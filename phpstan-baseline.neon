@@ -20459,31 +20459,6 @@ parameters:
 			path: app/cdash/tests/test_authtoken.php
 
 		-
-			message: "#^Call to an undefined method AutoRemoveBuildsTestCase\\:\\:launchViaCommandLine\\(\\)\\.$#"
-			count: 2
-			path: app/cdash/tests/test_autoremovebuilds.php
-
-		-
-			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
-			count: 1
-			path: app/cdash/tests/test_autoremovebuilds.php
-
-		-
-			message: "#^Implicit array creation is not allowed \\- variable \\$argv does not exist\\.$#"
-			count: 1
-			path: app/cdash/tests/test_autoremovebuilds.php
-
-		-
-			message: "#^Method AutoRemoveBuildsTestCase\\:\\:testAutoRemoveBuilds\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_autoremovebuilds.php
-
-		-
-			message: "#^Parameter \\#1 \\$haystack of function str_contains expects string, string\\|false given\\.$#"
-			count: 3
-			path: app/cdash/tests/test_autoremovebuilds.php
-
-		-
 			message: """
 				#^Call to deprecated function pdo_fetch_array\\(\\)\\:
 				04/01/2023$#
