@@ -1,63 +1,3 @@
-function(add_vue_test TestName)
-  add_test(
-    NAME ${TestName}
-    COMMAND "node_modules/.bin/jest" "tests/${TestName}.spec.js"
-    WORKING_DIRECTORY "${CDash_SOURCE_DIR}"
-  )
-endfunction()
-
-function(set_app_url)
-  if(DEFINED ENV{APP_URL})
-    set(APP_URL "$ENV{APP_URL}" PARENT_SCOPE)
-  elseif(EXISTS ${CDash_SOURCE_DIR}/.env)
-    file(STRINGS ${CDash_SOURCE_DIR}/.env env_vars)
-    foreach(var IN LISTS env_vars)
-      if(var MATCHES "^APP_URL=(.*)$")
-        set(APP_URL "${CMAKE_MATCH_1}" PARENT_SCOPE)
-        break()
-      endif()
-    endforeach()
-  else()
-    set(APP_URL "http://localhost:8080" PARENT_SCOPE)
-  endif()
-endfunction()
-
-function(add_cypress_e2e_test TestName)
-  set_app_url()
-
-  add_test(
-    NAME cypress/e2e/${TestName}
-    COMMAND ${NPX_EXE} cypress run
-      --e2e
-      --project ${CDash_SOURCE_DIR}
-      --spec ${CDash_SOURCE_DIR}/tests/cypress/e2e/${TestName}.cy.js
-      --config baseUrl=${APP_URL}
-  )
-  # Cypress tries to put stuff in our home directory, which doesn't work for /var/www.
-  set_tests_properties(cypress/e2e/${TestName} PROPERTIES
-    ENVIRONMENT "HOME=${CDash_BINARY_DIR};"
-    DISABLED "$<STREQUAL:${CDASH_IMAGE},ubi>"
-  )
-endfunction()
-
-function(add_cypress_component_test TestName)
-  set_app_url()
-
-  add_test(
-    NAME cypress/component/${TestName}
-    COMMAND ${NPX_EXE} cypress run
-      --component
-      --project ${CDash_SOURCE_DIR}
-      --spec ${CDash_SOURCE_DIR}/tests/cypress/component/${TestName}.cy.js
-      --config baseUrl=${APP_URL}
-  )
-  # Cypress tries to put stuff in our home directory, which doesn't work for /var/www.
-  set_tests_properties(cypress/component/${TestName} PROPERTIES
-    ENVIRONMENT "HOME=${CDash_BINARY_DIR};"
-    DISABLED "$<STREQUAL:${CDASH_IMAGE},ubi>"
-  )
-endfunction()
-
 add_test(
   NAME php_style_check
   COMMAND ${CMAKE_SOURCE_DIR}/vendor/bin/php-cs-fixer fix --dry-run --allow-risky=yes
@@ -94,18 +34,8 @@ set_tests_properties(eslint PROPERTIES
   FAIL_REGULAR_EXPRESSION " \+[0-9]\+:[0-9]\+ \+warning"
 )
 
-add_vue_test(Spec/build-configure)
-add_vue_test(Spec/build-summary)
-add_vue_test(Spec/edit-project)
-add_vue_test(Spec/manage-measurements)
-add_vue_test(Spec/page-header/header-menu)
-add_vue_test(Spec/test-details)
-
-add_cypress_component_test(loading-indicator)
-
 cdash_install()
 
-add_cypress_e2e_test(user-profile)
-set_tests_properties(cypress/e2e/user-profile PROPERTIES DEPENDS install_1)
-
 add_subdirectory(cypress/e2e)
+add_subdirectory(cypress/component)
+add_subdirectory(Spec)

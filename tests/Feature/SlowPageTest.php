@@ -12,15 +12,16 @@ class SlowPageTest extends TestCase
     public function testSlowPageLogsWarning(): void
     {
         Log::shouldReceive('warning')
-            ->with(Mockery::pattern('#Slow page\: /\?projectid=10 took \d*\.?\d+ seconds to load#'));
+            ->with(Mockery::pattern('#Slow page\: /login took \d*\.?\d+ seconds to load#'));
         Config::set('cdash.slow_page_time', 0);
-        self::assertNotEmpty($this->get('/?projectid=10')->content());
+        self::assertNotEmpty($this->get('/login')->content());
     }
 
     public function testFastPageDoesntLogWarning(): void
     {
         Config::set('cdash.slow_page_time', 100);
         Log::shouldReceive('warning')->never();
-        $this->get('/?projectid=10');
+        $this->get('/login');
+        self::assertNotEmpty($this->get('/login')->content());
     }
 }

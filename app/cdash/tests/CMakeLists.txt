@@ -65,11 +65,8 @@ add_laravel_test(/Unit/app/Console/Command/ValidateXmlCommandTest)
 
 ###################################################################################################
 
-cdash_install()
-set_tests_properties(install_2 PROPERTIES DEPENDS cypress/e2e/user-profile)
-
 add_laravel_test(/Feature/CDashTest)
-set_tests_properties(/Feature/CDashTest PROPERTIES DEPENDS install_2)
+set_tests_properties(/Feature/CDashTest PROPERTIES DEPENDS install_1)
 
 add_laravel_test(/Feature/LoginAndRegistration)
 set_tests_properties(/Feature/LoginAndRegistration PROPERTIES DEPENDS /Feature/CDashTest)
@@ -77,11 +74,8 @@ set_tests_properties(/Feature/LoginAndRegistration PROPERTIES DEPENDS /Feature/C
 add_laravel_test(/Feature/ProjectPermissions)
 set_tests_properties(/Feature/ProjectPermissions PROPERTIES DEPENDS /Feature/LoginAndRegistration)
 
-add_laravel_test(/Feature/SlowPageTest)
-set_tests_properties(/Feature/SlowPageTest PROPERTIES DEPENDS /Feature/ProjectPermissions)
-
 add_laravel_test(/Feature/GitHubWebhook)
-set_tests_properties(/Feature/GitHubWebhook PROPERTIES DEPENDS /Feature/SlowPageTest)
+set_tests_properties(/Feature/GitHubWebhook PROPERTIES DEPENDS /Feature/ProjectPermissions)
 
 add_unit_test(/CDash/BuildUseCase)
 set_tests_properties(/CDash/BuildUseCase PROPERTIES DEPENDS /Feature/GitHubWebhook)
@@ -275,10 +269,14 @@ set_tests_properties(/Feature/Mail/AuthTokenExpiringTest PROPERTIES DEPENDS /CDa
 add_laravel_test(/Feature/Mail/AuthTokenExpiredTest)
 set_tests_properties(/Feature/Mail/AuthTokenExpiredTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
+add_laravel_test(/Feature/SlowPageTest)
+set_tests_properties(/Feature/SlowPageTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
 ###################################################################################################
 
 cdash_install()
-set_property(TEST install_3 PROPERTY DEPENDS
+set_property(TEST install_2 PROPERTY DEPENDS
+  cypress/e2e/user-profile
   /Feature/SubmissionValidation
   /Feature/GraphQL/FilterTest
   /Feature/GraphQL/ProjectTypeTest
@@ -313,11 +311,12 @@ set_property(TEST install_3 PROPERTY DEPENDS
   /Feature/Jobs/NotifyExpiringAuthTokensTest
   /Feature/Mail/AuthTokenExpiringTest
   /Feature/Mail/AuthTokenExpiredTest
+  /Feature/SlowPageTest
 )
 
 
 add_php_test(compressedtest)
-set_tests_properties(compressedtest PROPERTIES DEPENDS install_3)
+set_tests_properties(compressedtest PROPERTIES DEPENDS install_2)
 
 add_php_test(createpublicdashboard)
 set_tests_properties(createpublicdashboard PROPERTIES DEPENDS compressedtest)
@@ -364,11 +363,8 @@ set_tests_properties(image PROPERTIES DEPENDS committerinfo)
 add_php_test(displayimage)
 set_tests_properties(displayimage PROPERTIES DEPENDS image)
 
-add_cypress_e2e_test(banner)
-set_tests_properties(cypress/e2e/banner PROPERTIES DEPENDS displayimage)
-
 add_php_test(manageprojectroles)
-set_tests_properties(manageprojectroles PROPERTIES DEPENDS cypress/e2e/banner)
+set_tests_properties(manageprojectroles PROPERTIES DEPENDS displayimage)
 
 add_php_test(manageusers)
 set_tests_properties(manageusers PROPERTIES DEPENDS manageprojectroles)
@@ -458,7 +454,7 @@ add_php_test(excludesubprojects)
 set_tests_properties(excludesubprojects PROPERTIES DEPENDS subprojectnextprevious)
 
 add_php_test(testhistory)
-set_tests_properties(testhistory PROPERTIES DEPENDS excludesubprojects)
+set_tests_properties(testhistory PROPERTIES DEPENDS subprojectnextprevious)
 
 add_php_test(expectedandmissing)
 set_tests_properties(expectedandmissing PROPERTIES DEPENDS testhistory)
