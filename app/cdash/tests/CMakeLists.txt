@@ -454,7 +454,7 @@ add_php_test(excludesubprojects)
 set_tests_properties(excludesubprojects PROPERTIES DEPENDS subprojectnextprevious)
 
 add_php_test(testhistory)
-set_tests_properties(testhistory PROPERTIES DEPENDS excludesubprojects)
+set_tests_properties(testhistory PROPERTIES DEPENDS subprojectnextprevious)
 
 add_php_test(expectedandmissing)
 set_tests_properties(expectedandmissing PROPERTIES DEPENDS testhistory)
