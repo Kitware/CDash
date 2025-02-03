@@ -115,4 +115,4 @@ add_cypress_e2e_test(all-projects)
 set_tests_properties(cypress/e2e/all-projects PROPERTIES DEPENDS projectindb)
 
 add_cypress_e2e_test(banner)
-set_tests_properties(cypress/e2e/banner PROPERTIES DEPENDS cypress/e2e/build-configure)
+set_tests_properties(cypress/e2e/banner PROPERTIES DEPENDS simple2_async)
