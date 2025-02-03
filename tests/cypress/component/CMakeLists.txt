@@ -16,4 +16,5 @@ function(add_cypress_component_test TestName)
   )
 endfunction()
 
+add_cypress_component_test(data-table)
 add_cypress_component_test(loading-indicator)

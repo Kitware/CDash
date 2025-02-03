@@ -171,7 +171,7 @@ describe('Data table component tests', () => {
           {
             test: 'Data value 1',
             test2: {
-              value: 'Link 1',
+              text: 'Link 1',
               href: 'http://localhost:8080/test',
             },
           },
