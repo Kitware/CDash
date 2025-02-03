@@ -73,6 +73,7 @@ jobs:
         name: Build ${{matrix.base-image}} production image
         with:
           context: .
+          platforms: linux/amd64,linux/arm64
           push: false
           target: cdash
           build-args: |
@@ -84,6 +85,7 @@ jobs:
         name: Build ${{matrix.base-image}} worker image
         with:
           context: .
+          platforms: linux/amd64,linux/arm64
           push: false
           target: cdash-worker
           build-args: |
