@@ -13,6 +13,7 @@ function(add_cypress_component_test TestName)
   set_tests_properties(cypress/component/${TestName} PROPERTIES
     ENVIRONMENT "HOME=${CDash_BINARY_DIR};"
     DISABLED "$<STREQUAL:${CDASH_IMAGE},ubi>"
+    RESOURCE_LOCK "dev-server-port"
   )
 endfunction()
 
