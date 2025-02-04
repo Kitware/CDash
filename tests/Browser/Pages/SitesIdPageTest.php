@@ -47,6 +47,11 @@ class SitesIdPageTest extends BrowserTestCase
             $site->delete();
         }
         $this->sites = [];
+
+        foreach ($this->users as $users) {
+            $users->delete();
+        }
+        $this->users = [];
     }
 
     public function testMostRecentSiteDetails(): void
@@ -288,6 +293,83 @@ class SitesIdPageTest extends BrowserTestCase
                 ->assertVisible('@claim-site-button')
                 ->assertMissing('@unclaim-site-button')
                 ->waitUntilMissingText("{$this->users['user']->firstname} {$this->users['user']->lastname} ({$this->users['user']->institution})");
+        });
+    }
+
+    public function testEditSiteDescription(): void
+    {
+        $this->sites['site1'] = $this->makeSite();
+        $this->sites['site1']->information()->create();
+        $this->users['user'] = $this->makeNormalUser();
+
+        $this->browse(function (Browser $browser) {
+            // We shouldn't see buttons to edit the description if we are logged out
+            $browser->visit("/sites/{$this->sites['site1']->id}")
+                ->whenAvailable('@site-description', function (Browser $browser) {
+                    $browser->assertMissing('@cancel-edit-description-button');
+                    $browser->assertMissing('@save-description-button');
+                    $browser->assertMissing('@edit-description-button');
+                });
+
+            $description1 = Str::uuid()->toString();
+            $description2 = Str::uuid()->toString();
+
+            $browser->loginAs($this->users['user'])
+                ->visit("/sites/{$this->sites['site1']->id}")
+                ->waitFor('@site-description')
+                ->assertMissing('@cancel-edit-description-button')
+                ->assertMissing('@save-description-button')
+                ->assertVisible('@edit-description-button')
+                ->waitForTextIn('@site-description', 'No description provided')
+                ->click('@edit-description-button')
+                ->waitFor('@cancel-edit-description-button')
+                ->assertVisible('@cancel-edit-description-button')
+                ->assertVisible('@save-description-button')
+                ->assertMissing('@edit-description-button')
+                ->assertVisible('@edit-description-textarea')
+                ->assertValue('@edit-description-textarea', '')
+                ->type('@edit-description-textarea', $description1)
+                ->click('@cancel-edit-description-button')
+                ->waitForTextIn('@site-description', 'No description provided')
+                ->assertDontSee($description1)
+                ->assertMissing('@cancel-edit-description-button')
+                ->assertMissing('@save-description-button')
+                ->assertVisible('@edit-description-button')
+                ->click('@edit-description-button')
+                ->assertVisible('@cancel-edit-description-button')
+                ->assertVisible('@save-description-button')
+                ->assertMissing('@edit-description-button')
+                ->assertVisible('@edit-description-textarea')
+                ->assertValue('@edit-description-textarea', '')
+                ->type('@edit-description-textarea', $description1)
+                ->click('@save-description-button')
+                ->waitFor('@edit-description-button')
+                ->assertMissing('@cancel-edit-description-button')
+                ->assertMissing('@save-description-button')
+                ->assertVisible('@edit-description-button')
+                ->assertSeeIn('@site-description', $description1)
+                ->assertSeeIn('[data-test="site-history-item"]:nth-child(1)', $description1)
+                ->refresh()
+                ->waitFor('@site-description')
+                ->assertMissing('@cancel-edit-description-button')
+                ->assertMissing('@save-description-button')
+                ->assertVisible('@edit-description-button')
+                ->waitForTextIn('@site-description', $description1)
+                ->waitForTextIn('[data-test="site-history-item"]:nth-child(1)', $description1)
+                ->click('@edit-description-button')
+                ->assertValue('@edit-description-textarea', $description1)
+                ->clear('@edit-description-textarea')
+                ->type('@edit-description-textarea', $description2)
+                ->click('@save-description-button')
+                ->waitForTextIn('@site-description', $description2)
+                ->waitForTextIn('[data-test="site-history-item"]:nth-child(1)', $description2)
+                ->waitForTextIn('[data-test="site-history-item"]:nth-child(2)', $description1)
+                ->refresh()
+                ->waitFor('@site-description')
+                ->waitForTextIn('@site-description', $description2)
+                ->waitForTextIn('[data-test="site-history-item"]:nth-child(1)', $description2)
+                ->waitForTextIn('[data-test="site-history-item"]:nth-child(2)', $description1)
+            ;
         });
     }
 }
