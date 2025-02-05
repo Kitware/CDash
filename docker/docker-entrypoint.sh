@@ -38,6 +38,7 @@ if [ "$1" = "start-website" ] ; then
 
 # If the start-worker argument was provided, start a worker process instead
 elif [ "$1" = "start-worker" ] ; then
+  php artisan storage:mkdirs
   php -d memory_limit=-1 artisan queue:work
 
 # Otherwise, throw an error...
