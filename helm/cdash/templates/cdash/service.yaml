@@ -1,0 +1,12 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ .Release.Name }}-website
+  labels:
+    app: {{ .Release.Name }}-website
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+  selector:
+    app: {{ .Release.Name }}-website
