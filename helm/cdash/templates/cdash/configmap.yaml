@@ -1,0 +1,26 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: "{{ .Release.Name }}-website"
+data:
+  APP_ENV: "production"
+
+  DB_DATABASE: "cdash"
+  DB_PORT: "5432"
+  DB_HOST: "{{ .Release.Name }}-postgresql"
+  DB_CONNECTION: "pgsql"
+  DB_LOGIN: "postgres"
+
+  QUEUE_CONNECTION: "database"
+
+  LOG_CHANNEL: "stderr"
+
+  {{ if .Values.minio.enabled }}
+  FILESYSTEM_DRIVER: "s3"
+  AWS_REGION: "local"
+  AWS_BUCKET: "cdash"
+  AWS_URL: "http://{{ .Release.Name }}-minio:9000/{{ .Release.Name }}/"
+  AWS_ENDPOINT: "http://{{ .Release.Name }}-minio:9000"
+  AWS_USE_PATH_STYLE_ENDPOINT: "true"
+  {{ end }}
+  {{- .Values.global.cdash.env | nindent 2 }}

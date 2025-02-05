@@ -1,0 +1,53 @@
+website:
+  url: cdash-example.local
+  resources:
+    limits:
+      memory: 256Mi
+
+worker:
+  resources:
+    limits:
+      memory: 256Mi
+  replicas: 1
+
+global:
+  cdash:
+    image: kitware/cdash:latest
+    # Configure CDash by setting additional environment variables here
+    # https://github.com/Kitware/CDash/blob/master/docs/config.md
+    #
+    # Note that if you disable minio (below) and want to store files
+    # on the CDash webserver instead, you should specify:
+    # REMOTE_WORKERS: "true"
+    env: |-
+      #REMOTE_WORKERS: "true"
+      #BACKUP_TIMEFRAME: 36
+
+  postgresql:
+    enabled: true
+    auth:
+      database: cdash
+      existingSecret: "{{ .Release.Name }}-website"
+      secretKeys:
+        adminPasswordKey: DB_PASSWORD
+
+# See here for more config settings: https://github.com/bitnami/charts/tree/main/bitnami/postgresql
+postgresql:
+  primary:
+    persistence:
+      size: "8Gi"
+
+# See here for more config settings: https://github.com/bitnami/charts/tree/main/bitnami/minio
+minio:
+  enabled: true
+  auth:
+    existingSecret: "{{ .Release.Name }}-website"
+    rootPasswordSecretKey: AWS_SECRET_ACCESS_KEY
+    rootUserSecretKey: AWS_ACCESS_KEY_ID
+  defaultBuckets: cdash
+  ingress:
+    enabled: true
+  persistence:
+    annotations:
+      helm.sh/resource-policy: keep
+    size: "8Gi"
