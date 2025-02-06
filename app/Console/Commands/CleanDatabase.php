@@ -37,7 +37,6 @@ class CleanDatabase extends Command
         DatabaseCleanupUtils::deleteUnusedRows('buildfailuredetails', 'id', 'buildfailure', 'detailsid');
         DatabaseCleanupUtils::deleteUnusedRows('configure', 'id', 'build2configure', 'configureid');
         DatabaseCleanupUtils::deleteUnusedRows('coveragefile', 'id', 'coverage', 'fileid');
-        DatabaseCleanupUtils::deleteUnusedRows('dailyupdatefile', 'dailyupdateid', 'dailyupdate');
         DatabaseCleanupUtils::deleteUnusedRows('note', 'id', 'build2note', 'noteid');
         DatabaseCleanupUtils::deleteUnusedRows('testoutput', 'id', 'build2test', 'outputid');
         DatabaseCleanupUtils::deleteUnusedRows('uploadfile', 'id', 'build2uploadfile', 'fileid');

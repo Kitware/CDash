@@ -982,44 +982,11 @@ function addDailyChanges(int $projectid): void
 
         // Insert the commits
         foreach ($commits as $commit) {
-            $filename = $commit['directory'] . '/' . $commit['filename'];
-            $checkindate = $commit['time'];
             $author = addslashes($commit['author']);
-            $email = '';
-            if (isset($commit['email'])) {
-                $email = addslashes($commit['email']);
-            }
-            $log = addslashes($commit['comment']);
-            $revision = $commit['revision'];
-            $priorrevision = $commit['priorrevision'];
 
             if (!in_array(stripslashes($author), $cvsauthors)) {
                 $cvsauthors[] = stripslashes($author);
             }
-
-            $db->executePreparedSingleRow('
-                INSERT INTO dailyupdatefile (
-                    dailyupdateid,
-                    filename,
-                    checkindate,
-                    author,
-                    email,
-                    log,
-                    revision,
-                    priorrevision
-                )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-            ', [
-                $updateid,
-                $filename,
-                $checkindate,
-                $author,
-                $email,
-                $log,
-                $revision,
-                $priorrevision,
-            ]);
-            add_last_sql_error('addDailyChanges', $projectid);
         }
 
         // If the project has the option to send an email to the author
