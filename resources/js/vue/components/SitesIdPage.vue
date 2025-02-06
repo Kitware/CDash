@@ -23,7 +23,7 @@
                   data-test="site-details-table"
                 >
                   <tbody>
-                    <tr v-for="field in Object.keys(mostRecentInformation).filter(i => !['description', 'timestamp', '__typename'].includes(i))">
+                    <tr v-for="field in Object.keys(mostRecentInformation).filter(i => !['id', 'description', 'timestamp', '__typename'].includes(i))">
                       <th>{{ humanReadableSiteFieldName(field) }}</th>
                       <td
                         v-if="mostRecentInformation[field]"
@@ -42,21 +42,66 @@
                   </tbody>
                 </table>
               </div>
-              <div data-test="site-description">
-                <div class="tw-text-lg tw-font-black">
-                  Description
+              <div
+                data-test="site-description"
+                class="tw-grow"
+              >
+                <div class="tw-flex tw-flex-row">
+                  <div class="tw-text-lg tw-font-black">
+                    Description
+                  </div>
+                  <div
+                    v-if="userId"
+                    class="tw-ml-auto"
+                  >
+                    <template v-if="editingDescription">
+                      <button
+                        class="tw-btn tw-btn-outline tw-btn-sm"
+                        data-test="cancel-edit-description-button"
+                        @click="cancelEditDescription"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        class="tw-ml-1 tw-btn tw-btn-success tw-btn-sm"
+                        data-test="save-description-button"
+                        @click="saveDescription"
+                      >
+                        Save
+                      </button>
+                    </template>
+                    <button
+                      v-else
+                      class="tw-btn tw-btn-outline tw-btn-sm"
+                      data-test="edit-description-button"
+                      @click="editDescription"
+                    >
+                      <font-awesome-icon icon="fa-pencil" /> Edit
+                    </button>
+                  </div>
                 </div>
-                <div
-                  v-if="mostRecentInformation.description"
-                  class="tw-font-medium tw-text-neutral-500"
-                >
-                  {{ mostRecentInformation.description }}
+                <div v-if="editingDescription">
+                  <textarea
+                    v-model="currentDescription"
+                    class="tw-textarea tw-textarea-bordered tw-w-full tw-mt-1 tw-min-h-60"
+                    placeholder="Description..."
+                    data-test="edit-description-textarea"
+                    maxlength="255"
+                  />
                 </div>
-                <div
-                  v-else
-                  class="tw-italic tw-font-medium tw-text-neutral-500"
-                >
-                  No description provided...
+                <div v-else>
+                  <div
+                    v-if="mostRecentInformation.description"
+                    class="tw-font-medium tw-text-neutral-500"
+                  >
+                    {{ mostRecentInformation.description }}
+                  </div>
+                  <div
+                    v-else
+                    class="tw-italic tw-font-medium tw-text-neutral-500"
+                  >
+                    No description provided...
+                  </div>
                 </div>
               </div>
             </div>
@@ -157,7 +202,7 @@
                 </div>
                 <table class="tw-table tw-table-xs tw-text-left">
                   <tbody>
-                    <tr v-for="field in Object.keys(information.node).filter(i => !['description', 'timestamp', '__typename'].includes(i))">
+                    <tr v-for="field in Object.keys(information.node).filter(i => !['id', 'description', 'timestamp', '__typename'].includes(i))">
                       <th>{{ humanReadableSiteFieldName(field) }}</th>
                       <td v-if="information.node[field]">
                         {{ humanReadableSiteFieldValue(field, information.node[field]) }}
@@ -203,7 +248,7 @@
                 </div>
                 <table class="tw-table tw-w-auto tw-table-xs tw-text-left">
                   <tbody>
-                    <tr v-for="field in Object.keys(information.node).filter(i => !['description', 'timestamp', '__typename'].includes(i))">
+                    <tr v-for="field in Object.keys(information.node).filter(i => !['id', 'description', 'timestamp', '__typename'].includes(i))">
                       <th>{{ humanReadableSiteFieldName(field) }}</th>
                       <td v-if="information.node[field]">
                         {{ humanReadableSiteFieldValue(field, information.node[field]) }}
@@ -258,6 +303,39 @@ const SITE_MAINTAINERS_QUERY = gql`
   }
 `;
 
+const SITE_INFORMATION_QUERY = gql`
+  query($siteid: ID, $after: String) {
+    site(id: $siteid) {
+      id
+      information(after: $after, first: 100) {
+        edges {
+          node {
+            id
+            timestamp
+            description
+            processorVendor
+            processorVendorId
+            processorFamilyId
+            processorModelId
+            processorCacheSize
+            numberLogicalCpus
+            numberPhysicalCpus
+            totalVirtualMemory
+            totalPhysicalMemory
+            processorClockFrequency
+          }
+        }
+        pageInfo {
+          hasNextPage
+          hasPreviousPage
+          startCursor
+          endCursor
+        }
+      }
+    }
+  }
+`;
+
 export default {
   components: {
     LoadingIndicator,
@@ -276,39 +354,16 @@ export default {
     },
   },
 
+  data() {
+    return {
+      editingDescription: false,
+      currentDescription: '',
+    };
+  },
+
   apollo: {
     site: {
-      query: gql`
-        query($siteid: ID, $after: String) {
-          site(id: $siteid) {
-            id
-            information(after: $after, first: 100) {
-              edges {
-                node {
-                  timestamp
-                  description
-                  processorVendor
-                  processorVendorId
-                  processorFamilyId
-                  processorModelId
-                  processorCacheSize
-                  numberLogicalCpus
-                  numberPhysicalCpus
-                  totalVirtualMemory
-                  totalPhysicalMemory
-                  processorClockFrequency
-                }
-              }
-              pageInfo {
-                hasNextPage
-                hasPreviousPage
-                startCursor
-                endCursor
-              }
-            }
-          }
-        }
-      `,
+      query: SITE_INFORMATION_QUERY,
       variables() {
         return {
           siteid: this.siteId,
@@ -331,6 +386,7 @@ export default {
           site(id: $siteid) {
             id
             mostRecentInformation {
+              id
               description
               processorVendor
               processorVendorId
@@ -462,6 +518,8 @@ export default {
       const information2_copy = JSON.parse(JSON.stringify(information2));
       information1_copy.timestamp = '';
       information2_copy.timestamp = '';
+      information1_copy.id = '';
+      information2_copy.id = '';
 
       return JSON.stringify(information1_copy) === JSON.stringify(information2_copy);
     },
@@ -587,6 +645,93 @@ export default {
           unclaimSite: {
             __typename: 'UnclaimSiteMutationPayload',
             message: '',
+          },
+        },
+      }).catch((error) => {
+        console.error(error);
+      });
+    },
+
+    editDescription() {
+      this.editingDescription = true;
+      this.currentDescription = this.mostRecentInformation?.description;
+    },
+
+    cancelEditDescription() {
+      this.editingDescription = false;
+    },
+
+    saveDescription() {
+      this.editingDescription = false;
+
+      this.$apollo.mutate({
+        mutation: gql`mutation ($siteid: ID!, $description: String!) {
+          updateSiteDescription(input: {
+            siteId: $siteid
+            description: $description
+          }) {
+            site {
+              id
+              mostRecentInformation {
+                id
+                timestamp
+                description
+                processorVendor
+                processorVendorId
+                processorFamilyId
+                processorModelId
+                processorCacheSize
+                numberLogicalCpus
+                numberPhysicalCpus
+                totalVirtualMemory
+                totalPhysicalMemory
+                processorClockFrequency
+              }
+            }
+          }
+        }`,
+        variables: {
+          siteid: this.siteId,
+          description: this.currentDescription,
+        },
+        update: (cache, { data: { updateSiteDescription } }) => {
+          const data = JSON.parse(JSON.stringify(cache.readQuery({
+            query: SITE_INFORMATION_QUERY,
+            variables: {
+              siteid: this.siteId,
+            },
+          })));
+          data.site.information.edges.unshift({
+            node: {
+              ...updateSiteDescription.site.mostRecentInformation,
+            },
+          });
+          cache.writeQuery({ query: SITE_INFORMATION_QUERY, data: data });
+        },
+        optimisticResponse: {
+          __typename: 'Mutation',
+          updateSiteDescription: {
+            __typename: 'UnclaimSiteMutationPayload',
+            site: {
+              __typename: 'Site',
+              id: this.siteId,
+              mostRecentInformation: {
+                __typename: 'SiteInformation',
+                id: -1,
+                timestamp: DateTime.now().toISODate(),
+                description: this.currentDescription,
+                processorVendor: this.mostRecentInformation.processorVendor,
+                processorVendorId:  this.mostRecentInformation.processorVendorId,
+                processorFamilyId:  this.mostRecentInformation.processorFamilyId,
+                processorModelId:  this.mostRecentInformation.processorModelId,
+                processorCacheSize:  this.mostRecentInformation.processorCacheSize,
+                numberLogicalCpus:  this.mostRecentInformation.numberLogicalCpus,
+                numberPhysicalCpus:  this.mostRecentInformation.numberPhysicalCpus,
+                totalVirtualMemory:  this.mostRecentInformation.totalVirtualMemory,
+                totalPhysicalMemory:  this.mostRecentInformation.totalPhysicalMemory,
+                processorClockFrequency:  this.mostRecentInformation.processorClockFrequency,
+              },
+            },
           },
         },
       }).catch((error) => {

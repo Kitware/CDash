@@ -109,7 +109,7 @@
               <a
                 v-if="project.role > 0"
                 title="Claim sites"
-                :href="$baseURL + '/editSite.php?projectid=' + project.id"
+                :href="$baseURL + '/projects/' + project.id + '/sites'"
               >
                 <font-awesome-icon icon="fa-computer" />
               </a>
@@ -229,7 +229,7 @@
             <td align="center">
               <a
                 class="cdash-link"
-                :href="$baseURL + '/editSite.php?siteid=' + site.id"
+                :href="$baseURL + '/sites/' + site.id"
               >
                 {{ site.name }}
               </a>

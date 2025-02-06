@@ -275,6 +275,9 @@ set_tests_properties(/Feature/Mail/AuthTokenExpiringTest PROPERTIES DEPENDS /CDa
 add_laravel_test(/Feature/Mail/AuthTokenExpiredTest)
 set_tests_properties(/Feature/Mail/AuthTokenExpiredTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
+add_laravel_test(/Feature/GraphQL/Mutations/UpdateSiteDescriptionTest)
+set_tests_properties(/Feature/GraphQL/Mutations/UpdateSiteDescriptionTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
 ###################################################################################################
 
 cdash_install()
@@ -313,6 +316,7 @@ set_property(TEST install_3 PROPERTY DEPENDS
   /Feature/Jobs/NotifyExpiringAuthTokensTest
   /Feature/Mail/AuthTokenExpiringTest
   /Feature/Mail/AuthTokenExpiredTest
+  /Feature/GraphQL/Mutations/UpdateSiteDescriptionTest
 )
 
 

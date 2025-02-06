@@ -49,6 +49,9 @@ type Mutation {
 
   "Unsubscribe the current user from the specified site."
   unclaimSite(input: UnclaimSiteInput! @spread): UnclaimSiteMutationPayload! @field(resolver: "UnclaimSite")
+
+  "Edit the site description."
+  updateSiteDescription(input: UpdateSiteDescriptionInput! @spread): UpdateSiteDescriptionMutationPayload! @field(resolver: "UpdateSiteDescription")
 }
 
 
@@ -497,9 +500,24 @@ input UnclaimSiteInput {
   siteId: ID!
 }
 
+input UpdateSiteDescriptionInput {
+  siteId: ID!
+  description: String!
+}
+
+type UpdateSiteDescriptionMutationPayload implements MutationPayloadInterface {
+  "Optional error message."
+  message: String
+
+  site: Site
+}
+
 
 "Details about a site at a given point in time."
 type SiteInformation {
+  "Unique primary key."
+  id: ID!
+
   "Creation timestamp."
   timestamp: DateTimeTz!
 
