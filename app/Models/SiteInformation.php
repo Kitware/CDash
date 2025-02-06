@@ -5,9 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
 /**
- * @property string $timestamp
+ * @property Carbon $timestamp
  * @property bool|null $processoris64bits
  * @property string|null $processorvendor
  * @property string|null $processorvendorid

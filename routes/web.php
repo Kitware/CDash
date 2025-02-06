@@ -238,9 +238,17 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/manageCoverage.php', 'CoverageController@manageCoverage');
     Route::post('/manageCoverage.php', 'CoverageController@manageCoverage');
 
-    // TODO: (williamjallen) send the POST route to a different function
-    Route::get('/editSite.php', 'SiteController@editSite');
-    Route::post('/editSite.php', 'SiteController@editSite');
+    Route::match(['get', 'post'], '/editSite.php', function (Request $request) {
+        if ($request->has('siteid')) {
+            $siteid = $request->integer('siteid');
+            return redirect("/sites/$siteid", 301);
+        } elseif ($request->has('projectid')) {
+            $projectid = $request->integer('projectid');
+            return redirect("/projects/$projectid/sites", 301);
+        } else {
+            return redirect('/sites', 301);
+        }
+    });
 
     Route::get('/ajax/buildnote.php', 'BuildController@ajaxBuildNote');
 
