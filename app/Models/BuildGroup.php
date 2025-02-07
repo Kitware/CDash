@@ -16,7 +16,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon $starttime
  * @property Carbon $endtime
  * @property int $autoremovetimeframe
- * @property string $description
+ * @property ?string $description
  * @property int $summaryemail
  * @property int $includesubprojectotal // Should this be a boolean?
  * @property int $emailcommitters // Should this be a boolean?
