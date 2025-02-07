@@ -151,7 +151,7 @@ class BuildGroup
     }
 
     /** Get/Set the description */
-    public function GetDescription(): string|false
+    public function GetDescription(): string|false|null
     {
         if (!isset($this->eloquent_model->id)) {
             Log::error('BuildGroup GetDescription(): Id not set');
