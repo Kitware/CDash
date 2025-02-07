@@ -1747,7 +1747,7 @@ parameters:
 
 		-
 			message: "#^Argument of an invalid type array\\|false supplied for foreach, only iterables are supported\\.$#"
-			count: 5
+			count: 4
 			path: app/Http/Controllers/ManageProjectRolesController.php
 
 		-
@@ -1760,7 +1760,7 @@ parameters:
 				#^Call to deprecated function add_last_sql_error\\(\\)\\:
 				04/22/2023$#
 			"""
-			count: 3
+			count: 2
 			path: app/Http/Controllers/ManageProjectRolesController.php
 
 		-
@@ -1784,7 +1784,7 @@ parameters:
 				#^Call to deprecated method executePrepared\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 5
+			count: 4
 			path: app/Http/Controllers/ManageProjectRolesController.php
 
 		-
@@ -1914,21 +1914,11 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$value of function intval expects array\\|bool\\|float\\|int\\|resource\\|string\\|null, mixed given\\.$#"
-			count: 4
+			count: 1
 			path: app/Http/Controllers/ManageProjectRolesController.php
 
 		-
 			message: "#^Parameter \\#2 \\$string of function explode expects string, mixed given\\.$#"
-			count: 1
-			path: app/Http/Controllers/ManageProjectRolesController.php
-
-		-
-			message: "#^Parameter \\#2 \\$timestamp of function date expects int\\|null, int\\|false given\\.$#"
-			count: 1
-			path: app/Http/Controllers/ManageProjectRolesController.php
-
-		-
-			message: "#^Variable \\$project_array might not be defined\\.$#"
 			count: 1
 			path: app/Http/Controllers/ManageProjectRolesController.php
 
@@ -13858,7 +13848,7 @@ parameters:
 				#^Call to deprecated function add_last_sql_error\\(\\)\\:
 				04/22/2023$#
 			"""
-			count: 3
+			count: 2
 			path: app/cdash/include/dailyupdates.php
 
 		-
@@ -13882,7 +13872,7 @@ parameters:
 				#^Call to deprecated method executePreparedSingleRow\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 8
+			count: 7
 			path: app/cdash/include/dailyupdates.php
 
 		-

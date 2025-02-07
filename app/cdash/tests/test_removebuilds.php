@@ -414,16 +414,6 @@ class RemoveBuildsTestCase extends KWWebTestCase
             'status' => 0,
             'revision' => 'DEADBEEF',
         ]);
-        DB::table('dailyupdatefile')->insert([
-            'dailyupdateid' => $dailyupdate_id,
-            'filename' => 'test_removebuilds.php',
-            'checkindate' => $time,
-            'author' => 'CDash',
-            'email' => 'admin@cdash.org',
-            'log' => 'test_removebuilds.php',
-            'revision' => 'DEADBEEF',
-            'priorrevision' => '00000000',
-        ]);
         $image_id = DB::table('image')->insertGetId([
             'img' => 'asdf',
             'extension' => 'png',
@@ -455,7 +445,6 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $this->verify('configure', 'id', '=', $configure_id, 0, $extra_msg);
         $this->verify('coveragefile', 'id', '=', $coveragefile_id, 0, $extra_msg);
         $this->verify('dailyupdate', 'id', '=', $dailyupdate_id, 0, $extra_msg);
-        $this->verify('dailyupdatefile', 'dailyupdateid', '=', $dailyupdate_id, 0, $extra_msg);
         $this->verify('image', 'id', '=', $image_id, 0, $extra_msg);
         $this->verify('note', 'id', '=', $note_id, 0, $extra_msg);
         $this->verify('testoutput', 'id', '=', $testoutput_id, 0, $extra_msg);

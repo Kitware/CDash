@@ -329,56 +329,6 @@ final class ManageProjectRolesController extends AbstractProjectController
 
                 $xml .= '</user>';
             }
-
-            if (is_array($project_array)) {
-                // Check if a user is committing without being registered to CDash or with email disabled
-                $date = date(FMT_DATETIME, strtotime(date(FMT_DATETIME) . ' -30 days'));
-                $query = $db->executePrepared('
-                             SELECT DISTINCT
-                                 author,
-                                 emailtype,
-                                 u.email
-                             FROM
-                                 dailyupdate,
-                                 dailyupdatefile
-                             LEFT JOIN user2repository ON (
-                                 dailyupdatefile.author=user2repository.credential
-                                 AND (
-                                     user2repository.projectid=0
-                                     OR user2repository.projectid=?
-                                 )
-                             )
-                             LEFT JOIN user2project ON (
-                                 user2repository.userid= user2project.userid
-                                 AND user2project.projectid=?
-                             )
-                             LEFT JOIN users AS u ON (
-                                 user2project.userid=u.id
-                             )
-                             WHERE
-                                 dailyupdatefile.dailyupdateid=dailyupdate.id
-                                 AND dailyupdate.projectid=?
-                                 AND dailyupdatefile.checkindate>?
-                                 AND (
-                                     emailtype=0
-                                     OR emailtype IS NULL
-                                 )
-                         ', [
-                    intval($project_array['id']),
-                    intval($project_array['id']),
-                    intval($project_array['id']),
-                    $date,
-                ]);
-
-                add_last_sql_error('ManageProjectRole');
-                foreach ($query as $query_array) {
-                    $xml .= '<baduser>';
-                    $xml .= add_XML_value('author', $query_array['author']);
-                    $xml .= add_XML_value('emailtype', $query_array['emailtype']);
-                    $xml .= add_XML_value('email', $query_array['email']);
-                    $xml .= '</baduser>';
-                }
-            }
         }
 
         if ((bool) config('require_full_email_when_adding_user')) {

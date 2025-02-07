@@ -202,13 +202,6 @@ class Project
         DB::delete('DELETE FROM labelemail WHERE projectid=?', [intval($this->Id)]);
         DB::delete('DELETE FROM project2repositories WHERE projectid=?', [intval($this->Id)]);
 
-        $dailyupdate = DB::select('SELECT id FROM dailyupdate WHERE projectid=?', [intval($this->Id)]);
-        $dailyupdate_ids = [];
-        foreach ($dailyupdate as $dailyupdate_array) {
-            $dailyupdate_ids[] = (int) $dailyupdate_array->id;
-        }
-        DB::table('dailyupdatefile')->whereIn('dailyupdateid', $dailyupdate_ids)->delete();
-
         DB::delete('DELETE FROM dailyupdate WHERE projectid=?', [intval($this->Id)]);
         DB::delete('DELETE FROM build_filters WHERE projectid=?', [intval($this->Id)]);
 
