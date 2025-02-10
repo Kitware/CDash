@@ -214,6 +214,11 @@ add_laravel_test(/Browser/Pages/ProjectSitesPageTest)
 set_tests_properties(/Browser/Pages/ProjectSitesPageTest PROPERTIES RUN_SERIAL TRUE)
 set_tests_properties(/Browser/Pages/ProjectSitesPageTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
+# Technically this test doesn't have to run serially.  It just needs to have exclusive access to the .env
+add_laravel_test(/Browser/Pages/RegistrationTest)
+set_tests_properties(/Browser/Pages/RegistrationTest PROPERTIES RUN_SERIAL TRUE)
+set_tests_properties(/Browser/Pages/RegistrationTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
 add_laravel_test(/Feature/PurgeUnusedProjectsCommand)
 set_tests_properties(/Feature/PurgeUnusedProjectsCommand PROPERTIES RUN_SERIAL TRUE)
 set_tests_properties(/Feature/PurgeUnusedProjectsCommand PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
