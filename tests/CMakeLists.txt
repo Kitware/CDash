@@ -98,7 +98,6 @@ add_vue_test(Spec/build-configure)
 add_vue_test(Spec/build-summary)
 add_vue_test(Spec/edit-project)
 add_vue_test(Spec/manage-measurements)
-add_vue_test(Spec/page-header/header-menu)
 add_vue_test(Spec/test-details)
 
 add_cypress_component_test(loading-indicator)

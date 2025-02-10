@@ -1,8 +1,11 @@
 @php
-    if (isset($project)) {
-        $logoid = $project->ImageId;
-    }
+if (isset($project)) {
+    $logoid = $project->ImageId;
+}
+
 $hideRegistration = config('auth.user_registration_form_enabled') === false;
+
+$currentDateString = now()->toDateString();
 @endphp
 
 <div id="header">
@@ -223,26 +226,127 @@ $hideRegistration = config('auth.user_registration_form_enabled') === false;
                     </li>
                 </ul>
             </div>
-        @elseif(isset($vue) && $vue === true)
-            <header-menu></header-menu>
-        @elseif(isset($project)) {{-- Some XSL pages have an admin menu --}}
+        @elseif(isset($project))
             <div id="headermenu">
                 <ul id="navigation">
-                    <li id="admin">
-                        <a class="cdash-link" href="#">Settings</a><ul>
-                            <li><a class="cdash-link" href="{{ url('/project') }}/{{ $project->Id }}/edit">Project</a></li>
-                            <li><a class="cdash-link" href="{{ url('/manageProjectRoles.php') }}?projectid={{ $project->Id }}">Users</a></li>
-                            <li><a class="cdash-link" href="{{ url('/manageBuildGroup.php') }}?projectid={{ $project->Id }}">Groups</a></li>
-                            <li><a class="cdash-link" href="{{ url('/manageCoverage.php') }}?projectid={{ $project->Id }}">Coverage</a></li>
-                            <li><a class="cdash-link" href="{{ url('/manageBanner.php') }}?projectid={{ $project->Id }}">Banner</a></li>
-                            <li><a class="cdash-link" href="{{ url('/project') }}/{{ $project->Id }}/testmeasurements">Measurements</a></li>
-                            <li><a class="cdash-link" href="{{ url('/manageSubProject.php') }}?projectid={{ $project->Id }}">SubProjects</a></li>
-                            <li class="endsubmenu"><a class="cdash-link" href="{{ url('/manageOverview.php') }}?projectid={{ $project->Id }}">Overview</a></li>
+                    <li>
+                        <a href="#">Dashboard</a>
+                        <ul>
+                            <li>
+                                <a href="{{ url('/overview.php') }}?project={{ rawurlencode($project->Name) }}&date={{$currentDateString}}">
+                                    Overview
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ url('/index.php') }}?project={{ rawurlencode($project->Name) }}&date={{$currentDateString}}">
+                                    Builds
+                                </a>
+                            </li>
+                            <li>
+                                <!-- This only excludes passing tests for performance reasons. TODO: show all tests. -->
+                                <a href="{{ url('/queryTests.php') }}?project={{rawurlencode($project->Name)}}&date={{$currentDateString}}&filtercount=1&showfilters=1&field1=status&compare1=62&value1=Passed">
+                                    Tests
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ url("/projects/$project->Id/sites") }}">
+                                    Sites
+                                </a>
+                            </li>
+                            @if(isset($project->Id) && $project->GetNumberOfSubProjects(request()->get('date')) > 0)
+                                <li>
+                                    <a href="{{ url('/viewSubProjects.php') }}?project={{ rawurlencode($project->Name) }}">
+                                        SubProjects
+                                    </a>
+                                </li>
+                            @endif
                         </ul>
                     </li>
-                    <li id="Dashboard">
-                        <a class="cdash-link" href="{{ url('/index.php') }}?project={{ rawurlencode($project->Name) }}">Dashboard</a>
+                    <li>
+                        <a href="#">Project</a>
+                        <ul>
+                            @if(isset($project->HomeUrl) && strlen($project->HomeUrl) > 0)
+                                <li>
+                                    <a href="{{ $project->HomeUrl }}">
+                                        Home
+                                    </a>
+                                </li>
+                            @endif
+                            @if(isset($project->DocumentationUrl) && strlen($project->DocumentationUrl) > 0)
+                                <li>
+                                    <a href="{{ $project->DocumentationUrl }}">
+                                        Documentation
+                                    </a>
+                                </li>
+                            @endif
+                            @if(isset($project->CvsUrl) && strlen($project->CvsUrl) > 0)
+                                <li>
+                                    <a href="{{ $project->CvsUrl }}">
+                                        Repository
+                                    </a>
+                                </li>
+                            @endif
+                            @if(isset($project->BugTrackerUrl) && strlen($project->BugTrackerUrl) > 0)
+                                <li>
+                                    <a href="{{ $project->BugTrackerUrl }}">
+                                        Bug Tracker
+                                    </a>
+                                </li>
+                            @endif
+                            <li>
+                                <a href="{{ url('/subscribeProject.php') }}?projectid={{ $project->Id }}">
+                                    Subscribe
+                                </a>
+                            </li>
+                        </ul>
                     </li>
+                    @can('edit-project', $project)
+                        <li>
+                            <a href="#">Settings</a>
+                            <ul>
+                                <li>
+                                    <a href="{{ url('/project') }}/{{ $project->Id }}/edit">
+                                        Project
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ url('/manageProjectRoles.php') }}?projectid={{ $project->Id }}">
+                                        Users
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ url('/manageBuildGroup.php') }}?projectid={{ $project->Id }}">
+                                        Groups
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ url('/manageCoverage.php') }}?projectid={{ $project->Id }}">
+                                        Coverage
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ url('/manageBanner.php') }}?projectid={{ $project->Id }}">
+                                        Banner
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ url('/project') }}/{{ $project->Id }}/testmeasurements">
+                                        Measurements
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ url('/manageSubProject.php') }}?projectid={{ $project->Id }}">
+                                        SubProjects
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ url('/manageOverview.php') }}?projectid={{ $project->Id }}">
+                                        Overview
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    @endcan
                 </ul>
             </div>
         @endif

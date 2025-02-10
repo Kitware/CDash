@@ -70,9 +70,14 @@ final class ManageBannerController extends AbstractController
             }
         }
 
-        return $this->view('admin.banner')
-            ->with('project', $project)
+        $retval = $this->view('admin.banner')
             ->with('available_projects', $available_projects)
             ->with('banner', $banner);
+
+        if ($project->Id > 0) {
+            $retval = $retval->with('project', $project);
+        }
+
+        return $retval;
     }
 }
