@@ -320,8 +320,11 @@ a.sup {
 
 
 /** New CSS starts here */
-div#header {
-  width:100%;
+#header {
+  width: 100%;
+  position: sticky;
+  top: 0;
+  z-index: 9999;
 }
 
 #headername2 {
