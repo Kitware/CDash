@@ -15,7 +15,6 @@ if (!is_array($unlimited_projects)) {
 }
 
 return [
-    'directory' => $cdash,
     'password' => [
         'complexity' => env('MINIMUM_PASSWORD_COMPLEXITY', 0),
         'count' => env('PASSWORD_COMPLEXITY_COUNT', 0),
@@ -49,9 +48,7 @@ return [
     'backup_timeframe' => env('BACKUP_TIMEFRAME', 48),
     'builds_per_project' => env('BUILDS_PER_PROJECT', 0),
     'coverage_dir' => env('CDASH_COVERAGE_DIR', '/cdash/_build/xdebugCoverage'),
-    'curl_localhost_prefix' => env('CURL_LOCALHOST_PREFIX', ''),
     'daily_updates' => env('DAILY_UPDATES', true),
-    'default_git_dir' => env('DEFAULT_GIT_DIRECTORY', '/cdash/_build'),
     'default_project' => env('DEFAULT_PROJECT', null),
     'delete_old_subprojects' => env('DELETE_OLD_SUBPROJECTS', true),
     'github_always_pass' => env('GITHUB_ALWAYS_PASS', false),
@@ -63,8 +60,6 @@ return [
     'login_field' => env('LOGIN_FIELD', 'Email'),
     'max_upload_quota' => env('MAX_UPLOAD_QUOTA', 10),
     'notify_pull_request' => env('NOTIFY_PULL_REQUEST', false),
-    'php_exe' => env('PHP_EXE', ''),
-    'phpunit_exe' => env('PHPUNIT_EXE', ''),
     'queue_timeout' => env('QUEUE_TIMEOUT', 2000),
     'remote_workers' => env('REMOTE_WORKERS', false),
     'retry_base' => env('QUEUE_RETRY_BASE', 5),
