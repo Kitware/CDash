@@ -25,7 +25,6 @@ import ManageMeasurements from './components/ManageMeasurements';
 import Monitor from './components/Monitor';
 import TestDetails from './components/TestDetails';
 import HeaderNav from './components/page-header/HeaderNav.vue';
-import HeaderMenu from './components/page-header/HeaderMenu.vue';
 import HeaderLogo from './components/page-header/HeaderLogo.vue';
 import ViewDynamicAnalysis from './components/ViewDynamicAnalysis.vue';
 import AllProjects from './components/AllProjects.vue';
@@ -56,7 +55,6 @@ const cdash_components = {
   Monitor,
   TestDetails,
   HeaderNav,
-  HeaderMenu,
   HeaderLogo,
   ViewDynamicAnalysis,
   AllProjects,

@@ -14,7 +14,7 @@
                 <form
                     name="form1"
                     method="post"
-                    action="{{ url('manageBanner.php') }}?projectid={{ $project->Id }}"
+                    action="{{ url('manageBanner.php') }}?projectid={{ $project->Id ?? 0 }}"
                 >
                     <select
                         onchange="location = '{{ url('manageBanner.php') }}?projectid='+this.options[this.selectedIndex].value;"
@@ -37,7 +37,7 @@
     <form
         name="formnewgroup"
         method="post"
-        action="{{ url('manageBanner.php') }}?projectid={{ $project->Id }}"
+        action="{{ url('manageBanner.php') }}?projectid={{ $project->Id ?? 0 }}"
     >
         <table width="100%"  border="0">
             <tr>

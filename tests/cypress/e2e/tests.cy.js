@@ -50,10 +50,6 @@ describe('the test page', () => {
       // navigate to current day
       cy.get('#header-nav-current-btn').find('a').click();
       cy.get('#header-nav-next-btn').should('have.class', 'btn-disabled');
-
-      // test that the 'up' button works
-      cy.get('#Back').find('a').click();
-      cy.url().should('include', 'viewTest.php');
     });
   });
 
