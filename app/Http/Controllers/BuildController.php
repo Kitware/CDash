@@ -634,29 +634,7 @@ final class BuildController extends AbstractBuildController
             $file['filename'] = $update_file->Filename;
             $file['author'] = $update_file->Author;
             $file['status'] = $update_file->Status;
-
-            // Only display email if the user is logged in.
-            if (Auth::check()) {
-                if ($update_file->Email == '') {
-                    // Try to find author email from repository credentials.
-                    $stmt = $db->prepare('
-                SELECT email FROM user WHERE id IN (
-                  SELECT up.userid FROM user2project AS up, user2repository AS ur
-                   WHERE ur.userid=up.userid
-                   AND up.projectid=:projectid
-                   AND ur.credential=:author
-                   AND (ur.projectid=0 OR ur.projectid=:projectid) )
-                   LIMIT 1');
-                    $stmt->bindParam(':projectid', $this->project->Id);
-                    $stmt->bindParam(':author', $file['author']);
-                    $db->execute($stmt);
-                    $file['email'] = $stmt ? $stmt->fetchColumn() : '';
-                } else {
-                    $file['email'] = $update_file->Email;
-                }
-            } else {
-                $file['email'] = '';
-            }
+            $file['email'] = '';
 
             $file['log'] = $update_file->Log;
             $file['revision'] = $update_file->Revision;

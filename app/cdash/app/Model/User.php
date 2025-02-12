@@ -34,7 +34,6 @@ class User
     public $Admin;
     private $Filled;
     private $PDO;
-    private $Credentials;
     private $LabelCollection;
 
     public function __construct()
@@ -48,7 +47,6 @@ class User
         $this->Admin = 0;
         $this->Filled = false;
         $this->PDO = Database::getInstance();
-        $this->Credentials = null;
         $this->LabelCollection = collect();
     }
 
@@ -202,29 +200,6 @@ class User
                 ])->delete();
             }
         }
-    }
-
-    /**
-     * Returns the current User's repository credentials. (There may be multiple credentials
-     * for multiple repositories).
-     *
-     * @return array|bool|null
-     */
-    public function GetRepositoryCredentials()
-    {
-        if (is_null($this->Credentials)) {
-            if (!$this->Id) {
-                return false;
-            }
-
-            $sql = 'SELECT credential FROM user2repository WHERE userid = :id';
-            $stmt = $this->PDO->prepare($sql);
-            $stmt->bindParam(':id', $this->Id);
-            if ($this->PDO->execute($stmt)) {
-                $this->Credentials = $stmt->fetchAll(PDO::FETCH_COLUMN);
-            }
-        }
-        return $this->Credentials;
     }
 
     /**

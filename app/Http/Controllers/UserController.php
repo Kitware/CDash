@@ -435,36 +435,6 @@ final class UserController extends AbstractController
             $error_msg = 'Password has expired';
         }
 
-        // Update the credentials
-        if (isset($_POST['updatecredentials'])) {
-            $credentials = $_POST['credentials'] ?? [];
-            $UserProject = new UserProject();
-            $UserProject->ProjectId = 0;
-            $UserProject->UserId = $userid;
-            $credentials[] = $user->Email;
-            $UserProject->UpdateCredentials($credentials);
-        }
-
-        // List the credentials
-        $credentials_query = DB::select('
-            SELECT credential
-            FROM user2repository
-            WHERE
-                userid = ?
-              AND projectid = 0
-        ', [(int) $userid]);
-
-        $credentials = [];
-
-        foreach ($credentials_query as $credential) {
-            if ($credential->credential === $user->Email) {
-                // Move the email credential (which cannot be changed) to the top of the array
-                array_unshift($credentials, $credential->credential);
-            } else {
-                $credentials[] = $credential->credential;
-            }
-        }
-
         if (($_GET['reason'] ?? '') === 'expired') {
             $error_msg = 'Your password has expired. Please set a new one.';
         }
@@ -472,8 +442,7 @@ final class UserController extends AbstractController
         return $this->view('auth.profile')
             ->with('user', $user)
             ->with('error', $error_msg)
-            ->with('message', $other_msg)
-            ->with('credentials', $credentials);
+            ->with('message', $other_msg);
     }
 
     public function recoverPassword(): View

@@ -66,11 +66,8 @@ final class ManageProjectRolesController extends AbstractProjectController
             $emailtype = (int) $emailtype;
         }
 
-        @$credentials = $_POST['credentials'];
-        @$repositoryCredential = $_POST['repositoryCredential'];
         @$updateuser = $_POST['updateuser'];
         @$importUsers = $_POST['importUsers'];
-        @$registerUsers = $_POST['registerUsers'];
 
         @$registerUser = $_POST['registerUser'];
 
@@ -111,36 +108,12 @@ final class ManageProjectRolesController extends AbstractProjectController
             if ($lastName != null) {
                 $lastName = htmlspecialchars(pdo_real_escape_string($lastName));
             }
-            @$repositoryCredential = $_POST['registeruserrepositorycredential'];
 
             if (strlen($email) < 3 || strlen($firstName) < 2 || strlen($lastName) < 2) {
                 $xml .= '<error>Email, first name and last name should be filled out.</error>';
             } else {
                 // Call the register_user function
-                $xml .= $this->register_user($projectid, $email, $firstName, $lastName, $repositoryCredential);
-            }
-        }
-
-        // Register CVS users
-        if ($registerUsers) {
-            $cvslogins = $_POST['cvslogin'];
-            $emails = $_POST['email'];
-            $firstnames = $_POST['firstname'];
-            $lastnames = $_POST['lastname'];
-            $cvsuser = $_POST['cvsuser'];
-
-            for ($logini = 0; $logini < count($cvslogins); $logini++) {
-                if (!isset($cvsuser[$logini])) {
-                    continue;
-                }
-
-                $cvslogin = $cvslogins[$logini];
-                $email = $emails[$logini];
-                $firstName = $firstnames[$logini];
-                $lastName = $lastnames[$logini];
-
-                // Call the register_user function
-                $xml .= $this->register_user($projectid, $email, $firstName, $lastName, $cvslogin);
+                $xml .= $this->register_user($projectid, $email, $firstName, $lastName);
             }
         }
 
@@ -153,7 +126,6 @@ final class ManageProjectRolesController extends AbstractProjectController
                 $UserProject->Role = $role;
                 $UserProject->EmailType = 1;
                 $UserProject->Save();
-                $UserProject->AddCredential($repositoryCredential);
             }
         }
 
@@ -162,18 +134,13 @@ final class ManageProjectRolesController extends AbstractProjectController
         // Remove the user
         if ($removeuser) {
             DB::delete('DELETE FROM user2project WHERE userid=? AND projectid=?', [$userid, $projectid]);
-            DB::delete('DELETE FROM user2repository WHERE userid=? AND projectid=?', [$userid, $projectid]);
         }
 
         // Update the user
         if ($updateuser) {
-            // Update the credentials
             $UserProject = new UserProject();
             $UserProject->ProjectId = $projectid;
             $UserProject->UserId = $userid;
-
-            $credentials_array = explode(';', $credentials);
-            $UserProject->UpdateCredentials($credentials_array);
 
             $UserProject->Role = $role;
             $UserProject->EmailType = $emailtype;
@@ -308,22 +275,6 @@ final class ManageProjectRolesController extends AbstractProjectController
                 $xml .= add_XML_value('lastname', $user_array['lastname']);
                 $xml .= add_XML_value('email', $user_array['email']);
 
-                $credentials = $db->executePrepared('
-                                   SELECT credential
-                                   FROM user2repository as ur
-                                   WHERE
-                                       ur.userid=?
-                                       AND (
-                                           ur.projectid=?
-                                           OR ur.projectid=0
-                                       )
-                               ', [$userid, intval($projectid)]);
-                add_last_sql_error('ManageProjectRole');
-
-                foreach ($credentials as $credentials_array) {
-                    $xml .= add_XML_value('repositorycredential', $credentials_array['credential']);
-                }
-
                 $xml .= add_XML_value('role', $user_array['role']);
                 $xml .= add_XML_value('emailtype', $user_array['emailtype']);
 
@@ -374,7 +325,7 @@ final class ManageProjectRolesController extends AbstractProjectController
         return array_unique($userids);
     }
 
-    private function register_user($projectid, $email, $firstName, $lastName, $repositoryCredential)
+    private function register_user($projectid, $email, $firstName, $lastName)
     {
         if (config('auth.project_admin_registration_form_enabled') === false) {
             return '<error>Users cannot be registered via this form at the current time.</error>';
@@ -397,11 +348,6 @@ final class ManageProjectRolesController extends AbstractProjectController
                 $UserProject->EmailType = 1;
                 $UserProject->Save();
 
-                // We add the credentials if not already added
-                $UserProject->AddCredential($repositoryCredential);
-                $UserProject->ProjectId = 0;
-                $UserProject->AddCredential($email); // Add the email by default
-
                 if (strlen(pdo_error()) > 0) {
                     throw new RuntimeException(pdo_error());
                 }
@@ -410,12 +356,6 @@ final class ManageProjectRolesController extends AbstractProjectController
             }
             return '<error>User ' . $email . ' already registered.</error>';
         } // already registered
-
-        // Check if the repositoryCredential exists for this project
-        $UserProject->RepositoryCredential = $repositoryCredential;
-        if ($UserProject->FillFromRepositoryCredential() === true) {
-            return '<error>' . $repositoryCredential . ' was already registered for this project under a different email address</error>';
-        }
 
         // Register the user
         // Create a new password
@@ -436,11 +376,6 @@ final class ManageProjectRolesController extends AbstractProjectController
         $UserProject->Role = 0;
         $UserProject->EmailType = 1;
         $UserProject->Save();
-
-        // We add the credentials if not already added
-        $UserProject->AddCredential($repositoryCredential);
-        $UserProject->ProjectId = 0;
-        $UserProject->AddCredential($email); // Add the email by default
 
         $prefix = '';
         if (strlen($firstName) > 0) {
