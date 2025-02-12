@@ -1524,23 +1524,8 @@ class Build
         // Find user by email address.
         $user = User::firstWhere('email', $email);
         if ($user === null) {
-            // Find user by author name.
-            $stmt = $this->PDO->prepare(
-                'SELECT up.userid FROM user2project AS up
-                JOIN user2repository AS ur ON (ur.userid=up.userid)
-                WHERE up.projectid=:projectid
-                AND (ur.credential=:author OR ur.credential=:email)
-                AND (ur.projectid=0 OR ur.projectid=:projectid)');
-            $stmt->bindParam(':projectid', $this->ProjectId);
-            $stmt->bindParam(':author', $author);
-            $stmt->bindParam(':email', $email);
-            pdo_execute($stmt);
-            $row = $stmt->fetch();
-            if (!$row) {
-                // Unable to find user, return early.
-                return;
-            }
-            $userid = $row['userid'];
+            // Unable to find user, return early.
+            return;
         } else {
             $userid = $user->id;
         }
@@ -2700,19 +2685,7 @@ class Build
      */
     public function AuthoredBy(SubscriberInterface $subscriber): bool
     {
-        $authoredBy = false;
-        $authors = $this->GetCommitAuthors();
-        $credentials = $subscriber->getUserCredentials();
-        $credentials[] = $subscriber->getAddress();
-
-        foreach (array_unique($credentials) as $credential) {
-            if (in_array($credential, $authors)) {
-                $authoredBy = true;
-                break;
-            }
-        }
-
-        return $authoredBy;
+        return in_array($subscriber->getAddress(), $this->GetCommitAuthors());
     }
 
     /**

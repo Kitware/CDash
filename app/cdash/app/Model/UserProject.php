@@ -19,13 +19,11 @@ namespace CDash\Model;
 
 use App\Models\User;
 use CDash\Database;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class UserProject
 {
     public $Role;
-    public $RepositoryCredential;
     public $EmailType;
     public $EmailCategory;
     public $EmailMissingSites; // send email when a site is missing for the project (expected builds)
@@ -132,125 +130,6 @@ class UserProject
                 return false;
             }
         }
-        return true;
-    }
-
-    /** Update the credentials for a project */
-    public function UpdateCredentials(array $credentials): bool
-    {
-        if (!$this->UserId) {
-            Log::error('UserId not set', [
-                'method' => 'UserProject UpdateCredentials()',
-                'projectid' => $this->ProjectId,
-            ]);
-            return false;
-        }
-
-        // Insert the new credentials
-        foreach ($credentials as $credential) {
-            $this->AddCredential($credential);
-        }
-
-        $db = Database::getInstance();
-
-        // Remove the one that have been removed
-        $prepared_array = $db->createPreparedArray(count($credentials));
-        DB::delete("
-            DELETE FROM user2repository
-            WHERE
-                userid=?
-                AND projectid=?
-                AND credential NOT IN $prepared_array
-        ", array_merge([$this->UserId, $this->ProjectId], $credentials));
-        return true;
-    }
-
-    /** Add a credential for a given project */
-    public function AddCredential($credential): bool
-    {
-        if (empty($credential)) {
-            return false;
-        }
-
-        if (!$this->UserId) {
-            Log::error('UserId not set', [
-                'method' => 'UserProject AddCredential()',
-                'projectid' => $this->ProjectId,
-            ]);
-            return false;
-        }
-
-        $db = Database::getInstance();
-
-        // Check if the credential exists for all the project or the given project
-        $query = $db->executePreparedSingleRow('
-                     SELECT COUNT(*) AS c
-                     FROM user2repository
-                     WHERE
-                         userid=?
-                         AND (projectid=? OR projectid=0)
-                         AND credential=?
-                 ', [intval($this->UserId), intval($this->ProjectId), $credential]);
-        add_last_sql_error('UserProject AddCredential');
-
-        if (intval($query['c']) === 0) {
-            $db->executePrepared('
-                INSERT INTO user2repository (userid, projectid, credential)
-                VALUES(?, ?, ?)
-            ', [intval($this->UserId), intval($this->ProjectId), $credential]);
-            add_last_sql_error('UserProject AddCredential');
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     *  Fill in the information given a projectid and a repository credential.
-     *  This function expects the emailtype > 0
-     */
-    public function FillFromRepositoryCredential(): bool
-    {
-        if (!$this->ProjectId) {
-            Log::error('ProjectId not set', [
-                'method' => 'UserProject FillFromRepositoryCredential()',
-                'projectid' => $this->ProjectId,
-                'userid' => $this->UserId,
-            ]);
-            return false;
-        }
-
-        if (!$this->RepositoryCredential) {
-            Log::error('RepositoryCredential not set', [
-                'method' => 'UserProject FillFromRepositoryCredential()',
-                'projectid' => $this->ProjectId,
-                'userid' => $this->UserId,
-            ]);
-            return false;
-        }
-
-        $db = Database::getInstance();
-
-        $user = $db->executePreparedSingleRow('
-                   SELECT up.emailcategory, up.userid, up.emailsuccess
-                   FROM user2project AS up, user2repository AS ur
-                   WHERE up.projectid=?
-                       AND up.userid=ur.userid
-                       AND (ur.projectid=0 OR ur.projectid=up.projectid)
-                       AND ur.credential=?
-                       AND up.emailtype>0
-               ', [intval($this->ProjectId), $this->RepositoryCredential]);
-
-        if ($user === false) {
-            add_last_sql_error('UserProject FillFromRepositoryCredential');
-            return false;
-        }
-
-        if (empty($user)) {
-            return false;
-        }
-        $this->EmailCategory = $user['emailcategory'];
-        $this->UserId = $user['userid'];
-        $this->EmailSuccess = $user['emailsuccess'];
         return true;
     }
 

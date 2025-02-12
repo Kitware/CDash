@@ -25,7 +25,6 @@ use CDash\Database;
 use CDash\Model\BuildGroup;
 use CDash\Model\BuildGroupRule;
 use CDash\Model\Project;
-use CDash\Model\UserProject;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -887,64 +886,6 @@ function cleanUserTemp(): void
     DB::delete('DELETE FROM usertemp WHERE registrationdate < ?', [$now]);
 }
 
-/** Send an email to administrator of the project for users who are not registered */
-function sendEmailUnregisteredUsers(int $projectid, $cvsauthors): void
-{
-    $unregisteredusers = [];
-    foreach ($cvsauthors as $author) {
-        if ($author == 'Local User') {
-            continue;
-        }
-
-        $UserProject = new UserProject();
-        $UserProject->RepositoryCredential = $author;
-        $UserProject->ProjectId = $projectid;
-
-        if (!$UserProject->FillFromRepositoryCredential()) {
-            $unregisteredusers[] = $author;
-        }
-    }
-
-    // Send the email if any
-    if (count($unregisteredusers) > 0) {
-        $db = Database::getInstance();
-
-        // Find the project administrators
-        $recipients = [];
-        $emails = $db->executePrepared('
-                      SELECT email
-                      FROM
-                          users AS u,
-                          user2project
-                      WHERE
-                          u.id=user2project.userid
-                          AND user2project.projectid=?
-                          AND user2project.role=2', [$projectid]);
-        foreach ($emails as $emails_array) {
-            $recipients[] = $emails_array['email'];
-        }
-
-        // Send the email
-        if (!empty($recipients)) {
-            $projectname = get_project_name($projectid);
-
-            $title = 'CDash [' . $projectname . '] - Unregistered users';
-            $body = 'The following users are checking in code but are not registered for the project ' . $projectname . ":\n";
-
-            foreach ($unregisteredusers as $unreg) {
-                $body .= '* ' . $unreg . "\n";
-            }
-            $body .= "\n You should register these users to your project. They are currently not receiving any emails from CDash.\n";
-            $body .= "\n-CDash\n";
-
-            Mail::raw($body, function ($message) use ($title, $recipients) {
-                $message->subject($title)
-                    ->to($recipients);
-            });
-        }
-    }
-}
-
 /** Add daily changes if necessary */
 function addDailyChanges(int $projectid): void
 {
@@ -987,11 +928,6 @@ function addDailyChanges(int $projectid): void
             if (!in_array(stripslashes($author), $cvsauthors)) {
                 $cvsauthors[] = stripslashes($author);
             }
-        }
-
-        // If the project has the option to send an email to the author
-        if ($project->EmailAdministrator) {
-            sendEmailUnregisteredUsers($projectid, $cvsauthors);
         }
 
         // Send an email if some expected builds have not been submitting
