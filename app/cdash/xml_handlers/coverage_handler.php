@@ -15,6 +15,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use App\Http\Submission\Traits\UpdatesSiteInformation;
 use App\Models\Site;
 use App\Models\SiteInformation;
 use App\Utils\SubmissionUtils;
@@ -28,6 +29,8 @@ use CDash\Model\SubProject;
 
 class CoverageHandler extends AbstractXmlHandler
 {
+    use UpdatesSiteInformation;
+
     private $StartTimeStamp;
     private $EndTimeStamp;
 
@@ -83,7 +86,7 @@ class CoverageHandler extends AbstractXmlHandler
                 }
             }
 
-            $this->Site->mostRecentInformation()->save($siteInformation);
+            $this->updateSiteInfoIfChanged($this->Site, $siteInformation);
 
             $this->Build->SiteId = $this->Site->id;
             $this->Build->Name = $attributes['BUILDNAME'];

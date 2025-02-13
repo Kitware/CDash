@@ -33,7 +33,6 @@ class SiteInformation extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'timestamp',
         'processoris64bits',
         'processorvendor',
         'processorvendorid',

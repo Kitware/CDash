@@ -103,7 +103,7 @@ class TestUseCaseTest extends CDashUseCaseTestCase
         $builds = $handler->GetBuildCollection();
         /** @var Build $build */
         $build = $builds->current();
-        $information = $build->GetSite()->mostRecentInformation;
+        $information = $build->GetSite()?->refresh()->mostRecentInformation;
 
         $this->assertEquals($siteInformation['Description'], $information?->description);
         $this->assertEquals($siteInformation['Is64Bits'], $information?->processoris64bits);

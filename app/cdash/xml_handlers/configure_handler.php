@@ -15,6 +15,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use App\Http\Submission\Traits\UpdatesSiteInformation;
 use App\Models\Site;
 use App\Models\SiteInformation;
 use App\Utils\SubmissionUtils;
@@ -33,6 +34,8 @@ use CDash\Model\SubscriberInterface;
 
 class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInterface
 {
+    use UpdatesSiteInformation;
+
     private $StartTimeStamp;
     private $EndTimeStamp;
     private $Builds;
@@ -117,7 +120,7 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
                 $this->BuildName = '(empty)';
             }
 
-            $this->Site->mostRecentInformation()->save($siteInformation);
+            $this->updateSiteInfoIfChanged($this->Site, $siteInformation);
         } elseif ($name == 'SUBPROJECT') {
             $this->SubProjectName = $attributes['NAME'];
             if (!array_key_exists($this->SubProjectName, $this->SubProjects)) {
