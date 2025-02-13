@@ -22,7 +22,6 @@ use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildGroup;
 use CDash\Model\Project;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -134,22 +133,7 @@ class Index extends ResultsApi
     {
         $query_params = [];
 
-        // If the user is logged in we display if the build has some changes for them.
-        $userupdatesql = '';
-        if (Auth::check()) {
-            $userupdatesql = '(SELECT count(updatefile.updateid) FROM updatefile,build2update,user2project,user2repository
-                    WHERE build2update.buildid=b.id
-                    AND build2update.updateid=updatefile.updateid
-                    AND user2project.projectid=b.projectid
-                    AND user2project.userid=?
-                    AND user2repository.userid=user2project.userid
-                    AND (user2repository.projectid=0 OR user2repository.projectid=b.projectid)
-                    AND user2repository.credential=updatefile.author) AS userupdates,';
-
-            $query_params[] = Auth::id();
-        }
-
-        $sql = $this->getIndexQuery($userupdatesql);
+        $sql = $this->getIndexQuery();
         $sql .= " WHERE b.projectid=? AND g.type='Daily' ";
         $query_params[] = (int) $this->project->Id;
 
@@ -278,10 +262,10 @@ class Index extends ResultsApi
 
     // Encapsulate this monster query so that it is not duplicated between
     // index.php and get_dynamic_builds.
-    public function getIndexQuery(string $userupdatesql = ''): string
+    public function getIndexQuery(): string
     {
         return
-            "SELECT b.id,b.siteid,b.parentid,b.done,b.changeid,b.testduration,
+            'SELECT b.id,b.siteid,b.parentid,b.done,b.changeid,b.testduration,
             bu.status AS updatestatus,
             b.osname AS osname,
             bu.starttime AS updatestarttime,
@@ -306,8 +290,7 @@ class Index extends ResultsApi
             tstatusfailed_diff.difference_negative AS countteststimestatusfaileddiffn,
             (SELECT count(buildid) FROM build2note WHERE buildid=b.id)  AS countnotes,
             (SELECT count(buildid) FROM comments WHERE buildid=b.id) AS countcomments,
-            $userupdatesql
-                s.name AS sitename,
+            s.name AS sitename,
             s.outoforder AS siteoutoforder,
             b.stamp,b.name,b.type,b.generator,b.starttime,b.endtime,b.submittime,
             b.configureerrors AS countconfigureerrors,
@@ -347,7 +330,7 @@ class Index extends ResultsApi
                 LEFT JOIN testdiff AS tpassed_diff ON (tpassed_diff.buildid=b.id AND tpassed_diff.type=2)
                 LEFT JOIN testdiff AS tstatusfailed_diff ON (tstatusfailed_diff.buildid=b.id AND tstatusfailed_diff.type=3)
                 LEFT JOIN subproject2build AS sp2b ON (sp2b.buildid = b.id)
-                LEFT JOIN subproject as sp ON (sp2b.subprojectid = sp.id)";
+                LEFT JOIN subproject as sp ON (sp2b.subprojectid = sp.id)';
     }
 
     public function populateBuildRow(array $build_row): array
@@ -729,9 +712,6 @@ class Index extends ResultsApi
             }
         }
 
-        if (isset($build_array['userupdates'])) {
-            $build_response['userupdates'] = $build_array['userupdates'];
-        }
         $build_response['id'] = (int) $build_array['id'];
         $build_response['done'] = $build_array['done'];
 

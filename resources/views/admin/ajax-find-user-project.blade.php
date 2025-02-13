@@ -13,7 +13,6 @@
                             <option value="1">Site maintainer</option>
                             <option value="2">Project administrator</option>
                         </select>
-                        Repository credential: <input name="repositoryCredential" type="text" size="20"/>
                         <input name="adduser" type="submit" value="add user">
                     </form>
                 </font>

@@ -122,7 +122,6 @@
                 <td><center><b>User</b></center></td>
                 <td><center><b>Email</b></center></td>
                 <td><center><b>Role</b></center></td>
-                <td><center><b>Repository Credentials<br/>(cred1;cred2;)</b></center></td>
                 <td><center><b>Notifications</b></center></td>
                 <td><center><b>Action</b></center></td>
                </tr>
@@ -143,11 +142,6 @@
                  <option value="1"><xsl:if test="role=1"><xsl:attribute name="selected"></xsl:attribute></xsl:if>Site maintainer</option>
                  <option value="2"><xsl:if test="role=2"><xsl:attribute name="selected"></xsl:attribute></xsl:if>Project Administrator</option>
                 </select>
-                </td>
-               <td>
-                 <input name="credentials" type="text">
-                  <xsl:attribute name="value"><xsl:for-each select="repositorycredential"><xsl:value-of select="."/>;</xsl:for-each></xsl:attribute>
-                 </input>
                 </td>
                 <td>
                 <select name="emailtype">
@@ -238,14 +232,6 @@
               </td>
               </tr>
               <tr>
-              <td><div align="right">Repository credential:</div></td>
-              <td>
-              <input name="registeruserrepositorycredential" type="text" id="registeruserrepositorycredential" size="40"/>
-              * email address is automatically added as a credential
-              </td>
-              </tr>
-              <tr>
-              <td></td>
               <td>
               <input type="submit" name="registerUser" value="Register User"/>
               </td>

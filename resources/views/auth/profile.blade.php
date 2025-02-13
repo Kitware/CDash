@@ -18,9 +18,6 @@
     <form method="post" action="" id="password_form">
         @csrf
     </form>
-    <form method="post" action="" id="credentials_form">
-        @csrf
-    </form>
 
     <table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb striped">
         <thead>
@@ -157,73 +154,6 @@
                 </td>
             </tr>
 
-            {{-- Credentials Form --}}
-            <tr>
-                <td width="20%" height="2">
-                    <div align="right">Repository Credential #1</div>
-                </td>
-                <td width="80%" height="2">
-                    @if(count($credentials) === 0)
-                        Not found (you should really add it)
-                    @else
-                        {{ $credentials[0] }}
-                    @endif
-                </td>
-            </tr>
-            <tr>
-                <td width="20%" height="2">
-                    <div align="right">Repository Credential #2</div>
-                </td>
-                <td width="80%" height="2">
-                    <input
-                        class="textbox"
-                        type="text"
-                        name="credentials[1]"
-                        value="{{ $credentials[1] ?? '' }}"
-                        form="credentials_form"
-                    >
-                </td>
-            </tr>
-            <tr>
-                <td width="20%" height="2">
-                    <div align="right">Repository Credential #3</div>
-                </td>
-                <td width="80%" height="2">
-                    <input
-                        class="textbox"
-                        type="text"
-                        name="credentials[2]"
-                        value="{{ $credentials[2] ?? '' }}"
-                        form="credentials_form"
-                    >
-                </td>
-            </tr>
-            <tr>
-                <td width="20%" height="2">
-                    <div align="right">Repository Credential #4</div>
-                </td>
-                <td width="80%" height="2">
-                    <input
-                        class="textbox"
-                        type="text"
-                        name="credentials[3]"
-                        value="{{ $credentials[3] ?? '' }}"
-                        form="credentials_form"
-                    >
-                </td>
-            </tr>
-            <tr>
-                <td width="20%"></td>
-                <td width="80%">
-                    <input
-                        type="submit"
-                        value="Update Credentials"
-                        name="updatecredentials"
-                        class="textbox"
-                        form="credentials_form"
-                    >
-                </td>
-            </tr>
             {{-- Other Misc Info --}}
             <tr>
                 <td width="20%" height="2">
