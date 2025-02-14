@@ -26,6 +26,9 @@ use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 
 abstract class AbstractXmlHandler extends AbstractSubmissionHandler
 {
+    /**
+     * @var Stack<string>
+     */
     private Stack $stack;
     protected bool $Append = false;
     protected Site $Site;
@@ -103,9 +106,34 @@ abstract class AbstractXmlHandler extends AbstractSubmissionHandler
         return $errors;
     }
 
-    protected function getParent()
+    protected function getParent(): ?string
     {
+        if ($this->stack->size() <= 1) {
+            return null;
+        }
+
         return $this->stack->at($this->stack->size() - 2);
+    }
+
+    protected function currentPathMatches(string $path): bool
+    {
+        $path = explode('.', $path);
+
+        // We can return early if this isn't even the right level of the document
+        if ($this->stack->size() !== count($path)) {
+            return false;
+        }
+
+        for ($i = 0; $i < $this->stack->size(); $i++) {
+            if ($path[$i] === '*') {  // Wildcard matches any string at a given level (but only one level)
+                continue;
+            } elseif (strtoupper($path[$i]) === strtoupper((string) $this->stack->at($i))) {  // Match the specified string
+                continue;
+            } else {
+                return false;
+            }
+        }
+        return true;
     }
 
     protected function getElement()

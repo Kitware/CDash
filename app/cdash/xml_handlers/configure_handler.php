@@ -66,7 +66,7 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
     {
         parent::startElement($parser, $name, $attributes);
 
-        if ($name == 'SITE') {
+        if ($this->currentPathMatches('site')) {
             $sitename = !empty($attributes['NAME']) ? $attributes['NAME'] : '(empty)';
             $this->Site = Site::firstOrCreate(['name' => $sitename], ['name' => $sitename]);
 
@@ -141,10 +141,6 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
 
     public function endElement($parser, $name): void
     {
-        $parent = $this->getParent();
-
-        parent::endElement($parser, $name);
-
         if ($name == 'CONFIGURE') {
             $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
             $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp);
@@ -249,11 +245,13 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
             // so only need to do this once
             $build->UpdateParentConfigureNumbers(
                 (int) $this->Configure->NumberOfWarnings, (int) $this->Configure->NumberOfErrors);
-        } elseif ($name == 'LABEL' && $parent == 'LABELS') {
+        } elseif ($name === 'LABEL' && $this->getParent() === 'LABELS') {
             if (isset($this->Configure)) {
                 $this->Configure->AddLabel($this->Label);
             }
         }
+
+        parent::endElement($parser, $name);
     }
 
     public function text($parser, $data)

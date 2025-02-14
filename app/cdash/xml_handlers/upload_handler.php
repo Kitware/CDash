@@ -77,7 +77,7 @@ class UploadHandler extends AbstractXmlHandler
             return;
         }
 
-        if ($name === 'SITE') {
+        if ($this->currentPathMatches('site')) {
             $site_name = !empty($attributes['NAME']) ? $attributes['NAME'] : '(empty)';
             $this->Site = Site::firstOrCreate(['name' => $site_name], ['name' => $site_name]);
 

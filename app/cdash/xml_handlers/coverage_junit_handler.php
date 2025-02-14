@@ -48,7 +48,7 @@ class CoverageJUnitHandler extends AbstractXmlHandler
     {
         parent::startElement($parser, $name, $attributes);
         $parent = $this->getParent();
-        if ($name == 'SITE') {
+        if ($this->currentPathMatches('site')) {
             $site_name = !empty($attributes['NAME']) ? $attributes['NAME'] : '(empty)';
             $this->Site = Site::firstOrCreate(['name' => $site_name], ['name' => $site_name]);
 
@@ -132,8 +132,7 @@ class CoverageJUnitHandler extends AbstractXmlHandler
     /** End element */
     public function endElement($parser, $name): void
     {
-        parent::endElement($parser, $name);
-        if ($name == 'SITE') {
+        if ($this->currentPathMatches('site')) {
             $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
             $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp);
 
@@ -171,6 +170,8 @@ class CoverageJUnitHandler extends AbstractXmlHandler
                 $this->Coverage->AddLabel($this->Label);
             }
         }
+
+        parent::endElement($parser, $name);
     }
 
     /** Text function */

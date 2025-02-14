@@ -29410,11 +29410,6 @@ parameters:
 			path: app/cdash/xml_handlers/abstract_xml_handler.php
 
 		-
-			message: "#^Method AbstractXmlHandler\\:\\:getParent\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/abstract_xml_handler.php
-
-		-
 			message: "#^Method AbstractXmlHandler\\:\\:getSubProjectName\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/abstract_xml_handler.php
@@ -29491,7 +29486,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 29
+			count: 21
 			path: app/cdash/xml_handlers/build_handler.php
 
 		-
@@ -29696,7 +29691,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 13
+			count: 10
 			path: app/cdash/xml_handlers/configure_handler.php
 
 		-
@@ -29841,7 +29836,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 12
+			count: 10
 			path: app/cdash/xml_handlers/coverage_handler.php
 
 		-
@@ -29926,7 +29921,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 14
+			count: 12
 			path: app/cdash/xml_handlers/coverage_junit_handler.php
 
 		-
@@ -30021,7 +30016,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 7
+			count: 6
 			path: app/cdash/xml_handlers/coverage_log_handler.php
 
 		-
@@ -30231,7 +30226,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 22
+			count: 18
 			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
 
 		-
@@ -30366,7 +30361,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 5
+			count: 4
 			path: app/cdash/xml_handlers/note_handler.php
 
 		-
@@ -30626,7 +30621,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 34
+			count: 25
 			path: app/cdash/xml_handlers/testing_handler.php
 
 		-
@@ -30791,7 +30786,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 21
+			count: 20
 			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
@@ -30946,7 +30941,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 23
+			count: 22
 			path: app/cdash/xml_handlers/update_handler.php
 
 		-
