@@ -15,15 +15,17 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use App\Http\Submission\Traits\UpdatesSiteInformation;
 use App\Models\Site;
 use App\Models\SiteInformation;
 use App\Utils\SubmissionUtils;
 use App\Utils\TestCreator;
-use CDash\Model\Build;
 use CDash\Model\Project;
 
 class TestingJUnitHandler extends AbstractXmlHandler
 {
+    use UpdatesSiteInformation;
+
     private $StartTimeStamp;
     private $EndTimeStamp;
     // Should we update the end time of the build?
@@ -100,7 +102,7 @@ class TestingJUnitHandler extends AbstractXmlHandler
                 }
             }
 
-            $this->Site->mostRecentInformation()->save($siteInformation);
+            $this->updateSiteInfoIfChanged($this->Site, $siteInformation);
 
             $this->Build->SiteId = $this->Site->id;
             $this->Build->Name = $attributes['BUILDNAME'];

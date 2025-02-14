@@ -99,7 +99,7 @@ class UpdateSiteDescriptionTest extends TestCase
 
     public function testMutationPreservesPreviousInformation(): void
     {
-        $this->site->information()->create([
+        $this->site->information()->forceCreate([
             'timestamp' => Carbon::create(2020),
             'description' => Str::uuid()->toString(),
             'processorclockfrequency' => 1234,

@@ -18081,11 +18081,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
 
 		-
-			message: "#^Cannot access property \\$mostRecentInformation on App\\\\Models\\\\Site\\|null\\.$#"
-			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
 			message: "#^Cannot call method GetTestCollection\\(\\) on mixed\\.$#"
 			count: 4
 			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
@@ -29490,6 +29485,11 @@ parameters:
 			path: app/cdash/xml_handlers/build_handler.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\SiteInformation\\>\\:\\:count\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/build_handler.php
+
+		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 29
 			path: app/cdash/xml_handlers/build_handler.php
@@ -29695,6 +29695,11 @@ parameters:
 			path: app/cdash/xml_handlers/configure_handler.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\SiteInformation\\>\\:\\:count\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/configure_handler.php
+
+		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 13
 			path: app/cdash/xml_handlers/configure_handler.php
@@ -29840,6 +29845,11 @@ parameters:
 			path: app/cdash/xml_handlers/coverage_handler.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\SiteInformation\\>\\:\\:count\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/coverage_handler.php
+
+		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 12
 			path: app/cdash/xml_handlers/coverage_handler.php
@@ -29922,6 +29932,11 @@ parameters:
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 2
+			path: app/cdash/xml_handlers/coverage_junit_handler.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\SiteInformation\\>\\:\\:count\\(\\)\\.$#"
+			count: 1
 			path: app/cdash/xml_handlers/coverage_junit_handler.php
 
 		-
@@ -30230,6 +30245,11 @@ parameters:
 			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\SiteInformation\\>\\:\\:count\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
+
+		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 22
 			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
@@ -30357,6 +30377,11 @@ parameters:
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 2
+			path: app/cdash/xml_handlers/note_handler.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\SiteInformation\\>\\:\\:count\\(\\)\\.$#"
+			count: 1
 			path: app/cdash/xml_handlers/note_handler.php
 
 		-
@@ -30625,6 +30650,11 @@ parameters:
 			path: app/cdash/xml_handlers/testing_handler.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\SiteInformation\\>\\:\\:count\\(\\)\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/testing_handler.php
+
+		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 34
 			path: app/cdash/xml_handlers/testing_handler.php
@@ -30787,6 +30817,11 @@ parameters:
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 4
+			path: app/cdash/xml_handlers/testing_j_unit_handler.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\SiteInformation\\>\\:\\:count\\(\\)\\.$#"
+			count: 1
 			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
@@ -31022,6 +31057,11 @@ parameters:
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 2
+			path: app/cdash/xml_handlers/upload_handler.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\SiteInformation\\>\\:\\:count\\(\\)\\.$#"
+			count: 1
 			path: app/cdash/xml_handlers/upload_handler.php
 
 		-
@@ -31869,6 +31909,11 @@ parameters:
 			message: "#^Dynamic call to static method Illuminate\\\\Http\\\\Response\\:\\:content\\(\\)\\.$#"
 			count: 1
 			path: tests/Feature/SlowPageTest.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\SiteInformation\\>\\:\\:count\\(\\)\\.$#"
+			count: 1
+			path: tests/Feature/Traits/UpdatesSiteInformationTest.php
 
 		-
 			message: "#^Cannot access property \\$admin on App\\\\Models\\\\User\\|null\\.$#"

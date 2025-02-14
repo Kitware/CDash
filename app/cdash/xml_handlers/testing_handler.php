@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Submission\Traits\UpdatesSiteInformation;
 use App\Models\Site;
 use App\Models\SiteInformation;
 use App\Models\TestMeasurement;
@@ -25,6 +26,7 @@ use CDash\Submission\CommitAuthorHandlerTrait;
 class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterface, CommitAuthorHandlerInterface
 {
     use CommitAuthorHandlerTrait;
+    use UpdatesSiteInformation;
 
     protected static ?string $schema_file = '/app/Validators/Schemas/Test.xsd';
     private $StartTimeStamp;
@@ -126,7 +128,7 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
             if (empty($this->BuildName)) {
                 $this->BuildName = '(empty)';
             }
-            $this->Site->mostRecentInformation()->save($siteInformation);
+            $this->updateSiteInfoIfChanged($this->Site, $siteInformation);
         } elseif ($name == 'SUBPROJECT') {
             $this->SubProjectName = $attributes['NAME'];
             if (!array_key_exists($this->SubProjectName, $this->SubProjects)) {

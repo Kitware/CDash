@@ -15,15 +15,17 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use App\Http\Submission\Traits\UpdatesSiteInformation;
 use App\Models\Site;
 use App\Models\SiteInformation;
 use App\Utils\NoteCreator;
 use App\Utils\SubmissionUtils;
-use CDash\Model\Build;
 use CDash\Model\Project;
 
 class NoteHandler extends AbstractXmlHandler
 {
+    use UpdatesSiteInformation;
+
     private $AdjustStartTime;
     private $NoteCreator;
     protected static ?string $schema_file = '/app/Validators/Schemas/Notes.xsd';
@@ -73,7 +75,7 @@ class NoteHandler extends AbstractXmlHandler
                 }
             }
 
-            $this->Site->mostRecentInformation()->save($siteInformation);
+            $this->updateSiteInfoIfChanged($this->Site, $siteInformation);
 
             $this->Build->SiteId = $this->Site->id;
             $this->Build->Name = $attributes['BUILDNAME'];

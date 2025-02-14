@@ -134,35 +134,33 @@ class SitesIdPageTest extends BrowserTestCase
     public function testHistoryList(): void
     {
         $this->sites['site1'] = $this->makeSite();
-        $this->sites['site1']->information()->createMany([
-            [
-                'timestamp' => Carbon::now()->subMinutes(5),
-                'totalphysicalmemory' => 5678,
-                'numberphysicalcpus' => 2,
-            ],
-            [
-                'timestamp' => Carbon::now()->subMinutes(4),
-                'totalphysicalmemory' => 8765,
-                'numberphysicalcpus' => 4,
-            ],
-            [
-                'timestamp' => Carbon::now()->subMinutes(3),
-                'totalphysicalmemory' => 8765,
-                'numberphysicalcpus' => 4,
-                'description' => 'description1',
-            ],
-            [
-                'timestamp' => Carbon::now()->subMinutes(2),
-                'totalphysicalmemory' => 8765,
-                'numberphysicalcpus' => 4,
-                'description' => 'description2',
-            ],
-            [
-                'timestamp' => Carbon::now(),
-                'totalphysicalmemory' => 10765,
-                'numberphysicalcpus' => 8,
-                'description' => 'description2',
-            ],
+        $this->sites['site1']->information()->forceCreate([
+            'timestamp' => Carbon::now()->subMinutes(5),
+            'totalphysicalmemory' => 5678,
+            'numberphysicalcpus' => 2,
+        ]);
+        $this->sites['site1']->information()->forceCreate([
+            'timestamp' => Carbon::now()->subMinutes(4),
+            'totalphysicalmemory' => 8765,
+            'numberphysicalcpus' => 4,
+        ]);
+        $this->sites['site1']->information()->forceCreate([
+            'timestamp' => Carbon::now()->subMinutes(3),
+            'totalphysicalmemory' => 8765,
+            'numberphysicalcpus' => 4,
+            'description' => 'description1',
+        ]);
+        $this->sites['site1']->information()->forceCreate([
+            'timestamp' => Carbon::now()->subMinutes(2),
+            'totalphysicalmemory' => 8765,
+            'numberphysicalcpus' => 4,
+            'description' => 'description2',
+        ]);
+        $this->sites['site1']->information()->forceCreate([
+            'timestamp' => Carbon::now(),
+            'totalphysicalmemory' => 10765,
+            'numberphysicalcpus' => 8,
+            'description' => 'description2',
         ]);
 
         $this->browse(function (Browser $browser) {
@@ -198,27 +196,25 @@ class SitesIdPageTest extends BrowserTestCase
     public function testHistoryDeduplication(): void
     {
         $this->sites['site1'] = $this->makeSite();
-        $this->sites['site1']->information()->createMany([
-            [
-                'timestamp' => Carbon::now()->subMinutes(5),
-                'totalphysicalmemory' => 5678,
-                'numberphysicalcpus' => 2,
-            ],
-            [
-                'timestamp' => Carbon::now()->subMinutes(4),
-                'totalphysicalmemory' => 8765,
-                'numberphysicalcpus' => 4,
-            ],
-            [
-                'timestamp' => Carbon::now()->subMinutes(3),
-                'totalphysicalmemory' => 8765,
-                'numberphysicalcpus' => 4,
-            ],
-            [
-                'timestamp' => Carbon::now()->subMinutes(2),
-                'totalphysicalmemory' => 8765,
-                'numberphysicalcpus' => 6,
-            ],
+        $this->sites['site1']->information()->forceCreate([
+            'timestamp' => Carbon::now()->subMinutes(5),
+            'totalphysicalmemory' => 5678,
+            'numberphysicalcpus' => 2,
+        ]);
+        $this->sites['site1']->information()->forceCreate([
+            'timestamp' => Carbon::now()->subMinutes(4),
+            'totalphysicalmemory' => 8765,
+            'numberphysicalcpus' => 4,
+        ]);
+        $this->sites['site1']->information()->forceCreate([
+            'timestamp' => Carbon::now()->subMinutes(3),
+            'totalphysicalmemory' => 8765,
+            'numberphysicalcpus' => 4,
+        ]);
+        $this->sites['site1']->information()->forceCreate([
+            'timestamp' => Carbon::now()->subMinutes(2),
+            'totalphysicalmemory' => 8765,
+            'numberphysicalcpus' => 6,
         ]);
 
         $this->browse(function (Browser $browser) {

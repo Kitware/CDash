@@ -15,10 +15,10 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use App\Http\Submission\Traits\UpdatesSiteInformation;
 use App\Models\Site;
 use App\Models\SiteInformation;
 use App\Utils\SubmissionUtils;
-use CDash\Model\Build;
 use CDash\Model\Label;
 use CDash\Model\Project;
 use CDash\Model\UploadFile;
@@ -43,6 +43,8 @@ use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
  */
 class UploadHandler extends AbstractXmlHandler
 {
+    use UpdatesSiteInformation;
+
     private $UploadFile;
     private $TmpFilename;
     private $Base64TmpFileWriteHandle;
@@ -108,7 +110,7 @@ class UploadHandler extends AbstractXmlHandler
                 }
             }
 
-            $this->Site->mostRecentInformation()->save($siteInformation);
+            $this->updateSiteInfoIfChanged($this->Site, $siteInformation);
 
             $this->Build->SiteId = $this->Site->id;
             $this->Build->Name = $attributes['BUILDNAME'];
