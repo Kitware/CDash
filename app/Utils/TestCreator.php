@@ -21,7 +21,9 @@ use App\Models\Test;
 use App\Models\TestImage;
 use CDash\Model\Build;
 use CDash\Model\Image;
+use ErrorException;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 /**
  * This class is responsible for creating the various models associated
@@ -70,7 +72,13 @@ class TestCreator
 
         // Decode the data
         $imgStr = base64_decode($image->Data);
-        $img = imagecreatefromstring($imgStr);
+        try {
+            $img = imagecreatefromstring($imgStr);
+        } catch (ErrorException) {
+            Log::error("Unable to create image object from data in #{$this->testName}");
+            $image->Checksum = 0;
+            return;
+        }
         ob_start();
         switch ($image->Extension) {
             case 'image/jpeg':
