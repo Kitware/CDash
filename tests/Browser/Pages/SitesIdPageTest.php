@@ -166,6 +166,7 @@ class SitesIdPageTest extends BrowserTestCase
         $this->browse(function (Browser $browser) {
             $browser->visit("/sites/{$this->sites['site1']->id}")
                 ->whenAvailable('@site-history', function (Browser $browser) {
+                    $browser->waitFor('@site-history-item');
                     // Can't use nth child with @ selector unfortunately
                     $browser->assertSeeIn('[data-test="site-history-item"]:nth-child(1)', 'System Update');
                     $browser->assertSeeIn('[data-test="site-history-item"]:nth-child(1)', '10.51 GiB');
