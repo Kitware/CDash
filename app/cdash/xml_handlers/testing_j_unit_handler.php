@@ -70,7 +70,7 @@ class TestingJUnitHandler extends AbstractXmlHandler
         parent::startElement($parser, $name, $attributes);
         $parent = $this->getParent(); // should be before endElement
 
-        if ($name == 'SITE') {
+        if ($this->currentPathMatches('site')) {
             $this->HasSiteTag = true;
             $site_name = !empty($attributes['NAME']) ? $attributes['NAME'] : '(empty)';
             $this->Site = Site::firstOrCreate(['name' => $site_name], ['name' => $site_name]);

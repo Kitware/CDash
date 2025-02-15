@@ -73,8 +73,7 @@ class UpdateHandler extends AbstractXmlHandler implements ActionableBuildInterfa
     /** End element */
     public function endElement($parser, $name): void
     {
-        parent::endElement($parser, $name);
-        if ($name == 'SITE') {
+        if ($this->currentPathMatches('site')) {
             if (!isset($this->Site)) {
                 $this->Site = Site::firstOrCreate(['name' => '(unknown)']);
             } else {
@@ -142,6 +141,8 @@ class UpdateHandler extends AbstractXmlHandler implements ActionableBuildInterfa
             $this->Update->AddFile($this->UpdateFile);
             unset($this->UpdateFile);
         }
+
+        parent::endElement($parser, $name);
     }
 
     /** Text */

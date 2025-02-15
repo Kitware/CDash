@@ -75,7 +75,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
         parent::startElement($parser, $name, $attributes);
         $factory = $this->getModelFactory();
 
-        if ($name == 'SITE') {
+        if ($this->currentPathMatches('site')) {
             $site_name = !empty($attributes['NAME']) ? $attributes['NAME'] : '(empty)';
             $this->Site = Site::firstOrCreate(['name' => $site_name], ['name' => $site_name]);
 
@@ -192,8 +192,6 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
 
     public function endElement($parser, $name): void
     {
-        $parent = $this->getParent(); // should be before endElement
-        parent::endElement($parser, $name);
         $factory = $this->getModelFactory();
 
         if ($name == 'BUILD') {
@@ -302,7 +300,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
                 $this->Builds[$this->SubProjectName]->AddError($this->Error);
             }
             unset($this->Error);
-        } elseif ($name == 'LABEL' && $parent == 'LABELS') {
+        } elseif ($name == 'LABEL' && $this->getParent() === 'LABELS') {
             if (!empty($this->ErrorSubProjectName)) {
                 $this->SubProjectName = $this->ErrorSubProjectName;
             } elseif (isset($this->Error) && $this->Error instanceof BuildFailure) {
@@ -311,13 +309,14 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
                 $this->Labels[] = $this->Label;
             }
         }
+
+        parent::endElement($parser, $name);
     }
 
     public function text($parser, $data)
     {
-        $parent = $this->getParent();
         $element = $this->getElement();
-        if ($parent == 'BUILD') {
+        if ($this->getParent() === 'BUILD') {
             switch ($element) {
                 case 'STARTBUILDTIME':
                     $this->StartTimeStamp = $data;
@@ -329,7 +328,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
                     $this->BuildCommand = htmlspecialchars_decode($data);
                     break;
             }
-        } elseif ($parent == 'ACTION') {
+        } elseif ($this->getParent() === 'ACTION') {
             switch ($element) {
                 case 'LANGUAGE':
                     $this->Error->Language .= $data;
@@ -347,7 +346,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
                     $this->Error->OutputType .= $data;
                     break;
             }
-        } elseif ($parent == 'COMMAND') {
+        } elseif ($this->getParent() === 'COMMAND') {
             switch ($element) {
                 case 'WORKINGDIRECTORY':
                     $this->Error->WorkingDirectory .= $data;
@@ -356,7 +355,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
                     $this->Error->AddArgument($data);
                     break;
             }
-        } elseif ($parent == 'RESULT') {
+        } elseif ($this->getParent() === 'RESULT') {
             switch ($element) {
                 case 'STDOUT':
                     $this->Error->StdOutput .= $data;
@@ -382,9 +381,9 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
             $this->Error->PreContext .= $data;
         } elseif ($element == 'POSTCONTEXT') {
             $this->Error->PostContext .= $data;
-        } elseif ($parent == 'SUBPROJECT' && $element == 'LABEL') {
+        } elseif ($this->getParent() === 'SUBPROJECT' && $element == 'LABEL') {
             $this->SubProjects[$this->SubProjectName][] = $data;
-        } elseif ($parent == 'LABELS' && $element == 'LABEL') {
+        } elseif ($this->getParent() === 'LABELS' && $element == 'LABEL') {
             // First, check if this label belongs to a SubProject
             foreach ($this->SubProjects as $subproject => $labels) {
                 if (in_array($data, $labels)) {

@@ -71,7 +71,7 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
         parent::startElement($parser, $name, $attributes);
         $factory = $this->getModelFactory();
 
-        if ($name == 'SITE') {
+        if ($this->currentPathMatches('site')) {
             $site_name = !empty($attributes['NAME']) ? $attributes['NAME'] : '(empty)';
             $this->Site = Site::firstOrCreate(['name' => $site_name], ['name' => $site_name]);
 
@@ -152,10 +152,8 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
     /** Function endElement */
     public function endElement($parser, $name): void
     {
-        $parent = $this->getParent(); // should be before endElement
-        parent::endElement($parser, $name);
         $factory = $this->getModelFactory();
-        if ($name == 'STARTTESTTIME' && $parent == 'DYNAMICANALYSIS') {
+        if ($name === 'STARTTESTTIME' && $this->getParent() === 'DYNAMICANALYSIS') {
             if (empty($this->SubProjects)) {
                 // Not a SubProject build.
                 $this->createBuild('');
@@ -165,7 +163,7 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
                     $this->createBuild($subproject);
                 }
             }
-        } elseif ($name == 'TEST' && $parent == 'DYNAMICANALYSIS') {
+        } elseif ($name === 'TEST' && $this->getParent() == 'DYNAMICANALYSIS') {
             /** @var Build $build */
             $build = $this->Builds[$this->SubProjectName];
             $GLOBALS['PHP_ERROR_BUILD_ID'] = $build->Id;
@@ -213,6 +211,8 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
                 }
             }
         }
+
+        parent::endElement($parser, $name);
     }
 
     /** Function Text */
