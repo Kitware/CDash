@@ -605,23 +605,7 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated method execute\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
-			path: app/Http/Controllers/BuildController.php
-
-		-
-			message: """
 				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
-			path: app/Http/Controllers/BuildController.php
-
-		-
-			message: """
-				#^Call to deprecated method prepare\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 1
@@ -665,11 +649,6 @@ parameters:
 		-
 			message: "#^Cannot access property \\$name on App\\\\Models\\\\Site\\|null\\.$#"
 			count: 4
-			path: app/Http/Controllers/BuildController.php
-
-		-
-			message: "#^Cannot call method bindParam\\(\\) on PDOStatement\\|false\\.$#"
-			count: 2
 			path: app/Http/Controllers/BuildController.php
 
 		-
@@ -719,7 +698,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 4
+			count: 3
 			path: app/Http/Controllers/BuildController.php
 
 		-
@@ -783,11 +762,6 @@ parameters:
 			path: app/Http/Controllers/BuildController.php
 
 		-
-			message: "#^Only booleans are allowed in a ternary operator condition, PDOStatement\\|false given\\.$#"
-			count: 1
-			path: app/Http/Controllers/BuildController.php
-
-		-
 			message: "#^Only numeric types are allowed in \\*, \\(int\\|false\\) given on the left side\\.$#"
 			count: 2
 			path: app/Http/Controllers/BuildController.php
@@ -840,11 +814,6 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$stmt of function pdo_execute expects PDOStatement, \\(PDOStatement\\|false\\) given\\.$#"
 			count: 4
-			path: app/Http/Controllers/BuildController.php
-
-		-
-			message: "#^Parameter \\#1 \\$stmt of method CDash\\\\Database\\:\\:execute\\(\\) expects PDOStatement, PDOStatement\\|false given\\.$#"
-			count: 1
 			path: app/Http/Controllers/BuildController.php
 
 		-
@@ -1747,7 +1716,7 @@ parameters:
 
 		-
 			message: "#^Argument of an invalid type array\\|false supplied for foreach, only iterables are supported\\.$#"
-			count: 4
+			count: 3
 			path: app/Http/Controllers/ManageProjectRolesController.php
 
 		-
@@ -1760,7 +1729,7 @@ parameters:
 				#^Call to deprecated function add_last_sql_error\\(\\)\\:
 				04/22/2023$#
 			"""
-			count: 2
+			count: 1
 			path: app/Http/Controllers/ManageProjectRolesController.php
 
 		-
@@ -1784,17 +1753,12 @@ parameters:
 				#^Call to deprecated method executePrepared\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 4
+			count: 3
 			path: app/Http/Controllers/ManageProjectRolesController.php
 
 		-
 			message: "#^Cannot access offset 'tmp_name' on mixed\\.$#"
 			count: 1
-			path: app/Http/Controllers/ManageProjectRolesController.php
-
-		-
-			message: "#^Cannot access offset int\\<0, max\\> on mixed\\.$#"
-			count: 5
 			path: app/Http/Controllers/ManageProjectRolesController.php
 
 		-
@@ -1848,11 +1812,6 @@ parameters:
 			path: app/Http/Controllers/ManageProjectRolesController.php
 
 		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\ManageProjectRolesController\\:\\:register_user\\(\\) has parameter \\$repositoryCredential with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/ManageProjectRolesController.php
-
-		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\ManageProjectRolesController\\:\\:viewPage\\(\\) never returns Illuminate\\\\Http\\\\RedirectResponse so it can be removed from the return type\\.$#"
 			count: 1
 			path: app/Http/Controllers/ManageProjectRolesController.php
@@ -1864,7 +1823,7 @@ parameters:
 
 		-
 			message: "#^Only booleans are allowed in an if condition, mixed given\\.$#"
-			count: 6
+			count: 5
 			path: app/Http/Controllers/ManageProjectRolesController.php
 
 		-
@@ -1908,17 +1867,7 @@ parameters:
 			path: app/Http/Controllers/ManageProjectRolesController.php
 
 		-
-			message: "#^Parameter \\#1 \\$value of function count expects array\\|Countable, mixed given\\.$#"
-			count: 1
-			path: app/Http/Controllers/ManageProjectRolesController.php
-
-		-
 			message: "#^Parameter \\#1 \\$value of function intval expects array\\|bool\\|float\\|int\\|resource\\|string\\|null, mixed given\\.$#"
-			count: 1
-			path: app/Http/Controllers/ManageProjectRolesController.php
-
-		-
-			message: "#^Parameter \\#2 \\$string of function explode expects string, mixed given\\.$#"
 			count: 1
 			path: app/Http/Controllers/ManageProjectRolesController.php
 
@@ -2588,11 +2537,6 @@ parameters:
 
 		-
 			message: "#^Argument of an invalid type array\\|false supplied for foreach, only iterables are supported\\.$#"
-			count: 2
-			path: app/Http/Controllers/SubscribeProjectController.php
-
-		-
-			message: "#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\\.$#"
 			count: 1
 			path: app/Http/Controllers/SubscribeProjectController.php
 
@@ -2601,7 +2545,7 @@ parameters:
 				#^Call to deprecated method executePrepared\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 5
+			count: 4
 			path: app/Http/Controllers/SubscribeProjectController.php
 
 		-
@@ -2635,11 +2579,6 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$array of function array_diff expects array, array\\<int\\>\\|false given\\.$#"
 			count: 1
-			path: app/Http/Controllers/SubscribeProjectController.php
-
-		-
-			message: "#^Parameter \\#1 \\$credentials of method CDash\\\\Model\\\\UserProject\\:\\:UpdateCredentials\\(\\) expects array, mixed given\\.$#"
-			count: 2
 			path: app/Http/Controllers/SubscribeProjectController.php
 
 		-
@@ -2802,11 +2741,6 @@ parameters:
 			path: app/Http/Controllers/UserController.php
 
 		-
-			message: "#^Cannot access an offset on mixed\\.$#"
-			count: 1
-			path: app/Http/Controllers/UserController.php
-
-		-
 			message: "#^Cannot access offset 'id' on mixed\\.$#"
 			count: 2
 			path: app/Http/Controllers/UserController.php
@@ -2898,11 +2832,6 @@ parameters:
 
 		-
 			message: "#^Only numeric types are allowed in \\-, int\\|false given on the right side\\.$#"
-			count: 1
-			path: app/Http/Controllers/UserController.php
-
-		-
-			message: "#^Parameter \\#1 \\$credentials of method CDash\\\\Model\\\\UserProject\\:\\:UpdateCredentials\\(\\) expects array, mixed given\\.$#"
 			count: 1
 			path: app/Http/Controllers/UserController.php
 
@@ -7221,7 +7150,7 @@ parameters:
 				#^Call to deprecated function pdo_execute\\(\\)\\:
 				v2\\.5\\.0 01/22/2018$#
 			"""
-			count: 28
+			count: 27
 			path: app/cdash/app/Model/Build.php
 
 		-
@@ -10838,16 +10767,6 @@ parameters:
 			path: app/cdash/app/Model/Subscriber.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Subscriber\\:\\:getUserCredentials\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Subscriber.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Subscriber\\:\\:getUserCredentials\\(\\) should return array but returns array\\|bool\\|null\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Subscriber.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\Subscriber\\:\\:getUserId\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Subscriber.php
@@ -10896,11 +10815,6 @@ parameters:
 			message: "#^Return type \\(CDash\\\\Model\\\\Collection\\) of method CDash\\\\Model\\\\Subscriber\\:\\:getLabels\\(\\) should be compatible with return type \\(array\\<string\\>\\) of method CDash\\\\Model\\\\SubscriberInterface\\:\\:getLabels\\(\\)$#"
 			count: 1
 			path: app/cdash/app/Model/Subscriber.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\SubscriberInterface\\:\\:getUserCredentials\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubscriberInterface.php
 
 		-
 			message: "#^Method CDash\\\\Model\\\\SubscriberInterface\\:\\:setAddress\\(\\) has no return type specified\\.$#"
@@ -11030,22 +10944,12 @@ parameters:
 			path: app/cdash/app/Model/User.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\User\\:\\:GetRepositoryCredentials\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/app/Model/User.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\User\\:\\:Save\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/User.php
 
 		-
 			message: "#^Property CDash\\\\Model\\\\User\\:\\:\\$Admin has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/User.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\User\\:\\:\\$Credentials has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/User.php
 
@@ -11099,7 +11003,7 @@ parameters:
 				#^Call to deprecated function add_last_sql_error\\(\\)\\:
 				04/22/2023$#
 			"""
-			count: 5
+			count: 2
 			path: app/cdash/app/Model/UserProject.php
 
 		-
@@ -11115,7 +11019,7 @@ parameters:
 				#^Call to deprecated method executePrepared\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 3
+			count: 2
 			path: app/cdash/app/Model/UserProject.php
 
 		-
@@ -11123,7 +11027,7 @@ parameters:
 				#^Call to deprecated method executePreparedSingleRow\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 3
+			count: 1
 			path: app/cdash/app/Model/UserProject.php
 
 		-
@@ -11136,26 +11040,11 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'c' on array\\|false\\|null\\.$#"
-			count: 2
-			path: app/cdash/app/Model/UserProject.php
-
-		-
-			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 2
-			path: app/cdash/app/Model/UserProject.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\UserProject\\:\\:AddCredential\\(\\) has parameter \\$credential with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/UserProject.php
 
 		-
 			message: "#^Method CDash\\\\Model\\\\UserProject\\:\\:GetProjects\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/app/Model/UserProject.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\UserProject\\:\\:UpdateCredentials\\(\\) has parameter \\$credentials with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/app/Model/UserProject.php
 
@@ -11186,11 +11075,6 @@ parameters:
 
 		-
 			message: "#^Property CDash\\\\Model\\\\UserProject\\:\\:\\$ProjectId has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/UserProject.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\UserProject\\:\\:\\$RepositoryCredential has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/UserProject.php
 
@@ -13835,7 +13719,7 @@ parameters:
 
 		-
 			message: "#^Argument of an invalid type array\\|false supplied for foreach, only iterables are supported\\.$#"
-			count: 6
+			count: 5
 			path: app/cdash/include/dailyupdates.php
 
 		-
@@ -13864,7 +13748,7 @@ parameters:
 				#^Call to deprecated method executePrepared\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 9
+			count: 8
 			path: app/cdash/include/dailyupdates.php
 
 		-
@@ -13925,7 +13809,7 @@ parameters:
 
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 5
+			count: 4
 			path: app/cdash/include/dailyupdates.php
 
 		-
@@ -14064,11 +13948,6 @@ parameters:
 			path: app/cdash/include/dailyupdates.php
 
 		-
-			message: "#^Function sendEmailUnregisteredUsers\\(\\) has parameter \\$cvsauthors with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/dailyupdates.php
-
-		-
 			message: "#^Implicit array creation is not allowed \\- variable \\$commit might not exist\\.$#"
 			count: 3
 			path: app/cdash/include/dailyupdates.php
@@ -14085,7 +13964,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 15
+			count: 14
 			path: app/cdash/include/dailyupdates.php
 
 		-
@@ -22604,24 +22483,8 @@ parameters:
 			path: app/cdash/tests/test_dynamicanalysissummary.php
 
 		-
-			message: """
-				#^Call to deprecated method execute\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
-			path: app/cdash/tests/test_email.php
-
-		-
 			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
 			count: 5
-			path: app/cdash/tests/test_email.php
-
-		-
-			message: """
-				#^Call to deprecated method prepare\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
 			path: app/cdash/tests/test_email.php
 
 		-
@@ -22630,31 +22493,6 @@ parameters:
 				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
 			count: 10
-			path: app/cdash/tests/test_email.php
-
-		-
-			message: "#^Cannot access offset 'directories' on mixed\\.$#"
-			count: 1
-			path: app/cdash/tests/test_email.php
-
-		-
-			message: "#^Cannot access offset 'email' on mixed\\.$#"
-			count: 1
-			path: app/cdash/tests/test_email.php
-
-		-
-			message: "#^Cannot access offset 'files' on mixed\\.$#"
-			count: 1
-			path: app/cdash/tests/test_email.php
-
-		-
-			message: "#^Cannot access offset 'updategroups' on mixed\\.$#"
-			count: 1
-			path: app/cdash/tests/test_email.php
-
-		-
-			message: "#^Cannot access offset 0 on mixed\\.$#"
-			count: 3
 			path: app/cdash/tests/test_email.php
 
 		-
@@ -22690,11 +22528,6 @@ parameters:
 		-
 			message: "#^Cannot access property \\$type on mixed\\.$#"
 			count: 4
-			path: app/cdash/tests/test_email.php
-
-		-
-			message: "#^Cannot call method fetchColumn\\(\\) on PDOStatement\\|false\\.$#"
-			count: 1
 			path: app/cdash/tests/test_email.php
 
 		-
@@ -22739,11 +22572,6 @@ parameters:
 
 		-
 			message: "#^Only booleans are allowed in a negated boolean, int given\\.$#"
-			count: 1
-			path: app/cdash/tests/test_email.php
-
-		-
-			message: "#^Parameter \\#1 \\$stmt of method CDash\\\\Database\\:\\:execute\\(\\) expects PDOStatement, PDOStatement\\|false given\\.$#"
 			count: 1
 			path: app/cdash/tests/test_email.php
 
@@ -24342,7 +24170,7 @@ parameters:
 
 		-
 			message: "#^Cannot access property \\$id on App\\\\Models\\\\User\\|null\\.$#"
-			count: 3
+			count: 2
 			path: app/cdash/tests/test_manageprojectroles.php
 
 		-

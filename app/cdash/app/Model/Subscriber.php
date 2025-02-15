@@ -151,9 +151,4 @@ class Subscriber implements SubscriberInterface
     {
         return $this->user->Id;
     }
-
-    public function getUserCredentials()
-    {
-        return $this->user->GetRepositoryCredentials();
-    }
 }

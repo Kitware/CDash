@@ -58,9 +58,4 @@ interface SubscriberInterface
      * @return NotificationPreferencesInterface
      */
     public function getNotificationPreferences();
-
-    /**
-     * @return array
-     */
-    public function getUserCredentials();
 }

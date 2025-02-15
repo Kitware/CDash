@@ -7,7 +7,6 @@ use CDash\Database;
 use CDash\Model\Label;
 use CDash\Model\LabelEmail;
 use CDash\Model\Project;
-use CDash\Model\UserProject;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -95,7 +94,6 @@ final class SubscribeProjectController extends AbstractProjectController
 
         if ($Unsubscribe) {
             DB::delete('DELETE FROM user2project WHERE userid=? AND projectid=?', [$user->id, $this->project->Id]);
-            DB::delete('DELETE FROM user2repository WHERE userid=? AND projectid=?', [$user->id, $this->project->Id]);
 
             // Remove the claim sites for this project if they are only part of this project
             DB::delete('
@@ -143,12 +141,6 @@ final class SubscribeProjectController extends AbstractProjectController
                     $user->id,
                     $this->project->Id,
                 ]);
-
-                // Update the repository credential
-                $UserProject = new UserProject();
-                $UserProject->ProjectId = $this->project->Id;
-                $UserProject->UserId = $user->id;
-                $UserProject->UpdateCredentials($Credentials);
 
                 if ($Role == 0) {
                     // Remove the claim sites for this project if they are only part of this project
@@ -207,12 +199,6 @@ final class SubscribeProjectController extends AbstractProjectController
                     $this->project->Id,
                 ]);
 
-                // Update the repository credential
-                $UserProject = new UserProject();
-                $UserProject->ProjectId = $this->project->Id;
-                $UserProject->UserId = $user->id;
-                $UserProject->UpdateCredentials($Credentials);
-
                 if ($Role == 0) {
                     // Remove the claim sites for this project if they are only part of this project
                     DB::delete('
@@ -251,37 +237,8 @@ final class SubscribeProjectController extends AbstractProjectController
                     $EmailSuccess,
                     $EmailMissingSites,
                 ]);
-
-                $UserProject = new UserProject();
-                $UserProject->ProjectId = $this->project->Id;
-                $UserProject->UserId = $user->id;
-                foreach ($Credentials as $credential) {
-                    $UserProject->AddCredential($credential);
-                }
             }
             return redirect('/user?note=subscribedtoproject');
-        }
-
-        // XML
-        // Show the current credentials for the user
-        $query = $db->executePrepared('
-                 SELECT credential, projectid
-                 FROM user2repository
-                 WHERE
-                     userid=?
-                      AND (
-                          projectid=?
-                          OR projectid=0
-                      )
-             ', [$user->id, $this->project->Id]);
-
-        $credential_num = 0;
-        foreach ($query as $credential_array) {
-            if (intval($credential_array['projectid']) === 0) {
-                $xml .= add_XML_value('global_credential', $credential_array['credential']);
-            } else {
-                $xml .= add_XML_value('credential_' . $credential_num++, $credential_array['credential']);
-            }
         }
 
         $xml .= '<project>';

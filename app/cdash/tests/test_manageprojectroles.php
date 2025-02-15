@@ -32,9 +32,6 @@ class ManageProjectRolesTestCase extends KWWebTestCase
         if (!$this->setFieldByName('registeruserlastname', 'User')) {
             $this->fail('Set user last name returned false');
         }
-        if (!$this->setFieldByName('registeruserrepositorycredential', 'simpleuser')) {
-            $this->fail('Set user repository credential returned false');
-        }
         $this->clickSubmitByName('registerUser');
         if (!str_contains($this->getBrowser()->getContentAsText(), $email)) {
             $this->fail("'{$email}' not found when expected");
@@ -48,9 +45,6 @@ class ManageProjectRolesTestCase extends KWWebTestCase
         // Verify that they are no longer associated with this project.
         if (DB::table('user2project')->where('userid', $user->id)->where('projectid', $this->projectid)->exists()) {
             $this->fail('user2project row still exists after deletion');
-        }
-        if (DB::table('user2repository')->where('userid', $user->id)->where('projectid', $this->projectid)->exists()) {
-            $this->fail('user2repository row still exists after deletion');
         }
     }
 
