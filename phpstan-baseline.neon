@@ -13267,21 +13267,6 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
-			message: "#^Function getByteValueWithExtension\\(\\) has parameter \\$base with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function getByteValueWithExtension\\(\\) has parameter \\$value with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function getByteValueWithExtension\\(\\) throws checked exception DivisionByZeroError but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 3
-			path: app/cdash/include/common.php
-
-		-
 			message: "#^Function get_dashboard_JSON\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
@@ -13367,16 +13352,6 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
-			message: "#^Function qiv\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			message: "#^Function qiv\\(\\) has parameter \\$iv with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
 			message: "#^Function qnum\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
@@ -13448,7 +13423,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 8
+			count: 7
 			path: app/cdash/include/common.php
 
 		-
