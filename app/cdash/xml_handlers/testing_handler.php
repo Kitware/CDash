@@ -75,10 +75,9 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
     public function startElement($parser, $name, $attributes): void
     {
         parent::startElement($parser, $name, $attributes);
-        $parent = $this->getParent(); // should be before endElement
         $factory = $this->getModelFactory();
 
-        if ($name == 'SITE') {
+        if ($this->currentPathMatches('site')) {
             $site_name = !empty($attributes['NAME']) ? $attributes['NAME'] : '(empty)';
             $this->Site = Site::firstOrCreate(['name' => $site_name], ['name' => $site_name]);
 
@@ -150,11 +149,11 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
                 $this->TestMeasurement->name = $attributes['NAME'];
             }
             $this->TestMeasurement->type = $attributes['TYPE'];
-        } elseif ($name == 'VALUE' && $parent == 'MEASUREMENT') {
+        } elseif ($name === 'VALUE' && $this->getParent() === 'MEASUREMENT') {
             if (isset($attributes['COMPRESSION']) && $attributes['COMPRESSION'] == 'gzip') {
                 $this->TestCreator->alreadyCompressed = true;
             }
-        } elseif ($name == 'LABEL' && $parent == 'LABELS') {
+        } elseif ($name === 'LABEL' && $this->getParent() === 'LABELS') {
             $this->Label = $factory->create(Label::class);
         }
     }
@@ -162,11 +161,9 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
     /** End Element */
     public function endElement($parser, $name): void
     {
-        $parent = $this->getParent(); // should be before endElement
-        parent::endElement($parser, $name);
         $factory = $this->getModelFactory();
 
-        if ($name == 'TEST' && $parent == 'TESTING') {
+        if ($name === 'TEST' && $this->getParent() === 'TESTING') {
             // By now, will either have one subproject for the entire file
             // Or a subproject specifically for this test
             // Or no subprojects.
@@ -190,7 +187,7 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
             }
             $this->TestCreator->projectid = $this->GetProject()->Id;
             $this->TestCreator->create($build);
-        } elseif ($name == 'LABEL' && $parent == 'LABELS') {
+        } elseif ($name === 'LABEL' && $this->getParent() == 'LABELS') {
             if (!empty($this->TestSubProjectName)) {
                 $this->SubProjectName = $this->TestSubProjectName;
             }
@@ -226,7 +223,7 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
                     $this->TestCreator->measurements->push($this->TestMeasurement);
                 }
             }
-        } elseif ($name == 'SITE') {
+        } elseif ($this->currentPathMatches('site')) {
             // If we've gotten this far without creating any builds, there's no
             // tests. Create a build anyway.
             if (empty($this->Builds)) {
@@ -264,6 +261,8 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
                 $build->SaveTotalTestsTime();
             }
         }
+
+        parent::endElement($parser, $name);
     }
 
     /** Text function */

@@ -51,7 +51,7 @@ class CoverageLogHandler extends AbstractXmlHandler
     public function startElement($parser, $name, $attributes): void
     {
         parent::startElement($parser, $name, $attributes);
-        if ($name == 'SITE') {
+        if ($this->currentPathMatches('site')) {
             $site_name = !empty($attributes['NAME']) ? $attributes['NAME'] : '(empty)';
             $this->Site = Site::firstOrCreate(['name' => $site_name], ['name' => $site_name]);
 
@@ -77,9 +77,7 @@ class CoverageLogHandler extends AbstractXmlHandler
     /** End Element */
     public function endElement($parser, $name): void
     {
-        parent::endElement($parser, $name);
-
-        if ($name === 'SITE') {
+        if ($this->currentPathMatches('site')) {
             $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
             $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp);
             $this->Build->ProjectId = $this->GetProject()->Id;
@@ -159,6 +157,8 @@ class CoverageLogHandler extends AbstractXmlHandler
                 $this->CoverageFiles[] = [new CoverageFile(), new CoverageFileLog()];
             }
         }
+
+        parent::endElement($parser, $name);
     }
 
     /** Text */
