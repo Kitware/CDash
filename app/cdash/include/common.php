@@ -492,30 +492,6 @@ function date2day(string $date): string
     return is_numeric(substr($date, 4, 1)) ? substr($date, 6, 2) : substr($date, 8, 2);
 }
 
-/**
- * Get hour from formatted time
- */
-function time2hour(string $time): string
-{
-    return substr($time, 0, 2);
-}
-
-/**
- * Get minute from formatted time
- */
-function time2minute(string $time): string
-{
-    return is_numeric(substr($time, 2, 1)) ? substr($time, 2, 2) : substr($time, 3, 2);
-}
-
-/**
- * Get second from formatted time
- */
-function time2second(string $time): string
-{
-    return is_numeric(substr($time, 2, 1)) ? substr($time, 4, 2) : substr($time, 6, 2);
-}
-
 /** Get dates
  * today: the *starting* timestamp of the current dashboard
  * previousdate: the date in Y-m-d format of the previous dashboard
@@ -580,18 +556,6 @@ function make_cdash_url(string $url): string
 }
 
 /**
- * Quote SQL interval specifier
- */
-function qiv($iv)
-{
-    if (config('database.default') == 'pgsql') {
-        return "'$iv'";
-    } else {
-        return $iv;
-    }
-}
-
-/**
  * Quote SQL number
  */
 function qnum($num)
@@ -603,30 +567,6 @@ function qnum($num)
     } else {
         return $num;
     }
-}
-
-/**
- * Return the byte value with proper extension
- */
-function getByteValueWithExtension($value, $base = 1024): string
-{
-    $valueext = '';
-    if ($value > $base) {
-        $value /= $base;
-        $value = $value;
-        $valueext = 'K';
-    }
-    if ($value > $base) {
-        $value /= $base;
-        $value = $value;
-        $valueext = 'M';
-    }
-    if ($value > $base) {
-        $value /= $base;
-        $value = $value;
-        $valueext = 'G';
-    }
-    return round($value, 2) . $valueext;
 }
 
 /**
