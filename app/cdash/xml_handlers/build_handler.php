@@ -16,9 +16,14 @@
 =========================================================================*/
 
 use App\Http\Submission\Traits\UpdatesSiteInformation;
+use App\Enums\BuildCommandType;
+use App\Models\Build as EloquentBuild;
+use App\Models\BuildCommand;
+use App\Models\BuildMeasurement;
 use App\Models\Site;
 use App\Models\SiteInformation;
 use App\Utils\SubmissionUtils;
+use Carbon\Carbon;
 use CDash\Collection\BuildCollection;
 use CDash\Collection\SubscriptionBuilderCollection;
 use CDash\Messaging\Subscription\CommitAuthorSubscriptionBuilder;
@@ -59,6 +64,18 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
     private $PullRequest;
     private $BuildErrorFilter;
     protected static ?string $schema_file = '/app/Validators/Schemas/Build.xsd';
+
+    /**
+     * A list of BuildCommands to be attached to the parent build and associated
+     * unsaved measurements.  This should eventually be turned into a mapping of
+     * subproject names to BuildCommands so BuildCommands can be associated with
+     * child builds.
+     *
+     * @var array<BuildCommand>
+     */
+    private array $BuildCommands = [];
+
+    private BuildMeasurement $MostRecentBuildMeasurement;
 
     public function __construct(Project $project)
     {
@@ -185,8 +202,46 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
                 $this->Error->Type = 1;
             }
             $this->ErrorSubProjectName = '';
-        } elseif ($name == 'LABEL') {
+        } elseif ($name === 'LABEL' && !$this->currentPathMatches('site.build.commands.*.labels.label')) {
             $this->Label = $factory->create(Label::class);
+        } elseif ($this->hasParent() && $this->getParent() === 'COMMANDS') {
+            $command_info = [
+                'starttime' => Carbon::createFromTimestamp($attributes['TIMESTART']),
+                'endtime' => Carbon::createFromTimestamp($attributes['TIMESTOP']),
+                'command' => $attributes['COMMAND'] ?? null,
+                'binarydirectory' => $attributes['BINARYDIR'],
+            ];
+
+            switch ($name) {
+                case 'COMPILE':
+                    $command_info['type'] = BuildCommandType::COMPILE_COMMAND;
+                    $command_info['language'] = $attributes['LANGUAGE'];
+                    $command_info['source'] = $attributes['SOURCE'];
+                    $command_info['target'] = $attributes['TARGET'];
+                    break;
+                case 'LINK':
+                    $command_info['type'] = BuildCommandType::LINK_COMMAND;
+                    $command_info['language'] = $attributes['LANGUAGE'];
+                    $command_info['target'] = $attributes['TARGET'];
+                    $command_info['targettype'] = $attributes['TARGETTYPE'];
+                    break;
+                case 'CMAKEBUILD':
+                    $command_info['type'] = BuildCommandType::CMAKE_BUILD_COMMAND;
+                    break;
+                case 'CUSTOM':
+                    $command_info['type'] = BuildCommandType::CUSTOM_COMMAND;
+                    // TODO: Finish this
+                    break;
+                default:
+                    throw new Exception("Unknown element $name");
+            }
+
+            $this->BuildCommands[] = new BuildCommand($command_info);
+        } elseif ($name === 'NAMEDMEASUREMENT') {
+            $this->MostRecentBuildMeasurement = new BuildMeasurement([
+                'type' => $attributes['TYPE'],
+                'name' => $attributes['NAME'],
+            ]);
         }
     }
 
@@ -233,6 +288,26 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
                 }
 
                 $build->ComputeDifferences();
+            }
+
+            if (count($this->BuildCommands) > 0) {
+                // This is an unfortunate side effect of not having the build until the end.
+                // In the future, it would be good to initialize the build earlier and directly
+                // attach children as we go.
+                $eloquent_parent_build = EloquentBuild::findOrFail((int) $this->getBuild()->Id);
+                foreach ($this->BuildCommands as $command) {
+                    /** @var BuildCommand $build_command */
+                    $build_command = $eloquent_parent_build->commands()->save($command);
+                    if ($build_command === false) {
+                        throw new Exception('Build command failed to save.');
+                    }
+                    $build_command->measurements()->saveMany($command->measurements);
+
+                    foreach ($command->labels as $label) {
+                        $build_command->labels()->attach($label);
+                    }
+                }
+                $eloquent_parent_build->push();
             }
         } elseif ($name == 'WARNING' || $name == 'ERROR' || $name == 'FAILURE') {
             $skip_error = false;
@@ -300,7 +375,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
                 $this->Builds[$this->SubProjectName]->AddError($this->Error);
             }
             unset($this->Error);
-        } elseif ($name == 'LABEL' && $this->getParent() === 'LABELS') {
+        } elseif ($name == 'LABEL' && $this->getParent() == 'LABELS' && !$this->currentPathMatches('site.build.commands.*.labels.label')) {
             if (!empty($this->ErrorSubProjectName)) {
                 $this->SubProjectName = $this->ErrorSubProjectName;
             } elseif (isset($this->Error) && $this->Error instanceof BuildFailure) {
@@ -383,7 +458,11 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
             $this->Error->PostContext .= $data;
         } elseif ($this->getParent() === 'SUBPROJECT' && $element == 'LABEL') {
             $this->SubProjects[$this->SubProjectName][] = $data;
-        } elseif ($this->getParent() === 'LABELS' && $element == 'LABEL') {
+        } elseif ($this->currentPathMatches('site.build.commands.*.labels.label')) {
+            $this->BuildCommands[array_key_last($this->BuildCommands)]->labels->add(
+                App\Models\Label::firstOrCreate(['text' => $data])
+            );
+        } elseif ($parent === 'LABELS' && $element === 'LABEL' && !$this->currentPathMatches('site.build.commands.*.labels.label')) {
             // First, check if this label belongs to a SubProject
             foreach ($this->SubProjects as $subproject => $labels) {
                 if (in_array($data, $labels)) {
@@ -394,6 +473,9 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
             if (empty($this->ErrorSubProjectName)) {
                 $this->Label->SetText($data);
             }
+        } elseif ($element === 'VALUE' && $parent === 'NAMEDMEASUREMENT') {
+            $this->MostRecentBuildMeasurement->value = $data;
+            $this->BuildCommands[array_key_last($this->BuildCommands)]->measurements->add($this->MostRecentBuildMeasurement);
         }
     }
 

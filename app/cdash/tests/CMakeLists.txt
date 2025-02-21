@@ -187,6 +187,9 @@ set_tests_properties(/Feature/GraphQL/NoteTypeTest PROPERTIES DEPENDS /CDash/Xml
 add_laravel_test(/Feature/GraphQL/BuildMeasurementTypeTest)
 set_tests_properties(/Feature/GraphQL/BuildMeasurementTypeTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
+add_laravel_test(/Feature/GraphQL/CompileBuildCommandTypeTest)
+set_tests_properties(/Feature/GraphQL/CompileBuildCommandTypeTest PROPERTIES DEPENDS /Feature/GraphQL/BuildTypeTest)
+
 add_laravel_test(/Feature/GraphQL/CoverageTypeTest)
 set_tests_properties(/Feature/GraphQL/CoverageTypeTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
@@ -213,6 +216,9 @@ set_tests_properties(/Feature/LdapIntegration PROPERTIES DEPENDS /CDash/XmlHandl
 add_laravel_test(/Browser/Pages/ProjectSitesPageTest)
 set_tests_properties(/Browser/Pages/ProjectSitesPageTest PROPERTIES RUN_SERIAL TRUE)
 set_tests_properties(/Browser/Pages/ProjectSitesPageTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_laravel_test(/Feature/GraphQL/LabelTypeTest)
+set_tests_properties(/Feature/GraphQL/LabelTypeTest PROPERTIES DEPENDS /Feature/GraphQL/BuildTypeTest)
 
 add_laravel_test(/Feature/PurgeUnusedProjectsCommand)
 set_tests_properties(/Feature/PurgeUnusedProjectsCommand PROPERTIES RUN_SERIAL TRUE)
