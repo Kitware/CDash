@@ -131,7 +131,7 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
                 $build->SubProjectName = $this->SubProjectName;
                 $this->Builds[$this->SubProjectName] = $build;
             }
-        } elseif ($name == 'CONFIGURE') {
+        } elseif ($this->currentPathMatches('site.configure')) {
             $this->Configure = $this->getModelFactory()->create(BuildConfigure::class);
             if (empty($this->Builds)) {
                 // No subprojects
@@ -144,7 +144,7 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
 
     public function endElement($parser, $name): void
     {
-        if ($name == 'CONFIGURE') {
+        if ($this->currentPathMatches('site.configure')) {
             $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
             $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp);
             // Configure Duration is handled differently if this XML
@@ -262,7 +262,7 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
         $parent = $this->getParent();
         $element = $this->getElement();
 
-        if ($parent == 'CONFIGURE') {
+        if ($this->currentPathMatches('site.configure.*')) {
             switch ($element) {
                 case 'STARTCONFIGURETIME':
                     $this->StartTimeStamp = $data;

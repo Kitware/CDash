@@ -1,0 +1,1447 @@
+{
+  "data": {
+    "project": {
+      "builds": {
+        "edges": [
+          {
+            "node": {
+              "name": "test_instrument",
+              "targets": {
+                "edges": []
+              },
+              "commands": {
+                "edges": [
+                  {
+                    "node": {
+                      "type": "CUSTOM",
+                      "startTime": "2025-03-28T16:19:11+00:00",
+                      "duration": 195,
+                      "command": "\"/my/path/projects/CMake_bin/bin/cmake\" (truncated)",
+                      "result": "0",
+                      "source": null,
+                      "language": null,
+                      "config": null,
+                      "target": null,
+                      "measurements": {
+                        "edges": [
+                          {
+                            "node": {
+                              "name": "AfterCPULoadAverage",
+                              "type": "numeric/double",
+                              "value": "4.84765625"
+                            }
+                          },
+                          {
+                            "node": {
+                              "name": "AfterHostMemoryUsed",
+                              "type": "numeric/double",
+                              "value": "51396352.0"
+                            }
+                          },
+                          {
+                            "node": {
+                              "name": "BeforeCPULoadAverage",
+                              "type": "numeric/double",
+                              "value": "4.84765625"
+                            }
+                          },
+                          {
+                            "node": {
+                              "name": "BeforeHostMemoryUsed",
+                              "type": "numeric/double",
+                              "value": "51395488.0"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "node": {
+                      "type": "CUSTOM",
+                      "startTime": "2025-03-28T16:19:10+00:00",
+                      "duration": 135,
+                      "command": "\"/my/path/projects/tmp_for_cdash/bin_instrument/MakeTable\" (truncated)",
+                      "result": "0",
+                      "source": null,
+                      "language": null,
+                      "config": null,
+                      "target": null,
+                      "measurements": {
+                        "edges": [
+                          {
+                            "node": {
+                              "name": "AfterCPULoadAverage",
+                              "type": "numeric/double",
+                              "value": "4.74755859375"
+                            }
+                          },
+                          {
+                            "node": {
+                              "name": "AfterHostMemoryUsed",
+                              "type": "numeric/double",
+                              "value": "51402880.0"
+                            }
+                          },
+                          {
+                            "node": {
+                              "name": "BeforeCPULoadAverage",
+                              "type": "numeric/double",
+                              "value": "4.74755859375"
+                            }
+                          },
+                          {
+                            "node": {
+                              "name": "BeforeHostMemoryUsed",
+                              "type": "numeric/double",
+                              "value": "51398928.0"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "node": {
+                      "type": "INSTALL",
+                      "startTime": "2025-03-28T16:19:12+00:00",
+                      "duration": 126,
+                      "command": "\"/my/path/projects/CMake_bin/bin/cmake\" (truncated)",
+                      "result": "0",
+                      "source": null,
+                      "language": null,
+                      "config": null,
+                      "target": null,
+                      "measurements": {
+                        "edges": [
+                          {
+                            "node": {
+                              "name": "AfterCPULoadAverage",
+                              "type": "numeric/double",
+                              "value": "4.84765625"
+                            }
+                          },
+                          {
+                            "node": {
+                              "name": "AfterHostMemoryUsed",
+                              "type": "numeric/double",
+                              "value": "51397248.0"
+                            }
+                          },
+                          {
+                            "node": {
+                              "name": "BeforeCPULoadAverage",
+                              "type": "numeric/double",
+                              "value": "4.84765625"
+                            }
+                          },
+                          {
+                            "node": {
+                              "name": "BeforeHostMemoryUsed",
+                              "type": "numeric/double",
+                              "value": "51395936.0"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "node": {
+                      "type": "CMAKE_INSTALL",
+                      "startTime": "2025-03-28T16:19:11+00:00",
+                      "duration": 122,
+                      "command": "\"/my/path/projects/CMake_bin/bin/cmake\" (truncated)",
+                      "result": "0",
+                      "source": null,
+                      "language": null,
+                      "config": null,
+                      "target": null,
+                      "measurements": {
+                        "edges": [
+                          {
+                            "node": {
+                              "name": "AfterCPULoadAverage",
+                              "type": "numeric/double",
+                              "value": "4.84765625"
+                            }
+                          },
+                          {
+                            "node": {
+                              "name": "AfterHostMemoryUsed",
+                              "type": "numeric/double",
+                              "value": "51400928.0"
+                            }
+                          },
+                          {
+                            "node": {
+                              "name": "BeforeCPULoadAverage",
+                              "type": "numeric/double",
+                              "value": "4.84765625"
+                            }
+                          },
+                          {
+                            "node": {
+                              "name": "BeforeHostMemoryUsed",
+                              "type": "numeric/double",
+                              "value": "51398320.0"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "node": {
+                      "type": "CMAKE_BUILD",
+                      "startTime": "2025-03-28T16:19:09+00:00",
+                      "duration": 2488,
+                      "command": "\"/my/path/projects/CMake_bin/bin/cmake\" (truncated)",
+                      "result": "0",
+                      "source": null,
+                      "language": null,
+                      "config": null,
+                      "target": null,
+                      "measurements": {
+                        "edges": [
+                          {
+                            "node": {
+                              "name": "AfterCPULoadAverage",
+                              "type": "numeric/double",
+                              "value": "4.84765625"
+                            }
+                          },
+                          {
+                            "node": {
+                              "name": "AfterHostMemoryUsed",
+                              "type": "numeric/double",
+                              "value": "51391872.0"
+                            }
+                          },
+                          {
+                            "node": {
+                              "name": "BeforeCPULoadAverage",
+                              "type": "numeric/double",
+                              "value": "4.74755859375"
+                            }
+                          },
+                          {
+                            "node": {
+                              "name": "BeforeHostMemoryUsed",
+                              "type": "numeric/double",
+                              "value": "51340336.0"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                ]
+              },
+              "children": {
+                "edges": [
+                  {
+                    "node": {
+                      "name": "test_instrument",
+                      "targets": {
+                        "edges": [
+                          {
+                            "node": {
+                              "name": "MakeTable",
+                              "type": "EXECUTABLE",
+                              "commands": {
+                                "edges": [
+                                  {
+                                    "node": {
+                                      "type": "LINK",
+                                      "startTime": "2025-03-28T16:19:10+00:00",
+                                      "duration": 76,
+                                      "command": "\"/usr/bin/c++\" (truncated)",
+                                      "result": "0",
+                                      "source": null,
+                                      "language": "C++",
+                                      "config": "",
+                                      "target": {
+                                        "name": "MakeTable",
+                                        "type": "EXECUTABLE"
+                                      },
+                                      "measurements": {
+                                        "edges": [
+                                          {
+                                            "node": {
+                                              "name": "AfterCPULoadAverage",
+                                              "type": "numeric/double",
+                                              "value": "4.74755859375"
+                                            }
+                                          },
+                                          {
+                                            "node": {
+                                              "name": "AfterHostMemoryUsed",
+                                              "type": "numeric/double",
+                                              "value": "51399056.0"
+                                            }
+                                          },
+                                          {
+                                            "node": {
+                                              "name": "BeforeCPULoadAverage",
+                                              "type": "numeric/double",
+                                              "value": "4.74755859375"
+                                            }
+                                          },
+                                          {
+                                            "node": {
+                                              "name": "BeforeHostMemoryUsed",
+                                              "type": "numeric/double",
+                                              "value": "51405264.0"
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  },
+                                  {
+                                    "node": {
+                                      "type": "COMPILE",
+                                      "startTime": "2025-03-28T16:19:09+00:00",
+                                      "duration": 340,
+                                      "command": "\"/usr/bin/c++\" (truncated)",
+                                      "result": "0",
+                                      "source": "/my/path/projects/tmp_for_cdash/src_instrument/MathFunctions/MakeTable.cxx",
+                                      "language": "C++",
+                                      "config": "",
+                                      "target": {
+                                        "name": "MakeTable",
+                                        "type": "EXECUTABLE"
+                                      },
+                                      "measurements": {
+                                        "edges": [
+                                          {
+                                            "node": {
+                                              "name": "AfterCPULoadAverage",
+                                              "type": "numeric/double",
+                                              "value": "4.74755859375"
+                                            }
+                                          },
+                                          {
+                                            "node": {
+                                              "name": "AfterHostMemoryUsed",
+                                              "type": "numeric/double",
+                                              "value": "51401328.0"
+                                            }
+                                          },
+                                          {
+                                            "node": {
+                                              "name": "BeforeCPULoadAverage",
+                                              "type": "numeric/double",
+                                              "value": "4.74755859375"
+                                            }
+                                          },
+                                          {
+                                            "node": {
+                                              "name": "BeforeHostMemoryUsed",
+                                              "type": "numeric/double",
+                                              "value": "51365504.0"
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  }
+                                ]
+                              },
+                              "labels": {
+                                "edges": [
+                                  {
+                                    "node": {
+                                      "text": "Label4"
+                                    }
+                                  },
+                                  {
+                                    "node": {
+                                      "text": "MakeTable"
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "commands": {
+                        "edges": [
+                          {
+                            "node": {
+                              "type": "LINK",
+                              "startTime": "2025-03-28T16:19:10+00:00",
+                              "duration": 76,
+                              "command": "\"/usr/bin/c++\" (truncated)",
+                              "result": "0",
+                              "source": null,
+                              "language": "C++",
+                              "config": "",
+                              "target": {
+                                "name": "MakeTable",
+                                "type": "EXECUTABLE"
+                              },
+                              "measurements": {
+                                "edges": [
+                                  {
+                                    "node": {
+                                      "name": "AfterCPULoadAverage",
+                                      "type": "numeric/double",
+                                      "value": "4.74755859375"
+                                    }
+                                  },
+                                  {
+                                    "node": {
+                                      "name": "AfterHostMemoryUsed",
+                                      "type": "numeric/double",
+                                      "value": "51399056.0"
+                                    }
+                                  },
+                                  {
+                                    "node": {
+                                      "name": "BeforeCPULoadAverage",
+                                      "type": "numeric/double",
+                                      "value": "4.74755859375"
+                                    }
+                                  },
+                                  {
+                                    "node": {
+                                      "name": "BeforeHostMemoryUsed",
+                                      "type": "numeric/double",
+                                      "value": "51405264.0"
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          },
+                          {
+                            "node": {
+                              "type": "COMPILE",
+                              "startTime": "2025-03-28T16:19:09+00:00",
+                              "duration": 340,
+                              "command": "\"/usr/bin/c++\" (truncated)",
+                              "result": "0",
+                              "source": "/my/path/projects/tmp_for_cdash/src_instrument/MathFunctions/MakeTable.cxx",
+                              "language": "C++",
+                              "config": "",
+                              "target": {
+                                "name": "MakeTable",
+                                "type": "EXECUTABLE"
+                              },
+                              "measurements": {
+                                "edges": [
+                                  {
+                                    "node": {
+                                      "name": "AfterCPULoadAverage",
+                                      "type": "numeric/double",
+                                      "value": "4.74755859375"
+                                    }
+                                  },
+                                  {
+                                    "node": {
+                                      "name": "AfterHostMemoryUsed",
+                                      "type": "numeric/double",
+                                      "value": "51401328.0"
+                                    }
+                                  },
+                                  {
+                                    "node": {
+                                      "name": "BeforeCPULoadAverage",
+                                      "type": "numeric/double",
+                                      "value": "4.74755859375"
+                                    }
+                                  },
+                                  {
+                                    "node": {
+                                      "name": "BeforeHostMemoryUsed",
+                                      "type": "numeric/double",
+                                      "value": "51365504.0"
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "node": {
+                      "name": "test_instrument",
+                      "targets": {
+                        "edges": [
+                          {
+                            "node": {
+                              "name": "MathFunctions",
+                              "type": "SHARED_LIBRARY",
+                              "commands": {
+                                "edges": [
+                                  {
+                                    "node": {
+                                      "type": "LINK",
+                                      "startTime": "2025-03-28T16:19:11+00:00",
+                                      "duration": 67,
+                                      "command": "\"/usr/bin/c++\" (truncated)",
+                                      "result": "0",
+                                      "source": null,
+                                      "language": "C++",
+                                      "config": "",
+                                      "target": {
+                                        "name": "MathFunctions",
+                                        "type": "SHARED_LIBRARY"
+                                      },
+                                      "measurements": {
+                                        "edges": [
+                                          {
+                                            "node": {
+                                              "name": "AfterCPULoadAverage",
+                                              "type": "numeric/double",
+                                              "value": "4.84765625"
+                                            }
+                                          },
+                                          {
+                                            "node": {
+                                              "name": "AfterHostMemoryUsed",
+                                              "type": "numeric/double",
+                                              "value": "51400864.0"
+                                            }
+                                          },
+                                          {
+                                            "node": {
+                                              "name": "BeforeCPULoadAverage",
+                                              "type": "numeric/double",
+                                              "value": "4.84765625"
+                                            }
+                                          },
+                                          {
+                                            "node": {
+                                              "name": "BeforeHostMemoryUsed",
+                                              "type": "numeric/double",
+                                              "value": "51400288.0"
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  },
+                                  {
+                                    "node": {
+                                      "type": "COMPILE",
+                                      "startTime": "2025-03-28T16:19:10+00:00",
+                                      "duration": 99,
+                                      "command": "\"/usr/bin/c++\" (truncated)",
+                                      "result": "0",
+                                      "source": "/my/path/projects/tmp_for_cdash/src_instrument/MathFunctions/MathFunctions.cxx",
+                                      "language": "C++",
+                                      "config": "",
+                                      "target": {
+                                        "name": "MathFunctions",
+                                        "type": "SHARED_LIBRARY"
+                                      },
+                                      "measurements": {
+                                        "edges": [
+                                          {
+                                            "node": {
+                                              "name": "AfterCPULoadAverage",
+                                              "type": "numeric/double",
+                                              "value": "4.74755859375"
+                                            }
+                                          },
+                                          {
+                                            "node": {
+                                              "name": "AfterHostMemoryUsed",
+                                              "type": "numeric/double",
+                                              "value": "51428640.0"
+                                            }
+                                          },
+                                          {
+                                            "node": {
+                                              "name": "BeforeCPULoadAverage",
+                                              "type": "numeric/double",
+                                              "value": "4.74755859375"
+                                            }
+                                          },
+                                          {
+                                            "node": {
+                                              "name": "BeforeHostMemoryUsed",
+                                              "type": "numeric/double",
+                                              "value": "51405616.0"
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  }
+                                ]
+                              },
+                              "labels": {
+                                "edges": [
+                                  {
+                                    "node": {
+                                      "text": "Label3"
+                                    }
+                                  },
+                                  {
+                                    "node": {
+                                      "text": "MathFunctions"
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          },
+                          {
+                            "node": {
+                              "name": "SqrtLibrary",
+                              "type": "STATIC_LIBRARY",
+                              "commands": {
+                                "edges": [
+                                  {
+                                    "node": {
+                                      "type": "LINK",
+                                      "startTime": "2025-03-28T16:19:11+00:00",
+                                      "duration": 64,
+                                      "command": "\"/my/path/projects/CMake_bin/bin/cmake\" (truncated)",
+                                      "result": "0",
+                                      "source": null,
+                                      "language": "C++",
+                                      "config": "",
+                                      "target": {
+                                        "name": "SqrtLibrary",
+                                        "type": "STATIC_LIBRARY"
+                                      },
+                                      "measurements": {
+                                        "edges": [
+                                          {
+                                            "node": {
+                                              "name": "AfterCPULoadAverage",
+                                              "type": "numeric/double",
+                                              "value": "4.84765625"
+                                            }
+                                          },
+                                          {
+                                            "node": {
+                                              "name": "AfterHostMemoryUsed",
+                                              "type": "numeric/double",
+                                              "value": "51401440.0"
+                                            }
+                                          },
+                                          {
+                                            "node": {
+                                              "name": "BeforeCPULoadAverage",
+                                              "type": "numeric/double",
+                                              "value": "4.84765625"
+                                            }
+                                          },
+                                          {
+                                            "node": {
+                                              "name": "BeforeHostMemoryUsed",
+                                              "type": "numeric/double",
+                                              "value": "51401152.0"
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  },
+                                  {
+                                    "node": {
+                                      "type": "LINK",
+                                      "startTime": "2025-03-28T16:19:11+00:00",
+                                      "duration": 24,
+                                      "command": "\"/usr/bin/ranlib\" (truncated)",
+                                      "result": "0",
+                                      "source": null,
+                                      "language": "C++",
+                                      "config": "",
+                                      "target": {
+                                        "name": "SqrtLibrary",
+                                        "type": "STATIC_LIBRARY"
+                                      },
+                                      "measurements": {
+                                        "edges": [
+                                          {
+                                            "node": {
+                                              "name": "AfterCPULoadAverage",
+                                              "type": "numeric/double",
+                                              "value": "4.84765625"
+                                            }
+                                          },
+                                          {
+                                            "node": {
+                                              "name": "AfterHostMemoryUsed",
+                                              "type": "numeric/double",
+                                              "value": "51400672.0"
+                                            }
+                                          },
+                                          {
+                                            "node": {
+                                              "name": "BeforeCPULoadAverage",
+                                              "type": "numeric/double",
+                                              "value": "4.84765625"
+                                            }
+                                          },
+                                          {
+                                            "node": {
+                                              "name": "BeforeHostMemoryUsed",
+                                              "type": "numeric/double",
+                                              "value": "51400576.0"
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  },
+                                  {
+                                    "node": {
+                                      "type": "LINK",
+                                      "startTime": "2025-03-28T16:19:11+00:00",
+                                      "duration": 29,
+                                      "command": "\"/usr/bin/ar\" (truncated)",
+                                      "result": "0",
+                                      "source": null,
+                                      "language": "C++",
+                                      "config": "",
+                                      "target": {
+                                        "name": "SqrtLibrary",
+                                        "type": "STATIC_LIBRARY"
+                                      },
+                                      "measurements": {
+                                        "edges": [
+                                          {
+                                            "node": {
+                                              "name": "AfterCPULoadAverage",
+                                              "type": "numeric/double",
+                                              "value": "4.84765625"
+                                            }
+                                          },
+                                          {
+                                            "node": {
+                                              "name": "AfterHostMemoryUsed",
+                                              "type": "numeric/double",
+                                              "value": "51400704.0"
+                                            }
+                                          },
+                                          {
+                                            "node": {
+                                              "name": "BeforeCPULoadAverage",
+                                              "type": "numeric/double",
+                                              "value": "4.84765625"
+                                            }
+                                          },
+                                          {
+                                            "node": {
+                                              "name": "BeforeHostMemoryUsed",
+                                              "type": "numeric/double",
+                                              "value": "51400912.0"
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  },
+                                  {
+                                    "node": {
+                                      "type": "COMPILE",
+                                      "startTime": "2025-03-28T16:19:10+00:00",
+                                      "duration": 365,
+                                      "command": "\"/usr/bin/c++\" (truncated)",
+                                      "result": "0",
+                                      "source": "/my/path/projects/tmp_for_cdash/src_instrument/MathFunctions/mysqrt.cxx",
+                                      "language": "C++",
+                                      "config": "",
+                                      "target": {
+                                        "name": "SqrtLibrary",
+                                        "type": "STATIC_LIBRARY"
+                                      },
+                                      "measurements": {
+                                        "edges": [
+                                          {
+                                            "node": {
+                                              "name": "AfterCPULoadAverage",
+                                              "type": "numeric/double",
+                                              "value": "4.84765625"
+                                            }
+                                          },
+                                          {
+                                            "node": {
+                                              "name": "AfterHostMemoryUsed",
+                                              "type": "numeric/double",
+                                              "value": "51397360.0"
+                                            }
+                                          },
+                                          {
+                                            "node": {
+                                              "name": "BeforeCPULoadAverage",
+                                              "type": "numeric/double",
+                                              "value": "4.74755859375"
+                                            }
+                                          },
+                                          {
+                                            "node": {
+                                              "name": "BeforeHostMemoryUsed",
+                                              "type": "numeric/double",
+                                              "value": "51405904.0"
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  },
+                                  {
+                                    "node": {
+                                      "type": "LINK",
+                                      "startTime": "2025-03-28T16:19:11+00:00",
+                                      "duration": 60,
+                                      "command": "\"/my/path/projects/CMake_bin/bin/cmake\" (truncated)",
+                                      "result": "0",
+                                      "source": null,
+                                      "language": "C++",
+                                      "config": "",
+                                      "target": {
+                                        "name": "SqrtLibrary",
+                                        "type": "STATIC_LIBRARY"
+                                      },
+                                      "measurements": {
+                                        "edges": [
+                                          {
+                                            "node": {
+                                              "name": "AfterCPULoadAverage",
+                                              "type": "numeric/double",
+                                              "value": "4.84765625"
+                                            }
+                                          },
+                                          {
+                                            "node": {
+                                              "name": "AfterHostMemoryUsed",
+                                              "type": "numeric/double",
+                                              "value": "51407712.0"
+                                            }
+                                          },
+                                          {
+                                            "node": {
+                                              "name": "BeforeCPULoadAverage",
+                                              "type": "numeric/double",
+                                              "value": "4.84765625"
+                                            }
+                                          },
+                                          {
+                                            "node": {
+                                              "name": "BeforeHostMemoryUsed",
+                                              "type": "numeric/double",
+                                              "value": "51400720.0"
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  }
+                                ]
+                              },
+                              "labels": {
+                                "edges": [
+                                  {
+                                    "node": {
+                                      "text": "Label3"
+                                    }
+                                  },
+                                  {
+                                    "node": {
+                                      "text": "MathFunctions"
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "commands": {
+                        "edges": [
+                          {
+                            "node": {
+                              "type": "LINK",
+                              "startTime": "2025-03-28T16:19:11+00:00",
+                              "duration": 67,
+                              "command": "\"/usr/bin/c++\" (truncated)",
+                              "result": "0",
+                              "source": null,
+                              "language": "C++",
+                              "config": "",
+                              "target": {
+                                "name": "MathFunctions",
+                                "type": "SHARED_LIBRARY"
+                              },
+                              "measurements": {
+                                "edges": [
+                                  {
+                                    "node": {
+                                      "name": "AfterCPULoadAverage",
+                                      "type": "numeric/double",
+                                      "value": "4.84765625"
+                                    }
+                                  },
+                                  {
+                                    "node": {
+                                      "name": "AfterHostMemoryUsed",
+                                      "type": "numeric/double",
+                                      "value": "51400864.0"
+                                    }
+                                  },
+                                  {
+                                    "node": {
+                                      "name": "BeforeCPULoadAverage",
+                                      "type": "numeric/double",
+                                      "value": "4.84765625"
+                                    }
+                                  },
+                                  {
+                                    "node": {
+                                      "name": "BeforeHostMemoryUsed",
+                                      "type": "numeric/double",
+                                      "value": "51400288.0"
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          },
+                          {
+                            "node": {
+                              "type": "COMPILE",
+                              "startTime": "2025-03-28T16:19:10+00:00",
+                              "duration": 99,
+                              "command": "\"/usr/bin/c++\" (truncated)",
+                              "result": "0",
+                              "source": "/my/path/projects/tmp_for_cdash/src_instrument/MathFunctions/MathFunctions.cxx",
+                              "language": "C++",
+                              "config": "",
+                              "target": {
+                                "name": "MathFunctions",
+                                "type": "SHARED_LIBRARY"
+                              },
+                              "measurements": {
+                                "edges": [
+                                  {
+                                    "node": {
+                                      "name": "AfterCPULoadAverage",
+                                      "type": "numeric/double",
+                                      "value": "4.74755859375"
+                                    }
+                                  },
+                                  {
+                                    "node": {
+                                      "name": "AfterHostMemoryUsed",
+                                      "type": "numeric/double",
+                                      "value": "51428640.0"
+                                    }
+                                  },
+                                  {
+                                    "node": {
+                                      "name": "BeforeCPULoadAverage",
+                                      "type": "numeric/double",
+                                      "value": "4.74755859375"
+                                    }
+                                  },
+                                  {
+                                    "node": {
+                                      "name": "BeforeHostMemoryUsed",
+                                      "type": "numeric/double",
+                                      "value": "51405616.0"
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          },
+                          {
+                            "node": {
+                              "type": "LINK",
+                              "startTime": "2025-03-28T16:19:11+00:00",
+                              "duration": 64,
+                              "command": "\"/my/path/projects/CMake_bin/bin/cmake\" (truncated)",
+                              "result": "0",
+                              "source": null,
+                              "language": "C++",
+                              "config": "",
+                              "target": {
+                                "name": "SqrtLibrary",
+                                "type": "STATIC_LIBRARY"
+                              },
+                              "measurements": {
+                                "edges": [
+                                  {
+                                    "node": {
+                                      "name": "AfterCPULoadAverage",
+                                      "type": "numeric/double",
+                                      "value": "4.84765625"
+                                    }
+                                  },
+                                  {
+                                    "node": {
+                                      "name": "AfterHostMemoryUsed",
+                                      "type": "numeric/double",
+                                      "value": "51401440.0"
+                                    }
+                                  },
+                                  {
+                                    "node": {
+                                      "name": "BeforeCPULoadAverage",
+                                      "type": "numeric/double",
+                                      "value": "4.84765625"
+                                    }
+                                  },
+                                  {
+                                    "node": {
+                                      "name": "BeforeHostMemoryUsed",
+                                      "type": "numeric/double",
+                                      "value": "51401152.0"
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          },
+                          {
+                            "node": {
+                              "type": "LINK",
+                              "startTime": "2025-03-28T16:19:11+00:00",
+                              "duration": 24,
+                              "command": "\"/usr/bin/ranlib\" (truncated)",
+                              "result": "0",
+                              "source": null,
+                              "language": "C++",
+                              "config": "",
+                              "target": {
+                                "name": "SqrtLibrary",
+                                "type": "STATIC_LIBRARY"
+                              },
+                              "measurements": {
+                                "edges": [
+                                  {
+                                    "node": {
+                                      "name": "AfterCPULoadAverage",
+                                      "type": "numeric/double",
+                                      "value": "4.84765625"
+                                    }
+                                  },
+                                  {
+                                    "node": {
+                                      "name": "AfterHostMemoryUsed",
+                                      "type": "numeric/double",
+                                      "value": "51400672.0"
+                                    }
+                                  },
+                                  {
+                                    "node": {
+                                      "name": "BeforeCPULoadAverage",
+                                      "type": "numeric/double",
+                                      "value": "4.84765625"
+                                    }
+                                  },
+                                  {
+                                    "node": {
+                                      "name": "BeforeHostMemoryUsed",
+                                      "type": "numeric/double",
+                                      "value": "51400576.0"
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          },
+                          {
+                            "node": {
+                              "type": "LINK",
+                              "startTime": "2025-03-28T16:19:11+00:00",
+                              "duration": 29,
+                              "command": "\"/usr/bin/ar\" (truncated)",
+                              "result": "0",
+                              "source": null,
+                              "language": "C++",
+                              "config": "",
+                              "target": {
+                                "name": "SqrtLibrary",
+                                "type": "STATIC_LIBRARY"
+                              },
+                              "measurements": {
+                                "edges": [
+                                  {
+                                    "node": {
+                                      "name": "AfterCPULoadAverage",
+                                      "type": "numeric/double",
+                                      "value": "4.84765625"
+                                    }
+                                  },
+                                  {
+                                    "node": {
+                                      "name": "AfterHostMemoryUsed",
+                                      "type": "numeric/double",
+                                      "value": "51400704.0"
+                                    }
+                                  },
+                                  {
+                                    "node": {
+                                      "name": "BeforeCPULoadAverage",
+                                      "type": "numeric/double",
+                                      "value": "4.84765625"
+                                    }
+                                  },
+                                  {
+                                    "node": {
+                                      "name": "BeforeHostMemoryUsed",
+                                      "type": "numeric/double",
+                                      "value": "51400912.0"
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          },
+                          {
+                            "node": {
+                              "type": "COMPILE",
+                              "startTime": "2025-03-28T16:19:10+00:00",
+                              "duration": 365,
+                              "command": "\"/usr/bin/c++\" (truncated)",
+                              "result": "0",
+                              "source": "/my/path/projects/tmp_for_cdash/src_instrument/MathFunctions/mysqrt.cxx",
+                              "language": "C++",
+                              "config": "",
+                              "target": {
+                                "name": "SqrtLibrary",
+                                "type": "STATIC_LIBRARY"
+                              },
+                              "measurements": {
+                                "edges": [
+                                  {
+                                    "node": {
+                                      "name": "AfterCPULoadAverage",
+                                      "type": "numeric/double",
+                                      "value": "4.84765625"
+                                    }
+                                  },
+                                  {
+                                    "node": {
+                                      "name": "AfterHostMemoryUsed",
+                                      "type": "numeric/double",
+                                      "value": "51397360.0"
+                                    }
+                                  },
+                                  {
+                                    "node": {
+                                      "name": "BeforeCPULoadAverage",
+                                      "type": "numeric/double",
+                                      "value": "4.74755859375"
+                                    }
+                                  },
+                                  {
+                                    "node": {
+                                      "name": "BeforeHostMemoryUsed",
+                                      "type": "numeric/double",
+                                      "value": "51405904.0"
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          },
+                          {
+                            "node": {
+                              "type": "LINK",
+                              "startTime": "2025-03-28T16:19:11+00:00",
+                              "duration": 60,
+                              "command": "\"/my/path/projects/CMake_bin/bin/cmake\" (truncated)",
+                              "result": "0",
+                              "source": null,
+                              "language": "C++",
+                              "config": "",
+                              "target": {
+                                "name": "SqrtLibrary",
+                                "type": "STATIC_LIBRARY"
+                              },
+                              "measurements": {
+                                "edges": [
+                                  {
+                                    "node": {
+                                      "name": "AfterCPULoadAverage",
+                                      "type": "numeric/double",
+                                      "value": "4.84765625"
+                                    }
+                                  },
+                                  {
+                                    "node": {
+                                      "name": "AfterHostMemoryUsed",
+                                      "type": "numeric/double",
+                                      "value": "51407712.0"
+                                    }
+                                  },
+                                  {
+                                    "node": {
+                                      "name": "BeforeCPULoadAverage",
+                                      "type": "numeric/double",
+                                      "value": "4.84765625"
+                                    }
+                                  },
+                                  {
+                                    "node": {
+                                      "name": "BeforeHostMemoryUsed",
+                                      "type": "numeric/double",
+                                      "value": "51400720.0"
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "node": {
+                      "name": "test_instrument",
+                      "targets": {
+                        "edges": [
+                          {
+                            "node": {
+                              "name": "Tutorial",
+                              "type": "EXECUTABLE",
+                              "commands": {
+                                "edges": [
+                                  {
+                                    "node": {
+                                      "type": "LINK",
+                                      "startTime": "2025-03-28T16:19:11+00:00",
+                                      "duration": 70,
+                                      "command": "\"/usr/bin/c++\" (truncated)",
+                                      "result": "0",
+                                      "source": null,
+                                      "language": "C++",
+                                      "config": "",
+                                      "target": {
+                                        "name": "Tutorial",
+                                        "type": "EXECUTABLE"
+                                      },
+                                      "measurements": {
+                                        "edges": [
+                                          {
+                                            "node": {
+                                              "name": "AfterCPULoadAverage",
+                                              "type": "numeric/double",
+                                              "value": "4.84765625"
+                                            }
+                                          },
+                                          {
+                                            "node": {
+                                              "name": "AfterHostMemoryUsed",
+                                              "type": "numeric/double",
+                                              "value": "51395712.0"
+                                            }
+                                          },
+                                          {
+                                            "node": {
+                                              "name": "BeforeCPULoadAverage",
+                                              "type": "numeric/double",
+                                              "value": "4.84765625"
+                                            }
+                                          },
+                                          {
+                                            "node": {
+                                              "name": "BeforeHostMemoryUsed",
+                                              "type": "numeric/double",
+                                              "value": "51400464.0"
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  },
+                                  {
+                                    "node": {
+                                      "type": "COMPILE",
+                                      "startTime": "2025-03-28T16:19:10+00:00",
+                                      "duration": 365,
+                                      "command": "\"/usr/bin/c++\" (truncated)",
+                                      "result": "0",
+                                      "source": "/my/path/projects/tmp_for_cdash/src_instrument/tutorial.cxx",
+                                      "language": "C++",
+                                      "config": "",
+                                      "target": {
+                                        "name": "Tutorial",
+                                        "type": "EXECUTABLE"
+                                      },
+                                      "measurements": {
+                                        "edges": [
+                                          {
+                                            "node": {
+                                              "name": "AfterCPULoadAverage",
+                                              "type": "numeric/double",
+                                              "value": "4.84765625"
+                                            }
+                                          },
+                                          {
+                                            "node": {
+                                              "name": "AfterHostMemoryUsed",
+                                              "type": "numeric/double",
+                                              "value": "51398064.0"
+                                            }
+                                          },
+                                          {
+                                            "node": {
+                                              "name": "BeforeCPULoadAverage",
+                                              "type": "numeric/double",
+                                              "value": "4.74755859375"
+                                            }
+                                          },
+                                          {
+                                            "node": {
+                                              "name": "BeforeHostMemoryUsed",
+                                              "type": "numeric/double",
+                                              "value": "51406128.0"
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  }
+                                ]
+                              },
+                              "labels": {
+                                "edges": [
+                                  {
+                                    "node": {
+                                      "text": "Label2"
+                                    }
+                                  },
+                                  {
+                                    "node": {
+                                      "text": "Label1"
+                                    }
+                                  },
+                                  {
+                                    "node": {
+                                      "text": "Tutorial"
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "commands": {
+                        "edges": [
+                          {
+                            "node": {
+                              "type": "LINK",
+                              "startTime": "2025-03-28T16:19:11+00:00",
+                              "duration": 70,
+                              "command": "\"/usr/bin/c++\" (truncated)",
+                              "result": "0",
+                              "source": null,
+                              "language": "C++",
+                              "config": "",
+                              "target": {
+                                "name": "Tutorial",
+                                "type": "EXECUTABLE"
+                              },
+                              "measurements": {
+                                "edges": [
+                                  {
+                                    "node": {
+                                      "name": "AfterCPULoadAverage",
+                                      "type": "numeric/double",
+                                      "value": "4.84765625"
+                                    }
+                                  },
+                                  {
+                                    "node": {
+                                      "name": "AfterHostMemoryUsed",
+                                      "type": "numeric/double",
+                                      "value": "51395712.0"
+                                    }
+                                  },
+                                  {
+                                    "node": {
+                                      "name": "BeforeCPULoadAverage",
+                                      "type": "numeric/double",
+                                      "value": "4.84765625"
+                                    }
+                                  },
+                                  {
+                                    "node": {
+                                      "name": "BeforeHostMemoryUsed",
+                                      "type": "numeric/double",
+                                      "value": "51400464.0"
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          },
+                          {
+                            "node": {
+                              "type": "COMPILE",
+                              "startTime": "2025-03-28T16:19:10+00:00",
+                              "duration": 365,
+                              "command": "\"/usr/bin/c++\" (truncated)",
+                              "result": "0",
+                              "source": "/my/path/projects/tmp_for_cdash/src_instrument/tutorial.cxx",
+                              "language": "C++",
+                              "config": "",
+                              "target": {
+                                "name": "Tutorial",
+                                "type": "EXECUTABLE"
+                              },
+                              "measurements": {
+                                "edges": [
+                                  {
+                                    "node": {
+                                      "name": "AfterCPULoadAverage",
+                                      "type": "numeric/double",
+                                      "value": "4.84765625"
+                                    }
+                                  },
+                                  {
+                                    "node": {
+                                      "name": "AfterHostMemoryUsed",
+                                      "type": "numeric/double",
+                                      "value": "51398064.0"
+                                    }
+                                  },
+                                  {
+                                    "node": {
+                                      "name": "BeforeCPULoadAverage",
+                                      "type": "numeric/double",
+                                      "value": "4.74755859375"
+                                    }
+                                  },
+                                  {
+                                    "node": {
+                                      "name": "BeforeHostMemoryUsed",
+                                      "type": "numeric/double",
+                                      "value": "51406128.0"
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}
