@@ -1,0 +1,21 @@
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: {{ .Release.Name }}-website
+  labels:
+    app: {{ .Release.Name }}-website
+spec:
+  ingressClassName: nginx
+  tls:
+    - secretName: tls-cdash
+  rules:
+    - host: {{ .Values.website.url }}
+      http:
+        paths:
+          - backend:
+              service:
+                name: {{ .Release.Name }}-website
+                port:
+                  number: 8080
+            path: /
+            pathType: ImplementationSpecific
