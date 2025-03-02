@@ -1,0 +1,11 @@
+<?php
+
+namespace App\Enums;
+
+enum BuildCommandType: string
+{
+    case COMPILE = 'COMPILE';
+    case LINK = 'LINK';
+    case CUSTOM = 'CUSTOM';
+    case CMAKE_BUILD = 'CMAKE_BUILD';
+}
