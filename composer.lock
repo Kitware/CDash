@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e48c1696db91a68fb4ecccf81ba99b69",
+    "content-hash": "40ab7bb7a53bc810041d11a01f8595be",
     "packages": [
         {
             "name": "24slides/laravel-saml2",
@@ -504,24 +504,24 @@
         },
         {
             "name": "directorytree/ldaprecord",
-            "version": "v3.7.1",
+            "version": "v3.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/DirectoryTree/LdapRecord.git",
-                "reference": "9b5f53d820a490fdb0c7a098c93f3b83b74455dd"
+                "reference": "86c95c46862a525169a3d9b57db180027ff09bf1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/DirectoryTree/LdapRecord/zipball/9b5f53d820a490fdb0c7a098c93f3b83b74455dd",
-                "reference": "9b5f53d820a490fdb0c7a098c93f3b83b74455dd",
+                "url": "https://api.github.com/repos/DirectoryTree/LdapRecord/zipball/86c95c46862a525169a3d9b57db180027ff09bf1",
+                "reference": "86c95c46862a525169a3d9b57db180027ff09bf1",
                 "shasum": ""
             },
             "require": {
                 "ext-iconv": "*",
                 "ext-json": "*",
                 "ext-ldap": "*",
-                "illuminate/collections": "^8.0|^9.0|^10.0|^11.0",
-                "illuminate/contracts": "^8.0|^9.0|^10.0|^11.0",
+                "illuminate/collections": "^8.0|^9.0|^10.0|^11.0|^12.0",
+                "illuminate/contracts": "^8.0|^9.0|^10.0|^11.0|^12.0",
                 "nesbot/carbon": "*",
                 "php": ">=8.1",
                 "psr/log": "*",
@@ -576,27 +576,27 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-09-23T03:45:43+00:00"
+            "time": "2025-02-26T00:55:14+00:00"
         },
         {
             "name": "directorytree/ldaprecord-laravel",
-            "version": "v3.3.5",
+            "version": "v3.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/DirectoryTree/LdapRecord-Laravel.git",
-                "reference": "3f5d015417498d62763a2aae13f8e2fc9d56fbb1"
+                "reference": "bb0aa206723ed07e2b42eadd7311d5949cc770dd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/DirectoryTree/LdapRecord-Laravel/zipball/3f5d015417498d62763a2aae13f8e2fc9d56fbb1",
-                "reference": "3f5d015417498d62763a2aae13f8e2fc9d56fbb1",
+                "url": "https://api.github.com/repos/DirectoryTree/LdapRecord-Laravel/zipball/bb0aa206723ed07e2b42eadd7311d5949cc770dd",
+                "reference": "bb0aa206723ed07e2b42eadd7311d5949cc770dd",
                 "shasum": ""
             },
             "require": {
                 "directorytree/ldaprecord": "^v3.3",
                 "ext-json": "*",
                 "ext-ldap": "*",
-                "illuminate/support": "^8.0|^9.0|^10.0|^11.0",
+                "illuminate/support": "^8.0|^9.0|^10.0|^11.0|^12.0",
                 "php": ">=8.1",
                 "ramsey/uuid": "*"
             },
@@ -604,7 +604,7 @@
                 "laravel/pint": "^1.9",
                 "laravel/sanctum": "*",
                 "mockery/mockery": "^1.0",
-                "orchestra/testbench": "^6.0|^7.0|^8.0|^9.0",
+                "orchestra/testbench": "^6.0|^7.0|^8.0|^9.0|^10.0",
                 "phpunit/phpunit": "^8.0|^9.0|^10.0|^11.0",
                 "spatie/ray": "^1.28"
             },
@@ -635,7 +635,7 @@
             ],
             "support": {
                 "issues": "https://github.com/DirectoryTree/LdapRecord-Laravel/issues",
-                "source": "https://github.com/DirectoryTree/LdapRecord-Laravel/tree/v3.3.5"
+                "source": "https://github.com/DirectoryTree/LdapRecord-Laravel/tree/v3.4.0"
             },
             "funding": [
                 {
@@ -643,7 +643,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-09-23T03:24:21+00:00"
+            "time": "2025-02-26T01:41:53+00:00"
         },
         {
             "name": "doctrine/cache",
