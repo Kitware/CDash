@@ -15,8 +15,8 @@ data:
 
   LOG_CHANNEL: "stderr"
 
-  {{ if .Values.minio.enabled }}
   FILESYSTEM_DRIVER: "s3"
+  {{ if .Values.minio.enabled }}
   AWS_REGION: "local"
   AWS_BUCKET: "cdash"
   AWS_URL: "http://{{ .Release.Name }}-minio:9000/{{ .Release.Name }}/"

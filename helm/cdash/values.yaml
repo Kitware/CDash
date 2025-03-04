@@ -15,12 +15,7 @@ global:
     image: kitware/cdash:latest
     # Configure CDash by setting additional environment variables here
     # https://github.com/Kitware/CDash/blob/master/docs/config.md
-    #
-    # Note that if you disable minio (below) and want to store files
-    # on the CDash webserver instead, you should specify:
-    # REMOTE_WORKERS: "true"
     env: |-
-      #REMOTE_WORKERS: "true"
       #BACKUP_TIMEFRAME: 36
 
   postgresql:
