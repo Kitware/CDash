@@ -29,7 +29,7 @@
     "guzzlehttp/guzzle": "7.9.2",
     "knplabs/github-api": "3.16.0",
     "laravel/framework": "10.48.23",
-    "laravel/socialite": "5.17.1",
+    "laravel/socialite": "5.18.0",
     "laravel/ui": "4.6.1",
     "lcobucci/jwt": "5.5.0",
     "league/flysystem-aws-s3-v3": "^3.29",
