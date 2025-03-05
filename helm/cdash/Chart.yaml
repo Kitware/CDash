@@ -8,7 +8,7 @@ dependencies:
   - name: postgresql
     version: "16.3.5"
     repository: "oci://registry-1.docker.io/bitnamicharts"
-    condition: global.postgresql.enabled
+    condition: postgresql.enabled
   - name: minio
     version: "14.10.3"
     repository: "oci://registry-1.docker.io/bitnamicharts"

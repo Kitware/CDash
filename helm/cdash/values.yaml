@@ -29,17 +29,14 @@ cdash:
       limits:
         memory: 256Mi
 
-global:
-  postgresql:
-    enabled: true
-    auth:
-      database: cdash
-      existingSecret: "{{ .Release.Name }}-website"
-      secretKeys:
-        adminPasswordKey: DB_PASSWORD
-
 # See here for more config settings: https://github.com/bitnami/charts/tree/main/bitnami/postgresql
 postgresql:
+  enabled: true
+  auth:
+    database: cdash
+    existingSecret: "{{ .Release.Name }}-website"
+    secretKeys:
+      adminPasswordKey: DB_PASSWORD
   primary:
     persistence:
       size: "8Gi"
