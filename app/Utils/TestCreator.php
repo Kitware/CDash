@@ -75,10 +75,12 @@ class TestCreator
         try {
             $img = imagecreatefromstring($imgStr);
         } catch (ErrorException) {
+            // Unable to create a valid image, substitute the broken image from CDash
             Log::error("Unable to create image object from data in #{$this->testName}");
-            $image->Checksum = 0;
-            return;
+            $image->Extension = 'image/png';
+            $img = imagecreatefrompng(public_path('/img/image_missing.png'));
         }
+
         ob_start();
         switch ($image->Extension) {
             case 'image/jpeg':
