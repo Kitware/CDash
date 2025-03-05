@@ -5,7 +5,7 @@ metadata:
   labels:
     app: "{{ .Release.Name }}-worker"
 spec:
-  replicas: {{ .Values.worker.replicas }}
+  replicas: {{ .Values.cdash.worker.replicas }}
   strategy:
     type: Recreate
   selector:
@@ -20,7 +20,7 @@ spec:
         - name: "{{ .Release.Name }}-worker"
           image: {{ .Values.cdash.image | quote }}
           resources:
-            {{ toYaml .Values.worker.resources | nindent 12 }}
+            {{ toYaml .Values.cdash.worker.resources | nindent 12 }}
           command: [ "/bin/bash", "/cdash/docker/docker-entrypoint.sh" ]
           args: [ "start-worker" ]
           env:

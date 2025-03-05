@@ -1,3 +1,15 @@
+{{/*
+Returns the CDash URL, ex: `http://cdash-example.local`
+Use https if `cdash.https` is true, otherwise use http.
+*/}}
+{{- define "cdash.url" -}}
+{{- if .Values.cdash.https -}}
+{{-   printf "https://%s" $.Values.cdash.host -}}
+{{- else -}}
+{{-   printf "http://%s" $.Values.cdash.host -}}
+{{- end -}}
+{{- end -}}
+
 {{- define "cdash.environment" }}
           - name: "APP_KEY"
             valueFrom:

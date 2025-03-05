@@ -20,10 +20,10 @@ spec:
         - name: "{{ .Release.Name }}-website"
           image: {{ .Values.cdash.image | quote }}
           resources:
-            {{ toYaml .Values.website.resources | nindent 12 }}
+            {{ toYaml .Values.cdash.website.resources | nindent 12 }}
           command: [ "/bin/bash", "/cdash/docker/docker-entrypoint.sh" ]
           args: [ "start-website" ]
           env:
           - name: "APP_URL"
-            value: "https://{{ .Values.website.url }}"
+            value: {{ template "cdash.url" . }}
           {{ template "cdash.environment" . }}

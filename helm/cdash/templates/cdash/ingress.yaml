@@ -6,10 +6,12 @@ metadata:
     app: {{ .Release.Name }}-website
 spec:
   ingressClassName: nginx
+  {{ if .Values.cdash.https }}
   tls:
     - secretName: tls-cdash
+  {{ end }}
   rules:
-    - host: {{ .Values.website.url }}
+    - host: {{ .Values.cdash.host }}
       http:
         paths:
           - backend:
