@@ -10,14 +10,14 @@ worker:
       memory: 256Mi
   replicas: 1
 
-global:
-  cdash:
-    image: kitware/cdash:latest
-    # Configure CDash by setting additional environment variables here
-    # https://github.com/Kitware/CDash/blob/master/docs/config.md
-    env: |-
-      #BACKUP_TIMEFRAME: 36
+cdash:
+  image: kitware/cdash:latest
+  # Configure CDash by setting additional environment variables here
+  # https://github.com/Kitware/CDash/blob/master/docs/config.md
+  env: |-
+    #BACKUP_TIMEFRAME: 36
 
+global:
   postgresql:
     enabled: true
     auth:

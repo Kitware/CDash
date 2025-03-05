@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: "{{ .Release.Name }}-website"
-          image: {{ .Values.global.cdash.image | quote }}
+          image: {{ .Values.cdash.image | quote }}
           resources:
             {{ toYaml .Values.website.resources | nindent 12 }}
           command: [ "/bin/bash", "/cdash/docker/docker-entrypoint.sh" ]

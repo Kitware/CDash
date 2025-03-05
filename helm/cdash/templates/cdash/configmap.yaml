@@ -23,4 +23,4 @@ data:
   AWS_ENDPOINT: "http://{{ .Release.Name }}-minio:9000"
   AWS_USE_PATH_STYLE_ENDPOINT: "true"
   {{ end }}
-  {{- .Values.global.cdash.env | nindent 2 }}
+  {{- .Values.cdash.env | nindent 2 }}
