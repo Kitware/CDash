@@ -4,6 +4,9 @@ cdash:
 
   # cdash.https controls whether the CDash external URL
   # uses https instead of http.
+  # When using https for a production CDash server, you should
+  # also create a Kubernetes TLS secret named "tls-cdash"
+  # https://kubernetes.io/docs/reference/kubectl/generated/kubectl_create/kubectl_create_secret_tls/
   https: true
 
   # cdash.image is the Docker image to use for this CDash instance.
