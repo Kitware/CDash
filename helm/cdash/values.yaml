@@ -2,12 +2,21 @@ cdash:
   # cdash.host is the host name for CDash.
   host: cdash-example.local
 
-  # cdash.https controls whether the CDash external URL.
+  # cdash.https controls whether the CDash external URL
   # uses https instead of http.
   https: true
 
   # cdash.image is the Docker image to use for this CDash instance.
   image: kitware/cdash:latest
+
+  # By default, this Helm chart uses an embedded postgres database.
+  # To use an external database instead, set postgresql.enable: false
+  # below and create a secret named 'cdash-database' with the following
+  # values:
+  # - host (required)
+  # - password (required)
+  # - username (optional, defaults to 'postgres')
+  # - database (optional, defaults to 'cdash')
 
   # cdash.env can be used to configure CDash by setting
   # additional environment variables.

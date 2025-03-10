@@ -26,11 +26,39 @@ Use https if `cdash.https` is true, otherwise use http.
               secretKeyRef:
                 name: "{{ .Release.Name }}-website"
                 key: "AWS_SECRET_ACCESS_KEY"
+          - name: "DB_CONNECTION"
+            value: "pgsql"
+          - name: "DB_DATABASE"
+            value: "cdash"
+          - name: "DB_PORT"
+            value: "5432"
+          {{ if .Values.postgresql.enabled }}
+          - name: "DB_HOST"
+            value: "{{ .Release.Name }}-postgresql"
+          - name: "DB_USERNAME"
+            value: "postgres"
           - name: "DB_PASSWORD"
             valueFrom:
               secretKeyRef:
                 name: "{{ .Release.Name }}-website"
                 key: "DB_PASSWORD"
+          {{- else -}}
+          - name: "DB_HOST"
+            valueFrom:
+              secretKeyRef:
+                name: "cdash-database"
+                key: "host"
+          - name: "DB_USERNAME"
+            valueFrom:
+              secretKeyRef:
+                name: "cdash-database"
+                key: "username"
+          - name: "DB_PASSWORD"
+            valueFrom:
+              secretKeyRef:
+                name: "cdash-database"
+                key: "password"
+          {{- end }}
           envFrom:
             - configMapRef:
                 name: "{{ .Release.Name }}-website"

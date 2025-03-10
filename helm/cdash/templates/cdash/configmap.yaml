@@ -5,12 +5,6 @@ metadata:
 data:
   APP_ENV: "production"
 
-  DB_DATABASE: "cdash"
-  DB_PORT: "5432"
-  DB_HOST: "{{ .Release.Name }}-postgresql"
-  DB_CONNECTION: "pgsql"
-  DB_LOGIN: "postgres"
-
   QUEUE_CONNECTION: "database"
 
   LOG_CHANNEL: "stderr"
