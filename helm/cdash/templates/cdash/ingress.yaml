@@ -8,7 +8,7 @@ spec:
   ingressClassName: nginx
   {{ if .Values.cdash.https }}
   tls:
-    - secretName: tls-cdash
+    - secretName: "{{ .Release.Name }}-tls"
   {{ end }}
   rules:
     - host: {{ .Values.cdash.host }}

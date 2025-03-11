@@ -11,8 +11,6 @@ data:
 
   FILESYSTEM_DRIVER: "s3"
   {{ if .Values.minio.enabled }}
-  AWS_REGION: "local"
-  AWS_BUCKET: "cdash"
   AWS_URL: "http://{{ .Release.Name }}-minio:9000/{{ .Release.Name }}/"
   AWS_ENDPOINT: "http://{{ .Release.Name }}-minio:9000"
   AWS_USE_PATH_STYLE_ENDPOINT: "true"

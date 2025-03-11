@@ -5,21 +5,29 @@ cdash:
   # cdash.https controls whether the CDash external URL
   # uses https instead of http.
   # When using https for a production CDash server, you should
-  # also create a Kubernetes TLS secret named "tls-cdash"
+  # also create a Kubernetes TLS secret named "<release name>-tls"
   # https://kubernetes.io/docs/reference/kubectl/generated/kubectl_create/kubectl_create_secret_tls/
   https: true
 
   # cdash.image is the Docker image to use for this CDash instance.
   image: kitware/cdash:latest
 
-  # By default, this Helm chart uses an embedded postgres database.
-  # To use an external database instead, set postgresql.enable: false
-  # below and create a secret named 'cdash-database' with the following
+  # This Helm chart uses an embedded postgres database by default.
+  # To use an external database instead, set postgresql.enabled: false
+  # below and create a secret named '<release name>-db' with the following
   # values:
   # - host (required)
   # - password (required)
   # - username (optional, defaults to 'postgres')
   # - database (optional, defaults to 'cdash')
+
+  # By default, this Helm chart uses an embedded MinIO for object storage.
+  # To use AWS S3 instead, set minio.enabled: false below and create a secret
+  # named '<release name>-s3' with the following values:
+  # - accesskey
+  # - secretkey
+  # - region
+  # - bucket
 
   # cdash.env can be used to configure CDash by setting
   # additional environment variables.
@@ -46,9 +54,9 @@ postgresql:
   enabled: true
   auth:
     database: cdash
-    existingSecret: "{{ .Release.Name }}-website"
+    existingSecret: "{{ .Release.Name }}-db"
     secretKeys:
-      adminPasswordKey: DB_PASSWORD
+      adminPasswordKey: password
   primary:
     persistence:
       size: "8Gi"
@@ -57,9 +65,9 @@ postgresql:
 minio:
   enabled: true
   auth:
-    existingSecret: "{{ .Release.Name }}-website"
-    rootPasswordSecretKey: AWS_SECRET_ACCESS_KEY
-    rootUserSecretKey: AWS_ACCESS_KEY_ID
+    existingSecret: "{{ .Release.Name }}-s3"
+    rootPasswordSecretKey: secretkey
+    rootUserSecretKey: accesskey
   defaultBuckets: cdash
   ingress:
     enabled: true
