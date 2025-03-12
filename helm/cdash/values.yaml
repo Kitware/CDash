@@ -59,6 +59,8 @@ postgresql:
       adminPasswordKey: password
   primary:
     persistence:
+      # This is the size of the database's persistent volume.
+      # Increase as necessary for your anticipated needs.
       size: "8Gi"
 
 # See here for more config settings: https://github.com/bitnami/charts/tree/main/bitnami/minio
@@ -74,4 +76,6 @@ minio:
   persistence:
     annotations:
       helm.sh/resource-policy: keep
+    # This is the size of the object store's persistent volume.
+    # Increase as necessary for your anticipated needs.
     size: "8Gi"
