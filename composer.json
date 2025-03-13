@@ -28,7 +28,7 @@
     "doctrine/dbal": "3.8.6",
     "guzzlehttp/guzzle": "7.9.2",
     "knplabs/github-api": "3.16.0",
-    "laravel/framework": "10.48.23",
+    "laravel/framework": "10.48.29",
     "laravel/socialite": "5.18.0",
     "laravel/ui": "4.6.1",
     "lcobucci/jwt": "5.5.0",
