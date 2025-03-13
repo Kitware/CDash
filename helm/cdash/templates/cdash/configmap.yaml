@@ -3,13 +3,9 @@ apiVersion: v1
 metadata:
   name: "{{ .Release.Name }}-website"
 data:
-  APP_ENV: "production"
-
-  QUEUE_CONNECTION: "database"
-
-  LOG_CHANNEL: "stderr"
-
   FILESYSTEM_DRIVER: "s3"
+  LOG_CHANNEL: "stderr"
+  QUEUE_CONNECTION: "database"
   {{ if .Values.minio.enabled }}
   AWS_URL: "http://{{ .Release.Name }}-minio:9000/{{ .Release.Name }}/"
   AWS_ENDPOINT: "http://{{ .Release.Name }}-minio:9000"
