@@ -24,6 +24,4 @@ spec:
           command: [ "/bin/bash", "/cdash/docker/docker-entrypoint.sh" ]
           args: [ "start-worker" ]
           env:
-          - name: "APP_URL"
-            value: "http://{{ .Release.Name }}-website:8080"
         {{ template "cdash.environment" . }}
