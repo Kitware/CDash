@@ -10,7 +10,7 @@ cdash:
   https: true
 
   # cdash.image is the Docker image to use for this CDash instance.
-  image: "kitware/cdash:v3.8.0"
+  image: "kitware/cdash:v3.9.0"
 
   # This Helm chart uses an embedded postgres database by default.
   # To use an external database instead, set postgresql.enabled: false

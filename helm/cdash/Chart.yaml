@@ -3,7 +3,7 @@ name: cdash
 description: CDash aggregates, analyzes and displays the results of software testing processes
 type: application
 version: "0.1.0"
-appVersion: "3.8.0"
+appVersion: "3.9.0"
 dependencies:
   - name: postgresql
     version: "16.3.5"
