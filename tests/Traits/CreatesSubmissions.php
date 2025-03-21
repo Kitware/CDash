@@ -29,9 +29,9 @@ trait CreatesSubmissions
                     if ($auth_token !== null) {
                         $command = $command->withToken($auth_token);
                     }
-                    $command->get(url('/submit.php'), [
+                    dd(Http::withBody($file_contents)->timeout(10000)->get(url('/submit.php'), [
                         'project' => $project_name,
-                    ]);
+                    ])->body());
                 }
             });
 

@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="test-build-name"
+	BuildStamp="20250224-1858-Experimental"
+	Name="test-site"
+	Generator="ctest-4.0.0-rc1-g4e7b37c"
+	CompilerName=""
+	CompilerVersion=""
+	OSName="macOS"
+	Hostname="test"
+	OSRelease="15.3.1"
+	OSVersion="24D70"
+	OSPlatform="arm64"
+	Is64Bits="1"
+	VendorString="Apple"
+	VendorID="Apple"
+	FamilyID="0"
+	ModelID="0"
+	ModelName="Apple M3 Max"
+	ProcessorCacheSize="131072"
+	NumberOfLogicalCPU="14"
+	NumberOfPhysicalCPU="14"
+	TotalVirtualMemory="0"
+	TotalPhysicalMemory="98304"
+	LogicalProcessorsPerPhysical="14"
+	ProcessorClockFrequency="0"
+	>
+	<Subproject name="MyExperimentalFeature">
+		<Label>MyExperimentalFeature</Label>
+	</Subproject>
+	<Subproject name="MyProductionCode">
+		<Label>MyProductionCode</Label>
+	</Subproject>
+	<Build>
+		<StartDateTime>Feb 24 13:58 EST</StartDateTime>
+		<StartBuildTime>1740423527</StartBuildTime>
+		<BuildCommand>/my/path/CMake_bin/bin/cmake --build . --config "Release"</BuildCommand>
+		<Failure type="Warning">
+			<!-- Meta-information about the build action -->
+			<Action>
+				<TargetName>foo</TargetName>
+				<Language>C</Language>
+				<SourceFile>MyExperimentalFeature/foo.c</SourceFile>
+				<OutputFile>MyExperimentalFeature/CMakeFiles/foo.dir/foo.c.o</OutputFile>
+				<OutputType>object file</OutputType>
+			</Action>
+			<!-- Details of command -->
+			<Command>
+				<WorkingDirectory>/my/path/tmp_for_cdash/labels_for_subprojects/bin</WorkingDirectory>
+				<Argument>/usr/bin/cc</Argument>
+				<Argument>-Wall</Argument>
+				<Argument>-Wpedantic</Argument>
+				<Argument>-Wunused</Argument>
+				<Argument>-Wextra</Argument>
+				<Argument>-arch</Argument>
+				<Argument>arm64</Argument>
+				<Argument>-MD</Argument>
+				<Argument>-MT</Argument>
+				<Argument>MyExperimentalFeature/CMakeFiles/foo.dir/foo.c.o</Argument>
+				<Argument>-MF</Argument>
+				<Argument>MyExperimentalFeature/CMakeFiles/foo.dir/foo.c.o.d</Argument>
+				<Argument>-o</Argument>
+				<Argument>MyExperimentalFeature/CMakeFiles/foo.dir/foo.c.o</Argument>
+				<Argument>-c</Argument>
+				<Argument>/my/path/tmp_for_cdash/labels_for_subprojects/src/MyExperimentalFeature/foo.c</Argument>
+			</Command>
+			<!-- Result of command -->
+			<Result>
+				<StdOut/>
+				<StdErr>[CTest: warning matched] /my/path/tmp_for_cdash/labels_for_subprojects/src/MyExperimentalFeature/foo.c:1:8: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
+    1 | int foo()
+      |        ^
+      |         void
+[CTest: warning matched] 1 warning generated.</StdErr>
+				<ExitCondition>0</ExitCondition>
+			</Result>
+		</Failure>
+		<Failure type="Warning">
+			<!-- Meta-information about the build action -->
+			<Action>
+				<TargetName>testapp</TargetName>
+				<Language>C</Language>
+				<SourceFile>MyExperimentalFeature/experimental.c</SourceFile>
+				<OutputFile>MyExperimentalFeature/CMakeFiles/testapp.dir/experimental.c.o</OutputFile>
+				<OutputType>object file</OutputType>
+			</Action>
+			<!-- Details of command -->
+			<Command>
+				<WorkingDirectory>/my/path/tmp_for_cdash/labels_for_subprojects/bin</WorkingDirectory>
+				<Argument>/usr/bin/cc</Argument>
+				<Argument>-Wall</Argument>
+				<Argument>-Wpedantic</Argument>
+				<Argument>-Wunused</Argument>
+				<Argument>-Wextra</Argument>
+				<Argument>-arch</Argument>
+				<Argument>arm64</Argument>
+				<Argument>-MD</Argument>
+				<Argument>-MT</Argument>
+				<Argument>MyExperimentalFeature/CMakeFiles/testapp.dir/experimental.c.o</Argument>
+				<Argument>-MF</Argument>
+				<Argument>MyExperimentalFeature/CMakeFiles/testapp.dir/experimental.c.o.d</Argument>
+				<Argument>-o</Argument>
+				<Argument>MyExperimentalFeature/CMakeFiles/testapp.dir/experimental.c.o</Argument>
+				<Argument>-c</Argument>
+				<Argument>/my/path/tmp_for_cdash/labels_for_subprojects/src/MyExperimentalFeature/experimental.c</Argument>
+			</Command>
+			<!-- Result of command -->
+			<Result>
+				<StdOut/>
+				<StdErr>[CTest: warning matched] /my/path/tmp_for_cdash/labels_for_subprojects/src/MyExperimentalFeature/experimental.c:6:9: warning: comparison of integers of different signs: 'unsigned int' and 'int' [-Wsign-compare]
+    6 |   if (i &lt; -1) {
+      |       ~ ^ ~~
+[CTest: warning matched] 1 warning generated.</StdErr>
+				<ExitCondition>0</ExitCondition>
+			</Result>
+			<!-- Interested parties -->
+			<Labels>
+				<Label>MyExperimentalFeature</Label>
+				<Label>NotASubproject</Label>
+			</Labels>
+		</Failure>
+		<Targets>
+			<Target name="testapp" type="EXECUTABLE">
+				<Labels>
+					<Label>MyExperimentalFeature</Label>
+					<Label>NotASubproject</Label>
+				</Labels>
+				<Commands>
+					<Link command="&quot;/usr/bin/cc&quot; &quot;-Wall&quot; &quot;-Wpedantic&quot; &quot;-Wunused&quot; &quot;-Wextra&quot; &quot;-arch&quot; &quot;arm64&quot; &quot;-Wl,-search_paths_first&quot; &quot;-Wl,-headerpad_max_install_names&quot; &quot;MyExperimentalFeature/CMakeFiles/testapp.dir/experimental.c.o&quot; &quot;-o&quot; &quot;MyExperimentalFeature/testapp&quot;" config="" duration="80" language="C" result="0" timeStart="1740423527921" version="1">
+						<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
+							<Value>2.271484375</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="AfterHostMemoryUsed">
+							<Value>39223872.0</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="BeforeCPULoadAverage">
+							<Value>2.271484375</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="BeforeHostMemoryUsed">
+							<Value>39211120.0</Value>
+						</NamedMeasurement>
+					</Link>
+					<Compile command="&quot;/usr/bin/cc&quot; &quot;-Wall&quot; &quot;-Wpedantic&quot; &quot;-Wunused&quot; &quot;-Wextra&quot; &quot;-arch&quot; &quot;arm64&quot; &quot;-MD&quot; &quot;-MT&quot; &quot;MyExperimentalFeature/CMakeFiles/testapp.dir/experimental.c.o&quot; &quot;-MF&quot; &quot;MyExperimentalFeature/CMakeFiles/testapp.dir/experimental.c.o.d&quot; &quot;-o&quot; &quot;MyExperimentalFeature/CMakeFiles/testapp.dir/experimental.c.o&quot; &quot;-c&quot; &quot;/my/path/tmp_for_cdash/labels_for_subprojects/src/MyExperimentalFeature/experimental.c&quot;" config="" duration="57" language="C" result="0" source="/my/path/tmp_for_cdash/labels_for_subprojects/src/MyExperimentalFeature/experimental.c" timeStart="1740423527774" version="1">
+						<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
+							<Value>2.271484375</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="AfterHostMemoryUsed">
+							<Value>39169840.0</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="BeforeCPULoadAverage">
+							<Value>2.271484375</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="BeforeHostMemoryUsed">
+							<Value>39143792.0</Value>
+						</NamedMeasurement>
+					</Compile>
+				</Commands>
+			</Target>
+			<Target name="MakeTable" type="EXECUTABLE">
+				<Labels>
+					<Label>MyExperimentalFeature</Label>
+					<Label>NotASubproject</Label>
+				</Labels>
+				<Commands>
+					<Compile command="&quot;/usr/bin/c++&quot; &quot;-arch&quot; &quot;arm64&quot; &quot;-MD&quot; &quot;-MT&quot; &quot;MyExperimentalFeature/CMakeFiles/MakeTable.dir/MakeTable.cxx.o&quot; &quot;-MF&quot; &quot;MyExperimentalFeature/CMakeFiles/MakeTable.dir/MakeTable.cxx.o.d&quot; &quot;-o&quot; &quot;MyExperimentalFeature/CMakeFiles/MakeTable.dir/MakeTable.cxx.o&quot; &quot;-c&quot; &quot;/my/path/tmp_for_cdash/labels_for_subprojects/src/MyExperimentalFeature/MakeTable.cxx&quot;" config="" duration="387" language="C++" result="0" source="/my/path/tmp_for_cdash/labels_for_subprojects/src/MyExperimentalFeature/MakeTable.cxx" timeStart="1740423527774" version="1">
+						<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
+							<Value>2.271484375</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="AfterHostMemoryUsed">
+							<Value>39207216.0</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="BeforeCPULoadAverage">
+							<Value>2.271484375</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="BeforeHostMemoryUsed">
+							<Value>39144256.0</Value>
+						</NamedMeasurement>
+					</Compile>
+					<Link command="&quot;/usr/bin/c++&quot; &quot;-arch&quot; &quot;arm64&quot; &quot;-Wl,-search_paths_first&quot; &quot;-Wl,-headerpad_max_install_names&quot; &quot;MyExperimentalFeature/CMakeFiles/MakeTable.dir/MakeTable.cxx.o&quot; &quot;-o&quot; &quot;MyExperimentalFeature/MakeTable&quot;" config="" duration="61" language="C++" result="0" timeStart="1740423528227" version="1">
+						<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
+							<Value>2.271484375</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="AfterHostMemoryUsed">
+							<Value>39208144.0</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="BeforeCPULoadAverage">
+							<Value>2.271484375</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="BeforeHostMemoryUsed">
+							<Value>39208272.0</Value>
+						</NamedMeasurement>
+					</Link>
+				</Commands>
+			</Target>
+			<Target name="SqrtLibrary" type="STATIC_LIBRARY">
+				<Labels>
+					<Label>MyExperimentalFeature</Label>
+					<Label>NotASubproject</Label>
+				</Labels>
+				<Commands>
+					<Compile command="&quot;/usr/bin/c++&quot; &quot;-I/my/path/tmp_for_cdash/labels_for_subprojects/src/MyExperimentalFeature&quot; &quot;-I/my/path/tmp_for_cdash/labels_for_subprojects/bin/MyExperimentalFeature&quot; &quot;-arch&quot; &quot;arm64&quot; &quot;-MD&quot; &quot;-MT&quot; &quot;MyExperimentalFeature/CMakeFiles/SqrtLibrary.dir/mysqrt.cxx.o&quot; &quot;-MF&quot; &quot;MyExperimentalFeature/CMakeFiles/SqrtLibrary.dir/mysqrt.cxx.o.d&quot; &quot;-o&quot; &quot;MyExperimentalFeature/CMakeFiles/SqrtLibrary.dir/mysqrt.cxx.o&quot; &quot;-c&quot; &quot;/my/path/tmp_for_cdash/labels_for_subprojects/src/MyExperimentalFeature/mysqrt.cxx&quot;" config="" duration="303" language="C++" result="0" source="/my/path/tmp_for_cdash/labels_for_subprojects/src/MyExperimentalFeature/mysqrt.cxx" timeStart="1740423528602" version="1">
+						<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
+							<Value>2.271484375</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="AfterHostMemoryUsed">
+							<Value>39207264.0</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="BeforeCPULoadAverage">
+							<Value>2.271484375</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="BeforeHostMemoryUsed">
+							<Value>39207616.0</Value>
+						</NamedMeasurement>
+					</Compile>
+					<Link command="&quot;/usr/bin/ranlib&quot; &quot;MyExperimentalFeature/libSqrtLibrary.a&quot;" config="" duration="25" language="C++" result="0" timeStart="1740423529171" version="1">
+						<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
+							<Value>2.271484375</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="AfterHostMemoryUsed">
+							<Value>39210336.0</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="BeforeCPULoadAverage">
+							<Value>2.271484375</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="BeforeHostMemoryUsed">
+							<Value>39210144.0</Value>
+						</NamedMeasurement>
+					</Link>
+					<Link command="&quot;/usr/bin/ar&quot; &quot;qc&quot; &quot;MyExperimentalFeature/libSqrtLibrary.a&quot; &quot;MyExperimentalFeature/CMakeFiles/SqrtLibrary.dir/mysqrt.cxx.o&quot;" config="" duration="29" language="C++" result="0" timeStart="1740423529085" version="1">
+						<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
+							<Value>2.271484375</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="AfterHostMemoryUsed">
+							<Value>39210304.0</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="BeforeCPULoadAverage">
+							<Value>2.271484375</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="BeforeHostMemoryUsed">
+							<Value>39209312.0</Value>
+						</NamedMeasurement>
+					</Link>
+					<Link command="&quot;/my/path/CMake_bin/bin/cmake&quot; &quot;-E&quot; &quot;rm&quot; &quot;-f&quot; &quot;MyExperimentalFeature/libSqrtLibrary.a&quot;" config="" duration="57" language="C++" result="0" timeStart="1740423528969" version="1">
+						<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
+							<Value>2.271484375</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="AfterHostMemoryUsed">
+							<Value>39209648.0</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="BeforeCPULoadAverage">
+							<Value>2.271484375</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="BeforeHostMemoryUsed">
+							<Value>39209280.0</Value>
+						</NamedMeasurement>
+					</Link>
+					<Link command="&quot;/my/path/CMake_bin/bin/cmake&quot; &quot;-E&quot; &quot;touch&quot; &quot;MyExperimentalFeature/libSqrtLibrary.a&quot;" config="" duration="57" language="C++" result="0" timeStart="1740423529252" version="1">
+						<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
+							<Value>2.16943359375</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="AfterHostMemoryUsed">
+							<Value>39210960.0</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="BeforeCPULoadAverage">
+							<Value>2.16943359375</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="BeforeHostMemoryUsed">
+							<Value>39210304.0</Value>
+						</NamedMeasurement>
+					</Link>
+				</Commands>
+			</Target>
+			<Target name="foo" type="UNKNOWN">
+				<Commands>
+					<Compile command="&quot;/usr/bin/cc&quot; &quot;-Wall&quot; &quot;-Wpedantic&quot; &quot;-Wunused&quot; &quot;-Wextra&quot; &quot;-arch&quot; &quot;arm64&quot; &quot;-MD&quot; &quot;-MT&quot; &quot;MyExperimentalFeature/CMakeFiles/foo.dir/foo.c.o&quot; &quot;-MF&quot; &quot;MyExperimentalFeature/CMakeFiles/foo.dir/foo.c.o.d&quot; &quot;-o&quot; &quot;MyExperimentalFeature/CMakeFiles/foo.dir/foo.c.o&quot; &quot;-c&quot; &quot;/my/path/tmp_for_cdash/labels_for_subprojects/src/MyExperimentalFeature/foo.c&quot;" config="" duration="46" language="C" result="0" source="/my/path/tmp_for_cdash/labels_for_subprojects/src/MyExperimentalFeature/foo.c" timeStart="1740423527774" version="1">
+						<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
+							<Value>2.271484375</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="AfterHostMemoryUsed">
+							<Value>39188880.0</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="BeforeCPULoadAverage">
+							<Value>2.271484375</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="BeforeHostMemoryUsed">
+							<Value>39142544.0</Value>
+						</NamedMeasurement>
+					</Compile>
+				</Commands>
+			</Target>
+			<Target name="production" type="EXECUTABLE">
+				<Labels>
+					<Label>MyProductionCode</Label>
+				</Labels>
+				<Commands>
+					<Compile command="&quot;/usr/bin/cc&quot; &quot;-Wall&quot; &quot;-Wpedantic&quot; &quot;-Wunused&quot; &quot;-Wextra&quot; &quot;-arch&quot; &quot;arm64&quot; &quot;-MD&quot; &quot;-MT&quot; &quot;MyProductionCode/CMakeFiles/production.dir/production.c.o&quot; &quot;-MF&quot; &quot;MyProductionCode/CMakeFiles/production.dir/production.c.o.d&quot; &quot;-o&quot; &quot;MyProductionCode/CMakeFiles/production.dir/production.c.o&quot; &quot;-c&quot; &quot;/my/path/tmp_for_cdash/labels_for_subprojects/src/MyProductionCode/production.c&quot;" config="" duration="57" language="C" result="0" source="/my/path/tmp_for_cdash/labels_for_subprojects/src/MyProductionCode/production.c" timeStart="1740423527774" version="1">
+						<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
+							<Value>2.271484375</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="AfterHostMemoryUsed">
+							<Value>39170240.0</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="BeforeCPULoadAverage">
+							<Value>2.271484375</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="BeforeHostMemoryUsed">
+							<Value>39142528.0</Value>
+						</NamedMeasurement>
+					</Compile>
+					<Link command="&quot;/usr/bin/cc&quot; &quot;-Wall&quot; &quot;-Wpedantic&quot; &quot;-Wunused&quot; &quot;-Wextra&quot; &quot;-arch&quot; &quot;arm64&quot; &quot;-Wl,-search_paths_first&quot; &quot;-Wl,-headerpad_max_install_names&quot; &quot;MyProductionCode/CMakeFiles/production.dir/production.c.o&quot; &quot;-o&quot; &quot;MyProductionCode/production&quot;" config="" duration="80" language="C" result="0" timeStart="1740423527921" version="1">
+						<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
+							<Value>2.271484375</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="AfterHostMemoryUsed">
+							<Value>39223968.0</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="BeforeCPULoadAverage">
+							<Value>2.271484375</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="BeforeHostMemoryUsed">
+							<Value>39211120.0</Value>
+						</NamedMeasurement>
+					</Link>
+				</Commands>
+			</Target>
+		</Targets>
+		<Commands>
+			<CmakeBuild command="&quot;/my/path/CMake_bin/bin/cmake&quot; &quot;--build&quot; &quot;.&quot; &quot;--config&quot; &quot;Release&quot;" duration="1615" result="0" timeStart="1740423527705" version="1">
+				<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
+					<Value>2.16943359375</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="numeric/double" name="AfterHostMemoryUsed">
+					<Value>39204320.0</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="numeric/double" name="BeforeCPULoadAverage">
+					<Value>2.271484375</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="numeric/double" name="BeforeHostMemoryUsed">
+					<Value>39095344.0</Value>
+				</NamedMeasurement>
+			</CmakeBuild>
+			<Custom command="&quot;/my/path/tmp_for_cdash/labels_for_subprojects/bin/MyExperimentalFeature/MakeTable&quot; &quot;/my/path/tmp_for_cdash/labels_for_subprojects/bin/MyExperimentalFeature/Table.h&quot;" duration="152" result="0" timeStart="1740423528356" version="1">
+				<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
+					<Value>2.271484375</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="numeric/double" name="AfterHostMemoryUsed">
+					<Value>39209488.0</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="numeric/double" name="BeforeCPULoadAverage">
+					<Value>2.271484375</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="numeric/double" name="BeforeHostMemoryUsed">
+					<Value>39208496.0</Value>
+				</NamedMeasurement>
+			</Custom>
+		</Commands>
+		<Log Encoding="base64" Compression="bin/gzip"/>
+		<EndDateTime>Feb 24 13:58 EST</EndDateTime>
+		<EndBuildTime>1740423529</EndBuildTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Build>
+</Site>
