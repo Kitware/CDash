@@ -29,6 +29,9 @@ cdash:
   # - region
   # - bucket
 
+  # Optionally specify an existing serviceAccount for the cdash pods to use.
+  serviceAccountName: default
+
   # cdash.env can be used to configure CDash by setting
   # additional environment variables.
   # https://github.com/Kitware/CDash/blob/master/docs/config.md

@@ -16,6 +16,7 @@ spec:
       labels:
         app: "{{ .Release.Name }}-website"
     spec:
+      serviceAccountName: {{ .Values.cdash.serviceAccountName | quote }}
       containers:
         - name: "{{ .Release.Name }}-website"
           image: {{ .Values.cdash.image | quote }}

@@ -16,6 +16,7 @@ spec:
       labels:
         app: "{{ .Release.Name }}-worker"
     spec:
+      serviceAccountName: {{ .Values.cdash.serviceAccountName | quote }}
       containers:
         - name: "{{ .Release.Name }}-worker"
           image: {{ .Values.cdash.image | quote }}
