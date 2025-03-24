@@ -269,6 +269,9 @@ add_laravel_test(/Feature/Jobs/NotifyExpiringAuthTokensTest)
 set_tests_properties(/Feature/Jobs/NotifyExpiringAuthTokensTest PROPERTIES RUN_SERIAL TRUE)
 set_tests_properties(/Feature/Jobs/NotifyExpiringAuthTokensTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
+add_laravel_test(/Feature/Jobs/PruneUploadsTest)
+set_tests_properties(/Feature/Jobs/PruneUploadsTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
 add_laravel_test(/Feature/Mail/AuthTokenExpiringTest)
 set_tests_properties(/Feature/Mail/AuthTokenExpiringTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
@@ -317,6 +320,7 @@ set_property(TEST install_3 PROPERTY DEPENDS
   /CDash/Messaging/Topic/TopicDecorator
   /Feature/RemoteWorkers
   /Feature/Jobs/NotifyExpiringAuthTokensTest
+  /Feature/Jobs/PruneUploadsTest
   /Feature/Mail/AuthTokenExpiringTest
   /Feature/Mail/AuthTokenExpiredTest
   /Feature/GraphQL/Mutations/UpdateSiteDescriptionTest
