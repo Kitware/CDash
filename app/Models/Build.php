@@ -237,4 +237,12 @@ class Build extends Model
     {
         return $this->belongsToMany(Label::class, 'label2build', 'buildid', 'labelid');
     }
+
+    /**
+     * @return BelongsToMany<UploadFile>
+     */
+    public function uploadedFiles(): BelongsToMany
+    {
+        return $this->belongsToMany(UploadFile::class, 'build2uploadfile', 'buildid', 'fileid');
+    }
 }

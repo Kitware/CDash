@@ -3320,6 +3320,26 @@ parameters:
 			path: app/Jobs/PruneJobs.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\UploadFile\\>\\:\\:pluck\\(\\)\\.$#"
+			count: 1
+			path: app/Jobs/PruneUploads.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\UploadFile\\>\\:\\:sum\\(\\)\\.$#"
+			count: 1
+			path: app/Jobs/PruneUploads.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Build\\>\\:\\:chunk\\(\\)\\.$#"
+			count: 1
+			path: app/Jobs/PruneUploads.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Build\\>\\:\\:with\\(\\)\\.$#"
+			count: 1
+			path: app/Jobs/PruneUploads.php
+
+		-
 			message: "#^Parameter \\#1 \\$filters of static method LdapRecord\\\\Query\\\\Builder\\:\\:rawFilter\\(\\) expects array\\|string, string\\|true given\\.$#"
 			count: 3
 			path: app/Ldap/Rules/FilterRules.php
@@ -10226,11 +10246,6 @@ parameters:
 
 		-
 			message: "#^Only numeric types are allowed in \\-, \\(int\\|false\\) given on the right side\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Only numeric types are allowed in \\-, float\\|int\\|false given on the left side\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Project.php
 
@@ -31093,6 +31108,11 @@ parameters:
 			message: "#^Variable \\$total might not be defined\\.$#"
 			count: 1
 			path: database/migrations/2024_11_20_144308_test2image_foreign_key.php
+
+		-
+			message: "#^Cannot cast mixed to int\\.$#"
+			count: 2
+			path: database/migrations/2025_03_25_130812_uploadfile_fileid_foreign_key_constraint.php
 
 		-
 			message: "#^Cannot access offset 'Id' on mixed\\.$#"

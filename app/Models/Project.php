@@ -41,7 +41,7 @@ use Illuminate\Support\Facades\Auth;
  * @property int $displaylabels
  * @property int $autoremovetimeframe
  * @property int $autoremovemaxbuilds
- * @property int $uploadquota
+ * @property int $uploadquota Maximum sum of uploaded file sizes in GiB
  * @property int $showcoveragecode
  * @property int $sharelabelfilters
  * @property int $authenticatesubmissions

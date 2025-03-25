@@ -279,7 +279,6 @@ class UploadHandler extends AbstractXmlHandler
             if (!$success) {
                 Log::error("UploadFile model - Failed to insert row associated with file: '{$this->UploadFile->Filename}'");
             }
-            $this->GetProject()->CullUploadedFiles();
 
             // Reset UploadError so that the handler could attempt to process following files
             $this->UploadError = false;
