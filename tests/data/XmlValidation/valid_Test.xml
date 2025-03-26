@@ -2,6 +2,7 @@
 <Site BuildName="dummy_test_name"
   BuildStamp="dummy_stamp"
   Name="dummy_name"
+  ModelName="dummy_model"
   >
   <Testing>
     <TestList>
