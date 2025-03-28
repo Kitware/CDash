@@ -57,6 +57,14 @@ final class SubmissionController extends AbstractProjectController
         }
     }
 
+    private function failProcessing(?string $filename, int $outResponseCode, string $outMessage): void
+    {
+        if ($filename !== null) {
+            Storage::move('inbox/' . $filename, 'failed/' . $filename);
+        }
+        abort($outResponseCode, $outMessage);
+    }
+
     /**
      * @throws BadSubmissionException
      */
@@ -69,18 +77,18 @@ final class SubmissionController extends AbstractProjectController
         $projectname = $_GET['project'] ?? '';
 
         if (strlen($projectname) === 0) {
-            abort(Response::HTTP_BAD_REQUEST, 'No project name provided.');
+            $this->failProcessing(null, Response::HTTP_BAD_REQUEST, 'No project name provided.');
         }
 
         if (!Project::validateProjectName($projectname)) {
             Log::error("Invalid project name: $projectname");
-            abort(Response::HTTP_BAD_REQUEST, "Invalid project name: $projectname");
+            $this->failProcessing(null, Response::HTTP_BAD_REQUEST, "Invalid project name: $projectname");
         }
 
         $expected_md5 = isset($_GET['MD5']) ? htmlspecialchars($_GET['MD5']) : '';
 
         if ($expected_md5 !== '' && !preg_match('/^[a-f0-9]{32}$/i', $expected_md5)) {
-            abort(Response::HTTP_BAD_REQUEST, "Provided md5 hash '{$expected_md5}' is improperly formatted.");
+            $this->failProcessing(null, Response::HTTP_BAD_REQUEST, "Provided md5 hash '{$expected_md5}' is improperly formatted.");
         }
 
         // Get auth token (if any).
@@ -92,7 +100,7 @@ final class SubmissionController extends AbstractProjectController
         if (strlen($expected_md5) > 0) {
             $md5sum = SubmissionUtils::hashFileHandle($fp, 'md5');
             if ($md5sum != $expected_md5) {
-                abort(Response::HTTP_BAD_REQUEST, "md5 mismatch. expected: {$expected_md5}, received: {$md5sum}");
+                $this->failProcessing(null, Response::HTTP_BAD_REQUEST, "md5 mismatch. expected: {$expected_md5}, received: {$md5sum}");
             }
         }
 
@@ -100,7 +108,7 @@ final class SubmissionController extends AbstractProjectController
         $filename = "{$projectname}_-_{$authtoken_hash}_-_" . Str::uuid()->toString() . "_-_{$expected_md5}.xml";
         if (!Storage::put("inbox/{$filename}", $fp)) {
             Log::error("Failed to save submission to inbox for $projectname (md5=$expected_md5)");
-            abort(Response::HTTP_INTERNAL_SERVER_ERROR, 'Failed to save submission file.');
+            $this->failProcessing($filename, Response::HTTP_INTERNAL_SERVER_ERROR, 'Failed to save submission file.');
         }
 
         // Check if we can connect to the database before proceeding any further.
@@ -130,9 +138,9 @@ final class SubmissionController extends AbstractProjectController
         // Check for valid authentication token if this project requires one.
         if ($this->project->AuthenticateSubmissions && !AuthTokenUtil::checkToken($authtoken_hash, $this->project->Id)) {
             Storage::delete("inbox/{$filename}");
-            abort(Response::HTTP_FORBIDDEN, 'Invalid Token');
+            $this->failProcessing(null, Response::HTTP_FORBIDDEN, 'Invalid Token');
         } elseif (intval($this->project->Id) < 1) {
-            abort(Response::HTTP_NOT_FOUND, 'The requested project does not exist.');
+            $this->failProcessing($filename, Response::HTTP_NOT_FOUND, 'The requested project does not exist.');
         }
 
         // Figure out what type of XML file this is.
@@ -145,7 +153,7 @@ final class SubmissionController extends AbstractProjectController
             $message = "Could not determine submission file type for: '{$stored_filename}'";
             Log::warning($message);
             if ((bool) config('cdash.validate_xml_submissions') === true) {
-                abort(400, $message);
+                $this->failProcessing($filename, 400, $message);
             }
         }
         if ($xml_info['xml_handler'] !== '') {
@@ -156,7 +164,7 @@ final class SubmissionController extends AbstractProjectController
             } catch (FileNotFoundException|UnableToReadFile $e) {
                 Log::warning($e->getMessage());
                 if ((bool) config('cdash.validate_xml_submissions') === true) {
-                    abort(400, "XML validation failed for $filename:" . PHP_EOL . $e->getMessage());
+                    $this->failProcessing($filename, 400, "XML validation failed for $filename:" . PHP_EOL . $e->getMessage());
                 }
             }
             if (count($validation_errors) > 0) {
@@ -165,7 +173,7 @@ final class SubmissionController extends AbstractProjectController
                 // We always log validation failures, but we only send messages back to the client if configured to do so
                 Log::warning("Submission validation failed for file '$filename':" . PHP_EOL);
                 if ((bool) config('cdash.validate_xml_submissions') === true) {
-                    abort(400, "XML validation failed: rejected file $filename:" . PHP_EOL . $error_string);
+                    $this->failProcessing($filename, 400, "XML validation failed: rejected file $filename:" . PHP_EOL . $error_string);
                 }
             }
         }
