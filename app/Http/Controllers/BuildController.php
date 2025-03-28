@@ -385,8 +385,9 @@ final class BuildController extends AbstractBuildController
         $response['hascoverage'] = false;
         $coverage_array = DB::select('SELECT * FROM coveragesummary WHERE buildid=?', [$this->build->Id])[0] ?? [];
         if ($coverage_array !== []) {
-            $coverage_percent = round($coverage_array->loctested /
-                ($coverage_array->loctested + $coverage_array->locuntested) * 100, 2);
+            $total_lines = (int) $coverage_array->loctested + (int) $coverage_array->locuntested;
+
+            $coverage_percent = $total_lines > 0 ? round(($coverage_array->loctested / $total_lines) * 100, 2) : 0;
             $response['coverage'] = $coverage_percent;
             $response['hascoverage'] = true;
         }
