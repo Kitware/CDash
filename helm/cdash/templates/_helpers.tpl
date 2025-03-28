@@ -66,4 +66,8 @@ Use https if `cdash.https` is true, otherwise use http.
           envFrom:
             - configMapRef:
                 name: "{{ .Release.Name }}-website"
+            {{- if .Values.cdash.externalSecret }}
+            - secretRef:
+                name: "{{ .Values.cdash.externalSecret -}}"
+            {{ end }}
 {{- end }}

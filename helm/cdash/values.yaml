@@ -29,6 +29,13 @@ cdash:
   # - region
   # - bucket
 
+  # To securely store other other sensitive configuration data
+  # (e.g. OAuth/email credentials) create a secret and name it here.
+  # The keys of this secret need to match the names of the environment
+  # variables that CDash expects.
+  # https://github.com/Kitware/CDash/blob/master/docs/config.md
+  externalSecret: ""
+
   # Optionally specify an existing serviceAccount for the cdash pods to use.
   serviceAccountName: default
 
