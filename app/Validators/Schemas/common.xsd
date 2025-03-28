@@ -18,6 +18,7 @@
     <xs:attribute name="VendorID" type="xs:string" />
     <xs:attribute name="FamilyID" type="xs:int" />
     <xs:attribute name="ModelID" type="xs:int" />
+    <xs:attribute name="ModelName" type="xs:string" />
     <xs:attribute name="ProcessorCacheSize" type="xs:int" />
     <xs:attribute name="NumberOfLogicalCPU" type="xs:int" />
     <xs:attribute name="NumberOfPhysicalCPU" type="xs:int" />
