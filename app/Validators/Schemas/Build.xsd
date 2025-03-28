@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:include schemaLocation="common.xsd" />
+  <xs:element name="NamedMeasurement">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Value" type="xs:string" />
+      </xs:sequence>
+      <xs:attribute name="type" type="xs:string" use="required" />
+      <xs:attribute name="name" type="xs:string" use="required" />
+    </xs:complexType>
+  </xs:element>
   <xs:element name="Site">
     <xs:complexType>
       <xs:sequence>
@@ -79,6 +88,120 @@
                         </xs:choice>
                       </xs:sequence>
                       <xs:attribute name="type" type="xs:string" use="required" />
+                    </xs:complexType>
+                  </xs:element>
+                  <xs:element name="Targets">
+                    <xs:complexType>
+                      <xs:sequence maxOccurs="unbounded">
+                        <xs:element name="Target">
+                          <xs:complexType>
+                            <xs:all>
+                              <xs:element name="Labels" type="LabelsType" minOccurs="0"/>
+                              <xs:element name="Commands">
+                                <xs:complexType>
+                                  <xs:sequence>
+                                    <xs:choice maxOccurs="unbounded">
+                                      <xs:element name="Compile">
+                                        <xs:complexType>
+                                          <xs:sequence>
+                                            <xs:element maxOccurs="unbounded" ref="NamedMeasurement"/>
+                                          </xs:sequence>
+                                          <xs:attribute name="command" use="required"/>
+                                          <xs:attribute name="workingDir" use="required"/>
+                                          <xs:attribute name="config" use="required"/>
+                                          <xs:attribute name="duration" use="required" type="xs:integer"/>
+                                          <xs:attribute name="language" use="required"/>
+                                          <xs:attribute name="result" use="required"/>
+                                          <xs:attribute name="source" use="required"/>
+                                          <xs:attribute name="timeStart" use="required" type="xs:integer"/>
+                                          <xs:attribute name="version" use="required" type="xs:integer"/>
+                                        </xs:complexType>
+                                      </xs:element>
+                                      <xs:element name="Link">
+                                        <xs:complexType>
+                                          <xs:sequence>
+                                            <xs:element maxOccurs="unbounded" ref="NamedMeasurement"/>
+                                          </xs:sequence>
+                                          <xs:attribute name="command" use="required"/>
+                                          <xs:attribute name="workingDir" use="required"/>
+                                          <xs:attribute name="config" use="required"/>
+                                          <xs:attribute name="duration" use="required" type="xs:integer"/>
+                                          <xs:attribute name="language" use="required"/>
+                                          <xs:attribute name="result" use="required"/>
+                                          <xs:attribute name="timeStart" use="required" type="xs:integer"/>
+                                          <xs:attribute name="version" use="required" type="xs:integer"/>
+                                        </xs:complexType>
+                                      </xs:element>
+                                    </xs:choice>
+                                  </xs:sequence>
+                                </xs:complexType>
+                              </xs:element>
+                            </xs:all>
+                            <xs:attribute name="name" use="required"/>
+                            <xs:attribute name="type" use="required"/>
+                          </xs:complexType>
+                        </xs:element>
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                  <xs:element name="Commands">
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:choice maxOccurs="unbounded">
+                          <xs:element name="CmakeBuild">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element maxOccurs="unbounded" ref="NamedMeasurement"/>
+                              </xs:sequence>
+                              <xs:attribute name="command" use="required"/>
+                              <xs:attribute name="workingDir" use="required"/>
+                              <xs:attribute name="duration" use="required" type="xs:integer"/>
+                              <xs:attribute name="result" use="required"/>
+                              <xs:attribute name="timeStart" use="required" type="xs:integer"/>
+                              <xs:attribute name="version" use="required" type="xs:integer"/>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="CmakeInstall">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element maxOccurs="unbounded" ref="NamedMeasurement"/>
+                              </xs:sequence>
+                              <xs:attribute name="command" use="required"/>
+                              <xs:attribute name="workingDir" use="required"/>
+                              <xs:attribute name="duration" use="required" type="xs:integer"/>
+                              <xs:attribute name="result" use="required"/>
+                              <xs:attribute name="timeStart" use="required" type="xs:integer"/>
+                              <xs:attribute name="version" use="required" type="xs:integer"/>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="Custom">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element maxOccurs="unbounded" ref="NamedMeasurement"/>
+                              </xs:sequence>
+                              <xs:attribute name="command" use="required"/>
+                              <xs:attribute name="workingDir" use="required"/>
+                              <xs:attribute name="duration" use="required" type="xs:integer"/>
+                              <xs:attribute name="result" use="required"/>
+                              <xs:attribute name="timeStart" use="required" type="xs:integer"/>
+                              <xs:attribute name="version" use="required" type="xs:integer"/>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="Install">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element maxOccurs="unbounded" ref="NamedMeasurement"/>
+                              </xs:sequence>
+                              <xs:attribute name="command" use="required"/>
+                              <xs:attribute name="workingDir" use="required"/>
+                              <xs:attribute name="duration" use="required" type="xs:integer"/>
+                              <xs:attribute name="result" use="required"/>
+                              <xs:attribute name="timeStart" use="required" type="xs:integer"/>
+                              <xs:attribute name="version" use="required" type="xs:integer"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:choice>
+                      </xs:sequence>
                     </xs:complexType>
                   </xs:element>
                   <xs:element name="Log" type="LogType" />
