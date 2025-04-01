@@ -188,6 +188,18 @@
                   </td>
                 </tr>
                 <tr>
+                  <th>Processor Model Name</th>
+                  <td v-if="build.site.mostRecentInformation.processorModelName">
+                    {{ build.site.mostRecentInformation.processorModelName }}
+                  </td>
+                  <td
+                    v-else
+                    class="tw-italic"
+                  >
+                    Unknown
+                  </td>
+                </tr>
+                <tr>
                   <th>Cache Size</th>
                   <td v-if="build.site.mostRecentInformation.processorCacheSize">
                     {{ build.site.mostRecentInformation.processorCacheSize }}

@@ -14,6 +14,7 @@ use Illuminate\Support\Carbon;
  * @property string|null $processorvendorid
  * @property int|null $processorfamilyid
  * @property int|null $processormodelid
+ * @property string|null $processormodelname
  * @property int|null $processorcachesize
  * @property int|null $numberlogicalcpus
  * @property int|null $numberphysicalcpus
@@ -38,6 +39,7 @@ class SiteInformation extends Model
         'processorvendorid',
         'processorfamilyid',
         'processormodelid',
+        'processormodelname',
         'processorcachesize',
         'numberlogicalcpus',
         'numberphysicalcpus',
@@ -90,6 +92,9 @@ class SiteInformation extends Model
                 break;
             case 'MODELID':
                 $this->processormodelid = (int) $value;
+                break;
+            case 'MODELNAME':
+                $this->processormodelname = (string) $value;
                 break;
             case 'PROCESSORCACHESIZE':
                 $this->processorcachesize = (int) $value;

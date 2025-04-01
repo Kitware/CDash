@@ -86,6 +86,7 @@ class TestUseCaseTest extends CDashUseCaseTestCase
             'VendorID' => 'Intel Corporation',
             'FamilyID' => '6',
             'ModelID' => '69',
+            'ModelName' => 'Intel(R) Xenon',
             'ProcessorCacheSize' => '4096',
             'NumberOfLogicalCPU' => '4',
             'NumberOfPhysicalCPU' => '1',
@@ -111,6 +112,7 @@ class TestUseCaseTest extends CDashUseCaseTestCase
         $this->assertEquals($siteInformation['VendorID'], $information?->processorvendorid);
         $this->assertEquals($siteInformation['FamilyID'], $information?->processorfamilyid);
         $this->assertEquals($siteInformation['ModelID'], $information?->processormodelid);
+        $this->assertEquals($siteInformation['ModelName'], $information?->processormodelname);
         $this->assertEquals($siteInformation['ProcessorCacheSize'], $information?->processorcachesize);
         $this->assertEquals($siteInformation['NumberOfLogicalCPU'], $information?->numberlogicalcpus);
         $this->assertEquals($siteInformation['NumberOfPhysicalCPU'], $information?->numberphysicalcpus);

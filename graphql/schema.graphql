@@ -531,6 +531,8 @@ type SiteInformation {
 
   processorModelId: Int @rename(attribute: "processormodelid")
 
+  processorModelName: String @rename(attribute: "processormodelname")
+
   processorCacheSize: Int @rename(attribute: "processorcachesize")
 
   numberLogicalCpus: Int @rename(attribute: "numberlogicalcpus")
