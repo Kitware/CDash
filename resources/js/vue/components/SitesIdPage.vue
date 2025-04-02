@@ -317,6 +317,7 @@ const SITE_INFORMATION_QUERY = gql`
             processorVendorId
             processorFamilyId
             processorModelId
+            processorModelName
             processorCacheSize
             numberLogicalCpus
             numberPhysicalCpus
@@ -392,6 +393,7 @@ export default {
               processorVendorId
               processorFamilyId
               processorModelId
+              processorModelName
               processorCacheSize
               numberLogicalCpus
               numberPhysicalCpus
@@ -543,6 +545,8 @@ export default {
         return 'Processor Family ID';
       case 'processorModelId':
         return 'Processor Model ID';
+      case 'processorModelName':
+        return 'Processor Model Name';
       case 'processorCacheSize':
         return 'Processor Cache Size';
       case 'numberLogicalCpus':
@@ -680,6 +684,7 @@ export default {
                 processorVendorId
                 processorFamilyId
                 processorModelId
+                processorModelName
                 processorCacheSize
                 numberLogicalCpus
                 numberPhysicalCpus
@@ -724,6 +729,7 @@ export default {
                 processorVendorId:  this.mostRecentInformation.processorVendorId,
                 processorFamilyId:  this.mostRecentInformation.processorFamilyId,
                 processorModelId:  this.mostRecentInformation.processorModelId,
+                processorModelName:  this.mostRecentInformation.processorModelName,
                 processorCacheSize:  this.mostRecentInformation.processorCacheSize,
                 numberLogicalCpus:  this.mostRecentInformation.numberLogicalCpus,
                 numberPhysicalCpus:  this.mostRecentInformation.numberPhysicalCpus,

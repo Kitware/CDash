@@ -79,8 +79,8 @@ class SitesIdPageTest extends BrowserTestCase
             $browser->visit("/sites/{$this->sites['site1']->id}")
                 ->whenAvailable('@site-details @site-details-table', function (Browser $browser) {
                     // Just spot check a couple fields
-                    self::assertEquals('4', $browser->elements('@site-details-table-cell')[6]->getText());
-                    self::assertEquals('8.56 GiB', $browser->elements('@site-details-table-cell')[8]->getText());
+                    self::assertEquals('4', $browser->elements('@site-details-table-cell')[7]->getText());
+                    self::assertEquals('8.56 GiB', $browser->elements('@site-details-table-cell')[9]->getText());
                 })
                 ->whenAvailable('@site-details @site-description', function (Browser $browser) {
                     $browser->assertSee('No description provided...');

@@ -17678,7 +17678,7 @@ parameters:
 
 		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertEquals\\(\\)\\.$#"
-			count: 28
+			count: 29
 			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
 
 		-

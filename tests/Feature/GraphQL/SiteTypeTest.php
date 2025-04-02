@@ -447,6 +447,7 @@ class SiteTypeTest extends TestCase
             'processorvendorid' => 'Intel Corporation',
             'processorfamilyid' => 6,
             'processormodelid' => 7,
+            'processormodelname' => 'Intel(R) Xeon',
             'processorcachesize' => 123,
             'numberlogicalcpus' => 4,
             'numberphysicalcpus' => 2,
@@ -481,6 +482,7 @@ class SiteTypeTest extends TestCase
                                                     processorVendorId
                                                     processorFamilyId
                                                     processorModelId
+                                                    processorModelName
                                                     processorCacheSize
                                                     numberLogicalCpus
                                                     numberPhysicalCpus
@@ -520,6 +522,7 @@ class SiteTypeTest extends TestCase
                                                                 'processorVendorId' => 'Intel Corporation',
                                                                 'processorFamilyId' => 6,
                                                                 'processorModelId' => 7,
+                                                                'processorModelName' => 'Intel(R) Xeon',
                                                                 'processorCacheSize' => 123,
                                                                 'numberLogicalCpus' => 4,
                                                                 'numberPhysicalCpus' => 2,
@@ -559,6 +562,7 @@ class SiteTypeTest extends TestCase
             [['processorvendorid' => 'Intel Corporation']],
             [['processorfamilyid' => 6]],
             [['processormodelid' => 7]],
+            [['processormodelname' => 'Intel(R) Xeon']],
             [['processorcachesize' => 123]],
             [['numberlogicalcpus' => 4]],
             [['numberphysicalcpus' => 2]],
@@ -607,6 +611,7 @@ class SiteTypeTest extends TestCase
                                                     processorVendorId
                                                     processorFamilyId
                                                     processorModelId
+                                                    processorModelName
                                                     processorCacheSize
                                                     numberLogicalCpus
                                                     numberPhysicalCpus
@@ -646,6 +651,7 @@ class SiteTypeTest extends TestCase
                                                                 'processorVendorId' => $params['processorvendorid'] ?? null,
                                                                 'processorFamilyId' => $params['processorfamilyid'] ?? null,
                                                                 'processorModelId' => $params['processormodelid'] ?? null,
+                                                                'processorModelName' => $params['processormodelname'] ?? null,
                                                                 'processorCacheSize' => $params['processorcachesize'] ?? null,
                                                                 'numberLogicalCpus' => $params['numberlogicalcpus'] ?? null,
                                                                 'numberPhysicalCpus' => $params['numberphysicalcpus'] ?? null,
