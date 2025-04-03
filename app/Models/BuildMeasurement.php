@@ -2,17 +2,14 @@
 
 namespace App\Models;
 
-use App\Enums\BuildMeasurementType;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * @property int $id
- * @property int $buildid
+ * @property int $buildcommandid
  * @property string $name
- * @property string $source
- * @property BuildMeasurementType $type
+ * @property string $type
  * @property string $value
  *
  * @mixin Builder<BuildMeasurement>
@@ -25,22 +22,12 @@ class BuildMeasurement extends Model
 
     protected $fillable = [
         'name',
-        'source',
         'type',
         'value',
     ];
 
     protected $casts = [
         'id' => 'integer',
-        'buildid' => 'integer',
-        'type' => BuildMeasurementType::class,
+        'buildcommandid' => 'integer',
     ];
-
-    /**
-     * @return HasOne<Build>
-     */
-    public function build(): HasOne
-    {
-        return $this->hasOne(Build::class, 'id', 'buildid');
-    }
 }
