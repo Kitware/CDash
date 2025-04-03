@@ -244,12 +244,42 @@ parameters:
 		-
 			message: "#^Dynamic call to static method Illuminate\\\\Contracts\\\\Auth\\\\Guard\\:\\:user\\(\\)\\.$#"
 			count: 1
+			path: app/GraphQL/Mutations/ChangeProjectRole.php
+
+		-
+			message: "#^Parameter \\#1 \\$args \\(array\\{userId\\: int, projectId\\: int, role\\: App\\\\Enums\\\\ProjectRole\\}\\) of method App\\\\GraphQL\\\\Mutations\\\\ChangeProjectRole\\:\\:mutate\\(\\) should be contravariant with parameter \\$args \\(array\\<string, mixed\\>\\) of method App\\\\GraphQL\\\\Mutations\\\\AbstractMutation\\:\\:mutate\\(\\)$#"
+			count: 1
+			path: app/GraphQL/Mutations/ChangeProjectRole.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Contracts\\\\Auth\\\\Guard\\:\\:user\\(\\)\\.$#"
+			count: 1
 			path: app/GraphQL/Mutations/ClaimSite.php
 
 		-
 			message: "#^Parameter \\#1 \\$args \\(array\\{siteId\\: int\\}\\) of method App\\\\GraphQL\\\\Mutations\\\\ClaimSite\\:\\:mutate\\(\\) should be contravariant with parameter \\$args \\(array\\<string, mixed\\>\\) of method App\\\\GraphQL\\\\Mutations\\\\AbstractMutation\\:\\:mutate\\(\\)$#"
 			count: 1
 			path: app/GraphQL/Mutations/ClaimSite.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Contracts\\\\Auth\\\\Guard\\:\\:user\\(\\)\\.$#"
+			count: 1
+			path: app/GraphQL/Mutations/InviteToProject.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\UserInvitation\\>\\:\\:exists\\(\\)\\.$#"
+			count: 1
+			path: app/GraphQL/Mutations/InviteToProject.php
+
+		-
+			message: "#^Parameter \\#1 \\$args \\(array\\{email\\: string, projectId\\: int, role\\: App\\\\Enums\\\\ProjectRole\\}\\) of method App\\\\GraphQL\\\\Mutations\\\\InviteToProject\\:\\:mutate\\(\\) should be contravariant with parameter \\$args \\(array\\<string, mixed\\>\\) of method App\\\\GraphQL\\\\Mutations\\\\AbstractMutation\\:\\:mutate\\(\\)$#"
+			count: 1
+			path: app/GraphQL/Mutations/InviteToProject.php
+
+		-
+			message: "#^Parameter \\#1 \\$args \\(array\\{invitationId\\: int\\}\\) of method App\\\\GraphQL\\\\Mutations\\\\RevokeInvitation\\:\\:mutate\\(\\) should be contravariant with parameter \\$args \\(array\\<string, mixed\\>\\) of method App\\\\GraphQL\\\\Mutations\\\\AbstractMutation\\:\\:mutate\\(\\)$#"
+			count: 1
+			path: app/GraphQL/Mutations/RevokeInvitation.php
 
 		-
 			message: "#^Dynamic call to static method Illuminate\\\\Contracts\\\\Auth\\\\Guard\\:\\:user\\(\\)\\.$#"
@@ -1608,6 +1638,21 @@ parameters:
 			message: "#^Part \\$default_project \\(mixed\\) of encapsed string cannot be cast to string\\.$#"
 			count: 1
 			path: app/Http/Controllers/IndexController.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Contracts\\\\Auth\\\\Guard\\:\\:user\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Controllers/InvitationController.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\Project\\>\\:\\:exists\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Controllers/InvitationController.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\Project\\>\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Controllers/InvitationController.php
 
 		-
 			message: "#^Cannot cast mixed to int\\.$#"
@@ -3382,11 +3427,6 @@ parameters:
 			path: app/Models/Project.php
 
 		-
-			message: "#^PHPDoc tag @method for method App\\\\Models\\\\Project\\:\\:forUser\\(\\) return type contains generic class Illuminate\\\\Database\\\\Eloquent\\\\Builder but does not specify its types\\: TModelClass$#"
-			count: 1
-			path: app/Models/Project.php
-
-		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 1
 			path: app/Models/Site.php
@@ -3472,13 +3512,23 @@ parameters:
 			path: app/Models/User.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\User\\>\\:\\:exists\\(\\)\\.$#"
+			message: "#^Parameter \\$get of static method Illuminate\\\\Database\\\\Eloquent\\\\Casts\\\\Attribute\\<mixed,mixed\\>\\:\\:make\\(\\) expects \\(callable\\(mixed, mixed\\)\\: string\\)\\|null, Closure\\(mixed, array\\)\\: string given\\.$#"
+			count: 1
+			path: app/Models/UserInvitation.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\Project\\>\\:\\:exists\\(\\)\\.$#"
 			count: 2
 			path: app/Policies/ProjectPolicy.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\User\\>\\:\\:exists\\(\\)\\.$#"
+			count: 3
+			path: app/Policies/ProjectPolicy.php
+
+		-
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\User\\>\\:\\:where\\(\\)\\.$#"
-			count: 2
+			count: 3
 			path: app/Policies/ProjectPolicy.php
 
 		-
@@ -31022,6 +31072,11 @@ parameters:
 			path: server.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\User\\>\\:\\:pluck\\(\\)\\.$#"
+			count: 2
+			path: tests/Browser/Pages/ProjectMembersPageTest.php
+
+		-
 			message: "#^Cannot access property \\$description on App\\\\Models\\\\SiteInformation\\|null\\.$#"
 			count: 1
 			path: tests/Browser/Pages/SitesIdPageTest.php
@@ -31101,6 +31156,11 @@ parameters:
 			message: "#^Method Tests\\\\Feature\\\\GitHubWebhook\\:\\:testWebhookWithWrongSignature\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: tests/Feature/GitHubWebhook.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\User\\>\\:\\:pluck\\(\\)\\.$#"
+			count: 64
+			path: tests/Feature/GraphQL/Mutations/ChangeProjectRoleTest.php
 
 		-
 			message: "#^Dynamic call to static method Illuminate\\\\Testing\\\\TestResponse\\:\\:assertGraphQLErrorMessage\\(\\)\\.$#"
@@ -31251,6 +31311,16 @@ parameters:
 			message: "#^Property Tests\\\\Feature\\\\PasswordRotation\\:\\:\\$user has no type specified\\.$#"
 			count: 1
 			path: tests/Feature/PasswordRotation.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\User\\>\\:\\:pluck\\(\\)\\.$#"
+			count: 2
+			path: tests/Feature/ProjectInvitationAcceptanceTest.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\UserInvitation\\>\\:\\:pluck\\(\\)\\.$#"
+			count: 14
+			path: tests/Feature/ProjectInvitationAcceptanceTest.php
 
 		-
 			message: "#^Class Tests\\\\Feature\\\\PurgeUnusedProjectsCommand has an uninitialized property \\$project1\\. Give it default value or assign it in the constructor\\.$#"

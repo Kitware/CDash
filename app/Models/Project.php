@@ -48,7 +48,7 @@ use Illuminate\Support\Facades\Auth;
  * @property int $viewsubprojectslink
  * @property ?string $ldapfilter
  *
- * @method static Builder forUser(?User $user = null)
+ * @method Builder<Project> forUser(?User $user = null)
  *
  * @mixin Builder<Project>
  */
@@ -113,7 +113,7 @@ class Project extends Model
     public const ACCESS_PROTECTED = 2;
 
     /**
-     * Get the users who have been added to this project.
+     * Get the users who have been added to this project.  Note that this selects users with all roles.
      *
      * Note: This is *not* all of the users who have access to this project!
      *
@@ -122,6 +122,17 @@ class Project extends Model
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'user2project', 'projectid', 'userid');
+    }
+
+    /**
+     * Get the users with the lowest user role.
+     *
+     * @return BelongsToMany<User>
+     */
+    public function basicUsers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'user2project', 'projectid', 'userid')
+            ->wherePivot('role', self::PROJECT_USER);
     }
 
     /**
@@ -249,5 +260,13 @@ class Project extends Model
     public function sites(): BelongsToMany
     {
         return $this->belongsToMany(Site::class, Build::class, 'projectid', 'siteid')->distinct();
+    }
+
+    /**
+     * @return HasMany<UserInvitation>
+     */
+    public function invitations(): HasMany
+    {
+        return $this->hasMany(UserInvitation::class, 'project_id');
     }
 }

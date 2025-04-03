@@ -3,7 +3,7 @@
     class="tabb striped"
     :class="{ 'full-width': fullWidth }"
     data-cy="data-table"
-    data-test="data-table"
+    :data-test="testId"
   >
     <thead>
       <tr
@@ -39,14 +39,14 @@
       <tr
         v-for="row in (sortable ? sortedRows : rows)"
         data-cy="data-table-row"
-        data-test="data-table-row"
+        :data-test="testId + '-row'"
       >
         <td
           v-for="column in columns"
           :class="(row[column.name]?.classes ?? []).concat(column.expand ? [] : ['shrink'])"
           class="table-cell"
           data-cy="data-table-cell"
-          data-test="data-table-cell"
+          :data-test="testId + '-cell'"
         >
           <!--
             Display a custom template for each table cell, or a default template
@@ -181,6 +181,15 @@ export default {
     initialSortColumn: {
       type: String,
       default: null,
+    },
+
+    /**
+     * An optional ID to identify this table in browser tests.
+     */
+    testId: {
+      type: String,
+      default: 'data-table',
+      required: false,
     },
   },
 

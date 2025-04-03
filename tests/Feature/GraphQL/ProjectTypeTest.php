@@ -721,6 +721,93 @@ class ProjectTypeTest extends TestCase
         ], true);
     }
 
+    public function testGetProjectUsersAsAdmin(): void
+    {
+        $this->actingAs($this->users['admin'])->graphQL('
+            query {
+                projects {
+                    edges {
+                        node {
+                            name
+                            basicUsers {
+                                edges {
+                                    node {
+                                        id
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        ')->assertJson([
+            'data' => [
+                'projects' => [
+                    'edges' => [
+                        [
+                            'node' => [
+                                'name' => $this->projects['public1']->name,
+                                'basicUsers' => [],
+                            ],
+                        ],
+                        [
+                            'node' => [
+                                'name' => $this->projects['public2']->name,
+                                'basicUsers' => [],
+                            ],
+                        ],
+                        [
+                            'node' => [
+                                'name' => $this->projects['protected1']->name,
+                                'basicUsers' => [],
+                            ],
+                        ],
+                        [
+                            'node' => [
+                                'name' => $this->projects['protected2']->name,
+                                'basicUsers' => [
+                                    'edges' => [
+                                        [
+                                            'node' => [
+                                                'id' => (string) $this->users['normal']->id,
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                        [
+                            'node' => [
+                                'name' => $this->projects['private1']->name,
+                                'basicUsers' => [
+                                    'edges' => [
+                                        [
+                                            'node' => [
+                                                'id' => (string) $this->users['normal']->id,
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                        [
+                            'node' => [
+                                'name' => $this->projects['private2']->name,
+                                'basicUsers' => [],
+                            ],
+                        ],
+                        [
+                            'node' => [
+                                'name' => $this->projects['private3']->name,
+                                'basicUsers' => [],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ], true);
+    }
+
     public function testProjectVisibilityValue(): void
     {
         $this->actingAs($this->users['admin'])->graphQL('

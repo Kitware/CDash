@@ -59,7 +59,7 @@ class AuthTokenExpiringTest extends TestCase
 
         $mailable = new AuthTokenExpiring($authtoken);
 
-        $mailable->assertSeeInHtml('http://localhost:8080/user');
+        $mailable->assertSeeInHtml(url('/user'));
     }
 
     public function testMailableNoDescription(): void
