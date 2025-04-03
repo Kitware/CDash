@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -104,6 +105,14 @@ class User extends Authenticatable implements MustVerifyEmail, LdapAuthenticatab
     public function authTokens(): HasMany
     {
         return $this->hasMany(AuthToken::class, 'userid');
+    }
+
+    /**
+     * @return BelongsToMany<Project>
+     */
+    public function projects(): BelongsToMany
+    {
+        return $this->belongsToMany(Project::class, 'user2project', 'userid', 'projectid');
     }
 
     /**
