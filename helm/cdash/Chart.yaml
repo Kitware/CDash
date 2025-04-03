@@ -1,0 +1,15 @@
+apiVersion: v2
+name: cdash
+description: CDash aggregates, analyzes and displays the results of software testing processes
+type: application
+version: "0.1.0"
+appVersion: "3.9.0"
+dependencies:
+  - name: postgresql
+    version: "16.3.5"
+    repository: "oci://registry-1.docker.io/bitnamicharts"
+    condition: postgresql.enabled
+  - name: minio
+    version: "14.10.3"
+    repository: "oci://registry-1.docker.io/bitnamicharts"
+    condition: minio.enabled

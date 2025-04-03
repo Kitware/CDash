@@ -1,0 +1,30 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: "{{ .Release.Name }}-website"
+  labels:
+    app: "{{ .Release.Name }}-website"
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: "{{ .Release.Name }}-website"
+  template:
+    metadata:
+      labels:
+        app: "{{ .Release.Name }}-website"
+    spec:
+      serviceAccountName: {{ .Values.cdash.serviceAccountName | quote }}
+      containers:
+        - name: "{{ .Release.Name }}-website"
+          image: {{ .Values.cdash.image | quote }}
+          resources:
+            {{ toYaml .Values.cdash.website.resources | nindent 12 }}
+          command: [ "/bin/bash", "/cdash/docker/docker-entrypoint.sh" ]
+          args: [ "start-website" ]
+          env:
+          - name: "APP_URL"
+            value: {{ template "cdash.url" . }}
+          {{ template "cdash.environment" . }}
