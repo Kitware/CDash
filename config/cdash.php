@@ -79,4 +79,6 @@ return [
     'require_authenticated_submissions' => env('REQUIRE_AUTHENTICATED_SUBMISSIONS', false),
     'use_vcs_api' => env('USE_VCS_API', true),
     'require_full_email_when_adding_user' => env('REQUIRE_FULL_EMAIL_WHEN_ADDING_USER', false),
+    // Whether or not project administrators can invite users
+    'project_admin_registration_form_enabled' => env('PROJECT_ADMIN_REGISTRATION_FORM_ENABLED', true),
 ];
