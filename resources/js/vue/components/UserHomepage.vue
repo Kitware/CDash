@@ -137,7 +137,7 @@
               <a
                 v-if="project.role > 1"
                 title="Manage project users"
-                :href="$baseURL + '/manageProjectRoles.php?projectid=' + project.id"
+                :href="$baseURL + '/projects/' + project.id + '/members'"
               >
                 <font-awesome-icon icon="fa-user-pen" />
               </a>
@@ -629,14 +629,6 @@
                 class="cdash-link"
                 :href="$baseURL + '/project/new'"
               >Create new project</a>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <a
-                class="cdash-link"
-                :href="$baseURL + '/manageProjectRoles.php'"
-              >Manage project roles</a>
             </td>
           </tr>
           <tr>

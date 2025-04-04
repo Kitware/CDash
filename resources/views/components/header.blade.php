@@ -188,7 +188,7 @@ $currentDateString = now()->toDateString();
                                 </a>
                             </li>
                             <li>
-                                <a class="cdash-link" ng-href="{{ url('/manageProjectRoles.php') }}?projectid=@{{::cdash.projectid}}">
+                                <a class="cdash-link" ng-href="{{ url('/projects/') }}@{{::cdash.projectid}}/members">
                                     Users
                                 </a>
                             </li>
@@ -310,7 +310,7 @@ $currentDateString = now()->toDateString();
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{ url('/manageProjectRoles.php') }}?projectid={{ $project->Id }}">
+                                    <a href="{{ url("/projects/{$project->Id}/members") }}">
                                         Users
                                     </a>
                                 </li>

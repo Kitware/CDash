@@ -228,10 +228,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/subscribeProject.php', 'SubscribeProjectController@subscribeProject');
     Route::post('/subscribeProject.php', 'SubscribeProjectController@subscribeProject');
 
-    // TODO: (williamjallen) send the POST route to a different function
-    Route::get('/manageProjectRoles.php', 'ManageProjectRolesController@viewPage');
-    Route::post('/manageProjectRoles.php', 'ManageProjectRolesController@viewPage');
-    Route::any('/ajax/finduserproject.php', 'ManageProjectRolesController@ajaxFindUserProject');
+    Route::get('/manageProjectRoles.php', function (Request $request) {
+        if (!$request->has('projectid')) {
+            abort(404);
+        }
+        $projectid = $request->integer('projectidid');
+        return redirect("/projects/$projectid/members", 301);
+    });
 
     // TODO: (williamjallen) send the POST route to a different function
     Route::get('/manageBanner.php', 'ManageBannerController@manageBanner');
