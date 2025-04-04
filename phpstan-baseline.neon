@@ -5314,6 +5314,16 @@ parameters:
 			path: app/Utils/TestingDay.php
 
 		-
+			message: "#^Method App\\\\Utils\\\\TestingDay\\:\\:get\\(\\) throws checked exception DateInvalidOperationException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/Utils/TestingDay.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\TestingDay\\:\\:get\\(\\) throws checked exception DateMalformedStringException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/Utils/TestingDay.php
+
+		-
 			message: "#^Access to an undefined property object\\:\\:\\$authenticatesubmissions\\.$#"
 			count: 1
 			path: app/Utils/UnparsedSubmissionProcessor.php
@@ -6473,6 +6483,11 @@ parameters:
 			path: app/cdash/app/Controller/Api/Timeline.php
 
 		-
+			message: "#^Method CDash\\\\Controller\\\\Api\\\\Timeline\\:\\:chartForBuildGroup\\(\\) throws checked exception DateInvalidOperationException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/app/Controller/Api/Timeline.php
+
+		-
 			message: "#^Method CDash\\\\Controller\\\\Api\\\\Timeline\\:\\:chartForBuildProperties\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Controller/Api/Timeline.php
@@ -6500,6 +6515,11 @@ parameters:
 		-
 			message: "#^Method CDash\\\\Controller\\\\Api\\\\Timeline\\:\\:getTimelineChartData\\(\\) has parameter \\$builds with no type specified\\.$#"
 			count: 1
+			path: app/cdash/app/Controller/Api/Timeline.php
+
+		-
+			message: "#^Method CDash\\\\Controller\\\\Api\\\\Timeline\\:\\:getTimelineChartData\\(\\) throws checked exception DateMalformedStringException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 2
 			path: app/cdash/app/Controller/Api/Timeline.php
 
 		-
@@ -13765,6 +13785,16 @@ parameters:
 			path: app/cdash/include/dailyupdates.php
 
 		-
+			message: "#^Function addDailyChanges\\(\\) throws checked exception DateInvalidOperationException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/include/dailyupdates.php
+
+		-
+			message: "#^Function addDailyChanges\\(\\) throws checked exception DateMalformedIntervalStringException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: app/cdash/include/dailyupdates.php
+
+		-
 			message: "#^Function sendEmailExpectedBuilds\\(\\) has parameter \\$currentstarttime with no type specified\\.$#"
 			count: 1
 			path: app/cdash/include/dailyupdates.php
@@ -18386,11 +18416,6 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Binary operation \"\\.\" between mixed and '/'\\|'\\\\\\\\' results in an error\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
 			message: "#^Call to an undefined method Psr\\\\Log\\\\LoggerInterface\\:\\:getHandlers\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
@@ -18744,21 +18769,6 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method KWWebTestCase\\:\\:startCodeCoverage\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
-			message: "#^Method KWWebTestCase\\:\\:stopCodeCoverage\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
-			message: "#^Method KWWebTestCase\\:\\:stopCodeCoverage\\(\\) throws checked exception Random\\\\RandomException but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
 			message: "#^Method KWWebTestCase\\:\\:submission\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
@@ -18849,22 +18859,22 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:856\\:\\:__construct\\(\\) has parameter \\$response with no type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:829\\:\\:__construct\\(\\) has parameter \\$response with no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:856\\:\\:getSent\\(\\) has no return type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:829\\:\\:getSent\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:856\\:\\:isError\\(\\) has no return type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:829\\:\\:isError\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:856\\:\\:read\\(\\) has no return type specified\\.$#"
+			message: "#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:829\\:\\:read\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
@@ -18939,11 +18949,6 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Parameter \\#1 \\$prefix of function uniqid expects string, int\\<0, max\\> given\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
 			message: "#^Parameter \\#1 \\$responses of method WebTestCase\\:\\:assertResponse\\(\\) expects array, int given\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
@@ -18965,11 +18970,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$stream of function fwrite expects resource, resource\\|false given\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function md5 expects string, mixed given\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
@@ -19064,7 +19064,7 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: "#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:856\\:\\:\\$read has no type specified\\.$#"
+			message: "#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\\.php\\:829\\:\\:\\$read has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 

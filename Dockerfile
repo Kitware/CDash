@@ -10,7 +10,7 @@ ARG DEVELOPMENT_BUILD
 ###############################################################################
 # The base image for regular Debian-based images
 ###############################################################################
-FROM php:8.2-apache-bookworm AS cdash-debian-intermediate
+FROM php:8.3-apache-bookworm AS cdash-debian-intermediate
 
 ARG BASE_IMAGE
 ARG DEVELOPMENT_BUILD
