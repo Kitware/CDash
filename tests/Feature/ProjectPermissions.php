@@ -65,18 +65,6 @@ class ProjectPermissions extends TestCase
             'public' => Project::ACCESS_PUBLIC,
         ]);
 
-        // Verify that viewProjects.php only lists the public project.
-        $_GET['project'] = '';
-        $_SERVER['SERVER_NAME'] = '';
-        $_GET['allprojects'] = 1;
-        $response = $this->get('/api/v1/viewProjects.php');
-        $response->assertJson([
-            'nprojects' => 1,
-            'projects' => [
-                ['name' => $this->public_project->name],
-            ],
-        ]);
-
         // Verify that we cannot access the protected project or the private projects.
         $_GET['project'] = $this->protected_project->name;
         $response = $this->get('/api/v1/index.php');
@@ -130,20 +118,6 @@ class ProjectPermissions extends TestCase
         $response = $this->actingAs($this->normal_user)->get('/api/v1/index.php');
         $response->assertJson(['error' => 'You do not have access to the requested project or the requested project does not exist.']);
 
-        // Verify that viewProjects.php lists public, protected, and private1, but not private2.
-        $_GET['project'] = '';
-        $_SERVER['SERVER_NAME'] = '';
-        $_GET['allprojects'] = 1;
-        $response = $this->actingAs($this->normal_user)->get('/api/v1/viewProjects.php');
-        $response->assertJson([
-            'nprojects' => 3,
-            'projects' => [
-                ['name' => $this->private_project1->name],
-                ['name' => $this->protected_project->name],
-                ['name' => $this->public_project->name],
-            ],
-        ]);
-
         // Verify that they can access all 4 projects.
         $_GET['project'] = $this->public_project->name;
         $response = $this->actingAs($this->admin_user)->get('/api/v1/index.php');
@@ -169,18 +143,5 @@ class ProjectPermissions extends TestCase
             'projectname' => $this->private_project2->name,
             'public' => Project::ACCESS_PRIVATE,
         ]);
-
-        // Verify that admin sees all four projects on viewProjects.php
-        // the order of the projects returned is not deterministic, which makes testing the array structure challenging
-        $_GET['project'] = '';
-        $_SERVER['SERVER_NAME'] = '';
-        $_GET['allprojects'] = 1;
-        $response = $this->actingAs($this->admin_user)->get('/api/v1/viewProjects.php');
-        $response->assertJsonPath('nprojects', 4);
-        $response->assertJsonCount(4, 'projects');
-        $response->assertJsonFragment(['name' => $this->private_project1->name]);
-        $response->assertJsonFragment(['name' => $this->private_project2->name]);
-        $response->assertJsonFragment(['name' => $this->protected_project->name]);
-        $response->assertJsonFragment(['name' => $this->public_project->name]);
     }
 }

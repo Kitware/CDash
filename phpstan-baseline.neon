@@ -3012,14 +3012,6 @@ parameters:
 			path: app/Http/Controllers/UserStatisticsController.php
 
 		-
-			message: """
-				#^Instantiation of deprecated class CDash\\\\Controller\\\\Api\\\\ViewProjects\\:
-				05/23/2024 This endpoint is deprecated in favor of the GraphQL API and will eventually be removed$#
-			"""
-			count: 1
-			path: app/Http/Controllers/ViewProjectsController.php
-
-		-
 			message: "#^Parameter \\#2 \\$build of class CDash\\\\Controller\\\\Api\\\\ViewTest constructor expects CDash\\\\Model\\\\Build, CDash\\\\Model\\\\Build\\|null given\\.$#"
 			count: 1
 			path: app/Http/Controllers/ViewTestController.php
@@ -6561,96 +6553,6 @@ parameters:
 			message: "#^Property CDash\\\\Controller\\\\Api\\\\Timeline\\:\\:\\$timeToDate has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Controller/Api/Timeline.php
-
-		-
-			message: "#^Access to an undefined property CDash\\\\Controller\\\\Api\\\\ViewProjects\\:\\:\\$pageTimer\\.$#"
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewProjects.php
-
-		-
-			message: "#^Cannot access property \\$c on mixed\\.$#"
-			count: 2
-			path: app/cdash/app/Controller/Api/ViewProjects.php
-
-		-
-			message: "#^Cannot access property \\$description on mixed\\.$#"
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewProjects.php
-
-		-
-			message: "#^Cannot access property \\$id on mixed\\.$#"
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewProjects.php
-
-		-
-			message: "#^Cannot access property \\$name on mixed\\.$#"
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewProjects.php
-
-		-
-			message: "#^Cannot access property \\$projectid on mixed\\.$#"
-			count: 3
-			path: app/cdash/app/Controller/Api/ViewProjects.php
-
-		-
-			message: "#^Cannot access property \\$submittime on mixed\\.$#"
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewProjects.php
-
-		-
-			message: "#^Cannot access property \\$viewsubprojectslink on mixed\\.$#"
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewProjects.php
-
-		-
-			message: "#^Cannot cast mixed to int\\.$#"
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewProjects.php
-
-		-
-			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
-			count: 2
-			path: app/cdash/app/Controller/Api/ViewProjects.php
-
-		-
-			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 3
-			path: app/cdash/app/Controller/Api/ViewProjects.php
-
-		-
-			message: "#^Method CDash\\\\Controller\\\\Api\\\\ViewProjects\\:\\:getProjects\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewProjects.php
-
-		-
-			message: "#^Method CDash\\\\Controller\\\\Api\\\\ViewProjects\\:\\:getResponse\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewProjects.php
-
-		-
-			message: "#^Method CDash\\\\Controller\\\\Api\\\\ViewProjects\\:\\:getVisibleProjects\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewProjects.php
-
-		-
-			message: "#^Only numeric types are allowed in \\-, \\(int\\|false\\) given on the right side\\.$#"
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewProjects.php
-
-		-
-			message: "#^Only numeric types are allowed in \\-, int\\|false given on the right side\\.$#"
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewProjects.php
-
-		-
-			message: "#^Parameter \\#2 \\$timestamp of function date expects int\\|null, int\\|false given\\.$#"
-			count: 2
-			path: app/cdash/app/Controller/Api/ViewProjects.php
-
-		-
-			message: "#^Property CDash\\\\Controller\\\\Api\\\\ViewProjects\\:\\:\\$projectids has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewProjects.php
 
 		-
 			message: "#^Access to an undefined property CDash\\\\Controller\\\\Api\\\\ViewTest\\:\\:\\$pageTimer\\.$#"
@@ -27694,41 +27596,6 @@ parameters:
 			message: "#^Method ViewSubProjectsTestCase\\:\\:testViewSubProjects\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_viewsubprojects.php
-
-		-
-			message: "#^Cannot access offset 'projects' on mixed\\.$#"
-			count: 2
-			path: app/cdash/tests/test_viewsubprojectslinkoption.php
-
-		-
-			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 1
-			path: app/cdash/tests/test_viewsubprojectslinkoption.php
-
-		-
-			message: "#^Method ViewSubProjectsLinkOptionTestCase\\:\\:getTrilinosLink\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_viewsubprojectslinkoption.php
-
-		-
-			message: "#^Method ViewSubProjectsLinkOptionTestCase\\:\\:getTrilinosLink\\(\\) has parameter \\$projects with no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_viewsubprojectslinkoption.php
-
-		-
-			message: "#^Method ViewSubProjectsLinkOptionTestCase\\:\\:testViewSubProjectsLinkOption\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_viewsubprojectslinkoption.php
-
-		-
-			message: "#^Property ViewSubProjectsLinkOptionTestCase\\:\\:\\$project has no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_viewsubprojectslinkoption.php
-
-		-
-			message: "#^Property ViewSubProjectsLinkOptionTestCase\\:\\:\\$project is unused\\.$#"
-			count: 1
-			path: app/cdash/tests/test_viewsubprojectslinkoption.php
 
 		-
 			message: "#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\\.$#"

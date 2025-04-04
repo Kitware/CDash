@@ -676,11 +676,8 @@ set_tests_properties(configureappend PROPERTIES DEPENDS redundanttests)
 add_php_test(notesparsererrormessages)
 set_tests_properties(notesparsererrormessages PROPERTIES DEPENDS configureappend)
 
-add_php_test(viewsubprojectslinkoption)
-set_tests_properties(viewsubprojectslinkoption PROPERTIES DEPENDS notesparsererrormessages)
-
 add_laravel_test(/Feature/SubProjectDependencies)
-set_tests_properties(/Feature/SubProjectDependencies PROPERTIES DEPENDS viewsubprojectslinkoption)
+set_tests_properties(/Feature/SubProjectDependencies PROPERTIES DEPENDS notesparsererrormessages)
 
 add_php_test(misassignedconfigure)
 set_tests_properties(misassignedconfigure PROPERTIES DEPENDS /Feature/SubProjectDependencies)
