@@ -2,10 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use CDash\Controller\Api\ViewProjects;
-use CDash\Database;
 use CDash\Model\Project;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -36,11 +33,5 @@ final class ViewProjectsController extends AbstractController
 
         return $this->view('project.view-all-projects')
             ->with('show_all', $all);
-    }
-
-    public function fetchPageContent(): JsonResponse
-    {
-        $controller = new ViewProjects(Database::getInstance());
-        return response()->json(cast_data_for_JSON($controller->getResponse()));
     }
 }
