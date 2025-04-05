@@ -45,30 +45,18 @@ export default {
     plotData: {
       type: Object,
       required: true,
-      default() {
-        return null;
-      },
     },
     title: {
       type: String,
       required: true,
-      default() {
-        return 'Timeline Plot';
-      },
     },
     xLabel: {
       type: String,
       required: true,
-      default() {
-        return 'Time';
-      },
     },
     yLabel: {
       type: String,
       required: true,
-      default() {
-        return 'Value';
-      },
     },
   },
 

@@ -7,7 +7,7 @@
       primary-record-name="tests"
       :initial-filters="initialFilters"
       :execute-query-link="executeQueryLink"
-      @changeFilters="filters => changedFilters = filters"
+      @change-filters="filters => changedFilters = filters"
     />
     <loading-indicator :is-loading="!build">
       <data-table

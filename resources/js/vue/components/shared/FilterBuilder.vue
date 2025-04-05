@@ -10,7 +10,7 @@
       :type="filterType"
       :primary-record-name="primaryRecordName"
       :initial-filters="initialFilters"
-      @changeFilters="filters => $emit('changeFilters', filters)"
+      @change-filters="filters => $emit('changeFilters', filters)"
     />
     <div class="tw-flex tw-flex-row tw-w-full tw-gap-1">
       <a

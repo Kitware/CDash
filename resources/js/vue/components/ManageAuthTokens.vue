@@ -124,7 +124,7 @@ export default {
       this.$axios
         .delete(`/api/authtokens/delete/${token.hash}`)
         .then(() => {
-          this.$delete(this.cdash.tokens, token.hash);
+          delete this.cdash.tokens[token.hash];
         })
         .catch(error => {
           console.log(error);
