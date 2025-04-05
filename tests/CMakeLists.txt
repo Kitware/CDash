@@ -1,11 +1,3 @@
-function(add_vue_test TestName)
-  add_test(
-    NAME ${TestName}
-    COMMAND "node_modules/.bin/jest" "tests/${TestName}.spec.js"
-    WORKING_DIRECTORY "${CDash_SOURCE_DIR}"
-  )
-endfunction()
-
 function(set_app_url)
   if(DEFINED ENV{APP_URL})
     set(APP_URL "$ENV{APP_URL}" PARENT_SCOPE)
@@ -99,12 +91,6 @@ add_test(
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/helm/cdash
 )
 
-add_vue_test(Spec/build-configure)
-add_vue_test(Spec/build-summary)
-add_vue_test(Spec/edit-project)
-add_vue_test(Spec/manage-measurements)
-add_vue_test(Spec/test-details)
-
 add_cypress_component_test(loading-indicator)
 
 cdash_install()
@@ -113,3 +99,4 @@ add_cypress_e2e_test(user-profile)
 set_tests_properties(cypress/e2e/user-profile PROPERTIES DEPENDS install_1)
 
 add_subdirectory(cypress/e2e)
+add_subdirectory(Spec)
