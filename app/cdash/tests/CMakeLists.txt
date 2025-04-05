@@ -565,11 +565,8 @@ set_tests_properties(limitedbuilds PROPERTIES DEPENDS issuecreation)
 add_php_test(managemeasurements)
 set_tests_properties(managemeasurements PROPERTIES DEPENDS limitedbuilds)
 
-add_php_test(subprojectemail)
-set_tests_properties(subprojectemail PROPERTIES DEPENDS managemeasurements)
-
 add_php_test(coveragedirectories)
-set_tests_properties(coveragedirectories PROPERTIES DEPENDS subprojectemail)
+set_tests_properties(coveragedirectories PROPERTIES DEPENDS managemeasurements)
 
 add_php_test(outputcolor)
 set_tests_properties(outputcolor PROPERTIES DEPENDS coveragedirectories)
