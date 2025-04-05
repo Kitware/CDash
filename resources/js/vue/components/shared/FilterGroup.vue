@@ -34,7 +34,7 @@
             :initial-filters="entry"
             :type="type"
             @delete="changeRow('deleted', index)"
-            @changeFilters="newEntry => changeRow(newEntry, index)"
+            @change-filters="newEntry => changeRow(newEntry, index)"
           />
           <filter-row
             v-else-if="entry !== 'deleted'"
@@ -44,7 +44,7 @@
             :initial-operator="filterToFilterRow(entry).operator"
             :initial-value="filterToFilterRow(entry).value"
             @delete="changeRow('deleted', index)"
-            @changeFilters="newEntry => changeRow(newEntry, index)"
+            @change-filters="newEntry => changeRow(newEntry, index)"
           />
         </div>
         <div class="tw-flex tw-flex-row tw-w-full tw-gap-1">
