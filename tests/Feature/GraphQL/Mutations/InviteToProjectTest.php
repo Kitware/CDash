@@ -446,4 +446,50 @@ class InviteToProjectTest extends TestCase
 
         self::assertEmpty($this->project->invitations()->get());
     }
+
+    /**
+     * @dataProvider invalidEmails
+     */
+    public function testCantCreateInvitationWhenUserWithEmailAlreadyExists(): void
+    {
+        self::assertEmpty($this->project->invitations()->get());
+
+        $this->project
+            ->users()
+            ->attach($this->users['normal']->id, [
+                'emailtype' => 0,
+                'emailcategory' => 0,
+                'emailsuccess' => true,
+                'emailmissingsites' => true,
+                'role' => Project::PROJECT_USER,
+            ]);
+
+        $this->actingAs($this->users['admin'])->graphQL('
+            mutation ($email: String!, $projectId: ID!, $role: ProjectRole!) {
+                inviteToProject(input: {
+                    email: $email
+                    projectId: $projectId
+                    role: $role
+                }) {
+                    message
+                    invitedUser {
+                        id
+                    }
+                }
+            }
+        ', [
+            'email' => $this->users['normal']->email,
+            'projectId' => $this->project->id,
+            'role' => 'USER',
+        ])->assertJson([
+            'data' => [
+                'inviteToProject' => [
+                    'message' => 'User is already a member of this project.',
+                    'invitedUser' => null,
+                ],
+            ],
+        ], true);
+
+        self::assertEmpty($this->project->invitations()->get());
+    }
 }

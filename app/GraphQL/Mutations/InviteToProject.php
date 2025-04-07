@@ -65,6 +65,11 @@ final class InviteToProject extends AbstractMutation
             return;
         }
 
+        if ($project->users()->where('email', $args['email'])->exists()) {
+            $this->message = 'User is already a member of this project.';
+            return;
+        }
+
         $this->invitedUser = UserInvitation::create([
             'email' => $args['email'],
             'invited_by_id' => $user->id,
