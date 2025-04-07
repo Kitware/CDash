@@ -391,4 +391,33 @@ class ProjectMembersPageTest extends BrowserTestCase
                 });
         });
     }
+
+    public function testHandlesMisformattedEmail(): void
+    {
+        $this->users['admin'] = $this->makeAdminUser();
+
+        $fakeEmail = fake()->email();
+
+        $this->browse(function (Browser $browser) use ($fakeEmail) {
+            $browser->loginAs($this->users['admin'])
+                ->visit("/projects/{$this->project->id}/members")
+                ->waitFor('@project-members-page')
+                ->click('@invite-members-button')
+                ->waitFor('@invite-members-modal')
+                ->type('@invite-members-modal-email', 'abc')
+                ->assertMissing('@invite-members-modal-error-text')
+                ->click('@invite-members-modal-invite-button')
+                ->waitForTextIn('@invite-members-modal-error-text', 'The email must be a valid email address.')
+                ->clear('@invite-members-modal-email')
+                ->type('@invite-members-modal-email', $fakeEmail)
+                ->click('@invite-members-modal-invite-button')
+                ->waitUntilMissing('@invite-members-modal')
+                ->waitFor('@invitations-table-row')
+                ->assertCount('@invitations-table-row', 1)
+                ->assertSeeIn('@invitations-table-row', $fakeEmail)
+                ->assertSeeIn('@invitations-table-row', $this->users['admin']->firstname)
+                ->assertSeeIn('@invitations-table-row', $this->users['admin']->lastname)
+            ;
+        });
+    }
 }

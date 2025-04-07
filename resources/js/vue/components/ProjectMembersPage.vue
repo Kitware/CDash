@@ -23,6 +23,13 @@
           <h3 class="tw-text-lg tw-font-bold">
             Invite Members
           </h3>
+          <div
+            v-if="inviteMembersModalError"
+            class="tw-text-error tw-font-bold"
+            data-test="invite-members-modal-error-text"
+          >
+            {{ inviteMembersModalError }}
+          </div>
           <div>
             <div class="tw-label tw-font-bold">
               Email
@@ -225,6 +232,7 @@ export default {
       USER_TYPES: user_types,
       inviteMembersModalEmail: '',
       inviteMembersModalRole: user_types.USER,
+      inviteMembersModalError: null,
     };
   },
 
@@ -419,7 +427,9 @@ export default {
       });
     },
 
-    inviteUserByEmail() {
+    inviteUserByEmail(event) {
+      this.inviteMembersModalError = null;
+      event.preventDefault();
       this.$apollo.mutate({
         mutation: gql`mutation ($email: String!, $projectId: ID!, $role: ProjectRole!) {
           inviteToProject(input: {
@@ -448,6 +458,11 @@ export default {
         },
         updateQueries: {
           projectInvitations(prev, { mutationResult }) {
+            if (mutationResult.data.inviteToProject.message !== null) {
+              // this.inviteMembersModalError = 'test';//mutationResult.data.inviteToProject.message;
+              return prev;
+            }
+
             const data = JSON.parse(JSON.stringify(prev));
             data.project.invitations.edges.push({
               __typename: 'UserInvitationEdge',
@@ -458,6 +473,18 @@ export default {
             return data;
           },
         },
+        onResult() {
+
+        },
+      }).then((mutationResult) => {
+        if (mutationResult.data.inviteToProject.message !== null) {
+          this.inviteMembersModalError = mutationResult.data.inviteToProject.message;
+        }
+        else {
+          invite_members_modal.close();
+          this.inviteMembersModalEmail = '';
+          this.inviteMembersModalRole = this.USER_TYPES.USER;
+        }
       }).catch((error) => {
         console.error(error);
       });
