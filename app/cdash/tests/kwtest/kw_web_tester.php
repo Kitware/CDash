@@ -91,7 +91,6 @@ class KWWebTestCase extends WebTestCase
     public function setUp()
     {
         $this->removeParsedFiles();
-        $this->startCodeCoverage();
     }
 
     public function removeParsedFiles()
@@ -102,7 +101,6 @@ class KWWebTestCase extends WebTestCase
 
     public function tearDown()
     {
-        $this->stopCodeCoverage();
         unset($_SERVER['Authorization']);
         foreach (array_keys($_SERVER) as $key) {
             if (str_starts_with($key, 'HTTP_')) {
@@ -114,31 +112,6 @@ class KWWebTestCase extends WebTestCase
         $_REQUEST = [];
         $_FILES = [];
         $_GET = [];
-    }
-
-    public function startCodeCoverage()
-    {
-        // echo "startCodeCoverage called...\n";
-        if (extension_loaded('xdebug')) {
-            xdebug_start_code_coverage(XDEBUG_CC_UNUSED | XDEBUG_CC_DEAD_CODE);
-            // echo "xdebug_start_code_coverage called...\n";
-        }
-    }
-
-    public function stopCodeCoverage()
-    {
-        // echo "stopCodeCoverage called...\n";
-        if (extension_loaded('xdebug')) {
-            $data = xdebug_get_code_coverage();
-            xdebug_stop_code_coverage();
-            // echo "xdebug_stop_code_coverage called...\n";
-            $file = config('cdash.coverage_dir') . DIRECTORY_SEPARATOR .
-                md5($_SERVER['SCRIPT_FILENAME']);
-            file_put_contents(
-                $file . '.' . md5(uniqid(random_int(0, getrandmax()), true)) . '.' . get_class(),
-                serialize($data)
-            );
-        }
     }
 
     /**
