@@ -106,7 +106,7 @@
             <td>
               <a
                 class="cdash-link"
-                :click="configure.show = !configure.show"
+                @click="configure.show = !configure.show"
               >
                 <span v-show="!configure.show">View</span>
                 <span v-show="configure.show">Hide</span>
