@@ -176,7 +176,8 @@ describe('manageBuildGroup', () => {
     // click on the delete icons and verify that no rows are present
     cy.get('@dynamic_rows').find('span.glyphicon-trash').as('delete_icons');
     cy.get('@delete_icons').should('have.length', 2);
-    cy.get('@delete_icons').click({ multiple: true });
+    cy.get('@delete_icons').eq(1).click();
+    cy.get('@delete_icons').eq(0).click();
 
     // reload the page to make sure they're really gone
     cy.reload();
