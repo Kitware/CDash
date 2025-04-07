@@ -270,7 +270,7 @@ class EmailTestCase extends KWWebTestCase
     {
         // Verify that we have three builds for this project.
         $project = DB::table('project')->where('name', 'EmailProjectExample')->first();
-        $builds = DB::table('build')->where('projectid', $project->id)->get();
+        $builds = DB::table('build')->where('projectid', $project->id)->orderBy('id')->get();
         $this->assertEqual(3, count($builds));
 
         // Verify that we have four rows in the testdiff table for these builds.
