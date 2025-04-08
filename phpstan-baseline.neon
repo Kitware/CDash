@@ -272,6 +272,16 @@ parameters:
 			path: app/GraphQL/Mutations/InviteToProject.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\User\\>\\:\\:exists\\(\\)\\.$#"
+			count: 1
+			path: app/GraphQL/Mutations/InviteToProject.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\User\\>\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/GraphQL/Mutations/InviteToProject.php
+
+		-
 			message: "#^Parameter \\#1 \\$args \\(array\\{email\\: string, projectId\\: int, role\\: App\\\\Enums\\\\ProjectRole\\}\\) of method App\\\\GraphQL\\\\Mutations\\\\InviteToProject\\:\\:mutate\\(\\) should be contravariant with parameter \\$args \\(array\\<string, mixed\\>\\) of method App\\\\GraphQL\\\\Mutations\\\\AbstractMutation\\:\\:mutate\\(\\)$#"
 			count: 1
 			path: app/GraphQL/Mutations/InviteToProject.php
