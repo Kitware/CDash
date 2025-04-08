@@ -13,6 +13,7 @@ function(add_cypress_e2e_test TestName)
   set_tests_properties(cypress/e2e/${TestName} PROPERTIES
     ENVIRONMENT "HOME=${CDash_BINARY_DIR};"
     DISABLED "$<STREQUAL:${CDASH_IMAGE},ubi>"
+    RESOURCE_LOCK "cypress" # Cypress can only run one at a time due to xvfb issues
   )
 endfunction()
 
@@ -26,73 +27,73 @@ add_cypress_e2e_test(manage-overview)
 set_tests_properties(cypress/e2e/manage-overview PROPERTIES DEPENDS simple2_async)
 
 add_cypress_e2e_test(sub-project-dependencies)
-set_tests_properties(cypress/e2e/sub-project-dependencies PROPERTIES DEPENDS cypress/e2e/manage-overview)
+set_tests_properties(cypress/e2e/sub-project-dependencies PROPERTIES DEPENDS simple2_async)
 
 add_cypress_e2e_test(manage-build-group)
-set_tests_properties(cypress/e2e/manage-build-group PROPERTIES DEPENDS cypress/e2e/sub-project-dependencies)
+set_tests_properties(cypress/e2e/manage-build-group PROPERTIES DEPENDS simple2_async)
 
 add_cypress_e2e_test(manage-sub-project)
-set_tests_properties(cypress/e2e/manage-sub-project PROPERTIES DEPENDS cypress/e2e/manage-build-group)
+set_tests_properties(cypress/e2e/manage-sub-project PROPERTIES DEPENDS simple2_async)
 
 add_cypress_e2e_test(view-build-error)
-set_tests_properties(cypress/e2e/view-build-error PROPERTIES DEPENDS cypress/e2e/manage-sub-project)
+set_tests_properties(cypress/e2e/view-build-error PROPERTIES DEPENDS simple2_async)
 
 add_cypress_e2e_test(view-test)
-set_tests_properties(cypress/e2e/view-test PROPERTIES DEPENDS cypress/e2e/view-build-error)
+set_tests_properties(cypress/e2e/view-test PROPERTIES DEPENDS simple2_async)
 
 add_cypress_e2e_test(sort-index)
-set_tests_properties(cypress/e2e/sort-index PROPERTIES DEPENDS cypress/e2e/view-test)
+set_tests_properties(cypress/e2e/sort-index PROPERTIES DEPENDS simple2_async)
 
 add_cypress_e2e_test(expected-build)
-set_tests_properties(cypress/e2e/expected-build PROPERTIES DEPENDS cypress/e2e/sort-index)
+set_tests_properties(cypress/e2e/expected-build PROPERTIES DEPENDS simple2_async)
 
 add_cypress_e2e_test(remove-build)
-set_tests_properties(cypress/e2e/remove-build PROPERTIES DEPENDS cypress/e2e/expected-build)
+set_tests_properties(cypress/e2e/remove-build PROPERTIES DEPENDS simple2_async)
 
 add_cypress_e2e_test(view-sub-projects)
-set_tests_properties(cypress/e2e/view-sub-projects PROPERTIES DEPENDS cypress/e2e/remove-build)
+set_tests_properties(cypress/e2e/view-sub-projects PROPERTIES DEPENDS simple2_async)
 
 add_cypress_e2e_test(test-summary)
-set_tests_properties(cypress/e2e/test-summary PROPERTIES DEPENDS cypress/e2e/view-sub-projects)
+set_tests_properties(cypress/e2e/test-summary PROPERTIES DEPENDS simple2_async)
 
 add_cypress_e2e_test(query-tests)
-set_tests_properties(cypress/e2e/query-tests PROPERTIES DEPENDS cypress/e2e/test-summary)
+set_tests_properties(cypress/e2e/query-tests PROPERTIES DEPENDS simple2_async)
 
 add_cypress_e2e_test(filter-labels)
-set_tests_properties(cypress/e2e/filter-labels PROPERTIES DEPENDS cypress/e2e/query-tests)
+set_tests_properties(cypress/e2e/filter-labels PROPERTIES DEPENDS simple2_async)
 
 add_cypress_e2e_test(view-test-pagination)
-set_tests_properties(cypress/e2e/view-test-pagination PROPERTIES DEPENDS cypress/e2e/filter-labels)
+set_tests_properties(cypress/e2e/view-test-pagination PROPERTIES DEPENDS simple2_async)
 
 add_cypress_e2e_test(done-build)
-set_tests_properties(cypress/e2e/done-build PROPERTIES DEPENDS cypress/e2e/view-test-pagination)
+set_tests_properties(cypress/e2e/done-build PROPERTIES DEPENDS simple2_async)
 
 add_cypress_e2e_test(sub-project-group-order)
-set_tests_properties(cypress/e2e/sub-project-group-order PROPERTIES DEPENDS cypress/e2e/done-build)
+set_tests_properties(cypress/e2e/sub-project-group-order PROPERTIES DEPENDS simple2_async)
 
 add_cypress_e2e_test(calendar)
-set_tests_properties(cypress/e2e/calendar PROPERTIES DEPENDS cypress/e2e/sub-project-group-order)
+set_tests_properties(cypress/e2e/calendar PROPERTIES DEPENDS simple2_async)
 
 add_cypress_e2e_test(colorblind)
-set_tests_properties(cypress/e2e/colorblind PROPERTIES DEPENDS cypress/e2e/calendar)
+set_tests_properties(cypress/e2e/colorblind PROPERTIES DEPENDS simple2_async)
 
 add_cypress_e2e_test(daterange)
-set_tests_properties(cypress/e2e/daterange PROPERTIES DEPENDS cypress/e2e/colorblind)
+set_tests_properties(cypress/e2e/daterange PROPERTIES DEPENDS simple2_async)
 
 add_cypress_e2e_test(build-notes)
-set_tests_properties(cypress/e2e/build-notes PROPERTIES DEPENDS cypress/e2e/daterange)
+set_tests_properties(cypress/e2e/build-notes PROPERTIES DEPENDS simple2_async)
 
 add_cypress_e2e_test(sites)
-set_tests_properties(cypress/e2e/sites PROPERTIES DEPENDS cypress/e2e/build-notes)
+set_tests_properties(cypress/e2e/sites PROPERTIES DEPENDS simple2_async)
 
 add_cypress_e2e_test(view-coverage)
-set_tests_properties(cypress/e2e/view-coverage PROPERTIES DEPENDS cypress/e2e/sites)
+set_tests_properties(cypress/e2e/view-coverage PROPERTIES DEPENDS simple2_async)
 
 add_cypress_e2e_test(tests)
-set_tests_properties(cypress/e2e/tests PROPERTIES DEPENDS cypress/e2e/view-coverage)
+set_tests_properties(cypress/e2e/tests PROPERTIES DEPENDS simple2_async)
 
 add_cypress_e2e_test(build-configure)
-set_tests_properties(cypress/e2e/build-configure PROPERTIES DEPENDS cypress/e2e/tests)
+set_tests_properties(cypress/e2e/build-configure PROPERTIES DEPENDS simple2_async)
 
 add_cypress_e2e_test(all-projects)
-set_tests_properties(cypress/e2e/all-projects PROPERTIES DEPENDS cypress/e2e/build-configure)
+set_tests_properties(cypress/e2e/all-projects PROPERTIES DEPENDS simple2_async)
