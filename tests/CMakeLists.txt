@@ -73,11 +73,6 @@ add_test(
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/helm/cdash
 )
 
-cdash_install()
-
-add_cypress_e2e_test(user-profile)
-set_tests_properties(cypress/e2e/user-profile PROPERTIES DEPENDS install_1)
-
 add_subdirectory(cypress/e2e)
 add_subdirectory(cypress/component)
 add_subdirectory(Spec)
