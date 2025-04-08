@@ -617,7 +617,7 @@ add_php_test(commitauthornotification)
 set_tests_properties(commitauthornotification PROPERTIES DEPENDS putdynamicbuilds)
 
 add_php_test(subscribeprojectshowlabels)
-set_tests_properties(subscribeprojectshowlabels PROPERTIES DEPENDS commitauthornotification)
+set_tests_properties(subscribeprojectshowlabels PROPERTIES DEPENDS putdynamicbuilds)
 
 add_php_test(consistenttestingday)
 set_tests_properties(consistenttestingday PROPERTIES DEPENDS subscribeprojectshowlabels)
