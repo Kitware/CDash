@@ -539,10 +539,10 @@ add_php_test(pdoexecutelogserrors)
 set_tests_properties(pdoexecutelogserrors PROPERTIES DEPENDS extracttar)
 
 add_php_test(revisionfilteracrossdates)
-set_tests_properties(revisionfilteracrossdates PROPERTIES DEPENDS pdoexecutelogserrors)
+set_tests_properties(revisionfilteracrossdates PROPERTIES DEPENDS actualtrilinossubmission)
 
 add_php_test(timeoutsandmissingtests)
-set_tests_properties(timeoutsandmissingtests PROPERTIES DEPENDS revisionfilteracrossdates)
+set_tests_properties(timeoutsandmissingtests PROPERTIES DEPENDS pdoexecutelogserrors)
 
 add_php_test(disabledtests)
 set_tests_properties(disabledtests PROPERTIES DEPENDS timeoutsandmissingtests)
