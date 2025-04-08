@@ -392,7 +392,7 @@ add_php_test(pubproject)
 set_tests_properties(pubproject PROPERTIES DEPENDS projectindb)
 
 add_php_test(projectmodel)
-set_tests_properties(projectmodel PROPERTIES DEPENDS pubproject)
+set_tests_properties(projectmodel PROPERTIES DEPENDS projectindb)
 
 add_php_test(querytests)
 set_tests_properties(querytests PROPERTIES DEPENDS projectmodel)
