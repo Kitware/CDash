@@ -650,7 +650,7 @@ add_php_test(subprojecttestfilters)
 set_tests_properties(subprojecttestfilters PROPERTIES DEPENDS multiplelabelsfortests)
 
 add_php_test(dynamicanalysisdefectlongtype)
-set_tests_properties(dynamicanalysisdefectlongtype PROPERTIES DEPENDS subprojecttestfilters)
+set_tests_properties(dynamicanalysisdefectlongtype PROPERTIES DEPENDS multiplelabelsfortests)
 
 add_php_test(starttimefromnotes)
 set_tests_properties(starttimefromnotes PROPERTIES DEPENDS dynamicanalysisdefectlongtype)
