@@ -392,7 +392,7 @@ add_php_test(pubproject)
 set_tests_properties(pubproject PROPERTIES DEPENDS projectindb)
 
 add_php_test(projectmodel)
-set_tests_properties(projectmodel PROPERTIES DEPENDS pubproject)
+set_tests_properties(projectmodel PROPERTIES DEPENDS projectindb)
 
 add_php_test(querytests)
 set_tests_properties(querytests PROPERTIES DEPENDS projectmodel)
@@ -470,7 +470,7 @@ add_php_test(excludesubprojects)
 set_tests_properties(excludesubprojects PROPERTIES DEPENDS subprojectnextprevious)
 
 add_php_test(testhistory)
-set_tests_properties(testhistory PROPERTIES DEPENDS excludesubprojects)
+set_tests_properties(testhistory PROPERTIES DEPENDS subprojectnextprevious)
 
 add_php_test(expectedandmissing)
 set_tests_properties(expectedandmissing PROPERTIES DEPENDS testhistory)
@@ -539,10 +539,10 @@ add_php_test(pdoexecutelogserrors)
 set_tests_properties(pdoexecutelogserrors PROPERTIES DEPENDS extracttar)
 
 add_php_test(revisionfilteracrossdates)
-set_tests_properties(revisionfilteracrossdates PROPERTIES DEPENDS pdoexecutelogserrors)
+set_tests_properties(revisionfilteracrossdates PROPERTIES DEPENDS actualtrilinossubmission)
 
 add_php_test(timeoutsandmissingtests)
-set_tests_properties(timeoutsandmissingtests PROPERTIES DEPENDS revisionfilteracrossdates)
+set_tests_properties(timeoutsandmissingtests PROPERTIES DEPENDS pdoexecutelogserrors)
 
 add_php_test(disabledtests)
 set_tests_properties(disabledtests PROPERTIES DEPENDS timeoutsandmissingtests)
@@ -617,7 +617,7 @@ add_php_test(commitauthornotification)
 set_tests_properties(commitauthornotification PROPERTIES DEPENDS putdynamicbuilds)
 
 add_php_test(subscribeprojectshowlabels)
-set_tests_properties(subscribeprojectshowlabels PROPERTIES DEPENDS commitauthornotification)
+set_tests_properties(subscribeprojectshowlabels PROPERTIES DEPENDS putdynamicbuilds)
 
 add_php_test(consistenttestingday)
 set_tests_properties(consistenttestingday PROPERTIES DEPENDS subscribeprojectshowlabels)
@@ -650,7 +650,7 @@ add_php_test(subprojecttestfilters)
 set_tests_properties(subprojecttestfilters PROPERTIES DEPENDS multiplelabelsfortests)
 
 add_php_test(dynamicanalysisdefectlongtype)
-set_tests_properties(dynamicanalysisdefectlongtype PROPERTIES DEPENDS subprojecttestfilters)
+set_tests_properties(dynamicanalysisdefectlongtype PROPERTIES DEPENDS multiplelabelsfortests)
 
 add_php_test(starttimefromnotes)
 set_tests_properties(starttimefromnotes PROPERTIES DEPENDS dynamicanalysisdefectlongtype)
