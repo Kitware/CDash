@@ -45,7 +45,7 @@ class InvitedToProject extends Mailable implements ShouldQueue
     public function content(): Content
     {
         return new Content(
-            view: 'email.invited-to-project',
+            text: 'email.invited-to-project',
         );
     }
 }
