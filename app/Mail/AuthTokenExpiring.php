@@ -39,7 +39,7 @@ class AuthTokenExpiring extends Mailable implements ShouldQueue
     public function content(): Content
     {
         return new Content(
-            view: 'email.auth-token-expiring',
+            text: 'email.auth-token-expiring',
         );
     }
 }
