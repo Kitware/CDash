@@ -158,7 +158,7 @@ describe('manageSubProject', () => {
     //   because the UI doesn't show the icon next to the
     //   default group unless it's the only existing one
     cy.get('table[data-cy="existing-subproject-groups"]').find('span.glyphicon-trash').click();
-    cy.wait(1000); // wait because the UI has a delay/fadeout on delete
+    cy.wait(1500); // wait because the UI has a delay/fadeout on delete
     cy.get('table[data-cy="existing-subproject-groups"]').find('span.glyphicon-trash').click();
 
     // make sure the groups don't exist anymore
