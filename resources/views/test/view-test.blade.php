@@ -118,7 +118,7 @@
             </a>
         </div>
     @endverbatim
-        <ng-include src="{{ asset(mix('assets/js/angular/views/partials/filterdataTemplate.html')) }}"></ng-include>
+        <ng-include src="'{{ asset(mix('assets/js/angular/views/partials/filterdataTemplate.html')) }}'"></ng-include>
     @verbatim
 
         <div ng-switch="::cdash.display">
