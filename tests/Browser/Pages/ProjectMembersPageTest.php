@@ -119,7 +119,8 @@ class ProjectMembersPageTest extends BrowserTestCase
             $browser->loginAs($this->users['admin'])
                 ->visit("/projects/{$this->project->id}/members")
                 ->whenAvailable('@project-members-page', function (Browser $browser) {
-                    $browser->assertVisible('@invitations-table');
+                    $browser->waitFor('@invitations-table')
+                        ->assertVisible('@invitations-table');
                 });
         });
     }
@@ -142,7 +143,8 @@ class ProjectMembersPageTest extends BrowserTestCase
             $browser->loginAs($this->users['normal'])
                 ->visit("/projects/{$this->project->id}/members")
                 ->whenAvailable('@project-members-page', function (Browser $browser) {
-                    $browser->assertVisible('@invitations-table');
+                    $browser->waitFor('@invitations-table')
+                        ->assertVisible('@invitations-table');
                 });
         });
     }
