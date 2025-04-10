@@ -11,10 +11,4 @@
 #=============================================================================
 set(CTEST_PROJECT_NAME "CMake")
 set(CTEST_NIGHTLY_START_TIME "1:00:00 UTC")
-
-set(CTEST_DROP_METHOD "http")
-set(CTEST_DROP_SITE "open.cdash.org")
-set(CTEST_DROP_LOCATION "/submit.php?project=CDash")
-set(CTEST_DROP_SITE_CDASH TRUE)
-set(CTEST_CDASH_VERSION "1.6")
-set(CTEST_CDASH_QUERY_VERSION TRUE)
+set(CTEST_SUBMIT_URL "https://open.cdash.org/submit.php?project=CDash")
