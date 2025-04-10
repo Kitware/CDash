@@ -62,21 +62,6 @@ class UpgradeTestCase extends KWWebTestCase
         $this->assertText('Timing for tests has been computed successfully.');
     }
 
-    /* functionality seems broken...
-       function testComputeUpdateStatistics()
-       {
-       if(!$this->getMaintenancePage())
-       {
-       return 1;
-       }
-       if(!$this->clickSubmitByName("ComputeUpdateStatistics"))
-       {
-       $this->fail("clicking ComputeUpdateStatistics returned false");
-       }
-       $this->assertText("Timing for tests has been computed successfully.");
-       }
-     */
-
     public function getMaintenancePage()
     {
         $this->login();

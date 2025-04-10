@@ -134,11 +134,6 @@ $currentDateString = now()->toDateString();
                                     Tests Query
                                 </a>
                             </li>
-                            <li>
-                                <a class="cdash-link" ng-href="{{ url('/userStatistics.php') }}?project=@{{::cdash.projectname_encoded}}&date=@{{::cdash.date}}">
-                                    Statistics
-                                </a>
-                            </li>
                             <li class="endsubmenu">
                                 <a class="cdash-link" ng-href="{{ url('/projects') }}/@{{::cdash.projectid}}/sites@{{::cdash.extraurl}}">
                                     Sites
