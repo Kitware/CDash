@@ -79,4 +79,10 @@ CDash automatically detects when its database is unavailable and stores submissi
 
 ## Submission files validation
 
-CDash can be configured to validate submitted XML files before attempting to process them, in order to preemptively reject malformed files. If enabled, once a submission is moved out of the queue, its XML files will be scanned for valid syntax and validated against the [XML schemas](../app/Validators/Schemas/) CDash supports. To use this feature, set `VALIDATE_XML_SUBMISSIONS=true` in your `.env` file.
+CDash can be configured to validate submitted XML files before attempting to process them, in order to preemptively reject malformed files. If enabled, once a submission is moved out of the queue, its XML files will be scanned for valid syntax and validated against the [XML schemas](../app/Validators/Schemas/) CDash supports. To use this feature, set `VALIDATE_SUBMISSIONS` in your `.env` file.
+
+      No Value or "SILENT": Log a message in the CDash logs and attempt to parse XML
+      "WARN"              : Log, return a message with a warning label in the
+                            http response of the submission, and attempt to parse XML
+      "REJECT"            : Log and return 400 to prevent further submissions and do not attempt
+                            to process the XML

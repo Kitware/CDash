@@ -27,7 +27,7 @@ class SubmissionValidation extends TestCase
 
     public function writeEnvEntry(string $value): void
     {
-        file_put_contents($this->ConfigFile, "VALIDATE_XML_SUBMISSIONS={$value}\n", FILE_APPEND | LOCK_EX);
+        file_put_contents($this->ConfigFile, "VALIDATE_SUBMISSIONS={$value}\n", FILE_APPEND | LOCK_EX);
     }
 
     public function submit(string $fileName): bool
@@ -54,20 +54,31 @@ class SubmissionValidation extends TestCase
     /** Check that error messages are logged but submission succeeds
      *  when the environment variable is set but to false
      */
-    public function testSubmissionValidationFalse(): void
+    public function testSubmissionValidationSilent(): void
     {
-        $this->writeEnvEntry('false');
+        $this->writeEnvEntry('SILENT');
+        $this::assertTrue($this->submit('invalid_Configure.xml'), 'Submission of invalid_Configure.xml was not successful when it should have passed.');
+        $this::assertTrue($this->submit('invalid_syntax_Build.xml'), 'Submission of invalid_syntax_Build.xml  was not successful when it should have passed.');
+        $this::assertTrue($this->submit('valid_Build.xml'), 'Submission of valid_Build.xml was not successful when it should have passed.');
+    }
+
+    /** Check that error messages are logged but submission succeeds
+     *  when the environment variable is set but to WARN
+     */
+    public function testSubmissionValidationWarn(): void
+    {
+        $this->writeEnvEntry('WARN');
         $this::assertTrue($this->submit('invalid_Configure.xml'), 'Submission of invalid_Configure.xml was not successful when it should have passed.');
         $this::assertTrue($this->submit('invalid_syntax_Build.xml'), 'Submission of invalid_syntax_Build.xml  was not successful when it should have passed.');
         $this::assertTrue($this->submit('valid_Build.xml'), 'Submission of valid_Build.xml was not successful when it should have passed.');
     }
 
     /** Check that the submission is dependent upon passing validation
-     *  when the environment variable is set
+     *  when the environment variable is set to REJECT
      */
-    public function testSubmissionValidationTrue(): void
+    public function testSubmissionValidationReject(): void
     {
-        $this->writeEnvEntry('true');
+        $this->writeEnvEntry('REJECT');
         $this::assertFalse($this->submit('invalid_Configure.xml'), 'Submission of invalid_Configure.xml was successful when it should have failed.');
         $this::assertFalse($this->submit('invalid_syntax_Build.xml'), 'Submission of invalid_syntax_Build.xml was successful when it should have failed.');
         $this::assertTrue($this->submit('valid_Build.xml'), 'Submission of valid_Build.xml was not successful when it should have passed.');
