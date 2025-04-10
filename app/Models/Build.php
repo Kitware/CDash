@@ -215,14 +215,6 @@ class Build extends Model
     }
 
     /**
-     * @return HasMany<BuildMeasurement>
-     */
-    public function measurements(): HasMany
-    {
-        return $this->hasMany(BuildMeasurement::class, 'buildid');
-    }
-
-    /**
      * @return HasMany<Coverage>
      */
     public function coverageResults(): HasMany
@@ -244,5 +236,29 @@ class Build extends Model
     public function uploadedFiles(): BelongsToMany
     {
         return $this->belongsToMany(UploadFile::class, 'build2uploadfile', 'buildid', 'fileid');
+    }
+
+    /**
+     * @return HasMany<BuildCommand>
+     */
+    public function commands(): HasMany
+    {
+        return $this->hasMany(BuildCommand::class, 'buildid');
+    }
+
+    /**
+     * @return HasMany<Target>
+     */
+    public function targets(): HasMany
+    {
+        return $this->hasMany(Target::class, 'buildid');
+    }
+
+    /**
+     * @return HasMany<self>
+     */
+    public function children(): HasMany
+    {
+        return $this->hasMany(self::class, 'parentid');
     }
 }
