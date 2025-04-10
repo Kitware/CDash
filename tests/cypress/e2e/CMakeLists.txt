@@ -61,7 +61,7 @@ add_cypress_e2e_test(test-summary)
 set_tests_properties(cypress/e2e/test-summary PROPERTIES DEPENDS simple2_async)
 
 add_cypress_e2e_test(query-tests)
-set_tests_properties(cypress/e2e/query-tests PROPERTIES DEPENDS simple2_async)
+set_tests_properties(cypress/e2e/query-tests PROPERTIES DEPENDS cypress/e2e/test-summary)
 
 add_cypress_e2e_test(filter-labels)
 set_tests_properties(cypress/e2e/filter-labels PROPERTIES DEPENDS simple2_async)
