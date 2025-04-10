@@ -193,14 +193,23 @@ set_tests_properties(/Feature/GraphQL/TestMeasurementTypeTest PROPERTIES DEPENDS
 add_laravel_test(/Feature/GraphQL/NoteTypeTest)
 set_tests_properties(/Feature/GraphQL/NoteTypeTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
-add_laravel_test(/Feature/GraphQL/BuildMeasurementTypeTest)
-set_tests_properties(/Feature/GraphQL/BuildMeasurementTypeTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
-
 add_laravel_test(/Feature/GraphQL/CoverageTypeTest)
 set_tests_properties(/Feature/GraphQL/CoverageTypeTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_laravel_test(/Feature/GraphQL/UserInvitationTypeTest)
 set_tests_properties(/Feature/GraphQL/UserInvitationTypeTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_laravel_test(/Feature/GraphQL/LabelTypeTest)
+set_tests_properties(/Feature/GraphQL/LabelTypeTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_laravel_test(/Feature/GraphQL/TargetTypeTest)
+set_tests_properties(/Feature/GraphQL/TargetTypeTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_laravel_test(/Feature/GraphQL/BuildCommandTypeTest)
+set_tests_properties(/Feature/GraphQL/BuildCommandTypeTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_laravel_test(/Feature/Submission/Instrumentation/BuildInstrumentationTest)
+set_tests_properties(/Feature/Submission/Instrumentation/BuildInstrumentationTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_laravel_test(/Feature/RouteAccessTest)
 set_tests_properties(/Feature/RouteAccessTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
@@ -335,9 +344,12 @@ set_property(TEST install_2 PROPERTY DEPENDS
   /Feature/GraphQL/TestTypeTest
   /Feature/GraphQL/TestMeasurementTypeTest
   /Feature/GraphQL/NoteTypeTest
-  /Feature/GraphQL/BuildMeasurementTypeTest
   /Feature/GraphQL/CoverageTypeTest
   /Feature/GraphQL/UserInvitationTypeTest
+  /Feature/GraphQL/LabelTypeTest
+  /Feature/GraphQL/TargetTypeTest
+  /Feature/GraphQL/BuildCommandTypeTest
+  /Feature/Submission/Instrumentation/BuildInstrumentationTest
   /Feature/RouteAccessTest
   /Feature/Monitor
   /Feature/PasswordRotation

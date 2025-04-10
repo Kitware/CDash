@@ -15,10 +15,18 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use App\Enums\BuildCommandType;
+use App\Enums\TargetType;
 use App\Http\Submission\Traits\UpdatesSiteInformation;
+use App\Models\Build as EloquentBuild;
+use App\Models\BuildCommand;
+use App\Models\BuildMeasurement;
+use App\Models\Label as EloquentLabel;
 use App\Models\Site;
 use App\Models\SiteInformation;
+use App\Models\Target;
 use App\Utils\SubmissionUtils;
+use Carbon\Carbon;
 use CDash\Collection\BuildCollection;
 use CDash\Collection\SubscriptionBuilderCollection;
 use CDash\Messaging\Subscription\CommitAuthorSubscriptionBuilder;
@@ -59,6 +67,50 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
     private $PullRequest;
     private $BuildErrorFilter;
     protected static ?string $schema_file = '/app/Validators/Schemas/Build.xsd';
+
+    /**
+     * A mapping of target names to unsaved Target objects and saved Label objects.  The labels
+     * will be attached to the targets at save time.  It's not currently possible to save members
+     * of a many-to-many relationship in Eloquent without the two records existing, and targets
+     * don't exist until parsing is complete.
+     *
+     * @var array<string,array{
+     *     labels: array<EloquentLabel>,
+     *     target: Target
+     * }>
+     */
+    private array $Targets = [];
+
+    /**
+     * Child builds are not known until the very end, so we have to store all of the build commands
+     * here until then.  This could be fixed by parsing the XML twice, once to identify all of the
+     * child builds, and then again to populate them.
+     *
+     * The command and measurements fields are unsaved.
+     *
+     * @var array<array{
+     *     command: BuildCommand,
+     *     targetname?: string,
+     *     measurements?: array<BuildMeasurement>
+     * }>
+     */
+    private array $BuildCommands = [];
+
+    /**
+     * This perhaps poorly named field represents what will be the next element added to the
+     * $BuildCommands field above.
+     *
+     * The optional targetname field corresponds to an entry in the $Targets field above.
+     *
+     * @var ?array{
+     *      command?: BuildCommand,
+     *      targetname?: string,
+     *      measurements?: array<BuildMeasurement>
+     *  }
+     */
+    private ?array $MostRecentCommand = null;
+
+    private ?BuildMeasurement $MostRecentMeasurement = null;
 
     public function __construct(Project $project)
     {
@@ -185,8 +237,78 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
                 $this->Error->Type = 1;
             }
             $this->ErrorSubProjectName = '';
-        } elseif ($name == 'LABEL') {
+        } elseif ($name === 'LABEL' && !$this->currentPathMatches('site.build.commands.*.labels.label')) {
             $this->Label = $factory->create(Label::class);
+        } elseif ($this->currentPathMatches('site.build.targets.target')) {
+            if (array_key_exists($attributes['NAME'], $this->Targets)) {
+                // In theory, this case should never happen...
+                throw new Exception('Non-unique target name found.');
+            }
+
+            $target = new Target([
+                'name' => $attributes['NAME'],
+                'type' => match ($attributes['TYPE']) {
+                    'STATIC_LIBRARY' => TargetType::STATIC_LIBRARY,
+                    'MODULE_LIBRARY' => TargetType::MODULE_LIBRARY,
+                    'SHARED_LIBRARY' => TargetType::SHARED_LIBRARY,
+                    'OBJECT_LIBRARY' => TargetType::OBJECT_LIBRARY,
+                    'INTERFACE_LIBRARY' => TargetType::INTERFACE_LIBRARY,
+                    'EXECUTABLE' => TargetType::EXECUTABLE,
+                    default => TargetType::UNKNOWN,
+                },
+            ]);
+
+            $this->Targets[(string) $attributes['NAME']] = [
+                'target' => $target,
+                'labels' => [],
+            ];
+            $this->MostRecentCommand['targetname'] = (string) $attributes['NAME'];
+        } elseif ($this->getParent() === 'COMMANDS') {
+            // Note: Matches both /site/build/commands/* and /site/build/targets/commands/*
+
+            // Required attributes for all commands
+            $command_info = [
+                'starttime' => Carbon::createFromTimestampMsUTC($attributes['TIMESTART']),
+                'command' => $attributes['COMMAND'],
+                'duration' => $attributes['DURATION'],
+                'result' => $attributes['RESULT'],
+                'workingdirectory' => $attributes['WORKINGDIR'],
+            ];
+
+            switch ($name) {
+                case 'COMPILE':
+                    $command_info['type'] = BuildCommandType::COMPILE;
+                    $command_info['source'] = $attributes['SOURCE'];
+                    $command_info['language'] = $attributes['LANGUAGE'];
+                    $command_info['config'] = $attributes['CONFIG'];
+                    break;
+                case 'LINK':
+                    $command_info['type'] = BuildCommandType::LINK;
+                    $command_info['language'] = $attributes['LANGUAGE'];
+                    $command_info['config'] = $attributes['CONFIG'];
+                    break;
+                case 'CUSTOM':
+                    $command_info['type'] = BuildCommandType::CUSTOM;
+                    break;
+                case 'CMAKEBUILD':
+                    $command_info['type'] = BuildCommandType::CMAKE_BUILD;
+                    break;
+                case 'CMAKEINSTALL':
+                    $command_info['type'] = BuildCommandType::CMAKE_INSTALL;
+                    break;
+                case 'INSTALL':
+                    $command_info['type'] = BuildCommandType::INSTALL;
+                    break;
+                default:
+                    throw new Exception("Unknown element $name");
+            }
+
+            $this->MostRecentCommand['command'] = new BuildCommand($command_info);
+        } elseif ($name === 'NAMEDMEASUREMENT') {
+            $this->MostRecentMeasurement = new BuildMeasurement([
+                'type' => $attributes['TYPE'],
+                'name' => $attributes['NAME'],
+            ]);
         }
     }
 
@@ -233,6 +355,60 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
                 }
 
                 $build->ComputeDifferences();
+            }
+
+            if (count($this->BuildCommands) > 0) {
+                // This is an unfortunate side effect of not having the build until the end.
+                // In the future, it would be good to initialize the build earlier and directly
+                // attach children as we go.
+                $eloquent_parent_build = EloquentBuild::findOrFail((int) $this->getBuild()->Id);
+
+                foreach ($this->Targets as &$target_arr) {
+                    $build_to_attach_to = $eloquent_parent_build;
+
+                    /** @var Build $build */
+                    foreach ($this->Builds as $subproject => $build) {
+                        foreach ($target_arr['labels'] as $label) {
+                            if ($label->text === $subproject) {
+                                $build_to_attach_to = EloquentBuild::findOrFail((int) $build->Id);
+                                break 2;
+                            }
+                        }
+                    }
+
+                    $target_arr['target'] = $build_to_attach_to->targets()->save($target_arr['target']);
+                    if ($target_arr['target'] === false) {
+                        throw new Exception('Failed to save target.');
+                    }
+
+                    if (count($target_arr['labels']) > 0) {
+                        $target_arr['target']->labels()->syncWithoutDetaching(collect($target_arr['labels'])->pluck('id'));
+                    }
+                }
+
+                foreach ($this->BuildCommands as $command_arr) {
+                    $build_to_attach_to = $eloquent_parent_build;
+                    if (array_key_exists('targetname', $command_arr) && array_key_exists($command_arr['targetname'], $this->Targets)) {
+                        $build_to_attach_to = $this->Targets[$command_arr['targetname']]['target']->build;
+                        if ($build_to_attach_to === null) {
+                            throw new Exception('Target not attached to build when saving command.');
+                        }
+                    }
+
+                    $command_arr['command'] = $build_to_attach_to->commands()->save($command_arr['command']);
+                    if ($command_arr['command'] === false) {
+                        throw new Exception('Failed to save command.');
+                    }
+
+                    // Some commands are also associated with a target and have to be attached separately.
+                    if (array_key_exists('targetname', $command_arr) && array_key_exists($command_arr['targetname'], $this->Targets)) {
+                        $this->Targets[$command_arr['targetname']]['target']->commands()->save($command_arr['command']);
+                    }
+
+                    if (array_key_exists('measurements', $command_arr) && count($command_arr['measurements']) > 0) {
+                        $command_arr['command']->measurements()->saveMany($command_arr['measurements']);
+                    }
+                }
             }
         } elseif ($name == 'WARNING' || $name == 'ERROR' || $name == 'FAILURE') {
             $skip_error = false;
@@ -300,7 +476,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
                 $this->Builds[$this->SubProjectName]->AddError($this->Error);
             }
             unset($this->Error);
-        } elseif ($name == 'LABEL' && $this->getParent() === 'LABELS') {
+        } elseif ($name === 'LABEL' && $this->getParent() === 'LABELS' && !$this->currentPathMatches('site.build.targets.target.labels.label')) {
             if (!empty($this->ErrorSubProjectName)) {
                 $this->SubProjectName = $this->ErrorSubProjectName;
             } elseif (isset($this->Error) && $this->Error instanceof BuildFailure) {
@@ -308,6 +484,45 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
             } else {
                 $this->Labels[] = $this->Label;
             }
+        } elseif ($this->currentPathMatches('site.build.commands.*') || $this->currentPathMatches('site.build.targets.target.commands.*')) {
+            if ($this->MostRecentCommand === null || !array_key_exists('command', $this->MostRecentCommand)) {
+                throw new Exception('Failed to save command with no command info.');
+            }
+
+            $this->BuildCommands[] = $this->MostRecentCommand;
+
+            if ($this->currentPathMatches('site.build.targets.target.commands.*')) {
+                if (!array_key_exists('targetname', $this->MostRecentCommand)) {
+                    throw new Exception('Invalid state: targetname not set inside target element.');
+                }
+
+                // Pass the targetname on to the next command
+                $this->MostRecentCommand = [
+                    'targetname' => $this->MostRecentCommand['targetname'],
+                ];
+            } else {
+                $this->MostRecentCommand = [];
+            }
+        } elseif ($this->currentPathMatches('site.build.targets.target')) {
+            // The most recent command was already saved at the conclusion of the previous command element
+            $this->MostRecentCommand = null;
+        } elseif (
+            $this->currentPathMatches('site.build.commands.*.namedmeasurement')
+            || $this->currentPathMatches('site.build.targets.target.commands.*.namedmeasurement')
+        ) {
+            if ($this->MostRecentCommand === null) {
+                throw new Exception('Invalid state: Attempt to save measurement without command initialized.');
+            }
+
+            if ($this->MostRecentMeasurement === null) {
+                throw new Exception('Invalid state: Attempt to save uninitialized measurement.');
+            }
+
+            if (!array_key_exists('measurements', $this->MostRecentCommand)) {
+                $this->MostRecentCommand['measurements'] = [];
+            }
+            $this->MostRecentCommand['measurements'][] = $this->MostRecentMeasurement;
+            $this->MostRecentMeasurement = null;
         }
 
         parent::endElement($parser, $name);
@@ -383,7 +598,19 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
             $this->Error->PostContext .= $data;
         } elseif ($this->getParent() === 'SUBPROJECT' && $element == 'LABEL') {
             $this->SubProjects[$this->SubProjectName][] = $data;
-        } elseif ($this->getParent() === 'LABELS' && $element == 'LABEL') {
+        } elseif ($this->currentPathMatches('site.build.targets.target.labels.label')) {
+            if ($this->MostRecentCommand === null || !array_key_exists('targetname', $this->MostRecentCommand)) {
+                throw new Exception('Invalid state: target name not set when parsing labels.');
+            }
+
+            if (!array_key_exists('labels', $this->Targets[$this->MostRecentCommand['targetname']])) {
+                throw new Exception('Target data not initialized properly.');
+            }
+
+            $this->Targets[$this->MostRecentCommand['targetname']]['labels'][] = EloquentLabel::firstOrCreate([
+                'text' => $data,
+            ]);
+        } elseif ($this->getParent() === 'LABELS' && $element === 'LABEL') {
             // First, check if this label belongs to a SubProject
             foreach ($this->SubProjects as $subproject => $labels) {
                 if (in_array($data, $labels)) {
@@ -394,6 +621,15 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
             if (empty($this->ErrorSubProjectName)) {
                 $this->Label->SetText($data);
             }
+        } elseif (
+            $this->currentPathMatches('site.build.commands.*.namedmeasurement.value')
+            || $this->currentPathMatches('site.build.targets.target.commands.*.namedmeasurement.value')
+        ) {
+            if ($this->MostRecentMeasurement === null) {
+                throw new Exception('Most recent measurement is unset.');
+            }
+
+            $this->MostRecentMeasurement->value = $data;
         }
     }
 

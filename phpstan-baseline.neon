@@ -297,6 +297,16 @@ parameters:
 			path: app/GraphQL/Mutations/UpdateSiteDescription.php
 
 		-
+			message: "#^Cannot cast mixed to int\\.$#"
+			count: 1
+			path: app/GraphQL/Scalars/NonNegativeIntegerMilliseconds.php
+
+		-
+			message: "#^Part \\$value \\(mixed\\) of encapsed string cannot be cast to string\\.$#"
+			count: 2
+			path: app/GraphQL/Scalars/NonNegativeIntegerMilliseconds.php
+
+		-
 			message: "#^Cannot cast mixed to float\\.$#"
 			count: 1
 			path: app/GraphQL/Scalars/NonNegativeSeconds.php
@@ -27167,7 +27177,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 21
+			count: 18
 			path: app/cdash/xml_handlers/build_handler.php
 
 		-
@@ -27377,7 +27387,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 10
+			count: 7
 			path: app/cdash/xml_handlers/configure_handler.php
 
 		-
