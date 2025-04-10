@@ -25849,87 +25849,6 @@ parameters:
 			path: app/cdash/tests/test_subproject.php
 
 		-
-			message: "#^Argument of an invalid type array\\<int, string\\>\\|false supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: app/cdash/tests/test_subprojectemail.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_execute\\(\\)\\:
-				v2\\.5\\.0 01/22/2018$#
-			"""
-			count: 2
-			path: app/cdash/tests/test_subprojectemail.php
-
-		-
-			message: """
-				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
-			"""
-			count: 1
-			path: app/cdash/tests/test_subprojectemail.php
-
-		-
-			message: "#^Cannot access property \\$admin on null\\.$#"
-			count: 1
-			path: app/cdash/tests/test_subprojectemail.php
-
-		-
-			message: "#^Cannot access property \\$email on null\\.$#"
-			count: 1
-			path: app/cdash/tests/test_subprojectemail.php
-
-		-
-			message: "#^Cannot access property \\$firstname on null\\.$#"
-			count: 1
-			path: app/cdash/tests/test_subprojectemail.php
-
-		-
-			message: "#^Cannot access property \\$id on App\\\\Models\\\\User\\|null\\.$#"
-			count: 1
-			path: app/cdash/tests/test_subprojectemail.php
-
-		-
-			message: "#^Cannot access property \\$id on null\\.$#"
-			count: 1
-			path: app/cdash/tests/test_subprojectemail.php
-
-		-
-			message: "#^Cannot access property \\$lastname on null\\.$#"
-			count: 1
-			path: app/cdash/tests/test_subprojectemail.php
-
-		-
-			message: "#^Cannot access property \\$password on null\\.$#"
-			count: 1
-			path: app/cdash/tests/test_subprojectemail.php
-
-		-
-			message: "#^Cannot call method save\\(\\) on null\\.$#"
-			count: 1
-			path: app/cdash/tests/test_subprojectemail.php
-
-		-
-			message: "#^Method SubProjectEmailTestCase\\:\\:testSubProjectEmail\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_subprojectemail.php
-
-		-
-			message: "#^Only booleans are allowed in a negated boolean, App\\\\Models\\\\User\\|null given\\.$#"
-			count: 1
-			path: app/cdash/tests/test_subprojectemail.php
-
-		-
-			message: "#^Property SubProjectEmailTestCase\\:\\:\\$PDO has no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_subprojectemail.php
-
-		-
-			message: "#^Property SubProjectEmailTestCase\\:\\:\\$Project has no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_subprojectemail.php
-
-		-
 			message: "#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\\.$#"
 			count: 1
 			path: app/cdash/tests/test_subprojectnextprevious.php
@@ -29857,18 +29776,13 @@ parameters:
 			path: app/cdash/xml_handlers/note_handler.php
 
 		-
-			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/project_handler.php
-
-		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/project_handler.php
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 9
+			count: 8
 			path: app/cdash/xml_handlers/project_handler.php
 
 		-
@@ -29912,11 +29826,6 @@ parameters:
 			path: app/cdash/xml_handlers/project_handler.php
 
 		-
-			message: "#^Only booleans are allowed in an if condition, App\\\\Models\\\\User\\|null given\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/project_handler.php
-
-		-
 			message: "#^Only booleans are allowed in an if condition, mixed given\\.$#"
 			count: 2
 			path: app/cdash/xml_handlers/project_handler.php
@@ -29933,11 +29842,6 @@ parameters:
 
 		-
 			message: "#^Property ProjectHandler\\:\\:\\$Dependencies has no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/project_handler.php
-
-		-
-			message: "#^Property ProjectHandler\\:\\:\\$Emails has no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/project_handler.php
 
