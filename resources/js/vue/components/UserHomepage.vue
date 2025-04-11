@@ -141,13 +141,6 @@
               >
                 <font-awesome-icon icon="fa-user-pen" />
               </a>
-              <a
-                v-if="project.role > 1"
-                title="Manage project coverage"
-                :href="$baseURL + '/manageCoverage.php?projectid=' + project.id"
-              >
-                <font-awesome-icon icon="fa-chart-line" />
-              </a>
             </td>
             <td
               align="center"
@@ -653,14 +646,6 @@
                 class="cdash-link"
                 :href="$baseURL + '/manageBuildGroup.php'"
               >Manage project groups</a>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <a
-                class="cdash-link"
-                :href="$baseURL + '/manageCoverage.php'"
-              >Manage project coverage</a>
             </td>
           </tr>
           <tr>
