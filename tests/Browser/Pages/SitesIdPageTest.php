@@ -250,7 +250,8 @@ class SitesIdPageTest extends BrowserTestCase
         $this->browse(function (Browser $browser) {
             $browser->visit("/sites/{$this->sites['site1']->id}")
                 ->whenAvailable('@site-details', function (Browser $browser) {
-                    $browser->assertSee('No information available for this site.');
+                    $browser->waitForText('No information available for this site.')
+                        ->assertSee('No information available for this site.');
                 });
         });
     }
