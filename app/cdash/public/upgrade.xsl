@@ -27,10 +27,6 @@
     <td><div align="left">for the last <input type="text" name="TestTimingDays" size="2" value="4"/> days <input type="submit" name="ComputeTestTiming" value="Compute test timing"/></div></td>
   </tr>
   <tr>
-    <td><div align="right">Compute update statistics:</div></td>
-    <td><div align="left">for the last <input type="text" name="UpdateStatisticsDays" size="2" value="4"/> days <input type="submit" name="ComputeUpdateStatistics" value="Compute update statistics"/></div></td>
-  </tr>
-  <tr>
     <td><div align="right">Manage CDash dependencies:</div></td>
     <td><input type="submit" name="Audit" value="Display audit report"/>
         <input type="submit" name="Clear" value="Clear current audit report"/>
