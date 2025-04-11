@@ -6,7 +6,6 @@ use App\Models\User;
 use App\Utils\DatabaseCleanupUtils;
 use CDash\Model\Project;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
@@ -332,12 +331,6 @@ final class AdminController extends AbstractController
         @$ComputeTestTiming = $_POST['ComputeTestTiming'];
         @$ComputeUpdateStatistics = $_POST['ComputeUpdateStatistics'];
 
-        @$Dependencies = $_POST['Dependencies'];
-        @$Audit = $_POST['Audit'];
-        @$ClearAudit = $_POST['Clear'];
-
-        $configFile = base_path('/app/cdash/AuditReport.log');
-
         // Compute the testtime
         if ($ComputeTestTiming) {
             $TestTimingDays = (int) ($_POST['TestTimingDays'] ?? 0);
@@ -358,23 +351,6 @@ final class AdminController extends AbstractController
             } else {
                 $xml .= add_XML_value('alert', 'Wrong number of days.');
             }
-        }
-
-        if ($Dependencies) {
-            $returnVal = Artisan::call('dependencies:update');
-            $xml .= add_XML_value('alert', "The call to update CDash's dependencies was run. The call exited with value: $returnVal");
-        }
-
-        if ($Audit) {
-            if (!file_exists($configFile)) {
-                Artisan::call("schedule:test --name='dependencies:audit'");
-            }
-            $fileContents = file_get_contents($configFile);
-            $xml .= add_XML_value('audit', $fileContents);
-        }
-
-        if ($ClearAudit && file_exists($configFile)) {
-            unlink($configFile);
         }
 
         /* Check the builds with wrong date */

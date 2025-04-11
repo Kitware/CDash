@@ -18,14 +18,6 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $cdash_directory_name = env('CDASH_DIRECTORY', 'cdash');
-        $cdash_app_dir = realpath(app_path($cdash_directory_name));
-        $output_filename = $cdash_app_dir . '/AuditReport.log';
-
-        $schedule->command('dependencies:audit')
-            ->everySixHours()
-            ->sendOutputTo($output_filename);
-
         $schedule->job(new PruneJobs())
             ->hourly()
             ->withoutOverlapping();
