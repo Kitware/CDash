@@ -17,6 +17,7 @@ function(add_cypress_e2e_test TestName)
   )
 endfunction()
 
+# These tests have the correct dependencies set up
 add_cypress_e2e_test(user-profile)
 set_tests_properties(cypress/e2e/user-profile PROPERTIES DEPENDS install_1)
 
@@ -25,6 +26,9 @@ set_tests_properties(cypress/e2e/banner PROPERTIES DEPENDS displayimage)
 
 add_cypress_e2e_test(all-projects)
 set_tests_properties(cypress/e2e/all-projects PROPERTIES DEPENDS projectindb)
+
+add_cypress_e2e_test(query-tests)
+set_tests_properties(cypress/e2e/query-tests PROPERTIES DEPENDS cypress/e2e/remove-build)
 
 # These tests don't have all of the dependencies worked out
 add_cypress_e2e_test(manage-overview)
@@ -59,9 +63,6 @@ set_tests_properties(cypress/e2e/view-sub-projects PROPERTIES DEPENDS simple2_as
 
 add_cypress_e2e_test(test-summary)
 set_tests_properties(cypress/e2e/test-summary PROPERTIES DEPENDS simple2_async)
-
-add_cypress_e2e_test(query-tests)
-set_tests_properties(cypress/e2e/query-tests PROPERTIES DEPENDS cypress/e2e/test-summary)
 
 add_cypress_e2e_test(filter-labels)
 set_tests_properties(cypress/e2e/filter-labels PROPERTIES DEPENDS simple2_async)
