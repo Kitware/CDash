@@ -56,8 +56,6 @@ class RouteAccessTest extends TestCase
             ['/profile'],
             ['/subscribeProject.php'],
             ['/manageProjectRoles.php'],
-            ['/manageCoverage.php'],
-            ['/manageCoverage.php'],
             ['/manageBanner.php'],
         ];
     }

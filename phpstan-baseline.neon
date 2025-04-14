@@ -1013,18 +1013,13 @@ parameters:
 			path: app/Http/Controllers/CoverageController.php
 
 		-
-			message: "#^Argument of an invalid type array\\<int, mixed\\>\\|false supplied for foreach, only iterables are supported\\.$#"
-			count: 2
-			path: app/Http/Controllers/CoverageController.php
-
-		-
 			message: "#^Argument of an invalid type array\\|false supplied for foreach, only iterables are supported\\.$#"
-			count: 7
+			count: 6
 			path: app/Http/Controllers/CoverageController.php
 
 		-
 			message: "#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\\.$#"
-			count: 7
+			count: 6
 			path: app/Http/Controllers/CoverageController.php
 
 		-
@@ -1060,7 +1055,7 @@ parameters:
 				#^Call to deprecated method executePrepared\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 8
+			count: 7
 			path: app/Http/Controllers/CoverageController.php
 
 		-
@@ -1175,11 +1170,6 @@ parameters:
 			path: app/Http/Controllers/CoverageController.php
 
 		-
-			message: "#^Cannot access property \\$name on App\\\\Models\\\\Site\\|null\\.$#"
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
 			message: "#^Cannot call method GetId\\(\\) on mixed\\.$#"
 			count: 1
 			path: app/Http/Controllers/CoverageController.php
@@ -1216,12 +1206,12 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
-			count: 11
+			count: 10
 			path: app/Http/Controllers/CoverageController.php
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 59
+			count: 55
 			path: app/Http/Controllers/CoverageController.php
 
 		-
@@ -1236,11 +1226,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\CoverageController\\:\\:get_cdash_dashboard_xml_by_name\\(\\) has parameter \\$date with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\CoverageController\\:\\:manageCoverage\\(\\) never returns Illuminate\\\\Http\\\\RedirectResponse so it can be removed from the return type\\.$#"
 			count: 1
 			path: app/Http/Controllers/CoverageController.php
 
@@ -1291,16 +1276,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\CoverageController\\:\\:sort_percentage\\(\\) has parameter \\$b with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\CoverageController\\:\\:sort_priority\\(\\) has parameter \\$a with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\CoverageController\\:\\:sort_priority\\(\\) has parameter \\$b with no type specified\\.$#"
 			count: 1
 			path: app/Http/Controllers/CoverageController.php
 
@@ -1405,16 +1380,6 @@ parameters:
 			path: app/Http/Controllers/CoverageController.php
 
 		-
-			message: "#^Parameter \\#1 \\$array of function rsort expects TArray of array, array\\|false given\\.$#"
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			message: "#^Parameter \\#1 \\$array of function sort expects TArray of array, array\\|false given\\.$#"
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
 			message: "#^Parameter \\#1 \\$coverage of static method App\\\\Http\\\\Controllers\\\\CoverageController\\:\\:apiCompareCoverage_create_subproject\\(\\) expects array\\<string, mixed\\>, mixed given\\.$#"
 			count: 2
 			path: app/Http/Controllers/CoverageController.php
@@ -1441,7 +1406,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$string of function htmlspecialchars expects string, mixed given\\.$#"
-			count: 6
+			count: 5
 			path: app/Http/Controllers/CoverageController.php
 
 		-
@@ -1455,22 +1420,12 @@ parameters:
 			path: app/Http/Controllers/CoverageController.php
 
 		-
-			message: "#^Parameter \\#1 \\$string of function urlencode expects string, string\\|false given\\.$#"
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
 			message: "#^Parameter \\#1 \\$value of function intval expects array\\|bool\\|float\\|int\\|resource\\|string\\|null, mixed given\\.$#"
-			count: 13
+			count: 9
 			path: app/Http/Controllers/CoverageController.php
 
 		-
 			message: "#^Parameter \\#2 \\$build_array of static method App\\\\Http\\\\Controllers\\\\CoverageController\\:\\:apiCompareCoverage_get_build_label\\(\\) expects array\\<string, mixed\\>, mixed given\\.$#"
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			message: "#^Parameter \\#2 \\$file_path of method App\\\\Http\\\\Controllers\\\\CoverageController\\:\\:setFilePriority\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: app/Http/Controllers/CoverageController.php
 
@@ -1481,11 +1436,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$timestamp of function gmdate expects int\\|null, \\(float\\|int\\) given\\.$#"
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			message: "#^Parameter \\#2 \\$timestamp of function gmdate expects int\\|null, int\\|false given\\.$#"
 			count: 1
 			path: app/Http/Controllers/CoverageController.php
 
@@ -18134,55 +18084,6 @@ parameters:
 			message: "#^Variable property access on CDash\\\\Model\\\\Project\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
-			message: """
-				#^Call to deprecated method execute\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 2
-			path: app/cdash/tests/manageCoverageTest.php
-
-		-
-			message: """
-				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
-			path: app/cdash/tests/manageCoverageTest.php
-
-		-
-			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
-			count: 1
-			path: app/cdash/tests/manageCoverageTest.php
-
-		-
-			message: """
-				#^Call to deprecated method prepare\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
-			path: app/cdash/tests/manageCoverageTest.php
-
-		-
-			message: "#^Cannot call method fetchColumn\\(\\) on PDOStatement\\|false\\.$#"
-			count: 2
-			path: app/cdash/tests/manageCoverageTest.php
-
-		-
-			message: "#^Method ManageCoverageTestCase\\:\\:testManageCoverageTest\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/manageCoverageTest.php
-
-		-
-			message: "#^Parameter \\#1 \\$stmt of method CDash\\\\Database\\:\\:execute\\(\\) expects PDOStatement, PDOStatement\\|false given\\.$#"
-			count: 2
-			path: app/cdash/tests/manageCoverageTest.php
-
-		-
-			message: "#^Parameter \\#2 \\$value of method WebTestCase\\:\\:setFieldByName\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: app/cdash/tests/manageCoverageTest.php
 
 		-
 			message: "#^Method EmailTestCase\\:\\:testSimple\\(\\) has no return type specified\\.$#"

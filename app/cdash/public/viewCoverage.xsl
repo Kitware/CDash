@@ -267,7 +267,6 @@
           <th width="10%" align="center">Branch percentage</th>
           <th width="10%" align="center">Branches not covered</th>
         </xsl:if>
-        <th width="10%" align="center">Priority</th>
         <xsl:if test="cdash/coverage/displaylabels=1">
             <th>Labels</th>
          </xsl:if>
@@ -277,7 +276,6 @@
       <xsl:if test="cdash/coverage/coveragetype='bullseye'">
           <th width="10%" align="center">Branch Points not covered</th>
           <th width="10%" align="center">Functions not covered</th>
-          <th>Priority</th>
            <xsl:if test="cdash/coverage/displaylabels=1">
             <th>Labels</th>
           </xsl:if>

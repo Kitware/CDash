@@ -198,11 +198,6 @@ $currentDateString = now()->toDateString();
                                 </a>
                             </li>
                             <li>
-                                <a class="cdash-link" ng-href="{{ url('/manageCoverage.php') }}?projectid=@{{::cdash.projectid}}">
-                                    Coverage
-                                </a>
-                            </li>
-                            <li>
                                 <a class="cdash-link" ng-href="{{ url('/manageBanner.php') }}?projectid=@{{::cdash.projectid}}">
                                     Banner
                                 </a>
@@ -317,11 +312,6 @@ $currentDateString = now()->toDateString();
                                 <li>
                                     <a href="{{ url('/manageBuildGroup.php') }}?projectid={{ $project->Id }}">
                                         Groups
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ url('/manageCoverage.php') }}?projectid={{ $project->Id }}">
-                                        Coverage
                                     </a>
                                 </li>
                                 <li>

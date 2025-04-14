@@ -496,7 +496,6 @@ class ViewCoveragePhpFilters extends DefaultFilters
         $xml .= getFilterDefinitionXML('filename', 'Filename', 'string', '', '');
         $xml .= getFilterDefinitionXML('labels', 'Labels', 'string', '', '');
         // $xml .= getFilterDefinitionXML('percentage', 'Percentage', 'number', '', '0');
-        $xml .= getFilterDefinitionXML('priority', 'Priority', 'string', '', '');
         // $xml .= getFilterDefinitionXML('status', 'Status', 'string', '', '');
         $xml .= getFilterDefinitionXML('totallines', 'Total Lines', 'number', '', '0');
         $xml .= getFilterDefinitionXML('uncoveredlines', 'Uncovered Lines', 'number', '', '0');
@@ -527,11 +526,6 @@ class ViewCoveragePhpFilters extends DefaultFilters
                 //  $sql_field = "TODO.percentage";
                 // }
                 // break;
-
-            case 'priority':
-                $sql_field = 'cfp.priority';
-
-                break;
 
                 // case 'status':
                 // {

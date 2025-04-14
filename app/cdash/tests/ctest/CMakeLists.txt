@@ -26,8 +26,9 @@ function(add_coverage_test TestName ProjectName Directory CDashVerifyScript)
   )
 endfunction()
 
+# This is no longer relevant and should eventually be removed
 if(COVERAGE_COMMAND)
-  add_coverage_test(simple InsightExample simple manageCoverageTest.php)
+  add_coverage_test(simple InsightExample simple simple.php)
 else()
   add_ctest_test(simple InsightExample simple simple.php)
 endif()
@@ -75,8 +76,9 @@ set_tests_properties(nobackup PROPERTIES DEPENDS Feature/Timeline)
 add_php_test(deferredsubmissions)
 set_tests_properties(deferredsubmissions PROPERTIES DEPENDS nobackup)
 
+# This is no longer relevant and should eventually be removed
 if(COVERAGE_COMMAND)
-  add_coverage_test(simple_async InsightExample simple manageCoverageTest.php enable_async)
+  add_coverage_test(simple_async InsightExample simple simple.php enable_async)
 else()
   add_ctest_test(simple_async InsightExample simple simple.php enable_async)
 endif()
