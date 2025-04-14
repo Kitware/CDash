@@ -66,10 +66,9 @@ add_laravel_test(/Unit/app/Console/Command/ValidateXmlCommandTest)
 ###################################################################################################
 
 cdash_install()
-set_tests_properties(install_2 PROPERTIES DEPENDS cypress/e2e/user-profile)
 
 add_laravel_test(/Feature/CDashTest)
-set_tests_properties(/Feature/CDashTest PROPERTIES DEPENDS install_2)
+set_tests_properties(/Feature/CDashTest PROPERTIES DEPENDS install_1)
 
 add_laravel_test(/Feature/LoginAndRegistration)
 set_tests_properties(/Feature/LoginAndRegistration PROPERTIES DEPENDS /Feature/CDashTest)
@@ -287,7 +286,7 @@ set_tests_properties(/Feature/Traits/UpdatesSiteInformationTest PROPERTIES DEPEN
 ###################################################################################################
 
 cdash_install()
-set_property(TEST install_3 PROPERTY DEPENDS
+set_property(TEST install_2 PROPERTY DEPENDS
   /Feature/SubmissionValidation
   /Feature/GraphQL/FilterTest
   /Feature/GraphQL/ProjectTypeTest
@@ -329,7 +328,7 @@ set_property(TEST install_3 PROPERTY DEPENDS
 
 
 add_php_test(compressedtest)
-set_tests_properties(compressedtest PROPERTIES DEPENDS install_3)
+set_tests_properties(compressedtest PROPERTIES DEPENDS install_2)
 
 add_php_test(createpublicdashboard)
 set_tests_properties(createpublicdashboard PROPERTIES DEPENDS compressedtest)
@@ -376,11 +375,8 @@ set_tests_properties(image PROPERTIES DEPENDS committerinfo)
 add_php_test(displayimage)
 set_tests_properties(displayimage PROPERTIES DEPENDS image)
 
-add_cypress_e2e_test(banner)
-set_tests_properties(cypress/e2e/banner PROPERTIES DEPENDS displayimage)
-
 add_php_test(manageprojectroles)
-set_tests_properties(manageprojectroles PROPERTIES DEPENDS cypress/e2e/banner)
+set_tests_properties(manageprojectroles PROPERTIES DEPENDS displayimage)
 
 add_php_test(manageusers)
 set_tests_properties(manageusers PROPERTIES DEPENDS manageprojectroles)
