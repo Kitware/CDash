@@ -82,11 +82,8 @@ set_tests_properties(/CDash/Service/RepositoryService PROPERTIES DEPENDS /CDash/
 add_unit_test(/CDash/TestUseCase)
 set_tests_properties(/CDash/TestUseCase PROPERTIES DEPENDS /CDash/Service/RepositoryService)
 
-add_unit_test(/CDash/UpdateUseCase)
-set_tests_properties(/CDash/UpdateUseCase PROPERTIES DEPENDS /CDash/TestUseCase)
-
 add_unit_test(/CDash/XmlHandler/BuildHandler)
-set_tests_properties(/CDash/XmlHandler/BuildHandler PROPERTIES DEPENDS /CDash/UpdateUseCase)
+set_tests_properties(/CDash/XmlHandler/BuildHandler PROPERTIES DEPENDS /CDash/TestUseCase)
 
 add_unit_test(/CDash/XmlHandler/ConfigureHandler)
 set_tests_properties(/CDash/XmlHandler/ConfigureHandler PROPERTIES DEPENDS /CDash/XmlHandler/BuildHandler)
@@ -128,6 +125,9 @@ set_tests_properties(/CDash/BuildUseCase PROPERTIES DEPENDS /CDash/XmlHandler/Up
 
 add_unit_test(/CDash/ConfigUseCase)
 set_tests_properties(/CDash/ConfigUseCase PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_unit_test(/CDash/UpdateUseCase)
+set_tests_properties(/CDash/UpdateUseCase PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_unit_test(/CDash/Model/BuildError)
 set_tests_properties(/CDash/Model/BuildError PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
@@ -294,6 +294,7 @@ set_property(TEST install_2 PROPERTY DEPENDS
   /CDash/Lib/Repository/GitHub
   /CDash/BuildUseCase
   /CDash/ConfigUseCase
+  /CDash/UpdateUseCase
   /CDash/Model/BuildError
   /CDash/Model/BuildErrorFilter
   /CDash/Model/BuildFailure
