@@ -26,10 +26,6 @@
     <td><div align="right">Compute test timing:</div></td>
     <td><div align="left">for the last <input type="text" name="TestTimingDays" size="2" value="4"/> days <input type="submit" name="ComputeTestTiming" value="Compute test timing"/></div></td>
   </tr>
-  <tr>
-    <td><div align="right">Compute update statistics:</div></td>
-    <td><div align="left">for the last <input type="text" name="UpdateStatisticsDays" size="2" value="4"/> days <input type="submit" name="ComputeUpdateStatistics" value="Compute update statistics"/></div></td>
-  </tr>
 </table>
 </form>
     </xsl:template>

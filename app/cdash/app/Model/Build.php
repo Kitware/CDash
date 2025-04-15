@@ -1435,29 +1435,6 @@ class Build
             return false;
         }
 
-        // Find how the number of errors, warnings and test failures have changed.
-        $previousbuild = new Build();
-        $previousbuild->Id = $previousbuildid;
-
-        $errordiff = $this->GetNumberOfErrors() - $previousbuild->GetNumberOfErrors();
-        $warningdiff = $this->GetNumberOfWarnings() - $previousbuild->GetNumberOfWarnings();
-        $testdiff =
-            ($this->GetNumberOfFailedTests() + $this->GetNumberOfNotRunTests()) -
-            ($previousbuild->GetNumberOfFailedTests() + $previousbuild->GetNumberOfNotRunTests());
-
-        // Find the number of authors that contributed to this changeset.
-        $nauthors_stmt = $this->PDO->prepare(
-            'SELECT count(author) FROM
-                    (SELECT uf.author FROM updatefile AS uf
-                     JOIN build2update AS b2u ON (b2u.updateid=uf.updateid)
-                     WHERE b2u.buildid=? GROUP BY author)
-                 AS test');
-        pdo_execute($nauthors_stmt, [$this->Id]);
-        $nauthors_array = $nauthors_stmt->fetch();
-        $nauthors = $nauthors_array[0];
-
-        $newbuild = 1;
-        $previousauthor = '';
         // Record user statistics for each updated file.
         $updatefiles_stmt = $this->PDO->prepare(
             "SELECT author,email,checkindate,filename FROM updatefile AS uf
@@ -1467,174 +1444,13 @@ class Build
         pdo_execute($updatefiles_stmt, [$this->Id]);
 
         while ($updatefiles_array = $updatefiles_stmt->fetch()) {
-            $checkindate = $updatefiles_array['checkindate'];
             $author = $updatefiles_array['author'];
-            $filename = $updatefiles_array['filename'];
             $email = $updatefiles_array['email'];
-            $warnings = 0;
-            $errors = 0;
 
             // cache the author, email results
             $this->CommitAuthors = array_unique(array_merge($this->CommitAuthors, [$author, $email]));
-
-            if ($author !== $previousauthor) {
-                $newbuild = 1;
-            }
-            $previousauthor = $author;
-
-            if ($warningdiff > 1) {
-                $warnings = $this->FindRealErrors('WARNING', $author, (int) $this->Id, $filename);
-            } elseif ($warningdiff < 0) {
-                $warnings = $this->FindRealErrors('WARNING', $author, $previousbuildid, $filename) * -1;
-            }
-            if ($errordiff > 1) {
-                $errors = $this->FindRealErrors('ERROR', $author, (int) $this->Id, $filename);
-            } elseif ($errordiff < 0) {
-                $errors = $this->FindRealErrors('ERROR', $author, $previousbuildid, $filename) * -1;
-            }
-            if ($nauthors > 1) {
-                // When multiple authors contribute to a changeset it is
-                // too difficult to determine which modified file caused a
-                // change in test behavior.
-                $tests = 0;
-            } else {
-                $tests = $testdiff;
-            }
-
-            $this->AddUpdateStatistics($author, $email, $checkindate, $newbuild, $warnings, $errors, $tests);
-
-            $warningdiff -= $warnings;
-            $errordiff -= $errors;
-            $testdiff -= $tests;
-            $newbuild = 0;
         }
         return true;
-    }
-
-    /** Helper function for AddUpdateStatistics */
-    private function AddUpdateStatistics(
-        $author,
-        $email,
-        $checkindate,
-        int $firstbuild,
-        $warningdiff,
-        $errordiff,
-        $testdiff,
-    ): void {
-        // Find user by email address.
-        $user = User::firstWhere('email', $email);
-        if ($user === null) {
-            // Unable to find user, return early.
-            return;
-        } else {
-            $userid = $user->id;
-        }
-
-        $totalbuilds = 0;
-        if ($firstbuild === 1) {
-            $totalbuilds = 1;
-        }
-
-        // Convert errordiff to nfailederrors & nfixederrors (etc).
-        $nfailedwarnings = 0;
-        $nfixedwarnings = 0;
-        $nfailederrors = 0;
-        $nfixederrors = 0;
-        $nfailedtests = 0;
-        $nfixedtests = 0;
-        if ($warningdiff > 0) {
-            $nfailedwarnings = $warningdiff;
-        } else {
-            $nfixedwarnings = abs($warningdiff);
-        }
-        if ($errordiff > 0) {
-            $nfailederrors = $errordiff;
-        } else {
-            $nfixederrors = abs($errordiff);
-        }
-        if ($testdiff > 0) {
-            $nfailedtests = $testdiff;
-        } else {
-            $nfixedtests = abs($testdiff);
-        }
-
-        // Insert or update appropriately.
-        DB::transaction(function () use ($checkindate, $nfailederrors, $nfailedtests,
-            $nfailedwarnings, $nfixederrors, $nfixedtests,
-            $nfixedwarnings, $totalbuilds, $userid) {
-            $row = DB::table('userstatistics')
-                ->where('userid', $userid)
-                ->where('projectid', $this->ProjectId)
-                ->where('checkindate', $checkindate)
-                ->lockForUpdate()
-                ->first();
-
-            if ($row) {
-                // Update existing entry.
-                DB::table('userstatistics')
-                    ->where('userid', $userid)
-                    ->where('projectid', $this->ProjectId)
-                    ->where('checkindate', $checkindate)
-                    ->update([
-                        'totalupdatedfiles' => DB::raw('totalupdatedfiles + 1'),
-                        'totalbuilds' => DB::raw("totalbuilds + $totalbuilds"),
-                        'nfixedwarnings' => DB::raw("nfixedwarnings + $nfixedwarnings"),
-                        'nfailedwarnings' => DB::raw("nfailedwarnings + $nfailedwarnings"),
-                        'nfixederrors' => DB::raw("nfixederrors + $nfixederrors"),
-                        'nfailederrors' => DB::raw("nfailederrors + $nfailederrors"),
-                        'nfixedtests' => DB::raw("nfixedtests + $nfixedtests"),
-                        'nfailedtests' => DB::raw("nfailedtests + $nfailedtests"),
-                    ]);
-            } else {
-                // Insert a new row into the database.
-                DB::table('userstatistics')
-                    ->insert([
-                        'userid' => $userid,
-                        'projectid' => $this->ProjectId,
-                        'checkindate' => $checkindate,
-                        'totalupdatedfiles' => 1,
-                        'totalbuilds' => $totalbuilds,
-                        'nfixedwarnings' => $nfixedwarnings,
-                        'nfailedwarnings' => $nfailedwarnings,
-                        'nfixederrors' => $nfixederrors,
-                        'nfailederrors' => $nfailederrors,
-                        'nfixedtests' => $nfixedtests,
-                        'nfailedtests' => $nfailedtests,
-                    ]);
-            }
-        }, 5);
-    }
-
-    /**
-     * Find the errors associated with a user
-     * For now the author is not used, we assume that the filename is sufficient
-     */
-    private function FindRealErrors(string $type, $author, int $buildid, string $filename): int|false
-    {
-        $errortype = 0;
-        if ($type === 'WARNING') {
-            $errortype = 1;
-        }
-
-        // Get number of builderrors.
-        $stmt = $this->PDO->prepare(
-            'SELECT COUNT(*) FROM builderror
-            WHERE type = ? AND sourcefile LIKE ? AND buildid = ?');
-        if (!pdo_execute($stmt, [$errortype, "%$filename%", $buildid])) {
-            return false;
-        }
-        $nerrors = (int) $stmt->fetchColumn();
-
-        // Get number of buildfailures.
-        $stmt = $this->PDO->prepare(
-            'SELECT COUNT(*) FROM buildfailure AS bf
-            LEFT JOIN buildfailuredetails AS bfd ON (bfd.id = bf.detailsid)
-            WHERE bfd.type = ? AND bf.sourcefile LIKE ? AND bf.buildid = ?');
-        if (!pdo_execute($stmt, [$errortype, "%$filename%", $buildid])) {
-            return false;
-        }
-        $nerrors += (int) $stmt->fetchColumn();
-        return $nerrors;
     }
 
     /** Return the name of a build */

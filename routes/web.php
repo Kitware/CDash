@@ -248,9 +248,6 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/ajax/buildnote.php', 'BuildController@ajaxBuildNote');
 
-    // TODO: Determine if this route should go in the admin section
-    Route::get('/userStatistics.php', 'AdminController@userStatistics');
-
     Route::middleware(['admin'])->group(function () {
         Route::get('/authtokens/manage', 'AuthTokenController@manage');
 
