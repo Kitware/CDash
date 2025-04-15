@@ -70,11 +70,8 @@ cdash_install()
 add_laravel_test(/Feature/CDashTest)
 set_tests_properties(/Feature/CDashTest PROPERTIES DEPENDS install_1)
 
-add_laravel_test(/Feature/GitHubWebhook)
-set_tests_properties(/Feature/GitHubWebhook PROPERTIES DEPENDS /Feature/CDashTest)
-
 add_unit_test(/CDash/BuildUseCase)
-set_tests_properties(/CDash/BuildUseCase PROPERTIES DEPENDS /Feature/GitHubWebhook)
+set_tests_properties(/CDash/BuildUseCase PROPERTIES DEPENDS /Feature/CDashTest)
 
 add_unit_test(/CDash/ConfigUseCase)
 set_tests_properties(/CDash/ConfigUseCase PROPERTIES DEPENDS /CDash/BuildUseCase)
@@ -152,6 +149,9 @@ set_tests_properties(/Feature/ProjectPermissions PROPERTIES DEPENDS /CDash/XmlHa
 
 add_laravel_test(/Feature/SlowPageTest)
 set_tests_properties(/Feature/SlowPageTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_laravel_test(/Feature/GitHubWebhook)
+set_tests_properties(/Feature/GitHubWebhook PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 # Set this to RUN_SERIAL as we are changing the config and don't want to clobber other tests.
 # Only requires exclusive .env access.
@@ -290,6 +290,7 @@ set_property(TEST install_2 PROPERTY DEPENDS
   /Feature/LoginAndRegistration
   /Feature/ProjectPermissions
   /Feature/SlowPageTest
+  /Feature/GitHubWebhook
   /Feature/SubmissionValidation
   /Feature/GraphQL/FilterTest
   /Feature/GraphQL/ProjectTypeTest
