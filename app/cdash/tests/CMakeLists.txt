@@ -79,23 +79,8 @@ set_tests_properties(/CDash/Messaging/Subscription/UserSubscriptionBuilder PROPE
 add_unit_test(/CDash/Messaging/Topic/UpdateErrorTopic)
 set_tests_properties(/CDash/Messaging/Topic/UpdateErrorTopic PROPERTIES DEPENDS /CDash/Messaging/Subscription/UserSubscriptionBuilder)
 
-add_unit_test(/CDash/Model/BuildError)
-set_tests_properties(/CDash/Model/BuildError PROPERTIES DEPENDS /CDash/Messaging/Topic/UpdateErrorTopic)
-
-add_unit_test(/CDash/Model/BuildErrorFilter)
-set_tests_properties(/CDash/Model/BuildErrorFilter PROPERTIES DEPENDS /CDash/Model/BuildError)
-
-add_unit_test(/CDash/Model/BuildFailure)
-set_tests_properties(/CDash/Model/BuildFailure PROPERTIES DEPENDS /CDash/Model/BuildErrorFilter)
-
-add_unit_test(/CDash/Model/BuildRelationship)
-set_tests_properties(/CDash/Model/BuildRelationship PROPERTIES DEPENDS /CDash/Model/BuildFailure)
-
-add_unit_test(/CDash/Model/Repository)
-set_tests_properties(/CDash/Model/Repository PROPERTIES DEPENDS /CDash/Model/BuildRelationship)
-
 add_unit_test(/CDash/MultipleSubprojectsEmail)
-set_tests_properties(/CDash/MultipleSubprojectsEmail PROPERTIES DEPENDS /CDash/Model/Repository)
+set_tests_properties(/CDash/MultipleSubprojectsEmail PROPERTIES DEPENDS /CDash/Messaging/Topic/UpdateErrorTopic)
 
 add_unit_test(/CDash/NightlyTime)
 set_tests_properties(/CDash/NightlyTime PROPERTIES DEPENDS /CDash/MultipleSubprojectsEmail)
@@ -152,6 +137,21 @@ set_tests_properties(/CDash/BuildUseCase PROPERTIES DEPENDS /CDash/XmlHandler/Up
 
 add_unit_test(/CDash/ConfigUseCase)
 set_tests_properties(/CDash/ConfigUseCase PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_unit_test(/CDash/Model/BuildError)
+set_tests_properties(/CDash/Model/BuildError PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_unit_test(/CDash/Model/BuildErrorFilter)
+set_tests_properties(/CDash/Model/BuildErrorFilter PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_unit_test(/CDash/Model/BuildFailure)
+set_tests_properties(/CDash/Model/BuildFailure PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_unit_test(/CDash/Model/BuildRelationship)
+set_tests_properties(/CDash/Model/BuildRelationship PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_unit_test(/CDash/Model/Repository)
+set_tests_properties(/CDash/Model/Repository PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 # Set this to RUN_SERIAL as we are changing the config and don't want to clobber other tests.
 # Only requires exclusive .env access.
@@ -294,6 +294,11 @@ set_property(TEST install_2 PROPERTY DEPENDS
   /CDash/Lib/Repository/GitHub
   /CDash/BuildUseCase
   /CDash/ConfigUseCase
+  /CDash/Model/BuildError
+  /CDash/Model/BuildErrorFilter
+  /CDash/Model/BuildFailure
+  /CDash/Model/BuildRelationship
+  /CDash/Model/Repository
   /Feature/SubmissionValidation
   /Feature/GraphQL/FilterTest
   /Feature/GraphQL/ProjectTypeTest
