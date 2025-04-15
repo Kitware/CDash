@@ -76,14 +76,8 @@ set_tests_properties(/CDash/BuildUseCase PROPERTIES DEPENDS /Feature/CDashTest)
 add_unit_test(/CDash/ConfigUseCase)
 set_tests_properties(/CDash/ConfigUseCase PROPERTIES DEPENDS /CDash/BuildUseCase)
 
-add_unit_test(/CDash/Lib/Repository/GitHub)
-set_tests_properties(/CDash/Lib/Repository/GitHub PROPERTIES
-    DEPENDS /CDash/ConfigUseCase
-    DISABLED "$<STREQUAL:${CDASH_IMAGE},ubi>"
-)
-
 add_unit_test(/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilder)
-set_tests_properties(/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilder PROPERTIES DEPENDS /CDash/Lib/Repository/GitHub)
+set_tests_properties(/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilder PROPERTIES DEPENDS /CDash/ConfigUseCase)
 
 add_unit_test(/CDash/Messaging/Subscription/UserSubscriptionBuilder)
 set_tests_properties(/CDash/Messaging/Subscription/UserSubscriptionBuilder PROPERTIES DEPENDS /CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilder)
@@ -152,6 +146,12 @@ set_tests_properties(/Feature/SlowPageTest PROPERTIES DEPENDS /CDash/XmlHandler/
 
 add_laravel_test(/Feature/GitHubWebhook)
 set_tests_properties(/Feature/GitHubWebhook PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_unit_test(/CDash/Lib/Repository/GitHub)
+set_tests_properties(/CDash/Lib/Repository/GitHub PROPERTIES
+    DEPENDS /CDash/XmlHandler/UpdateHandler
+    DISABLED "$<STREQUAL:${CDASH_IMAGE},ubi>"
+)
 
 # Set this to RUN_SERIAL as we are changing the config and don't want to clobber other tests.
 # Only requires exclusive .env access.
@@ -291,6 +291,7 @@ set_property(TEST install_2 PROPERTY DEPENDS
   /Feature/ProjectPermissions
   /Feature/SlowPageTest
   /Feature/GitHubWebhook
+  /CDash/Lib/Repository/GitHub
   /Feature/SubmissionValidation
   /Feature/GraphQL/FilterTest
   /Feature/GraphQL/ProjectTypeTest
