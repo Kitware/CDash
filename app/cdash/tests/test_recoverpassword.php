@@ -4,9 +4,10 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+use App\Models\User;
+use Illuminate\Support\Carbon;
 
-use CDash\Model\User;
+require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 class RecoverPasswordTestCase extends KWWebTestCase
 {
@@ -34,12 +35,12 @@ class RecoverPasswordTestCase extends KWWebTestCase
         }
 
         // fix the password so others can still login...
-        $user = new User();
-        $user->Id = App\Models\User::firstWhere('email', 'simpletest@localhost')?->id;
-        $user->Fill();
-        $user->Password = password_hash('simpletest', PASSWORD_DEFAULT);
-        if (!$user->Save()) {
-            $this->fail('user->Save() returned false');
+        /** @var User $user */
+        $user = User::firstWhere('email', 'simpletest@localhost');
+        $user->password = password_hash('simpletest', PASSWORD_DEFAULT);
+        $user->password_updated_at = Carbon::now();
+        if (!$user->save()) {
+            $this->fail('user->save() returned false');
         }
     }
 }

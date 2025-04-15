@@ -476,16 +476,6 @@ parameters:
 			path: app/Http/Controllers/Auth/LoginController.php
 
 		-
-			message: "#^Cannot access property \\$password on App\\\\Models\\\\User\\|null\\.$#"
-			count: 1
-			path: app/Http/Controllers/Auth/RegisterController.php
-
-		-
-			message: "#^Cannot call method passwords\\(\\) on App\\\\Models\\\\User\\|null\\.$#"
-			count: 1
-			path: app/Http/Controllers/Auth/RegisterController.php
-
-		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\Auth\\\\RegisterController\\:\\:create\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/Http/Controllers/Auth/RegisterController.php
@@ -2706,11 +2696,6 @@ parameters:
 			path: app/Http/Controllers/UserController.php
 
 		-
-			message: "#^Cannot cast mixed to int\\.$#"
-			count: 1
-			path: app/Http/Controllers/UserController.php
-
-		-
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Build\\>\\:\\:count\\(\\)\\.$#"
 			count: 1
 			path: app/Http/Controllers/UserController.php
@@ -2767,17 +2752,12 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$password of function password_verify expects string, mixed given\\.$#"
-			count: 2
+			count: 1
 			path: app/Http/Controllers/UserController.php
 
 		-
 			message: "#^Parameter \\#1 \\$stmt of function pdo_execute expects PDOStatement, \\(PDOStatement\\|false\\) given\\.$#"
 			count: 4
-			path: app/Http/Controllers/UserController.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function md5 expects string, mixed given\\.$#"
-			count: 1
 			path: app/Http/Controllers/UserController.php
 
 		-
@@ -2812,6 +2792,26 @@ parameters:
 
 		-
 			message: "#^Part \\$minimum_length \\(mixed\\) of encapsed string cannot be cast to string\\.$#"
+			count: 1
+			path: app/Http/Controllers/UserController.php
+
+		-
+			message: "#^Property App\\\\Models\\\\User\\:\\:\\$email \\(string\\) does not accept mixed\\.$#"
+			count: 1
+			path: app/Http/Controllers/UserController.php
+
+		-
+			message: "#^Property App\\\\Models\\\\User\\:\\:\\$firstname \\(string\\) does not accept mixed\\.$#"
+			count: 1
+			path: app/Http/Controllers/UserController.php
+
+		-
+			message: "#^Property App\\\\Models\\\\User\\:\\:\\$institution \\(string\\) does not accept mixed\\.$#"
+			count: 1
+			path: app/Http/Controllers/UserController.php
+
+		-
+			message: "#^Property App\\\\Models\\\\User\\:\\:\\$lastname \\(string\\) does not accept mixed\\.$#"
 			count: 1
 			path: app/Http/Controllers/UserController.php
 
@@ -3378,11 +3378,6 @@ parameters:
 
 		-
 			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
-			count: 1
-			path: app/Models/User.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Password\\>\\:\\:orderBy\\(\\)\\.$#"
 			count: 1
 			path: app/Models/User.php
 
@@ -9908,65 +9903,7 @@ parameters:
 			path: app/cdash/app/Model/UploadFile.php
 
 		-
-			message: """
-				#^Call to deprecated function pdo_execute\\(\\)\\:
-				v2\\.5\\.0 01/22/2018$#
-			"""
-			count: 1
-			path: app/cdash/app/Model/User.php
-
-		-
-			message: "#^Cannot cast mixed to int\\.$#"
-			count: 1
-			path: app/cdash/app/Model/User.php
-
-		-
-			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 1
-			path: app/cdash/app/Model/User.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\Password\\>\\:\\:offset\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/app/Model/User.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\Password\\>\\:\\:orderBy\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/app/Model/User.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\User\\>\\:\\:exists\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/app/Model/User.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Password\\>\\:\\:count\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/app/Model/User.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Password\\>\\:\\:insert\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/app/Model/User.php
-
-		-
-			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
-			count: 1
-			path: app/cdash/app/Model/User.php
-
-		-
-			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 1
-			path: app/cdash/app/Model/User.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\User\\:\\:GetLabelCollection\\(\\) has invalid return type CDash\\\\Model\\\\Collection\\.$#"
-			count: 1
-			path: app/cdash/app/Model/User.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\User\\:\\:Save\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/User.php
 
@@ -9977,11 +9914,6 @@ parameters:
 
 		-
 			message: "#^Property CDash\\\\Model\\\\User\\:\\:\\$Email has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/User.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\User\\:\\:\\$Filled has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/User.php
 
@@ -30284,18 +30216,8 @@ parameters:
 			path: tests/Feature/Monitor.php
 
 		-
-			message: "#^Cannot access property \\$id on App\\\\Models\\\\User\\|null\\.$#"
-			count: 1
-			path: tests/Feature/PasswordRotation.php
-
-		-
-			message: "#^Cannot access property \\$institution on App\\\\Models\\\\User\\|null\\.$#"
-			count: 1
-			path: tests/Feature/PasswordRotation.php
-
-		-
-			message: "#^Property Tests\\\\Feature\\\\PasswordRotation\\:\\:\\$user has no type specified\\.$#"
-			count: 1
+			message: "#^Parameter \\#1 \\$user of method Illuminate\\\\Foundation\\\\Testing\\\\TestCase\\:\\:actingAs\\(\\) expects Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable, App\\\\Models\\\\User\\|null given\\.$#"
+			count: 3
 			path: tests/Feature/PasswordRotation.php
 
 		-
