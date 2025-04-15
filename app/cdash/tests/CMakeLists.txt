@@ -76,11 +76,8 @@ set_tests_properties(/CDash/MultipleSubprojectsEmail PROPERTIES DEPENDS /Feature
 add_unit_test(/CDash/NightlyTime)
 set_tests_properties(/CDash/NightlyTime PROPERTIES DEPENDS /CDash/MultipleSubprojectsEmail)
 
-add_unit_test(/CDash/Service/RepositoryService)
-set_tests_properties(/CDash/Service/RepositoryService PROPERTIES DEPENDS /CDash/NightlyTime)
-
 add_unit_test(/CDash/TestUseCase)
-set_tests_properties(/CDash/TestUseCase PROPERTIES DEPENDS /CDash/Service/RepositoryService)
+set_tests_properties(/CDash/TestUseCase PROPERTIES DEPENDS /CDash/NightlyTime)
 
 add_unit_test(/CDash/XmlHandler/BuildHandler)
 set_tests_properties(/CDash/XmlHandler/BuildHandler PROPERTIES DEPENDS /CDash/TestUseCase)
@@ -152,6 +149,9 @@ set_tests_properties(/CDash/Messaging/Subscription/UserSubscriptionBuilder PROPE
 
 add_unit_test(/CDash/Messaging/Topic/UpdateErrorTopic)
 set_tests_properties(/CDash/Messaging/Topic/UpdateErrorTopic PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_unit_test(/CDash/Service/RepositoryService)
+set_tests_properties(/CDash/Service/RepositoryService PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 # Set this to RUN_SERIAL as we are changing the config and don't want to clobber other tests.
 # Only requires exclusive .env access.
@@ -303,6 +303,7 @@ set_property(TEST install_2 PROPERTY DEPENDS
   /CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilder
   /CDash/Messaging/Subscription/UserSubscriptionBuilder
   /CDash/Messaging/Topic/UpdateErrorTopic
+  /CDash/Service/RepositoryService
   /Feature/SubmissionValidation
   /Feature/GraphQL/FilterTest
   /Feature/GraphQL/ProjectTypeTest
