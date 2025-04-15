@@ -70,17 +70,8 @@ cdash_install()
 add_laravel_test(/Feature/CDashTest)
 set_tests_properties(/Feature/CDashTest PROPERTIES DEPENDS install_1)
 
-add_unit_test(/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilder)
-set_tests_properties(/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilder PROPERTIES DEPENDS /Feature/CDashTest)
-
-add_unit_test(/CDash/Messaging/Subscription/UserSubscriptionBuilder)
-set_tests_properties(/CDash/Messaging/Subscription/UserSubscriptionBuilder PROPERTIES DEPENDS /CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilder)
-
-add_unit_test(/CDash/Messaging/Topic/UpdateErrorTopic)
-set_tests_properties(/CDash/Messaging/Topic/UpdateErrorTopic PROPERTIES DEPENDS /CDash/Messaging/Subscription/UserSubscriptionBuilder)
-
 add_unit_test(/CDash/MultipleSubprojectsEmail)
-set_tests_properties(/CDash/MultipleSubprojectsEmail PROPERTIES DEPENDS /CDash/Messaging/Topic/UpdateErrorTopic)
+set_tests_properties(/CDash/MultipleSubprojectsEmail PROPERTIES DEPENDS /Feature/CDashTest)
 
 add_unit_test(/CDash/NightlyTime)
 set_tests_properties(/CDash/NightlyTime PROPERTIES DEPENDS /CDash/MultipleSubprojectsEmail)
@@ -152,6 +143,15 @@ set_tests_properties(/CDash/Model/BuildRelationship PROPERTIES DEPENDS /CDash/Xm
 
 add_unit_test(/CDash/Model/Repository)
 set_tests_properties(/CDash/Model/Repository PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_unit_test(/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilder)
+set_tests_properties(/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilder PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_unit_test(/CDash/Messaging/Subscription/UserSubscriptionBuilder)
+set_tests_properties(/CDash/Messaging/Subscription/UserSubscriptionBuilder PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_unit_test(/CDash/Messaging/Topic/UpdateErrorTopic)
+set_tests_properties(/CDash/Messaging/Topic/UpdateErrorTopic PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 # Set this to RUN_SERIAL as we are changing the config and don't want to clobber other tests.
 # Only requires exclusive .env access.
@@ -299,6 +299,9 @@ set_property(TEST install_2 PROPERTY DEPENDS
   /CDash/Model/BuildFailure
   /CDash/Model/BuildRelationship
   /CDash/Model/Repository
+  /CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilder
+  /CDash/Messaging/Subscription/UserSubscriptionBuilder
+  /CDash/Messaging/Topic/UpdateErrorTopic
   /Feature/SubmissionValidation
   /Feature/GraphQL/FilterTest
   /Feature/GraphQL/ProjectTypeTest
