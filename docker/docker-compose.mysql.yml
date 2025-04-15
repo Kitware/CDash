@@ -1,5 +1,5 @@
 services:
-  cdash:
+  website:
     environment:
       DB_CONNECTION: mysql
       DB_LOGIN: root
@@ -7,7 +7,6 @@ services:
 
   database:
     image: mysql/mysql-server:8.0
-    container_name: cdash_mysql
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_DATABASE: ${DB_DATABASE}

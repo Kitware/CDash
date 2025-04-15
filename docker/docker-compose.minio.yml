@@ -1,5 +1,5 @@
 services:
-  cdash:
+  website:
     environment:
       FILESYSTEM_DRIVER: s3
       AWS_BUCKET: cdash

@@ -25,7 +25,7 @@ echo "submit_type=$submit_type"
 sleep 2
 
 # Wait for migrations to finish running by checking for maintenance mode to be lifted
-docker exec cdash bash -c "\
+docker exec cdash-website-1 bash -c "\
   until [ ! -f /cdash/storage/framework/down ]; \
   do \
     sleep 1; \
@@ -33,9 +33,9 @@ docker exec cdash bash -c "\
 "
 
 # Suppress any uncommitted changes left after the image build
-docker exec cdash bash -c "cd /cdash && /usr/bin/git checkout ."
+docker exec cdash-website-1 bash -c "cd /cdash && /usr/bin/git checkout ."
 
-docker exec cdash bash -c "\
+docker exec cdash-website-1 bash -c "\
   ctest \
     -VV \
     -j 4 \
