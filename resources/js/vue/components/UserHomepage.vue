@@ -692,14 +692,6 @@
             <td>
               <a
                 class="cdash-link"
-                :href="$baseURL + '/userStatistics.php'"
-              >User Statistics</a>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <a
-                class="cdash-link"
                 :href="$baseURL + '/removeBuilds.php'"
               >Remove Builds</a>
             </td>

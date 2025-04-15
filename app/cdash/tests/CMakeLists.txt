@@ -399,9 +399,6 @@ set_tests_properties(sitestatistics PROPERTIES DEPENDS querytests)
 add_php_test(testoverview)
 set_tests_properties(testoverview PROPERTIES DEPENDS sitestatistics)
 
-add_php_test(userstatistics)
-set_tests_properties(userstatistics PROPERTIES DEPENDS testoverview)
-
 add_php_test(viewconfigure)
 set_tests_properties(viewconfigure PROPERTIES DEPENDS testoverview)
 
@@ -594,11 +591,8 @@ set_tests_properties(donehandler PROPERTIES DEPENDS submission_assign_buildid)
 add_php_test(changeid)
 set_tests_properties(changeid PROPERTIES DEPENDS donehandler)
 
-add_php_test(updateonlyuserstats)
-set_tests_properties(updateonlyuserstats PROPERTIES DEPENDS changeid)
-
 add_php_test(expiredbuildrules)
-set_tests_properties(expiredbuildrules PROPERTIES DEPENDS updateonlyuserstats)
+set_tests_properties(expiredbuildrules PROPERTIES DEPENDS changeid)
 
 add_php_test(filterblocks)
 set_tests_properties(filterblocks PROPERTIES DEPENDS expiredbuildrules)

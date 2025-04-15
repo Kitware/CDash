@@ -28,7 +28,6 @@ resources/js/angular/controllers/viewTest.js
 resources/js/angular/controllers/viewSubProjects.js
 resources/js/angular/controllers/viewDynamicAnalysisFile.js
 resources/js/angular/controllers/viewBuildError.js
-resources/js/angular/controllers/userStatistics.js
 resources/js/angular/controllers/testSummary.js
 resources/js/angular/controllers/testOverview.js
 resources/js/angular/controllers/subproject.js

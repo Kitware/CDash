@@ -302,21 +302,11 @@ parameters:
 			path: app/Http/Controllers/AbstractProjectController.php
 
 		-
-			message: "#^Access to property \\$Id on an unknown class App\\\\Http\\\\Controllers\\\\Build\\.$#"
-			count: 2
-			path: app/Http/Controllers/AdminController.php
-
-		-
-			message: "#^Access to property \\$ProjectId on an unknown class App\\\\Http\\\\Controllers\\\\Build\\.$#"
-			count: 2
-			path: app/Http/Controllers/AdminController.php
-
-		-
 			message: """
 				#^Call to deprecated function pdo_error\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 6
+			count: 5
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -324,7 +314,7 @@ parameters:
 				#^Call to deprecated function pdo_fetch_array\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 12
+			count: 11
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -332,12 +322,7 @@ parameters:
 				#^Call to deprecated function pdo_query\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 14
-			path: app/Http/Controllers/AdminController.php
-
-		-
-			message: "#^Call to method ComputeUpdateStatistics\\(\\) on an unknown class App\\\\Http\\\\Controllers\\\\Build\\.$#"
-			count: 1
+			count: 13
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -387,16 +372,11 @@ parameters:
 
 		-
 			message: "#^Cannot cast mixed to int\\.$#"
-			count: 2
-			path: app/Http/Controllers/AdminController.php
-
-		-
-			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 1
 			path: app/Http/Controllers/AdminController.php
 
 		-
-			message: "#^Instantiated class App\\\\Http\\\\Controllers\\\\Build not found\\.$#"
+			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 1
 			path: app/Http/Controllers/AdminController.php
 
@@ -416,16 +396,6 @@ parameters:
 			path: app/Http/Controllers/AdminController.php
 
 		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\AdminController\\:\\:ComputeUpdateStatistics\\(\\) has parameter \\$days with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/AdminController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\AdminController\\:\\:ComputeUpdateStatistics\\(\\) throws checked exception DivisionByZeroError but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: app/Http/Controllers/AdminController.php
-
-		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\AdminController\\:\\:removeBuilds\\(\\) never returns Illuminate\\\\Http\\\\RedirectResponse so it can be removed from the return type\\.$#"
 			count: 1
 			path: app/Http/Controllers/AdminController.php
@@ -437,7 +407,7 @@ parameters:
 
 		-
 			message: "#^Only booleans are allowed in an if condition, mixed given\\.$#"
-			count: 6
+			count: 5
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -452,7 +422,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$timestamp of function gmdate expects int\\|null, \\(float\\|int\\) given\\.$#"
-			count: 2
+			count: 1
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -2824,122 +2794,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$string of function strlen expects string, array\\|string given\\.$#"
 			count: 2
 			path: app/Http/Controllers/UserNoteController.php
-
-		-
-			message: "#^Binary operation \"\\+\\=\" between \\(array\\|float\\|int\\) and mixed results in an error\\.$#"
-			count: 8
-			path: app/Http/Controllers/UserStatisticsController.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_execute\\(\\)\\:
-				v2\\.5\\.0 01/22/2018$#
-			"""
-			count: 1
-			path: app/Http/Controllers/UserStatisticsController.php
-
-		-
-			message: """
-				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
-			path: app/Http/Controllers/UserStatisticsController.php
-
-		-
-			message: "#^Cannot access offset 'nfailederrors' on mixed\\.$#"
-			count: 1
-			path: app/Http/Controllers/UserStatisticsController.php
-
-		-
-			message: "#^Cannot access offset 'nfailedtests' on mixed\\.$#"
-			count: 1
-			path: app/Http/Controllers/UserStatisticsController.php
-
-		-
-			message: "#^Cannot access offset 'nfailedwarnings' on mixed\\.$#"
-			count: 1
-			path: app/Http/Controllers/UserStatisticsController.php
-
-		-
-			message: "#^Cannot access offset 'nfixederrors' on mixed\\.$#"
-			count: 1
-			path: app/Http/Controllers/UserStatisticsController.php
-
-		-
-			message: "#^Cannot access offset 'nfixedtests' on mixed\\.$#"
-			count: 1
-			path: app/Http/Controllers/UserStatisticsController.php
-
-		-
-			message: "#^Cannot access offset 'nfixedwarnings' on mixed\\.$#"
-			count: 1
-			path: app/Http/Controllers/UserStatisticsController.php
-
-		-
-			message: "#^Cannot access offset 'totalbuilds' on mixed\\.$#"
-			count: 1
-			path: app/Http/Controllers/UserStatisticsController.php
-
-		-
-			message: "#^Cannot access offset 'totalupdatedfiles' on mixed\\.$#"
-			count: 1
-			path: app/Http/Controllers/UserStatisticsController.php
-
-		-
-			message: "#^Cannot access offset 'userid' on mixed\\.$#"
-			count: 2
-			path: app/Http/Controllers/UserStatisticsController.php
-
-		-
-			message: "#^Cannot access property \\$full_name on App\\\\Models\\\\User\\|null\\.$#"
-			count: 1
-			path: app/Http/Controllers/UserStatisticsController.php
-
-		-
-			message: "#^Cannot call method bindParam\\(\\) on PDOStatement\\|false\\.$#"
-			count: 3
-			path: app/Http/Controllers/UserStatisticsController.php
-
-		-
-			message: "#^Cannot call method fetch\\(\\) on PDOStatement\\|false\\.$#"
-			count: 1
-			path: app/Http/Controllers/UserStatisticsController.php
-
-		-
-			message: "#^Only numeric types are allowed in \\+, \\(array\\|float\\|int\\) given on the left side\\.$#"
-			count: 8
-			path: app/Http/Controllers/UserStatisticsController.php
-
-		-
-			message: "#^Parameter \\#1 \\$key of function array_key_exists expects int\\|string, mixed given\\.$#"
-			count: 1
-			path: app/Http/Controllers/UserStatisticsController.php
-
-		-
-			message: "#^Parameter \\#1 \\$project_name of method App\\\\Http\\\\Controllers\\\\AbstractProjectController\\:\\:setProjectByName\\(\\) expects string, mixed given\\.$#"
-			count: 1
-			path: app/Http/Controllers/UserStatisticsController.php
-
-		-
-			message: "#^Parameter \\#1 \\$stmt of function pdo_execute expects PDOStatement, \\(PDOStatement\\|false\\) given\\.$#"
-			count: 1
-			path: app/Http/Controllers/UserStatisticsController.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function htmlspecialchars expects string, mixed given\\.$#"
-			count: 1
-			path: app/Http/Controllers/UserStatisticsController.php
-
-		-
-			message: "#^Parameter \\#2 \\$baseTimestamp of function strtotime expects int\\|null, \\(float\\|int\\) given\\.$#"
-			count: 1
-			path: app/Http/Controllers/UserStatisticsController.php
-
-		-
-			message: "#^Parameter \\#2 \\$timestamp of function gmdate expects int\\|null, \\(float\\|int\\) given\\.$#"
-			count: 1
-			path: app/Http/Controllers/UserStatisticsController.php
 
 		-
 			message: "#^Parameter \\#2 \\$build of class CDash\\\\Controller\\\\Api\\\\ViewTest constructor expects CDash\\\\Model\\\\Build, CDash\\\\Model\\\\Build\\|null given\\.$#"
@@ -6177,7 +6031,7 @@ parameters:
 				#^Call to deprecated function pdo_execute\\(\\)\\:
 				v2\\.5\\.0 01/22/2018$#
 			"""
-			count: 27
+			count: 24
 			path: app/cdash/app/Model/Build.php
 
 		-
@@ -6282,36 +6136,6 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:AddUpdateStatistics\\(\\) has parameter \\$author with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:AddUpdateStatistics\\(\\) has parameter \\$checkindate with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:AddUpdateStatistics\\(\\) has parameter \\$email with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:AddUpdateStatistics\\(\\) has parameter \\$errordiff with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:AddUpdateStatistics\\(\\) has parameter \\$testdiff with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:AddUpdateStatistics\\(\\) has parameter \\$warningdiff with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\Build\\:\\:ConvertMissingToZero\\(\\) has parameter \\$value with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Build.php
@@ -6324,11 +6148,6 @@ parameters:
 		-
 			message: "#^Method CDash\\\\Model\\\\Build\\:\\:FillFromId\\(\\) throws checked exception TypeError but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 3
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Method CDash\\\\Model\\\\Build\\:\\:FindRealErrors\\(\\) has parameter \\$author with no type specified\\.$#"
-			count: 1
 			path: app/cdash/app/Model/Build.php
 
 		-
@@ -6533,16 +6352,11 @@ parameters:
 
 		-
 			message: "#^Only booleans are allowed in an if condition, object\\|null given\\.$#"
-			count: 4
+			count: 3
 			path: app/cdash/app/Model/Build.php
 
 		-
 			message: "#^Only booleans are allowed in an if condition, string\\|false given\\.$#"
-			count: 2
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Only numeric types are allowed in \\*, int\\|false given on the left side\\.$#"
 			count: 2
 			path: app/cdash/app/Model/Build.php
 
@@ -6552,23 +6366,8 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Only numeric types are allowed in \\+, int\\|false given on the left side\\.$#"
-			count: 2
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Only numeric types are allowed in \\+, int\\|false given on the right side\\.$#"
-			count: 2
-			path: app/cdash/app/Model/Build.php
-
-		-
-			message: "#^Only numeric types are allowed in \\-, int\\|false given on the left side\\.$#"
-			count: 2
-			path: app/cdash/app/Model/Build.php
-
-		-
 			message: "#^Only numeric types are allowed in \\-, int\\|false given on the right side\\.$#"
-			count: 7
+			count: 3
 			path: app/cdash/app/Model/Build.php
 
 		-
@@ -26256,117 +26055,6 @@ parameters:
 			path: app/cdash/tests/test_updateappend.php
 
 		-
-			message: "#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: app/cdash/tests/test_updateonlyuserstats.php
-
-		-
-			message: """
-				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
-			path: app/cdash/tests/test_updateonlyuserstats.php
-
-		-
-			message: """
-				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
-				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
-			"""
-			count: 1
-			path: app/cdash/tests/test_updateonlyuserstats.php
-
-		-
-			message: "#^Call to method Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:save\\(\\) with incorrect case\\: Save$#"
-			count: 1
-			path: app/cdash/tests/test_updateonlyuserstats.php
-
-		-
-			message: "#^Cannot access offset 'failed_errors'\\|'failed_tests'\\|'failed_warnings'\\|'fixed_errors'\\|'fixed_tests'\\|'fixed_warnings'\\|'totalupdatedfiles' on mixed\\.$#"
-			count: 1
-			path: app/cdash/tests/test_updateonlyuserstats.php
-
-		-
-			message: "#^Cannot access offset 'id' on mixed\\.$#"
-			count: 1
-			path: app/cdash/tests/test_updateonlyuserstats.php
-
-		-
-			message: "#^Cannot access offset 'name' on mixed\\.$#"
-			count: 1
-			path: app/cdash/tests/test_updateonlyuserstats.php
-
-		-
-			message: "#^Cannot access offset 'users' on mixed\\.$#"
-			count: 2
-			path: app/cdash/tests/test_updateonlyuserstats.php
-
-		-
-			message: "#^Cannot call method execute\\(\\) on PDOStatement\\|false\\.$#"
-			count: 1
-			path: app/cdash/tests/test_updateonlyuserstats.php
-
-		-
-			message: "#^Cannot call method fetch\\(\\) on PDOStatement\\|false\\.$#"
-			count: 1
-			path: app/cdash/tests/test_updateonlyuserstats.php
-
-		-
-			message: "#^Method UpdateOnlyUserStatsTestCase\\:\\:testCleanup\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_updateonlyuserstats.php
-
-		-
-			message: "#^Method UpdateOnlyUserStatsTestCase\\:\\:testSetup\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_updateonlyuserstats.php
-
-		-
-			message: "#^Method UpdateOnlyUserStatsTestCase\\:\\:testUpdateOnlyUserStats\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_updateonlyuserstats.php
-
-		-
-			message: "#^Parameter \\#1 \\$buildid of static method App\\\\Utils\\\\DatabaseCleanupUtils\\:\\:removeBuild\\(\\) expects array\\<int\\>\\|int, mixed given\\.$#"
-			count: 1
-			path: app/cdash/tests/test_updateonlyuserstats.php
-
-		-
-			message: "#^Parameter \\#1 \\$key of function array_key_exists expects int\\|string, mixed given\\.$#"
-			count: 1
-			path: app/cdash/tests/test_updateonlyuserstats.php
-
-		-
-			message: "#^Parameter \\#1 \\$value of function count expects array\\|Countable, mixed given\\.$#"
-			count: 1
-			path: app/cdash/tests/test_updateonlyuserstats.php
-
-		-
-			message: "#^Part \\$found \\(mixed\\) of encapsed string cannot be cast to string\\.$#"
-			count: 1
-			path: app/cdash/tests/test_updateonlyuserstats.php
-
-		-
-			message: "#^Part \\$name \\(mixed\\) of encapsed string cannot be cast to string\\.$#"
-			count: 1
-			path: app/cdash/tests/test_updateonlyuserstats.php
-
-		-
-			message: "#^Property UpdateOnlyUserStatsTestCase\\:\\:\\$DataDir has no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_updateonlyuserstats.php
-
-		-
-			message: "#^Property UpdateOnlyUserStatsTestCase\\:\\:\\$ProjectId has no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_updateonlyuserstats.php
-
-		-
-			message: "#^Property UpdateOnlyUserStatsTestCase\\:\\:\\$Users has no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_updateonlyuserstats.php
-
-		-
 			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
 			count: 2
 			path: app/cdash/tests/test_upgrade.php
@@ -26488,11 +26176,6 @@ parameters:
 			message: "#^Cannot access property \\$requirelogin on mixed\\.$#"
 			count: 2
 			path: app/cdash/tests/test_usernotes.php
-
-		-
-			message: "#^Method UserStatisticsTestCase\\:\\:testUserStatistics\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_userstatistics.php
 
 		-
 			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
