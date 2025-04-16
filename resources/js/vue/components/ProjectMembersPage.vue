@@ -459,7 +459,6 @@ export default {
         updateQueries: {
           projectInvitations(prev, { mutationResult }) {
             if (mutationResult.data.inviteToProject.message !== null) {
-              // this.inviteMembersModalError = 'test';//mutationResult.data.inviteToProject.message;
               return prev;
             }
 
@@ -472,9 +471,6 @@ export default {
             });
             return data;
           },
-        },
-        onResult() {
-
         },
       }).then((mutationResult) => {
         if (mutationResult.data.inviteToProject.message !== null) {

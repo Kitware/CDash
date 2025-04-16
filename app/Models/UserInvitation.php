@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\URL;
 /**
  * @property int $id
  * @property string $email
- * @property int $invited_by
+ * @property int $invited_by_id
  * @property int $project_id
  * @property ProjectRole $role
  * @property Carbon $invitation_timestamp

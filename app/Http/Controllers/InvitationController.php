@@ -32,6 +32,11 @@ final class InvitationController extends AbstractController
             abort(401, 'You are already registered for this project.');
         }
 
+        if ($user->id === $user_invite->invited_by_id) {
+            // This case should never happen in theory, because users should never be able create a self-invitation anyway.
+            abort(401, 'Cannot accept self-invitation.');
+        }
+
         $role = $user_invite->role === ProjectRole::ADMINISTRATOR ? Project::PROJECT_ADMIN : Project::PROJECT_USER;
 
         $user->projects()->attach($user_invite->project_id, [

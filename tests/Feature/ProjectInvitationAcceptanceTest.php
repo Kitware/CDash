@@ -123,7 +123,7 @@ class ProjectInvitationAcceptanceTest extends TestCase
         $invitation->save();
         self::assertContains($invitation->id, $this->project->invitations()->pluck('id'));
 
-        $this->actingAs($this->users['normal'])
+        $this->actingAs($this->users['admin'])
             ->get('/invitations/' . $invitation->id)
             ->assertUnauthorized();
 
