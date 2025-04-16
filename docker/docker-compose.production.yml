@@ -10,13 +10,15 @@ services:
   worker:
     env_file:
       - ../.env
-    image: kitware/cdash-worker
+    image: kitware/cdash
     build:
       context: ..
-      target: cdash-worker
+      target: cdash
       # Set the environment variable BASE_IMAGE=ubi to use RedHat UBI as base image
       args:
         BASE_IMAGE: ${BASE_IMAGE-debian}
+    command:
+      - start-worker
     environment:
       DB_HOST: database
     deploy:

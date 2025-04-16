@@ -258,7 +258,7 @@ USER 1001
 # Do shared installation tasks as a non-root user
 ###############################################################################
 
-FROM cdash-${BASE_IMAGE}-non-root-intermediate AS cdash-non-root-intermediate
+FROM cdash-${BASE_IMAGE}-non-root-intermediate AS cdash
 
 LABEL MAINTAINER="Kitware, Inc. <cdash@public.kitware.com>"
 
@@ -303,17 +303,5 @@ ENV DEVELOPMENT_BUILD=$DEVELOPMENT_BUILD
 ENV BASE_IMAGE=$BASE_IMAGE
 
 ENTRYPOINT ["/bin/bash", "/cdash/docker/docker-entrypoint.sh"]
-
-###############################################################################
-# Add website-specific information
-###############################################################################
-
-FROM cdash-non-root-intermediate AS cdash
 CMD ["start-website"]
 
-###############################################################################
-# Add worker-specific information
-###############################################################################
-
-FROM cdash-non-root-intermediate AS cdash-worker
-CMD ["start-worker"]
