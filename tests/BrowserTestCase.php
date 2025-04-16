@@ -32,9 +32,9 @@ abstract class BrowserTestCase extends BaseTestCase
         }
         $this->original_env_contents = $env_contents;
 
-        file_put_contents(base_path('.env'), str_replace('localhost:8080', 'cdash:8080', $this->original_env_contents));
+        file_put_contents(base_path('.env'), str_replace('localhost:8080', 'website:8080', $this->original_env_contents));
 
-        Browser::$baseUrl = 'http://cdash:8080';
+        Browser::$baseUrl = 'http://website:8080';
     }
 
     public function tearDown(): void

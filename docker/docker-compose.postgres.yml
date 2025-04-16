@@ -1,5 +1,5 @@
 services:
-  cdash:
+  website:
     environment:
       DB_CONNECTION: pgsql
       DB_LOGIN: postgres
@@ -13,7 +13,6 @@ services:
 
   database:
     image: postgres
-    container_name: cdash_postgres
     environment:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_DATABASE}

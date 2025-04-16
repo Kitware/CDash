@@ -1,5 +1,5 @@
 services:
-  cdash:
+  website:
     env_file:
       - ../.env
     ports:
@@ -24,7 +24,7 @@ services:
       restart_policy:
         condition: any
     depends_on:
-      cdash:
+      website:
         condition: service_started
     volumes:
       - type: volume
