@@ -80,15 +80,3 @@ jobs:
             BASE_IMAGE=${{matrix.base-image}}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-      # Building the worker image should be almost instantaneous due to caching of the regular image
-      - uses: docker/build-push-action@v6
-        name: Build ${{matrix.base-image}} worker image
-        with:
-          context: .
-          platforms: linux/amd64,linux/arm64
-          push: false
-          target: cdash-worker
-          build-args: |
-            BASE_IMAGE=${{matrix.base-image}}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max

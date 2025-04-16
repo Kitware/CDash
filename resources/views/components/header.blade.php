@@ -134,11 +134,6 @@ $currentDateString = now()->toDateString();
                                     Tests Query
                                 </a>
                             </li>
-                            <li>
-                                <a class="cdash-link" ng-href="{{ url('/userStatistics.php') }}?project=@{{::cdash.projectname_encoded}}&date=@{{::cdash.date}}">
-                                    Statistics
-                                </a>
-                            </li>
                             <li class="endsubmenu">
                                 <a class="cdash-link" ng-href="{{ url('/projects') }}/@{{::cdash.projectid}}/sites@{{::cdash.extraurl}}">
                                     Sites
@@ -195,11 +190,6 @@ $currentDateString = now()->toDateString();
                             <li>
                                 <a class="cdash-link" ng-href="{{ url('/manageBuildGroup.php') }}?projectid=@{{::cdash.projectid}}">
                                     Groups
-                                </a>
-                            </li>
-                            <li>
-                                <a class="cdash-link" ng-href="{{ url('/manageCoverage.php') }}?projectid=@{{::cdash.projectid}}">
-                                    Coverage
                                 </a>
                             </li>
                             <li>
@@ -317,11 +307,6 @@ $currentDateString = now()->toDateString();
                                 <li>
                                     <a href="{{ url('/manageBuildGroup.php') }}?projectid={{ $project->Id }}">
                                         Groups
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ url('/manageCoverage.php') }}?projectid={{ $project->Id }}">
-                                        Coverage
                                     </a>
                                 </li>
                                 <li>

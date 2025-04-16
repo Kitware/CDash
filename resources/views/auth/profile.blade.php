@@ -38,7 +38,7 @@
                         class="textbox"
                         name="fname"
                         size="20"
-                        value="{{ $user->FirstName }}"
+                        value="{{ $user->firstname }}"
                         form="profile_form"
                     >
                 </td>
@@ -52,7 +52,7 @@
                         class="textbox"
                         name="lname"
                         size="20"
-                        value="{{ $user->LastName }}"
+                        value="{{ $user->lastname }}"
                         form="profile_form"
                     >
                 </td>
@@ -66,7 +66,7 @@
                         class="textbox"
                         name="email"
                         size="20"
-                        value="{{ $user->Email }}"
+                        value="{{ $user->email }}"
                         form="profile_form"
                     >
                 </td>
@@ -80,7 +80,7 @@
                         class="textbox"
                         name="institution"
                         size="20"
-                        value="{{ $user->Institution }}"
+                        value="{{ $user->institution }}"
                         form="profile_form"
                     >
                 </td>
@@ -159,7 +159,7 @@
                 <td width="20%" height="2">
                     <div align="right">Internal Id</div>
                 </td>
-                <td  width="80%" height="2">{{ $user->Id }}</td>
+                <td  width="80%" height="2">{{ $user->id }}</td>
             </tr>
         </tbody>
     </table>

@@ -253,26 +253,6 @@
                     <td />
                     <td>
                       <div align="right">
-                        <strong>Bug Tracker File URL:</strong>
-                      </div>
-                    </td>
-                    <td>
-                      <input
-                        id="bugFileURL"
-                        v-model="cdash.project.BugTrackerFilerUrl"
-                        name="bugFileURL"
-                        type="text"
-                        size="50"
-                        @change="cdash.changesmade = true"
-                        @focus="clearHelp()"
-                      >
-                    </td>
-                  </tr>
-
-                  <tr>
-                    <td />
-                    <td>
-                      <div align="right">
                         <strong>Bug Tracker Issue Creation:</strong>
                       </div>
                     </td>

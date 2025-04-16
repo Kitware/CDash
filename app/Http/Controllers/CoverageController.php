@@ -11,13 +11,11 @@ use CDash\Model\Build;
 use CDash\Model\Coverage;
 use CDash\Model\CoverageFile;
 use CDash\Model\CoverageFileLog;
-use CDash\Model\CoverageSummary;
 use CDash\Model\Project;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
 require_once 'include/filterdataFunctions.php';
@@ -32,161 +30,6 @@ final class CoverageController extends AbstractBuildController
         }
 
         return $this->angular_view('compareCoverage');
-    }
-
-    /**
-     * TODO: (williamjallen) this function contains legacy XSL templating and should be converted
-     *       to a proper Blade template with Laravel-based DB queries eventually.  This contents
-     *       this function are originally from manageCoverage.php and have been copied (almost) as-is.
-     */
-    public function manageCoverage(): View|RedirectResponse
-    {
-        $userid = Auth::id();
-        // Checks
-        if (!isset($userid) || !is_numeric($userid)) {
-            return $this->view('cdash')
-                ->with('xsl', true)
-                ->with('xsl_content', 'Not a valid userid!');
-        }
-
-        $xml = begin_XML_for_XSLT();
-        $xml .= '<menutitle>CDash</menutitle>';
-        $xml .= '<menusubtitle>Coverage</menusubtitle>';
-
-        @$projectid = $_GET['projectid'];
-        if ($projectid != null) {
-            $projectid = intval($projectid);
-        }
-
-        $Project = new Project();
-
-        $buildid = 0;
-        if (isset($_GET['buildid'])) {
-            $buildid = intval($_GET['buildid']);
-        }
-
-        // If the projectid is not set and there is only one project we go directly to the page
-        // TODO: (williamjallen) Should this be one project in all of CDash, or one project we can see?
-        if (!isset($projectid) && EloquentProject::count() === 1) {
-            $projectid = EloquentProject::all()->firstOrFail()->id;
-        }
-        $projectid = intval($projectid);
-
-        /** @var User $User */
-        $User = Auth::user();
-        $Project->Id = $projectid;
-        if ($projectid > 0 && !Gate::allows('edit-project', $Project)) {
-            return $this->view('cdash')
-                ->with('xsl', true)
-                ->with('xsl_content', "You don't have the permissions to access this page");
-        }
-
-        $sql = 'SELECT id,name FROM project';
-        $params = [];
-        if ($User->admin) {
-            $sql .= ' WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid=? AND role>0)';
-            $params[] = intval($userid);
-        }
-
-        $db = Database::getInstance();
-        $project = $db->executePrepared($sql, $params);
-        foreach ($project as $project_array) {
-            $xml .= '<availableproject>';
-            $xml .= add_XML_value('id', $project_array['id']);
-            $xml .= add_XML_value('name', $project_array['name']);
-            if ($project_array['id'] == $projectid) {
-                $xml .= add_XML_value('selected', '1');
-            }
-            $xml .= '</availableproject>';
-        }
-
-        // Display the current builds who have coverage for the past 7 days
-        $currentUTCTime = gmdate(FMT_DATETIME);
-        $beginUTCTime = gmdate(FMT_DATETIME, time() - 3600 * 7 * 24); // 7 days
-
-        // Change the priority of selected files, assuming that the bulk replacement takes priority.
-        if (isset($_POST['changePrioritySelected'])) {
-            foreach ($_POST['selectionFiles'] ?? [] as $key => $value) {
-                $this->setFilePriority($Project->Id, htmlspecialchars($value), intval($_POST['prioritySelectedSelection']));
-            }
-        } elseif (isset($_POST['prioritySelection'])) {
-            $this->setFilePriority($Project->Id, $_POST['fullpath'] ?? '', intval($_POST['prioritySelection'] ?? -1));
-        }
-
-        /* We start generating the XML here */
-
-        // Find the recent builds for this project
-        if ($projectid > 0) {
-            $xml .= '<project>';
-            $xml .= add_XML_value('id', $Project->Id);
-            $xml .= add_XML_value('name', $Project->GetName());
-            $xml .= add_XML_value('name_encoded', urlencode($Project->GetName()));
-
-            if ($buildid > 0) {
-                $xml .= add_XML_value('buildid', $buildid);
-            }
-
-            $CoverageSummary = new CoverageSummary();
-
-            $buildids = $CoverageSummary->GetBuilds($Project->Id, $beginUTCTime, $currentUTCTime);
-            rsort($buildids);
-            foreach ($buildids as $buildId) {
-                $Build = new Build();
-                $Build->Id = $buildId;
-                $Build->FillFromId($Build->Id);
-                $xml .= '<build>';
-                $xml .= add_XML_value('id', $buildId);
-                $xml .= add_XML_value('name', $Build->GetSite()->name . '-' . $Build->GetName() . ' [' . gmdate(FMT_DATETIME, strtotime($Build->StartTime)) . ']');
-                if ($buildid > 0 && $buildId == $buildid) {
-                    $xml .= add_XML_value('selected', 1);
-                }
-                $xml .= '</build>';
-            }
-
-            // For now take the first one
-            if ($buildid > 0) {
-                // Find the files associated with the build
-                $Coverage = new Coverage();
-                $Coverage->BuildId = $buildid;
-                $fileIds = $Coverage->GetFiles();
-                $row = '0';
-                sort($fileIds);
-                foreach ($fileIds as $fileid) {
-                    $CoverageFile = new CoverageFile();
-                    $CoverageFile->Id = $fileid;
-                    $xml .= '<file>';
-
-                    $file_path = $CoverageFile->GetPath();
-
-                    $xml .= add_XML_value('fullpath', $file_path);
-                    $xml .= add_XML_value('id', $CoverageFile->Id);
-                    $xml .= add_XML_value('fileid', $fileid);
-
-                    $row = $row == 0 ? 1 : 0;
-
-                    $xml .= add_XML_value('row', $row);
-
-                    $priority = (int) (DB::select('
-                        SELECT priority
-                        FROM coveragefilepriority
-                        WHERE fullpath=? AND projectid=?
-                    ', [$file_path, $Project->Id])[0]->priority ?? 0);
-
-                    if ($priority > 0) {
-                        $xml .= add_XML_value('priority', $priority);
-                    }
-
-                    $xml .= '</file>';
-                }
-            }
-            $xml .= '</project>';
-        }
-        $xml .= '</cdash>';
-
-        return $this->view('cdash', 'Manage Coverage')
-            ->with('xsl', true)
-            ->with('xsl_content', generate_XSLT($xml, base_path() . '/app/cdash/public/manageCoverage', true))
-            ->with('project', $Project);
     }
 
     private static function get_cdash_dashboard_xml_by_name(string $projectname, $date): string
@@ -612,28 +455,6 @@ final class CoverageController extends AbstractBuildController
             ->with('xsl_content', generate_XSLT($xml, 'viewCoverage', true));
     }
 
-    private function setFilePriority(int $projectid, string $file_path, int $priority): void
-    {
-        $count = (int) (DB::select('
-            SELECT count(*) AS c
-            FROM coveragefilepriority
-            WHERE FullPath=?
-        ', [$file_path])[0]->c ?? 0);
-
-        if ($count === 0) {
-            DB::insert('
-                INSERT INTO coveragefilepriority (projectid, priority, fullpath)
-                VALUES (?, ?, ?)
-            ', [$projectid, $priority, $file_path]);
-        } else {
-            DB::update('
-                UPDATE coveragefilepriority
-                SET priority=?
-                WHERE fullpath=? AND projectid=?
-            ', [$priority, $file_path, $projectid]);
-        }
-    }
-
     public function viewCoverageFile(): View
     {
         $this->setBuildById(intval($_GET['buildid'] ?? 0));
@@ -791,9 +612,6 @@ final class CoverageController extends AbstractBuildController
                     case 5:
                         $sortby = 'branches';
                         break;
-                    case 6:
-                        $sortby = 'priority';
-                        break;
                 }
             } else {
                 switch (intval($_GET['iSortCol_0'])) {
@@ -808,9 +626,6 @@ final class CoverageController extends AbstractBuildController
                         break;
                     case 3:
                         $sortby = 'lines';
-                        break;
-                    case 5:
-                        $sortby = 'priority';
                         break;
                 }
             }
@@ -851,15 +666,10 @@ final class CoverageController extends AbstractBuildController
                                 c.branchestested,
                                 c.branchesuntested,
                                 c.functionstested,
-                                c.functionsuntested,
-                                cfp.priority
+                                c.functionsuntested
                             FROM
                                 coverage AS c,
                                 coveragefile AS cf
-                            LEFT JOIN coveragefilepriority AS cfp ON (
-                                cfp.fullpath=cf.fullpath
-                                AND projectid=?
-                            )
                             WHERE
                                 c.buildid=?
                                 AND cf.id=c.fileid
@@ -867,7 +677,7 @@ final class CoverageController extends AbstractBuildController
                                 $filter_sql
                                 $SQLsearchTerm
                             $limit_sql
-                        ", array_merge([$this->project->Id, $this->build->Id], $SQLsearchTermParams, $limit_sql_params));
+                        ", array_merge([$this->build->Id], $SQLsearchTermParams, $limit_sql_params));
 
         // Add the coverage type
         $status = (int) ($_GET['status'] ?? -1);
@@ -930,9 +740,6 @@ final class CoverageController extends AbstractBuildController
                 $coveragetype = 'gcov';
             }
 
-            // Add the priority
-            $covfile['priority'] = $coveragefile_array['priority'];
-
             if ($covfile['coveragemetric'] != 1.0 || $status !== -1) {
                 $covfile_array[] = $covfile;
             }
@@ -946,7 +753,6 @@ final class CoverageController extends AbstractBuildController
                 $fullpath = dirname($fullpath);
                 if (!isset($directory_array[$fullpath])) {
                     $directory_array[$fullpath] = [];
-                    $directory_array[$fullpath]['priority'] = 0;
                     $directory_array[$fullpath]['directory'] = 1;
                     $directory_array[$fullpath]['covered'] = 1;
                     $directory_array[$fullpath]['fileid'] = 0;
@@ -1004,20 +810,15 @@ final class CoverageController extends AbstractBuildController
             $coveragefile = $db->executePrepared("
                         SELECT
                             cf.fullpath,
-                            cfp.priority
                         FROM
                             coverage AS c,
                             coveragefile AS cf
-                        LEFT JOIN coveragefilepriority AS cfp ON (
-                            cfp.fullpath=cf.fullpath
-                            AND projectid=?
-                        )
                         WHERE
                             c.buildid=?
                             AND cf.id=c.fileid
                             AND c.covered=0
                             $SQLsearchTerm
-                    ", [$this->project->Id, $this->build->Id]);
+                    ", [$this->build->Id]);
 
             foreach ($coveragefile as $coveragefile_array) {
                 $covfile = [];
@@ -1033,8 +834,6 @@ final class CoverageController extends AbstractBuildController
                 $covfile['functionstested'] = 0;
                 $covfile['percentcoverage'] = 0;
                 $covfile['coveragemetric'] = 0;
-
-                $covfile['priority'] = $coveragefile_array['priority'];
 
                 $covfile_array[] = $covfile;
             }
@@ -1425,28 +1224,6 @@ final class CoverageController extends AbstractBuildController
                 $row[] = $nextcolumn2;
             }
 
-            // Fifth column (Priority)
-            // Get the priority
-            $priority = 'NA';
-            switch ($covfile['priority']) {
-                case 0:
-                    $priority = '<div>None</div>';
-                    break;
-                case 1:
-                    $priority = '<div>Low</div>';
-                    break;
-                case 2:
-                    $priority = '<div class="warning">Medium</div>';
-                    break;
-                case 3:
-                    $priority = '<div class="error">High</div>';
-                    break;
-                case 4:
-                    $priority = '<div class="error">Urgent</div>';
-                    break;
-            }
-            $row[] = $priority;
-
             // Sixth colum (Authors)
             if ($userid > 0) {
                 $author = '';
@@ -1562,14 +1339,6 @@ final class CoverageController extends AbstractBuildController
             return 0;
         }
         return $a['branchesuntested'] > $b['branchesuntested'] ? 1 : -1;
-    }
-
-    private function sort_priority($a, $b): int
-    {
-        if ($a['priority'] == $b['priority']) {
-            return 0;
-        }
-        return $a['priority'] > $b['priority'] ? 1 : -1;
     }
 
     public function ajaxShowCoverageGraph(): View

@@ -20,7 +20,6 @@ return [
         'count' => env('PASSWORD_COMPLEXITY_COUNT', 0),
         'min' => env('MINIMUM_PASSWORD_LENGTH', 5),
         'expires' => env('PASSWORD_EXPIRATION', 0),
-        'unique' => env('UNIQUE_PASSWORD_COUNT', 0),
     ],
     'version' => '3.9.0',
     'registration' => [
@@ -43,7 +42,6 @@ return [
             'duration' => env('LOCKOUT_LENGTH', 1),
         ],
     ],
-    'active_project_days' => env('ACTIVE_PROJECT_DAYS', 7),
     'autoremove_builds' => env('AUTOREMOVE_BUILDS', true),
     'backup_timeframe' => env('BACKUP_TIMEFRAME', 48),
     'builds_per_project' => env('BUILDS_PER_PROJECT', 0),

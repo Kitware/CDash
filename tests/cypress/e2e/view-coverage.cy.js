@@ -71,7 +71,6 @@ describe('view coverage', () => {
     cy.get('@table_row').find('td').eq(1).should('contain', 'Satisfactory');
     cy.get('@table_row').find('td').eq(2).should('contain', '33.33%');
     cy.get('@table_row').find('td').eq(3).should('contain', '2/3');
-    cy.get('@table_row').find('td').eq(4).should('contain', 'None');
 
     // check directory name and url in first column
     cy.get('#coverageTable').contains('td', 'func_15').then(directory_td => {

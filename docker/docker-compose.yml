@@ -1,8 +1,7 @@
 name: cdash
 services:
-  cdash:
+  website:
     image: kitware/cdash
-    container_name: cdash
     build:
       context: ..
       target: cdash

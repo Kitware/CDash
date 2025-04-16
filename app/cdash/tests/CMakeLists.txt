@@ -66,10 +66,9 @@ add_laravel_test(/Unit/app/Console/Command/ValidateXmlCommandTest)
 ###################################################################################################
 
 cdash_install()
-set_tests_properties(install_2 PROPERTIES DEPENDS cypress/e2e/user-profile)
 
 add_laravel_test(/Feature/CDashTest)
-set_tests_properties(/Feature/CDashTest PROPERTIES DEPENDS install_2)
+set_tests_properties(/Feature/CDashTest PROPERTIES DEPENDS install_1)
 
 add_laravel_test(/Feature/LoginAndRegistration)
 set_tests_properties(/Feature/LoginAndRegistration PROPERTIES DEPENDS /Feature/CDashTest)
@@ -305,7 +304,7 @@ set_tests_properties(/Feature/Traits/UpdatesSiteInformationTest PROPERTIES DEPEN
 ###################################################################################################
 
 cdash_install()
-set_property(TEST install_3 PROPERTY DEPENDS
+set_property(TEST install_2 PROPERTY DEPENDS
   /Feature/SubmissionValidation
   /Feature/ProjectInvitationAcceptanceTest
   /Feature/GraphQL/FilterTest
@@ -353,7 +352,7 @@ set_property(TEST install_3 PROPERTY DEPENDS
 
 
 add_php_test(compressedtest)
-set_tests_properties(compressedtest PROPERTIES DEPENDS install_3)
+set_tests_properties(compressedtest PROPERTIES DEPENDS install_2)
 
 add_php_test(createpublicdashboard)
 set_tests_properties(createpublicdashboard PROPERTIES DEPENDS compressedtest)
@@ -400,11 +399,8 @@ set_tests_properties(image PROPERTIES DEPENDS committerinfo)
 add_php_test(displayimage)
 set_tests_properties(displayimage PROPERTIES DEPENDS image)
 
-add_cypress_e2e_test(banner)
-set_tests_properties(cypress/e2e/banner PROPERTIES DEPENDS displayimage)
-
 add_php_test(manageusers)
-set_tests_properties(manageusers PROPERTIES DEPENDS cypress/e2e/banner)
+set_tests_properties(manageusers PROPERTIES DEPENDS displayimage)
 
 add_php_test(projectindb)
 set_tests_properties(projectindb PROPERTIES DEPENDS manageusers)
@@ -423,9 +419,6 @@ set_tests_properties(sitestatistics PROPERTIES DEPENDS querytests)
 
 add_php_test(testoverview)
 set_tests_properties(testoverview PROPERTIES DEPENDS sitestatistics)
-
-add_php_test(userstatistics)
-set_tests_properties(userstatistics PROPERTIES DEPENDS testoverview)
 
 add_php_test(viewconfigure)
 set_tests_properties(viewconfigure PROPERTIES DEPENDS testoverview)
@@ -619,11 +612,8 @@ set_tests_properties(donehandler PROPERTIES DEPENDS submission_assign_buildid)
 add_php_test(changeid)
 set_tests_properties(changeid PROPERTIES DEPENDS donehandler)
 
-add_php_test(updateonlyuserstats)
-set_tests_properties(updateonlyuserstats PROPERTIES DEPENDS changeid)
-
 add_php_test(expiredbuildrules)
-set_tests_properties(expiredbuildrules PROPERTIES DEPENDS updateonlyuserstats)
+set_tests_properties(expiredbuildrules PROPERTIES DEPENDS changeid)
 
 add_php_test(filterblocks)
 set_tests_properties(filterblocks PROPERTIES DEPENDS expiredbuildrules)

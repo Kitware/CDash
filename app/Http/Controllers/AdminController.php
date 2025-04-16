@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Utils\DatabaseCleanupUtils;
 use CDash\Model\Project;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
@@ -276,47 +274,6 @@ final class AdminController extends AbstractController
         }
     }
 
-    private static function ComputeUpdateStatistics($days = 4): void
-    {
-        // Loop through the projects
-        $project = pdo_query('SELECT id FROM project');
-
-        while ($project_array = pdo_fetch_array($project)) {
-            $projectid = $project_array['id'];
-
-            // only test a couple of days
-            $now = gmdate(FMT_DATETIME, time() - 3600 * 24 * $days);
-
-            // Find the builds
-            $builds = DB::select("SELECT starttime,siteid,name,type,id
-                FROM build
-                WHERE build.projectid='$projectid' AND build.starttime>'$now'
-                ORDER BY build.starttime ASC");
-
-            $total = count($builds);
-            echo pdo_error();
-
-            $i = 0;
-            $previousperc = 0;
-            foreach ($builds as $build) {
-                $Build = new Build();
-                $Build->Id = $build->id;
-                $Build->ProjectId = $projectid;
-                $Build->ComputeUpdateStatistics();
-
-                // Progress bar
-                $perc = ($i / $total) * 100;
-                if ($perc - $previousperc > 5) {
-                    echo round($perc, 3) . '% done.<br>';
-                    flush();
-                    ob_flush();
-                    $previousperc = $perc;
-                }
-                $i++;
-            }
-        }
-    }
-
     public function upgrade()
     {
         @set_time_limit(0);
@@ -330,13 +287,6 @@ final class AdminController extends AbstractController
         @$DeleteBuildsWrongDate = $_POST['DeleteBuildsWrongDate'];
         @$CheckBuildsWrongDate = $_POST['CheckBuildsWrongDate'];
         @$ComputeTestTiming = $_POST['ComputeTestTiming'];
-        @$ComputeUpdateStatistics = $_POST['ComputeUpdateStatistics'];
-
-        @$Dependencies = $_POST['Dependencies'];
-        @$Audit = $_POST['Audit'];
-        @$ClearAudit = $_POST['Clear'];
-
-        $configFile = base_path('/app/cdash/AuditReport.log');
 
         // Compute the testtime
         if ($ComputeTestTiming) {
@@ -347,34 +297,6 @@ final class AdminController extends AbstractController
             } else {
                 $xml .= add_XML_value('alert', 'Wrong number of days.');
             }
-        }
-
-        // Compute the user statistics
-        if ($ComputeUpdateStatistics) {
-            $UpdateStatisticsDays = (int) ($_POST['UpdateStatisticsDays'] ?? 0);
-            if ($UpdateStatisticsDays > 0) {
-                self::ComputeUpdateStatistics($UpdateStatisticsDays);
-                $xml .= add_XML_value('alert', 'User statistics has been computed successfully.');
-            } else {
-                $xml .= add_XML_value('alert', 'Wrong number of days.');
-            }
-        }
-
-        if ($Dependencies) {
-            $returnVal = Artisan::call('dependencies:update');
-            $xml .= add_XML_value('alert', "The call to update CDash's dependencies was run. The call exited with value: $returnVal");
-        }
-
-        if ($Audit) {
-            if (!file_exists($configFile)) {
-                Artisan::call("schedule:test --name='dependencies:audit'");
-            }
-            $fileContents = file_get_contents($configFile);
-            $xml .= add_XML_value('audit', $fileContents);
-        }
-
-        if ($ClearAudit && file_exists($configFile)) {
-            unlink($configFile);
         }
 
         /* Check the builds with wrong date */
@@ -451,10 +373,5 @@ final class AdminController extends AbstractController
         return $this->view('cdash', 'Maintenance')
             ->with('xsl', true)
             ->with('xsl_content', generate_XSLT($xml, base_path() . '/app/cdash/public/upgrade', true));
-    }
-
-    public function userStatistics(): View
-    {
-        return $this->angular_view('userStatistics');
     }
 }

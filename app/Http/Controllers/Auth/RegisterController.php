@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\AbstractController;
-use App\Models\Password;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -135,7 +134,6 @@ final class RegisterController extends AbstractController
 
         $user = $this->create($request->all());
 
-        $user->passwords()->save(new Password(['password' => $user->password]));
         event(new Registered($user));
         $this->guard()->login($user);
 

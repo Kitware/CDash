@@ -102,7 +102,6 @@ AWS_URL=<bucket URL> (e.g. http://127.0.0.1:9001/cdash/)
 ## Other settings
 | Variable  | Description | Default |
 | --------- | ----------- | ------- |
-| ACTIVE_PROJECT_DAYS | How long (in days) since the last submission before considering a project inactive and hidden on the /projects page | 7 |
 | BACKUP_TIMEFRAME |  How long (in hours) CDash will store parsed input files | 48 |
 | DEFAULT_PROJECT | Display a given project by default when one isn't specified | '' |
 | LARGE_TEXT_LIMIT | How many bytes of build/test data CDash should accept before truncating away the center (0 for unlimited) | 0 |

@@ -240,10 +240,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/manageBanner.php', 'ManageBannerController@manageBanner');
     Route::post('/manageBanner.php', 'ManageBannerController@manageBanner');
 
-    // TODO: (williamjallen) send the POST route to a different function
-    Route::get('/manageCoverage.php', 'CoverageController@manageCoverage');
-    Route::post('/manageCoverage.php', 'CoverageController@manageCoverage');
-
     Route::match(['get', 'post'], '/editSite.php', function (Request $request) {
         if ($request->has('siteid')) {
             $siteid = $request->integer('siteid');
@@ -257,9 +253,6 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::get('/ajax/buildnote.php', 'BuildController@ajaxBuildNote');
-
-    // TODO: Determine if this route should go in the admin section
-    Route::get('/userStatistics.php', 'AdminController@userStatistics');
 
     Route::get('/invitations/{invitationId}', InvitationController::class)->whereNumber('invitationId');
 
