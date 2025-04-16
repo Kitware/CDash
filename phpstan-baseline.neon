@@ -29925,7 +29925,7 @@ parameters:
 
 		-
 			message: "#^Dynamic call to static method Illuminate\\\\Http\\\\Response\\:\\:content\\(\\)\\.$#"
-			count: 1
+			count: 2
 			path: tests/Feature/SlowPageTest.php
 
 		-
