@@ -23,14 +23,9 @@ class PasswordExpired
             if (!Str::contains(url()->current(), $password_expired_path)) {
                 /** @var User $user */
                 $user = Auth::user();
-                $current_password = $user->currentPassword ?? null;
-                if ($current_password !== null) {
-                    $password_lifetime = (int) config('cdash.password.expires');
-                    $password_expired = $current_password->date->addDays($password_lifetime) < Carbon::now();
-                    if ($password_lifetime > 0 && $password_expired) {
-                        $password_expired_uri = "{$password_expired_path}?password_expired=1";
-                        return redirect($password_expired_uri);
-                    }
+                $password_lifetime = (int) config('cdash.password.expires');
+                if ($password_lifetime > 0 && $user->password_updated_at->addDays($password_lifetime) < Carbon::now()) {
+                    return redirect("{$password_expired_path}?password_expired=1");
                 }
             }
         }

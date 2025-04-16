@@ -20,7 +20,6 @@ return [
         'count' => env('PASSWORD_COMPLEXITY_COUNT', 0),
         'min' => env('MINIMUM_PASSWORD_LENGTH', 5),
         'expires' => env('PASSWORD_EXPIRATION', 0),
-        'unique' => env('UNIQUE_PASSWORD_COUNT', 0),
     ],
     'version' => '3.9.0',
     'registration' => [

@@ -15,8 +15,8 @@ use CDash\Model\Project;
 use CDash\Model\UserProject;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
@@ -333,11 +333,8 @@ final class UserController extends AbstractController
 
     public function edit(): View
     {
-        $userid = Auth::id();
-        // TODO: (williamjallen) Switch this to the new User model...
-        $user = new \CDash\Model\User();
-        $user->Id = $userid;
-        $user->Fill();
+        /** @var User $user */
+        $user = Auth::user();
 
         $error_msg = '';
         $other_msg = '';
@@ -348,11 +345,11 @@ final class UserController extends AbstractController
             if (strlen($email) < 3 || !str_contains($email, '@')) {
                 $error_msg = 'Email should be a valid address.';
             } else {
-                $user->Email = $email;
-                $user->Institution = $_POST['institution'] ?? '';
-                $user->LastName = $_POST['lname'] ?? '';
-                $user->FirstName = $_POST['fname'] ?? '';
-                if ($user->Save()) {
+                $user->email = $email;
+                $user->institution = $_POST['institution'] ?? '';
+                $user->lastname = $_POST['lname'] ?? '';
+                $user->firstname = $_POST['fname'] ?? '';
+                if ($user->save()) {
                     $other_msg = 'Your profile has been updated.';
                 } else {
                     $error_msg = 'Cannot update profile.';
@@ -368,7 +365,7 @@ final class UserController extends AbstractController
 
             $password_is_good = true;
 
-            if (!password_verify($oldpasswd, $user->Password) && md5($oldpasswd) !== $user->Password) {
+            if (!password_verify($oldpasswd, $user->password)) {
                 $password_is_good = false;
                 $error_msg = 'Your old password is incorrect.';
             }
@@ -382,24 +379,6 @@ final class UserController extends AbstractController
             if ($password_is_good && strlen($passwd) < $minimum_length) {
                 $password_is_good = false;
                 $error_msg = "Password must be at least $minimum_length characters.";
-            }
-
-            if ($password_is_good && config('cdash.password.expires') > 0) {
-                $query = 'SELECT password FROM password WHERE userid = ?';
-                $query_params = [(int) $userid];
-                $unique_count = (int) config('cdash.password.unique');
-                if ($unique_count > 0) {
-                    $query .= ' ORDER BY date DESC LIMIT ?';
-                    $query_params[] = $unique_count;
-                }
-                $query_result = DB::select($query, $query_params);
-                foreach ($query_result as $row) {
-                    if (password_verify($passwd, $row->password)) {
-                        $password_is_good = false;
-                        $error_msg = 'You have recently used this password.  Please select a new one.';
-                        break;
-                    }
-                }
             }
 
             if ($password_is_good) {
@@ -417,9 +396,15 @@ final class UserController extends AbstractController
                 }
             }
 
+            if ($password_is_good && $passwd === $oldpasswd) {
+                $error_msg = 'New password matches old password.';
+                $password_is_good = false;
+            }
+
             if ($password_is_good) {
-                $user->Password = password_hash($passwd, PASSWORD_DEFAULT);
-                if ($user->Save()) {
+                $user->password = password_hash($passwd, PASSWORD_DEFAULT);
+                $user->password_updated_at = Carbon::now();
+                if ($user->save()) {
                     $other_msg = 'Your password has been updated.';
                     if (isset($_SESSION['cdash']['redirect'])) {
                         unset($_SESSION['cdash']['redirect']);
@@ -451,9 +436,8 @@ final class UserController extends AbstractController
         $warning = '';
         if (isset($_POST['recover'])) {
             $email = $_POST['email'];
-            $user = new \CDash\Model\User();
-            $userid = User::firstWhere('email', $email)?->id;
-            if ($userid !== null) {  // Don't reveal whether or not this is a valid account.
+            $user = User::firstWhere('email', $email);
+            if ($user !== null) {  // Don't reveal whether or not this is a valid account.
                 // Create a new password
                 $password = Str::password(10);
 
@@ -470,10 +454,9 @@ final class UserController extends AbstractController
                         ->to($email);
                 });
 
-                $user->Id = $userid;
-                $user->Fill();
-                $user->Password = password_hash($password, PASSWORD_DEFAULT);
-                $user->Save();
+                $user->password = password_hash($password, PASSWORD_DEFAULT);
+                $user->password_updated_at = Carbon::now();
+                $user->save();
             }
 
             $message = 'A confirmation message has been sent to your inbox.';

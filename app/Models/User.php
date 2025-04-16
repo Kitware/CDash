@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Carbon;
 use LdapRecord\Laravel\Auth\AuthenticatesWithLdap;
 use LdapRecord\Laravel\Auth\LdapAuthenticatable;
 
@@ -24,10 +24,10 @@ use LdapRecord\Laravel\Auth\LdapAuthenticatable;
  * @property string $lastname
  * @property string $email
  * @property string $password
+ * @property Carbon $password_updated_at
  * @property string $institution
  * @property string $ldapdomain
  * @property string $ldapguid
- * @property Password $currentPassword
  *
  * @mixin Builder<User>
  */
@@ -48,6 +48,7 @@ class User extends Authenticatable implements MustVerifyEmail, LdapAuthenticatab
         'lastname',
         'email',
         'password',
+        'password_updated_at',
         'institution',
     ];
 
@@ -60,6 +61,7 @@ class User extends Authenticatable implements MustVerifyEmail, LdapAuthenticatab
 
     protected $casts = [
         'admin' => 'boolean',
+        'password_updated_at' => 'datetime',
     ];
 
     public function getLdapDomainColumn(): string
@@ -70,22 +72,6 @@ class User extends Authenticatable implements MustVerifyEmail, LdapAuthenticatab
     public function getLdapGuidColumn(): string
     {
         return 'ldapguid';
-    }
-
-    /**
-     * @return HasMany<Password>
-     */
-    public function passwords(): HasMany
-    {
-        return $this->hasMany(Password::class, 'userid')->orderBy('date', 'desc');
-    }
-
-    /**
-     * @return HasOne<Password>
-     */
-    public function currentPassword(): HasOne
-    {
-        return $this->hasOne(Password::class, 'userid')->ofMany('date', 'max');
     }
 
     /**

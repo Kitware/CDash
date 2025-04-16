@@ -14,7 +14,6 @@ The following `.env` variables can be used to customize the email/password user 
 | MINIMUM_PASSWORD_COMPLEXITY | How many types of characters (uppercase, lowercase, numbers, symbols) must be present in a password | 1 |
 | PASSWORD_COMPLEXITY_COUNT | How many characters of a given type must be present in a password for it to count towards the minimum complexity | 1 |
 | PASSWORD_EXPIRATION | How long a password should last for (in days). Password rotation is disabled when this is set to 0. | 0 |
-| UNIQUE_PASSWORD_COUNT | Unique password count (new password cannot match last X). 0 means you can never reuse a password | 0 |
 | REGISTRATION_EMAIL_VERIFY | Should CDash only register verified email addresses? | true |
 | USERNAME_PASSWORD_AUTHENTICATION_ENABLED | Whether or not email+password authentication is enabled | true |
 | USER_REGISTRATION_FORM_ENABLED | Whether or not new CDash users can register email+password accounts | true |
