@@ -38,7 +38,7 @@ docker exec cdash bash -c "cd /cdash && /usr/bin/git checkout ."
 docker exec cdash bash -c "\
   ctest \
     -VV \
-    -j 4 \
+    -j 3 \
     --schedule-random \
     -DSITENAME=\"${site}\" \
     -DDATABASE=\"${database}\" \
