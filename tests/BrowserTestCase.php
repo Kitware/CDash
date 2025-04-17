@@ -15,8 +15,6 @@ abstract class BrowserTestCase extends BaseTestCase
 {
     use CreatesApplication;
 
-    private string $original_env_contents = '';
-
     /**
      * @throws Exception
      */
@@ -30,9 +28,9 @@ abstract class BrowserTestCase extends BaseTestCase
         if ($env_contents === false) {
             throw new Exception('Unable to read .env file.');
         }
-        $this->original_env_contents = $env_contents;
 
-        file_put_contents(base_path('.env'), str_replace('localhost:8080', 'website:8080', $this->original_env_contents));
+        $env_after_substitution = str_replace('APP_URL=http://localhost:8080', 'APP_URL=http://website:8080', $env_contents);
+        file_put_contents(base_path('.env'), $env_after_substitution);
 
         Browser::$baseUrl = 'http://website:8080';
     }
@@ -41,7 +39,13 @@ abstract class BrowserTestCase extends BaseTestCase
     {
         parent::tearDown();
 
-        file_put_contents(base_path('.env'), $this->original_env_contents);
+        $env_contents = file_get_contents(base_path('.env'));
+        if ($env_contents === false) {
+            throw new Exception('Unable to read .env file.');
+        }
+
+        $env_after_substitution = str_replace('APP_URL=http://website:8080', 'APP_URL=http://localhost:8080', $env_contents);
+        file_put_contents(base_path('.env'), $env_after_substitution);
     }
 
     /**
