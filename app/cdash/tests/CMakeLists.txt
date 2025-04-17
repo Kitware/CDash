@@ -223,7 +223,7 @@ set_tests_properties(/Feature/LdapIntegration PROPERTIES DEPENDS /CDash/XmlHandl
 add_browser_test(/Browser/Pages/ProjectSitesPageTest)
 set_tests_properties(/Browser/Pages/ProjectSitesPageTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
-add_laravel_test(/Browser/Pages/ProjectMembersPageTest)
+add_browser_test(/Browser/Pages/ProjectMembersPageTest)
 set_tests_properties(/Browser/Pages/ProjectMembersPageTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_laravel_test(/Feature/PurgeUnusedProjectsCommand)
