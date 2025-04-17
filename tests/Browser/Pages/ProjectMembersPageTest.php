@@ -389,6 +389,8 @@ class ProjectMembersPageTest extends BrowserTestCase
                 ->whenAvailable('@members-table', function (Browser $browser) {
                     // Make sure the pagination has completed before making assertions about the count
                     $browser->waitForText($this->users[119]->firstname . ' ' . $this->users[119]->lastname)
+                        ->waitForText($this->users[50]->firstname . ' ' . $this->users[50]->lastname)
+                        ->waitForText($this->users[0]->firstname . ' ' . $this->users[0]->lastname)
                         ->assertCount('@members-table-row', 120);
                 });
         });
