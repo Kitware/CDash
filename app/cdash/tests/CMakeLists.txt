@@ -36,6 +36,13 @@ function(add_laravel_test TestName)
   )
 endfunction()
 
+function(add_browser_test TestName)
+  add_laravel_test(${TestName})
+  set_property(TEST ${TestName} PROPERTY RESOURCE_LOCK
+    APP_URL # All browser tests need exclusive access to the APP_URL configuration setting
+  )
+endfunction()
+
 # phpunit tests
 set(phpunit_extra_arg "")
 if (CDASH_CONFIGURE_HTACCESS_FILE)
@@ -199,8 +206,7 @@ set_tests_properties(/Feature/Monitor PROPERTIES DEPENDS /CDash/XmlHandler/Updat
 add_laravel_test(/Feature/PasswordRotation)
 set_tests_properties(/Feature/PasswordRotation PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
-add_laravel_test(/Browser/Pages/SitesIdPageTest)
-set_tests_properties(/Browser/Pages/SitesIdPageTest PROPERTIES RUN_SERIAL TRUE)
+add_browser_test(/Browser/Pages/SitesIdPageTest)
 set_tests_properties(/Browser/Pages/SitesIdPageTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 # Technically this test doesn't have to run serially.  It just needs to have exclusive access to the .env
@@ -208,9 +214,7 @@ add_laravel_test(/Feature/LdapIntegration)
 set_tests_properties(/Feature/LdapIntegration PROPERTIES RUN_SERIAL TRUE)
 set_tests_properties(/Feature/LdapIntegration PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
-# TODO: Evaluate whether this test can be independent
-add_laravel_test(/Browser/Pages/ProjectSitesPageTest)
-set_tests_properties(/Browser/Pages/ProjectSitesPageTest PROPERTIES RUN_SERIAL TRUE)
+add_browser_test(/Browser/Pages/ProjectSitesPageTest)
 set_tests_properties(/Browser/Pages/ProjectSitesPageTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_laravel_test(/Feature/PurgeUnusedProjectsCommand)

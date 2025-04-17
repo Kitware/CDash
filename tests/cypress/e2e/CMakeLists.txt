@@ -13,7 +13,7 @@ function(add_cypress_e2e_test TestName)
   set_tests_properties(cypress/e2e/${TestName} PROPERTIES
     ENVIRONMENT "HOME=${CDash_BINARY_DIR};"
     DISABLED "$<STREQUAL:${CDASH_IMAGE},ubi>"
-    RESOURCE_LOCK "cypress" # Cypress can only run one at a time due to xvfb issues
+    RESOURCE_LOCK "cypress;APP_URL" # Cypress can only run one at a time due to xvfb issues and needs a consistent APP_URL
   )
 endfunction()
 
