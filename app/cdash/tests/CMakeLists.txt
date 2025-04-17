@@ -70,71 +70,17 @@ cdash_install()
 add_laravel_test(/Feature/CDashTest)
 set_tests_properties(/Feature/CDashTest PROPERTIES DEPENDS install_1)
 
-add_laravel_test(/Feature/LoginAndRegistration)
-set_tests_properties(/Feature/LoginAndRegistration PROPERTIES DEPENDS /Feature/CDashTest)
-
-add_laravel_test(/Feature/ProjectPermissions)
-set_tests_properties(/Feature/ProjectPermissions PROPERTIES DEPENDS /Feature/LoginAndRegistration)
-
-add_laravel_test(/Feature/SlowPageTest)
-set_tests_properties(/Feature/SlowPageTest PROPERTIES DEPENDS /Feature/ProjectPermissions)
-
-add_laravel_test(/Feature/GitHubWebhook)
-set_tests_properties(/Feature/GitHubWebhook PROPERTIES DEPENDS /Feature/SlowPageTest)
-
-add_unit_test(/CDash/BuildUseCase)
-set_tests_properties(/CDash/BuildUseCase PROPERTIES DEPENDS /Feature/GitHubWebhook)
-
-add_unit_test(/CDash/ConfigUseCase)
-set_tests_properties(/CDash/ConfigUseCase PROPERTIES DEPENDS /CDash/BuildUseCase)
-
-add_unit_test(/CDash/Lib/Repository/GitHub)
-set_tests_properties(/CDash/Lib/Repository/GitHub PROPERTIES
-    DEPENDS /CDash/ConfigUseCase
-    DISABLED "$<STREQUAL:${CDASH_IMAGE},ubi>"
-)
-
-add_unit_test(/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilder)
-set_tests_properties(/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilder PROPERTIES DEPENDS /CDash/Lib/Repository/GitHub)
-
-add_unit_test(/CDash/Messaging/Subscription/UserSubscriptionBuilder)
-set_tests_properties(/CDash/Messaging/Subscription/UserSubscriptionBuilder PROPERTIES DEPENDS /CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilder)
-
-add_unit_test(/CDash/Messaging/Topic/UpdateErrorTopic)
-set_tests_properties(/CDash/Messaging/Topic/UpdateErrorTopic PROPERTIES DEPENDS /CDash/Messaging/Subscription/UserSubscriptionBuilder)
-
-add_unit_test(/CDash/Model/BuildError)
-set_tests_properties(/CDash/Model/BuildError PROPERTIES DEPENDS /CDash/Messaging/Topic/UpdateErrorTopic)
-
-add_unit_test(/CDash/Model/BuildErrorFilter)
-set_tests_properties(/CDash/Model/BuildErrorFilter PROPERTIES DEPENDS /CDash/Model/BuildError)
-
-add_unit_test(/CDash/Model/BuildFailure)
-set_tests_properties(/CDash/Model/BuildFailure PROPERTIES DEPENDS /CDash/Model/BuildErrorFilter)
-
-add_unit_test(/CDash/Model/BuildRelationship)
-set_tests_properties(/CDash/Model/BuildRelationship PROPERTIES DEPENDS /CDash/Model/BuildFailure)
-
-add_unit_test(/CDash/Model/Repository)
-set_tests_properties(/CDash/Model/Repository PROPERTIES DEPENDS /CDash/Model/BuildRelationship)
-
 add_unit_test(/CDash/MultipleSubprojectsEmail)
-set_tests_properties(/CDash/MultipleSubprojectsEmail PROPERTIES DEPENDS /CDash/Model/Repository)
+set_tests_properties(/CDash/MultipleSubprojectsEmail PROPERTIES DEPENDS /Feature/CDashTest)
 
 add_unit_test(/CDash/NightlyTime)
 set_tests_properties(/CDash/NightlyTime PROPERTIES DEPENDS /CDash/MultipleSubprojectsEmail)
 
-add_unit_test(/CDash/Service/RepositoryService)
-set_tests_properties(/CDash/Service/RepositoryService PROPERTIES DEPENDS /CDash/NightlyTime)
-
 add_unit_test(/CDash/TestUseCase)
-set_tests_properties(/CDash/TestUseCase PROPERTIES DEPENDS /CDash/Service/RepositoryService)
-
-add_unit_test(/CDash/UpdateUseCase)
-set_tests_properties(/CDash/UpdateUseCase PROPERTIES DEPENDS /CDash/TestUseCase)
+set_tests_properties(/CDash/TestUseCase PROPERTIES DEPENDS /CDash/NightlyTime)
 
 add_unit_test(/CDash/XmlHandler/BuildHandler)
-set_tests_properties(/CDash/XmlHandler/BuildHandler PROPERTIES DEPENDS /CDash/UpdateUseCase)
+set_tests_properties(/CDash/XmlHandler/BuildHandler PROPERTIES DEPENDS /CDash/TestUseCase)
 
 add_unit_test(/CDash/XmlHandler/ConfigureHandler)
 set_tests_properties(/CDash/XmlHandler/ConfigureHandler PROPERTIES DEPENDS /CDash/XmlHandler/BuildHandler)
@@ -152,6 +98,60 @@ set_tests_properties(/CDash/XmlHandler/UpdateHandler PROPERTIES DEPENDS /CDash/X
 # Tests from this point to the next cdash_install() are expected to be completely independent.
 # Tests may wipe the database, provided that they use RUN_SERIAL. All tests in this section should
 # depend upon the last test prior to this section.
+
+add_laravel_test(/Feature/LoginAndRegistration)
+set_tests_properties(/Feature/LoginAndRegistration PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_laravel_test(/Feature/ProjectPermissions)
+set_tests_properties(/Feature/ProjectPermissions PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_laravel_test(/Feature/SlowPageTest)
+set_tests_properties(/Feature/SlowPageTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_laravel_test(/Feature/GitHubWebhook)
+set_tests_properties(/Feature/GitHubWebhook PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_unit_test(/CDash/Lib/Repository/GitHub)
+set_tests_properties(/CDash/Lib/Repository/GitHub PROPERTIES
+    DEPENDS /CDash/XmlHandler/UpdateHandler
+    DISABLED "$<STREQUAL:${CDASH_IMAGE},ubi>"
+)
+
+add_unit_test(/CDash/BuildUseCase)
+set_tests_properties(/CDash/BuildUseCase PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_unit_test(/CDash/ConfigUseCase)
+set_tests_properties(/CDash/ConfigUseCase PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_unit_test(/CDash/UpdateUseCase)
+set_tests_properties(/CDash/UpdateUseCase PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_unit_test(/CDash/Model/BuildError)
+set_tests_properties(/CDash/Model/BuildError PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_unit_test(/CDash/Model/BuildErrorFilter)
+set_tests_properties(/CDash/Model/BuildErrorFilter PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_unit_test(/CDash/Model/BuildFailure)
+set_tests_properties(/CDash/Model/BuildFailure PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_unit_test(/CDash/Model/BuildRelationship)
+set_tests_properties(/CDash/Model/BuildRelationship PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_unit_test(/CDash/Model/Repository)
+set_tests_properties(/CDash/Model/Repository PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_unit_test(/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilder)
+set_tests_properties(/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilder PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_unit_test(/CDash/Messaging/Subscription/UserSubscriptionBuilder)
+set_tests_properties(/CDash/Messaging/Subscription/UserSubscriptionBuilder PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_unit_test(/CDash/Messaging/Topic/UpdateErrorTopic)
+set_tests_properties(/CDash/Messaging/Topic/UpdateErrorTopic PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_unit_test(/CDash/Service/RepositoryService)
+set_tests_properties(/CDash/Service/RepositoryService PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 # Set this to RUN_SERIAL as we are changing the config and don't want to clobber other tests.
 # Only requires exclusive .env access.
@@ -287,6 +287,23 @@ set_tests_properties(/Feature/Traits/UpdatesSiteInformationTest PROPERTIES DEPEN
 
 cdash_install()
 set_property(TEST install_2 PROPERTY DEPENDS
+  /Feature/LoginAndRegistration
+  /Feature/ProjectPermissions
+  /Feature/SlowPageTest
+  /Feature/GitHubWebhook
+  /CDash/Lib/Repository/GitHub
+  /CDash/BuildUseCase
+  /CDash/ConfigUseCase
+  /CDash/UpdateUseCase
+  /CDash/Model/BuildError
+  /CDash/Model/BuildErrorFilter
+  /CDash/Model/BuildFailure
+  /CDash/Model/BuildRelationship
+  /CDash/Model/Repository
+  /CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilder
+  /CDash/Messaging/Subscription/UserSubscriptionBuilder
+  /CDash/Messaging/Topic/UpdateErrorTopic
+  /CDash/Service/RepositoryService
   /Feature/SubmissionValidation
   /Feature/GraphQL/FilterTest
   /Feature/GraphQL/ProjectTypeTest
