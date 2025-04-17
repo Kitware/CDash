@@ -676,14 +676,6 @@
             <td>
               <a
                 class="cdash-link"
-                :href="$baseURL + '/upgrade.php'"
-              >Maintenance</a>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <a
-                class="cdash-link"
                 :href="$baseURL + '/sites'"
               >Site Statistics</a>
             </td>

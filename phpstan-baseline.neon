@@ -302,112 +302,13 @@ parameters:
 			path: app/Http/Controllers/AbstractProjectController.php
 
 		-
-			message: """
-				#^Call to deprecated function pdo_error\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 5
-			path: app/Http/Controllers/AdminController.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_fetch_array\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 11
-			path: app/Http/Controllers/AdminController.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_query\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 13
-			path: app/Http/Controllers/AdminController.php
-
-		-
-			message: "#^Cannot access offset 'id' on array\\|false\\|null\\.$#"
-			count: 1
-			path: app/Http/Controllers/AdminController.php
-
-		-
-			message: "#^Cannot access offset 'name' on array\\|false\\|null\\.$#"
-			count: 1
-			path: app/Http/Controllers/AdminController.php
-
-		-
-			message: "#^Cannot access offset 'projectid' on array\\|false\\|null\\.$#"
-			count: 1
-			path: app/Http/Controllers/AdminController.php
-
-		-
-			message: "#^Cannot access offset 'siteid' on array\\|false\\|null\\.$#"
-			count: 1
-			path: app/Http/Controllers/AdminController.php
-
-		-
-			message: "#^Cannot access offset 'submittime' on array\\|false\\|null\\.$#"
-			count: 1
-			path: app/Http/Controllers/AdminController.php
-
-		-
-			message: "#^Cannot access offset 'timemean' on array\\|false\\|null\\.$#"
-			count: 1
-			path: app/Http/Controllers/AdminController.php
-
-		-
-			message: "#^Cannot access offset 'timestd' on array\\|false\\|null\\.$#"
-			count: 1
-			path: app/Http/Controllers/AdminController.php
-
-		-
-			message: "#^Cannot access offset 'type' on array\\|false\\|null\\.$#"
-			count: 1
-			path: app/Http/Controllers/AdminController.php
-
-		-
-			message: "#^Cannot access property \\$id on array\\.$#"
-			count: 1
-			path: app/Http/Controllers/AdminController.php
-
-		-
-			message: "#^Cannot cast mixed to int\\.$#"
-			count: 1
-			path: app/Http/Controllers/AdminController.php
-
-		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 1
-			path: app/Http/Controllers/AdminController.php
-
-		-
-			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 1
-			path: app/Http/Controllers/AdminController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\AdminController\\:\\:ComputeTestTiming\\(\\) has parameter \\$days with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/AdminController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\AdminController\\:\\:ComputeTestTiming\\(\\) throws checked exception DivisionByZeroError but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/Http/Controllers/AdminController.php
 
 		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\AdminController\\:\\:removeBuilds\\(\\) never returns Illuminate\\\\Http\\\\RedirectResponse so it can be removed from the return type\\.$#"
 			count: 1
-			path: app/Http/Controllers/AdminController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\AdminController\\:\\:upgrade\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/AdminController.php
-
-		-
-			message: "#^Only booleans are allowed in an if condition, mixed given\\.$#"
-			count: 5
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -418,11 +319,6 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$timestamp of function date expects int\\|null, \\(int\\|false\\) given\\.$#"
 			count: 3
-			path: app/Http/Controllers/AdminController.php
-
-		-
-			message: "#^Parameter \\#2 \\$timestamp of function gmdate expects int\\|null, \\(float\\|int\\) given\\.$#"
-			count: 1
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -25985,46 +25881,6 @@ parameters:
 			message: "#^Property UppdateAppendTestCase\\:\\:\\$OriginalConfigSettings has no type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_updateappend.php
-
-		-
-			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
-			count: 2
-			path: app/cdash/tests/test_upgrade.php
-
-		-
-			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 1
-			path: app/cdash/tests/test_upgrade.php
-
-		-
-			message: "#^Method UpgradeTestCase\\:\\:getMaintenancePage\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_upgrade.php
-
-		-
-			message: "#^Method UpgradeTestCase\\:\\:testAssignBuildsToDefaultGroups\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_upgrade.php
-
-		-
-			message: "#^Method UpgradeTestCase\\:\\:testCheckAndDeleteBuildsWrongDate\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_upgrade.php
-
-		-
-			message: "#^Method UpgradeTestCase\\:\\:testComputeTestTiming\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_upgrade.php
-
-		-
-			message: "#^Method UpgradeTestCase\\:\\:testFixBuildGroups\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_upgrade.php
-
-		-
-			message: "#^Property UpgradeTestCase\\:\\:\\$PDO has no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_upgrade.php
 
 		-
 			message: "#^Binary operation \"\\.\" between 'Expected…' and mixed results in an error\\.$#"

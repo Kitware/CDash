@@ -251,9 +251,6 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['admin'])->group(function () {
         Route::get('/authtokens/manage', 'AuthTokenController@manage');
 
-        Route::get('/upgrade.php', 'AdminController@upgrade');
-        Route::post('/upgrade.php', 'AdminController@upgrade');
-
         Route::get('/removeBuilds.php', 'AdminController@removeBuilds');
         Route::post('/removeBuilds.php', 'AdminController@removeBuilds');
 
