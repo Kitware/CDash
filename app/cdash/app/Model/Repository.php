@@ -22,29 +22,8 @@ use ReflectionClass;
 
 class Repository
 {
-    public const CVS = 0;
-    public const SVN = 1;
-
-    public const VIEWER_CGIT = 'CGit';
-    public const VIEWER_CVSTRAC = 'CVSTrac';
-    public const VIEWER_FISHEYE = 'Fisheye';
     public const VIEWER_GITHUB = 'GitHub';
     public const VIEWER_GITLAB = 'GitLab';
-    public const VIEWER_GITORIOUS = 'Gitorious';
-    public const VIEWER_GITWEB = 'GitWeb';
-    public const VIEWER_GITWEB2 = 'GitWeb2';
-    public const VIEWER_HGWEB = 'Hgweb';
-    public const VIEWER_STASH = 'Atlassian Stash';
-    public const VIEWER_LOGGERHEAD = 'Loggerhead';
-    public const VIEWER_P4WEB = 'P4Web';
-    public const VIEWER_PHAB_GIT = 'Phabricator';
-    public const VIEWER_REDMINE = 'Redmine';
-    public const VIEWER_ALLURA = 'SourceForge Allura';
-    public const VIEWER_TRAC = 'Trac';
-    public const VIEWER_VIEWCVS = 'ViewCVS';
-    public const VIEWER_VIEWVC = 'ViewVC';
-    public const VIEWER_VIEWVC_1_1 = 'ViewVC1.1';
-    public const VIEWER_WEBSVN = 'WebSVN';
 
     /**
      * @return array
