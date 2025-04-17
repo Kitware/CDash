@@ -2,7 +2,8 @@
 
 namespace Tests\Browser\Pages;
 
-use Illuminate\Foundation\Testing\DatabaseTruncation;
+use App\Models\Project;
+use App\Models\Site;
 use Illuminate\Support\Str;
 use Laravel\Dusk\Browser;
 use Tests\BrowserTestCase;
@@ -13,12 +14,38 @@ class ProjectSitesPageTest extends BrowserTestCase
 {
     use CreatesProjects;
     use CreatesSites;
-    use DatabaseTruncation;
+
+    /**
+     * @var array<Project>
+     */
+    private array $projects = [];
+
+    /**
+     * @var array<Site>
+     */
+    private array $sites = [];
+
+    public function tearDown(): void
+    {
+        parent::tearDown();
+
+        foreach ($this->projects as $project) {
+            $project->delete();
+        }
+        $this->projects = [];
+
+        foreach ($this->sites as $site) {
+            $site->delete();
+        }
+        $this->sites = [];
+    }
 
     public function testSiteDisplaysLatestInformation(): void
     {
         $project = $this->makePublicProject();
+        $this->projects[] = $project;
         $site = $this->makeSite();
+        $this->sites[] = $site;
         $site->information()->createMany([
             [
                 'totalphysicalmemory' => 5678,
@@ -47,10 +74,12 @@ class ProjectSitesPageTest extends BrowserTestCase
     public function testSiteListPagination(): void
     {
         $project = $this->makePublicProject();
+        $this->projects[] = $project;
         $sites = [];
         for ($i = 0; $i < 120; $i++) {
             $sites[$i] = $this->makeSite();
         }
+        $this->sites = $sites;
 
         // No submissions to the project yet, so we shouldn't see any sites
         $this->browse(function (Browser $browser) use ($project) {
