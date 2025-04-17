@@ -15,12 +15,9 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-use App\Models\User;
 use CDash\Model\Label;
-use CDash\Model\LabelEmail;
 use CDash\Model\Project;
 use CDash\Model\SubProject;
-use CDash\Model\UserProject;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -31,7 +28,6 @@ class ProjectHandler extends AbstractXmlHandler
     private $Dependencies; // keep an array of dependencies in order to remove them
     private $SubProjects; // keep an array of subprojects in order to remove them
     private $CurrentDependencies; // The dependencies of the current SubProject.
-    private $Emails; // Email addresses associated with the current SubProject.
     private $ProjectNameMatches;
     protected static ?string $schema_file = '/app/Validators/Schemas/Project.xsd';
 
@@ -80,7 +76,6 @@ class ProjectHandler extends AbstractXmlHandler
             if (array_key_exists('GROUP', $attributes)) {
                 $this->SubProject->SetGroup($attributes['GROUP']);
             }
-            $this->Emails = [];
         } elseif ($name == 'DEPENDENCY') {
             // A DEPENDENCY is expected to be:
             //
@@ -93,8 +88,6 @@ class ProjectHandler extends AbstractXmlHandler
             // The subproject's Id is automatically loaded once its name & projectid
             // are set.
             $this->CurrentDependencies[] = $dependentProject->GetId();
-        } elseif ($name == 'EMAIL') {
-            $this->Emails[] = $attributes['ADDRESS'];
         }
     }
 
@@ -199,53 +192,6 @@ class ProjectHandler extends AbstractXmlHandler
                         'function' => 'ProjectHandler:endElement',
                         'projectid' => $this->GetProject()->Id,
                     ]);
-                }
-            }
-
-            foreach ($this->Emails as $email) {
-                // Check if the user is in the database.
-                $user = new User();
-
-                $posat = strpos($email, '@');
-                if ($posat !== false) {
-                    $user->firstname = substr($email, 0, $posat);
-                    $user->lastname = substr($email, $posat + 1);
-                } else {
-                    $user->firstname = $email;
-                    $user->lastname = $email;
-                }
-                $user->email = $email;
-                $user->password = password_hash($email, PASSWORD_DEFAULT);
-                $user->admin = false;
-                $existing_user = User::where('email', $email)->first();
-                if ($existing_user) {
-                    $userid = $existing_user->id;
-                } else {
-                    $user->save();
-                    $userid = $user->id;
-                }
-
-                $UserProject = new UserProject();
-                $UserProject->UserId = $userid;
-                $UserProject->ProjectId = $this->GetProject()->Id;
-                if (!$UserProject->FillFromUserId()) {
-                    // This user wasn't already subscribed to this project.
-                    $UserProject->EmailType = 3; // any build
-                    $UserProject->EmailCategory = 54; // everything except warnings
-                    $UserProject->Save();
-                }
-
-                // Insert the labels for this user
-                $LabelEmail = new LabelEmail();
-                $LabelEmail->UserId = $userid;
-                $LabelEmail->ProjectId = $this->GetProject()->Id;
-
-                $Label = new Label();
-                $Label->SetText($this->SubProject->GetName());
-                $labelid = $Label->GetIdFromText();
-                if (!empty($labelid)) {
-                    $LabelEmail->LabelId = $labelid;
-                    $LabelEmail->Insert();
                 }
             }
         }
