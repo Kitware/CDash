@@ -229,12 +229,52 @@ parameters:
 		-
 			message: "#^Dynamic call to static method Illuminate\\\\Contracts\\\\Auth\\\\Guard\\:\\:user\\(\\)\\.$#"
 			count: 1
+			path: app/GraphQL/Mutations/ChangeProjectRole.php
+
+		-
+			message: "#^Parameter \\#1 \\$args \\(array\\{userId\\: int, projectId\\: int, role\\: App\\\\Enums\\\\ProjectRole\\}\\) of method App\\\\GraphQL\\\\Mutations\\\\ChangeProjectRole\\:\\:mutate\\(\\) should be contravariant with parameter \\$args \\(array\\<string, mixed\\>\\) of method App\\\\GraphQL\\\\Mutations\\\\AbstractMutation\\:\\:mutate\\(\\)$#"
+			count: 1
+			path: app/GraphQL/Mutations/ChangeProjectRole.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Contracts\\\\Auth\\\\Guard\\:\\:user\\(\\)\\.$#"
+			count: 1
 			path: app/GraphQL/Mutations/ClaimSite.php
 
 		-
 			message: "#^Parameter \\#1 \\$args \\(array\\{siteId\\: int\\}\\) of method App\\\\GraphQL\\\\Mutations\\\\ClaimSite\\:\\:mutate\\(\\) should be contravariant with parameter \\$args \\(array\\<string, mixed\\>\\) of method App\\\\GraphQL\\\\Mutations\\\\AbstractMutation\\:\\:mutate\\(\\)$#"
 			count: 1
 			path: app/GraphQL/Mutations/ClaimSite.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Contracts\\\\Auth\\\\Guard\\:\\:user\\(\\)\\.$#"
+			count: 1
+			path: app/GraphQL/Mutations/InviteToProject.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\UserInvitation\\>\\:\\:exists\\(\\)\\.$#"
+			count: 1
+			path: app/GraphQL/Mutations/InviteToProject.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\User\\>\\:\\:exists\\(\\)\\.$#"
+			count: 1
+			path: app/GraphQL/Mutations/InviteToProject.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\User\\>\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/GraphQL/Mutations/InviteToProject.php
+
+		-
+			message: "#^Parameter \\#1 \\$args \\(array\\{email\\: string, projectId\\: int, role\\: App\\\\Enums\\\\ProjectRole\\}\\) of method App\\\\GraphQL\\\\Mutations\\\\InviteToProject\\:\\:mutate\\(\\) should be contravariant with parameter \\$args \\(array\\<string, mixed\\>\\) of method App\\\\GraphQL\\\\Mutations\\\\AbstractMutation\\:\\:mutate\\(\\)$#"
+			count: 1
+			path: app/GraphQL/Mutations/InviteToProject.php
+
+		-
+			message: "#^Parameter \\#1 \\$args \\(array\\{invitationId\\: int\\}\\) of method App\\\\GraphQL\\\\Mutations\\\\RevokeInvitation\\:\\:mutate\\(\\) should be contravariant with parameter \\$args \\(array\\<string, mixed\\>\\) of method App\\\\GraphQL\\\\Mutations\\\\AbstractMutation\\:\\:mutate\\(\\)$#"
+			count: 1
+			path: app/GraphQL/Mutations/RevokeInvitation.php
 
 		-
 			message: "#^Dynamic call to static method Illuminate\\\\Contracts\\\\Auth\\\\Guard\\:\\:user\\(\\)\\.$#"
@@ -1500,6 +1540,21 @@ parameters:
 			path: app/Http/Controllers/IndexController.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Contracts\\\\Auth\\\\Guard\\:\\:user\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Controllers/InvitationController.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\Project\\>\\:\\:exists\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Controllers/InvitationController.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\Project\\>\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Controllers/InvitationController.php
+
+		-
 			message: "#^Cannot cast mixed to int\\.$#"
 			count: 3
 			path: app/Http/Controllers/ManageBannerController.php
@@ -1593,163 +1648,6 @@ parameters:
 			message: "#^Only booleans are allowed in an if condition, mixed given\\.$#"
 			count: 1
 			path: app/Http/Controllers/ManageMeasurementsController.php
-
-		-
-			message: "#^Argument of an invalid type array\\|false supplied for foreach, only iterables are supported\\.$#"
-			count: 3
-			path: app/Http/Controllers/ManageProjectRolesController.php
-
-		-
-			message: "#^Binary operation \"\\.\" between '%%' and mixed results in an error\\.$#"
-			count: 3
-			path: app/Http/Controllers/ManageProjectRolesController.php
-
-		-
-			message: """
-				#^Call to deprecated function add_last_sql_error\\(\\)\\:
-				04/22/2023$#
-			"""
-			count: 1
-			path: app/Http/Controllers/ManageProjectRolesController.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_error\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 2
-			path: app/Http/Controllers/ManageProjectRolesController.php
-
-		-
-			message: """
-				#^Call to deprecated function pdo_real_escape_string\\(\\)\\:
-				04/01/2023$#
-			"""
-			count: 4
-			path: app/Http/Controllers/ManageProjectRolesController.php
-
-		-
-			message: """
-				#^Call to deprecated method executePrepared\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 3
-			path: app/Http/Controllers/ManageProjectRolesController.php
-
-		-
-			message: "#^Cannot access offset 'tmp_name' on mixed\\.$#"
-			count: 1
-			path: app/Http/Controllers/ManageProjectRolesController.php
-
-		-
-			message: "#^Cannot cast mixed to int\\.$#"
-			count: 4
-			path: app/Http/Controllers/ManageProjectRolesController.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\User\\>\\:\\:pluck\\(\\)\\.$#"
-			count: 1
-			path: app/Http/Controllers/ManageProjectRolesController.php
-
-		-
-			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
-			count: 4
-			path: app/Http/Controllers/ManageProjectRolesController.php
-
-		-
-			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 1
-			path: app/Http/Controllers/ManageProjectRolesController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\ManageProjectRolesController\\:\\:find_site_maintainers\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/Http/Controllers/ManageProjectRolesController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\ManageProjectRolesController\\:\\:register_user\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/ManageProjectRolesController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\ManageProjectRolesController\\:\\:register_user\\(\\) has parameter \\$email with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/ManageProjectRolesController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\ManageProjectRolesController\\:\\:register_user\\(\\) has parameter \\$firstName with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/ManageProjectRolesController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\ManageProjectRolesController\\:\\:register_user\\(\\) has parameter \\$lastName with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/ManageProjectRolesController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\ManageProjectRolesController\\:\\:register_user\\(\\) has parameter \\$projectid with no type specified\\.$#"
-			count: 1
-			path: app/Http/Controllers/ManageProjectRolesController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\ManageProjectRolesController\\:\\:viewPage\\(\\) never returns Illuminate\\\\Http\\\\RedirectResponse so it can be removed from the return type\\.$#"
-			count: 1
-			path: app/Http/Controllers/ManageProjectRolesController.php
-
-		-
-			message: "#^Only booleans are allowed in an if condition, App\\\\Models\\\\User\\|null given\\.$#"
-			count: 1
-			path: app/Http/Controllers/ManageProjectRolesController.php
-
-		-
-			message: "#^Only booleans are allowed in an if condition, mixed given\\.$#"
-			count: 5
-			path: app/Http/Controllers/ManageProjectRolesController.php
-
-		-
-			message: "#^Only numeric types are allowed in \\+, int\\<0, max\\>\\|false given on the left side\\.$#"
-			count: 1
-			path: app/Http/Controllers/ManageProjectRolesController.php
-
-		-
-			message: "#^Only numeric types are allowed in \\-, int\\<0, max\\>\\|false given on the left side\\.$#"
-			count: 1
-			path: app/Http/Controllers/ManageProjectRolesController.php
-
-		-
-			message: "#^Parameter \\#1 \\$filename of function file_get_contents expects string, mixed given\\.$#"
-			count: 1
-			path: app/Http/Controllers/ManageProjectRolesController.php
-
-		-
-			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, string\\|false given\\.$#"
-			count: 2
-			path: app/Http/Controllers/ManageProjectRolesController.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function strlen expects string, array\\|float\\|int\\|string\\|false\\|null given\\.$#"
-			count: 3
-			path: app/Http/Controllers/ManageProjectRolesController.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function strlen expects string, string\\|false given\\.$#"
-			count: 1
-			path: app/Http/Controllers/ManageProjectRolesController.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function substr expects string, string\\|false given\\.$#"
-			count: 1
-			path: app/Http/Controllers/ManageProjectRolesController.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function urlencode expects string, string\\|false given\\.$#"
-			count: 1
-			path: app/Http/Controllers/ManageProjectRolesController.php
-
-		-
-			message: "#^Parameter \\#1 \\$value of function intval expects array\\|bool\\|float\\|int\\|resource\\|string\\|null, mixed given\\.$#"
-			count: 1
-			path: app/Http/Controllers/ManageProjectRolesController.php
 
 		-
 			message: "#^Cannot access property \\$admin on App\\\\Models\\\\User\\|null\\.$#"
@@ -3166,11 +3064,6 @@ parameters:
 			path: app/Models/Project.php
 
 		-
-			message: "#^PHPDoc tag @method for method App\\\\Models\\\\Project\\:\\:forUser\\(\\) return type contains generic class Illuminate\\\\Database\\\\Eloquent\\\\Builder but does not specify its types\\: TModelClass$#"
-			count: 1
-			path: app/Models/Project.php
-
-		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 1
 			path: app/Models/Site.php
@@ -3251,13 +3144,23 @@ parameters:
 			path: app/Models/User.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\User\\>\\:\\:exists\\(\\)\\.$#"
+			message: "#^Parameter \\$get of static method Illuminate\\\\Database\\\\Eloquent\\\\Casts\\\\Attribute\\<mixed,mixed\\>\\:\\:make\\(\\) expects \\(callable\\(mixed, mixed\\)\\: string\\)\\|null, Closure\\(mixed, array\\)\\: string given\\.$#"
+			count: 1
+			path: app/Models/UserInvitation.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\Project\\>\\:\\:exists\\(\\)\\.$#"
 			count: 2
 			path: app/Policies/ProjectPolicy.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\User\\>\\:\\:exists\\(\\)\\.$#"
+			count: 3
+			path: app/Policies/ProjectPolicy.php
+
+		-
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\User\\>\\:\\:where\\(\\)\\.$#"
-			count: 2
+			count: 3
 			path: app/Policies/ProjectPolicy.php
 
 		-
@@ -22520,31 +22423,6 @@ parameters:
 			path: app/cdash/tests/test_managemeasurements.php
 
 		-
-			message: "#^Cannot access property \\$id on App\\\\Models\\\\User\\|null\\.$#"
-			count: 2
-			path: app/cdash/tests/test_manageprojectroles.php
-
-		-
-			message: "#^Method ManageProjectRolesTestCase\\:\\:connectAndGetProjectId\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_manageprojectroles.php
-
-		-
-			message: "#^Method ManageProjectRolesTestCase\\:\\:testRegisterUser\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_manageprojectroles.php
-
-		-
-			message: "#^Offset 1 might not exist on array\\{0\\?\\: string, 1\\?\\: numeric\\-string\\}\\.$#"
-			count: 1
-			path: app/cdash/tests/test_manageprojectroles.php
-
-		-
-			message: "#^Property ManageProjectRolesTestCase\\:\\:\\$projectid has no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_manageprojectroles.php
-
-		-
 			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
 			count: 1
 			path: app/cdash/tests/test_manageusers.php
@@ -29683,6 +29561,11 @@ parameters:
 			path: server.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\User\\>\\:\\:pluck\\(\\)\\.$#"
+			count: 2
+			path: tests/Browser/Pages/ProjectMembersPageTest.php
+
+		-
 			message: "#^Cannot access property \\$description on App\\\\Models\\\\SiteInformation\\|null\\.$#"
 			count: 1
 			path: tests/Browser/Pages/SitesIdPageTest.php
@@ -29762,6 +29645,11 @@ parameters:
 			message: "#^Method Tests\\\\Feature\\\\GitHubWebhook\\:\\:testWebhookWithWrongSignature\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: tests/Feature/GitHubWebhook.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\User\\>\\:\\:pluck\\(\\)\\.$#"
+			count: 64
+			path: tests/Feature/GraphQL/Mutations/ChangeProjectRoleTest.php
 
 		-
 			message: "#^Dynamic call to static method Illuminate\\\\Testing\\\\TestResponse\\:\\:assertGraphQLErrorMessage\\(\\)\\.$#"
@@ -29902,6 +29790,16 @@ parameters:
 			message: "#^Parameter \\#1 \\$user of method Illuminate\\\\Foundation\\\\Testing\\\\TestCase\\:\\:actingAs\\(\\) expects Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable, App\\\\Models\\\\User\\|null given\\.$#"
 			count: 3
 			path: tests/Feature/PasswordRotation.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\User\\>\\:\\:pluck\\(\\)\\.$#"
+			count: 2
+			path: tests/Feature/ProjectInvitationAcceptanceTest.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\UserInvitation\\>\\:\\:pluck\\(\\)\\.$#"
+			count: 14
+			path: tests/Feature/ProjectInvitationAcceptanceTest.php
 
 		-
 			message: "#^Class Tests\\\\Feature\\\\PurgeUnusedProjectsCommand has an uninitialized property \\$project1\\. Give it default value or assign it in the constructor\\.$#"

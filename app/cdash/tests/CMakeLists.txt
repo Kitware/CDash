@@ -166,6 +166,9 @@ add_laravel_test(/Feature/SubmissionValidation)
 set_tests_properties(/Feature/SubmissionValidation PROPERTIES RUN_SERIAL TRUE)
 set_tests_properties(/Feature/SubmissionValidation PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
+add_laravel_test(/Feature/ProjectInvitationAcceptanceTest)
+set_tests_properties(/Feature/ProjectInvitationAcceptanceTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
 add_laravel_test(/Feature/GraphQL/FilterTest)
 set_tests_properties(/Feature/GraphQL/FilterTest PROPERTIES RUN_SERIAL TRUE)
 set_tests_properties(/Feature/GraphQL/FilterTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
@@ -196,6 +199,9 @@ set_tests_properties(/Feature/GraphQL/BuildMeasurementTypeTest PROPERTIES DEPEND
 add_laravel_test(/Feature/GraphQL/CoverageTypeTest)
 set_tests_properties(/Feature/GraphQL/CoverageTypeTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
+add_laravel_test(/Feature/GraphQL/UserInvitationTypeTest)
+set_tests_properties(/Feature/GraphQL/UserInvitationTypeTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
 add_laravel_test(/Feature/RouteAccessTest)
 set_tests_properties(/Feature/RouteAccessTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
@@ -216,6 +222,9 @@ set_tests_properties(/Feature/LdapIntegration PROPERTIES DEPENDS /CDash/XmlHandl
 
 add_browser_test(/Browser/Pages/ProjectSitesPageTest)
 set_tests_properties(/Browser/Pages/ProjectSitesPageTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_browser_test(/Browser/Pages/ProjectMembersPageTest)
+set_tests_properties(/Browser/Pages/ProjectMembersPageTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_laravel_test(/Feature/PurgeUnusedProjectsCommand)
 set_tests_properties(/Feature/PurgeUnusedProjectsCommand PROPERTIES RUN_SERIAL TRUE)
@@ -284,6 +293,15 @@ set_tests_properties(/Feature/Mail/AuthTokenExpiredTest PROPERTIES DEPENDS /CDas
 add_laravel_test(/Feature/GraphQL/Mutations/UpdateSiteDescriptionTest)
 set_tests_properties(/Feature/GraphQL/Mutations/UpdateSiteDescriptionTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
+add_laravel_test(/Feature/GraphQL/Mutations/InviteToProjectTest)
+set_tests_properties(/Feature/GraphQL/Mutations/InviteToProjectTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_laravel_test(/Feature/GraphQL/Mutations/RevokeInvitationTest)
+set_tests_properties(/Feature/GraphQL/Mutations/RevokeInvitationTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_laravel_test(/Feature/GraphQL/Mutations/ChangeProjectRoleTest)
+set_tests_properties(/Feature/GraphQL/Mutations/ChangeProjectRoleTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
 add_laravel_test(/Feature/Traits/UpdatesSiteInformationTest)
 set_tests_properties(/Feature/Traits/UpdatesSiteInformationTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
@@ -309,6 +327,7 @@ set_property(TEST install_2 PROPERTY DEPENDS
   /CDash/Messaging/Topic/UpdateErrorTopic
   /CDash/Service/RepositoryService
   /Feature/SubmissionValidation
+  /Feature/ProjectInvitationAcceptanceTest
   /Feature/GraphQL/FilterTest
   /Feature/GraphQL/ProjectTypeTest
   /Feature/GraphQL/SiteTypeTest
@@ -318,12 +337,14 @@ set_property(TEST install_2 PROPERTY DEPENDS
   /Feature/GraphQL/NoteTypeTest
   /Feature/GraphQL/BuildMeasurementTypeTest
   /Feature/GraphQL/CoverageTypeTest
+  /Feature/GraphQL/UserInvitationTypeTest
   /Feature/RouteAccessTest
   /Feature/Monitor
   /Feature/PasswordRotation
   /Browser/Pages/SitesIdPageTest
   /Feature/LdapIntegration
   /Browser/Pages/ProjectSitesPageTest
+  /Browser/Pages/ProjectMembersPageTest
   /Feature/PurgeUnusedProjectsCommand
   /Feature/Jobs/PruneJobsTest
   /Feature/Jobs/PruneAuthTokensTest
@@ -344,6 +365,9 @@ set_property(TEST install_2 PROPERTY DEPENDS
   /Feature/Mail/AuthTokenExpiringTest
   /Feature/Mail/AuthTokenExpiredTest
   /Feature/GraphQL/Mutations/UpdateSiteDescriptionTest
+  /Feature/GraphQL/Mutations/InviteToProjectTest
+  /Feature/GraphQL/Mutations/RevokeInvitationTest
+  /Feature/GraphQL/Mutations/ChangeProjectRoleTest
   /Feature/Traits/UpdatesSiteInformationTest
 )
 
@@ -396,11 +420,8 @@ set_tests_properties(image PROPERTIES DEPENDS committerinfo)
 add_php_test(displayimage)
 set_tests_properties(displayimage PROPERTIES DEPENDS image)
 
-add_php_test(manageprojectroles)
-set_tests_properties(manageprojectroles PROPERTIES DEPENDS displayimage)
-
 add_php_test(manageusers)
-set_tests_properties(manageusers PROPERTIES DEPENDS manageprojectroles)
+set_tests_properties(manageusers PROPERTIES DEPENDS displayimage)
 
 add_php_test(projectindb)
 set_tests_properties(projectindb PROPERTIES DEPENDS manageusers)

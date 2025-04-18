@@ -52,6 +52,15 @@ type Mutation {
 
   "Edit the site description."
   updateSiteDescription(input: UpdateSiteDescriptionInput! @spread): UpdateSiteDescriptionMutationPayload! @field(resolver: "UpdateSiteDescription")
+
+  "Add users to a project."
+  inviteToProject(input: InviteToProjectInput! @spread): InviteToProjectMutationPayload! @field(resolver: "InviteToProject")
+
+  "Revoke previous project invite."
+  revokeInvitation(input: RevokeInvitationInput! @spread): RevokeInvitationMutationPayload! @field(resolver: "RevokeInvitation")
+
+  "Change an existing user's role in a project."
+  changeProjectRole(input: ChangeProjectRoleInput! @spread): ChangeProjectRoleMutationPayload! @field(resolver: "ChangeProjectRole")
 }
 
 
@@ -137,8 +146,14 @@ type Project {
     filters: _ @filter(inputType: "SiteFilterInput")
   ): [Site!]! @belongsToMany(type: CONNECTION) @orderBy(column: "id")
 
+  "Users with the lowest user role for this project."
+  basicUsers: [User!]! @belongsToMany(type: CONNECTION) @orderBy(column: "id")
+
   "Users with the administrator role for this project."
   administrators: [User!]! @belongsToMany(type: CONNECTION) @orderBy(column: "id")
+
+  "Invitations to this project which have not been accepted yet."
+  invitations: [UserInvitation!]! @hasMany(type: CONNECTION) @orderBy(column: "id")
 }
 
 enum ProjectVisibility {
@@ -176,6 +191,66 @@ input ProjectFilterInput {
   id: ID
   name: String
   visibility: ProjectVisibility @rename(attribute: "public")
+}
+
+
+type UserInvitation {
+  id: ID!
+
+  email: String!
+
+  invitedBy: User! @belongsTo
+
+  project: Project! @belongsTo
+
+  role: ProjectRole!
+
+  invitationTimestamp: DateTimeTz! @rename(attribute: "invitation_timestamp")
+}
+
+
+input InviteToProjectInput {
+  email: String!
+  projectId: ID!
+  role: ProjectRole!
+}
+
+
+type InviteToProjectMutationPayload implements MutationPayloadInterface {
+  "Optional error message."
+  message: String
+
+  invitedUser: UserInvitation
+}
+
+
+input RevokeInvitationInput {
+  invitationId: ID!
+}
+
+
+type RevokeInvitationMutationPayload implements MutationPayloadInterface {
+  "Optional error message."
+  message: String
+}
+
+
+input ChangeProjectRoleInput {
+  userId: ID!
+  projectId: ID!
+  role: ProjectRole!
+}
+
+
+type ChangeProjectRoleMutationPayload implements MutationPayloadInterface {
+  "Optional error message."
+  message: String
+
+  "The user whose role was changed."
+  user: User
+
+  "The project associated with the user whose role was changed."
+  project: Project
 }
 
 

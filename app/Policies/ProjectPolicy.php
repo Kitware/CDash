@@ -4,23 +4,15 @@ namespace App\Policies;
 
 use App\Models\Project;
 use App\Models\User;
-use BadMethodCallException;
 
 class ProjectPolicy
 {
-    /**
-     * Determine whether the user can view any models.
-     */
-    public function viewAny(User $user): bool
-    {
-        throw new BadMethodCallException('Policy method viewAny not implemented for Project');
-    }
-
-    /**
-     * Determine whether the user can view the model.
-     */
     public function view(?User $user, Project $project): bool
     {
+        if (!$project->exists()) {
+            return false;
+        }
+
         // If the project is public we return true.
         if ($project->public === Project::ACCESS_PUBLIC) {
             return true;
@@ -49,9 +41,6 @@ class ProjectPolicy
         return false;
     }
 
-    /**
-     * Determine whether the user can create models.
-     */
     public function create(User $user): bool
     {
         // System-wide admins can always create projects
@@ -67,11 +56,12 @@ class ProjectPolicy
         return false;
     }
 
-    /**
-     * Determine whether the user can update the model.
-     */
     public function update(User $user, Project $project): bool
     {
+        if (!$project->exists()) {
+            return false;
+        }
+
         // System-wide admins can edit any project
         if ($user->admin) {
             return true;
@@ -85,27 +75,34 @@ class ProjectPolicy
         return false;
     }
 
-    /**
-     * Determine whether the user can delete the model.
-     */
-    public function delete(User $user, Project $project): bool
+    public function changeUserRole(User $currentUser, Project $project, User $userToChange): bool
     {
-        throw new BadMethodCallException('Policy method delete not implemented for Project');
+        // Users cannot change their own role.
+        if ($currentUser->id === $userToChange->id) {
+            return false;
+        }
+
+        // Can't change the role for users who aren't in the project...
+        if (!$project->users()->where('id', $userToChange->id)->exists()) {
+            return false;
+        }
+
+        return $this->update($currentUser, $project);
     }
 
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, Project $project): bool
+    public function inviteUsers(User $currentUser, Project $project): bool
     {
-        throw new BadMethodCallException('Policy method restore not implemented for Project');
+        // The project_admin_registration_form_enabled setting controls whether project admins are able to invite
+        // users to their project or not.
+        if (!((bool) config('cdash.project_admin_registration_form_enabled')) && !$currentUser->admin) {
+            return false;
+        }
+
+        return $this->update($currentUser, $project);
     }
 
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, Project $project): bool
+    public function revokeInvitations(User $currentUser, Project $project): bool
     {
-        throw new BadMethodCallException('Policy method forceDelete not implemented for Project');
+        return $this->inviteUsers($currentUser, $project);
     }
 }

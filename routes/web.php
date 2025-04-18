@@ -11,6 +11,7 @@
 |
 */
 
+use App\Http\Controllers\InvitationController;
 use App\Models\Project;
 use App\Models\Test;
 use Illuminate\Http\Request;
@@ -211,6 +212,8 @@ Route::get('/ajax/dailyupdatescurl.php', 'ProjectController@ajaxDailyUpdatesCurl
 
 Route::get('/manageBuildGroup.php', 'BuildController@manageBuildGroup');
 
+Route::get('/projects/{project_id}/members', 'ProjectMembersController@members')->whereNumber('project_id');
+
 // The user must be logged in to access routes in this section.
 // Requests from users who are not logged in will be redirected to /login.
 Route::middleware(['auth'])->group(function () {
@@ -225,10 +228,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/subscribeProject.php', 'SubscribeProjectController@subscribeProject');
     Route::post('/subscribeProject.php', 'SubscribeProjectController@subscribeProject');
 
-    // TODO: (williamjallen) send the POST route to a different function
-    Route::get('/manageProjectRoles.php', 'ManageProjectRolesController@viewPage');
-    Route::post('/manageProjectRoles.php', 'ManageProjectRolesController@viewPage');
-    Route::any('/ajax/finduserproject.php', 'ManageProjectRolesController@ajaxFindUserProject');
+    Route::get('/manageProjectRoles.php', function (Request $request) {
+        if (!$request->has('projectid')) {
+            abort(404);
+        }
+        $projectid = $request->integer('projectidid');
+        return redirect("/projects/$projectid/members", 301);
+    });
 
     // TODO: (williamjallen) send the POST route to a different function
     Route::get('/manageBanner.php', 'ManageBannerController@manageBanner');
@@ -247,6 +253,8 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::get('/ajax/buildnote.php', 'BuildController@ajaxBuildNote');
+
+    Route::get('/invitations/{invitationId}', InvitationController::class)->whereNumber('invitationId');
 
     Route::middleware(['admin'])->group(function () {
         Route::get('/authtokens/manage', 'AuthTokenController@manage');

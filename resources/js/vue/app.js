@@ -32,6 +32,7 @@ import SubProjectDependencies from './components/SubProjectDependencies.vue';
 import BuildTestsPage from './components/BuildTestsPage.vue';
 import ProjectSitesPage from './components/ProjectSitesPage.vue';
 import SitesIdPage from './components/SitesIdPage.vue';
+import ProjectMembersPage from './components/ProjectMembersPage.vue';
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import * as FA from '@fortawesome/fontawesome-svg-core';
@@ -62,6 +63,7 @@ const cdash_components = {
   BuildTestsPage,
   ProjectSitesPage,
   SitesIdPage,
+  ProjectMembersPage,
 };
 
 /**
@@ -99,6 +101,9 @@ const apolloClient = new ApolloClient({
       Project: {
         fields: {
           sites: relayStylePagination(),
+          basicUsers: relayStylePagination(),
+          administrators: relayStylePagination(),
+          invitations: relayStylePagination(),
         },
       },
       Build: {
