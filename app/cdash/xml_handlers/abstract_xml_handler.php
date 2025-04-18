@@ -93,7 +93,7 @@ abstract class AbstractXmlHandler extends AbstractSubmissionHandler
             $validation_errors = libxml_get_errors();
             foreach ($validation_errors as $error) {
                 if ($error->level === LIBXML_ERR_ERROR || $error->level === LIBXML_ERR_FATAL) {
-                    $errors[] = "ERROR: {$error->message} in {$error->file}, line: {$error->line}, column: {$error->column}";
+                    $errors[] = "WARNING: {$error->message} in {$error->file}, line: {$error->line}, column: {$error->column}";
                 }
             }
             libxml_clear_errors();

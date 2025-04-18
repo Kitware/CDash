@@ -150,6 +150,8 @@ function parse_put_submission(string $filename, int $projectid, ?string $expecte
 
 /**
  * Main function to parse the incoming xml from ctest
+ *
+ * @throws BadSubmissionException
  */
 function ctest_parse($filehandle, string $filename, $projectid, $expected_md5 = '', ?int $buildid = null): AbstractSubmissionHandler|false
 {
@@ -163,19 +165,8 @@ function ctest_parse($filehandle, string $filename, $projectid, $expected_md5 = 
     $Project->Id = $projectid;
     $xml_info = [];
     // Figure out what type of XML file this is.
-    try {
-        $xml_info = SubmissionUtils::get_xml_type($filehandle, $filename);
-    } catch (BadSubmissionException $e) {
-        $xml_info['file_handle'] = $filehandle;
-        $xml_info['xml_handler'] = null;
-        $xml_info['xml_type'] = '';
-        $message = "Could not determine submission file type for: '{$filename}'";
-        Log::warning($message);
-        if ((bool) config('cdash.validate_xml_submissions') === true) {
-            abort(400, $message);
-        }
-    }
-    $filehandle = $xml_info['file_handle'];
+    $xml_info = SubmissionUtils::get_xml_type($filehandle, $filename);
+
     $handler_ref = $xml_info['xml_handler'];
     $file = $xml_info['xml_type'];
     $handler = isset($handler_ref) ? new $handler_ref($Project) : null;
