@@ -22,7 +22,6 @@ require_once 'include/filterdataFunctions.php';
 
 use CDash\Controller\Api\Index as IndexController;
 use CDash\Database;
-use App\Models\Banner;
 use App\Models\Project as EloquentProject;
 use CDash\Model\Build;
 use CDash\Model\BuildGroup;
@@ -52,13 +51,11 @@ $response['title'] = $Project->Name;
 $response['showcalendar'] = 1;
 
 $banners = [];
-$global_banner = Banner::find(0);
-if ($global_banner !== null && strlen($global_banner->text) > 0) {
-    $banners[] = $global_banner->text;
+if (config('cdash.global_banner') !== null && strlen(config('cdash.global_banner')) > 0) {
+    $banners[] = config('cdash.global_banner');
 }
-$project_banner = Banner::find($Project->Id);
-if ($project_banner !== null && strlen($project_banner->text) > 0) {
-    $banners[] = $project_banner->text;
+if ($Project->Banner !== null && strlen($Project->Banner) > 0) {
+    $banners[] = $Project->Banner;
 }
 $response['banners'] = $banners;
 

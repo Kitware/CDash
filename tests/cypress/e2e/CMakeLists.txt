@@ -21,9 +21,6 @@ endfunction()
 add_cypress_e2e_test(user-profile)
 set_tests_properties(cypress/e2e/user-profile PROPERTIES DEPENDS install_1)
 
-add_cypress_e2e_test(banner)
-set_tests_properties(cypress/e2e/banner PROPERTIES DEPENDS displayimage)
-
 add_cypress_e2e_test(all-projects)
 set_tests_properties(cypress/e2e/all-projects PROPERTIES DEPENDS projectindb)
 
