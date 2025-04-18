@@ -92,6 +92,7 @@ class Project
     public $WarningsFilter;
     public $ErrorsFilter;
     public ?string $LdapFilter = null;
+    public ?string $Banner = null;
     /** @var Database */
     private $PDO;
 
@@ -286,6 +287,7 @@ class Project
             'emailmaxchars' => (int) $this->EmailMaxChars,
             'imageid' => $this->ImageId ?? 0,
             'ldapfilter' => $this->LdapFilter,
+            'banner' => $this->Banner,
         ]);
         $project->save();
         $this->Id = $project->id;
@@ -372,6 +374,7 @@ class Project
             $this->TestTimeMaxStatus = $project->testtimemaxstatus;
             $this->EmailMaxItems = $project->emailmaxitems;
             $this->EmailMaxChars = $project->emailmaxchars;
+            $this->Banner = $project->banner;
             $this->LdapFilter = $project->ldapfilter;
         }
 

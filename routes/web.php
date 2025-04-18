@@ -236,10 +236,6 @@ Route::middleware(['auth'])->group(function () {
         return redirect("/projects/$projectid/members", 301);
     });
 
-    // TODO: (williamjallen) send the POST route to a different function
-    Route::get('/manageBanner.php', 'ManageBannerController@manageBanner');
-    Route::post('/manageBanner.php', 'ManageBannerController@manageBanner');
-
     Route::match(['get', 'post'], '/editSite.php', function (Request $request) {
         if ($request->has('siteid')) {
             $siteid = $request->integer('siteid');
