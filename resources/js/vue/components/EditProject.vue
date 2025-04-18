@@ -1996,6 +1996,33 @@
                     <td />
                     <td>
                       <div align="right">
+                        <strong>Banner:</strong>
+                      </div>
+                    </td>
+                    <td>
+                      <input
+                        id="banner"
+                        v-model="cdash.project.Banner"
+                        name="banner"
+                        size="50"
+                        type="text"
+                        @change="cdash.changesmade = true"
+                        @focus="showHelp('banner_help')"
+                      >
+                      <span
+                        id="banner_help"
+                        class="help_content"
+                      >
+                        <strong>Banner</strong>
+                        <br>
+                        Displayed at the top of this project's dashboard.
+                      </span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td />
+                    <td>
+                      <div align="right">
                         <strong>Warnings Filters:</strong>
                       </div>
                     </td>

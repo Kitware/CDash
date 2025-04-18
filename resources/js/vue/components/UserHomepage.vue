@@ -644,14 +644,6 @@
             <td>
               <a
                 class="cdash-link"
-                :href="$baseURL + '/manageBanner.php'"
-              >Manage banner message</a>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <a
-                class="cdash-link"
                 :href="$baseURL + '/manageUsers.php'"
               >Manage users</a>
             </td>
