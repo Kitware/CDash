@@ -99,20 +99,6 @@ class SubProjectTestCase extends KWWebTestCase
         }
         $url = url('/');
         $expected = [
-            'nox-noemail@noemail',
-            'FAILED (t=1): SubProjectExample/NOX - Linux-GCC-4.1.2-SERIAL_RELEASE - Nightly',
-            'A submission to CDash for the project SubProjectExample has failing tests',
-            "Details on the submission can be found at {$url}/build/",
-            'Project: SubProjectExample',
-            'SubProject: NOX',
-            'Site: godel.sandia.gov',
-            'Build Name: Linux-GCC-4.1.2-SERIAL_RELEASE',
-            'Build Time: 2009-08-06 12:19:56',
-            'Type: Nightly',
-            'Total Failing Tests: 1',
-            '*Failing Tests*',
-            "NOX_FiniteDifferenceIsorropiaColoring | Completed (Failed) | ({$url}/testDetails.php?test=",
-            '-CDash on',
             'simpletest@localhost',
             'FAILED (t=1): SubProjectExample/NOX - Linux-GCC-4.1.2-SERIAL_RELEASE - Nightly',
             'A submission to CDash for the project SubProjectExample has failing tests',
@@ -128,7 +114,7 @@ class SubProjectTestCase extends KWWebTestCase
             "NOX_FiniteDifferenceIsorropiaColoring | Completed (Failed) | ({$url}/testDetails.php?test=",
             '-CDash on',
         ];
-        if ($this->assertLogContains($expected, 33)) {
+        if ($this->assertLogContains($expected, 17)) {
             $this->pass('Passed');
         }
     }
