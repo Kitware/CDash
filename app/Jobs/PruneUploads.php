@@ -46,7 +46,7 @@ class PruneUploads implements ShouldQueue
                 WHERE project.id = ?
             ', [$project->id])[0]->s ?? -1);
 
-            if ($total_size / (1024 * 1024 * 1024) > $project->uploadquota) {
+            if ($total_size > $project->uploadquota) {
                 // We're over the limit, so delete references to files from oldest to newest until we're
                 // under the limit.  We're probably not over the limit by very much, so we load in relatively
                 // small chunks to minimize the amount of data being loaded.
@@ -58,7 +58,7 @@ class PruneUploads implements ShouldQueue
                         $uploaded_files_to_check = $uploaded_files_to_check->merge($build->uploadedFiles()->pluck('id'));
                         $build->uploadedFiles()->detach();
 
-                        if ($total_size / (1024 * 1024 * 1024) <= $project->uploadquota) {
+                        if ($total_size <= $project->uploadquota) {
                             // Stop the build chunking.
                             return false;
                         }
