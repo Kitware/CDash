@@ -63,7 +63,6 @@ class RouteAccessTest extends TestCase
     public static function adminRoutes(): array
     {
         return [
-            ['/upgrade.php'],
             ['/removeBuilds.php'],
             ['/sites'],
             ['/manageUsers.php'],

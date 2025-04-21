@@ -396,11 +396,8 @@ set_tests_properties(actualtrilinossubmission PROPERTIES
 add_php_test(summaryemail)
 set_tests_properties(summaryemail PROPERTIES DEPENDS actualtrilinossubmission)
 
-add_php_test(upgrade)
-set_tests_properties(upgrade PROPERTIES DEPENDS summaryemail)
-
 add_php_test(aggregatecoverage)
-set_tests_properties(aggregatecoverage PROPERTIES DEPENDS upgrade)
+set_tests_properties(aggregatecoverage PROPERTIES DEPENDS summaryemail)
 
 add_php_test(buildconfigure)
 set_tests_properties(buildconfigure PROPERTIES DEPENDS aggregatecoverage)
