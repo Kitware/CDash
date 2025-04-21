@@ -1120,7 +1120,6 @@ class SiteTypeTest extends TestCase
                                     edges {
                                         node {
                                             id
-                                            email
                                         }
                                     }
                                 }
@@ -1174,7 +1173,6 @@ class SiteTypeTest extends TestCase
                                     edges {
                                         node {
                                             id
-                                            email
                                         }
                                     }
                                 }
@@ -1199,7 +1197,6 @@ class SiteTypeTest extends TestCase
                                             [
                                                 'node' => [
                                                     'id' => (string) $this->users['normal']->id,
-                                                    'email' => $this->users['normal']->email,
                                                 ],
                                             ],
                                         ],
@@ -1231,7 +1228,6 @@ class SiteTypeTest extends TestCase
                         edges {
                             node {
                                 id
-                                email
                             }
                         }
                     }
@@ -1248,7 +1244,6 @@ class SiteTypeTest extends TestCase
                             [
                                 'node' => [
                                     'id' => (string) $this->users['normal']->id,
-                                    'email' => $this->users['normal']->email,
                                 ],
                             ],
                         ],

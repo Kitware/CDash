@@ -8,6 +8,19 @@ scalar NonNegativeSeconds @scalar(class: "App\\GraphQL\\Scalars\\NonNegativeSeco
 
 "Indicates what fields are available at the top level of a query operation."
 type Query {
+  "Find a single user by ID."
+  me: User @auth
+
+  "Find a single user by ID."
+  user(
+    id: ID @eq
+  ): User @find
+
+  "Get multiple users."
+  users(
+    filters: _ @filter(inputType: "UserFilterInput")
+  ): [User!]! @paginate(type: CONNECTION) @orderBy(column: "id")
+
   "Find a single project."
   project(
     "Search by primary key."
@@ -82,7 +95,7 @@ type User {
   lastname: String!
 
   "Unique email address."
-  email: String!
+  email: String @canRoot(ability: "viewEmail")
 
   "Institution."
   institution: String!
@@ -95,7 +108,6 @@ input UserFilterInput {
   id: ID
   firstname: String
   lastname: String
-  email: String
   institution: String
   admin: Boolean
 }
