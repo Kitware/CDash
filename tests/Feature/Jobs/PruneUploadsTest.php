@@ -56,7 +56,7 @@ class PruneUploadsTest extends TestCase
 
     public function testUploadedFilesBelowLimit(): void
     {
-        $this->project->uploadquota = 2;
+        $this->project->uploadquota = 2147483648;
         $this->project->save();
 
         $hash = sha1_file(__FILE__);
@@ -94,7 +94,7 @@ class PruneUploadsTest extends TestCase
 
     public function testUploadedFilesAboveLimit(): void
     {
-        $this->project->uploadquota = 1;
+        $this->project->uploadquota = 1073741824;
         $this->project->save();
 
         $hash = sha1_file(__FILE__);
