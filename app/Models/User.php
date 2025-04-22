@@ -13,12 +13,6 @@ use LdapRecord\Laravel\Auth\AuthenticatesWithLdap;
 use LdapRecord\Laravel\Auth\LdapAuthenticatable;
 
 /**
- * All of these methods are accessed through reflection.  Only the ones currently necessary are
- * listed to encourage future developers to move User logic to this class.
- *
- * @method GetEmail()
- * @method int|false GetIdFromName($name)
- *
  * @property int $id
  * @property bool $admin
  * @property string $firstname
@@ -36,8 +30,6 @@ class User extends Authenticatable implements MustVerifyEmail, LdapAuthenticatab
 {
     use Notifiable;
     use AuthenticatesWithLdap;
-
-    protected $user;
 
     protected $table = 'users';
 
@@ -99,21 +91,5 @@ class User extends Authenticatable implements MustVerifyEmail, LdapAuthenticatab
     public function projects(): BelongsToMany
     {
         return $this->belongsToMany(Project::class, 'user2project', 'userid', 'projectid');
-    }
-
-    /**
-     * Passthrough to call legacy User model method.
-     **/
-    public function __call($method, $parameters)
-    {
-        $class = \CDash\Model\User::class;
-        $class_methods = get_class_methods($class);
-        if (in_array($method, $class_methods)) {
-            $user = new $class();
-            $user->Id = $this->id;
-            return $user->$method(...$parameters);
-        }
-
-        return parent::__call($method, $parameters);
     }
 }

@@ -20,6 +20,9 @@ namespace CDash\Model;
 use CDash\Database;
 use PDO;
 
+/**
+ * @deprecated 04/22/2025  Used only in the legacy notification system.  Use Eloquent for new work.
+ */
 class User
 {
     public $Id;
