@@ -379,10 +379,6 @@ class RemoveBuildsTestCase extends KWWebTestCase
         // Insert some unused records to make sure they get properly pruned by db:clean
         // without impacting the data created above.
         $crc32 = crc32('');
-        DB::table('banner')->insert([
-            'projectid' => 999,
-            'text' => 'created by test_removebuilds',
-        ]);
         $buildfailuredetails_id = DB::table('buildfailuredetails')->insertGetId([
             'type' => 0,
             'stdoutput' => '',
@@ -440,7 +436,6 @@ class RemoveBuildsTestCase extends KWWebTestCase
         // Verify that db:clean works as expected.
         Artisan::call('db:clean');
         $extra_msg = 'after db:clean';
-        $this->verify('banner', 'projectid', '=', 999, 0, $extra_msg);
         $this->verify('buildfailuredetails', 'id', '=', $buildfailuredetails_id, 0, $extra_msg);
         $this->verify('configure', 'id', '=', $configure_id, 0, $extra_msg);
         $this->verify('coveragefile', 'id', '=', $coveragefile_id, 0, $extra_msg);

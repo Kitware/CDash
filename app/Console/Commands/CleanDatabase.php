@@ -27,11 +27,6 @@ class CleanDatabase extends Command
         // Reconfigure laravel to log to stderr for the rest of this command.
         config(['logging.default' => 'stderr']);
 
-        Log::info('Deleting unused rows from `banner`');
-        $num_deleted = DB::delete('DELETE FROM banner WHERE projectid != 0 AND
-                NOT EXISTS (SELECT 1 FROM project WHERE project.id = banner.projectid)');
-        Log::info("{$num_deleted} rows deleted from `banner`");
-
         DatabaseCleanupUtils::deleteUnusedRows('dailyupdate', 'projectid', 'project');
 
         DatabaseCleanupUtils::deleteUnusedRows('buildfailuredetails', 'id', 'buildfailure', 'detailsid');

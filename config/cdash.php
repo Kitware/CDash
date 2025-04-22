@@ -79,4 +79,5 @@ return [
     'require_full_email_when_adding_user' => env('REQUIRE_FULL_EMAIL_WHEN_ADDING_USER', false),
     // Whether or not project administrators can invite users
     'project_admin_registration_form_enabled' => env('PROJECT_ADMIN_REGISTRATION_FORM_ENABLED', true),
+    'global_banner' => env('GLOBAL_BANNER'),
 ];

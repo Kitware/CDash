@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Banner;
 use App\Models\User;
 use App\Utils\PageTimer;
 use CDash\Model\SubProject;
@@ -139,13 +138,11 @@ final class SubProjectController extends AbstractProjectController
         $response['showcalendar'] = 1;
 
         $banners = [];
-        $global_banner = Banner::find(0);
-        if ($global_banner !== null && strlen($global_banner->text) > 0) {
-            $banners[] = $global_banner->text;
+        if (config('cdash.global_banner') !== null && strlen(config('cdash.global_banner')) > 0) {
+            $banners[] = config('cdash.global_banner');
         }
-        $project_banner = Banner::find($this->project->Id);
-        if ($project_banner !== null && strlen($project_banner->text) > 0) {
-            $banners[] = $project_banner->text;
+        if ($this->project->Banner !== null && strlen($this->project->Banner) > 0) {
+            $banners[] = $this->project->Banner;
         }
         $response['banners'] = $banners;
 

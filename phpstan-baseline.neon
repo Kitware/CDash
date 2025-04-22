@@ -1451,16 +1451,6 @@ parameters:
 			path: app/Http/Controllers/InvitationController.php
 
 		-
-			message: "#^Cannot cast mixed to int\\.$#"
-			count: 3
-			path: app/Http/Controllers/ManageBannerController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\ManageBannerController\\:\\:manageBanner\\(\\) never returns Illuminate\\\\Http\\\\RedirectResponse so it can be removed from the return type\\.$#"
-			count: 1
-			path: app/Http/Controllers/ManageBannerController.php
-
-		-
 			message: "#^Call to an undefined method App\\\\Models\\\\Project\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\Project\\>\\:\\:measurements\\(\\)\\.$#"
 			count: 2
 			path: app/Http/Controllers/ManageMeasurementsController.php
@@ -2064,11 +2054,6 @@ parameters:
 			path: app/Http/Controllers/SiteController.php
 
 		-
-			message: "#^Access to an undefined property App\\\\Models\\\\Banner\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\Banner\\>\\:\\:\\$text\\.$#"
-			count: 1
-			path: app/Http/Controllers/SubProjectController.php
-
-		-
 			message: """
 				#^Call to deprecated function pdo_real_escape_string\\(\\)\\:
 				04/01/2023$#
@@ -2139,6 +2124,11 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$string of function htmlspecialchars expects string, mixed given\\.$#"
 			count: 2
+			path: app/Http/Controllers/SubProjectController.php
+
+		-
+			message: "#^Parameter \\#1 \\$string of function strlen expects string, mixed given\\.$#"
+			count: 1
 			path: app/Http/Controllers/SubProjectController.php
 
 		-
@@ -13351,11 +13341,6 @@ parameters:
 			path: app/cdash/public/api/v1/computeClassifier.php
 
 		-
-			message: "#^Access to an undefined property App\\\\Models\\\\Banner\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\Banner\\>\\:\\:\\$text\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/index.php
-
-		-
 			message: "#^Call to an undefined method App\\\\Models\\\\Project\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\Project\\>\\:\\:measurements\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/public/api/v1/index.php
@@ -13476,6 +13461,11 @@ parameters:
 		-
 			message: "#^Only numeric types are allowed in \\-, int\\|false given on the right side\\.$#"
 			count: 6
+			path: app/cdash/public/api/v1/index.php
+
+		-
+			message: "#^Parameter \\#1 \\$string of function strlen expects string, mixed given\\.$#"
+			count: 1
 			path: app/cdash/public/api/v1/index.php
 
 		-

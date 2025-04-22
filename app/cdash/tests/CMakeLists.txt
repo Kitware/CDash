@@ -226,6 +226,9 @@ set_tests_properties(/Browser/Pages/ProjectSitesPageTest PROPERTIES DEPENDS /CDa
 add_browser_test(/Browser/Pages/ProjectMembersPageTest)
 set_tests_properties(/Browser/Pages/ProjectMembersPageTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
+add_browser_test(/Browser/Pages/ProjectPageTest)
+set_tests_properties(/Browser/Pages/ProjectPageTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
 add_laravel_test(/Feature/PurgeUnusedProjectsCommand)
 set_tests_properties(/Feature/PurgeUnusedProjectsCommand PROPERTIES RUN_SERIAL TRUE)
 set_tests_properties(/Feature/PurgeUnusedProjectsCommand PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
@@ -345,6 +348,7 @@ set_property(TEST install_2 PROPERTY DEPENDS
   /Feature/LdapIntegration
   /Browser/Pages/ProjectSitesPageTest
   /Browser/Pages/ProjectMembersPageTest
+  /Browser/Pages/ProjectPageTest
   /Feature/PurgeUnusedProjectsCommand
   /Feature/Jobs/PruneJobsTest
   /Feature/Jobs/PruneAuthTokensTest

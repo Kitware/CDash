@@ -47,6 +47,7 @@ use Illuminate\Support\Facades\Auth;
  * @property int $authenticatesubmissions
  * @property int $viewsubprojectslink
  * @property ?string $ldapfilter
+ * @property ?string $banner
  *
  * @method Builder<Project> forUser(?User $user = null)
  *
@@ -94,6 +95,7 @@ class Project extends Model
         'authenticatesubmissions',
         'viewsubprojectslink',
         'ldapfilter',
+        'banner',
     ];
 
     protected $casts = [

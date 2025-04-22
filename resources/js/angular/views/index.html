@@ -2,7 +2,9 @@
         <div name="banner"
              class="h3 text-center bg-info"
              ng-repeat="banner in ::cdash.banners"
-             ng-if="cdash.banners.length > 0">
+             ng-if="cdash.banners.length > 0"
+             data-test="banner"
+        >
           {{::banner}}
         </div>
 
