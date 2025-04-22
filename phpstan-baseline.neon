@@ -3010,26 +3010,6 @@ parameters:
 			path: app/Models/TestOutput.php
 
 		-
-			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
-			count: 1
-			path: app/Models/User.php
-
-		-
-			message: "#^Method App\\\\Models\\\\User\\:\\:__call\\(\\) has parameter \\$parameters with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/Models/User.php
-
-		-
-			message: "#^Property App\\\\Models\\\\User\\:\\:\\$user has no type specified\\.$#"
-			count: 1
-			path: app/Models/User.php
-
-		-
-			message: "#^Variable method call on CDash\\\\Model\\\\User\\.$#"
-			count: 1
-			path: app/Models/User.php
-
-		-
 			message: "#^Parameter \\$get of static method Illuminate\\\\Database\\\\Eloquent\\\\Casts\\\\Attribute\\<mixed,mixed\\>\\:\\:make\\(\\) expects \\(callable\\(mixed, mixed\\)\\: string\\)\\|null, Closure\\(mixed, array\\)\\: string given\\.$#"
 			count: 1
 			path: app/Models/UserInvitation.php
@@ -9362,6 +9342,14 @@ parameters:
 			path: app/cdash/app/Model/SubProjectGroup.php
 
 		-
+			message: """
+				#^Instantiation of deprecated class CDash\\\\Model\\\\User\\:
+				04/22/2025  Used only in the legacy notification system\\.  Use Eloquent for new work\\.$#
+			"""
+			count: 1
+			path: app/cdash/app/Model/Subscriber.php
+
+		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Subscriber.php
@@ -9408,6 +9396,14 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$build of method CDash\\\\Messaging\\\\Topic\\\\TopicInterface\\:\\:subscribesToBuild\\(\\) expects CDash\\\\Model\\\\Build, mixed given\\.$#"
+			count: 1
+			path: app/cdash/app/Model/Subscriber.php
+
+		-
+			message: """
+				#^Parameter \\$user of method CDash\\\\Model\\\\Subscriber\\:\\:__construct\\(\\) has typehint with deprecated class CDash\\\\Model\\\\User\\:
+				04/22/2025  Used only in the legacy notification system\\.  Use Eloquent for new work\\.$#
+			"""
 			count: 1
 			path: app/cdash/app/Model/Subscriber.php
 
