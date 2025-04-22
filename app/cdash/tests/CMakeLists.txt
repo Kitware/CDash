@@ -393,6 +393,7 @@ set_property(TEST install_2 PROPERTY DEPENDS
   /Feature/GraphQL/Mutations/RevokeInvitationTest
   /Feature/GraphQL/Mutations/ChangeProjectRoleTest
   /Feature/Traits/UpdatesSiteInformationTest
+  cypress/e2e/user-profile
 )
 
 
