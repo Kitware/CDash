@@ -17,7 +17,7 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_DATABASE}
     volumes:
-      - postgresqldata:/var/lib/postgresql
+      - postgresqldata:/var/lib/postgresql/data
     healthcheck:
       test: "pg_isready -U postgres"
       interval: 1s
