@@ -173,6 +173,12 @@ add_laravel_test(/Feature/GraphQL/FilterTest)
 set_tests_properties(/Feature/GraphQL/FilterTest PROPERTIES RUN_SERIAL TRUE)
 set_tests_properties(/Feature/GraphQL/FilterTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
+add_laravel_test(/Feature/GraphQL/QueryTypeTest)
+set_tests_properties(/Feature/GraphQL/QueryTypeTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_laravel_test(/Feature/GraphQL/UserTypeTest)
+set_tests_properties(/Feature/GraphQL/UserTypeTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
 add_laravel_test(/Feature/GraphQL/ProjectTypeTest)
 set_tests_properties(/Feature/GraphQL/ProjectTypeTest PROPERTIES RUN_SERIAL TRUE)
 set_tests_properties(/Feature/GraphQL/ProjectTypeTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
@@ -341,6 +347,8 @@ set_property(TEST install_2 PROPERTY DEPENDS
   /Feature/SubmissionValidation
   /Feature/ProjectInvitationAcceptanceTest
   /Feature/GraphQL/FilterTest
+  /Feature/GraphQL/QueryTypeTest
+  /Feature/GraphQL/UserTypeTest
   /Feature/GraphQL/ProjectTypeTest
   /Feature/GraphQL/SiteTypeTest
   /Feature/GraphQL/BuildTypeTest
