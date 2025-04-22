@@ -2,8 +2,12 @@
 
 namespace Tests\Feature\GraphQL;
 
+use App\Enums\BuildCommandType;
 use App\Models\Build;
+use App\Models\BuildCommand;
 use App\Models\Project;
+use App\Models\Target;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
@@ -668,5 +672,267 @@ class BuildTypeTest extends TestCase
 
         $label1->delete();
         $label2->delete();
+    }
+
+    public function testTargetRelationship(): void
+    {
+        /** @var Build $build */
+        $build = $this->project->builds()->create([
+            'name' => 'build1',
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        /** @var Target $target */
+        $target = $build->targets()->create([
+            'name' => Str::uuid()->toString(),
+            'type' => 'EXECUTABLE',
+        ]);
+
+        $this->graphQL('
+            query build($id: ID) {
+                build(id: $id) {
+                    targets {
+                        edges {
+                            node {
+                                id
+                                name
+                                type
+                            }
+                        }
+                    }
+                }
+            }
+        ', [
+            'id' => $build->id,
+        ])->assertJson([
+            'data' => [
+                'build' => [
+                    'targets' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'id' => (string) $target->id,
+                                    'name' => $target->name,
+                                    'type' => 'EXECUTABLE',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+    }
+
+    public function testBuildCommandRelationship(): void
+    {
+        /** @var Build $build */
+        $build = $this->project->builds()->create([
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        /** @var BuildCommand $command */
+        $command = $build->commands()->create([
+            'type' => BuildCommandType::CUSTOM,
+            'starttime' => Carbon::now(),
+            'duration' => 0,
+            'command' => '',
+            'result' => '',
+            'workingdirectory' => Str::uuid()->toString(),
+        ]);
+
+        $this->graphQL('
+            query build($id: ID) {
+                build(id: $id) {
+                    commands {
+                        edges {
+                            node {
+                                id
+                                type
+                            }
+                        }
+                    }
+                }
+            }
+        ', [
+            'id' => $build->id,
+        ])->assertJson([
+            'data' => [
+                'build' => [
+                    'commands' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'id' => (string) $command->id,
+                                    'type' => 'CUSTOM',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+    }
+
+    public function testChildBuildRelationshipNoChildren(): void
+    {
+        /** @var Build $build */
+        $build = $this->project->builds()->create([
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        $this->graphQL('
+            query build($id: ID) {
+                build(id: $id) {
+                    id
+                    children {
+                        edges {
+                            node {
+                                id
+                            }
+                        }
+                    }
+                }
+            }
+        ', [
+            'id' => $build->id,
+        ])->assertJson([
+            'data' => [
+                'build' => [
+                    'id' => (string) $build->id,
+                    'children' => [
+                        'edges' => [],
+                    ],
+                ],
+            ],
+        ]);
+    }
+
+    public function testChildBuildRelationshipGetAllChildren(): void
+    {
+        /** @var Build $build */
+        $build = $this->project->builds()->create([
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        /** @var Build $child1 */
+        $child1 = $this->project->builds()->create([
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+            'parentid' => $build->id,
+        ]);
+
+        /** @var Build $child2 */
+        $child2 = $this->project->builds()->create([
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+            'parentid' => $build->id,
+        ]);
+
+        $this->graphQL('
+            query build($id: ID) {
+                build(id: $id) {
+                    id
+                    children {
+                        edges {
+                            node {
+                                id
+                            }
+                        }
+                    }
+                }
+            }
+        ', [
+            'id' => $build->id,
+        ])->assertJson([
+            'data' => [
+                'build' => [
+                    'id' => (string) $build->id,
+                    'children' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'id' => (string) $child1->id,
+                                ],
+                            ],
+                            [
+                                'node' => [
+                                    'id' => (string) $child2->id,
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+    }
+
+    public function testChildBuildRelationshipFilterChildren(): void
+    {
+        /** @var Build $build */
+        $build = $this->project->builds()->create([
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        $this->project->builds()->create([
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+            'parentid' => $build->id,
+        ]);
+
+        /** @var Build $child2 */
+        $child2 = $this->project->builds()->create([
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+            'parentid' => $build->id,
+        ]);
+
+        $this->project->builds()->create([
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+            'parentid' => $build->id,
+        ]);
+
+        $this->graphQL('
+            query build($id: ID, $childid: ID) {
+                build(id: $id) {
+                    id
+                    children(
+                        filters: {
+                            eq: {
+                                id: $childid
+                            }
+                        }
+                    ) {
+                        edges {
+                            node {
+                                id
+                            }
+                        }
+                    }
+                }
+            }
+        ', [
+            'id' => $build->id,
+            'childid' => $child2->id,
+        ])->assertJson([
+            'data' => [
+                'build' => [
+                    'id' => (string) $build->id,
+                    'children' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'id' => (string) $child2->id,
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
     }
 }
