@@ -235,8 +235,6 @@ USER 0
 RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then \
         echo "alias cdash_copy_source='rsync -r -l --exclude-from /cdash_src/.rsyncignore /cdash_src/ /cdash'" >> /etc/bash.bashrc; \
         echo "alias cdash_install='cdash_copy_source && bash /cdash/install.sh'" >> /etc/bash.bashrc; \
-        # install helm
-        curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash; \
     else \
         echo "alias cdash_install='bash /cdash/install.sh'" >> /etc/bash.bashrc; \
     fi

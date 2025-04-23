@@ -49,11 +49,6 @@ add_test(
 set_tests_properties(eslint PROPERTIES
   FAIL_REGULAR_EXPRESSION " \+[0-9]\+:[0-9]\+ \+warning"
 )
-add_test(
-  NAME helmlint
-  COMMAND helm lint
-  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/helm/cdash
-)
 
 add_subdirectory(cypress/e2e)
 add_subdirectory(cypress/component)
