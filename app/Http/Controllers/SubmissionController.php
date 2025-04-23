@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\SubmissionValidationType;
 use App\Exceptions\BadSubmissionException;
 use App\Jobs\ProcessSubmission;
 use App\Models\Site;
@@ -73,7 +74,7 @@ final class SubmissionController extends AbstractProjectController
         @set_time_limit(0);
 
         $statusarray = [];
-
+        $responseMessage = '';
         $projectname = $_GET['project'] ?? '';
 
         if (strlen($projectname) === 0) {
@@ -146,34 +147,29 @@ final class SubmissionController extends AbstractProjectController
         // Figure out what type of XML file this is.
         $stored_filename = 'inbox/' . $filename;
         $xml_info = [];
-        try {
-            $xml_info = SubmissionUtils::get_xml_type(Storage::readStream($stored_filename), $stored_filename);
-        } catch (BadSubmissionException $e) {
-            $xml_info['xml_handler'] = '';
-            $message = "Could not determine submission file type for: '{$stored_filename}'";
-            Log::warning($message);
-            if ((bool) config('cdash.validate_xml_submissions') === true) {
-                $this->failProcessing($filename, 400, $message);
-            }
-        }
+        $xml_info = SubmissionUtils::get_xml_type(Storage::readStream($stored_filename), $stored_filename);
+
         if ($xml_info['xml_handler'] !== '') {
             // If validation is enabled and if this file has a corresponding schema, validate it
             $validation_errors = [];
             try {
                 $validation_errors = $xml_info['xml_handler']::validate($stored_filename);
             } catch (FileNotFoundException|UnableToReadFile $e) {
-                Log::warning($e->getMessage());
-                if ((bool) config('cdash.validate_xml_submissions') === true) {
-                    $this->failProcessing($filename, 400, "XML validation failed for $filename:" . PHP_EOL . $e->getMessage());
-                }
+                $message = $e->getMessage();
+                report($message);
+                $this->failProcessing($filename, 500, "Unable to read file for validation $filename:" . PHP_EOL . $message);
             }
             if (count($validation_errors) > 0) {
                 $error_string = implode(PHP_EOL, $validation_errors);
-
+                $message = "XML validation failed: Found issues with file $filename:";
                 // We always log validation failures, but we only send messages back to the client if configured to do so
-                Log::warning("Submission validation failed for file '$filename':" . PHP_EOL);
-                if ((bool) config('cdash.validate_xml_submissions') === true) {
-                    $this->failProcessing($filename, 400, "XML validation failed: rejected file $filename:" . PHP_EOL . $error_string);
+                Log::info($message);
+                $fullMessage = $message . PHP_EOL . $error_string;
+                if (config('cdash.validate_submissions') === SubmissionValidationType::REJECT) {
+                    $this->failProcessing($filename, 400, $fullMessage);
+                }
+                if (config('cdash.validate_submissions') === SubmissionValidationType::WARN) {
+                    $responseMessage .= $fullMessage;
                 }
             }
         }
@@ -219,8 +215,12 @@ final class SubmissionController extends AbstractProjectController
             Artisan::call('submission:queue');
         }
 
-        $statusarray['status'] = 'OK';
         $statusarray['message'] = '';
+        if ($responseMessage !== '') {
+            $statusarray['message'] = $responseMessage;
+        }
+
+        $statusarray['status'] = 'OK';
         if ($buildid !== null) {
             $statusarray['buildId'] = $buildid;
         }

@@ -1,5 +1,8 @@
 <?php
 
+use App\Enums\SubmissionValidationType;
+use Illuminate\Support\Str;
+
 $cdash_directory_name = env('CDASH_DIRECTORY', 'cdash');
 $cdash = realpath(app_path($cdash_directory_name));
 
@@ -64,7 +67,12 @@ return [
     'show_last_submission' => env('SHOW_LAST_SUBMISSION', true),
     'slow_page_time' => env('SLOW_PAGE_TIME', 10),
     'token_duration' => env('TOKEN_DURATION', 15811200),
-    'validate_xml_submissions' => env('VALIDATE_XML_SUBMISSIONS', false),
+    'validate_submissions' => match (Str::upper((string) env('VALIDATE_SUBMISSIONS'))) {
+        'SILENT' => SubmissionValidationType::SILENT,
+        'WARN' => SubmissionValidationType::WARN,
+        'REJECT' => SubmissionValidationType::REJECT,
+        default => SubmissionValidationType::SILENT,
+    },
     // Specify whether users are allowed to create "full access" authentication tokens
     'allow_full_access_tokens' => env('ALLOW_FULL_ACCESS_TOKENS', true),
     // Specify whether users are allowed to create "submit only" tokens which are valid for all projects
