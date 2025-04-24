@@ -44,6 +44,7 @@ return [
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app'),
+            'throw' => true,
         ],
 
         'public' => [
@@ -69,6 +70,7 @@ return [
             // See https://github.com/laravel/framework/discussions/49232
             // for more details.
             // 'stream_reads' => true,
+            'throw' => true,
         ],
 
         'cdash' => [

@@ -2201,7 +2201,7 @@ parameters:
 
 		-
 			message: "#^Part \\$projectname \\(mixed\\) of encapsed string cannot be cast to string\\.$#"
-			count: 4
+			count: 3
 			path: app/Http/Controllers/SubmissionController.php
 
 		-
