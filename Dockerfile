@@ -101,8 +101,8 @@ RUN mkdir -p /var/www/.npm && \
 # Copy Apache site-available config files into the image.
 COPY ./docker/cdash-site.conf /etc/apache2/sites-available/cdash-site.conf
 
-# Change apache config to listen on port 8080 instead of port 80
-RUN sed -i 's/Listen 80/Listen 8080/g' /etc/apache2/ports.conf
+# Reconfigure Apache to only listen on port 8080.
+RUN echo 'Listen 8080' > /etc/apache2/ports.conf
 
 # Remove default site, add cdash-site, enable mod_rewrite, enable php
 RUN a2dissite 000-default && \
