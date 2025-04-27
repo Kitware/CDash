@@ -66,10 +66,8 @@ Cypress.Commands.add('login', (user = 'admin', password = null) => {
       cy.get('[name=password]').type('simpletest');
       cy.get('[type=submit]').click();
 
-      cy.visit('/manageUsers.php');
-      cy.get('[name=search]').type('admin');
-      cy.wait(500); // Wait for the content to load dynamically
-      cy.get('#newuser').contains('admin@example.com').parent().parent().find('[name=makeadmin]').click();
+      cy.visit('/users');
+      cy.get('[data-test=users-page]').contains('admin@example.com').parent().find('select').select('ADMINISTRATOR');
 
       cy.visit('/logout');
       cy.clearCookies();

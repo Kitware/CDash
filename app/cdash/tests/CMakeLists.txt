@@ -472,11 +472,8 @@ set_tests_properties(image PROPERTIES DEPENDS committerinfo)
 add_php_test(displayimage)
 set_tests_properties(displayimage PROPERTIES DEPENDS image)
 
-add_php_test(manageusers)
-set_tests_properties(manageusers PROPERTIES DEPENDS displayimage)
-
 add_php_test(projectindb)
-set_tests_properties(projectindb PROPERTIES DEPENDS manageusers)
+set_tests_properties(projectindb PROPERTIES DEPENDS displayimage)
 
 add_php_test(pubproject)
 set_tests_properties(pubproject PROPERTIES DEPENDS projectindb)

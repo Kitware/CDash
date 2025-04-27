@@ -1546,81 +1546,6 @@ parameters:
 			path: app/Http/Controllers/ManageMeasurementsController.php
 
 		-
-			message: "#^Cannot access property \\$admin on App\\\\Models\\\\User\\|null\\.$#"
-			count: 2
-			path: app/Http/Controllers/ManageUsersController.php
-
-		-
-			message: "#^Cannot access property \\$full_name on App\\\\Models\\\\User\\|null\\.$#"
-			count: 3
-			path: app/Http/Controllers/ManageUsersController.php
-
-		-
-			message: "#^Cannot call method delete\\(\\) on App\\\\Models\\\\User\\|null\\.$#"
-			count: 1
-			path: app/Http/Controllers/ManageUsersController.php
-
-		-
-			message: "#^Cannot call method save\\(\\) on App\\\\Models\\\\User\\|null\\.$#"
-			count: 2
-			path: app/Http/Controllers/ManageUsersController.php
-
-		-
-			message: "#^Cannot cast mixed to int\\.$#"
-			count: 1
-			path: app/Http/Controllers/ManageUsersController.php
-
-		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\ManageUsersController\\:\\:showPage\\(\\) never returns Illuminate\\\\Http\\\\RedirectResponse so it can be removed from the return type\\.$#"
-			count: 1
-			path: app/Http/Controllers/ManageUsersController.php
-
-		-
-			message: "#^Parameter \\#1 \\$password of function password_hash expects string, mixed given\\.$#"
-			count: 1
-			path: app/Http/Controllers/ManageUsersController.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function trim expects string, mixed given\\.$#"
-			count: 1
-			path: app/Http/Controllers/ManageUsersController.php
-
-		-
-			message: "#^Part \\$email \\(mixed\\) of encapsed string cannot be cast to string\\.$#"
-			count: 1
-			path: app/Http/Controllers/ManageUsersController.php
-
-		-
-			message: "#^Part \\$passwd \\(mixed\\) of encapsed string cannot be cast to string\\.$#"
-			count: 1
-			path: app/Http/Controllers/ManageUsersController.php
-
-		-
-			message: "#^Property App\\\\Models\\\\User\\:\\:\\$email \\(string\\) does not accept mixed\\.$#"
-			count: 1
-			path: app/Http/Controllers/ManageUsersController.php
-
-		-
-			message: "#^Property App\\\\Models\\\\User\\:\\:\\$firstname \\(string\\) does not accept mixed\\.$#"
-			count: 1
-			path: app/Http/Controllers/ManageUsersController.php
-
-		-
-			message: "#^Property App\\\\Models\\\\User\\:\\:\\$institution \\(string\\) does not accept mixed\\.$#"
-			count: 1
-			path: app/Http/Controllers/ManageUsersController.php
-
-		-
-			message: "#^Property App\\\\Models\\\\User\\:\\:\\$lastname \\(string\\) does not accept mixed\\.$#"
-			count: 1
-			path: app/Http/Controllers/ManageUsersController.php
-
-		-
-			message: "#^Variable \\$post_user might not be defined\\.$#"
-			count: 8
-			path: app/Http/Controllers/ManageUsersController.php
-
-		-
 			message: "#^Binary operation \"\\-\" between int\\<1, max\\> and mixed results in an error\\.$#"
 			count: 1
 			path: app/Http/Controllers/MonitorController.php
@@ -22185,21 +22110,6 @@ parameters:
 			message: "#^Variable \\$selected_test_name might not be defined\\.$#"
 			count: 1
 			path: app/cdash/tests/test_managemeasurements.php
-
-		-
-			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
-			count: 1
-			path: app/cdash/tests/test_manageusers.php
-
-		-
-			message: "#^Call to method WebTestCase\\:\\:setFieldByName\\(\\) with incorrect case\\: SetFieldByName$#"
-			count: 6
-			path: app/cdash/tests/test_manageusers.php
-
-		-
-			message: "#^Method ManageUsersTestCase\\:\\:testManageUsersTest\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_manageusers.php
 
 		-
 			message: """

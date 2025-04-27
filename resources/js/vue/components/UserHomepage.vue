@@ -644,7 +644,7 @@
             <td>
               <a
                 class="cdash-link"
-                :href="$baseURL + '/manageUsers.php'"
+                :href="$baseURL + '/users'"
               >Manage users</a>
             </td>
           </tr>

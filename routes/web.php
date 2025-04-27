@@ -273,10 +273,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/sites', 'SiteController@siteStatistics');
         Route::permanentRedirect('/siteStatistics.php', url('/sites'));
 
-        Route::get('/manageUsers.php', 'ManageUsersController@showPage');
-        Route::post('/manageUsers.php', 'ManageUsersController@showPage');
-        Route::any('/ajax/findusers.php', 'ManageUsersController@ajaxFindUsers');
-
         Route::get('/monitor', 'MonitorController@monitor');
         Route::get('/monitor.php', fn () => redirect('/monitor', 301));
     });
