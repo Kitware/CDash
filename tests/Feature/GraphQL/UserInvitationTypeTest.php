@@ -4,8 +4,8 @@ namespace Tests\Feature\GraphQL;
 
 use App\Enums\ProjectRole;
 use App\Models\Project;
+use App\Models\ProjectInvitation;
 use App\Models\User;
-use App\Models\UserInvitation;
 use Illuminate\Support\Carbon;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
@@ -40,7 +40,7 @@ class UserInvitationTypeTest extends TestCase
 
     public function testAdminCanViewInvitations(): void
     {
-        $invitation = UserInvitation::create([
+        $invitation = ProjectInvitation::create([
             'email' => fake()->email(),
             'invited_by_id' => $this->adminUser->id,
             'project_id' => $this->project->id,
@@ -99,7 +99,7 @@ class UserInvitationTypeTest extends TestCase
 
     public function testNormalUserCannotViewInvitations(): void
     {
-        UserInvitation::create([
+        ProjectInvitation::create([
             'email' => fake()->email(),
             'invited_by_id' => $this->adminUser->id,
             'project_id' => $this->project->id,
@@ -134,7 +134,7 @@ class UserInvitationTypeTest extends TestCase
 
     public function testAnonymousUserCannotViewInvitations(): void
     {
-        UserInvitation::create([
+        ProjectInvitation::create([
             'email' => fake()->email(),
             'invited_by_id' => $this->adminUser->id,
             'project_id' => $this->project->id,

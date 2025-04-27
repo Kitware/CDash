@@ -52,6 +52,8 @@ type Query {
     "Search by primary key."
     id: ID @eq
   ): Site @find
+
+  invitations: [GlobalInvitation!]! @paginate(type: CONNECTION) @orderBy(column: "id")
 }
 
 
@@ -71,11 +73,23 @@ type Mutation {
   "Add users to a project."
   inviteToProject(input: InviteToProjectInput! @spread): InviteToProjectMutationPayload! @field(resolver: "InviteToProject")
 
-  "Revoke previous project invite."
-  revokeInvitation(input: RevokeInvitationInput! @spread): RevokeInvitationMutationPayload! @field(resolver: "RevokeInvitation")
+  "Revoke an outstanding project invitation."
+  revokeProjectInvitation(input: RevokeProjectInvitationInput! @spread): RevokeProjectInvitationMutationPayload! @field(resolver: "RevokeProjectInvitation")
 
   "Change an existing user's role in a project."
   changeProjectRole(input: ChangeProjectRoleInput! @spread): ChangeProjectRoleMutationPayload! @field(resolver: "ChangeProjectRole")
+
+  "Invite a user to this CDash instance by email."
+  createGlobalInvitation(input: CreateGlobalInvitationInput! @spread): CreateGlobalInvitationMutationPayload! @field(resolver: "CreateGlobalInvitation")
+
+  "Revoke an outstanding invitation."
+  revokeGlobalInvitation(input: RevokeGlobalInvitationInput! @spread): RevokeGlobalInvitationMutationPayload! @field(resolver: "RevokeGlobalInvitation")
+
+  "Change an existing user's site-wide role."
+  changeGlobalRole(input: ChangeGlobalRoleInput! @spread): ChangeGlobalRoleMutationPayload! @field(resolver: "ChangeGlobalRole")
+
+  "Delete a user."
+  removeUser(input: RemoveUserInput! @spread): RemoveUserMutationPayload! @field(resolver: "RemoveUser")
 }
 
 
@@ -97,7 +111,7 @@ type User {
   lastname: String!
 
   "Unique email address."
-  email: String @canRoot(ability: "viewEmail")
+  email: String @canRoot(ability: "viewEmail", action: RETURN_VALUE, returnValue: null)
 
   "Institution."
   institution: String!
@@ -167,7 +181,7 @@ type Project {
   administrators: [User!]! @belongsToMany(type: CONNECTION) @orderBy(column: "id")
 
   "Invitations to this project which have not been accepted yet."
-  invitations: [UserInvitation!]! @hasMany(type: CONNECTION) @orderBy(column: "id")
+  invitations: [ProjectInvitation!]! @hasMany(type: CONNECTION) @orderBy(column: "id")
 }
 
 enum ProjectVisibility {
@@ -208,7 +222,7 @@ input ProjectFilterInput {
 }
 
 
-type UserInvitation {
+type ProjectInvitation {
   id: ID!
 
   email: String!
@@ -234,16 +248,16 @@ type InviteToProjectMutationPayload implements MutationPayloadInterface {
   "Optional error message."
   message: String
 
-  invitedUser: UserInvitation
+  invitedUser: ProjectInvitation
 }
 
 
-input RevokeInvitationInput {
+input RevokeProjectInvitationInput {
   invitationId: ID!
 }
 
 
-type RevokeInvitationMutationPayload implements MutationPayloadInterface {
+type RevokeProjectInvitationMutationPayload implements MutationPayloadInterface {
   "Optional error message."
   message: String
 }
@@ -265,6 +279,70 @@ type ChangeProjectRoleMutationPayload implements MutationPayloadInterface {
 
   "The project associated with the user whose role was changed."
   project: Project
+}
+
+
+type GlobalInvitation {
+  id: ID!
+
+  email: String!
+
+  invitedBy: User! @belongsTo
+
+  role: GlobalRole!
+
+  invitationTimestamp: DateTimeTz! @rename(attribute: "invitation_timestamp")
+}
+
+
+input CreateGlobalInvitationInput {
+  email: String!
+  role: GlobalRole!
+}
+
+
+type CreateGlobalInvitationMutationPayload implements MutationPayloadInterface {
+  "Optional error message."
+  message: String
+
+  invitedUser: GlobalInvitation
+}
+
+
+input RevokeGlobalInvitationInput {
+  invitationId: ID!
+}
+
+
+type RevokeGlobalInvitationMutationPayload implements MutationPayloadInterface {
+  "Optional error message."
+  message: String
+}
+
+
+input ChangeGlobalRoleInput {
+  userId: ID!
+  role: GlobalRole!
+}
+
+
+type ChangeGlobalRoleMutationPayload implements MutationPayloadInterface {
+  "Optional error message."
+  message: String
+
+  "The user whose role was changed."
+  user: User
+}
+
+
+input RemoveUserInput {
+  userId: ID!
+}
+
+
+type RemoveUserMutationPayload implements MutationPayloadInterface {
+  "Optional error message."
+  message: String
 }
 
 

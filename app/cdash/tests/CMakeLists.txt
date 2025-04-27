@@ -316,14 +316,36 @@ set_tests_properties(/Feature/GraphQL/Mutations/UpdateSiteDescriptionTest PROPER
 add_laravel_test(/Feature/GraphQL/Mutations/InviteToProjectTest)
 set_tests_properties(/Feature/GraphQL/Mutations/InviteToProjectTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
-add_laravel_test(/Feature/GraphQL/Mutations/RevokeInvitationTest)
-set_tests_properties(/Feature/GraphQL/Mutations/RevokeInvitationTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_laravel_test(/Feature/GraphQL/Mutations/RevokeProjectInvitationTest)
+set_tests_properties(/Feature/GraphQL/Mutations/RevokeProjectInvitationTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_laravel_test(/Feature/GraphQL/Mutations/ChangeProjectRoleTest)
 set_tests_properties(/Feature/GraphQL/Mutations/ChangeProjectRoleTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_laravel_test(/Feature/Traits/UpdatesSiteInformationTest)
 set_tests_properties(/Feature/Traits/UpdatesSiteInformationTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_laravel_test(/Feature/GraphQL/Mutations/ChangeGlobalRoleTest)
+set_tests_properties(/Feature/GraphQL/Mutations/ChangeGlobalRoleTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+# Needs RUN_SERIAL to verify that no unexpected invitations are created
+add_laravel_test(/Feature/GraphQL/Mutations/CreateGlobalInvitationTest)
+set_tests_properties(/Feature/GraphQL/Mutations/CreateGlobalInvitationTest PROPERTIES RUN_SERIAL TRUE)
+set_tests_properties(/Feature/GraphQL/Mutations/CreateGlobalInvitationTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_laravel_test(/Feature/GraphQL/Mutations/RevokeGlobalInvitationTest)
+set_tests_properties(/Feature/GraphQL/Mutations/RevokeGlobalInvitationTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+# Needs RUN_SERIAL to verify that only the expected users are created
+add_laravel_test(/Feature/GlobalInvitationAcceptanceTest)
+set_tests_properties(/Feature/GlobalInvitationAcceptanceTest PROPERTIES RUN_SERIAL TRUE)
+set_tests_properties(/Feature/GlobalInvitationAcceptanceTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_laravel_test(/Feature/GraphQL/Mutations/RemoveUserTest)
+set_tests_properties(/Feature/GraphQL/Mutations/RemoveUserTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_browser_test(/Browser/Pages/UsersPageTest)
+set_tests_properties(/Browser/Pages/UsersPageTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 ###################################################################################################
 
@@ -392,9 +414,15 @@ set_property(TEST install_2 PROPERTY DEPENDS
   /Feature/Mail/AuthTokenExpiredTest
   /Feature/GraphQL/Mutations/UpdateSiteDescriptionTest
   /Feature/GraphQL/Mutations/InviteToProjectTest
-  /Feature/GraphQL/Mutations/RevokeInvitationTest
+  /Feature/GraphQL/Mutations/RevokeProjectInvitationTest
   /Feature/GraphQL/Mutations/ChangeProjectRoleTest
   /Feature/Traits/UpdatesSiteInformationTest
+  /Feature/GraphQL/Mutations/ChangeGlobalRoleTest
+  /Feature/GraphQL/Mutations/CreateGlobalInvitationTest
+  /Feature/GraphQL/Mutations/RevokeGlobalInvitationTest
+  /Feature/GlobalInvitationAcceptanceTest
+  /Feature/GraphQL/Mutations/RemoveUserTest
+  /Browser/Pages/UsersPageTest
   cypress/e2e/user-profile
 )
 

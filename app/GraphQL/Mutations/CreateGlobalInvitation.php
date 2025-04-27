@@ -4,26 +4,26 @@ declare(strict_types=1);
 
 namespace App\GraphQL\Mutations;
 
-use App\Enums\ProjectRole;
-use App\Mail\InvitedToProject;
-use App\Models\Project;
-use App\Models\ProjectInvitation;
+use App\Enums\GlobalRole;
+use App\Mail\InvitedToCdash;
+use App\Models\GlobalInvitation;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
-final class InviteToProject extends AbstractMutation
+final class CreateGlobalInvitation extends AbstractMutation
 {
-    public ?ProjectInvitation $invitedUser = null;
+    public ?GlobalInvitation $invitedUser = null;
 
     /**
      * @param array{
      *     email: string,
-     *     projectId: int,
-     *     role: ProjectRole,
+     *     role: GlobalRole,
      * } $args
      *
      * @throws Exception
@@ -38,12 +38,9 @@ final class InviteToProject extends AbstractMutation
                 'required',
                 'email:strict',
             ],
-            'projectId' => [
-                'required', // We defer to a later authorization check to prevent leaking project names here.
-            ],
             'role' => [
                 'required',
-                Rule::enum(ProjectRole::class),
+                Rule::enum(GlobalRole::class),
             ],
         ])->validate();
 
@@ -54,32 +51,30 @@ final class InviteToProject extends AbstractMutation
             throw new Exception('Attempt to invite user when not signed in.');
         }
 
-        $project = isset($args['projectId']) ? Project::find((int) $args['projectId']) : null;
-        if ($project === null || $user->cannot('inviteUser', $project)) {
-            $this->message = 'This action is unauthorized.';
-            return;
+        if ($user->cannot('createInvitation', GlobalInvitation::class)) {
+            abort(401, 'This action is unauthorized.');
         }
 
-        if (ProjectInvitation::where(['email' => $args['email'], 'project_id' => $args['projectId']])->exists()) {
-            $this->message = 'Duplicate invitations are not allowed.';
-            return;
+        if (GlobalInvitation::where('email', $args['email'])->exists()) {
+            abort(400, 'Duplicate invitations are not allowed.');
         }
 
-        if ($project->users()->where('email', $args['email'])->exists()) {
-            $this->message = 'User is already a member of this project.';
-            return;
+        if (User::where('email', $args['email'])->exists()) {
+            abort(401, 'User is already a member of this instance.');
         }
 
-        $this->invitedUser = ProjectInvitation::create([
+        $password = Str::password();
+
+        $this->invitedUser = GlobalInvitation::create([
             'email' => $args['email'],
             'invited_by_id' => $user->id,
-            'project_id' => $args['projectId'],
             'role' => $args['role'],  // Note: we assume that anyone who can invite users can assign them any role.
             'invitation_timestamp' => Carbon::now(),
+            'password' => Hash::make($password),
         ]);
 
         // The email gets sent to the queue, so we have no way to know immediately whether it was sent or not.
         // TODO: We should eventually track whether the email was actually sent.
-        Mail::to($args['email'])->send(new InvitedToProject($this->invitedUser));
+        Mail::to($args['email'])->send(new InvitedToCdash($this->invitedUser, $password));
     }
 }

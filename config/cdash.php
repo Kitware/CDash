@@ -88,4 +88,6 @@ return [
     // Whether or not project administrators can invite users
     'project_admin_registration_form_enabled' => env('PROJECT_ADMIN_REGISTRATION_FORM_ENABLED', true),
     'global_banner' => env('GLOBAL_BANNER'),
+    // Whether or not "normal" username+password authentication is enabled
+    'username_password_authentication_enabled' => env('USERNAME_PASSWORD_AUTHENTICATION_ENABLED', true),
 ];

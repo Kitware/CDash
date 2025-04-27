@@ -1,34 +1,34 @@
 <template>
   <div
     class="tw-flex tw-flex-col tw-gap-4"
-    data-test="project-members-page"
+    data-test="users-page"
   >
     <div
-      v-if="canEditUsers"
+      v-if="canInviteUsers"
       class="tw-flex tw-flex-row tw-w-full"
     >
       <button
         class="tw-ml-auto tw-btn"
-        data-test="invite-members-button"
-        onclick="invite_members_modal.showModal()"
+        data-test="invite-users-button"
+        onclick="invite_users_modal.showModal()"
       >
-        Invite Members
+        Invite Users
       </button>
       <dialog
-        id="invite_members_modal"
-        data-test="invite-members-modal"
+        id="invite_users_modal"
+        data-test="invite-users-modal"
         class="tw-modal"
       >
         <div class="tw-modal-box tw-flex tw-flex-col tw-gap-4 tw-w-full">
           <h3 class="tw-text-lg tw-font-bold">
-            Invite Members
+            Invite Users
           </h3>
           <div
-            v-if="inviteMembersModalError"
+            v-if="inviteUsersModalError"
             class="tw-text-error tw-font-bold"
-            data-test="invite-members-modal-error-text"
+            data-test="invite-users-modal-error-text"
           >
-            {{ inviteMembersModalError }}
+            {{ inviteUsersModalError }}
           </div>
           <div>
             <div class="tw-label tw-font-bold">
@@ -37,12 +37,12 @@
             <label class="tw-input tw-input-bordered tw-flex tw-items-center tw-w-full tw-gap-2">
               <font-awesome-icon icon="fa-envelope" />
               <input
-                v-model="inviteMembersModalEmail"
+                v-model="inviteUsersModalEmail"
                 type="email"
                 class="tw-grow"
                 placeholder="example@example.com"
                 required
-                data-test="invite-members-modal-email"
+                data-test="invite-users-modal-email"
               >
             </label>
           </div>
@@ -51,15 +51,19 @@
               Role
             </div>
             <select
-              v-model="inviteMembersModalRole"
+              v-model="inviteUsersModalRole"
               class="tw-select tw-select-bordered tw-w-full"
-              data-test="invite-members-modal-role"
+              data-test="invite-users-modal-role"
             >
               <option
-                v-for="type in USER_TYPES"
-                :value="type"
+                value="ADMINISTRATOR"
               >
-                {{ humanReadableRole(type) }}
+                Administrator
+              </option>
+              <option
+                value="USER"
+              >
+                User
               </option>
             </select>
           </div>
@@ -69,14 +73,14 @@
           >
             <button
               class="tw-btn tw-ml-auto"
-              data-test="invite-members-modal-cancel-button"
+              data-test="invite-users-modal-cancel-button"
             >
               Cancel
             </button>
             <button
               class="tw-btn tw-btn-primary"
-              :disabled="inviteMembersModalEmail.length === 0"
-              data-test="invite-members-modal-invite-button"
+              :disabled="inviteUsersModalEmail.length === 0"
+              data-test="invite-users-modal-invite-button"
               @click="inviteUserByEmail"
             >
               Invite
@@ -92,8 +96,8 @@
       </dialog>
     </div>
     <loading-indicator
-      v-if="canEditUsers"
-      :is-loading="!projectInvitations"
+      v-if="canInviteUsers"
+      :is-loading="!invitations"
     >
       <data-table
         :column-groups="[
@@ -141,11 +145,11 @@
         </template>
       </data-table>
     </loading-indicator>
-    <loading-indicator :is-loading="!projectAdministrators || !projectUsers">
+    <loading-indicator :is-loading="!users">
       <data-table
         :column-groups="[
           {
-            displayName: 'Members',
+            displayName: 'Users',
             width: 100,
           }
         ]"
@@ -155,35 +159,64 @@
             displayName: 'Name',
           },
           {
+            name: 'email',
+            displayName: 'Email',
+          },
+          {
+            name: 'institution',
+            displayName: 'Institution',
+          },
+          {
             name: 'role',
             displayName: 'Role',
           },
-        ]"
+        ].concat(
+          me && me.admin ? [{
+            name: 'actions',
+            displayName: 'Actions',
+          }] : []
+        )"
         :rows="formattedUserRows"
         :full-width="true"
-        test-id="members-table"
+        test-id="users-table"
       >
-        <template #role="{ props: { user: user, value: role } }">
+        <template #role="{ props: { user: user } }">
           <select
-            v-if="canEditUsers && parseInt(user.id) !== parseInt(userId)"
+            v-if="me && parseInt(user.id) !== parseInt(me.id) && me.admin"
             class="tw-select tw-select-bordered tw-w-full tw-select-sm"
-            data-test="role-select"
+            :data-test="'role-select-' + user.id"
             @change="changeUserRole($event, user)"
           >
             <option
-              v-for="type in USER_TYPES"
-              :value="type"
-              :selected="role === type"
+              value="ADMINISTRATOR"
+              :selected="user.admin"
             >
-              {{ humanReadableRole(type) }}
+              Administrator
+            </option>
+            <option
+              value="USER"
+              :selected="!user.admin"
+            >
+              User
             </option>
           </select>
           <span
             v-else
-            data-test="role-text"
+            :data-test="'role-text-' + user.id"
           >
-            {{ humanReadableRole(role) }}
+            {{ user.admin ? 'Administrator' : 'User' }}
           </span>
+        </template>
+        <template #actions="{ props: { user: user } }">
+          <button
+            v-if="me && parseInt(user.id) !== parseInt(me.id)"
+            class="tw-btn tw-btn-sm tw-btn-outline"
+            :data-test="'remove-user-button-' + user.id"
+            @click="removeUser(user)"
+          >
+            Remove User <font-awesome-icon icon="fa-trash" />
+          </button>
+          <span v-else />
         </template>
       </data-table>
     </loading-indicator>
@@ -206,160 +239,101 @@ export default {
   },
 
   props: {
-    projectId: {
-      type: Number,
-      required: true,
-    },
-
-    userId: {
-      type: [Number, null],
-      required: true,
-    },
-
-    canEditUsers: {
+    canInviteUsers: {
       type: Boolean,
       required: true,
     },
   },
 
   data() {
-    const user_types = Object.freeze({
-      USER: 'USER',
-      ADMINISTRATOR: 'ADMINISTRATOR',
-    });
-
     return {
-      USER_TYPES: user_types,
-      inviteMembersModalEmail: '',
-      inviteMembersModalRole: user_types.USER,
-      inviteMembersModalError: null,
+      inviteUsersModalEmail: '',
+      inviteUsersModalRole: 'USER',
+      inviteUsersModalError: null,
     };
   },
 
   apollo: {
-    projectAdministrators: {
+    users: {
       query: gql`
-        query($projectid: ID, $after: String) {
-          project(id: $projectid) {
-            id
-            administrators(after: $after) {
-              edges {
-                node {
-                  id
-                  firstname
-                  lastname
-                }
+        query users($after: String) {
+          users(after: $after) {
+            edges {
+              node {
+                id
+                email
+                firstname
+                lastname
+                institution
+                admin
               }
-              pageInfo {
-                hasNextPage
-                hasPreviousPage
-                startCursor
-                endCursor
-              }
+            }
+            pageInfo {
+              hasNextPage
+              hasPreviousPage
+              startCursor
+              endCursor
             }
           }
         }
       `,
-      update: data => data?.project?.administrators,
-      variables() {
-        return {
-          projectid: this.projectId,
-        };
-      },
       result({data}) {
-        if (data && data.project.administrators.pageInfo.hasNextPage) {
-          this.$apollo.queries.projectAdministrators.fetchMore({
+        if (data && data.users.pageInfo.hasNextPage) {
+          this.$apollo.queries.users.fetchMore({
             variables: {
-              projectid: this.projectId,
-              after: data.project.administrators.pageInfo.endCursor,
+              after: data.users.pageInfo.endCursor,
             },
           });
         }
       },
     },
 
-    projectUsers: {
+    me: {
       query: gql`
-        query($projectid: ID, $after: String) {
-          project(id: $projectid) {
+        query {
+          me {
             id
-            basicUsers(after: $after) {
-              edges {
-                node {
+            email
+            firstname
+            lastname
+            institution
+            admin
+          }
+        }
+      `,
+    },
+
+    invitations: {
+      query: gql`
+        query invitations($after: String) {
+          invitations(after: $after) {
+            edges {
+              node {
+                id
+                email
+                role
+                invitedBy {
                   id
                   firstname
                   lastname
                 }
+                invitationTimestamp
               }
-              pageInfo {
-                hasNextPage
-                hasPreviousPage
-                startCursor
-                endCursor
-              }
+            }
+            pageInfo {
+              hasNextPage
+              hasPreviousPage
+              startCursor
+              endCursor
             }
           }
         }
       `,
-      update: data => data?.project?.basicUsers,
-      variables() {
-        return {
-          projectid: this.projectId,
-        };
-      },
       result({data}) {
-        if (data && data.project.basicUsers.pageInfo.hasNextPage) {
-          this.$apollo.queries.projectUsers.fetchMore({
+        if (data && data.invitations.pageInfo.hasNextPage) {
+          this.$apollo.queries.invitations.fetchMore({
             variables: {
-              projectid: this.projectId,
-              after: data.project.basicUsers.pageInfo.endCursor,
-            },
-          });
-        }
-      },
-    },
-
-    projectInvitations: {
-      query: gql`
-        query projectInvitations($projectid: ID, $after: String) {
-          project(id: $projectid) {
-            id
-            invitations(after: $after) {
-              edges {
-                node {
-                  id
-                  email
-                  role
-                  invitedBy {
-                    id
-                    firstname
-                    lastname
-                  }
-                  invitationTimestamp
-                }
-              }
-              pageInfo {
-                hasNextPage
-                hasPreviousPage
-                startCursor
-                endCursor
-              }
-            }
-          }
-        }
-      `,
-      update: data => data?.project?.invitations,
-      variables() {
-        return {
-          projectid: this.projectId,
-        };
-      },
-      result({data}) {
-        if (data && data.project.invitations.pageInfo.hasNextPage) {
-          this.$apollo.queries.projectInvitations.fetchMore({
-            variables: {
-              projectid: this.projectId,
-              after: data.project.invitations.pageInfo.endCursor,
+              after: data.invitations.pageInfo.endCursor,
             },
           });
         }
@@ -369,27 +343,24 @@ export default {
 
   computed: {
     formattedUserRows() {
-      return this.projectAdministrators.edges?.map(edge => {
+      return this.users.edges?.map(edge => {
         return {
+          id: edge.node.id,
           name: `${edge.node.firstname} ${edge.node.lastname}`,
+          email: edge.node.email ?? '',
+          institution: edge.node.institution,
           role: {
-            value: this.USER_TYPES.ADMINISTRATOR,
+            user: edge.node,
+          },
+          actions: {
             user: edge.node,
           },
         };
-      }).concat(this.projectUsers.edges?.map(edge => {
-        return {
-          name: `${edge.node.firstname} ${edge.node.lastname}`,
-          role: {
-            value: this.USER_TYPES.USER,
-            user: edge.node,
-          },
-        };
-      }));
+      });
     },
 
     formattedInvitationRows() {
-      return this.projectInvitations.edges?.map(edge => {
+      return this.invitations.edges?.map(edge => {
         return {
           email: edge.node.email,
           role: this.humanReadableRole(edge.node.role),
@@ -406,10 +377,9 @@ export default {
   methods: {
     changeUserRole(event, user) {
       this.$apollo.mutate({
-        mutation: gql`mutation ($userId: ID!, $projectId: ID!, $role: ProjectRole!) {
-          changeProjectRole(input: {
+        mutation: gql`mutation ($userId: ID!, $role: GlobalRole!) {
+          changeGlobalRole(input: {
             userId: $userId
-            projectId: $projectId
             role: $role
           }) {
             message
@@ -417,7 +387,6 @@ export default {
         }`,
         variables: {
           userId: user.id,
-          projectId: this.projectId,
           role: event.target.value,
         },
         // Strictly speaking, we should update any relevant queries here.  It doesn't mean anything
@@ -428,13 +397,12 @@ export default {
     },
 
     inviteUserByEmail(event) {
-      this.inviteMembersModalError = null;
+      this.inviteUsersModalError = null;
       event.preventDefault();
       this.$apollo.mutate({
-        mutation: gql`mutation ($email: String!, $projectId: ID!, $role: ProjectRole!) {
-          inviteToProject(input: {
+        mutation: gql`mutation ($email: String!, $role: GlobalRole!) {
+          createGlobalInvitation(input: {
             email: $email
-            projectId: $projectId
             role: $role
           }) {
             message
@@ -452,34 +420,33 @@ export default {
           }
         }`,
         variables: {
-          email: this.inviteMembersModalEmail,
-          projectId: this.projectId,
-          role: this.inviteMembersModalRole,
+          email: this.inviteUsersModalEmail,
+          role: this.inviteUsersModalRole,
         },
         updateQueries: {
-          projectInvitations(prev, { mutationResult }) {
-            if (mutationResult.data.inviteToProject.message !== null) {
+          invitations(prev, { mutationResult }) {
+            if (mutationResult.data.createGlobalInvitation.message !== null) {
               return prev;
             }
 
             const data = JSON.parse(JSON.stringify(prev));
-            data.project.invitations.edges.push({
-              __typename: 'ProjectInvitationEdge',
+            data.invitations.edges.push({
+              __typename: 'GlobalInvitationEdge',
               node: {
-                ...mutationResult.data.inviteToProject.invitedUser,
+                ...mutationResult.data.createGlobalInvitation.invitedUser,
               },
             });
             return data;
           },
         },
       }).then((mutationResult) => {
-        if (mutationResult.data.inviteToProject.message !== null) {
-          this.inviteMembersModalError = mutationResult.data.inviteToProject.message;
+        if (mutationResult.data.createGlobalInvitation.message !== null) {
+          this.inviteUsersModalError = mutationResult.data.createGlobalInvitation.message;
         }
         else {
-          invite_members_modal.close();
-          this.inviteMembersModalEmail = '';
-          this.inviteMembersModalRole = this.USER_TYPES.USER;
+          invite_users_modal.close();
+          this.inviteUsersModalEmail = '';
+          this.inviteUsersModalRole = 'USER';
         }
       }).catch((error) => {
         console.error(error);
@@ -489,7 +456,7 @@ export default {
     revokeInvitation(invitation) {
       this.$apollo.mutate({
         mutation: gql`mutation ($invitationId: ID!) {
-          revokeProjectInvitation(input: {
+          revokeGlobalInvitation(input: {
             invitationId: $invitationId
           }) {
             message
@@ -499,11 +466,37 @@ export default {
           invitationId: invitation.id,
         },
         updateQueries: {
-          projectInvitations(prev) {
+          invitations(prev) {
             const data = JSON.parse(JSON.stringify(prev));
-            const prevLength = data.project.invitations.edges.length;
-            data.project.invitations.edges = data.project.invitations.edges.filter(({ node }) => node.id !== invitation.id);
-            console.assert(data.project.invitations.edges.length === prevLength - 1);
+            const prevLength = data.invitations.edges.length;
+            data.invitations.edges = data.invitations.edges.filter(({ node }) => node.id !== invitation.id);
+            console.assert(data.invitations.edges.length === prevLength - 1);
+            return data;
+          },
+        },
+      }).catch((error) => {
+        console.error(error);
+      });
+    },
+
+    removeUser(user) {
+      this.$apollo.mutate({
+        mutation: gql`mutation ($userId: ID!) {
+          removeUser(input: {
+           userId: $userId
+          }) {
+            message
+          }
+        }`,
+        variables: {
+          userId: user.id,
+        },
+        updateQueries: {
+          users(prev) {
+            const data = JSON.parse(JSON.stringify(prev));
+            const prevLength = data.users.edges.length;
+            data.users.edges = data.users.edges.filter(({ node }) => node.id !== user.id);
+            console.assert(data.users.edges.length === prevLength - 1);
             return data;
           },
         },

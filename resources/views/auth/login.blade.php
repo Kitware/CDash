@@ -9,7 +9,7 @@
     $saml2_login_text = config('saml2.login_text');
 
     $login_field = config('cdash.login_field');
-    $show_login_form = config('auth.username_password_authentication_enabled');
+    $show_login_form = config('cdash.username_password_authentication_enabled');
     $title = 'Login';
 @endphp
 

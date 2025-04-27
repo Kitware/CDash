@@ -4,14 +4,14 @@ namespace Tests\Feature\GraphQL\Mutations;
 
 use App\Enums\ProjectRole;
 use App\Models\Project;
+use App\Models\ProjectInvitation;
 use App\Models\User;
-use App\Models\UserInvitation;
 use Illuminate\Support\Carbon;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
 use Tests\Traits\CreatesUsers;
 
-class RevokeInvitationTest extends TestCase
+class RevokeProjectInvitationTest extends TestCase
 {
     use CreatesUsers;
     use CreatesProjects;
@@ -49,7 +49,7 @@ class RevokeInvitationTest extends TestCase
 
     public function testAdminCanDeleteInvitation(): void
     {
-        $invitation = UserInvitation::create([
+        $invitation = ProjectInvitation::create([
             'email' => fake()->email(),
             'invited_by_id' => $this->users['admin']->id,
             'project_id' => $this->project->id,
@@ -61,7 +61,7 @@ class RevokeInvitationTest extends TestCase
 
         $this->actingAs($this->users['admin'])->graphQL('
             mutation ($invitationId: ID!) {
-                revokeInvitation(input: {
+                revokeProjectInvitation(input: {
                     invitationId: $invitationId
                 }) {
                     message
@@ -71,7 +71,7 @@ class RevokeInvitationTest extends TestCase
             'invitationId' => $invitation->id,
         ])->assertJson([
             'data' => [
-                'revokeInvitation' => [
+                'revokeProjectInvitation' => [
                     'message' => null,
                 ],
             ],
@@ -82,7 +82,7 @@ class RevokeInvitationTest extends TestCase
 
     public function testAnonymousUserCannotDeleteInvitation(): void
     {
-        $invitation = UserInvitation::create([
+        $invitation = ProjectInvitation::create([
             'email' => fake()->email(),
             'invited_by_id' => $this->users['admin']->id,
             'project_id' => $this->project->id,
@@ -94,7 +94,7 @@ class RevokeInvitationTest extends TestCase
 
         $this->graphQL('
             mutation ($invitationId: ID!) {
-                revokeInvitation(input: {
+                revokeProjectInvitation(input: {
                     invitationId: $invitationId
                 }) {
                     message
@@ -104,7 +104,7 @@ class RevokeInvitationTest extends TestCase
             'invitationId' => $invitation->id,
         ])->assertJson([
             'data' => [
-                'revokeInvitation' => [
+                'revokeProjectInvitation' => [
                     'message' => 'This action is unauthorized.',
                 ],
             ],
@@ -115,7 +115,7 @@ class RevokeInvitationTest extends TestCase
 
     public function testNonMemberUserCannotDeleteInvitation(): void
     {
-        $invitation = UserInvitation::create([
+        $invitation = ProjectInvitation::create([
             'email' => fake()->email(),
             'invited_by_id' => $this->users['admin']->id,
             'project_id' => $this->project->id,
@@ -127,7 +127,7 @@ class RevokeInvitationTest extends TestCase
 
         $this->actingAs($this->users['normal'])->graphQL('
             mutation ($invitationId: ID!) {
-                revokeInvitation(input: {
+                revokeProjectInvitation(input: {
                     invitationId: $invitationId
                 }) {
                     message
@@ -137,7 +137,7 @@ class RevokeInvitationTest extends TestCase
             'invitationId' => $invitation->id,
         ])->assertJson([
             'data' => [
-                'revokeInvitation' => [
+                'revokeProjectInvitation' => [
                     'message' => 'This action is unauthorized.',
                 ],
             ],
@@ -148,7 +148,7 @@ class RevokeInvitationTest extends TestCase
 
     public function testMemberUserWithUserRoleCannotDeleteInvitation(): void
     {
-        $invitation = UserInvitation::create([
+        $invitation = ProjectInvitation::create([
             'email' => fake()->email(),
             'invited_by_id' => $this->users['admin']->id,
             'project_id' => $this->project->id,
@@ -170,7 +170,7 @@ class RevokeInvitationTest extends TestCase
 
         $this->actingAs($this->users['normal'])->graphQL('
             mutation ($invitationId: ID!) {
-                revokeInvitation(input: {
+                revokeProjectInvitation(input: {
                     invitationId: $invitationId
                 }) {
                     message
@@ -180,7 +180,7 @@ class RevokeInvitationTest extends TestCase
             'invitationId' => $invitation->id,
         ])->assertJson([
             'data' => [
-                'revokeInvitation' => [
+                'revokeProjectInvitation' => [
                     'message' => 'This action is unauthorized.',
                 ],
             ],
@@ -191,7 +191,7 @@ class RevokeInvitationTest extends TestCase
 
     public function testMemberUserWithAdminRoleCanDeleteInvitation(): void
     {
-        $invitation = UserInvitation::create([
+        $invitation = ProjectInvitation::create([
             'email' => fake()->email(),
             'invited_by_id' => $this->users['admin']->id,
             'project_id' => $this->project->id,
@@ -213,7 +213,7 @@ class RevokeInvitationTest extends TestCase
 
         $this->actingAs($this->users['normal'])->graphQL('
             mutation ($invitationId: ID!) {
-                revokeInvitation(input: {
+                revokeProjectInvitation(input: {
                     invitationId: $invitationId
                 }) {
                     message
@@ -223,7 +223,7 @@ class RevokeInvitationTest extends TestCase
             'invitationId' => $invitation->id,
         ])->assertJson([
             'data' => [
-                'revokeInvitation' => [
+                'revokeProjectInvitation' => [
                     'message' => null,
                 ],
             ],
@@ -236,7 +236,7 @@ class RevokeInvitationTest extends TestCase
     {
         $this->actingAs($this->users['admin'])->graphQL('
             mutation ($invitationId: ID!) {
-                revokeInvitation(input: {
+                revokeProjectInvitation(input: {
                     invitationId: $invitationId
                 }) {
                     message
@@ -246,7 +246,7 @@ class RevokeInvitationTest extends TestCase
             'invitationId' => 1234567,
         ])->assertJson([
             'data' => [
-                'revokeInvitation' => [
+                'revokeProjectInvitation' => [
                     'message' => 'Invitation does not exist.',
                 ],
             ],

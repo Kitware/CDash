@@ -104,7 +104,7 @@ class LoginAndRegistration extends TestCase
     {
         // Disable username+password authentication and verify that the
         // form is no longer displayed.
-        config(['auth.username_password_authentication_enabled' => false]);
+        config(['cdash.username_password_authentication_enabled' => false]);
         $response = $this->get('/login');
         $response->assertOk();
         $response->assertDontSeeText('Email:');
@@ -114,7 +114,7 @@ class LoginAndRegistration extends TestCase
     {
         // Verify that we can't login by POSTing to /login when the
         // relevant config setting is disabled.
-        config(['auth.username_password_authentication_enabled' => false]);
+        config(['cdash.username_password_authentication_enabled' => false]);
         $response = $this->post('/login', [
             'email' => LoginAndRegistration::$email,
             'password' => LoginAndRegistration::$password,

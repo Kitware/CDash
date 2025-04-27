@@ -11,7 +11,8 @@
 |
 */
 
-use App\Http\Controllers\InvitationController;
+use App\Http\Controllers\GlobalInvitationController;
+use App\Http\Controllers\ProjectInvitationController;
 use App\Models\Project;
 use App\Models\Test;
 use Illuminate\Http\Request;
@@ -212,7 +213,14 @@ Route::get('/ajax/dailyupdatescurl.php', 'ProjectController@ajaxDailyUpdatesCurl
 
 Route::get('/manageBuildGroup.php', 'BuildController@manageBuildGroup');
 
+Route::get('/users', 'UsersController@users');
+
 Route::get('/projects/{project_id}/members', 'ProjectMembersController@members')->whereNumber('project_id');
+
+Route::get('/invitations/{invitationId}', GlobalInvitationController::class)
+    ->whereNumber('invitationId')
+    ->name('invitations')
+    ->middleware('signed');
 
 // The user must be logged in to access routes in this section.
 // Requests from users who are not logged in will be redirected to /login.
@@ -250,7 +258,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/ajax/buildnote.php', 'BuildController@ajaxBuildNote');
 
-    Route::get('/invitations/{invitationId}', InvitationController::class)->whereNumber('invitationId');
+    Route::get('/projects/{projectId}/invitations/{invitationId}', ProjectInvitationController::class)
+        ->whereNumber('projectId')
+        ->whereNumber('invitationId');
 
     Route::middleware(['admin'])->group(function () {
         Route::get('/authtokens/manage', 'AuthTokenController@manage');
