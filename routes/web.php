@@ -271,6 +271,3 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/monitor.php', fn () => redirect('/monitor', 301));
     });
 });
-
-// this *MUST* be the last route in the file
-Route::any('{url}', 'CDash')->where('url', '.*');
