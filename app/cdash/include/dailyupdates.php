@@ -28,6 +28,7 @@ use CDash\Model\Project;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use League\Flysystem\UnableToDeleteFile;
 
 @set_time_limit(0);
 
@@ -306,7 +307,11 @@ function addDailyChanges(int $projectid): void
             $files = Storage::allFiles($dir_to_clean);
             foreach ($files as $file) {
                 if (Storage::lastModified($file) < $deletion_time_threshold) {
-                    Storage::delete($file);
+                    try {
+                        Storage::delete($file);
+                    } catch (UnableToDeleteFile $e) {
+                        continue;
+                    }
                 }
             }
         }
