@@ -99,7 +99,7 @@ abstract class AbstractXmlHandler extends AbstractSubmissionHandler
             libxml_clear_errors();
         }
 
-        if (config('filesystems.default') !== 'local') {
+        if ($local_path !== '' && config('filesystems.default') !== 'local') {
             Storage::disk('local')->delete($local_path);
         }
 
