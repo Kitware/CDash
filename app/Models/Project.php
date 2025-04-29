@@ -107,7 +107,6 @@ class Project extends Model
     ];
 
     public const PROJECT_ADMIN = 2;
-    public const SITE_MAINTAINER = 1;
     public const PROJECT_USER = 0;
 
     public const ACCESS_PRIVATE = 0;
@@ -146,17 +145,6 @@ class Project extends Model
     {
         return $this->belongsToMany(User::class, 'user2project', 'projectid', 'userid')
             ->wherePivot('role', self::PROJECT_ADMIN);
-    }
-
-    /**
-     * Get the users who maintain a site for this project
-     *
-     * @return BelongsToMany<User>
-     */
-    public function siteMaintainers(): BelongsToMany
-    {
-        return $this->belongsToMany(User::class, 'user2project', 'projectid', 'userid')
-            ->wherePivot('role', self::SITE_MAINTAINER);
     }
 
     /**
