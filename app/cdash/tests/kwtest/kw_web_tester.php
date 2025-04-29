@@ -416,7 +416,7 @@ class KWWebTestCase extends WebTestCase
                 'AutoremoveMaxBuilds' => 500,
                 'AutoremoveTimeframe' => 60,
                 'CoverageThreshold' => 70,
-                'CvsViewerType' => 'viewcvs',
+                'CvsViewerType' => 'github',
                 'EmailBrokenSubmission' => 1,
                 'EmailMaxChars' => 255,
                 'EmailMaxItems' => 5,
