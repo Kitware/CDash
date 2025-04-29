@@ -22,7 +22,9 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           sbom: true
-          tags: "kitware/cdash:${{ github.ref_name }}"
+          tags: |
+            "kitware/cdash:${{ github.ref_name }}"
+            "kitware/cdash:latest"
           target: cdash
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -43,7 +45,9 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           sbom: true
-          tags: "kitware/cdash:${{ github.ref_name }}-ubi"
+          tags: |
+            "kitware/cdash:${{ github.ref_name }}-ubi"
+            "kitware/cdash:latest-ubi"
           target: cdash
           build-args: |
             BASE_IMAGE=ubi
