@@ -61,6 +61,8 @@ add_laravel_test(/Unit/app/Validators/PasswordTest)
 
 add_laravel_test(/Unit/app/Middleware/InternalTest)
 
+add_laravel_test(/Unit/app/Models/TestOutputTest)
+
 # TODO: Is this test useful now?
 add_unit_test(/PHPUnitTest)
 
