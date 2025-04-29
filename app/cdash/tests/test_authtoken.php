@@ -3,10 +3,10 @@
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use App\Models\AuthToken;
+use App\Models\Project as EloquentProject;
+use App\Models\User;
 use App\Utils\AuthTokenUtil;
-use CDash\Database;
 use CDash\Model\Project;
-use CDash\Model\UserProject;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Support\Facades\DB;
@@ -19,13 +19,11 @@ class AuthTokenTestCase extends KWWebTestCase
     private $PostBuildId;
     private $Project;
     private $Hash;
-    private $PDO;
 
     public function __construct()
     {
         parent::__construct();
         $this->Hash = '';
-        $this->PDO = Database::getInstance()->getPdo();
         $this->PostBuildId = 0;
         $this->Project = null;
         $this->Token = '';
@@ -58,17 +56,14 @@ class AuthTokenTestCase extends KWWebTestCase
         $this->Project->Id = $projectid;
 
         // Subscribe a non-administrative user to it.
-        $stmt = $this->PDO->query("SELECT * FROM users WHERE email = 'user1@kw'");
-        $row = $stmt->fetch();
-        if (!$row) {
-            $this->fail('Failed to find non-admin user');
-        }
-        $userproject = new UserProject();
-        $userproject->ProjectId = $projectid;
-        $userproject->UserId = $row['id'];
-        if (!$userproject->Save()) {
-            $this->fail('Failed to assign user to project');
-        }
+        EloquentProject::findOrFail((int) $projectid)->users()
+            ->attach(User::where('email', 'user1@kw')->firstOrFail()->id, [
+                'emailtype' => 3, // receive all emails
+                'emailcategory' => 126,
+                'emailsuccess' => false,
+                'emailmissingsites' => false,
+                'role' => EloquentProject::PROJECT_USER,
+            ]);
     }
 
     public function testGenerateToken()

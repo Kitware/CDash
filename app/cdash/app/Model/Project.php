@@ -1034,14 +1034,6 @@ class Project
             }
         }
 
-        // Add administrator to the project.
-        $UserProject = new UserProject();
-        $UserProject->Role = 2;
-        $UserProject->EmailType = 3; // receive all emails
-        $UserProject->ProjectId = $this->Id;
-        $UserProject->UserId = 1; // administrator
-        $UserProject->Save();
-
         return true;
     }
 

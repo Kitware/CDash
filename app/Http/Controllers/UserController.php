@@ -12,7 +12,6 @@ use CDash\Model\Build;
 use CDash\Model\BuildConfigure;
 use CDash\Model\BuildUpdate;
 use CDash\Model\Project;
-use CDash\Model\UserProject;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Carbon;
@@ -67,22 +66,18 @@ final class UserController extends AbstractController
         }
 
         // Go through the list of project the user is part of.
-        $UserProject = new UserProject();
-        $UserProject->UserId = $userid;
-        $project_rows = $UserProject->GetProjects();
         $start = gmdate(FMT_DATETIME, strtotime(date('r')) - (3600 * 24));
         $Project = new Project();
         $projects_response = [];
-        foreach ($project_rows as $project_row) {
-            $eloquent_project = \App\Models\Project::findOrFail((int) $project_row['id']);
-            $Project->Id = $project_row['id'];
-            $Project->Name = $project_row['name'];
+        foreach ($user->projects()->withPivot('role')->get() as $project_row) {
+            $Project->Id = $project_row->id;
+            $Project->Name = $project_row->name;
             $project_response = [];
             $project_response['id'] = $Project->Id;
-            $project_response['role'] = $project_row['role']; // 0 is normal user, 1 is maintainer, 2 is administrator
+            $project_response['role'] = $project_row->pivot->role; // 0 is normal user, 2 is administrator
             $project_response['name'] = $Project->Name;
             $project_response['name_encoded'] = urlencode($Project->Name);
-            $project_response['nbuilds'] = $eloquent_project->builds()->count();
+            $project_response['nbuilds'] = $project_row->builds()->count();
             $project_response['average_builds'] = round($Project->GetBuildsDailyAverage(gmdate(FMT_DATETIME, time() - (3600 * 24 * 7)), gmdate(FMT_DATETIME)), 2);
             $project_response['success'] = $Project->GetNumberOfPassingBuilds($start, gmdate(FMT_DATETIME));
             $project_response['error'] = $Project->GetNumberOfErrorBuilds($start, gmdate(FMT_DATETIME));

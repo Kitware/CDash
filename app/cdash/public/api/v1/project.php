@@ -24,7 +24,7 @@ use App\Rules\ProjectAuthenticateSubmissions;
 use App\Rules\ProjectVisibilityAllowed;
 use App\Utils\RepositoryUtils;
 use CDash\Model\Project;
-use CDash\Model\UserProject;
+use App\Models\Project as EloquentProject;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -224,16 +224,17 @@ function create_project(&$response, $user)
     populate_project($Project);
     $Project->InitialSetup();
 
+    $eloquent_project = EloquentProject::findOrFail((int) $Project->Id);
+
     // Add the current user to this project.
-    if ($user->id != 1) {
-        // Global admin is already added, so no need to do it again.
-        $UserProject = new UserProject();
-        $UserProject->UserId = $user->id;
-        $UserProject->ProjectId = $Project->Id;
-        $UserProject->Role = 2;
-        $UserProject->EmailType = 3;// receive all emails
-        $UserProject->Save();
-    }
+    $eloquent_project->users()
+        ->attach($user->id, [
+            'emailtype' => 3, // receive all emails
+            'emailcategory' => 126,
+            'emailsuccess' => false,
+            'emailmissingsites' => false,
+            'role' => EloquentProject::PROJECT_ADMIN,
+        ]);
 
     $response['projectcreated'] = 1;
     $response['project'] = $Project->ConvertToJSON();
