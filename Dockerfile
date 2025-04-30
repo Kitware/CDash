@@ -170,7 +170,6 @@ RUN dnf install -y \
       zip \
       #> cdash
       php-bcmath \
-      php-fpm \
       php-gd \
       php-ldap \
       php-mbstring \
@@ -200,9 +199,6 @@ RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then \
 RUN chmod -R g=u,o-w /etc/pki/ca-trust/extracted /etc/pki/ca-trust/source/anchors && \
 	  update-ca-trust enable && \
 	  update-ca-trust extract
-
-RUN mkdir /var/log/apache2 && \
-    chown 1001:1001 /var/log/apache2
 
 # Allow PHP to access all environment variables.
 # In the future, we may want to consider limiting this for security reasons.
