@@ -79,4 +79,12 @@ class BuildCommand extends Model
     {
         return $this->belongsTo(Target::class, 'targetid');
     }
+
+    /**
+     * @return HasMany<BuildCommandOutput>
+     */
+    public function outputs(): HasMany
+    {
+        return $this->hasMany(BuildCommandOutput::class, 'buildcommandid');
+    }
 }

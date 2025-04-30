@@ -20,6 +20,7 @@ use App\Enums\TargetType;
 use App\Http\Submission\Traits\UpdatesSiteInformation;
 use App\Models\Build as EloquentBuild;
 use App\Models\BuildCommand;
+use App\Models\BuildCommandOutput;
 use App\Models\BuildMeasurement;
 use App\Models\Label as EloquentLabel;
 use App\Models\Site;
@@ -105,7 +106,8 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
      * @var ?array{
      *      command?: BuildCommand,
      *      targetname?: string,
-     *      measurements?: array<BuildMeasurement>
+     *      measurements?: array<BuildMeasurement>,
+     *      outputs?: array<BuildCommandOutput>
      *  }
      */
     private ?array $MostRecentCommand = null;
@@ -309,6 +311,19 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
                 'type' => $attributes['TYPE'],
                 'name' => $attributes['NAME'],
             ]);
+        } elseif ($this->currentPathMatches('site.build.commands.*.outputs.output') || $this->currentPathMatches('site.build.targets.target.commands.*.outputs.output')) {
+            if (!is_array($this->MostRecentCommand)) {
+                throw new Exception('Invalid state: most recent command not initialized');
+            }
+
+            if (!array_key_exists('outputs', $this->MostRecentCommand)) {
+                $this->MostRecentCommand['outputs'] = [];
+            }
+
+            $this->MostRecentCommand['outputs'][] = new BuildCommandOutput([
+                'name' => $attributes['NAME'],
+                'size' => $attributes['SIZE'],
+            ]);
         }
     }
 
@@ -407,6 +422,10 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
 
                     if (array_key_exists('measurements', $command_arr) && count($command_arr['measurements']) > 0) {
                         $command_arr['command']->measurements()->saveMany($command_arr['measurements']);
+                    }
+
+                    if (array_key_exists('outputs', $command_arr) && count($command_arr['outputs']) > 0) {
+                        $command_arr['command']->outputs()->saveMany($command_arr['outputs']);
                     }
                 }
             }
