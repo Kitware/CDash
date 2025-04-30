@@ -42,7 +42,7 @@ class TestDetails extends BuildTestApi
                     testid = ?
                     AND type = 'file'
                 ORDER BY id
-            ", [$this->buildtest->id])[0];
+            ", [$this->buildtest->id])[$_GET['fileid'] - 1];
 
             return response()->streamDownload(
                 function () use ($query) {
