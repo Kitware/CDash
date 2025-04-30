@@ -22,7 +22,10 @@ class BuildDetailsTestCase extends KWWebTestCase
         $this->testDataDir = dirname(__FILE__) . '/data/BuildDetails';
         $this->testDataFiles = ['Subbuild1.xml', 'Subbuild2.xml', 'Subbuild3.xml'];
 
-        $this->createProject(['Name' => 'BuildDetails']);
+        $this->createProject([
+            'Name' => 'BuildDetails',
+            'CvsViewerType' => 'viewcvs',
+        ]);
 
         foreach ($this->testDataFiles as $testDataFile) {
             if (!$this->submission('BuildDetails', $this->testDataDir . '/' . $testDataFile)) {
