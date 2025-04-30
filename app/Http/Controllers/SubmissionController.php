@@ -22,7 +22,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use League\Flysystem\UnableToMoveFile;
 use League\Flysystem\UnableToReadFile;
+use League\Flysystem\UnableToWriteFile;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -61,7 +63,11 @@ final class SubmissionController extends AbstractProjectController
     private function failProcessing(?string $filename, int $outResponseCode, string $outMessage): void
     {
         if ($filename !== null) {
-            Storage::move('inbox/' . $filename, 'failed/' . $filename);
+            try {
+                Storage::move('inbox/' . $filename, 'failed/' . $filename);
+            } catch (UnableToMoveFile $e) {
+                Log::error("Failed to move {$filename} from inbox/ to failed/");
+            }
         }
         abort($outResponseCode, $outMessage);
     }
@@ -107,8 +113,10 @@ final class SubmissionController extends AbstractProjectController
 
         // Save the incoming file in the inbox directory.
         $filename = "{$projectname}_-_{$authtoken_hash}_-_" . Str::uuid()->toString() . "_-_{$expected_md5}.xml";
-        if (!Storage::put("inbox/{$filename}", $fp)) {
-            Log::error("Failed to save submission to inbox for $projectname (md5=$expected_md5)");
+        try {
+            Storage::put("inbox/{$filename}", $fp);
+        } catch (UnableToWriteFile $e) {
+            report($e);
             $this->failProcessing($filename, Response::HTTP_INTERNAL_SERVER_ERROR, 'Failed to save submission file.');
         }
 

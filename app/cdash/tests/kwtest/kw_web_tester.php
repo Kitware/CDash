@@ -35,6 +35,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use League\Flysystem\UnableToDeleteFile;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Tests\CreatesApplication;
 
@@ -96,7 +97,11 @@ class KWWebTestCase extends WebTestCase
     public function removeParsedFiles()
     {
         $files = Storage::allFiles('parsed');
-        Storage::delete($files);
+        try {
+            Storage::delete($files);
+        } catch (UnableToDeleteFile $e) {
+            return;
+        }
     }
 
     public function tearDown()
