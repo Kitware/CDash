@@ -66,7 +66,7 @@ final class CDash extends AbstractController
     /**
      * Determines if the file being requested is in the CDash filesystem
      */
-    public function isValidRequest(): bool
+    protected function isValidRequest(): bool
     {
         $valid = false;
         $path = $this->getPath();
@@ -80,7 +80,7 @@ final class CDash extends AbstractController
     /**
      * Determines if the request is a request for a CDash api endpoint
      */
-    public function isApiRequest(): bool
+    protected function isApiRequest(): bool
     {
         $path = $this->getPath();
         return str_starts_with($path, 'api/');
@@ -89,7 +89,7 @@ final class CDash extends AbstractController
     /**
      * Processes the CDash file for a given request
      */
-    public function getRequestContents()
+    protected function getRequestContents()
     {
         $file = $this->getAbsolutePath();
         chdir($this->disk->path(''));
@@ -111,7 +111,7 @@ final class CDash extends AbstractController
      *
      * @return ResponseFactory|JsonResponse|Response|\Symfony\Component\HttpFoundation\Response
      */
-    public function handleApiRequest()
+    protected function handleApiRequest()
     {
         $json = $this->getRequestContents();
         $status = http_response_code(); // this should be empty if not previously set
@@ -136,7 +136,7 @@ final class CDash extends AbstractController
     /**
      * Returns the path of the request with consideration given to the root path
      */
-    public function getPath(): string
+    protected function getPath(): string
     {
         if (!$this->path) {
             $path = $this->request->path();
@@ -146,7 +146,7 @@ final class CDash extends AbstractController
         return $this->path;
     }
 
-    public function getAbsolutePath(): string
+    protected function getAbsolutePath(): string
     {
         $path = $this->getPath();
         $file = $this->disk->path($path);
