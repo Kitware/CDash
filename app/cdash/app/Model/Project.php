@@ -45,7 +45,6 @@ use RuntimeException;
 class Project
 {
     public const PROJECT_ADMIN = 2;
-    public const SITE_MAINTAINER = 1;
     public const PROJECT_USER = 0;
 
     public const ACCESS_PRIVATE = 0;
