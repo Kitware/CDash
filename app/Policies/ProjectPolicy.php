@@ -90,7 +90,7 @@ class ProjectPolicy
         return $this->update($currentUser, $project);
     }
 
-    public function inviteUsers(User $currentUser, Project $project): bool
+    public function inviteUser(User $currentUser, Project $project): bool
     {
         // The project_admin_registration_form_enabled setting controls whether project admins are able to invite
         // users to their project or not.
@@ -101,8 +101,8 @@ class ProjectPolicy
         return $this->update($currentUser, $project);
     }
 
-    public function revokeInvitations(User $currentUser, Project $project): bool
+    public function revokeInvitation(User $currentUser, Project $project): bool
     {
-        return $this->inviteUsers($currentUser, $project);
+        return $this->inviteUser($currentUser, $project);
     }
 }

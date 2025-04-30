@@ -47,7 +47,6 @@ resources/js/angular/cdashUploadFilesSorter.js
 resources/js/angular/cdashSortable.js
 resources/js/angular/cdashSiteSorter.js
 resources/js/angular/cdashProjectRole.js
-resources/js/angular/cdashManageUsers.js
 resources/js/angular/cdashFilters.js
 resources/js/angular/cdashCoverageGraph.js
 resources/js/angular/bulletchart.js

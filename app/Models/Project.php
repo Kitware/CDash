@@ -253,10 +253,10 @@ class Project extends Model
     }
 
     /**
-     * @return HasMany<UserInvitation>
+     * @return HasMany<ProjectInvitation>
      */
     public function invitations(): HasMany
     {
-        return $this->hasMany(UserInvitation::class, 'project_id');
+        return $this->hasMany(ProjectInvitation::class, 'project_id');
     }
 }

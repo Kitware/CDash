@@ -447,9 +447,6 @@ class InviteToProjectTest extends TestCase
         self::assertEmpty($this->project->invitations()->get());
     }
 
-    /**
-     * @dataProvider invalidEmails
-     */
     public function testCantCreateInvitationWhenUserWithEmailAlreadyExists(): void
     {
         self::assertEmpty($this->project->invitations()->get());

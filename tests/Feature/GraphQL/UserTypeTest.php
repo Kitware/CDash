@@ -98,6 +98,27 @@ class UserTypeTest extends TestCase
         ], true);
     }
 
+    public function testAnonUsersCannotSeeEmails(): void
+    {
+        $this->graphQL('
+            query($userid: ID) {
+                user(id: $userid) {
+                    id
+                    email
+                }
+            }
+        ', [
+            'userid' => $this->normalUser->id,
+        ])->assertJson([
+            'data' => [
+                'user' => [
+                    'id' => (string) $this->normalUser->id,
+                    'email' => null,
+                ],
+            ],
+        ], true);
+    }
+
     public function testAdminCanSeeAllEmails(): void
     {
         $this->actingAs($this->adminUser)->graphQL('

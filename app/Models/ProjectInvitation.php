@@ -19,11 +19,11 @@ use Illuminate\Support\Facades\URL;
  * @property Carbon $invitation_timestamp
  * @property URL $invitation_url
  *
- * @mixin Builder<UserInvitation>
+ * @mixin Builder<ProjectInvitation>
  */
-class UserInvitation extends Model
+class ProjectInvitation extends Model
 {
-    protected $table = 'user_invitations';
+    protected $table = 'project_invitations';
 
     public $timestamps = false;
 
@@ -48,12 +48,12 @@ class UserInvitation extends Model
     protected function invitationUrl(): Attribute
     {
         return Attribute::make(
-            get: fn (mixed $value, array $attributes): string => url('/invitations/' . $attributes['id']),
+            get: fn (mixed $value, array $attributes): string => url('/projects/' . $this->project_id . '/invitations/' . $attributes['id']),
         );
     }
 
     /**
-     * @return BelongsTo<User, UserInvitation>
+     * @return BelongsTo<User, ProjectInvitation>
      */
     public function invitedBy(): BelongsTo
     {
@@ -61,7 +61,7 @@ class UserInvitation extends Model
     }
 
     /**
-     * @return BelongsTo<Project, UserInvitation>
+     * @return BelongsTo<Project, ProjectInvitation>
      */
     public function project(): BelongsTo
     {

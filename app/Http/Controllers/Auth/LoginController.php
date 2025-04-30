@@ -56,7 +56,7 @@ final class LoginController extends AbstractController
      */
     public function login(Request $request)
     {
-        if (config('auth.username_password_authentication_enabled') === false) {
+        if (config('cdash.username_password_authentication_enabled') === false) {
             return $this->sendFailedLoginResponse($request);
         }
         return $this->traitLogin($request);

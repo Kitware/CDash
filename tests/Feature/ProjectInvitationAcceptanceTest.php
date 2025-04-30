@@ -4,8 +4,8 @@ namespace Tests\Feature;
 
 use App\Enums\ProjectRole;
 use App\Models\Project;
+use App\Models\ProjectInvitation;
 use App\Models\User;
-use App\Models\UserInvitation;
 use Illuminate\Support\Carbon;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
@@ -44,9 +44,9 @@ class ProjectInvitationAcceptanceTest extends TestCase
         }
     }
 
-    private function createInvitation(): UserInvitation
+    private function createInvitation(): ProjectInvitation
     {
-        /** @var UserInvitation $invitation */
+        /** @var ProjectInvitation $invitation */
         $invitation = $this->project->invitations()->create([
             'email' => fake()->email(),
             'invited_by_id' => $this->users['admin']->id,
@@ -62,7 +62,7 @@ class ProjectInvitationAcceptanceTest extends TestCase
         $invitation = $this->createInvitation();
         self::assertContains($invitation->id, $this->project->invitations()->pluck('id'));
 
-        $this->get('/invitations/' . $invitation->id)
+        $this->get('/projects/' . $invitation->project_id . '/invitations/' . $invitation->id)
             ->assertRedirect('/login');
 
         self::assertContains($invitation->id, $this->project->invitations()->pluck('id'));
@@ -74,7 +74,7 @@ class ProjectInvitationAcceptanceTest extends TestCase
         self::assertContains($invitation->id, $this->project->invitations()->pluck('id'));
 
         $this->actingAs($this->users['normal'])
-            ->get('/invitations/' . 1234567)
+            ->get('/projects/' . $invitation->project_id . '/invitations/' . 1234567)
             ->assertUnauthorized();
 
         self::assertContains($invitation->id, $this->project->invitations()->pluck('id'));
@@ -86,7 +86,7 @@ class ProjectInvitationAcceptanceTest extends TestCase
         self::assertContains($invitation->id, $this->project->invitations()->pluck('id'));
 
         $this->actingAs($this->users['normal'])
-            ->get('/invitations/' . $invitation->id)
+            ->get('/projects/' . $invitation->project_id . '/invitations/' . $invitation->id)
             ->assertUnauthorized();
 
         self::assertContains($invitation->id, $this->project->invitations()->pluck('id'));
@@ -110,7 +110,7 @@ class ProjectInvitationAcceptanceTest extends TestCase
             ]);
 
         $this->actingAs($this->users['normal'])
-            ->get('/invitations/' . $invitation->id)
+            ->get('/projects/' . $invitation->project_id . '/invitations/' . $invitation->id)
             ->assertUnauthorized();
 
         self::assertNotContains($invitation->id, $this->project->invitations()->pluck('id'));
@@ -124,7 +124,7 @@ class ProjectInvitationAcceptanceTest extends TestCase
         self::assertContains($invitation->id, $this->project->invitations()->pluck('id'));
 
         $this->actingAs($this->users['admin'])
-            ->get('/invitations/' . $invitation->id)
+            ->get('/projects/' . $invitation->project_id . '/invitations/' . $invitation->id)
             ->assertUnauthorized();
 
         self::assertContains($invitation->id, $this->project->invitations()->pluck('id'));
@@ -138,7 +138,7 @@ class ProjectInvitationAcceptanceTest extends TestCase
         self::assertContains($invitation->id, $this->project->invitations()->pluck('id'));
 
         $this->actingAs($this->users['normal'])
-            ->get('/invitations/' . $invitation->id)
+            ->get('/projects/' . $invitation->project_id . '/invitations/' . $invitation->id)
             ->assertRedirect("/index.php?project={$this->project->name}");
 
         self::assertNotContains($invitation->id, $this->project->invitations()->pluck('id'));
@@ -154,7 +154,7 @@ class ProjectInvitationAcceptanceTest extends TestCase
         self::assertContains($invitation->id, $this->project->invitations()->pluck('id'));
 
         $this->actingAs($this->users['normal'])
-            ->get('/invitations/' . $invitation->id)
+            ->get('/projects/' . $invitation->project_id . '/invitations/' . $invitation->id)
             ->assertRedirect("/index.php?project={$this->project->name}");
 
         self::assertNotContains($invitation->id, $this->project->invitations()->pluck('id'));
