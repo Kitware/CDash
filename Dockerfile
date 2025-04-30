@@ -42,7 +42,6 @@ RUN apt-get update && \
         nodejs \
         unzip \
         vim \
-        wget \
         zip \
         && \
     docker-php-ext-configure pgsql --with-pgsql=/usr/local/pgsql && \
@@ -57,8 +56,8 @@ RUN apt-get update && \
         xsl \
         opcache \
         && \
-    wget -q -O checksum https://composer.github.io/installer.sha384sum && \
-    wget -q -O composer-setup.php https://getcomposer.org/installer && \
+    curl -fsSL https://composer.github.io/installer.sha384sum > checksum && \
+    curl -fsSL https://getcomposer.org/installer > composer-setup.php && \
     sha384sum -c checksum && \
     php composer-setup.php --install-dir=/usr/local/bin --filename=composer && \
     php -r "unlink('composer-setup.php');" && \
