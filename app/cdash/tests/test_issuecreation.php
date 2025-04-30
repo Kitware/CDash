@@ -1,11 +1,11 @@
 <?php
 
+use App\Models\Project as EloquentProject;
 use App\Models\User;
 use App\Utils\RepositoryUtils;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\Project;
-use CDash\Model\UserProject;
 
 class IssueCreationTestCase extends KWWebTestCase
 {
@@ -86,13 +86,15 @@ class IssueCreationTestCase extends KWWebTestCase
         $this->Builds['clean'] = $clean_build;
 
         // Add user1@kw as a project administrator.
-        $user = User::where('email', '=', 'user1@kw')->first();
-        $userid = $user->id;
-        $userproject = new UserProject();
-        $userproject->UserId = $userid;
-        $userproject->ProjectId = $this->Projects['CDash']->Id;
-        $userproject->Role = 2;
-        $userproject->Save();
+        $userid = User::where('email', 'user1@kw')->firstOrFail()->id;
+        EloquentProject::findOrFail((int) $this->Projects['CDash']->Id)->users()
+            ->attach($userid, [
+                'emailtype' => 3, // receive all emails
+                'emailcategory' => 126,
+                'emailsuccess' => false,
+                'emailmissingsites' => false,
+                'role' => EloquentProject::PROJECT_ADMIN,
+            ]);
 
         // Setup subprojects.
         $file = dirname(__FILE__) . '/data/GithubPR/Project.xml';
@@ -102,7 +104,7 @@ class IssueCreationTestCase extends KWWebTestCase
 
         // Verify that administrative access to this project was not overwritten
         // by the Project.xml handler.
-        $project = App\Models\Project::findOrFail((int) $this->Projects['CDash']->Id);
+        $project = EloquentProject::findOrFail((int) $this->Projects['CDash']->Id);
         if ($project->administrators()->find($userid) === null) {
             $this->fail('Expected role to be an administrator');
         }
