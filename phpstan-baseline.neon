@@ -229,6 +229,16 @@ parameters:
 		-
 			message: "#^Dynamic call to static method Illuminate\\\\Contracts\\\\Auth\\\\Guard\\:\\:user\\(\\)\\.$#"
 			count: 1
+			path: app/GraphQL/Mutations/ChangeGlobalRole.php
+
+		-
+			message: "#^Parameter \\#1 \\$args \\(array\\{userId\\: int, role\\: App\\\\Enums\\\\GlobalRole\\}\\) of method App\\\\GraphQL\\\\Mutations\\\\ChangeGlobalRole\\:\\:mutate\\(\\) should be contravariant with parameter \\$args \\(array\\<string, mixed\\>\\) of method App\\\\GraphQL\\\\Mutations\\\\AbstractMutation\\:\\:mutate\\(\\)$#"
+			count: 1
+			path: app/GraphQL/Mutations/ChangeGlobalRole.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Contracts\\\\Auth\\\\Guard\\:\\:user\\(\\)\\.$#"
+			count: 1
 			path: app/GraphQL/Mutations/ChangeProjectRole.php
 
 		-
@@ -249,10 +259,30 @@ parameters:
 		-
 			message: "#^Dynamic call to static method Illuminate\\\\Contracts\\\\Auth\\\\Guard\\:\\:user\\(\\)\\.$#"
 			count: 1
+			path: app/GraphQL/Mutations/CreateGlobalInvitation.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\GlobalInvitation\\>\\:\\:exists\\(\\)\\.$#"
+			count: 1
+			path: app/GraphQL/Mutations/CreateGlobalInvitation.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\User\\>\\:\\:exists\\(\\)\\.$#"
+			count: 1
+			path: app/GraphQL/Mutations/CreateGlobalInvitation.php
+
+		-
+			message: "#^Parameter \\#1 \\$args \\(array\\{email\\: string, role\\: App\\\\Enums\\\\GlobalRole\\}\\) of method App\\\\GraphQL\\\\Mutations\\\\CreateGlobalInvitation\\:\\:mutate\\(\\) should be contravariant with parameter \\$args \\(array\\<string, mixed\\>\\) of method App\\\\GraphQL\\\\Mutations\\\\AbstractMutation\\:\\:mutate\\(\\)$#"
+			count: 1
+			path: app/GraphQL/Mutations/CreateGlobalInvitation.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Contracts\\\\Auth\\\\Guard\\:\\:user\\(\\)\\.$#"
+			count: 1
 			path: app/GraphQL/Mutations/InviteToProject.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\UserInvitation\\>\\:\\:exists\\(\\)\\.$#"
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\ProjectInvitation\\>\\:\\:exists\\(\\)\\.$#"
 			count: 1
 			path: app/GraphQL/Mutations/InviteToProject.php
 
@@ -272,9 +302,19 @@ parameters:
 			path: app/GraphQL/Mutations/InviteToProject.php
 
 		-
-			message: "#^Parameter \\#1 \\$args \\(array\\{invitationId\\: int\\}\\) of method App\\\\GraphQL\\\\Mutations\\\\RevokeInvitation\\:\\:mutate\\(\\) should be contravariant with parameter \\$args \\(array\\<string, mixed\\>\\) of method App\\\\GraphQL\\\\Mutations\\\\AbstractMutation\\:\\:mutate\\(\\)$#"
+			message: "#^Parameter \\#1 \\$args \\(array\\{userId\\: int\\}\\) of method App\\\\GraphQL\\\\Mutations\\\\RemoveUser\\:\\:mutate\\(\\) should be contravariant with parameter \\$args \\(array\\<string, mixed\\>\\) of method App\\\\GraphQL\\\\Mutations\\\\AbstractMutation\\:\\:mutate\\(\\)$#"
 			count: 1
-			path: app/GraphQL/Mutations/RevokeInvitation.php
+			path: app/GraphQL/Mutations/RemoveUser.php
+
+		-
+			message: "#^Parameter \\#1 \\$args \\(array\\{invitationId\\: int\\}\\) of method App\\\\GraphQL\\\\Mutations\\\\RevokeGlobalInvitation\\:\\:mutate\\(\\) should be contravariant with parameter \\$args \\(array\\<string, mixed\\>\\) of method App\\\\GraphQL\\\\Mutations\\\\AbstractMutation\\:\\:mutate\\(\\)$#"
+			count: 1
+			path: app/GraphQL/Mutations/RevokeGlobalInvitation.php
+
+		-
+			message: "#^Parameter \\#1 \\$args \\(array\\{invitationId\\: int\\}\\) of method App\\\\GraphQL\\\\Mutations\\\\RevokeProjectInvitation\\:\\:mutate\\(\\) should be contravariant with parameter \\$args \\(array\\<string, mixed\\>\\) of method App\\\\GraphQL\\\\Mutations\\\\AbstractMutation\\:\\:mutate\\(\\)$#"
+			count: 1
+			path: app/GraphQL/Mutations/RevokeProjectInvitation.php
 
 		-
 			message: "#^Dynamic call to static method Illuminate\\\\Contracts\\\\Auth\\\\Guard\\:\\:user\\(\\)\\.$#"
@@ -1436,6 +1476,11 @@ parameters:
 			path: app/Http/Controllers/FilterController.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\User\\>\\:\\:exists\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Controllers/GlobalInvitationController.php
+
+		-
 			message: "#^Only booleans are allowed in a ternary operator condition, mixed given\\.$#"
 			count: 1
 			path: app/Http/Controllers/IndexController.php
@@ -1444,21 +1489,6 @@ parameters:
 			message: "#^Part \\$default_project \\(mixed\\) of encapsed string cannot be cast to string\\.$#"
 			count: 1
 			path: app/Http/Controllers/IndexController.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Contracts\\\\Auth\\\\Guard\\:\\:user\\(\\)\\.$#"
-			count: 1
-			path: app/Http/Controllers/InvitationController.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\Project\\>\\:\\:exists\\(\\)\\.$#"
-			count: 1
-			path: app/Http/Controllers/InvitationController.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\Project\\>\\:\\:where\\(\\)\\.$#"
-			count: 1
-			path: app/Http/Controllers/InvitationController.php
 
 		-
 			message: "#^Call to an undefined method App\\\\Models\\\\Project\\|Illuminate\\\\Database\\\\Eloquent\\\\Collection\\<int, App\\\\Models\\\\Project\\>\\:\\:measurements\\(\\)\\.$#"
@@ -1592,6 +1622,21 @@ parameters:
 			message: "#^Parameter \\#1 \\$value of function intval expects array\\|bool\\|float\\|int\\|resource\\|string\\|null, mixed given\\.$#"
 			count: 2
 			path: app/Http/Controllers/ProjectController.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Contracts\\\\Auth\\\\Guard\\:\\:user\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Controllers/ProjectInvitationController.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\Project\\>\\:\\:exists\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Controllers/ProjectInvitationController.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\Project\\>\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Controllers/ProjectInvitationController.php
 
 		-
 			message: "#^Access to an undefined property object\\:\\:\\$numdefects\\.$#"
@@ -2860,6 +2905,11 @@ parameters:
 			path: app/Models/Build.php
 
 		-
+			message: "#^Parameter \\$get of static method Illuminate\\\\Database\\\\Eloquent\\\\Casts\\\\Attribute\\<mixed,mixed\\>\\:\\:make\\(\\) expects \\(callable\\(mixed, mixed\\)\\: string\\)\\|null, Closure\\(mixed, array\\)\\: string given\\.$#"
+			count: 1
+			path: app/Models/GlobalInvitation.php
+
+		-
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\Site\\>\\:\\:distinct\\(\\)\\.$#"
 			count: 1
 			path: app/Models/Project.php
@@ -2883,6 +2933,11 @@ parameters:
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\SubProject\\>\\:\\:where\\(\\)\\.$#"
 			count: 3
 			path: app/Models/Project.php
+
+		-
+			message: "#^Parameter \\$get of static method Illuminate\\\\Database\\\\Eloquent\\\\Casts\\\\Attribute\\<mixed,mixed\\>\\:\\:make\\(\\) expects \\(callable\\(mixed, mixed\\)\\: string\\)\\|null, Closure\\(mixed, array\\)\\: string given\\.$#"
+			count: 1
+			path: app/Models/ProjectInvitation.php
 
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
@@ -2928,11 +2983,6 @@ parameters:
 			message: "#^Only booleans are allowed in a negated boolean, mixed given\\.$#"
 			count: 1
 			path: app/Models/TestOutput.php
-
-		-
-			message: "#^Parameter \\$get of static method Illuminate\\\\Database\\\\Eloquent\\\\Casts\\\\Attribute\\<mixed,mixed\\>\\:\\:make\\(\\) expects \\(callable\\(mixed, mixed\\)\\: string\\)\\|null, Closure\\(mixed, array\\)\\: string given\\.$#"
-			count: 1
-			path: app/Models/UserInvitation.php
 
 		-
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\Project\\>\\:\\:exists\\(\\)\\.$#"
@@ -29109,6 +29159,16 @@ parameters:
 			path: tests/Browser/Pages/SitesIdPageTest.php
 
 		-
+			message: "#^Method Tests\\\\Browser\\\\Pages\\\\UsersPageTest\\:\\:createInvitation\\(\\) throws checked exception OverflowException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: tests/Browser/Pages/UsersPageTest.php
+
+		-
+			message: "#^Method Tests\\\\Browser\\\\Pages\\\\UsersPageTest\\:\\:testFullInvitationWorkflow\\(\\) throws checked exception OverflowException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: tests/Browser/Pages/UsersPageTest.php
+
+		-
 			message: "#^Access to an undefined property CDash\\\\Model\\\\Build\\:\\:\\$Endime\\.$#"
 			count: 2
 			path: tests/Feature/AutoRemoveBuildsCommand.php
@@ -29185,9 +29245,19 @@ parameters:
 			path: tests/Feature/GitHubWebhook.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\GlobalInvitation\\>\\:\\:exists\\(\\)\\.$#"
+			count: 8
+			path: tests/Feature/GlobalInvitationAcceptanceTest.php
+
+		-
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\User\\>\\:\\:pluck\\(\\)\\.$#"
 			count: 64
 			path: tests/Feature/GraphQL/Mutations/ChangeProjectRoleTest.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\GlobalInvitation\\>\\:\\:exists\\(\\)\\.$#"
+			count: 5
+			path: tests/Feature/GraphQL/Mutations/RevokeGlobalInvitationTest.php
 
 		-
 			message: "#^Dynamic call to static method Illuminate\\\\Testing\\\\TestResponse\\:\\:assertGraphQLErrorMessage\\(\\)\\.$#"
@@ -29335,7 +29405,7 @@ parameters:
 			path: tests/Feature/ProjectInvitationAcceptanceTest.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\UserInvitation\\>\\:\\:pluck\\(\\)\\.$#"
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\ProjectInvitation\\>\\:\\:pluck\\(\\)\\.$#"
 			count: 14
 			path: tests/Feature/ProjectInvitationAcceptanceTest.php
 
