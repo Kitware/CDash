@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use League\Flysystem\UnableToMoveFile;
 use League\Flysystem\UnableToReadFile;
 use League\Flysystem\UnableToWriteFile;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
@@ -64,7 +65,7 @@ final class SubmissionController extends AbstractProjectController
         if ($filename !== null) {
             try {
                 Storage::move('inbox/' . $filename, 'failed/' . $filename);
-            } catch (Exception $e) {
+            } catch (UnableToMoveFile $e) {
                 Log::error("Failed to move {$filename} from inbox/ to failed/");
             }
         }
