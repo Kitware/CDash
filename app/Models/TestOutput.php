@@ -44,21 +44,54 @@ class TestOutput extends Model
     /**
      * Returns uncompressed test output.
      */
-    public static function DecompressOutput($output)
+    public static function DecompressOutput(mixed $output): string
     {
+        if (is_resource($output)) {
+            $output = stream_get_contents($output);
+        }
+
+        if (!is_string($output)) {
+            $output = '';
+        }
+
         if (!config('cdash.use_compression')) {
             return $output;
         }
-        if (config('database.default') === 'pgsql') {
-            if (is_resource($output)) {
-                $output = base64_decode(stream_get_contents($output));
-            } else {
-                $output = base64_decode($output);
+
+        // This output could be:
+        // - compressed
+        // - compressed and base64 encoded
+        // - base64 encoded but not compressed
+        // - neither base64 encoded nor compressed
+
+        // Check if output is compressed.
+        // Note that compression is always applied before base64 encoding.
+        @$decompressed = gzuncompress($output);
+        if ($decompressed !== false) {
+            return $decompressed;
+        }
+
+        // Check if output is compressed and base64 encoded.
+        $decoded = base64_decode($output);
+        if ($decoded !== false) {
+            @$decompressed = gzuncompress($decoded);
+            if ($decompressed !== false) {
+                return $decompressed;
             }
         }
-        @$uncompressedrow = gzuncompress($output);
-        if ($uncompressedrow !== false) {
-            $output = $uncompressedrow;
+
+        // Output must not be compressed.
+        // If base64_decode failed then we can safely assume this output
+        // wasn't encoded.
+        if ($decoded === false) {
+            return $output;
+        }
+
+        // Otherwise it's difficult to tell if the output was actually base64
+        // encoded or not.
+        // Assume postgres means encoded and mysql means not.
+        if (config('database.default') === 'pgsql') {
+            return $decoded;
         }
         return $output;
     }
