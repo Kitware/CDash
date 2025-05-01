@@ -42,6 +42,24 @@ class ProjectMembersPageTest extends BrowserTestCase
         $this->users = [];
     }
 
+    private function addUserToProject(bool $admin = false): User
+    {
+        $user = $this->makeNormalUser();
+        $this->users[] = $user;
+
+        $this->project->users()->attach($user->id, [
+            'role' => $admin ? Project::PROJECT_ADMIN : Project::PROJECT_USER,
+        ]);
+
+        return $user;
+    }
+
+    private function assertNotProjectMember(User $user): void
+    {
+        self::assertTrue($user->refresh()->exists());
+        self::assertNotContains($user->id, $this->project->users()->pluck('id'));
+    }
+
     public function testGlobalAdminsCanSeeInviteMembersButton(): void
     {
         $this->users['admin'] = $this->makeAdminUser();
@@ -422,6 +440,68 @@ class ProjectMembersPageTest extends BrowserTestCase
                 ->assertSeeIn('@invitations-table-row', $this->users['admin']->firstname)
                 ->assertSeeIn('@invitations-table-row', $this->users['admin']->lastname)
             ;
+        });
+    }
+
+    public function testDeleteRegularProjectMember(): void
+    {
+        $this->users['admin'] = $this->makeAdminUser();
+        $userToDelete = $this->addUserToProject();
+
+        $this->browse(function (Browser $browser) {
+            $browser->loginAs($this->users['admin'])
+                ->visit("/projects/{$this->project->id}/members")
+                ->whenAvailable('@members-table-row', function (Browser $browser) {
+                    $browser->assertVisible('@remove-user-button')
+                        ->click('@remove-user-button')
+                        ->waitUntilMissing('@remove-user-button');
+                });
+        });
+
+        $this->assertNotProjectMember($userToDelete);
+    }
+
+    public function testDeleteAdminProjectMember(): void
+    {
+        $this->users['admin'] = $this->makeAdminUser();
+        $userToDelete = $this->addUserToProject(true);
+
+        $this->browse(function (Browser $browser) {
+            $browser->loginAs($this->users['admin'])
+                ->visit("/projects/{$this->project->id}/members")
+                ->whenAvailable('@members-table-row', function (Browser $browser) {
+                    $browser->assertVisible('@remove-user-button')
+                        ->click('@remove-user-button')
+                        ->waitUntilMissing('@remove-user-button');
+                });
+        });
+
+        $this->assertNotProjectMember($userToDelete);
+    }
+
+    public function testRegularUsersDontSeeDeleteButton(): void
+    {
+        $user = $this->addUserToProject();
+
+        $this->browse(function (Browser $browser) use ($user) {
+            $browser->loginAs($user)
+                ->visit("/projects/{$this->project->id}/members")
+                ->whenAvailable('@members-table-row', function (Browser $browser) {
+                    $browser->assertMissing('@remove-user-button');
+                });
+        });
+    }
+
+    public function testCannotDeleteSelf(): void
+    {
+        $user = $this->addUserToProject(true);
+
+        $this->browse(function (Browser $browser) use ($user) {
+            $browser->loginAs($user)
+                ->visit("/projects/{$this->project->id}/members")
+                ->whenAvailable('@members-table-row', function (Browser $browser) {
+                    $browser->assertMissing('@remove-user-button');
+                });
         });
     }
 }

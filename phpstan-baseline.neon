@@ -302,6 +302,26 @@ parameters:
 			path: app/GraphQL/Mutations/InviteToProject.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Contracts\\\\Auth\\\\Guard\\:\\:user\\(\\)\\.$#"
+			count: 1
+			path: app/GraphQL/Mutations/RemoveProjectUser.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\User\\>\\:\\:exists\\(\\)\\.$#"
+			count: 1
+			path: app/GraphQL/Mutations/RemoveProjectUser.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\User\\>\\:\\:where\\(\\)\\.$#"
+			count: 1
+			path: app/GraphQL/Mutations/RemoveProjectUser.php
+
+		-
+			message: "#^Parameter \\#1 \\$args \\(array\\{userId\\: int, projectId\\: int\\}\\) of method App\\\\GraphQL\\\\Mutations\\\\RemoveProjectUser\\:\\:mutate\\(\\) should be contravariant with parameter \\$args \\(array\\<string, mixed\\>\\) of method App\\\\GraphQL\\\\Mutations\\\\AbstractMutation\\:\\:mutate\\(\\)$#"
+			count: 1
+			path: app/GraphQL/Mutations/RemoveProjectUser.php
+
+		-
 			message: "#^Parameter \\#1 \\$args \\(array\\{userId\\: int\\}\\) of method App\\\\GraphQL\\\\Mutations\\\\RemoveUser\\:\\:mutate\\(\\) should be contravariant with parameter \\$args \\(array\\<string, mixed\\>\\) of method App\\\\GraphQL\\\\Mutations\\\\AbstractMutation\\:\\:mutate\\(\\)$#"
 			count: 1
 			path: app/GraphQL/Mutations/RemoveUser.php
@@ -29149,8 +29169,13 @@ parameters:
 			path: server.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\User\\>\\:\\:exists\\(\\)\\.$#"
+			count: 1
+			path: tests/Browser/Pages/ProjectMembersPageTest.php
+
+		-
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\User\\>\\:\\:pluck\\(\\)\\.$#"
-			count: 2
+			count: 3
 			path: tests/Browser/Pages/ProjectMembersPageTest.php
 
 		-
@@ -29253,6 +29278,16 @@ parameters:
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\User\\>\\:\\:pluck\\(\\)\\.$#"
 			count: 64
 			path: tests/Feature/GraphQL/Mutations/ChangeProjectRoleTest.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\User\\>\\:\\:exists\\(\\)\\.$#"
+			count: 4
+			path: tests/Feature/GraphQL/Mutations/RemoveProjectUserTest.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\User\\>\\:\\:pluck\\(\\)\\.$#"
+			count: 2
+			path: tests/Feature/GraphQL/Mutations/RemoveProjectUserTest.php
 
 		-
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\GlobalInvitation\\>\\:\\:exists\\(\\)\\.$#"
