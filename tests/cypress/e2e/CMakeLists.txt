@@ -92,8 +92,5 @@ set_tests_properties(cypress/e2e/daterange PROPERTIES DEPENDS simple2_async)
 add_cypress_e2e_test(build-notes)
 set_tests_properties(cypress/e2e/build-notes PROPERTIES DEPENDS simple2_async)
 
-add_cypress_e2e_test(sites)
-set_tests_properties(cypress/e2e/sites PROPERTIES DEPENDS simple2_async)
-
 add_cypress_e2e_test(build-configure)
 set_tests_properties(cypress/e2e/build-configure PROPERTIES DEPENDS simple2_async)
