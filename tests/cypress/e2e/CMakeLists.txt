@@ -52,6 +52,9 @@ set_tests_properties(cypress/e2e/filter-labels PROPERTIES DEPENDS actualtrilinos
 add_cypress_e2e_test(view-test-pagination)
 set_tests_properties(cypress/e2e/view-test-pagination PROPERTIES DEPENDS actualtrilinossubmission)
 
+add_cypress_e2e_test(view-coverage)
+set_tests_properties(cypress/e2e/view-coverage PROPERTIES DEPENDS coveragedirectories)
+
 # These tests don't have all of the dependencies worked out
 add_cypress_e2e_test(manage-overview)
 set_tests_properties(cypress/e2e/manage-overview PROPERTIES DEPENDS simple2_async)
@@ -91,9 +94,6 @@ set_tests_properties(cypress/e2e/build-notes PROPERTIES DEPENDS simple2_async)
 
 add_cypress_e2e_test(sites)
 set_tests_properties(cypress/e2e/sites PROPERTIES DEPENDS simple2_async)
-
-add_cypress_e2e_test(view-coverage)
-set_tests_properties(cypress/e2e/view-coverage PROPERTIES DEPENDS simple2_async)
 
 add_cypress_e2e_test(build-configure)
 set_tests_properties(cypress/e2e/build-configure PROPERTIES DEPENDS simple2_async)
