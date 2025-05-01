@@ -292,6 +292,7 @@ class Project
         $this->Id = $project->id;
 
         $buildErrorFilter = new BuildErrorFilter($this);
+        $buildErrorFilter->Fill();
         if ($buildErrorFilter->GetErrorsFilter() != $this->ErrorsFilter
             || $buildErrorFilter->GetWarningsFilter() != $this->WarningsFilter) {
             return $buildErrorFilter->AddOrUpdateFilters($this->WarningsFilter, $this->ErrorsFilter);

@@ -82,6 +82,7 @@ class BazelJSONHandler extends AbstractSubmissionHandler
         $this->ParseConfigure = true;
 
         $this->BuildErrorFilter = new BuildErrorFilter($this->Project);
+        $this->BuildErrorFilter->Fill();
 
         $this->PDO = Database::getInstance()->getPdo();
     }

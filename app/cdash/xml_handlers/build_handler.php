@@ -120,6 +120,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
         $this->Labels = [];
         $this->SubProjects = [];
         $this->BuildErrorFilter = new BuildErrorFilter($this->GetProject());
+        $this->BuildErrorFilter->Fill();
     }
 
     public function startElement($parser, $name, $attributes): void
