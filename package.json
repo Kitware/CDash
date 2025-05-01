@@ -41,7 +41,7 @@
     "eslint-plugin-vue": "^10.1.0",
     "flot": "^4.2.6",
     "git-revision-webpack-plugin": "^5.0.0",
-    "graphql": "^16.10.0",
+    "graphql": "^16.11.0",
     "graphql-tag": "^2.12.6",
     "jquery": "^3.7",
     "jquery-ui-dist": "^1.13.3",
