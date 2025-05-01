@@ -27339,11 +27339,6 @@ parameters:
 			path: app/cdash/xml_handlers/configure_handler.php
 
 		-
-			message: "#^Access to an undefined property CoverageHandler\\:\\:\\$HasSubProjects\\.$#"
-			count: 2
-			path: app/cdash/xml_handlers/coverage_handler.php
-
-		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 2
 			path: app/cdash/xml_handlers/coverage_handler.php

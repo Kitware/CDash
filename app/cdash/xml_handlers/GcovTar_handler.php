@@ -32,7 +32,7 @@ class GcovTarHandler extends AbstractSubmissionHandler
     private $SourceDirectory;
     private $BinaryDirectory;
     private $Labels;
-    private $SubProjectPath;
+    private ?string $SubProjectPath = null;
     private $SubProjectSummaries;
     private $AggregateBuildId;
     private $PreviousAggregateParentId;
@@ -46,18 +46,6 @@ class GcovTarHandler extends AbstractSubmissionHandler
         $this->SourceDirectory = '';
         $this->BinaryDirectory = '';
         $this->Labels = [];
-
-        $this->SubProjectPath = '';
-
-        // Check if we should support cross-SubProject coverage.
-        if ($this->Build->SubProjectId > 0) {
-            $subproject = new SubProject();
-            $subproject->SetId($this->Build->SubProjectId);
-            $path = $subproject->GetPath();
-            if ($path != '') {
-                $this->SubProjectPath = $path;
-            }
-        }
         $this->SubProjectSummaries = [];
         $this->PreviousAggregateParentId = null;
     }
@@ -189,6 +177,17 @@ class GcovTarHandler extends AbstractSubmissionHandler
         }
         if (empty($path)) {
             return;
+        }
+
+        // Check if we should support cross-SubProject coverage.
+        if ($this->SubProjectPath === null) {
+            if ($this->Build->SubProjectId > 0) {
+                $subproject = new SubProject();
+                $subproject->SetId($this->Build->SubProjectId);
+                $this->SubProjectPath = $subproject->GetPath();
+            } else {
+                $this->SubProjectPath = '';
+            }
         }
 
         // Check if this file belongs to a different SubProject.
