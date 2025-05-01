@@ -36,6 +36,9 @@ set_tests_properties(cypress/e2e/test-summary PROPERTIES DEPENDS cypress/e2e/rem
 add_cypress_e2e_test(tests)
 set_tests_properties(cypress/e2e/tests PROPERTIES DEPENDS cypress/e2e/remove-build)
 
+add_cypress_e2e_test(view-sub-projects)
+set_tests_properties(cypress/e2e/view-sub-projects PROPERTIES DEPENDS subproject)
+
 # These tests don't have all of the dependencies worked out
 add_cypress_e2e_test(manage-overview)
 set_tests_properties(cypress/e2e/manage-overview PROPERTIES DEPENDS simple2_async)
@@ -60,9 +63,6 @@ set_tests_properties(cypress/e2e/expected-build PROPERTIES DEPENDS simple2_async
 
 add_cypress_e2e_test(remove-build)
 set_tests_properties(cypress/e2e/remove-build PROPERTIES DEPENDS simple2_async)
-
-add_cypress_e2e_test(view-sub-projects)
-set_tests_properties(cypress/e2e/view-sub-projects PROPERTIES DEPENDS simple2_async)
 
 add_cypress_e2e_test(filter-labels)
 set_tests_properties(cypress/e2e/filter-labels PROPERTIES DEPENDS simple2_async)
