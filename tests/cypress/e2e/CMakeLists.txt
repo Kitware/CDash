@@ -43,12 +43,12 @@ add_cypress_e2e_test(sub-project-group-order)
 set_tests_properties(cypress/e2e/sub-project-group-order PROPERTIES DEPENDS crosssubprojectcoverage)
 set_tests_properties(cypress/e2e/sub-project-group-order PROPERTIES DEPENDS aggregatesubprojectcoverage)
 
+add_cypress_e2e_test(sub-project-dependencies)
+set_tests_properties(cypress/e2e/sub-project-dependencies PROPERTIES DEPENDS subproject)
+
 # These tests don't have all of the dependencies worked out
 add_cypress_e2e_test(manage-overview)
 set_tests_properties(cypress/e2e/manage-overview PROPERTIES DEPENDS simple2_async)
-
-add_cypress_e2e_test(sub-project-dependencies)
-set_tests_properties(cypress/e2e/sub-project-dependencies PROPERTIES DEPENDS simple2_async)
 
 add_cypress_e2e_test(manage-build-group)
 set_tests_properties(cypress/e2e/manage-build-group PROPERTIES DEPENDS simple2_async)
