@@ -46,6 +46,9 @@ set_tests_properties(cypress/e2e/sub-project-group-order PROPERTIES DEPENDS aggr
 add_cypress_e2e_test(sub-project-dependencies)
 set_tests_properties(cypress/e2e/sub-project-dependencies PROPERTIES DEPENDS subproject)
 
+add_cypress_e2e_test(filter-labels)
+set_tests_properties(cypress/e2e/filter-labels PROPERTIES DEPENDS actualtrilinossubmission)
+
 # These tests don't have all of the dependencies worked out
 add_cypress_e2e_test(manage-overview)
 set_tests_properties(cypress/e2e/manage-overview PROPERTIES DEPENDS simple2_async)
@@ -67,9 +70,6 @@ set_tests_properties(cypress/e2e/expected-build PROPERTIES DEPENDS simple2_async
 
 add_cypress_e2e_test(remove-build)
 set_tests_properties(cypress/e2e/remove-build PROPERTIES DEPENDS simple2_async)
-
-add_cypress_e2e_test(filter-labels)
-set_tests_properties(cypress/e2e/filter-labels PROPERTIES DEPENDS simple2_async)
 
 add_cypress_e2e_test(view-test-pagination)
 set_tests_properties(cypress/e2e/view-test-pagination PROPERTIES DEPENDS simple2_async)
