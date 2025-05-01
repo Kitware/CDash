@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a66c5c6873599b9a009e0217624b24e1",
+    "content-hash": "f86f726a80071ee879d1a4486687b12c",
     "packages": [
         {
             "name": "24slides/laravel-saml2",
@@ -137,16 +137,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.342.19",
+            "version": "3.343.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "b2eb01f8dc4015f50095fcdf2ac99e3342a63dc0"
+                "reference": "b24383b59b0fc039cecffe0bd7453ae514b22ed5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/b2eb01f8dc4015f50095fcdf2ac99e3342a63dc0",
-                "reference": "b2eb01f8dc4015f50095fcdf2ac99e3342a63dc0",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/b24383b59b0fc039cecffe0bd7453ae514b22ed5",
+                "reference": "b24383b59b0fc039cecffe0bd7453ae514b22ed5",
                 "shasum": ""
             },
             "require": {
@@ -228,9 +228,9 @@
             "support": {
                 "forum": "https://github.com/aws/aws-sdk-php/discussions",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.342.19"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.343.1"
             },
-            "time": "2025-04-02T18:16:12+00:00"
+            "time": "2025-04-30T18:21:17+00:00"
         },
         {
             "name": "brick/math",
