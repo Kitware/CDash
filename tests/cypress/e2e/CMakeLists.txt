@@ -58,6 +58,9 @@ set_tests_properties(cypress/e2e/view-coverage PROPERTIES DEPENDS coveragedirect
 add_cypress_e2e_test(colorblind)
 set_tests_properties(cypress/e2e/colorblind PROPERTIES DEPENDS projectwebpage)
 
+add_cypress_e2e_test(calendar)
+set_tests_properties(cypress/e2e/calendar PROPERTIES DEPENDS projectwebpage)
+
 # These tests don't have all of the dependencies worked out
 add_cypress_e2e_test(manage-overview)
 set_tests_properties(cypress/e2e/manage-overview PROPERTIES DEPENDS simple2_async)
@@ -82,9 +85,6 @@ set_tests_properties(cypress/e2e/remove-build PROPERTIES DEPENDS simple2_async)
 
 add_cypress_e2e_test(done-build)
 set_tests_properties(cypress/e2e/done-build PROPERTIES DEPENDS simple2_async)
-
-add_cypress_e2e_test(calendar)
-set_tests_properties(cypress/e2e/calendar PROPERTIES DEPENDS simple2_async)
 
 add_cypress_e2e_test(daterange)
 set_tests_properties(cypress/e2e/daterange PROPERTIES DEPENDS simple2_async)
