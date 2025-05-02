@@ -26034,11 +26034,6 @@ parameters:
 			path: app/cdash/xml_handlers/BazelJSON_handler.php
 
 		-
-			message: "#^Method BazelJSONHandler\\:\\:InitializeConfigure\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/BazelJSON_handler.php
-
-		-
 			message: "#^Method BazelJSONHandler\\:\\:InitializeConfigure\\(\\) has parameter \\$build with no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/BazelJSON_handler.php
@@ -26150,7 +26145,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$array of function array_key_exists expects array, mixed given\\.$#"
-			count: 9
+			count: 8
 			path: app/cdash/xml_handlers/BazelJSON_handler.php
 
 		-
@@ -26169,11 +26164,6 @@ parameters:
 			path: app/cdash/xml_handlers/BazelJSON_handler.php
 
 		-
-			message: "#^Property BazelJSONHandler\\:\\:\\$BuildErrorFilter has no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/BazelJSON_handler.php
-
-		-
 			message: "#^Property BazelJSONHandler\\:\\:\\$BuildErrors has no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/BazelJSON_handler.php
@@ -26189,12 +26179,7 @@ parameters:
 			path: app/cdash/xml_handlers/BazelJSON_handler.php
 
 		-
-			message: "#^Property BazelJSONHandler\\:\\:\\$Configures has no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/BazelJSON_handler.php
-
-		-
-			message: "#^Property BazelJSONHandler\\:\\:\\$HasSubProjects has no type specified\\.$#"
+			message: "#^Property BazelJSONHandler\\:\\:\\$Configures type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/BazelJSON_handler.php
 
@@ -26254,16 +26239,6 @@ parameters:
 			path: app/cdash/xml_handlers/BazelJSON_handler.php
 
 		-
-			message: "#^Property BazelJSONHandler\\:\\:\\$WorkingDirectory has no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/BazelJSON_handler.php
-
-		-
-			message: "#^Property BazelJSONHandler\\:\\:\\$WorkingDirectory is never read, only written\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/BazelJSON_handler.php
-
-		-
 			message: "#^Variable \\$source_file might not be defined\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/BazelJSON_handler.php
@@ -26316,11 +26291,6 @@ parameters:
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 5
-			path: app/cdash/xml_handlers/GcovTar_handler.php
-
-		-
-			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
-			count: 1
 			path: app/cdash/xml_handlers/GcovTar_handler.php
 
 		-
@@ -26455,11 +26425,6 @@ parameters:
 
 		-
 			message: "#^Property GcovTarHandler\\:\\:\\$SourceDirectory has no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/GcovTar_handler.php
-
-		-
-			message: "#^Property GcovTarHandler\\:\\:\\$SubProjectPath has no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/GcovTar_handler.php
 
@@ -27089,11 +27054,6 @@ parameters:
 			path: app/cdash/xml_handlers/build_handler.php
 
 		-
-			message: "#^Property BuildHandler\\:\\:\\$BuildErrorFilter has no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/build_handler.php
-
-		-
 			message: "#^Property BuildHandler\\:\\:\\$BuildGroup has no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/build_handler.php
@@ -27605,16 +27565,6 @@ parameters:
 
 		-
 			message: "#^Property CoverageLogHandler\\:\\:\\$StartTimeStamp has no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/coverage_log_handler.php
-
-		-
-			message: "#^Property CoverageLogHandler\\:\\:\\$UpdateEndTime has no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/coverage_log_handler.php
-
-		-
-			message: "#^Property CoverageLogHandler\\:\\:\\$UpdateEndTime is never read, only written\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/coverage_log_handler.php
 

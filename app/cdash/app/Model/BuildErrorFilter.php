@@ -21,8 +21,8 @@ use CDash\Database;
 
 class BuildErrorFilter
 {
-    private $ErrorsFilter = null;
-    private $WarningsFilter = null;
+    private $ErrorsFilter;
+    private $WarningsFilter;
     public $Project;
     private $PDO;
 
