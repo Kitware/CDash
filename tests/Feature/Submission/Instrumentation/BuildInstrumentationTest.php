@@ -92,6 +92,14 @@ class BuildInstrumentationTest extends TestCase
                                                                 }
                                                             }
                                                         }
+                                                        outputs {
+                                                            edges {
+                                                                node {
+                                                                    name
+                                                                    size
+                                                                }
+                                                            }
+                                                        }
                                                     }
                                                 }
                                             }
@@ -126,6 +134,14 @@ class BuildInstrumentationTest extends TestCase
                                                         name
                                                         type
                                                         value
+                                                    }
+                                                }
+                                            }
+                                            outputs {
+                                                edges {
+                                                    node {
+                                                        name
+                                                        size
                                                     }
                                                 }
                                             }
@@ -165,6 +181,14 @@ class BuildInstrumentationTest extends TestCase
                                                                             }
                                                                         }
                                                                     }
+                                                                    outputs {
+                                                                        edges {
+                                                                            node {
+                                                                                name
+                                                                                size
+                                                                            }
+                                                                        }
+                                                                    }
                                                                 }
                                                             }
                                                         }
@@ -199,6 +223,14 @@ class BuildInstrumentationTest extends TestCase
                                                                     name
                                                                     type
                                                                     value
+                                                                }
+                                                            }
+                                                        }
+                                                        outputs {
+                                                            edges {
+                                                                node {
+                                                                    name
+                                                                    size
                                                                 }
                                                             }
                                                         }

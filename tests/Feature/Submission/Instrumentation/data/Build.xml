@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Site BuildName="test_instrument"
-	BuildStamp="20250328-1619-Experimental"
+	BuildStamp="20250424-1534-Experimental"
 	Name="test-site"
 	Generator="ctest-4.0.xyz"
 	CompilerName=""
@@ -34,8 +34,8 @@
 		<Label>Tutorial</Label>
 	</Subproject>
 	<Build>
-		<StartDateTime>Mar 28 12:19 EDT</StartDateTime>
-		<StartBuildTime>1743178749</StartBuildTime>
+		<StartDateTime>Apr 24 11:34 EDT</StartDateTime>
+		<StartBuildTime>1745508870</StartBuildTime>
 		<BuildCommand>/my/path/projects/CMake_bin/bin/cmake --build . --config "Release" --target "install"</BuildCommand>
 		<Failure type="Warning">
 			<!-- Meta-information about the build action -->
@@ -50,7 +50,7 @@
 			<Command>
 				<WorkingDirectory>/my/path/projects/tmp_for_cdash/bin_instrument</WorkingDirectory>
 				<Argument>/usr/bin/c++</Argument>
-				<Argument>-std=gnu++11</Argument>
+				<Argument>-g</Argument>
 				<Argument>-arch</Argument>
 				<Argument>arm64</Argument>
 				<Argument>-Wall</Argument>
@@ -91,33 +91,39 @@
 					<Label>Label2</Label>
 				</Labels>
 				<Commands>
-					<Link command="&quot;/usr/bin/c++&quot; (truncated)" config="" duration="70" language="C++" result="0" timeStart="1743178751667" version="1" workingDir="/my/path/projects/tmp_for_cdash/bin_instrument">
+					<Link command="&quot;/usr/bin/c++&quot; (truncated)" config="Debug" duration="57" language="C++" result="0" timeStart="1745508872439" version="1" workingDir="/my/path/projects/tmp_for_cdash/bin_instrument">
 						<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
-							<Value>4.84765625</Value>
+							<Value>7.3916015625</Value>
 						</NamedMeasurement>
 						<NamedMeasurement type="numeric/double" name="AfterHostMemoryUsed">
-							<Value>51395712.0</Value>
+							<Value>29929392.0</Value>
 						</NamedMeasurement>
 						<NamedMeasurement type="numeric/double" name="BeforeCPULoadAverage">
-							<Value>4.84765625</Value>
+							<Value>7.3916015625</Value>
 						</NamedMeasurement>
 						<NamedMeasurement type="numeric/double" name="BeforeHostMemoryUsed">
-							<Value>51400464.0</Value>
+							<Value>29926256.0</Value>
 						</NamedMeasurement>
+						<Outputs>
+							<Output name="Tutoriald" size="44056"/>
+						</Outputs>
 					</Link>
-					<Compile command="&quot;/usr/bin/c++&quot; (truncated)" config="" duration="365" language="C++" result="0" source="/my/path/projects/tmp_for_cdash/src_instrument/tutorial.cxx" timeStart="1743178750573" version="1" workingDir="/my/path/projects/tmp_for_cdash/bin_instrument">
+					<Compile command="&quot;/usr/bin/c++&quot; (truncated)" config="Debug" duration="316" language="C++" result="0" source="/my/path/projects/tmp_for_cdash/src_instrument/tutorial.cxx" timeStart="1745508871459" version="1" workingDir="/my/path/projects/tmp_for_cdash/bin_instrument">
 						<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
-							<Value>4.84765625</Value>
+							<Value>7.3916015625</Value>
 						</NamedMeasurement>
 						<NamedMeasurement type="numeric/double" name="AfterHostMemoryUsed">
-							<Value>51398064.0</Value>
+							<Value>29622544.0</Value>
 						</NamedMeasurement>
 						<NamedMeasurement type="numeric/double" name="BeforeCPULoadAverage">
-							<Value>4.74755859375</Value>
+							<Value>7.3916015625</Value>
 						</NamedMeasurement>
 						<NamedMeasurement type="numeric/double" name="BeforeHostMemoryUsed">
-							<Value>51406128.0</Value>
+							<Value>29527728.0</Value>
 						</NamedMeasurement>
+						<Outputs>
+							<Output name="CMakeFiles/Tutorial.dir/tutorial.cxx.o" size="108104"/>
+						</Outputs>
 					</Compile>
 				</Commands>
 			</Target>
@@ -127,33 +133,39 @@
 					<Label>Label4</Label>
 				</Labels>
 				<Commands>
-					<Link command="&quot;/usr/bin/c++&quot; (truncated)" config="" duration="76" language="C++" result="0" timeStart="1743178750216" version="1" workingDir="/my/path/projects/tmp_for_cdash/bin_instrument">
+					<Link command="&quot;/usr/bin/c++&quot; (truncated)" config="Debug" duration="75" language="C++" result="0" timeStart="1745508871084" version="1" workingDir="/my/path/projects/tmp_for_cdash/bin_instrument">
 						<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
-							<Value>4.74755859375</Value>
+							<Value>7.3916015625</Value>
 						</NamedMeasurement>
 						<NamedMeasurement type="numeric/double" name="AfterHostMemoryUsed">
-							<Value>51399056.0</Value>
+							<Value>29475808.0</Value>
 						</NamedMeasurement>
 						<NamedMeasurement type="numeric/double" name="BeforeCPULoadAverage">
-							<Value>4.74755859375</Value>
+							<Value>7.3916015625</Value>
 						</NamedMeasurement>
 						<NamedMeasurement type="numeric/double" name="BeforeHostMemoryUsed">
-							<Value>51405264.0</Value>
+							<Value>29428976.0</Value>
 						</NamedMeasurement>
+						<Outputs>
+							<Output name="MakeTable" size="46392"/>
+						</Outputs>
 					</Link>
-					<Compile command="&quot;/usr/bin/c++&quot; (truncated)" config="" duration="340" language="C++" result="0" source="/my/path/projects/tmp_for_cdash/src_instrument/MathFunctions/MakeTable.cxx" timeStart="1743178749799" version="1" workingDir="/my/path/projects/tmp_for_cdash/bin_instrument">
+					<Compile command="&quot;/usr/bin/c++&quot; (truncated)" config="Debug" duration="290" language="C++" result="0" source="/my/path/projects/tmp_for_cdash/src_instrument/MathFunctions/MakeTable.cxx" timeStart="1745508870720" version="1" workingDir="/my/path/projects/tmp_for_cdash/bin_instrument">
 						<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
-							<Value>4.74755859375</Value>
+							<Value>7.3916015625</Value>
 						</NamedMeasurement>
 						<NamedMeasurement type="numeric/double" name="AfterHostMemoryUsed">
-							<Value>51401328.0</Value>
+							<Value>29392944.0</Value>
 						</NamedMeasurement>
 						<NamedMeasurement type="numeric/double" name="BeforeCPULoadAverage">
-							<Value>4.74755859375</Value>
+							<Value>6.1201171875</Value>
 						</NamedMeasurement>
 						<NamedMeasurement type="numeric/double" name="BeforeHostMemoryUsed">
-							<Value>51365504.0</Value>
+							<Value>29279824.0</Value>
 						</NamedMeasurement>
+						<Outputs>
+							<Output name="MathFunctions/CMakeFiles/MakeTable.dir/MakeTable.cxx.o" size="119000"/>
+						</Outputs>
 					</Compile>
 				</Commands>
 			</Target>
@@ -163,34 +175,40 @@
 					<Label>Label3</Label>
 				</Labels>
 				<Commands>
-					<Link command="&quot;/usr/bin/c++&quot; (truncated)" config="" duration="67" language="C++" result="0" timeStart="1743178751470" version="1" workingDir="/my/path/projects/tmp_for_cdash/bin_instrument">
+					<Compile command="&quot;/usr/bin/c++&quot; (truncated)" config="Debug" duration="84" language="C++" result="0" source="/my/path/projects/tmp_for_cdash/src_instrument/MathFunctions/MathFunctions.cxx" timeStart="1745508871459" version="1" workingDir="/my/path/projects/tmp_for_cdash/bin_instrument">
 						<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
-							<Value>4.84765625</Value>
+							<Value>7.3916015625</Value>
 						</NamedMeasurement>
 						<NamedMeasurement type="numeric/double" name="AfterHostMemoryUsed">
-							<Value>51400864.0</Value>
+							<Value>29595536.0</Value>
 						</NamedMeasurement>
 						<NamedMeasurement type="numeric/double" name="BeforeCPULoadAverage">
-							<Value>4.84765625</Value>
+							<Value>7.3916015625</Value>
 						</NamedMeasurement>
 						<NamedMeasurement type="numeric/double" name="BeforeHostMemoryUsed">
-							<Value>51400288.0</Value>
+							<Value>29532944.0</Value>
 						</NamedMeasurement>
-					</Link>
-					<Compile command="&quot;/usr/bin/c++&quot; (truncated)" config="" duration="99" language="C++" result="0" source="/my/path/projects/tmp_for_cdash/src_instrument/MathFunctions/MathFunctions.cxx" timeStart="1743178750573" version="1" workingDir="/my/path/projects/tmp_for_cdash/bin_instrument">
-						<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
-							<Value>4.74755859375</Value>
-						</NamedMeasurement>
-						<NamedMeasurement type="numeric/double" name="AfterHostMemoryUsed">
-							<Value>51428640.0</Value>
-						</NamedMeasurement>
-						<NamedMeasurement type="numeric/double" name="BeforeCPULoadAverage">
-							<Value>4.74755859375</Value>
-						</NamedMeasurement>
-						<NamedMeasurement type="numeric/double" name="BeforeHostMemoryUsed">
-							<Value>51405616.0</Value>
-						</NamedMeasurement>
+						<Outputs>
+							<Output name="MathFunctions/CMakeFiles/MathFunctions.dir/MathFunctions.cxx.o" size="10272"/>
+						</Outputs>
 					</Compile>
+					<Link command="&quot;/usr/bin/c++&quot; (truncated)" config="Debug" duration="59" language="C++" result="0" timeStart="1745508872257" version="1" workingDir="/my/path/projects/tmp_for_cdash/bin_instrument">
+						<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
+							<Value>7.3916015625</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="AfterHostMemoryUsed">
+							<Value>29657296.0</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="BeforeCPULoadAverage">
+							<Value>7.3916015625</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="BeforeHostMemoryUsed">
+							<Value>29640896.0</Value>
+						</NamedMeasurement>
+						<Outputs>
+							<Output name="libMathFunctionsd.1.0.0.dylib" size="60088"/>
+						</Outputs>
+					</Link>
 				</Commands>
 			</Target>
 			<Target name="SqrtLibrary" type="STATIC_LIBRARY">
@@ -199,154 +217,175 @@
 					<Label>Label3</Label>
 				</Labels>
 				<Commands>
-					<Link command="&quot;/my/path/projects/CMake_bin/bin/cmake&quot; (truncated)" config="" duration="64" language="C++" result="0" timeStart="1743178751022" version="1" workingDir="/my/path/projects/tmp_for_cdash/bin_instrument">
+					<Link command="&quot;/usr/bin/ar&quot; (truncated)" config="Debug" duration="24" language="C++" result="0" timeStart="1745508871971" version="1" workingDir="/my/path/projects/tmp_for_cdash/bin_instrument">
 						<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
-							<Value>4.84765625</Value>
+							<Value>7.3916015625</Value>
 						</NamedMeasurement>
 						<NamedMeasurement type="numeric/double" name="AfterHostMemoryUsed">
-							<Value>51401440.0</Value>
+							<Value>29609568.0</Value>
 						</NamedMeasurement>
 						<NamedMeasurement type="numeric/double" name="BeforeCPULoadAverage">
-							<Value>4.84765625</Value>
+							<Value>7.3916015625</Value>
 						</NamedMeasurement>
 						<NamedMeasurement type="numeric/double" name="BeforeHostMemoryUsed">
-							<Value>51401152.0</Value>
+							<Value>29629808.0</Value>
 						</NamedMeasurement>
+						<Outputs>
+							<Output name="libSqrtLibraryd.a" size="111144"/>
+						</Outputs>
 					</Link>
-					<Link command="&quot;/usr/bin/ranlib&quot; (truncated)" config="" duration="24" language="C++" result="0" timeStart="1743178751245" version="1" workingDir="/my/path/projects/tmp_for_cdash/bin_instrument">
+					<Compile command="&quot;/usr/bin/c++&quot; (truncated)" config="Debug" duration="314" language="C++" result="0" source="/my/path/projects/tmp_for_cdash/src_instrument/MathFunctions/mysqrt.cxx" timeStart="1745508871459" version="1" workingDir="/my/path/projects/tmp_for_cdash/bin_instrument">
 						<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
-							<Value>4.84765625</Value>
+							<Value>7.3916015625</Value>
 						</NamedMeasurement>
 						<NamedMeasurement type="numeric/double" name="AfterHostMemoryUsed">
-							<Value>51400672.0</Value>
+							<Value>29622320.0</Value>
 						</NamedMeasurement>
 						<NamedMeasurement type="numeric/double" name="BeforeCPULoadAverage">
-							<Value>4.84765625</Value>
+							<Value>7.3916015625</Value>
 						</NamedMeasurement>
 						<NamedMeasurement type="numeric/double" name="BeforeHostMemoryUsed">
-							<Value>51400576.0</Value>
+							<Value>29528576.0</Value>
 						</NamedMeasurement>
-					</Link>
-					<Link command="&quot;/usr/bin/ar&quot; (truncated)" config="" duration="29" language="C++" result="0" timeStart="1743178751153" version="1" workingDir="/my/path/projects/tmp_for_cdash/bin_instrument">
-						<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
-							<Value>4.84765625</Value>
-						</NamedMeasurement>
-						<NamedMeasurement type="numeric/double" name="AfterHostMemoryUsed">
-							<Value>51400704.0</Value>
-						</NamedMeasurement>
-						<NamedMeasurement type="numeric/double" name="BeforeCPULoadAverage">
-							<Value>4.84765625</Value>
-						</NamedMeasurement>
-						<NamedMeasurement type="numeric/double" name="BeforeHostMemoryUsed">
-							<Value>51400912.0</Value>
-						</NamedMeasurement>
-					</Link>
-					<Compile command="&quot;/usr/bin/c++&quot; (truncated)" config="" duration="365" language="C++" result="0" source="/my/path/projects/tmp_for_cdash/src_instrument/MathFunctions/mysqrt.cxx" timeStart="1743178750574" version="1" workingDir="/my/path/projects/tmp_for_cdash/bin_instrument">
-						<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
-							<Value>4.84765625</Value>
-						</NamedMeasurement>
-						<NamedMeasurement type="numeric/double" name="AfterHostMemoryUsed">
-							<Value>51397360.0</Value>
-						</NamedMeasurement>
-						<NamedMeasurement type="numeric/double" name="BeforeCPULoadAverage">
-							<Value>4.74755859375</Value>
-						</NamedMeasurement>
-						<NamedMeasurement type="numeric/double" name="BeforeHostMemoryUsed">
-							<Value>51405904.0</Value>
-						</NamedMeasurement>
+						<Outputs>
+							<Output name="MathFunctions/CMakeFiles/SqrtLibrary.dir/mysqrt.cxx.o" size="107128"/>
+						</Outputs>
 					</Compile>
-					<Link command="&quot;/my/path/projects/CMake_bin/bin/cmake&quot; (truncated)" config="" duration="60" language="C++" result="0" timeStart="1743178751337" version="1" workingDir="/my/path/projects/tmp_for_cdash/bin_instrument">
+					<Link command="&quot;/my/path/projects/CMake_bin/bin/cmake&quot; (truncated)" config="Debug" duration="62" language="C++" result="0" timeStart="1745508871848" version="1" workingDir="/my/path/projects/tmp_for_cdash/bin_instrument">
 						<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
-							<Value>4.84765625</Value>
+							<Value>7.3916015625</Value>
 						</NamedMeasurement>
 						<NamedMeasurement type="numeric/double" name="AfterHostMemoryUsed">
-							<Value>51407712.0</Value>
+							<Value>29628176.0</Value>
 						</NamedMeasurement>
 						<NamedMeasurement type="numeric/double" name="BeforeCPULoadAverage">
-							<Value>4.84765625</Value>
+							<Value>7.3916015625</Value>
 						</NamedMeasurement>
 						<NamedMeasurement type="numeric/double" name="BeforeHostMemoryUsed">
-							<Value>51400720.0</Value>
+							<Value>29621392.0</Value>
 						</NamedMeasurement>
+						<Outputs>
+							<Output name="libSqrtLibraryd.a" size="0"/>
+						</Outputs>
+					</Link>
+					<Link command="&quot;/my/path/projects/CMake_bin/bin/cmake&quot; (truncated)" config="Debug" duration="57" language="C++" result="0" timeStart="1745508872132" version="1" workingDir="/my/path/projects/tmp_for_cdash/bin_instrument">
+						<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
+							<Value>7.3916015625</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="AfterHostMemoryUsed">
+							<Value>29642096.0</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="BeforeCPULoadAverage">
+							<Value>7.3916015625</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="BeforeHostMemoryUsed">
+							<Value>29641936.0</Value>
+						</NamedMeasurement>
+						<Outputs>
+							<Output name="libSqrtLibraryd.a" size="111144"/>
+						</Outputs>
+					</Link>
+					<Link command="&quot;/usr/bin/ranlib&quot; (truncated)" config="Debug" duration="20" language="C++" result="0" timeStart="1745508872055" version="1" workingDir="/my/path/projects/tmp_for_cdash/bin_instrument">
+						<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
+							<Value>7.3916015625</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="AfterHostMemoryUsed">
+							<Value>29628128.0</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="BeforeCPULoadAverage">
+							<Value>7.3916015625</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="BeforeHostMemoryUsed">
+							<Value>29627744.0</Value>
+						</NamedMeasurement>
+						<Outputs>
+							<Output name="libSqrtLibraryd.a" size="111144"/>
+						</Outputs>
 					</Link>
 				</Commands>
 			</Target>
 		</Targets>
 		<Commands>
-			<Custom command="&quot;/my/path/projects/CMake_bin/bin/cmake&quot; (truncated)" duration="195" result="0" timeStart="1743178751806" version="1" workingDir="/my/path/projects/tmp_for_cdash/bin_instrument">
+			<CmakeInstall command="&quot;/my/path/projects/CMake_bin/bin/cmake&quot; (truncated)" duration="156" result="0" timeStart="1745508872617" version="1" workingDir="/my/path/projects/tmp_for_cdash/bin_instrument">
 				<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
-					<Value>4.84765625</Value>
+					<Value>7.3916015625</Value>
 				</NamedMeasurement>
 				<NamedMeasurement type="numeric/double" name="AfterHostMemoryUsed">
-					<Value>51396352.0</Value>
+					<Value>29999408.0</Value>
 				</NamedMeasurement>
 				<NamedMeasurement type="numeric/double" name="BeforeCPULoadAverage">
-					<Value>4.84765625</Value>
+					<Value>7.3916015625</Value>
 				</NamedMeasurement>
 				<NamedMeasurement type="numeric/double" name="BeforeHostMemoryUsed">
-					<Value>51395488.0</Value>
-				</NamedMeasurement>
-			</Custom>
-			<Custom command="&quot;/my/path/projects/tmp_for_cdash/bin_instrument/MakeTable&quot; (truncated)" duration="135" result="0" timeStart="1743178750362" version="1" workingDir="/my/path/projects/tmp_for_cdash/bin_instrument/MathFunctions">
-				<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
-					<Value>4.74755859375</Value>
-				</NamedMeasurement>
-				<NamedMeasurement type="numeric/double" name="AfterHostMemoryUsed">
-					<Value>51402880.0</Value>
-				</NamedMeasurement>
-				<NamedMeasurement type="numeric/double" name="BeforeCPULoadAverage">
-					<Value>4.74755859375</Value>
-				</NamedMeasurement>
-				<NamedMeasurement type="numeric/double" name="BeforeHostMemoryUsed">
-					<Value>51398928.0</Value>
-				</NamedMeasurement>
-			</Custom>
-			<Install command="&quot;/my/path/projects/CMake_bin/bin/cmake&quot; (truncated)" duration="126" result="0" timeStart="1743178752075" version="1" workingDir="/my/path/projects/tmp_for_cdash/bin_instrument">
-				<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
-					<Value>4.84765625</Value>
-				</NamedMeasurement>
-				<NamedMeasurement type="numeric/double" name="AfterHostMemoryUsed">
-					<Value>51397248.0</Value>
-				</NamedMeasurement>
-				<NamedMeasurement type="numeric/double" name="BeforeCPULoadAverage">
-					<Value>4.84765625</Value>
-				</NamedMeasurement>
-				<NamedMeasurement type="numeric/double" name="BeforeHostMemoryUsed">
-					<Value>51395936.0</Value>
-				</NamedMeasurement>
-			</Install>
-			<CmakeInstall command="&quot;/my/path/projects/CMake_bin/bin/cmake&quot; (truncated)" duration="122" result="0" timeStart="1743178751867" version="1" workingDir="/my/path/projects/tmp_for_cdash/bin_instrument">
-				<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
-					<Value>4.84765625</Value>
-				</NamedMeasurement>
-				<NamedMeasurement type="numeric/double" name="AfterHostMemoryUsed">
-					<Value>51400928.0</Value>
-				</NamedMeasurement>
-				<NamedMeasurement type="numeric/double" name="BeforeCPULoadAverage">
-					<Value>4.84765625</Value>
-				</NamedMeasurement>
-				<NamedMeasurement type="numeric/double" name="BeforeHostMemoryUsed">
-					<Value>51398320.0</Value>
+					<Value>29959744.0</Value>
 				</NamedMeasurement>
 			</CmakeInstall>
-			<CmakeBuild command="&quot;/my/path/projects/CMake_bin/bin/cmake&quot; (truncated)" duration="2488" result="0" timeStart="1743178749725" version="1" workingDir="/my/path/projects/tmp_for_cdash/bin_instrument">
+			<Install command="&quot;/my/path/projects/CMake_bin/bin/cmake&quot; (truncated)" duration="114" result="0" timeStart="1745508872873" version="1" workingDir="/my/path/projects/tmp_for_cdash/bin_instrument">
 				<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
-					<Value>4.84765625</Value>
+					<Value>7.3916015625</Value>
 				</NamedMeasurement>
 				<NamedMeasurement type="numeric/double" name="AfterHostMemoryUsed">
-					<Value>51391872.0</Value>
+					<Value>30030496.0</Value>
 				</NamedMeasurement>
 				<NamedMeasurement type="numeric/double" name="BeforeCPULoadAverage">
-					<Value>4.74755859375</Value>
+					<Value>7.3916015625</Value>
 				</NamedMeasurement>
 				<NamedMeasurement type="numeric/double" name="BeforeHostMemoryUsed">
-					<Value>51340336.0</Value>
+					<Value>30025664.0</Value>
+				</NamedMeasurement>
+			</Install>
+			<Custom command="&quot;/my/path/projects/CMake_bin/bin/cmake&quot; (truncated)" duration="234" result="0" timeStart="1745508872560" version="1" workingDir="/my/path/projects/tmp_for_cdash/bin_instrument">
+				<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
+					<Value>7.3916015625</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="numeric/double" name="AfterHostMemoryUsed">
+					<Value>29994752.0</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="numeric/double" name="BeforeCPULoadAverage">
+					<Value>7.3916015625</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="numeric/double" name="BeforeHostMemoryUsed">
+					<Value>29956800.0</Value>
+				</NamedMeasurement>
+				<Outputs>
+					<Output name="CMakeFiles/my_install" size="0"/>
+				</Outputs>
+			</Custom>
+			<Custom command="&quot;/my/path/projects/tmp_for_cdash/bin_instrument/MakeTable&quot; (truncated)" duration="138" result="0" timeStart="1745508871223" version="1" workingDir="/my/path/projects/tmp_for_cdash/bin_instrument/MathFunctions">
+				<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
+					<Value>7.3916015625</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="numeric/double" name="AfterHostMemoryUsed">
+					<Value>29519120.0</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="numeric/double" name="BeforeCPULoadAverage">
+					<Value>7.3916015625</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="numeric/double" name="BeforeHostMemoryUsed">
+					<Value>29479504.0</Value>
+				</NamedMeasurement>
+				<Outputs>
+					<Output name="Table.h" size="0"/>
+				</Outputs>
+			</Custom>
+			<CmakeBuild command="&quot;/my/path/projects/CMake_bin/bin/cmake&quot; (truncated)" duration="2346" result="0" timeStart="1745508870653" version="1" workingDir="/my/path/projects/tmp_for_cdash/bin_instrument">
+				<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
+					<Value>7.3916015625</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="numeric/double" name="AfterHostMemoryUsed">
+					<Value>30039824.0</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="numeric/double" name="BeforeCPULoadAverage">
+					<Value>6.1201171875</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="numeric/double" name="BeforeHostMemoryUsed">
+					<Value>29132864.0</Value>
 				</NamedMeasurement>
 			</CmakeBuild>
 		</Commands>
 		<Log Encoding="base64" Compression="bin/gzip"/>
-		<EndDateTime>Mar 28 12:19 EDT</EndDateTime>
-		<EndBuildTime>1743178752</EndBuildTime>
+		<EndDateTime>Apr 24 11:34 EDT</EndDateTime>
+		<EndBuildTime>1745508873</EndBuildTime>
 		<ElapsedMinutes>0</ElapsedMinutes>
 	</Build>
 </Site>

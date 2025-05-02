@@ -216,6 +216,9 @@ set_tests_properties(/Feature/GraphQL/TargetTypeTest PROPERTIES DEPENDS /CDash/X
 add_laravel_test(/Feature/GraphQL/BuildCommandTypeTest)
 set_tests_properties(/Feature/GraphQL/BuildCommandTypeTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
+add_laravel_test(/Feature/GraphQL/BuildCommandOutputTypeTest)
+set_tests_properties(/Feature/GraphQL/BuildCommandOutputTypeTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
 add_laravel_test(/Feature/Submission/Instrumentation/BuildInstrumentationTest)
 set_tests_properties(/Feature/Submission/Instrumentation/BuildInstrumentationTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
@@ -384,6 +387,7 @@ set_property(TEST install_2 PROPERTY DEPENDS
   /Feature/GraphQL/LabelTypeTest
   /Feature/GraphQL/TargetTypeTest
   /Feature/GraphQL/BuildCommandTypeTest
+  /Feature/GraphQL/BuildCommandOutputTypeTest
   /Feature/Submission/Instrumentation/BuildInstrumentationTest
   /Feature/RouteAccessTest
   /Feature/Monitor

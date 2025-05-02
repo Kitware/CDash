@@ -593,6 +593,14 @@ type BuildCommand @model(class: "App\\Models\\BuildCommand") {
   measurements(
     filters: _ @filter(inputType: "BuildMeasurementFilterInput")
   ): [BuildMeasurement!]! @hasMany(type: CONNECTION) @orderBy(column: "id", direction: ASC)
+
+  """
+  Output filenames and corresponding sizes associated with this command.  Most command types only
+  produce one output file.
+  """
+  outputs(
+    filters: _ @filter(inputType: "BuildCommandOutputFilterInput")
+  ): [BuildCommandOutput!]! @hasMany(type: CONNECTION) @orderBy(column: "id", direction: ASC)
 }
 
 input BuildCommandFilterInput {
@@ -634,6 +642,26 @@ input BuildMeasurementFilterInput {
   name: String
   type: String
   value: String
+}
+
+
+"An individual file produced by a build command."
+type BuildCommandOutput {
+  "Unique primary key."
+  id: ID!
+
+  "Output filename."
+  name: String!
+
+  "Output file size in bytes."
+  size: Int!
+}
+
+
+input BuildCommandOutputFilterInput {
+  id: ID
+  name: String
+  size: Int
 }
 
 

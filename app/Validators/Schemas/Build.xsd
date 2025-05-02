@@ -10,6 +10,18 @@
       <xs:attribute name="name" type="xs:string" use="required" />
     </xs:complexType>
   </xs:element>
+  <xs:element name="Outputs">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Output">
+          <xs:complexType>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+            <xs:attribute name="size" type="xs:unsignedLong" use="required"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
   <xs:element name="Site">
     <xs:complexType>
       <xs:sequence>
@@ -104,7 +116,10 @@
                                       <xs:element name="Compile">
                                         <xs:complexType>
                                           <xs:sequence>
-                                            <xs:element maxOccurs="unbounded" ref="NamedMeasurement"/>
+                                            <xs:choice maxOccurs="unbounded">
+                                              <xs:element maxOccurs="unbounded" ref="NamedMeasurement"/>
+                                              <xs:element maxOccurs="unbounded" ref="Outputs"/>
+                                            </xs:choice>
                                           </xs:sequence>
                                           <xs:attribute name="command" use="required"/>
                                           <xs:attribute name="workingDir" use="required"/>
@@ -120,7 +135,10 @@
                                       <xs:element name="Link">
                                         <xs:complexType>
                                           <xs:sequence>
-                                            <xs:element maxOccurs="unbounded" ref="NamedMeasurement"/>
+                                            <xs:choice maxOccurs="unbounded">
+                                              <xs:element maxOccurs="unbounded" ref="NamedMeasurement"/>
+                                              <xs:element maxOccurs="unbounded" ref="Outputs"/>
+                                            </xs:choice>
                                           </xs:sequence>
                                           <xs:attribute name="command" use="required"/>
                                           <xs:attribute name="workingDir" use="required"/>
@@ -177,7 +195,10 @@
                           <xs:element name="Custom">
                             <xs:complexType>
                               <xs:sequence>
-                                <xs:element maxOccurs="unbounded" ref="NamedMeasurement"/>
+                                <xs:choice maxOccurs="unbounded">
+                                  <xs:element maxOccurs="unbounded" ref="NamedMeasurement"/>
+                                  <xs:element maxOccurs="unbounded" ref="Outputs"/>
+                                </xs:choice>
                               </xs:sequence>
                               <xs:attribute name="command" use="required"/>
                               <xs:attribute name="workingDir" use="required"/>
