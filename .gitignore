@@ -34,6 +34,11 @@ public/main.js
 .vagrant
 /vendor/
 yarn-error.log
+.phpunit.cache
+app/cdash/tests/.phpunit.cache/
+bootstrap/cache/*.php
+cypress_cache
+public/images
 
 # Files generated for Vue
 public/laravel/
