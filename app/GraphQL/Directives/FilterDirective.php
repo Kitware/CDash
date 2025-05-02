@@ -149,19 +149,19 @@ final class FilterDirective extends BaseDirective implements ArgBuilderDirective
         return Parser::inputObjectTypeDefinition(/* @lang GraphQL */ <<<GRAPHQL
                 input {$multiFilterName} {
                     "Find nodes which match at least one of the provided filters."
-                    any: [{$multiFilterName}]
+                    any: [{$multiFilterName}] @rules(apply: ["prohibits:all,eq,ne,gt,lt,contains"])
                     "Find nodes which match all of the provided filters."
-                    all: [{$multiFilterName}]
+                    all: [{$multiFilterName}] @rules(apply: ["prohibits:any,eq,ne,gt,lt,contains"])
                     "Find nodes where the provided field is equal to the provided value."
-                    eq: {$filterName}
+                    eq: {$filterName} @rules(apply: ["prohibits:any,all,ne,gt,lt,contains"])
                     "Find nodes where the provided field is not equal to the provided value."
-                    ne: {$filterName}
+                    ne: {$filterName} @rules(apply: ["prohibits:any,all,eq,gt,lt,contains"])
                     "Find nodes where the provided field is greater than the provided value."
-                    gt: {$filterName}
+                    gt: {$filterName} @rules(apply: ["prohibits:any,all,eq,ne,lt,contains"])
                     "Find nodes where the provided field is less than the provided value."
-                    lt: {$filterName}
+                    lt: {$filterName} @rules(apply: ["prohibits:any,all,eq,ne,gt,contains"])
                     "Find nodes where the provided field contains the provided value."
-                    contains: {$filterName}
+                    contains: {$filterName} @rules(apply: ["prohibits:any,all,eq,ne,gt,lt"])
                 }
             GRAPHQL
         );

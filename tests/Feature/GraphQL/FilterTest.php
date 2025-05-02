@@ -477,4 +477,27 @@ class FilterTest extends TestCase
             ],
         ], true);
     }
+
+    public function testProhibitsMultipleFieldsInSingleFilterObject(): void
+    {
+        $this->actingAs($this->users['admin'])->graphQL('
+            query {
+                projects(filters: {
+                    eq: {
+                        visibility: PRIVATE
+                    }
+                    ne: {
+                        visibility: PUBLIC
+                    }
+                }) {
+                    edges {
+                        node {
+                            name
+                            visibility
+                        }
+                    }
+                }
+            }
+        ')->assertGraphQLErrorMessage('Validation failed for the field [projects].');
+    }
 }
