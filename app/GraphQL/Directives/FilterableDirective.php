@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\GraphQL\Directives;
 
+use GraphQL\Error\SyntaxError;
 use GraphQL\Language\AST\FieldDefinitionNode;
 use GraphQL\Language\AST\InterfaceTypeDefinitionNode;
 use GraphQL\Language\AST\ObjectTypeDefinitionNode;
 use GraphQL\Language\Parser;
+use JsonException;
 use Nuwave\Lighthouse\Schema\AST\DocumentAST;
 use Nuwave\Lighthouse\Schema\Directives\BaseDirective;
 use Nuwave\Lighthouse\Support\Contracts\FieldManipulator;
@@ -21,12 +23,15 @@ final class FilterableDirective extends BaseDirective implements FieldManipulato
             GRAPHQL;
     }
 
+    /**
+     * @throws JsonException
+     * @throws SyntaxError
+     */
     public function manipulateFieldDefinition(
         DocumentAST &$documentAST,
         FieldDefinitionNode &$fieldDefinition,
         ObjectTypeDefinitionNode|InterfaceTypeDefinitionNode &$parentType,
-    ): void
-    {
+    ): void {
         $typeName = $parentType->name->value . 'FilterInput';
 
         // We only have to do this once per type, even though this is called once per filterable directive
@@ -50,7 +55,7 @@ final class FilterableDirective extends BaseDirective implements FieldManipulato
 
             foreach ($filterableFields as $field) {
                 $name = $field->name->value;
-                $type = $field->type->name?->value ?? $field->type->type->name->value;
+                $type = $field->type->name->value ?? $field->type->type->name->value;
                 $description = $field->description?->value;
 
                 // Only allow one field at a time.

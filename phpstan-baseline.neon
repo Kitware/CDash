@@ -192,6 +192,16 @@ parameters:
 			path: app/Exceptions/Handler.php
 
 		-
+			message: "#^Access to an undefined property GraphQL\\\\Language\\\\AST\\\\ListTypeNode\\|GraphQL\\\\Language\\\\AST\\\\NamedTypeNode\\|GraphQL\\\\Language\\\\AST\\\\NonNullTypeNode\\:\\:\\$name\\.$#"
+			count: 1
+			path: app/GraphQL/Directives/FilterDirective.php
+
+		-
+			message: "#^Access to an undefined property GraphQL\\\\Language\\\\AST\\\\ListTypeNode\\|GraphQL\\\\Language\\\\AST\\\\NamedTypeNode\\|GraphQL\\\\Language\\\\AST\\\\NonNullTypeNode\\:\\:\\$type\\.$#"
+			count: 1
+			path: app/GraphQL/Directives/FilterDirective.php
+
+		-
 			message: "#^Binary operation \"\\.\" between non\\-falsy\\-string and mixed results in an error\\.$#"
 			count: 2
 			path: app/GraphQL/Directives/FilterDirective.php
@@ -225,6 +235,26 @@ parameters:
 			message: "#^Parameter \\#2 \\$filterName of method App\\\\GraphQL\\\\Directives\\\\FilterDirective\\:\\:createMultiFilterInput\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: app/GraphQL/Directives/FilterDirective.php
+
+		-
+			message: "#^Access to an undefined property GraphQL\\\\Language\\\\AST\\\\BooleanValueNode\\|GraphQL\\\\Language\\\\AST\\\\EnumValueNode\\|GraphQL\\\\Language\\\\AST\\\\FloatValueNode\\|GraphQL\\\\Language\\\\AST\\\\IntValueNode\\|GraphQL\\\\Language\\\\AST\\\\ListValueNode\\|GraphQL\\\\Language\\\\AST\\\\NullValueNode\\|GraphQL\\\\Language\\\\AST\\\\ObjectValueNode\\|GraphQL\\\\Language\\\\AST\\\\StringValueNode\\|GraphQL\\\\Language\\\\AST\\\\VariableNode\\:\\:\\$value\\.$#"
+			count: 1
+			path: app/GraphQL/Directives/FilterableDirective.php
+
+		-
+			message: "#^Access to an undefined property GraphQL\\\\Language\\\\AST\\\\ListTypeNode\\|GraphQL\\\\Language\\\\AST\\\\NamedTypeNode\\|GraphQL\\\\Language\\\\AST\\\\NonNullTypeNode\\:\\:\\$name\\.$#"
+			count: 2
+			path: app/GraphQL/Directives/FilterableDirective.php
+
+		-
+			message: "#^Access to an undefined property GraphQL\\\\Language\\\\AST\\\\ListTypeNode\\|GraphQL\\\\Language\\\\AST\\\\NamedTypeNode\\|GraphQL\\\\Language\\\\AST\\\\NonNullTypeNode\\:\\:\\$type\\.$#"
+			count: 1
+			path: app/GraphQL/Directives/FilterableDirective.php
+
+		-
+			message: "#^Parameter \\#2 \\$array of function array_key_exists expects array, array\\<string, GraphQL\\\\Language\\\\AST\\\\Node&GraphQL\\\\Language\\\\AST\\\\TypeDefinitionNode\\>\\|GraphQL\\\\Language\\\\AST\\\\NodeList\\<GraphQL\\\\Language\\\\AST\\\\Node&GraphQL\\\\Language\\\\AST\\\\TypeDefinitionNode\\> given\\.$#"
+			count: 1
+			path: app/GraphQL/Directives/FilterableDirective.php
 
 		-
 			message: "#^Dynamic call to static method Illuminate\\\\Contracts\\\\Auth\\\\Guard\\:\\:user\\(\\)\\.$#"
