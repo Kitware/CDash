@@ -31,24 +31,14 @@ $currentDateString = now()->toDateString();
     <div id="headerbottom">
         <div id="headerlogo">
             <a
-                @if(isset($home_url))
-                    href="{{ $home_url }}"
-                @elseif(isset($angular) && $angular === true)
-                    ng-href="@{{::cdash.home}}"
-                @elseif(isset($project))
+                @if(isset($project))
                     href="{{ url('/index.php') }}?project={{ rawurlencode($project->Name) }}"
                 @else
                     href="{{ url('/')}}"
                 @endif
             >
-                {{-- TODO: (williamjallen) refactor this to always render the image URL with Blade --}}
                 @if(isset($project) && $logoid > 0)
                     <img id="projectlogo" height="50px" alt="" src="{{ url('/image/' . $logoid) }}" />
-                @elseif(isset($angular) && $angular === true)
-                    <img ng-if="cdash.logoid && cdash.logoid != 0" id="projectlogo" border="0" height="50px" ng-src="{{ url('/image') }}/@{{::cdash.logoid}}"/>
-                    <img ng-if="!cdash.logoid || cdash.logoid==0" id="projectlogo" border="0" height="50px" src="{{ asset('/img/cdash.svg?rev=2023-05-31') }}"/>
-                @elseif(isset($vue) && $vue === true)
-                    <header-logo></header-logo>
                 @else
                     <img id="projectlogo" height="50px" alt="" src="{{ asset('img/cdash.svg') }}" />
                 @endif

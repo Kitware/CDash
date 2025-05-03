@@ -17,11 +17,13 @@ final class SubProjectController extends AbstractProjectController
 {
     public function viewSubProjects(): View
     {
+        $this->setProjectByName(request()->input('project'));
         return $this->angular_view('viewSubProjects');
     }
 
     public function manageSubProject(): View
     {
+        $this->setProjectById(request()->integer('projectid'));
         return $this->angular_view('manageSubProject');
     }
 

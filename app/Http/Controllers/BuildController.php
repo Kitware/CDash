@@ -1011,16 +1011,19 @@ final class BuildController extends AbstractBuildController
 
     public function manageBuildGroup(): View
     {
+        $this->setProjectById(request()->integer('projectid'));
         return $this->angular_view('manageBuildGroup');
     }
 
     public function viewBuildError(): View
     {
+        $this->setBuildById(request()->integer('buildid'));
         return $this->angular_view('viewBuildError');
     }
 
     public function viewBuildGroup(): View
     {
+        $this->setProjectByName(request()->input('project'));
         return $this->angular_view('index');
     }
 

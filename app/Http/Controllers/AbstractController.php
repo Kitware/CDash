@@ -32,7 +32,7 @@ abstract class AbstractController extends BaseController
         return $result;
     }
 
-    protected function angular_view(string $view): View
+    protected function angular_view(string $view, string $title = ''): View
     {
         // A hack to ensure that redirects work properly after being redirected to the login page
         session(['url.intended' => url()->full()]);
@@ -51,7 +51,7 @@ abstract class AbstractController extends BaseController
             $controller_name = Str::studly($file) . 'Controller';
         }
 
-        return $this->view('cdash')
+        return $this->view('cdash', $title)
             ->with('xsl_content', file_get_contents(base_path("public/assets/js/angular/views/$view.html")))
             ->with('xsl', true)
             ->with('angular', true)

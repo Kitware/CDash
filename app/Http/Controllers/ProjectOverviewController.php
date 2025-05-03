@@ -17,6 +17,7 @@ final class ProjectOverviewController extends AbstractProjectController
 {
     public function overview(): View
     {
+        $this->setProjectByName(request()->input('project'));
         return $this->angular_view('overview');
     }
 
@@ -753,7 +754,8 @@ final class ProjectOverviewController extends AbstractProjectController
 
     public function manageOverview(): View
     {
-        return $this->angular_view('manageOverview');
+        $this->setProjectById(request()->integer('projectid'));
+        return $this->angular_view('manageOverview', 'Manage Overview');
     }
 
     public function apiManageOverview(): JsonResponse

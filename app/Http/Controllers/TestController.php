@@ -127,6 +127,7 @@ final class TestController extends AbstractProjectController
 
     public function queryTests(): View
     {
+        $this->setProjectByName(request()->input('project'));
         return $this->angular_view('queryTests');
     }
 
@@ -144,6 +145,7 @@ final class TestController extends AbstractProjectController
 
     public function testOverview(): View
     {
+        $this->setProjectByName(request()->input('project'));
         return $this->angular_view('testOverview');
     }
 
@@ -162,6 +164,7 @@ final class TestController extends AbstractProjectController
 
     public function testSummary(): View
     {
+        $this->setProjectById(request()->integer('project'));
         return $this->angular_view('testSummary');
     }
 
