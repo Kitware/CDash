@@ -14,12 +14,12 @@ final class DynamicAnalysisController extends AbstractBuildController
     public function viewDynamicAnalysis(int $buildid): View
     {
         $this->setBuildById($buildid);
-        return $this->view('dynamicanalysis.dynamic-analysis');
+        return $this->view('dynamicanalysis.dynamic-analysis', 'Dynamic Analysis');
     }
 
     public function viewDynamicAnalysisFile(): View
     {
-        return $this->angular_view('viewDynamicAnalysisFile');
+        return $this->angular_view('viewDynamicAnalysisFile', 'Dynamic Analysis');
     }
 
     public function apiViewDynamicAnalysis(): JsonResponse

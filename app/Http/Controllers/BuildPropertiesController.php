@@ -17,7 +17,7 @@ final class BuildPropertiesController extends AbstractBuildController
 {
     public function buildProperties(): View
     {
-        return $this->view('build.properties');
+        return $this->view('build.properties', 'Build Properties');
     }
 
     public function apiBuildProperties(): JsonResponse

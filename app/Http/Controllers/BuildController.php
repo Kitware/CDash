@@ -550,8 +550,7 @@ final class BuildController extends AbstractBuildController
             ];
         }
 
-        return $this->view('build.overview')
-            ->with('project', $this->project)
+        return $this->view('build.overview', 'Build Overview')
             ->with('selected_group', $selected_group)
             ->with('sourcefiles', $sourcefiles)
             ->with('startdate', date('l, F d Y H:i:s', $currentstarttime));
@@ -802,7 +801,7 @@ final class BuildController extends AbstractBuildController
             }
         }
 
-        return $this->view('build.files')
+        return $this->view('build.files', 'Files')
             ->with('build', $this->build)
             ->with('files', $files)
             ->with('urls', $urls);
@@ -854,7 +853,7 @@ final class BuildController extends AbstractBuildController
             $note->user = $user;
         }
 
-        return $this->view('build.note')
+        return $this->view('build.note', 'Notes')
             ->with('notes', $notes);
     }
 
@@ -1012,13 +1011,13 @@ final class BuildController extends AbstractBuildController
     public function manageBuildGroup(): View
     {
         $this->setProjectById(request()->integer('projectid'));
-        return $this->angular_view('manageBuildGroup');
+        return $this->angular_view('manageBuildGroup', 'Manage Build Groups');
     }
 
     public function viewBuildError(): View
     {
         $this->setBuildById(request()->integer('buildid'));
-        return $this->angular_view('viewBuildError');
+        return $this->angular_view('viewBuildError', 'Build Errors');
     }
 
     public function viewBuildGroup(): View
@@ -1232,7 +1231,7 @@ final class BuildController extends AbstractBuildController
 
     public function apiRelateBuilds(): JsonResponse
     {
-        $this->setProjectByName(request()->input('project') ?? '');
+        $this->setProjectByName(request()->string('project') ?? '');
 
         if (!request()->has('buildid')) {
             abort(400, '"buildid" parameter required.');

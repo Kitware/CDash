@@ -15,7 +15,7 @@ final class ViewTestController extends AbstractBuildController
     public function viewTest(): View
     {
         $this->setBuildById(request()->integer('buildid'));
-        return $this->view('test.view-test');
+        return $this->view('test.view-test', 'Tests');
     }
 
     /**

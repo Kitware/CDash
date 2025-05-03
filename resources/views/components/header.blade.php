@@ -47,14 +47,7 @@ $currentDateString = now()->toDateString();
 
         <div id="headername2">
             <span id="subheadername">
-                @if(isset($title))
-                    @if(isset($project) && $project->Exists())
-                        {{ $project->Name }} -
-                    @endif
-                    {{ $title }}
-                @elseif(isset($angular) && $angular === true)
-                    @{{title}}
-                @endif
+                {{ $title }}
             </span>
         </div>
 

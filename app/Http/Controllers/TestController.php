@@ -34,9 +34,7 @@ final class TestController extends AbstractProjectController
         }
 
         $this->setProjectById($projectid);
-        return $this->view('test.details')
-            ->with('title', 'Test Results')
-            ->with('project', $this->project);
+        return $this->view('test.details', 'Test Results');
     }
 
     public function apiTestDetails(): JsonResponse|StreamedResponse
@@ -121,14 +119,14 @@ final class TestController extends AbstractProjectController
         }
         $tarray = array_reverse($tarray);
 
-        return $this->view('test.ajax-test-failure-graph')
+        return $this->view('test.ajax-test-failure-graph', '')
             ->with('tarray', $tarray);
     }
 
     public function queryTests(): View
     {
-        $this->setProjectByName(request()->input('project'));
-        return $this->angular_view('queryTests');
+        $this->setProjectByName(request()->string('project'));
+        return $this->angular_view('queryTests', 'Query Tests');
     }
 
     public function apiQueryTests(): JsonResponse
@@ -137,7 +135,7 @@ final class TestController extends AbstractProjectController
             return response()->json(['error' => 'Valid project required']);
         }
 
-        $this->setProjectByName(request()->input('project'));
+        $this->setProjectByName(request()->string('project'));
 
         $controller = new LegacyQueryTestsController(Database::getInstance(), $this->project);
         return response()->json(cast_data_for_JSON($controller->getResponse()));
@@ -146,7 +144,7 @@ final class TestController extends AbstractProjectController
     public function testOverview(): View
     {
         $this->setProjectByName(request()->input('project'));
-        return $this->angular_view('testOverview');
+        return $this->angular_view('testOverview', 'Test Overview');
     }
 
     public function apiTestOverview(): JsonResponse
@@ -165,7 +163,7 @@ final class TestController extends AbstractProjectController
     public function testSummary(): View
     {
         $this->setProjectById(request()->integer('project'));
-        return $this->angular_view('testSummary');
+        return $this->angular_view('testSummary', 'Test Summary');
     }
 
     public function apiTestSummary(): JsonResponse|StreamedResponse

@@ -17,8 +17,8 @@ final class ProjectOverviewController extends AbstractProjectController
 {
     public function overview(): View
     {
-        $this->setProjectByName(request()->input('project'));
-        return $this->angular_view('overview');
+        $this->setProjectByName(request()->string('project'));
+        return $this->angular_view('overview', 'Project Overview');
     }
 
     public function apiOverview(): JsonResponse

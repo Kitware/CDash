@@ -1486,6 +1486,11 @@ parameters:
 			path: app/Http/Controllers/IndexController.php
 
 		-
+			message: "#^Parameter \\#1 \\$project_name of method App\\\\Http\\\\Controllers\\\\AbstractProjectController\\:\\:setProjectByName\\(\\) expects string, mixed given\\.$#"
+			count: 1
+			path: app/Http/Controllers/IndexController.php
+
+		-
 			message: "#^Part \\$default_project \\(mixed\\) of encapsed string cannot be cast to string\\.$#"
 			count: 1
 			path: app/Http/Controllers/IndexController.php

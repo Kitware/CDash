@@ -19,17 +19,10 @@ abstract class AbstractController extends BaseController
     /**
      * Add global data to each view
      */
-    protected function view(string $view, string $title = ''): View
+    protected function view(string $view, string $title): View
     {
         session()->put('url.intended', url()->full());
-
-        $result = view($view);
-
-        if ($title !== '') {
-            $result = $result->with('title', $title);
-        }
-
-        return $result;
+        return view($view)->with('title', $title);
     }
 
     protected function angular_view(string $view, string $title = ''): View

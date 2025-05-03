@@ -10,7 +10,7 @@ final class CTestConfigurationController extends AbstractProjectController
     {
         $this->setProjectById($id);
 
-        $view = $this->view('project.ctest-configuration')
+        $view = $this->view('project.ctest-configuration', '')
             ->with('subprojects', $this->project->GetSubProjects());
         return response($view, 200, ['Content-Type' => 'text/plain']);
     }

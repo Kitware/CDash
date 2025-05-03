@@ -29,7 +29,7 @@ final class CoverageController extends AbstractBuildController
             return redirect('projects');
         }
 
-        return $this->angular_view('compareCoverage');
+        return $this->angular_view('compareCoverage', 'Compare Coverage');
     }
 
     private static function get_cdash_dashboard_xml_by_name(string $projectname, $date): string
@@ -539,7 +539,7 @@ final class CoverageController extends AbstractBuildController
 
         $file = implode('<br>', $file_array);
 
-        return $this->view('coverage.coverage-file')
+        return $this->view('coverage.coverage-file', 'Coverage')
             ->with('coverage_file', $coverageFile)
             ->with('log', $file);
     }

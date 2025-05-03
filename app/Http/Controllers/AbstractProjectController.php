@@ -24,6 +24,12 @@ abstract class AbstractProjectController extends AbstractController
             return parent::view($view, $title);
         }
 
+        if ($title === '') {
+            $title = $this->project->Name;
+        } else {
+            $title = $this->project->Name . ' - ' . $title;
+        }
+
         return parent::view($view, $title)
             ->with('project', $this->project);
     }
