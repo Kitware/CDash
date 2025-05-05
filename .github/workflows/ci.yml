@@ -61,10 +61,11 @@ jobs:
           bash .github/workflows/submit.sh ${{matrix.database}} "${BUILD_GROUP}"
 
   build-images:
-    runs-on: ubuntu-latest
+    runs-on: ${{matrix.architecture}}
     strategy:
       fail-fast: false
       matrix:
+        architecture: [ 'ubuntu-24.04', 'ubuntu-24.04-arm' ]
         base-image: [ 'debian', 'ubi' ]
     steps:
       - uses: actions/checkout@v4
@@ -73,7 +74,6 @@ jobs:
         name: Build ${{matrix.base-image}} production image
         with:
           context: .
-          platforms: linux/amd64,linux/arm64
           push: false
           target: cdash
           build-args: |
