@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Support\Str;
 use InvalidArgumentException;
 use JsonException;
 use Nuwave\Lighthouse\Schema\AST\ASTHelper;
@@ -31,7 +32,7 @@ final class FilterDirective extends BaseDirective implements ArgBuilderDirective
         return /* @lang GraphQL */ <<<'GRAPHQL'
                 directive @filter(
                     "Input type to filter on.  This should be of the form: <...>FilterInput"
-                    inputType: String!
+                    inputType: String
                 ) on ARGUMENT_DEFINITION
             GRAPHQL;
     }
@@ -49,7 +50,9 @@ final class FilterDirective extends BaseDirective implements ArgBuilderDirective
         $multiFilterName = ASTHelper::qualifiedArgType($argDefinition, $parentField, $parentType) . 'MultiFilterInput';
         $argDefinition->type = Parser::namedType($multiFilterName);
 
-        $documentAST->setTypeDefinition($this->createMultiFilterInput($multiFilterName, $this->directiveArgValue('inputType')));
+        $defaultFilterType = Str::replaceEnd('Connection', '', $parentField->type->type->name->value) . 'FilterInput';
+        $inputType = $this->directiveArgValue('inputType', $defaultFilterType);
+        $documentAST->setTypeDefinition($this->createMultiFilterInput($multiFilterName, $inputType));
     }
 
     /**
