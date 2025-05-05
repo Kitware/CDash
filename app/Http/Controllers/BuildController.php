@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Build as EloquentBuild;
 use App\Models\Comment;
+use App\Models\UploadFile;
 use App\Models\User;
 use App\Utils\DatabaseCleanupUtils;
 use App\Utils\PageTimer;
@@ -18,7 +19,6 @@ use CDash\Model\BuildGroupRule;
 use CDash\Model\BuildRelationship;
 use CDash\Model\BuildUpdate;
 use CDash\Model\Label;
-use CDash\Model\UploadFile;
 use CDash\ServiceContainer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -761,19 +761,21 @@ final class BuildController extends AbstractBuildController
     public function files(int $build_id): View
     {
         $this->setBuildById($build_id);
-        $uploadFilesOrURLs = $this->build->GetUploadedFilesOrUrls();
+
+        $uploadFilesOrURLs = EloquentBuild::findOrFail($build_id)->uploadedFiles()->get();
 
         $urls = [];
         $files = [];
 
+        /** @var UploadFile $uploadFileOrURL */
         foreach ($uploadFilesOrURLs as $uploadFileOrURL) {
-            if ($uploadFileOrURL->IsUrl) {
+            if ($uploadFileOrURL->isurl) {
                 $urls[] = [
-                    'id' => (int) $uploadFileOrURL->Id,
-                    'filename' => htmlspecialchars($uploadFileOrURL->Filename),
+                    'id' => (int) $uploadFileOrURL->id,
+                    'filename' => htmlspecialchars($uploadFileOrURL->filename),
                 ];
             } else {
-                $filesize = $uploadFileOrURL->Filesize;
+                $filesize = $uploadFileOrURL->filesize;
                 $ext = 'b';
                 if ($filesize > 1024) {
                     $filesize /= 1024;
@@ -792,11 +794,11 @@ final class BuildController extends AbstractBuildController
                     $ext = 'Tb';
                 }
                 $files[] = [
-                    'id' => (int) $uploadFileOrURL->Id,
-                    'href' => url("/build/{$build_id}/file/{$uploadFileOrURL->Id}"),
-                    'sha1sum' => $uploadFileOrURL->Sha1Sum,
-                    'filename' => $uploadFileOrURL->Filename,
-                    'filesize' => $uploadFileOrURL->Filesize,
+                    'id' => (int) $uploadFileOrURL->id,
+                    'href' => url("/build/{$build_id}/file/{$uploadFileOrURL->id}"),
+                    'sha1sum' => $uploadFileOrURL->sha1sum,
+                    'filename' => $uploadFileOrURL->filename,
+                    'filesize' => $uploadFileOrURL->filesize,
                     'filesizedisplay' => round($filesize) . ' ' . $ext,
                 ];
             }
@@ -812,27 +814,27 @@ final class BuildController extends AbstractBuildController
     {
         $this->setBuildById($build_id);
 
+        /** @var ?UploadFile $file */
+        $file = EloquentBuild::findOrFail($build_id)->uploadedFiles()->find($file_id);
+
         // Validate that the file is associated with the build.
-        if (DB::table('build2uploadfile')->where('buildid', $build_id)->where('fileid', $file_id)->doesntExist()) {
+        if ($file === null) {
             abort(404, 'File not found');
         }
-
-        $uploadFile = new UploadFile();
-        $uploadFile->Id = $file_id;
-        $uploadFile->Fill();
 
         // The code below satisfies the following requirements:
         // 1) Render text and images in browser (as opposed to forcing a download).
         // 2) Download other files to the proper filename (not a numeric identifier).
         // 3) Support downloading files that are larger than the PHP memory_limit.
-        $fp = Storage::readStream("upload/{$uploadFile->Sha1Sum}");
+        $fp = Storage::readStream("upload/{$file->sha1sum}");
         if ($fp === null) {
             abort(404, 'File not found');
         }
-        $filename = $uploadFile->Filename;
+
+        $filename = $file->filename;
         $headers = [
             'Content-Type' => 'text/plain',
-            'Content-Disposition' => "inline/attachment; filename={$uploadFile->Filename}",
+            'Content-Disposition' => "inline/attachment; filename={$filename}",
         ];
         return response()->streamDownload(function () use ($fp) {
             while (!feof($fp)) {

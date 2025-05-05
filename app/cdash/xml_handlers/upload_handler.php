@@ -18,10 +18,10 @@
 use App\Http\Submission\Traits\UpdatesSiteInformation;
 use App\Models\Site;
 use App\Models\SiteInformation;
+use App\Models\UploadFile;
 use App\Utils\SubmissionUtils;
 use CDash\Model\Label;
 use CDash\Model\Project;
-use CDash\Model\UploadFile;
 use Illuminate\Http\File;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
@@ -45,7 +45,7 @@ class UploadHandler extends AbstractXmlHandler
 {
     use UpdatesSiteInformation;
 
-    private $UploadFile;
+    private UploadFile $UploadFile;
     private $TmpFilename;
     private $Base64TmpFileWriteHandle;
     private $Base64TmpFilename;
@@ -122,7 +122,7 @@ class UploadHandler extends AbstractXmlHandler
         } elseif ($name === 'FILE') {
             $this->initializeBuild();
             $this->UploadFile = new UploadFile();
-            $this->UploadFile->Filename = $attributes['FILENAME'];
+            $this->UploadFile->filename = basename($attributes['FILENAME']);
         } elseif ($name === 'CONTENT') {
             $fileEncoding = $attributes['ENCODING'] ?? 'base64';
 
@@ -167,8 +167,6 @@ class UploadHandler extends AbstractXmlHandler
         }
 
         if ($name === 'FILE' && $parent === 'UPLOAD') {
-            $this->UploadFile->BuildId = $this->Build->Id;
-
             // Close base64 temporary file writing handler
             fclose($this->Base64TmpFileWriteHandle);
             unset($this->Base64TmpFileWriteHandle);
@@ -208,26 +206,26 @@ class UploadHandler extends AbstractXmlHandler
 
             // TODO Check if a file if same buildid, sha1 and name has already been uploaded
 
-            $this->UploadFile->Sha1Sum = $upload_file_sha1;
-            $this->UploadFile->Filesize = $upload_file_size;
+            $this->UploadFile->sha1sum = $upload_file_sha1;
+            $this->UploadFile->filesize = $upload_file_size;
 
             // Extension of the file indicates if it's a data file that should be hosted on CDash of if
             // an URL should just be considered. File having extension ".url" are expected to contain an URL.
-            $path_parts = pathinfo($this->UploadFile->Filename);
+            $path_parts = pathinfo($this->UploadFile->filename);
             $ext = $path_parts['extension'];
 
             if ($ext === 'url') {
-                $this->UploadFile->IsUrl = true;
+                $this->UploadFile->isurl = true;
 
                 // Read content of the file
                 $url_length = 255; // max length of 'uploadfile.filename' field
-                $this->UploadFile->Filename = trim(file_get_contents($this->TmpFilename, null, null, 0, $url_length));
+                $this->UploadFile->filename = trim(file_get_contents($this->TmpFilename, null, null, 0, $url_length));
             } else {
-                $this->UploadFile->IsUrl = false;
+                $this->UploadFile->isurl = false;
 
                 if ((bool) config('cdash.remote_workers')) {
                     // Make an API request to store this file.
-                    $encrypted_sha1sum = encrypt($this->UploadFile->Sha1Sum);
+                    $encrypted_sha1sum = encrypt($this->UploadFile->sha1sum);
                     $fp_to_upload = fopen($this->TmpFilename, 'r');
                     if ($fp_to_upload === false) {
                         Log::error("Failed to open temporary file {$this->TmpFilename} for upload");
@@ -236,7 +234,7 @@ class UploadHandler extends AbstractXmlHandler
                         return;
                     }
                     $response = Http::attach(
-                        'attachment', $fp_to_upload, (string) $this->UploadFile->Sha1Sum
+                        'attachment', $fp_to_upload, (string) $this->UploadFile->sha1sum
                     )->post(url('/api/v1/store_upload'), [
                         'sha1sum' => $encrypted_sha1sum,
                     ]);
@@ -249,7 +247,7 @@ class UploadHandler extends AbstractXmlHandler
                     }
                 } else {
                     // Store the file if we don't already have it.
-                    $uploadFilepath = "upload/{$this->UploadFile->Sha1Sum}";
+                    $uploadFilepath = "upload/{$this->UploadFile->sha1sum}";
                     if (!Storage::exists($uploadFilepath)) {
                         try {
                             $fileToUpload = new File($this->TmpFilename);
@@ -259,7 +257,7 @@ class UploadHandler extends AbstractXmlHandler
                             $this->UploadError = true;
                             return;
                         }
-                        if (Storage::putFileAs('upload', $fileToUpload, (string) $this->UploadFile->Sha1Sum) === false) {
+                        if (Storage::putFileAs('upload', $fileToUpload, (string) $this->UploadFile->sha1sum) === false) {
                             Log::error("Failed to store {$this->TmpFilename} as {$uploadFilepath}");
                             unlink($this->TmpFilename);
                             $this->UploadError = true;
@@ -275,10 +273,11 @@ class UploadHandler extends AbstractXmlHandler
             }
 
             // Update model
-            $success = $this->UploadFile->Insert();
+            $success = $this->UploadFile->save();
             if (!$success) {
-                Log::error("UploadFile model - Failed to insert row associated with file: '{$this->UploadFile->Filename}'");
+                Log::error("UploadFile model - Failed to insert row associated with file: '{$this->UploadFile->filename}'");
             }
+            $this->UploadFile->builds()->attach((int) $this->Build->Id);
 
             // Reset UploadError so that the handler could attempt to process following files
             $this->UploadError = false;

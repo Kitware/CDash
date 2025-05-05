@@ -527,11 +527,6 @@ parameters:
 			path: app/Http/Controllers/AuthTokenController.php
 
 		-
-			message: "#^Argument of an invalid type array\\<CDash\\\\Model\\\\UploadFile\\>\\|false supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: app/Http/Controllers/BuildController.php
-
-		-
 			message: "#^Argument of an invalid type array\\|false supplied for foreach, only iterables are supported\\.$#"
 			count: 7
 			path: app/Http/Controllers/BuildController.php
@@ -5785,7 +5780,7 @@ parameters:
 				#^Call to deprecated function pdo_execute\\(\\)\\:
 				v2\\.5\\.0 01/22/2018$#
 			"""
-			count: 24
+			count: 23
 			path: app/cdash/app/Model/Build.php
 
 		-
@@ -9416,65 +9411,6 @@ parameters:
 			message: "#^Method CDash\\\\Model\\\\SubscriberInterface\\:\\:setAddress\\(\\) has parameter \\$address with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/SubscriberInterface.php
-
-		-
-			message: """
-				#^Call to deprecated function add_last_sql_error\\(\\)\\:
-				04/22/2023$#
-			"""
-			count: 2
-			path: app/cdash/app/Model/UploadFile.php
-
-		-
-			message: """
-				#^Call to deprecated method executePrepared\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
-			path: app/cdash/app/Model/UploadFile.php
-
-		-
-			message: """
-				#^Call to deprecated method executePreparedSingleRow\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 2
-			path: app/cdash/app/Model/UploadFile.php
-
-		-
-			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 3
-			path: app/cdash/app/Model/UploadFile.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\UploadFile\\:\\:\\$BuildId has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/UploadFile.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\UploadFile\\:\\:\\$Filename has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/UploadFile.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\UploadFile\\:\\:\\$Filesize has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/UploadFile.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\UploadFile\\:\\:\\$Id has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/UploadFile.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\UploadFile\\:\\:\\$IsUrl has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/UploadFile.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\UploadFile\\:\\:\\$Sha1Sum has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/UploadFile.php
 
 		-
 			message: "#^Method CDash\\\\Model\\\\User\\:\\:GetLabelCollection\\(\\) has invalid return type CDash\\\\Model\\\\Collection\\.$#"
@@ -23936,6 +23872,16 @@ parameters:
 			path: app/cdash/tests/test_removebuilds.php
 
 		-
+			message: "#^Property App\\\\Models\\\\UploadFile\\:\\:\\$filesize \\(int\\) does not accept int\\<0, max\\>\\|false\\.$#"
+			count: 2
+			path: app/cdash/tests/test_removebuilds.php
+
+		-
+			message: "#^Property App\\\\Models\\\\UploadFile\\:\\:\\$sha1sum \\(string\\) does not accept string\\|false\\.$#"
+			count: 2
+			path: app/cdash/tests/test_removebuilds.php
+
+		-
 			message: "#^Variable property access on mixed\\.$#"
 			count: 2
 			path: app/cdash/tests/test_removebuilds.php
@@ -28564,6 +28510,11 @@ parameters:
 			path: app/cdash/xml_handlers/upload_handler.php
 
 		-
+			message: "#^Class UploadHandler has an uninitialized property \\$UploadFile\\. Give it default value or assign it in the constructor\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/upload_handler.php
+
+		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 2
 			path: app/cdash/xml_handlers/upload_handler.php
@@ -28674,6 +28625,16 @@ parameters:
 			path: app/cdash/xml_handlers/upload_handler.php
 
 		-
+			message: "#^Property App\\\\Models\\\\UploadFile\\:\\:\\$filesize \\(int\\) does not accept int\\<0, max\\>\\|false\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/upload_handler.php
+
+		-
+			message: "#^Property App\\\\Models\\\\UploadFile\\:\\:\\$sha1sum \\(string\\) does not accept string\\|false\\.$#"
+			count: 1
+			path: app/cdash/xml_handlers/upload_handler.php
+
+		-
 			message: "#^Property UploadHandler\\:\\:\\$Base64TmpFileWriteHandle has no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/upload_handler.php
@@ -28695,11 +28656,6 @@ parameters:
 
 		-
 			message: "#^Property UploadHandler\\:\\:\\$UploadError has no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/upload_handler.php
-
-		-
-			message: "#^Property UploadHandler\\:\\:\\$UploadFile has no type specified\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/upload_handler.php
 

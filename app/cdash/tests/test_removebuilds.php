@@ -7,6 +7,7 @@
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use App\Models\TestMeasurement;
+use App\Models\UploadFile;
 use App\Utils\DatabaseCleanupUtils;
 use App\Utils\NoteCreator;
 use App\Utils\TestCreator;
@@ -26,7 +27,6 @@ use CDash\Model\DynamicAnalysisDefect;
 use CDash\Model\DynamicAnalysisSummary;
 use CDash\Model\Image;
 use CDash\Model\Label;
-use CDash\Model\UploadFile;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 
@@ -319,23 +319,22 @@ class RemoveBuildsTestCase extends KWWebTestCase
         // UploadFile
         $filename = dirname(__FILE__) . '/data/smile.gif';
         $upload1 = new UploadFile();
-        $upload1->Filename = $filename;
-        $upload1->IsUrl = false;
-        $upload1->BuildId = $build->Id;
-        $upload1->Sha1Sum = sha1_file($filename);
-        $upload1->Filesize = filesize($filename);
-        $upload1->Insert();
+        $upload1->filename = $filename;
+        $upload1->isurl = false;
+        $upload1->sha1sum = sha1_file($filename);
+        $upload1->filesize = filesize($filename);
+        $upload1->save();
+        $upload1->builds()->attach((int) $build->Id);
 
         $filename = dirname(__FILE__) . '/data/smile2.gif';
         $upload2 = new UploadFile();
-        $upload2->Filename = $filename;
-        $upload2->IsUrl = false;
-        $upload2->BuildId = $build->Id;
-        $upload2->Sha1Sum = sha1_file($filename);
-        $upload2->Filesize = filesize($filename);
-        $upload2->Insert();
-        $upload2->BuildId = $existing_build->Id;
-        $upload2->Insert();
+        $upload2->filename = $filename;
+        $upload2->isurl = false;
+        $upload2->sha1sum = sha1_file($filename);
+        $upload2->filesize = filesize($filename);
+        $upload2->save();
+        $upload2->builds()->attach((int) $build->Id);
+        $upload2->builds()->attach((int) $existing_build->Id);
 
         // Various tables that are too hard to spoof with models so we resort
         // to direct insertion.

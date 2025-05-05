@@ -1579,36 +1579,6 @@ class Build
         return self::ConvertMissingToZero($num_warnings);
     }
 
-    /**
-     * Return all uploaded files or URLs for this build
-     *
-     * @return array<UploadFile>|false
-     */
-    public function GetUploadedFilesOrUrls(): array|false
-    {
-        if (!$this->Id) {
-            Log::error('Id not set', [
-                'function' => 'Build GetUploadedFilesOrUrls()',
-            ]);
-            return false;
-        }
-
-        $stmt = $this->PDO->prepare(
-            'SELECT fileid FROM build2uploadfile WHERE buildid = ?');
-        if (!pdo_execute($stmt, [$this->Id])) {
-            return false;
-        }
-
-        $allUploadedFiles = [];
-        while ($uploadfiles_array = $stmt->fetch()) {
-            $UploadFile = new UploadFile();
-            $UploadFile->Id = $uploadfiles_array['fileid'];
-            $UploadFile->Fill();
-            $allUploadedFiles[] = $UploadFile;
-        }
-        return $allUploadedFiles;
-    }
-
     /** Lookup this build's parentid, returning 0 if none is found. */
     public function LookupParentBuildId(): int
     {
