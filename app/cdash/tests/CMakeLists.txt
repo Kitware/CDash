@@ -325,6 +325,9 @@ set_tests_properties(/Feature/GraphQL/Mutations/RevokeProjectInvitationTest PROP
 add_laravel_test(/Feature/GraphQL/Mutations/ChangeProjectRoleTest)
 set_tests_properties(/Feature/GraphQL/Mutations/ChangeProjectRoleTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
+add_laravel_test(/Feature/GraphQL/Mutations/RemoveProjectUserTest)
+set_tests_properties(/Feature/GraphQL/Mutations/RemoveProjectUserTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
 add_laravel_test(/Feature/Traits/UpdatesSiteInformationTest)
 set_tests_properties(/Feature/Traits/UpdatesSiteInformationTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 

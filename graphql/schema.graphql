@@ -79,6 +79,9 @@ type Mutation {
   "Change an existing user's role in a project."
   changeProjectRole(input: ChangeProjectRoleInput! @spread): ChangeProjectRoleMutationPayload! @field(resolver: "ChangeProjectRole")
 
+  "Remove a user from a project."
+  removeProjectUser(input: RemoveProjectUserInput! @spread): RemoveProjectUserMutationPayload! @field(resolver: "RemoveProjectUser")
+
   "Invite a user to this CDash instance by email."
   createGlobalInvitation(input: CreateGlobalInvitationInput! @spread): CreateGlobalInvitationMutationPayload! @field(resolver: "CreateGlobalInvitation")
 
@@ -279,6 +282,18 @@ type ChangeProjectRoleMutationPayload implements MutationPayloadInterface {
 
   "The project associated with the user whose role was changed."
   project: Project
+}
+
+
+input RemoveProjectUserInput {
+  userId: ID!
+  projectId: ID!
+}
+
+
+type RemoveProjectUserMutationPayload implements MutationPayloadInterface {
+  "Optional error message."
+  message: String
 }
 
 

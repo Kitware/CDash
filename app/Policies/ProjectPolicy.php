@@ -105,4 +105,9 @@ class ProjectPolicy
     {
         return $this->inviteUser($currentUser, $project);
     }
+
+    public function removeUser(User $currentUser, Project $project): bool
+    {
+        return $this->update($currentUser, $project);
+    }
 }

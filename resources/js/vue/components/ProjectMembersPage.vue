@@ -4,7 +4,7 @@
     data-test="project-members-page"
   >
     <div
-      v-if="canEditUsers"
+      v-if="canInviteUsers"
       class="tw-flex tw-flex-row tw-w-full"
     >
       <button
@@ -92,7 +92,7 @@
       </dialog>
     </div>
     <loading-indicator
-      v-if="canEditUsers"
+      v-if="canInviteUsers"
       :is-loading="!projectInvitations"
     >
       <data-table
@@ -158,14 +158,19 @@
             name: 'role',
             displayName: 'Role',
           },
-        ]"
+        ].concat(
+          canRemoveUsers ? [{
+            name: 'actions',
+            displayName: 'Actions',
+          }] : []
+        )"
         :rows="formattedUserRows"
         :full-width="true"
         test-id="members-table"
       >
         <template #role="{ props: { user: user, value: role } }">
           <select
-            v-if="canEditUsers && parseInt(user.id) !== parseInt(userId)"
+            v-if="canInviteUsers && parseInt(user.id) !== parseInt(userId)"
             class="tw-select tw-select-bordered tw-w-full tw-select-sm"
             data-test="role-select"
             @change="changeUserRole($event, user)"
@@ -184,6 +189,17 @@
           >
             {{ humanReadableRole(role) }}
           </span>
+        </template>
+        <template #actions="{ props: { user: user } }">
+          <button
+            v-if="parseInt(user.id) !== parseInt(userId)"
+            class="tw-btn tw-btn-sm tw-btn-outline"
+            data-test="remove-user-button"
+            @click="removeUser(user)"
+          >
+            Remove User <font-awesome-icon icon="fa-trash" />
+          </button>
+          <span v-else />
         </template>
       </data-table>
     </loading-indicator>
@@ -216,7 +232,12 @@ export default {
       required: true,
     },
 
-    canEditUsers: {
+    canInviteUsers: {
+      type: Boolean,
+      required: true,
+    },
+
+    canRemoveUsers: {
       type: Boolean,
       required: true,
     },
@@ -239,7 +260,7 @@ export default {
   apollo: {
     projectAdministrators: {
       query: gql`
-        query($projectid: ID, $after: String) {
+        query projectAdministrators($projectid: ID, $after: String) {
           project(id: $projectid) {
             id
             administrators(after: $after) {
@@ -280,7 +301,7 @@ export default {
 
     projectUsers: {
       query: gql`
-        query($projectid: ID, $after: String) {
+        query projectUsers($projectid: ID, $after: String) {
           project(id: $projectid) {
             id
             basicUsers(after: $after) {
@@ -376,12 +397,18 @@ export default {
             value: this.USER_TYPES.ADMINISTRATOR,
             user: edge.node,
           },
+          actions: {
+            user: edge.node,
+          },
         };
       }).concat(this.projectUsers.edges?.map(edge => {
         return {
           name: `${edge.node.firstname} ${edge.node.lastname}`,
           role: {
             value: this.USER_TYPES.USER,
+            user: edge.node,
+          },
+          actions: {
             user: edge.node,
           },
         };
@@ -514,6 +541,37 @@ export default {
 
     humanReadableRole(role) {
       return String(role).at(0) + String(role).slice(1).toLowerCase();
+    },
+
+    removeUser(user) {
+      this.$apollo.mutate({
+        mutation: gql`mutation ($userId: ID!, $projectId: ID!) {
+          removeProjectUser(input: {
+            userId: $userId
+            projectId: $projectId
+          }) {
+            message
+          }
+        }`,
+        variables: {
+          userId: user.id,
+          projectId: this.projectId,
+        },
+        updateQueries: {
+          projectUsers(prev) {
+            const data = JSON.parse(JSON.stringify(prev));
+            data.project.basicUsers.edges = data.project.basicUsers.edges.filter(({ node }) => node.id !== user.id);
+            return data;
+          },
+          projectAdministrators(prev) {
+            const data = JSON.parse(JSON.stringify(prev));
+            data.project.administrators.edges = data.project.administrators.edges.filter(({ node }) => node.id !== user.id);
+            return data;
+          },
+        },
+      }).catch((error) => {
+        console.error(error);
+      });
     },
   },
 };
