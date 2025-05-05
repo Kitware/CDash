@@ -29231,6 +29231,11 @@ parameters:
 			path: tests/Feature/GlobalInvitationAcceptanceTest.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Testing\\\\TestResponse\\:\\:assertGraphQLErrorMessage\\(\\)\\.$#"
+			count: 1
+			path: tests/Feature/GraphQL/FilterTest.php
+
+		-
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\User\\>\\:\\:pluck\\(\\)\\.$#"
 			count: 64
 			path: tests/Feature/GraphQL/Mutations/ChangeProjectRoleTest.php
