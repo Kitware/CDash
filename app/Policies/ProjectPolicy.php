@@ -98,16 +98,26 @@ class ProjectPolicy
             return false;
         }
 
+        // If an LDAP filter has been specified and LDAP is enabled, CDash controls the entire members list.
+        if ((bool) config('cdash.ldap_enabled') && $project->ldapfilter !== null && $project->ldapfilter !== '') {
+            return false;
+        }
+
         return $this->update($currentUser, $project);
     }
 
     public function revokeInvitation(User $currentUser, Project $project): bool
     {
-        return $this->inviteUser($currentUser, $project);
+        return $this->update($currentUser, $project);
     }
 
     public function removeUser(User $currentUser, Project $project): bool
     {
+        // If an LDAP filter has been specified and LDAP is enabled, CDash controls the entire members list.
+        if ((bool) config('cdash.ldap_enabled') && $project->ldapfilter !== null && $project->ldapfilter !== '') {
+            return false;
+        }
+
         return $this->update($currentUser, $project);
     }
 }

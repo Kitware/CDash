@@ -90,4 +90,5 @@ return [
     'global_banner' => env('GLOBAL_BANNER'),
     // Whether or not "normal" username+password authentication is enabled
     'username_password_authentication_enabled' => env('USERNAME_PASSWORD_AUTHENTICATION_ENABLED', true),
+    'ldap_enabled' => env('CDASH_AUTHENTICATION_PROVIDER') === 'ldap',
 ];

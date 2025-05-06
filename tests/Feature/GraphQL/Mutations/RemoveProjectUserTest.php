@@ -4,6 +4,7 @@ namespace Tests\Feature\GraphQL\Mutations;
 
 use App\Models\Project;
 use App\Models\User;
+use Illuminate\Support\Facades\Config;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
 use Tests\Traits\CreatesUsers;
@@ -320,5 +321,71 @@ class RemoveProjectUserTest extends TestCase
                 ],
             ],
         ], true);
+    }
+
+    public function testCannotDeleteProjectMembersIfManagedByLdap(): void
+    {
+        $this->users['admin'] = $this->makeAdminUser();
+        $userToDelete = $this->addUserToProject();
+
+        $this->assertProjectMember($userToDelete);
+
+        Config::set('cdash.ldap_enabled', true);
+        $this->project->ldapfilter = '(uid=*group_1*)';
+        $this->project->save();
+
+        $this->actingAs($this->users['admin'])->graphQL('
+            mutation ($userId: ID!, $projectId: ID!) {
+                removeProjectUser(input: {
+                    projectId: $projectId
+                    userId: $userId
+                }) {
+                    message
+                }
+            }
+        ', [
+            'projectId' => $this->project->id,
+            'userId' => $userToDelete->id,
+        ])->assertJson([
+            'data' => [
+                'removeProjectUser' => [
+                    'message' => 'This action is unauthorized.',
+                ],
+            ],
+        ], true);
+
+        $this->assertProjectMember($userToDelete);
+    }
+
+    public function testCanDeleteProjectMemberWhenLdapEnabledButNoLdapFilter(): void
+    {
+        $this->users['admin'] = $this->makeAdminUser();
+        $userToDelete = $this->addUserToProject();
+
+        $this->assertProjectMember($userToDelete);
+
+        Config::set('cdash.ldap_enabled', true);
+
+        $this->actingAs($this->users['admin'])->graphQL('
+            mutation ($userId: ID!, $projectId: ID!) {
+                removeProjectUser(input: {
+                    projectId: $projectId
+                    userId: $userId
+                }) {
+                    message
+                }
+            }
+        ', [
+            'projectId' => $this->project->id,
+            'userId' => $userToDelete->id,
+        ])->assertJson([
+            'data' => [
+                'removeProjectUser' => [
+                    'message' => null,
+                ],
+            ],
+        ], true);
+
+        $this->assertNotProjectMember($userToDelete);
     }
 }
