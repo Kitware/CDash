@@ -28,13 +28,8 @@ class BuildErrorFilter
 
     public function __construct(Project $project)
     {
-        $this->ErrorsFilter = null;
-        $this->WarningsFilter = null;
-
         $this->PDO = Database::getInstance();
-
         $this->Project = $project;
-        $this->Fill();
     }
 
     public function Exists()
@@ -104,7 +99,7 @@ class BuildErrorFilter
         $this->WarningsFilter = $filter;
     }
 
-    private function Fill()
+    public function Fill()
     {
         $stmt = $this->PDO->prepare(
             'SELECT * FROM build_filters WHERE projectid = :projectid');

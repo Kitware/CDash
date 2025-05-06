@@ -7,7 +7,7 @@ abstract class AbstractSubmissionHandler
 {
     protected Build $Build;
 
-    protected Project $Project;
+    private ?Project $Project = null;
 
     /**
      * We prefer to accept a Build if one is known, but some (mostly XML) handlers determine the build
@@ -22,10 +22,17 @@ abstract class AbstractSubmissionHandler
         } else {
             $this->Build = $init;
             $this->Build->FillFromId($this->Build->Id);
+        }
+    }
+
+    public function GetProject(): Project
+    {
+        if ($this->Project === null) {
             $this->Project = $this->Build->GetProject();
         }
 
         $this->Project->Fill();
+        return $this->Project;
     }
 
     public function getBuild(): Build

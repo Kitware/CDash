@@ -66,7 +66,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
     private $BuildStamp;
     private $Generator;
     private $PullRequest;
-    private $BuildErrorFilter;
+    private ?BuildErrorFilter $BuildErrorFilter = null;
     protected static ?string $schema_file = '/app/Validators/Schemas/Build.xsd';
 
     /**
@@ -121,7 +121,6 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
         $this->BuildCommand = '';
         $this->Labels = [];
         $this->SubProjects = [];
-        $this->BuildErrorFilter = new BuildErrorFilter($this->GetProject());
     }
 
     public function startElement($parser, $name, $attributes): void
@@ -433,6 +432,11 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
             $skip_error = false;
             foreach (['StdOutput', 'StdError', 'Text'] as $field) {
                 if (isset($this->Error->$field)) {
+                    if ($this->BuildErrorFilter === null) {
+                        $this->BuildErrorFilter = new BuildErrorFilter($this->GetProject());
+                        $this->BuildErrorFilter->Fill();
+                    }
+
                     if ($this->Error->Type === 1) {
                         $skip_error = $this->BuildErrorFilter->FilterWarning($this->Error->$field);
                     } elseif ($this->Error->Type === 0) {

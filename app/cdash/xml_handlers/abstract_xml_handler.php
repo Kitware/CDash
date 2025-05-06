@@ -189,12 +189,6 @@ abstract class AbstractXmlHandler extends AbstractSubmissionHandler
         return $this->ModelFactory;
     }
 
-    public function GetProject(): Project
-    {
-        $this->Project->Fill();
-        return $this->Project;
-    }
-
     public function GetSite(): Site
     {
         return $this->Site;

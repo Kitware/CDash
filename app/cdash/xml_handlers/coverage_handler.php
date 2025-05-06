@@ -48,7 +48,6 @@ class CoverageHandler extends AbstractXmlHandler
         $this->Site = new Site();
         $this->Coverages = [];
         $this->CoverageSummaries = [];
-        $this->HasSubProjects = $this->GetProject()->GetNumberOfSubProjects() > 0;
     }
 
     /** startElement */
@@ -134,11 +133,13 @@ class CoverageHandler extends AbstractXmlHandler
                 $this->Build->UpdateBuild($this->Build->Id, -1, -1);
             }
 
+            $hasSubProjects = $this->GetProject()->GetNumberOfSubProjects() > 0;
+
             foreach ($this->Coverages as $coverageInfo) {
                 $coverage = $coverageInfo[0];
                 $coverageFile = $coverageInfo[1];
                 $buildid = $this->Build->Id;
-                if ($this->HasSubProjects) {
+                if ($hasSubProjects) {
                     // Make sure this file gets associated with the correct SubProject.
                     $subproject = SubProject::GetSubProjectFromPath(
                         $coverageFile->FullPath, $this->GetProject()->Id);

@@ -66,7 +66,7 @@ class SubProjectDirectoriesHandler extends AbstractSubmissionHandler
         // Save all of our SubProjects.
         foreach ($closed_list as $name => $path) {
             $subproject = new SubProject();
-            $subproject->SetProjectId($this->Project->Id);
+            $subproject->SetProjectId($this->GetProject()->Id);
             $subproject->SetName($name);
             $subproject->SetPath($path);
             $subproject->SetPosition($this->SubProjectOrder[$path]);

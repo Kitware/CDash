@@ -32,7 +32,7 @@ class GcovTarHandler extends AbstractSubmissionHandler
     private $SourceDirectory;
     private $BinaryDirectory;
     private $Labels;
-    private $SubProjectPath;
+    private ?string $SubProjectPath = null;
     private $SubProjectSummaries;
     private $AggregateBuildId;
     private $PreviousAggregateParentId;
@@ -46,18 +46,6 @@ class GcovTarHandler extends AbstractSubmissionHandler
         $this->SourceDirectory = '';
         $this->BinaryDirectory = '';
         $this->Labels = [];
-
-        $this->SubProjectPath = '';
-
-        // Check if we should support cross-SubProject coverage.
-        if ($this->Build->SubProjectId > 0) {
-            $subproject = new SubProject();
-            $subproject->SetId($this->Build->SubProjectId);
-            $path = $subproject->GetPath();
-            if ($path != '') {
-                $this->SubProjectPath = $path;
-            }
-        }
         $this->SubProjectSummaries = [];
         $this->PreviousAggregateParentId = null;
     }
@@ -191,13 +179,24 @@ class GcovTarHandler extends AbstractSubmissionHandler
             return;
         }
 
+        // Check if we should support cross-SubProject coverage.
+        if ($this->SubProjectPath === null) {
+            if ($this->Build->SubProjectId > 0) {
+                $subproject = new SubProject();
+                $subproject->SetId($this->Build->SubProjectId);
+                $this->SubProjectPath = $subproject->GetPath();
+            } else {
+                $this->SubProjectPath = '';
+            }
+        }
+
         // Check if this file belongs to a different SubProject.
         $buildid = $this->Build->Id;
         if (!empty($this->SubProjectPath)
             && !str_contains($path, $this->SubProjectPath)
         ) {
             // Find the SubProject that corresponds to this path.
-            $subproject = SubProject::GetSubProjectFromPath($path, $this->Project->Id);
+            $subproject = SubProject::GetSubProjectFromPath($path, $this->GetProject()->Id);
             if (is_null($subproject)) {
                 // Error already logged.
                 return;
@@ -210,7 +209,7 @@ class GcovTarHandler extends AbstractSubmissionHandler
                 // Build doesn't exist yet, add it here.
                 $siblingBuild = new Build();
                 $siblingBuild->Name = $this->Build->Name;
-                $siblingBuild->ProjectId = $this->Project->Id;
+                $siblingBuild->ProjectId = $this->GetProject()->Id;
                 $siblingBuild->SiteId = $this->Build->SiteId;
                 $siblingBuild->SetParentId($this->Build->GetParentId());
                 $siblingBuild->SetStamp($this->Build->GetStamp());
