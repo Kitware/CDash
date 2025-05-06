@@ -34,7 +34,7 @@ class Kernel extends ConsoleKernel
             ->daily()
             ->withoutOverlapping();
 
-        if (env('CDASH_AUTHENTICATION_PROVIDER') === 'ldap') {
+        if (config('ldap_enabled')) {
             $schedule->command('ldap:sync_projects')
                 ->everyFiveMinutes();
         }

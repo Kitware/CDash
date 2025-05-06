@@ -67,7 +67,7 @@ final class LoginController extends AbstractController
      */
     public function credentials(Request $request): array
     {
-        if (env('CDASH_AUTHENTICATION_PROVIDER', 'users') === 'ldap') {
+        if (config('ldap_enabled')) {
             return [
                 (string) env('LDAP_LOCATE_USERS_BY', 'mail') => $request->post('email'),
                 'password' => $request->post('password'),

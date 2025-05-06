@@ -13,7 +13,7 @@ class SuccessfulLdapAuthListener
 {
     public function handle(Login $event): void
     {
-        if (env('CDASH_AUTHENTICATION_PROVIDER', 'users') === 'ldap') {
+        if (config('ldap_enabled')) {
             /**
              * @var User $user
              */
