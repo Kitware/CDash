@@ -330,7 +330,7 @@ class RemoveProjectUserTest extends TestCase
 
         $this->assertProjectMember($userToDelete);
 
-        Config::set('ldap_enabled', true);
+        Config::set('cdash.ldap_enabled', true);
         $this->project->ldapfilter = '(uid=*group_1*)';
         $this->project->save();
 
@@ -364,7 +364,7 @@ class RemoveProjectUserTest extends TestCase
 
         $this->assertProjectMember($userToDelete);
 
-        Config::set('ldap_enabled', true);
+        Config::set('cdash.ldap_enabled', true);
 
         $this->actingAs($this->users['admin'])->graphQL('
             mutation ($userId: ID!, $projectId: ID!) {

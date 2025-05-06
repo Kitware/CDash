@@ -495,7 +495,7 @@ class InviteToProjectTest extends TestCase
         Mail::fake();
         self::assertEmpty($this->project->invitations()->get());
 
-        Config::set('ldap_enabled', true);
+        Config::set('cdash.ldap_enabled', true);
         $this->project->ldapfilter = '(uid=*group_1*)';
         $this->project->save();
 
@@ -534,7 +534,7 @@ class InviteToProjectTest extends TestCase
         Mail::fake();
         self::assertEmpty($this->project->invitations()->get());
 
-        Config::set('ldap_enabled', true);
+        Config::set('cdash.ldap_enabled', true);
 
         $this->actingAs($this->users['admin'])->graphQL('
             mutation ($email: String!, $projectId: ID!, $role: ProjectRole!) {

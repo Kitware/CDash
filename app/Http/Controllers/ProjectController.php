@@ -157,7 +157,7 @@ final class ProjectController extends AbstractProjectController
 
         $response['max_project_visibility'] = $User->admin ? 'PUBLIC' : config('cdash.max_project_visibility');
 
-        $response['ldap_enabled'] = config('ldap_enabled');
+        $response['ldap_enabled'] = config('cdash.ldap_enabled');
 
         $pageTimer->end($response);
         return response()->json(cast_data_for_JSON($response));
