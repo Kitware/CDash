@@ -489,4 +489,82 @@ class InviteToProjectTest extends TestCase
 
         self::assertEmpty($this->project->invitations()->get());
     }
+
+    public function testCantCreateInvitationWhenMembersManagedByLdap(): void
+    {
+        Mail::fake();
+        self::assertEmpty($this->project->invitations()->get());
+
+        Config::set('ldap_enabled', true);
+        $this->project->ldapfilter = '(uid=*group_1*)';
+        $this->project->save();
+
+        $this->actingAs($this->users['admin'])->graphQL('
+            mutation ($email: String!, $projectId: ID!, $role: ProjectRole!) {
+                inviteToProject(input: {
+                    email: $email
+                    projectId: $projectId
+                    role: $role
+                }) {
+                    message
+                    invitedUser {
+                        email
+                    }
+                }
+            }
+        ', [
+            'email' => $this->users['normal']->email,
+            'projectId' => $this->project->id,
+            'role' => 'USER',
+        ])->assertJson([
+            'data' => [
+                'inviteToProject' => [
+                    'message' => 'This action is unauthorized.',
+                    'invitedUser' => null,
+                ],
+            ],
+        ], true);
+
+        self::assertEmpty($this->project->invitations()->get());
+        Mail::assertNothingQueued();
+    }
+
+    public function testCanCreateInvitationWhenLdapEnabledButNoProjectLdapFilter(): void
+    {
+        Mail::fake();
+        self::assertEmpty($this->project->invitations()->get());
+
+        Config::set('ldap_enabled', true);
+
+        $this->actingAs($this->users['admin'])->graphQL('
+            mutation ($email: String!, $projectId: ID!, $role: ProjectRole!) {
+                inviteToProject(input: {
+                    email: $email
+                    projectId: $projectId
+                    role: $role
+                }) {
+                    message
+                    invitedUser {
+                        email
+                    }
+                }
+            }
+        ', [
+            'email' => $this->users['normal']->email,
+            'projectId' => $this->project->id,
+            'role' => 'USER',
+        ])->assertJson([
+            'data' => [
+                'inviteToProject' => [
+                    'message' => null,
+                    'invitedUser' => [
+                        'email' => $this->users['normal']->email,
+                    ],
+                ],
+            ],
+        ], true);
+
+        self::assertCount(1, $this->project->invitations()->get());
+        Mail::assertQueued(InvitedToProject::class);
+    }
 }

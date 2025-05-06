@@ -31,6 +31,10 @@ final class ProjectInvitationController extends AbstractController
             abort(401, 'This invitation is not associated with that project.');
         }
 
+        if (config('ldap_enabled') && $user_invite->project->ldapfilter !== null && $user_invite->project->ldapfilter !== '') {
+            abort(401, 'Membership is managed by LDAP for this project.');
+        }
+
         if ($user->projects()->where('id', $user_invite->project_id)->exists()) {
             $user_invite->deleteOrFail();
             abort(401, 'You are already registered for this project.');
