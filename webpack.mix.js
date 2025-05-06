@@ -112,4 +112,7 @@ mix.webpackConfig({
   stats: {
     children: true,
   },
+  optimization: {
+    runtimeChunk: false,
+  },
 });

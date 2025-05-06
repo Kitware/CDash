@@ -4,7 +4,7 @@
       class="table-heading1 tw-font-bold"
       style="font-size: 16px; padding: 6px;"
     >
-      <font-awesome-icon icon="fa-filter" /> Filters
+      <font-awesome-icon :icon="FA.faFilter" /> Filters
     </div>
     <filter-group
       :type="filterType"
@@ -18,7 +18,7 @@
         class="tw-btn tw-btn-xs"
         :href="executeQueryLink"
       >
-        <font-awesome-icon icon="fa-magnifying-glass" /> Apply
+        <font-awesome-icon :icon="FA.faMagnifyingGlass" /> Apply
       </a>
       <a
         role="button"
@@ -27,7 +27,7 @@
         target="_blank"
         rel="noopener noreferrer"
       >
-        <font-awesome-icon icon="fa-terminal" /> GraphQL
+        <font-awesome-icon :icon="FA.faTerminal" /> GraphQL
       </a>
     </div>
   </div>
@@ -36,6 +36,11 @@
 <script>
 import FilterGroup from './FilterGroup.vue';
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
+import {
+  faMagnifyingGlass,
+  faTerminal,
+  faFilter,
+} from '@fortawesome/free-solid-svg-icons';
 
 export default {
   components: { FilterGroup, FontAwesomeIcon },
@@ -83,5 +88,15 @@ export default {
   emits: [
     'changeFilters',
   ],
+
+  computed: {
+    FA() {
+      return {
+        faMagnifyingGlass,
+        faTerminal,
+        faFilter,
+      };
+    },
+  },
 };
 </script>

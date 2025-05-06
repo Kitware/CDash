@@ -35,7 +35,7 @@
               Email
             </div>
             <label class="tw-input tw-input-bordered tw-flex tw-items-center tw-w-full tw-gap-2">
-              <font-awesome-icon icon="fa-envelope" />
+              <font-awesome-icon :icon="FA.faEnvelope" />
               <input
                 v-model="inviteMembersModalEmail"
                 type="email"
@@ -136,7 +136,7 @@
             data-test="revoke-invitation-button"
             @click="revokeInvitation(invite)"
           >
-            Revoke Invitation <font-awesome-icon icon="fa-trash" />
+            Revoke Invitation <font-awesome-icon :icon="FA.faTrash" />
           </button>
         </template>
       </data-table>
@@ -197,7 +197,7 @@
             data-test="remove-user-button"
             @click="removeUser(user)"
           >
-            Remove User <font-awesome-icon icon="fa-trash" />
+            Remove User <font-awesome-icon :icon="FA.faTrash" />
           </button>
           <span v-else />
         </template>
@@ -212,6 +212,10 @@ import gql from 'graphql-tag';
 import LoadingIndicator from './shared/LoadingIndicator.vue';
 import DataTable from './shared/DataTable.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import {
+  faEnvelope,
+  faTrash,
+} from '@fortawesome/free-solid-svg-icons';
 import { DateTime } from 'luxon';
 
 export default {
@@ -389,6 +393,13 @@ export default {
   },
 
   computed: {
+    FA() {
+      return {
+        faEnvelope,
+        faTrash,
+      };
+    },
+
     formattedUserRows() {
       return this.projectAdministrators.edges?.map(edge => {
         return {

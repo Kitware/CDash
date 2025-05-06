@@ -5,7 +5,7 @@
         class="tw-btn tw-btn-xs"
         @click="$emit('delete')"
       >
-        <font-awesome-icon icon="fa-trash" /> Delete
+        <font-awesome-icon :icon="FA.faTrash" /> Delete
       </button>
       <!-- Field chooser -->
       <select
@@ -75,6 +75,7 @@ import {useQuery} from '@vue/apollo-composable';
 import gql from 'graphql-tag';
 import LoadingIndicator from './LoadingIndicator.vue';
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
+import {faTrash} from '@fortawesome/free-solid-svg-icons';
 
 export default {
   components: {FontAwesomeIcon, LoadingIndicator},
@@ -153,6 +154,12 @@ export default {
   },
 
   computed: {
+    FA() {
+      return {
+        faTrash,
+      };
+    },
+
     selectedType() {
       return this.result?.typeInformation.inputFields.filter(field => field.name === this.selectedField)[0].type;
     },

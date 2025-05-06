@@ -16,7 +16,7 @@
             :href="`${$baseURL}/sites/${build.site.id}`"
             class="tw-truncate"
           >
-            <font-awesome-icon icon="fa-computer" /> {{ build.site.name }}
+            <font-awesome-icon :icon="FA.faComputer" /> {{ build.site.name }}
           </a>
           &bull;
           <span
@@ -25,16 +25,16 @@
           >
             <font-awesome-icon
               v-if="build.operatingSystemName === 'Windows'"
-              :icon="['fab', 'windows']"
+              :icon="FA.faWindows"
             />
             <!-- TODO: Add more specific Linux types. May require CTest work. -->
             <font-awesome-icon
               v-else-if="build.operatingSystemName === 'Linux'"
-              :icon="['fab', 'linux']"
+              :icon="FA.faLinux"
             />
             <font-awesome-icon
               v-else-if="build.operatingSystemName === 'Darwin' || build.operatingSystemName === 'OSX'"
-              :icon="['fab', 'apple']"
+              :icon="FA.faApple"
             />
             {{ build.operatingSystemName }} {{ build.operatingSystemRelease }}
             <div
@@ -127,7 +127,7 @@
               :href="`${$baseURL}/sites/${build.site.id}`"
               class="tw-link tw-link-hover"
             >
-              <font-awesome-icon icon="fa-computer" /> {{ build.site.name }}
+              <font-awesome-icon :icon="FA.faComputer" /> {{ build.site.name }}
             </a>
           </div>
           <div class="tw-flex tw-flex-row tw-gap-4">
@@ -300,6 +300,12 @@ import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 import LoadingIndicator from './LoadingIndicator.vue';
 import { DateTime, Interval, Duration } from 'luxon';
 import BuildSummaryCardStepSummary from './BuildSummaryCardStepSummary.vue';
+import { faComputer } from '@fortawesome/free-solid-svg-icons';
+import {
+  faWindows,
+  faLinux,
+  faApple,
+} from '@fortawesome/free-brands-svg-icons';
 
 export default {
   components: {BuildSummaryCardStepSummary, LoadingIndicator, FontAwesomeIcon},
@@ -381,6 +387,15 @@ export default {
   },
 
   computed: {
+    FA() {
+      return {
+        faComputer,
+        faWindows,
+        faLinux,
+        faApple,
+      };
+    },
+
     hasConfigure() {
       return this.build.configureWarningsCount > -1 && this.build.configureErrorsCount > -1;
     },

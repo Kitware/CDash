@@ -104,42 +104,42 @@
                 title="Edit subscription"
                 :href="$baseURL + '/subscribeProject.php?projectid=' + project.id + '&edit=1'"
               >
-                <font-awesome-icon icon="fa-bell" />
+                <font-awesome-icon :icon="FA.faBell" />
               </a>
               <a
                 v-if="project.role > 0"
                 title="Claim sites"
                 :href="$baseURL + '/projects/' + project.id + '/sites'"
               >
-                <font-awesome-icon icon="fa-computer" />
+                <font-awesome-icon :icon="FA.faComputer" />
               </a>
               <a
                 v-if="project.role > 1"
                 title="Edit project"
                 :href="$baseURL + '/project/' + project.id + '/edit'"
               >
-                <font-awesome-icon icon="fa-pencil" />
+                <font-awesome-icon :icon="FA.faPencil" />
               </a>
               <a
                 v-if="project.role > 1"
                 title="Manage subprojects"
                 :href="$baseURL + '/manageSubProject.php?projectid=' + project.id"
               >
-                <font-awesome-icon icon="fa-folder-tree" />
+                <font-awesome-icon :icon="FA.faFolderTree" />
               </a>
               <a
                 v-if="project.role > 1"
                 title="Manage project groups"
                 :href="$baseURL + '/manageBuildGroup.php?projectid=' + project.id"
               >
-                <font-awesome-icon icon="fa-layer-group" />
+                <font-awesome-icon :icon="FA.faLayerGroup" />
               </a>
               <a
                 v-if="project.role > 1"
                 title="Manage project users"
                 :href="$baseURL + '/projects/' + project.id + '/members'"
               >
-                <font-awesome-icon icon="fa-user-pen" />
+                <font-awesome-icon :icon="FA.faUserPen" />
               </a>
             </td>
             <td
@@ -698,6 +698,15 @@
 import ApiLoader from './shared/ApiLoader';
 import LoadingIndicator from './shared/LoadingIndicator.vue';
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
+import {
+  faBell,
+  faComputer,
+  faPencil,
+  faFolderTree,
+  faLayerGroup,
+  faUserPen,
+} from '@fortawesome/free-solid-svg-icons';
+
 export default {
   name: 'UserHomepage',
   components: { FontAwesomeIcon, LoadingIndicator },
@@ -710,6 +719,19 @@ export default {
       errored: false,
       tokenscope: 'full_access',
     };
+  },
+
+  computed: {
+    FA() {
+      return {
+        faBell,
+        faComputer,
+        faPencil,
+        faFolderTree,
+        faLayerGroup,
+        faUserPen,
+      };
+    },
   },
 
   mounted () {

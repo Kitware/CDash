@@ -52,19 +52,19 @@
             class="tw-btn tw-btn-xs"
             @click="addFilter"
           >
-            <font-awesome-icon icon="fa-plus" /> Add Filter
+            <font-awesome-icon :icon="FA.faPlus" /> Add Filter
           </button>
           <button
             class="tw-btn tw-btn-xs"
             @click="addGroup"
           >
-            <font-awesome-icon icon="fa-bars-staggered" /> Add Group
+            <font-awesome-icon :icon="FA.faBarsStaggered" /> Add Group
           </button>
           <button
             class="tw-btn tw-btn-xs"
             @click="$emit('delete')"
           >
-            <font-awesome-icon icon="fa-trash" /> Delete Group
+            <font-awesome-icon :icon="FA.faTrash" /> Delete Group
           </button>
         </div>
       </div>
@@ -78,6 +78,11 @@ import {useQuery} from '@vue/apollo-composable';
 import gql from 'graphql-tag';
 import FilterRow from './FilterRow.vue';
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
+import {
+  faPlus,
+  faBarsStaggered,
+  faTrash,
+} from '@fortawesome/free-solid-svg-icons';
 
 export default {
   components: { FontAwesomeIcon, FilterRow, LoadingIndicator },
@@ -142,6 +147,14 @@ export default {
   },
 
   computed: {
+    FA() {
+      return {
+        faPlus,
+        faBarsStaggered,
+        faTrash,
+      };
+    },
+
     currentCombineType() {
       return this.filters.hasOwnProperty('any') ? 'any' : 'all';
     },

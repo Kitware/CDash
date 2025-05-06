@@ -29,7 +29,7 @@
         >
           <font-awesome-icon
             v-if="sortable"
-            :icon="sortColumn === column.name ? (sortAsc ? 'fa-caret-up' : 'fa-caret-down') : 'fa-sort'"
+            :icon="sortColumn === column.name ? (sortAsc ? FA.faCaretUp : FA.faCaretDown) : FA.faSort"
           />
           {{ column.displayName }}
         </th>
@@ -80,6 +80,11 @@
 
 <script>
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import {
+  faCaretUp,
+  faCaretDown,
+  faSort,
+} from '@fortawesome/free-solid-svg-icons';
 
 export default {
   components: {
@@ -201,6 +206,14 @@ export default {
   },
 
   computed: {
+    FA() {
+      return {
+        faCaretUp,
+        faCaretDown,
+        faSort,
+      };
+    },
+
     sortedRows() {
       return [...this.rows].sort((row1, row2) => {
         // The "value" attribute is required.  Fail if it is not provided.

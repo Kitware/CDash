@@ -8,7 +8,7 @@
   >
     <div class="tw-text-small tw-font-medium tw-text-neutral-500 tw-flex tw-flex-row tw-gap-2 group-hover:tw-font-bold">
       <div>
-        <font-awesome-icon icon="fa-link" />
+        <font-awesome-icon :icon="FA.faLink" />
         {{ upperLeftText }}
       </div>
       <div
@@ -55,6 +55,7 @@
 
 <script>
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
+import {faLink} from '@fortawesome/free-solid-svg-icons';
 
 export default {
   components: {FontAwesomeIcon},
@@ -83,6 +84,14 @@ export default {
     highlightColor: {
       type: String,
       default: null,
+    },
+  },
+
+  computed: {
+    FA() {
+      return {
+        faLink,
+      };
     },
   },
 };
