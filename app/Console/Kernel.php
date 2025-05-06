@@ -34,7 +34,7 @@ class Kernel extends ConsoleKernel
             ->daily()
             ->withoutOverlapping();
 
-        if (config('ldap_enabled')) {
+        if ((bool) config('ldap_enabled')) {
             $schedule->command('ldap:sync_projects')
                 ->everyFiveMinutes();
         }

@@ -13,7 +13,7 @@ class SuccessfulLdapAuthListener
 {
     public function handle(Login $event): void
     {
-        if (config('ldap_enabled')) {
+        if ((bool) config('ldap_enabled')) {
             /**
              * @var User $user
              */

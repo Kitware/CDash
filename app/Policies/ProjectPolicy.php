@@ -99,7 +99,7 @@ class ProjectPolicy
         }
 
         // If an LDAP filter has been specified and LDAP is enabled, CDash controls the entire members list.
-        if (config('ldap_enabled') && $project->ldapfilter !== null && $project->ldapfilter !== '') {
+        if ((bool) config('ldap_enabled') && $project->ldapfilter !== null && $project->ldapfilter !== '') {
             return false;
         }
 
@@ -114,7 +114,7 @@ class ProjectPolicy
     public function removeUser(User $currentUser, Project $project): bool
     {
         // If an LDAP filter has been specified and LDAP is enabled, CDash controls the entire members list.
-        if (config('ldap_enabled') && $project->ldapfilter !== null && $project->ldapfilter !== '') {
+        if ((bool) config('ldap_enabled') && $project->ldapfilter !== null && $project->ldapfilter !== '') {
             return false;
         }
 
