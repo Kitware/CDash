@@ -94,7 +94,6 @@ mix.scripts([
   'resources/js/angular/bulletchart.js',
   'resources/js/angular/cdash_angular.js',
   'resources/js/angular/jquery.tablesorter.js',
-  'resources/js/angular/jquery.dataTables.min.js',
   'resources/js/angular/jquery.metadata.js',
   'public/assets/js/angular/version.js',
   'resources/js/angular/directives/**.js',
@@ -102,6 +101,8 @@ mix.scripts([
   'resources/js/angular/services/**.js',
   'resources/js/angular/controllers/**.js',
 ], 'public/assets/js/legacy_1stparty.min.js');
+
+mix.copy('resources/js/angular/jquery.dataTables.min.js', 'public/assets/js/jquery.dataTables.min.js');
 
 // Boilerplate.
 mix.js('resources/js/vue/app.js', 'public/assets/js').vue();
