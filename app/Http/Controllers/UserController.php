@@ -25,7 +25,7 @@ final class UserController extends AbstractController
 {
     public function userPage(): View
     {
-        return $this->view('admin.user');
+        return $this->view('admin.user', 'My Profile');
     }
 
     public function userPageContent(): JsonResponse
@@ -419,7 +419,7 @@ final class UserController extends AbstractController
             $error_msg = 'Your password has expired. Please set a new one.';
         }
 
-        return $this->view('auth.profile')
+        return $this->view('auth.profile', 'Profile')
             ->with('user', $user)
             ->with('error', $error_msg)
             ->with('message', $other_msg);
@@ -457,7 +457,7 @@ final class UserController extends AbstractController
             $message = 'A confirmation message has been sent to your inbox.';
         }
 
-        return $this->view('user.recover-password')
+        return $this->view('user.recover-password', 'Password Reset')
             ->with('message', $message)
             ->with('warning', $warning);
     }

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
-final class IndexController extends AbstractController
+final class IndexController extends AbstractProjectController
 {
     public function showIndexPage(): View|RedirectResponse
     {
@@ -14,6 +14,8 @@ final class IndexController extends AbstractController
             $url = $default_project ? "index.php?project={$default_project}" : 'projects';
             return redirect($url);
         }
+
+        $this->setProjectByName($_GET['project']);
 
         return $this->angular_view('index');
     }

@@ -17,12 +17,14 @@ final class SubProjectController extends AbstractProjectController
 {
     public function viewSubProjects(): View
     {
-        return $this->angular_view('viewSubProjects');
+        $this->setProjectByName(request()->string('project'));
+        return $this->angular_view('viewSubProjects', 'SubProjects');
     }
 
     public function manageSubProject(): View
     {
-        return $this->angular_view('manageSubProject');
+        $this->setProjectById(request()->integer('projectid'));
+        return $this->angular_view('manageSubProject', 'Manage SubProjects');
     }
 
     public function apiManageSubProject(): JsonResponse
@@ -108,7 +110,7 @@ final class SubProjectController extends AbstractProjectController
     {
         $this->setProjectByName($project);
 
-        return $this->view('project.subproject-dependencies')->with([
+        return $this->view('project.subproject-dependencies', 'SubProject Dependencies')->with([
             'date' => $request->string('date'),
         ]);
     }

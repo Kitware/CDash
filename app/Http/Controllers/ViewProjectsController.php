@@ -31,7 +31,7 @@ final class ViewProjectsController extends AbstractController
             return $this->redirectToLogin();
         }
 
-        return $this->view('project.view-all-projects')
+        return $this->view('project.view-all-projects', 'Projects')
             ->with('show_all', $all);
     }
 }

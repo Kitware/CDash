@@ -88,7 +88,7 @@ final class SiteController extends AbstractController
                      ');
         }
 
-        return $this->view('site.site-statistics')
+        return $this->view('site.site-statistics', 'Site Statistics')
             ->with('sites', $sites);
     }
 

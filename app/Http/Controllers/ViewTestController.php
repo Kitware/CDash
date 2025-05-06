@@ -10,11 +10,12 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 require_once 'include/api_common.php';
 
-final class ViewTestController extends AbstractController
+final class ViewTestController extends AbstractBuildController
 {
     public function viewTest(): View
     {
-        return $this->view('test.view-test');
+        $this->setBuildById(request()->integer('buildid'));
+        return $this->view('test.view-test', 'Tests');
     }
 
     /**
