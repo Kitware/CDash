@@ -43,6 +43,7 @@ function(add_browser_test TestName)
   )
   set_property(TEST ${TestName} PROPERTY DEPENDS /CDash/XmlHandler/UpdateHandler)
   set_property(TEST install_2 PROPERTY DEPENDS ${TestName})
+  set_property(TEST ${TestName} PROPERTY PROCESSORS 2)
 endfunction()
 
 # phpunit tests
