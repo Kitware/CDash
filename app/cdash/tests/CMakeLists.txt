@@ -1,3 +1,6 @@
+cdash_install(install_1)
+cdash_install(install_2)
+
 # function to add a new PHP based coverage test to CDash
 function(add_php_test TestName)
   add_test(
@@ -76,8 +79,6 @@ add_unit_test(/CDash/LinkifyCompilerOutput)
 add_laravel_test(/Unit/app/Console/Command/ValidateXmlCommandTest)
 
 ###################################################################################################
-
-cdash_install()
 
 add_laravel_test(/Feature/CDashTest)
 set_tests_properties(/Feature/CDashTest PROPERTIES DEPENDS install_1)
@@ -353,7 +354,6 @@ add_browser_test(/Browser/Pages/UsersPageTest)
 
 ###################################################################################################
 
-cdash_install()
 set_property(TEST install_2 PROPERTY DEPENDS
   /Feature/LoginAndRegistration
   /Feature/ProjectPermissions
