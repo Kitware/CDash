@@ -53,7 +53,7 @@ class RevokeGlobalInvitationTest extends TestCase
     public function testAdminCanDeleteInvitation(): void
     {
         $invitation = GlobalInvitation::create([
-            'email' => fake()->email(),
+            'email' => fake()->unique()->email(),
             'invited_by_id' => $this->users['admin']->id,
             'role' => GlobalRole::USER,
             'invitation_timestamp' => Carbon::now(),
@@ -87,7 +87,7 @@ class RevokeGlobalInvitationTest extends TestCase
     public function testAnonymousUserCannotDeleteInvitation(): void
     {
         $invitation = GlobalInvitation::create([
-            'email' => fake()->email(),
+            'email' => fake()->unique()->email(),
             'invited_by_id' => $this->users['admin']->id,
             'role' => GlobalRole::USER,
             'invitation_timestamp' => Carbon::now(),
@@ -121,7 +121,7 @@ class RevokeGlobalInvitationTest extends TestCase
     public function testRegularUserCannotDeleteInvitation(): void
     {
         $invitation = GlobalInvitation::create([
-            'email' => fake()->email(),
+            'email' => fake()->unique()->email(),
             'invited_by_id' => $this->users['admin']->id,
             'role' => GlobalRole::USER,
             'invitation_timestamp' => Carbon::now(),

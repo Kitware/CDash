@@ -204,7 +204,7 @@ class ProjectMembersPageTest extends BrowserTestCase
     {
         $this->users['admin'] = $this->makeAdminUser();
 
-        $fakeEmail = fake()->email();
+        $fakeEmail = fake()->unique()->email();
 
         $this->browse(function (Browser $browser) use ($fakeEmail) {
             $browser->loginAs($this->users['admin'])
@@ -248,7 +248,7 @@ class ProjectMembersPageTest extends BrowserTestCase
 
         $email = '';
         for ($i = 0; $i < 120; $i++) {
-            $email = fake()->email();  // We store the oldest email to make the following assertions less flaky...
+            $email = fake()->unique()->email();  // We store the oldest email to make the following assertions less flaky...
             $this->project->invitations()->create([
                 'email' => $email,
                 'invited_by_id' => $this->users['admin']->id,
@@ -418,7 +418,7 @@ class ProjectMembersPageTest extends BrowserTestCase
     {
         $this->users['admin'] = $this->makeAdminUser();
 
-        $fakeEmail = fake()->email();
+        $fakeEmail = fake()->unique()->email();
 
         $this->browse(function (Browser $browser) use ($fakeEmail) {
             $browser->loginAs($this->users['admin'])

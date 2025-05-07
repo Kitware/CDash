@@ -69,7 +69,7 @@ class InviteToProjectTest extends TestCase
 
         self::assertEmpty($this->project->invitations()->get());
 
-        $email = fake()->email();
+        $email = fake()->unique()->email();
 
         $this->actingAs($this->users['admin'])->graphQL('
             mutation ($email: String!, $projectId: ID!, $role: ProjectRole!) {
@@ -137,7 +137,7 @@ class InviteToProjectTest extends TestCase
                 }
             }
         ', [
-            'email' => fake()->email(),
+            'email' => fake()->unique()->email(),
             'projectId' => $this->project->id,
             'role' => 'USER',
         ])->assertJson([
@@ -183,7 +183,7 @@ class InviteToProjectTest extends TestCase
                 }
             }
         ', [
-            'email' => fake()->email(),
+            'email' => fake()->unique()->email(),
             'projectId' => $this->project->id,
             'role' => 'USER',
         ])->assertJson([
@@ -205,7 +205,7 @@ class InviteToProjectTest extends TestCase
 
         self::assertEmpty($this->project->invitations()->get());
 
-        $email = fake()->email();
+        $email = fake()->unique()->email();
 
         $this->project
             ->users()
@@ -281,7 +281,7 @@ class InviteToProjectTest extends TestCase
                 }
             }
         ', [
-            'email' => fake()->email(),
+            'email' => fake()->unique()->email(),
             'projectId' => $this->project->id,
             'role' => 'USER',
         ])->assertJson([
@@ -315,7 +315,7 @@ class InviteToProjectTest extends TestCase
                 }
             }
         ', [
-            'email' => fake()->email(),
+            'email' => fake()->unique()->email(),
             'projectId' => 1234567,
             'role' => 'USER',
         ])->assertJson([
@@ -336,7 +336,7 @@ class InviteToProjectTest extends TestCase
 
         self::assertEmpty($this->project->invitations()->get());
 
-        $email = fake()->email();
+        $email = fake()->unique()->email();
         $this->actingAs($this->users['admin'])->graphQL('
             mutation ($email: String!, $projectId: ID!, $role: ProjectRole!) {
                 inviteToProject(input: {

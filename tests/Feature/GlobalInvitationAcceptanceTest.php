@@ -61,7 +61,7 @@ class GlobalInvitationAcceptanceTest extends TestCase
 
         /** @var GlobalInvitation $invitation */
         $invitation = GlobalInvitation::create([
-            'email' => fake()->email(),
+            'email' => fake()->unique()->email(),
             'invited_by_id' => $this->users['admin']->id,
             'role' => GlobalRole::USER,
             'invitation_timestamp' => Carbon::now(),

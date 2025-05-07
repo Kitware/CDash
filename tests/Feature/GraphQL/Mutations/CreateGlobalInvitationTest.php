@@ -73,7 +73,7 @@ class CreateGlobalInvitationTest extends TestCase
 
         self::assertEmpty(GlobalInvitation::all());
 
-        $email = fake()->email();
+        $email = fake()->unique()->email();
 
         $this->actingAs($this->users['admin'])->graphQL('
             mutation ($email: String!, $role: GlobalRole!) {
@@ -119,7 +119,7 @@ class CreateGlobalInvitationTest extends TestCase
 
         self::assertEmpty(GlobalInvitation::all());
 
-        $email = fake()->email();
+        $email = fake()->unique()->email();
 
         $this->actingAs($this->users['normal'])->graphQL('
             mutation ($email: String!, $role: GlobalRole!) {
@@ -159,7 +159,7 @@ class CreateGlobalInvitationTest extends TestCase
 
         self::assertEmpty(GlobalInvitation::all());
 
-        $email = fake()->email();
+        $email = fake()->unique()->email();
 
         $this->graphQL('
             mutation ($email: String!, $role: GlobalRole!) {
@@ -199,7 +199,7 @@ class CreateGlobalInvitationTest extends TestCase
 
         self::assertEmpty(GlobalInvitation::all());
 
-        $email = fake()->email();
+        $email = fake()->unique()->email();
 
         $this->actingAs($this->users['admin'])->graphQL('
             mutation ($email: String!, $role: GlobalRole!) {
@@ -350,7 +350,7 @@ class CreateGlobalInvitationTest extends TestCase
 
         self::assertEmpty(GlobalInvitation::all());
 
-        $email = fake()->email();
+        $email = fake()->unique()->email();
 
         $this->actingAs($this->users['admin'])->graphQL('
             mutation ($email: String!, $role: GlobalRole!) {
