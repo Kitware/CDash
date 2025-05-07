@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 require_once 'include/api_common.php';
-require_once 'include/ctestparser.php';
 
 final class AdminController extends AbstractController
 {
