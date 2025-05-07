@@ -76,7 +76,7 @@
                       data-test="edit-description-button"
                       @click="editDescription"
                     >
-                      <font-awesome-icon icon="fa-pencil" /> Edit
+                      <font-awesome-icon :icon="FA.faPencil" /> Edit
                     </button>
                   </div>
                 </div>
@@ -192,7 +192,7 @@
             data-test="site-history-item"
           >
             <div class="tw-timeline-middle">
-              <font-awesome-icon icon="circle-check" />
+              <font-awesome-icon :icon="FA.faCircleCheck" />
             </div>
             <div class="tw-timeline-end tw-mb-4">
               <time class="tw-font-mono tw-italic tw-text-neutral-500">{{ humanReadableTimestamp(information.node.timestamp) }}</time>
@@ -278,6 +278,10 @@ import gql from 'graphql-tag';
 import LoadingIndicator from './shared/LoadingIndicator.vue';
 import { DateTime } from 'luxon';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import {
+  faPencil,
+  faCircleCheck,
+} from '@fortawesome/free-solid-svg-icons';
 
 const SITE_MAINTAINERS_QUERY = gql`
   query($siteid: ID) {
@@ -480,6 +484,13 @@ export default {
   },
 
   computed: {
+    FA() {
+      return {
+        faPencil,
+        faCircleCheck,
+      };
+    },
+
     deduplicatedInformation() {
       return this.site?.information?.edges.filter((node, index, edges) => index === edges.length - 1 || !this.informationIsIdentical(node.node, edges[index + 1].node));
     },

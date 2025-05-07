@@ -34,17 +34,7 @@ const SitesIdPage = Vue.defineAsyncComponent(() => import('./components/SitesIdP
 const ProjectMembersPage = Vue.defineAsyncComponent(() => import('./components/ProjectMembersPage.vue'));
 const UsersPage = Vue.defineAsyncComponent(() => import('./components/UsersPage.vue'));
 
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import * as FA from '@fortawesome/fontawesome-svg-core';
-import { fas } from '@fortawesome/free-solid-svg-icons';
-import { far } from '@fortawesome/free-regular-svg-icons';
-import { fab } from '@fortawesome/free-brands-svg-icons';
-
-FA.library.add(fas, far, fab);
-FA.config.styleDefault = 'solid';
-
 const cdash_components = {
-  FontAwesomeIcon,
   BuildConfigure,
   BuildNotes,
   BuildSummary,
