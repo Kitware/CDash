@@ -44,8 +44,8 @@ function(add_browser_test TestName)
   set_property(TEST ${TestName} PROPERTY RESOURCE_LOCK
     APP_URL # All browser tests need exclusive access to the APP_URL configuration setting
   )
-  set_property(TEST ${TestName} PROPERTY DEPENDS /CDash/XmlHandler/UpdateHandler)
-  set_property(TEST install_2 PROPERTY DEPENDS ${TestName})
+  set_property(TEST ${TestName} APPEND PROPERTY DEPENDS /CDash/XmlHandler/UpdateHandler)
+  set_property(TEST install_2 APPEND PROPERTY DEPENDS ${TestName})
   set_property(TEST ${TestName} PROPERTY PROCESSORS 2)
 endfunction()
 
@@ -354,7 +354,7 @@ add_browser_test(/Browser/Pages/UsersPageTest)
 
 ###################################################################################################
 
-set_property(TEST install_2 PROPERTY DEPENDS
+set_property(TEST install_2 APPEND PROPERTY DEPENDS
   /Feature/LoginAndRegistration
   /Feature/ProjectPermissions
   /Feature/SlowPageTest
