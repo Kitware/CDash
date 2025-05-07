@@ -41,7 +41,7 @@ class UserInvitationTypeTest extends TestCase
     public function testAdminCanViewInvitations(): void
     {
         $invitation = ProjectInvitation::create([
-            'email' => fake()->email(),
+            'email' => fake()->unique()->email(),
             'invited_by_id' => $this->adminUser->id,
             'project_id' => $this->project->id,
             'role' => ProjectRole::USER,
@@ -100,7 +100,7 @@ class UserInvitationTypeTest extends TestCase
     public function testNormalUserCannotViewInvitations(): void
     {
         ProjectInvitation::create([
-            'email' => fake()->email(),
+            'email' => fake()->unique()->email(),
             'invited_by_id' => $this->adminUser->id,
             'project_id' => $this->project->id,
             'role' => ProjectRole::USER,
@@ -135,7 +135,7 @@ class UserInvitationTypeTest extends TestCase
     public function testAnonymousUserCannotViewInvitations(): void
     {
         ProjectInvitation::create([
-            'email' => fake()->email(),
+            'email' => fake()->unique()->email(),
             'invited_by_id' => $this->adminUser->id,
             'project_id' => $this->project->id,
             'role' => ProjectRole::USER,

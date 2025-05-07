@@ -48,7 +48,7 @@ class ProjectInvitationAcceptanceTest extends TestCase
     {
         /** @var ProjectInvitation $invitation */
         $invitation = $this->project->invitations()->create([
-            'email' => fake()->email(),
+            'email' => fake()->unique()->email(),
             'invited_by_id' => $this->users['admin']->id,
             'role' => ProjectRole::USER,
             'invitation_timestamp' => Carbon::now(),

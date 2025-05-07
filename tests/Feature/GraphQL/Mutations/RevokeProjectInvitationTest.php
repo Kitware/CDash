@@ -50,7 +50,7 @@ class RevokeProjectInvitationTest extends TestCase
     public function testAdminCanDeleteInvitation(): void
     {
         $invitation = ProjectInvitation::create([
-            'email' => fake()->email(),
+            'email' => fake()->unique()->email(),
             'invited_by_id' => $this->users['admin']->id,
             'project_id' => $this->project->id,
             'role' => ProjectRole::USER,
@@ -83,7 +83,7 @@ class RevokeProjectInvitationTest extends TestCase
     public function testAnonymousUserCannotDeleteInvitation(): void
     {
         $invitation = ProjectInvitation::create([
-            'email' => fake()->email(),
+            'email' => fake()->unique()->email(),
             'invited_by_id' => $this->users['admin']->id,
             'project_id' => $this->project->id,
             'role' => ProjectRole::USER,
@@ -116,7 +116,7 @@ class RevokeProjectInvitationTest extends TestCase
     public function testNonMemberUserCannotDeleteInvitation(): void
     {
         $invitation = ProjectInvitation::create([
-            'email' => fake()->email(),
+            'email' => fake()->unique()->email(),
             'invited_by_id' => $this->users['admin']->id,
             'project_id' => $this->project->id,
             'role' => ProjectRole::USER,
@@ -149,7 +149,7 @@ class RevokeProjectInvitationTest extends TestCase
     public function testMemberUserWithUserRoleCannotDeleteInvitation(): void
     {
         $invitation = ProjectInvitation::create([
-            'email' => fake()->email(),
+            'email' => fake()->unique()->email(),
             'invited_by_id' => $this->users['admin']->id,
             'project_id' => $this->project->id,
             'role' => ProjectRole::USER,
@@ -192,7 +192,7 @@ class RevokeProjectInvitationTest extends TestCase
     public function testMemberUserWithAdminRoleCanDeleteInvitation(): void
     {
         $invitation = ProjectInvitation::create([
-            'email' => fake()->email(),
+            'email' => fake()->unique()->email(),
             'invited_by_id' => $this->users['admin']->id,
             'project_id' => $this->project->id,
             'role' => ProjectRole::USER,

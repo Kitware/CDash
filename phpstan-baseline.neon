@@ -29110,6 +29110,21 @@ parameters:
 			path: tests/Browser/Pages/ProjectMembersPageTest.php
 
 		-
+			message: "#^Method Tests\\\\Browser\\\\Pages\\\\ProjectMembersPageTest\\:\\:testFullInvitationWorkflow\\(\\) throws checked exception OverflowException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: tests/Browser/Pages/ProjectMembersPageTest.php
+
+		-
+			message: "#^Method Tests\\\\Browser\\\\Pages\\\\ProjectMembersPageTest\\:\\:testHandlesMisformattedEmail\\(\\) throws checked exception OverflowException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: tests/Browser/Pages/ProjectMembersPageTest.php
+
+		-
+			message: "#^Method Tests\\\\Browser\\\\Pages\\\\ProjectMembersPageTest\\:\\:testInvitationTablePagination\\(\\) throws checked exception OverflowException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: tests/Browser/Pages/ProjectMembersPageTest.php
+
+		-
 			message: "#^Cannot access property \\$description on App\\\\Models\\\\SiteInformation\\|null\\.$#"
 			count: 1
 			path: tests/Browser/Pages/SitesIdPageTest.php
@@ -29206,6 +29221,11 @@ parameters:
 			path: tests/Feature/GlobalInvitationAcceptanceTest.php
 
 		-
+			message: "#^Method Tests\\\\Feature\\\\GlobalInvitationAcceptanceTest\\:\\:createInvitation\\(\\) throws checked exception OverflowException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: tests/Feature/GlobalInvitationAcceptanceTest.php
+
+		-
 			message: "#^Dynamic call to static method Illuminate\\\\Testing\\\\TestResponse\\:\\:assertGraphQLErrorMessage\\(\\)\\.$#"
 			count: 1
 			path: tests/Feature/GraphQL/FilterTest.php
@@ -29214,6 +29234,66 @@ parameters:
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\User\\>\\:\\:pluck\\(\\)\\.$#"
 			count: 64
 			path: tests/Feature/GraphQL/Mutations/ChangeProjectRoleTest.php
+
+		-
+			message: "#^Method Tests\\\\Feature\\\\GraphQL\\\\Mutations\\\\CreateGlobalInvitationTest\\:\\:testAdminCreatesInvitationCorrectly\\(\\) throws checked exception OverflowException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: tests/Feature/GraphQL/Mutations/CreateGlobalInvitationTest.php
+
+		-
+			message: "#^Method Tests\\\\Feature\\\\GraphQL\\\\Mutations\\\\CreateGlobalInvitationTest\\:\\:testAnonymousUserCantCreateInvitation\\(\\) throws checked exception OverflowException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: tests/Feature/GraphQL/Mutations/CreateGlobalInvitationTest.php
+
+		-
+			message: "#^Method Tests\\\\Feature\\\\GraphQL\\\\Mutations\\\\CreateGlobalInvitationTest\\:\\:testCantCreateDuplicateInvitation\\(\\) throws checked exception OverflowException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: tests/Feature/GraphQL/Mutations/CreateGlobalInvitationTest.php
+
+		-
+			message: "#^Method Tests\\\\Feature\\\\GraphQL\\\\Mutations\\\\CreateGlobalInvitationTest\\:\\:testCantCreateInvitationWhenPasswordAuthTurnedOff\\(\\) throws checked exception OverflowException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: tests/Feature/GraphQL/Mutations/CreateGlobalInvitationTest.php
+
+		-
+			message: "#^Method Tests\\\\Feature\\\\GraphQL\\\\Mutations\\\\CreateGlobalInvitationTest\\:\\:testRegularUserCantCreateInvitation\\(\\) throws checked exception OverflowException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: tests/Feature/GraphQL/Mutations/CreateGlobalInvitationTest.php
+
+		-
+			message: "#^Method Tests\\\\Feature\\\\GraphQL\\\\Mutations\\\\InviteToProjectTest\\:\\:testAdminCreatesInvitationCorrectly\\(\\) throws checked exception OverflowException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: tests/Feature/GraphQL/Mutations/InviteToProjectTest.php
+
+		-
+			message: "#^Method Tests\\\\Feature\\\\GraphQL\\\\Mutations\\\\InviteToProjectTest\\:\\:testCantCreateDuplicateInvitation\\(\\) throws checked exception OverflowException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: tests/Feature/GraphQL/Mutations/InviteToProjectTest.php
+
+		-
+			message: "#^Method Tests\\\\Feature\\\\GraphQL\\\\Mutations\\\\InviteToProjectTest\\:\\:testCantCreateInvitationForMissingProject\\(\\) throws checked exception OverflowException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: tests/Feature/GraphQL/Mutations/InviteToProjectTest.php
+
+		-
+			message: "#^Method Tests\\\\Feature\\\\GraphQL\\\\Mutations\\\\InviteToProjectTest\\:\\:testUserOutsideProjectCantCreateInvitation\\(\\) throws checked exception OverflowException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: tests/Feature/GraphQL/Mutations/InviteToProjectTest.php
+
+		-
+			message: "#^Method Tests\\\\Feature\\\\GraphQL\\\\Mutations\\\\InviteToProjectTest\\:\\:testUserWithProjectAdminRoleCanCreateInvitation\\(\\) throws checked exception OverflowException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: tests/Feature/GraphQL/Mutations/InviteToProjectTest.php
+
+		-
+			message: "#^Method Tests\\\\Feature\\\\GraphQL\\\\Mutations\\\\InviteToProjectTest\\:\\:testUserWithProjectAdminRoleCannotCreateInvitationWhenConfigured\\(\\) throws checked exception OverflowException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: tests/Feature/GraphQL/Mutations/InviteToProjectTest.php
+
+		-
+			message: "#^Method Tests\\\\Feature\\\\GraphQL\\\\Mutations\\\\InviteToProjectTest\\:\\:testUserWithProjectUserRoleCantCreateInvitation\\(\\) throws checked exception OverflowException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: tests/Feature/GraphQL/Mutations/InviteToProjectTest.php
 
 		-
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\User\\>\\:\\:exists\\(\\)\\.$#"
@@ -29229,6 +29309,46 @@ parameters:
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\GlobalInvitation\\>\\:\\:exists\\(\\)\\.$#"
 			count: 5
 			path: tests/Feature/GraphQL/Mutations/RevokeGlobalInvitationTest.php
+
+		-
+			message: "#^Method Tests\\\\Feature\\\\GraphQL\\\\Mutations\\\\RevokeGlobalInvitationTest\\:\\:testAdminCanDeleteInvitation\\(\\) throws checked exception OverflowException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: tests/Feature/GraphQL/Mutations/RevokeGlobalInvitationTest.php
+
+		-
+			message: "#^Method Tests\\\\Feature\\\\GraphQL\\\\Mutations\\\\RevokeGlobalInvitationTest\\:\\:testAnonymousUserCannotDeleteInvitation\\(\\) throws checked exception OverflowException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: tests/Feature/GraphQL/Mutations/RevokeGlobalInvitationTest.php
+
+		-
+			message: "#^Method Tests\\\\Feature\\\\GraphQL\\\\Mutations\\\\RevokeGlobalInvitationTest\\:\\:testRegularUserCannotDeleteInvitation\\(\\) throws checked exception OverflowException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: tests/Feature/GraphQL/Mutations/RevokeGlobalInvitationTest.php
+
+		-
+			message: "#^Method Tests\\\\Feature\\\\GraphQL\\\\Mutations\\\\RevokeProjectInvitationTest\\:\\:testAdminCanDeleteInvitation\\(\\) throws checked exception OverflowException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: tests/Feature/GraphQL/Mutations/RevokeProjectInvitationTest.php
+
+		-
+			message: "#^Method Tests\\\\Feature\\\\GraphQL\\\\Mutations\\\\RevokeProjectInvitationTest\\:\\:testAnonymousUserCannotDeleteInvitation\\(\\) throws checked exception OverflowException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: tests/Feature/GraphQL/Mutations/RevokeProjectInvitationTest.php
+
+		-
+			message: "#^Method Tests\\\\Feature\\\\GraphQL\\\\Mutations\\\\RevokeProjectInvitationTest\\:\\:testMemberUserWithAdminRoleCanDeleteInvitation\\(\\) throws checked exception OverflowException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: tests/Feature/GraphQL/Mutations/RevokeProjectInvitationTest.php
+
+		-
+			message: "#^Method Tests\\\\Feature\\\\GraphQL\\\\Mutations\\\\RevokeProjectInvitationTest\\:\\:testMemberUserWithUserRoleCannotDeleteInvitation\\(\\) throws checked exception OverflowException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: tests/Feature/GraphQL/Mutations/RevokeProjectInvitationTest.php
+
+		-
+			message: "#^Method Tests\\\\Feature\\\\GraphQL\\\\Mutations\\\\RevokeProjectInvitationTest\\:\\:testNonMemberUserCannotDeleteInvitation\\(\\) throws checked exception OverflowException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: tests/Feature/GraphQL/Mutations/RevokeProjectInvitationTest.php
 
 		-
 			message: "#^Dynamic call to static method Illuminate\\\\Testing\\\\TestResponse\\:\\:assertGraphQLErrorMessage\\(\\)\\.$#"
@@ -29279,6 +29399,21 @@ parameters:
 			message: "#^Parameter \\#1 \\$time of static method Carbon\\\\Carbon\\:\\:parse\\(\\) expects DateTimeInterface\\|string\\|null, mixed given\\.$#"
 			count: 1
 			path: tests/Feature/GraphQL/SiteTypeTest.php
+
+		-
+			message: "#^Method Tests\\\\Feature\\\\GraphQL\\\\UserInvitationTypeTest\\:\\:testAdminCanViewInvitations\\(\\) throws checked exception OverflowException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: tests/Feature/GraphQL/UserInvitationTypeTest.php
+
+		-
+			message: "#^Method Tests\\\\Feature\\\\GraphQL\\\\UserInvitationTypeTest\\:\\:testAnonymousUserCannotViewInvitations\\(\\) throws checked exception OverflowException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: tests/Feature/GraphQL/UserInvitationTypeTest.php
+
+		-
+			message: "#^Method Tests\\\\Feature\\\\GraphQL\\\\UserInvitationTypeTest\\:\\:testNormalUserCannotViewInvitations\\(\\) throws checked exception OverflowException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: tests/Feature/GraphQL/UserInvitationTypeTest.php
 
 		-
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\SuccessfulJob\\>\\:\\:count\\(\\)\\.$#"
@@ -29378,6 +29513,11 @@ parameters:
 		-
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\ProjectInvitation\\>\\:\\:pluck\\(\\)\\.$#"
 			count: 14
+			path: tests/Feature/ProjectInvitationAcceptanceTest.php
+
+		-
+			message: "#^Method Tests\\\\Feature\\\\ProjectInvitationAcceptanceTest\\:\\:createInvitation\\(\\) throws checked exception OverflowException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
 			path: tests/Feature/ProjectInvitationAcceptanceTest.php
 
 		-
