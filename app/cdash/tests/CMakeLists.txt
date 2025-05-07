@@ -41,6 +41,8 @@ function(add_browser_test TestName)
   set_property(TEST ${TestName} PROPERTY RESOURCE_LOCK
     APP_URL # All browser tests need exclusive access to the APP_URL configuration setting
   )
+  set_property(TEST ${TestName} PROPERTY DEPENDS /CDash/XmlHandler/UpdateHandler)
+  set_property(TEST install_2 PROPERTY DEPENDS ${TestName})
 endfunction()
 
 # phpunit tests
@@ -233,7 +235,6 @@ add_laravel_test(/Feature/PasswordRotation)
 set_tests_properties(/Feature/PasswordRotation PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_browser_test(/Browser/Pages/SitesIdPageTest)
-set_tests_properties(/Browser/Pages/SitesIdPageTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 # Technically this test doesn't have to run serially.  It just needs to have exclusive access to the .env
 add_laravel_test(/Feature/LdapIntegration)
@@ -241,13 +242,10 @@ set_tests_properties(/Feature/LdapIntegration PROPERTIES RUN_SERIAL TRUE)
 set_tests_properties(/Feature/LdapIntegration PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_browser_test(/Browser/Pages/ProjectSitesPageTest)
-set_tests_properties(/Browser/Pages/ProjectSitesPageTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_browser_test(/Browser/Pages/ProjectMembersPageTest)
-set_tests_properties(/Browser/Pages/ProjectMembersPageTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_browser_test(/Browser/Pages/ProjectPageTest)
-set_tests_properties(/Browser/Pages/ProjectPageTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_laravel_test(/Feature/PurgeUnusedProjectsCommand)
 set_tests_properties(/Feature/PurgeUnusedProjectsCommand PROPERTIES RUN_SERIAL TRUE)
@@ -351,7 +349,6 @@ add_laravel_test(/Feature/GraphQL/Mutations/RemoveUserTest)
 set_tests_properties(/Feature/GraphQL/Mutations/RemoveUserTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_browser_test(/Browser/Pages/UsersPageTest)
-set_tests_properties(/Browser/Pages/UsersPageTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 ###################################################################################################
 
@@ -395,11 +392,7 @@ set_property(TEST install_2 PROPERTY DEPENDS
   /Feature/RouteAccessTest
   /Feature/Monitor
   /Feature/PasswordRotation
-  /Browser/Pages/SitesIdPageTest
   /Feature/LdapIntegration
-  /Browser/Pages/ProjectSitesPageTest
-  /Browser/Pages/ProjectMembersPageTest
-  /Browser/Pages/ProjectPageTest
   /Feature/PurgeUnusedProjectsCommand
   /Feature/Jobs/PruneJobsTest
   /Feature/Jobs/PruneAuthTokensTest
@@ -429,7 +422,6 @@ set_property(TEST install_2 PROPERTY DEPENDS
   /Feature/GraphQL/Mutations/RevokeGlobalInvitationTest
   /Feature/GlobalInvitationAcceptanceTest
   /Feature/GraphQL/Mutations/RemoveUserTest
-  /Browser/Pages/UsersPageTest
   cypress/e2e/user-profile
 )
 
