@@ -1,3 +1,4 @@
+# We define these here so they can be referenced in functions below.
 cdash_install(install_1)
 cdash_install(install_2)
 
@@ -39,13 +40,18 @@ function(add_laravel_test TestName)
   )
 endfunction()
 
-function(add_browser_test TestName)
+# Tests with no dependencies which require the database to be available
+function(add_feature_test TestName)
   add_laravel_test(${TestName})
+  set_property(TEST ${TestName} APPEND PROPERTY DEPENDS /CDash/XmlHandler/UpdateHandler)
+  set_property(TEST install_2 APPEND PROPERTY DEPENDS ${TestName})
+endfunction()
+
+function(add_browser_test TestName)
+  add_feature_test(${TestName})
   set_property(TEST ${TestName} PROPERTY RESOURCE_LOCK
     APP_URL # All browser tests need exclusive access to the APP_URL configuration setting
   )
-  set_property(TEST ${TestName} APPEND PROPERTY DEPENDS /CDash/XmlHandler/UpdateHandler)
-  set_property(TEST install_2 APPEND PROPERTY DEPENDS ${TestName})
   set_property(TEST ${TestName} PROPERTY PROCESSORS 2)
 endfunction()
 
@@ -112,17 +118,13 @@ set_tests_properties(/CDash/XmlHandler/UpdateHandler PROPERTIES DEPENDS /CDash/X
 # Tests may wipe the database, provided that they use RUN_SERIAL. All tests in this section should
 # depend upon the last test prior to this section.
 
-add_laravel_test(/Feature/LoginAndRegistration)
-set_tests_properties(/Feature/LoginAndRegistration PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_feature_test(/Feature/LoginAndRegistration)
 
-add_laravel_test(/Feature/ProjectPermissions)
-set_tests_properties(/Feature/ProjectPermissions PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_feature_test(/Feature/ProjectPermissions)
 
-add_laravel_test(/Feature/SlowPageTest)
-set_tests_properties(/Feature/SlowPageTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_feature_test(/Feature/SlowPageTest)
 
-add_laravel_test(/Feature/GitHubWebhook)
-set_tests_properties(/Feature/GitHubWebhook PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_feature_test(/Feature/GitHubWebhook)
 
 add_unit_test(/CDash/Lib/Repository/GitHub)
 set_tests_properties(/CDash/Lib/Repository/GitHub PROPERTIES
@@ -168,80 +170,58 @@ set_tests_properties(/CDash/Service/RepositoryService PROPERTIES DEPENDS /CDash/
 
 # Set this to RUN_SERIAL as we are changing the config and don't want to clobber other tests.
 # Only requires exclusive .env access.
-add_laravel_test(/Feature/SubmissionValidation)
-set_tests_properties(/Feature/SubmissionValidation PROPERTIES RUN_SERIAL TRUE)
-set_tests_properties(/Feature/SubmissionValidation PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_feature_test(/Feature/SubmissionValidation)
+set_property(TEST /Feature/SubmissionValidation APPEND PROPERTY RUN_SERIAL TRUE)
 
-add_laravel_test(/Feature/ProjectInvitationAcceptanceTest)
-set_tests_properties(/Feature/ProjectInvitationAcceptanceTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_feature_test(/Feature/ProjectInvitationAcceptanceTest)
 
-add_laravel_test(/Feature/GraphQL/FilterTest)
-set_tests_properties(/Feature/GraphQL/FilterTest PROPERTIES RUN_SERIAL TRUE)
-set_tests_properties(/Feature/GraphQL/FilterTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_feature_test(/Feature/GraphQL/FilterTest)
+set_property(TEST /Feature/GraphQL/FilterTest APPEND PROPERTY RUN_SERIAL TRUE)
 
-add_laravel_test(/Feature/GraphQL/QueryTypeTest)
-set_tests_properties(/Feature/GraphQL/QueryTypeTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_feature_test(/Feature/GraphQL/QueryTypeTest)
 
-add_laravel_test(/Feature/GraphQL/UserTypeTest)
-set_tests_properties(/Feature/GraphQL/UserTypeTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_feature_test(/Feature/GraphQL/UserTypeTest)
 
-add_laravel_test(/Feature/GraphQL/ProjectTypeTest)
-set_tests_properties(/Feature/GraphQL/ProjectTypeTest PROPERTIES RUN_SERIAL TRUE)
-set_tests_properties(/Feature/GraphQL/ProjectTypeTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_feature_test(/Feature/GraphQL/ProjectTypeTest)
+set_property(TEST /Feature/GraphQL/ProjectTypeTest APPEND PROPERTY RUN_SERIAL TRUE)
 
-add_laravel_test(/Feature/GraphQL/SiteTypeTest)
-set_tests_properties(/Feature/GraphQL/SiteTypeTest PROPERTIES RUN_SERIAL TRUE)
-set_tests_properties(/Feature/GraphQL/SiteTypeTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_feature_test(/Feature/GraphQL/SiteTypeTest)
+set_property(TEST /Feature/GraphQL/SiteTypeTest APPEND PROPERTY RUN_SERIAL TRUE)
 
-add_laravel_test(/Feature/GraphQL/BuildTypeTest)
-set_tests_properties(/Feature/GraphQL/BuildTypeTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_feature_test(/Feature/GraphQL/BuildTypeTest)
 
-add_laravel_test(/Feature/GraphQL/TestTypeTest)
-set_tests_properties(/Feature/GraphQL/TestTypeTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_feature_test(/Feature/GraphQL/TestTypeTest)
 
-add_laravel_test(/Feature/GraphQL/TestMeasurementTypeTest)
-set_tests_properties(/Feature/GraphQL/TestMeasurementTypeTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_feature_test(/Feature/GraphQL/TestMeasurementTypeTest)
 
-add_laravel_test(/Feature/GraphQL/NoteTypeTest)
-set_tests_properties(/Feature/GraphQL/NoteTypeTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_feature_test(/Feature/GraphQL/NoteTypeTest)
 
-add_laravel_test(/Feature/GraphQL/CoverageTypeTest)
-set_tests_properties(/Feature/GraphQL/CoverageTypeTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_feature_test(/Feature/GraphQL/CoverageTypeTest)
 
-add_laravel_test(/Feature/GraphQL/UserInvitationTypeTest)
-set_tests_properties(/Feature/GraphQL/UserInvitationTypeTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_feature_test(/Feature/GraphQL/UserInvitationTypeTest)
 
-add_laravel_test(/Feature/GraphQL/LabelTypeTest)
-set_tests_properties(/Feature/GraphQL/LabelTypeTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_feature_test(/Feature/GraphQL/LabelTypeTest)
 
-add_laravel_test(/Feature/GraphQL/TargetTypeTest)
-set_tests_properties(/Feature/GraphQL/TargetTypeTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_feature_test(/Feature/GraphQL/TargetTypeTest)
 
-add_laravel_test(/Feature/GraphQL/BuildCommandTypeTest)
-set_tests_properties(/Feature/GraphQL/BuildCommandTypeTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_feature_test(/Feature/GraphQL/BuildCommandTypeTest)
 
-add_laravel_test(/Feature/GraphQL/BuildCommandOutputTypeTest)
-set_tests_properties(/Feature/GraphQL/BuildCommandOutputTypeTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_feature_test(/Feature/GraphQL/BuildCommandOutputTypeTest)
 
-add_laravel_test(/Feature/Submission/Instrumentation/BuildInstrumentationTest)
-set_tests_properties(/Feature/Submission/Instrumentation/BuildInstrumentationTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_feature_test(/Feature/Submission/Instrumentation/BuildInstrumentationTest)
 
-add_laravel_test(/Feature/RouteAccessTest)
-set_tests_properties(/Feature/RouteAccessTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_feature_test(/Feature/RouteAccessTest)
 
-add_laravel_test(/Feature/Monitor)
-set_tests_properties(/Feature/Monitor PROPERTIES RUN_SERIAL TRUE)
-set_tests_properties(/Feature/Monitor PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_feature_test(/Feature/Monitor)
+set_property(TEST /Feature/Monitor APPEND PROPERTY RUN_SERIAL TRUE)
 
-add_laravel_test(/Feature/PasswordRotation)
-set_tests_properties(/Feature/PasswordRotation PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_feature_test(/Feature/PasswordRotation)
 
 add_browser_test(/Browser/Pages/SitesIdPageTest)
 
 # Technically this test doesn't have to run serially.  It just needs to have exclusive access to the .env
-add_laravel_test(/Feature/LdapIntegration)
-set_tests_properties(/Feature/LdapIntegration PROPERTIES RUN_SERIAL TRUE)
-set_tests_properties(/Feature/LdapIntegration PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_feature_test(/Feature/LdapIntegration)
+set_property(TEST /Feature/LdapIntegration APPEND PROPERTY RUN_SERIAL TRUE)
 
 add_browser_test(/Browser/Pages/ProjectSitesPageTest)
 
@@ -249,20 +229,16 @@ add_browser_test(/Browser/Pages/ProjectMembersPageTest)
 
 add_browser_test(/Browser/Pages/ProjectPageTest)
 
-add_laravel_test(/Feature/PurgeUnusedProjectsCommand)
-set_tests_properties(/Feature/PurgeUnusedProjectsCommand PROPERTIES RUN_SERIAL TRUE)
-set_tests_properties(/Feature/PurgeUnusedProjectsCommand PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_feature_test(/Feature/PurgeUnusedProjectsCommand)
+set_property(TEST /Feature/PurgeUnusedProjectsCommand APPEND PROPERTY RUN_SERIAL TRUE)
 
 # This could theoretically conflict with another test removing jobs from the submission tables in the future
-add_laravel_test(/Feature/Jobs/PruneJobsTest)
-set_tests_properties(/Feature/Jobs/PruneJobsTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_feature_test(/Feature/Jobs/PruneJobsTest)
 
-add_laravel_test(/Feature/Jobs/PruneAuthTokensTest)
-set_tests_properties(/Feature/Jobs/PruneAuthTokensTest PROPERTIES RUN_SERIAL TRUE)
-set_tests_properties(/Feature/Jobs/PruneAuthTokensTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_feature_test(/Feature/Jobs/PruneAuthTokensTest)
+set_property(TEST /Feature/Jobs/PruneAuthTokensTest APPEND PROPERTY RUN_SERIAL TRUE)
 
-add_laravel_test(/Feature/UserCommand)
-set_tests_properties(/Feature/UserCommand PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_feature_test(/Feature/UserCommand)
 
 add_unit_test(/CDash/Database)
 set_tests_properties(/CDash/Database PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
@@ -294,71 +270,51 @@ set_tests_properties(/CDash/Messaging/Topic/TestFailureTopic PROPERTIES DEPENDS 
 add_unit_test(/CDash/Messaging/Topic/TopicDecorator)
 set_tests_properties(/CDash/Messaging/Topic/TopicDecorator PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
-add_laravel_test(/Feature/RemoteWorkers)
-set_tests_properties(/Feature/RemoteWorkers PROPERTIES
-    DEPENDS /CDash/XmlHandler/UpdateHandler
+add_feature_test(/Feature/RemoteWorkers)
+set_property(TEST /Feature/RemoteWorkers APPEND PROPERTY
     DISABLED "$<NOT:$<STREQUAL:${CDASH_STORAGE_TYPE},local>>"
 )
 
-add_laravel_test(/Feature/Jobs/NotifyExpiringAuthTokensTest)
-set_tests_properties(/Feature/Jobs/NotifyExpiringAuthTokensTest PROPERTIES RUN_SERIAL TRUE)
-set_tests_properties(/Feature/Jobs/NotifyExpiringAuthTokensTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_feature_test(/Feature/Jobs/NotifyExpiringAuthTokensTest)
+set_property(TEST /Feature/Jobs/NotifyExpiringAuthTokensTest APPEND PROPERTY RUN_SERIAL TRUE)
 
-add_laravel_test(/Feature/Jobs/PruneUploadsTest)
-set_tests_properties(/Feature/Jobs/PruneUploadsTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_feature_test(/Feature/Jobs/PruneUploadsTest)
 
-add_laravel_test(/Feature/Mail/AuthTokenExpiringTest)
-set_tests_properties(/Feature/Mail/AuthTokenExpiringTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_feature_test(/Feature/Mail/AuthTokenExpiringTest)
 
-add_laravel_test(/Feature/Mail/AuthTokenExpiredTest)
-set_tests_properties(/Feature/Mail/AuthTokenExpiredTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_feature_test(/Feature/Mail/AuthTokenExpiredTest)
 
-add_laravel_test(/Feature/GraphQL/Mutations/UpdateSiteDescriptionTest)
-set_tests_properties(/Feature/GraphQL/Mutations/UpdateSiteDescriptionTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_feature_test(/Feature/GraphQL/Mutations/UpdateSiteDescriptionTest)
 
-add_laravel_test(/Feature/GraphQL/Mutations/InviteToProjectTest)
-set_tests_properties(/Feature/GraphQL/Mutations/InviteToProjectTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_feature_test(/Feature/GraphQL/Mutations/InviteToProjectTest)
 
-add_laravel_test(/Feature/GraphQL/Mutations/RevokeProjectInvitationTest)
-set_tests_properties(/Feature/GraphQL/Mutations/RevokeProjectInvitationTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_feature_test(/Feature/GraphQL/Mutations/RevokeProjectInvitationTest)
 
-add_laravel_test(/Feature/GraphQL/Mutations/ChangeProjectRoleTest)
-set_tests_properties(/Feature/GraphQL/Mutations/ChangeProjectRoleTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_feature_test(/Feature/GraphQL/Mutations/ChangeProjectRoleTest)
 
-add_laravel_test(/Feature/GraphQL/Mutations/RemoveProjectUserTest)
-set_tests_properties(/Feature/GraphQL/Mutations/RemoveProjectUserTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_feature_test(/Feature/GraphQL/Mutations/RemoveProjectUserTest)
 
-add_laravel_test(/Feature/Traits/UpdatesSiteInformationTest)
-set_tests_properties(/Feature/Traits/UpdatesSiteInformationTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_feature_test(/Feature/Traits/UpdatesSiteInformationTest)
 
-add_laravel_test(/Feature/GraphQL/Mutations/ChangeGlobalRoleTest)
-set_tests_properties(/Feature/GraphQL/Mutations/ChangeGlobalRoleTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_feature_test(/Feature/GraphQL/Mutations/ChangeGlobalRoleTest)
 
 # Needs RUN_SERIAL to verify that no unexpected invitations are created
-add_laravel_test(/Feature/GraphQL/Mutations/CreateGlobalInvitationTest)
-set_tests_properties(/Feature/GraphQL/Mutations/CreateGlobalInvitationTest PROPERTIES RUN_SERIAL TRUE)
-set_tests_properties(/Feature/GraphQL/Mutations/CreateGlobalInvitationTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_feature_test(/Feature/GraphQL/Mutations/CreateGlobalInvitationTest)
+set_property(TEST /Feature/GraphQL/Mutations/CreateGlobalInvitationTest APPEND PROPERTY RUN_SERIAL TRUE)
 
-add_laravel_test(/Feature/GraphQL/Mutations/RevokeGlobalInvitationTest)
-set_tests_properties(/Feature/GraphQL/Mutations/RevokeGlobalInvitationTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_feature_test(/Feature/GraphQL/Mutations/RevokeGlobalInvitationTest)
 
 # Needs RUN_SERIAL to verify that only the expected users are created
-add_laravel_test(/Feature/GlobalInvitationAcceptanceTest)
-set_tests_properties(/Feature/GlobalInvitationAcceptanceTest PROPERTIES RUN_SERIAL TRUE)
-set_tests_properties(/Feature/GlobalInvitationAcceptanceTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_feature_test(/Feature/GlobalInvitationAcceptanceTest)
+set_property(TEST /Feature/GlobalInvitationAcceptanceTest APPEND PROPERTY RUN_SERIAL TRUE)
 
-add_laravel_test(/Feature/GraphQL/Mutations/RemoveUserTest)
-set_tests_properties(/Feature/GraphQL/Mutations/RemoveUserTest PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_feature_test(/Feature/GraphQL/Mutations/RemoveUserTest)
 
 add_browser_test(/Browser/Pages/UsersPageTest)
 
 ###################################################################################################
 
 set_property(TEST install_2 APPEND PROPERTY DEPENDS
-  /Feature/LoginAndRegistration
-  /Feature/ProjectPermissions
-  /Feature/SlowPageTest
-  /Feature/GitHubWebhook
   /CDash/Lib/Repository/GitHub
   /CDash/BuildUseCase
   /CDash/ConfigUseCase
@@ -372,32 +328,6 @@ set_property(TEST install_2 APPEND PROPERTY DEPENDS
   /CDash/Messaging/Subscription/UserSubscriptionBuilder
   /CDash/Messaging/Topic/UpdateErrorTopic
   /CDash/Service/RepositoryService
-  /Feature/SubmissionValidation
-  /Feature/ProjectInvitationAcceptanceTest
-  /Feature/GraphQL/FilterTest
-  /Feature/GraphQL/QueryTypeTest
-  /Feature/GraphQL/UserTypeTest
-  /Feature/GraphQL/ProjectTypeTest
-  /Feature/GraphQL/SiteTypeTest
-  /Feature/GraphQL/BuildTypeTest
-  /Feature/GraphQL/TestTypeTest
-  /Feature/GraphQL/TestMeasurementTypeTest
-  /Feature/GraphQL/NoteTypeTest
-  /Feature/GraphQL/CoverageTypeTest
-  /Feature/GraphQL/UserInvitationTypeTest
-  /Feature/GraphQL/LabelTypeTest
-  /Feature/GraphQL/TargetTypeTest
-  /Feature/GraphQL/BuildCommandTypeTest
-  /Feature/GraphQL/BuildCommandOutputTypeTest
-  /Feature/Submission/Instrumentation/BuildInstrumentationTest
-  /Feature/RouteAccessTest
-  /Feature/Monitor
-  /Feature/PasswordRotation
-  /Feature/LdapIntegration
-  /Feature/PurgeUnusedProjectsCommand
-  /Feature/Jobs/PruneJobsTest
-  /Feature/Jobs/PruneAuthTokensTest
-  /Feature/UserCommand
   /CDash/Database
   /CDash/Messaging/Topic/AuthoredTopic
   /CDash/Messaging/Topic/BuildErrorTopic
@@ -408,21 +338,6 @@ set_property(TEST install_2 APPEND PROPERTY DEPENDS
   /CDash/Messaging/Topic/MissingTestTopic
   /CDash/Messaging/Topic/TestFailureTopic
   /CDash/Messaging/Topic/TopicDecorator
-  /Feature/RemoteWorkers
-  /Feature/Jobs/NotifyExpiringAuthTokensTest
-  /Feature/Jobs/PruneUploadsTest
-  /Feature/Mail/AuthTokenExpiringTest
-  /Feature/Mail/AuthTokenExpiredTest
-  /Feature/GraphQL/Mutations/UpdateSiteDescriptionTest
-  /Feature/GraphQL/Mutations/InviteToProjectTest
-  /Feature/GraphQL/Mutations/RevokeProjectInvitationTest
-  /Feature/GraphQL/Mutations/ChangeProjectRoleTest
-  /Feature/Traits/UpdatesSiteInformationTest
-  /Feature/GraphQL/Mutations/ChangeGlobalRoleTest
-  /Feature/GraphQL/Mutations/CreateGlobalInvitationTest
-  /Feature/GraphQL/Mutations/RevokeGlobalInvitationTest
-  /Feature/GlobalInvitationAcceptanceTest
-  /Feature/GraphQL/Mutations/RemoveUserTest
   cypress/e2e/user-profile
 )
 
