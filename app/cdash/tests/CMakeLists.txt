@@ -15,7 +15,7 @@ function(add_php_test TestName)
   )
 endfunction()
 
-function(add_unit_test TestName)
+function(add_legacy_unit_test TestName)
   add_test(
     NAME ${TestName}
     COMMAND
@@ -76,11 +76,11 @@ add_laravel_test(/Unit/app/Middleware/InternalTest)
 add_laravel_test(/Unit/app/Models/TestOutputTest)
 
 # TODO: Is this test useful now?
-add_unit_test(/PHPUnitTest)
+add_legacy_unit_test(/PHPUnitTest)
 
-add_unit_test(/CDash/ServiceContainer)
+add_legacy_unit_test(/CDash/ServiceContainer)
 
-add_unit_test(/CDash/LinkifyCompilerOutput)
+add_legacy_unit_test(/CDash/LinkifyCompilerOutput)
 
 add_laravel_test(/Unit/app/Console/Command/ValidateXmlCommandTest)
 
@@ -89,28 +89,28 @@ add_laravel_test(/Unit/app/Console/Command/ValidateXmlCommandTest)
 add_laravel_test(/Feature/CDashTest)
 set_tests_properties(/Feature/CDashTest PROPERTIES DEPENDS install_1)
 
-add_unit_test(/CDash/MultipleSubprojectsEmail)
+add_legacy_unit_test(/CDash/MultipleSubprojectsEmail)
 set_tests_properties(/CDash/MultipleSubprojectsEmail PROPERTIES DEPENDS /Feature/CDashTest)
 
-add_unit_test(/CDash/NightlyTime)
+add_legacy_unit_test(/CDash/NightlyTime)
 set_tests_properties(/CDash/NightlyTime PROPERTIES DEPENDS /CDash/MultipleSubprojectsEmail)
 
-add_unit_test(/CDash/TestUseCase)
+add_legacy_unit_test(/CDash/TestUseCase)
 set_tests_properties(/CDash/TestUseCase PROPERTIES DEPENDS /CDash/NightlyTime)
 
-add_unit_test(/CDash/XmlHandler/BuildHandler)
+add_legacy_unit_test(/CDash/XmlHandler/BuildHandler)
 set_tests_properties(/CDash/XmlHandler/BuildHandler PROPERTIES DEPENDS /CDash/TestUseCase)
 
-add_unit_test(/CDash/XmlHandler/ConfigureHandler)
+add_legacy_unit_test(/CDash/XmlHandler/ConfigureHandler)
 set_tests_properties(/CDash/XmlHandler/ConfigureHandler PROPERTIES DEPENDS /CDash/XmlHandler/BuildHandler)
 
-add_unit_test(/CDash/XmlHandler/DynamicAnalysisHandler)
+add_legacy_unit_test(/CDash/XmlHandler/DynamicAnalysisHandler)
 set_tests_properties(/CDash/XmlHandler/DynamicAnalysisHandler PROPERTIES DEPENDS /CDash/XmlHandler/ConfigureHandler)
 
-add_unit_test(/CDash/XmlHandler/TestingHandler)
+add_legacy_unit_test(/CDash/XmlHandler/TestingHandler)
 set_tests_properties(/CDash/XmlHandler/TestingHandler PROPERTIES DEPENDS /CDash/XmlHandler/DynamicAnalysisHandler)
 
-add_unit_test(/CDash/XmlHandler/UpdateHandler)
+add_legacy_unit_test(/CDash/XmlHandler/UpdateHandler)
 set_tests_properties(/CDash/XmlHandler/UpdateHandler PROPERTIES DEPENDS /CDash/XmlHandler/TestingHandler)
 
 ###################################################################################################
@@ -126,46 +126,46 @@ add_feature_test(/Feature/SlowPageTest)
 
 add_feature_test(/Feature/GitHubWebhook)
 
-add_unit_test(/CDash/Lib/Repository/GitHub)
+add_legacy_unit_test(/CDash/Lib/Repository/GitHub)
 set_tests_properties(/CDash/Lib/Repository/GitHub PROPERTIES
     DEPENDS /CDash/XmlHandler/UpdateHandler
     DISABLED "$<STREQUAL:${CDASH_IMAGE},ubi>"
 )
 
-add_unit_test(/CDash/BuildUseCase)
+add_legacy_unit_test(/CDash/BuildUseCase)
 set_tests_properties(/CDash/BuildUseCase PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
-add_unit_test(/CDash/ConfigUseCase)
+add_legacy_unit_test(/CDash/ConfigUseCase)
 set_tests_properties(/CDash/ConfigUseCase PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
-add_unit_test(/CDash/UpdateUseCase)
+add_legacy_unit_test(/CDash/UpdateUseCase)
 set_tests_properties(/CDash/UpdateUseCase PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
-add_unit_test(/CDash/Model/BuildError)
+add_legacy_unit_test(/CDash/Model/BuildError)
 set_tests_properties(/CDash/Model/BuildError PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
-add_unit_test(/CDash/Model/BuildErrorFilter)
+add_legacy_unit_test(/CDash/Model/BuildErrorFilter)
 set_tests_properties(/CDash/Model/BuildErrorFilter PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
-add_unit_test(/CDash/Model/BuildFailure)
+add_legacy_unit_test(/CDash/Model/BuildFailure)
 set_tests_properties(/CDash/Model/BuildFailure PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
-add_unit_test(/CDash/Model/BuildRelationship)
+add_legacy_unit_test(/CDash/Model/BuildRelationship)
 set_tests_properties(/CDash/Model/BuildRelationship PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
-add_unit_test(/CDash/Model/Repository)
+add_legacy_unit_test(/CDash/Model/Repository)
 set_tests_properties(/CDash/Model/Repository PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
-add_unit_test(/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilder)
+add_legacy_unit_test(/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilder)
 set_tests_properties(/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilder PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
-add_unit_test(/CDash/Messaging/Subscription/UserSubscriptionBuilder)
+add_legacy_unit_test(/CDash/Messaging/Subscription/UserSubscriptionBuilder)
 set_tests_properties(/CDash/Messaging/Subscription/UserSubscriptionBuilder PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
-add_unit_test(/CDash/Messaging/Topic/UpdateErrorTopic)
+add_legacy_unit_test(/CDash/Messaging/Topic/UpdateErrorTopic)
 set_tests_properties(/CDash/Messaging/Topic/UpdateErrorTopic PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
-add_unit_test(/CDash/Service/RepositoryService)
+add_legacy_unit_test(/CDash/Service/RepositoryService)
 set_tests_properties(/CDash/Service/RepositoryService PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 # Set this to RUN_SERIAL as we are changing the config and don't want to clobber other tests.
@@ -240,34 +240,34 @@ set_property(TEST /Feature/Jobs/PruneAuthTokensTest APPEND PROPERTY RUN_SERIAL T
 
 add_feature_test(/Feature/UserCommand)
 
-add_unit_test(/CDash/Database)
+add_legacy_unit_test(/CDash/Database)
 set_tests_properties(/CDash/Database PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
-add_unit_test(/CDash/Messaging/Topic/AuthoredTopic)
+add_legacy_unit_test(/CDash/Messaging/Topic/AuthoredTopic)
 set_tests_properties(/CDash/Messaging/Topic/AuthoredTopic PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
-add_unit_test(/CDash/Messaging/Topic/BuildErrorTopic)
+add_legacy_unit_test(/CDash/Messaging/Topic/BuildErrorTopic)
 set_tests_properties(/CDash/Messaging/Topic/BuildErrorTopic PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
-add_unit_test(/CDash/Messaging/Topic/ConfigureTopic)
+add_legacy_unit_test(/CDash/Messaging/Topic/ConfigureTopic)
 set_tests_properties(/CDash/Messaging/Topic/ConfigureTopic PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
-add_unit_test(/CDash/Messaging/Topic/DynamicAnalysisTopic)
+add_legacy_unit_test(/CDash/Messaging/Topic/DynamicAnalysisTopic)
 set_tests_properties(/CDash/Messaging/Topic/DynamicAnalysisTopic PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
-add_unit_test(/CDash/Messaging/Topic/EmailSentTopic)
+add_legacy_unit_test(/CDash/Messaging/Topic/EmailSentTopic)
 set_tests_properties(/CDash/Messaging/Topic/EmailSentTopic PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
-add_unit_test(/CDash/Messaging/Topic/FixedTopic)
+add_legacy_unit_test(/CDash/Messaging/Topic/FixedTopic)
 set_tests_properties(/CDash/Messaging/Topic/FixedTopic PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
-add_unit_test(/CDash/Messaging/Topic/MissingTestTopic)
+add_legacy_unit_test(/CDash/Messaging/Topic/MissingTestTopic)
 set_tests_properties(/CDash/Messaging/Topic/MissingTestTopic PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
-add_unit_test(/CDash/Messaging/Topic/TestFailureTopic)
+add_legacy_unit_test(/CDash/Messaging/Topic/TestFailureTopic)
 set_tests_properties(/CDash/Messaging/Topic/TestFailureTopic PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
-add_unit_test(/CDash/Messaging/Topic/TopicDecorator)
+add_legacy_unit_test(/CDash/Messaging/Topic/TopicDecorator)
 set_tests_properties(/CDash/Messaging/Topic/TopicDecorator PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_feature_test(/Feature/RemoteWorkers)
@@ -417,7 +417,7 @@ set_tests_properties(viewdynamicanalysisfile PROPERTIES DEPENDS viewdynamicanaly
 add_php_test(buildmodel)
 set_tests_properties(buildmodel PROPERTIES DEPENDS viewdynamicanalysisfile)
 
-add_unit_test(/CDash/Model/PendingSubmissions)
+add_legacy_unit_test(/CDash/Model/PendingSubmissions)
 set_tests_properties(/CDash/Model/PendingSubmissions PROPERTIES DEPENDS buildmodel)
 
 add_php_test(projectxmlsequence)
