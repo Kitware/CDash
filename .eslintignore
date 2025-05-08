@@ -2,6 +2,7 @@ vendor/*
 _build/*
 cypress_cache/*
 public/assets/*
+public/vendor/*
 resources/js/angular/ui.tabs.js
 resources/js/angular/tabNavigation.js
 resources/js/angular/services/renderTimer.js

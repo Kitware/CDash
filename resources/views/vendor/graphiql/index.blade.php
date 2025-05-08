@@ -1,81 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
-@php use MLL\GraphiQL\DownloadAssetsCommand; @endphp
+@php use MLL\GraphiQL\GraphiQLAsset; @endphp
 <head>
-    <meta charset=utf-8/>
-    <meta name="viewport" content="user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, minimal-ui">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>GraphiQL</title>
     <style>
         body {
-            height: 100%;
             margin: 0;
-            width: 100%;
-            overflow: hidden;
+            overflow: hidden; /* in Firefox */
         }
 
         #graphiql {
-            height: 100vh;
+            height: 100dvh;
         }
 
-        /* Make the explorer feel more integrated */
-        .docExplorerWrap {
-            overflow: auto !important;
-            width: 100% !important;
-            height: auto !important;
-        }
-
-        .doc-explorer-title-bar {
-            font-weight: var(--font-weight-medium);
-            font-size: var(--font-size-h2);
-            overflow-x: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .doc-explorer-rhs {
-            display: none;
-        }
-
-        .doc-explorer-contents {
-            margin: var(--px-16) 0 0;
-        }
-
-        .graphiql-explorer-actions select {
-            margin-left: var(--px-12);
+        #graphiql-loading {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
         }
     </style>
-    <script src="{{ DownloadAssetsCommand::reactPath() }}"></script>
-    <script src="{{ DownloadAssetsCommand::reactDOMPath() }}"></script>
-    <link rel="stylesheet" href="{{ DownloadAssetsCommand::cssPath() }}"/>
-    <link rel="shortcut icon" href="{{ DownloadAssetsCommand::faviconPath() }}"/>
+    <script src="{{ GraphiQLAsset::reactJS() }}"></script>
+    <script src="{{ GraphiQLAsset::reactDOMJS() }}"></script>
+    <link rel="stylesheet" href="{{ GraphiQLAsset::graphiQLCSS() }}"/>
+    <link rel="stylesheet" href="{{ GraphiQLAsset::pluginExplorerCSS() }}"/>
+    <link rel="shortcut icon" href="{{ GraphiQLAsset::favicon() }}"/>
 </head>
 
 <body>
 
-<div id="graphiql">Loading...</div>
-<script src="{{ DownloadAssetsCommand::jsPath() }}"></script>
-<script src="{{ DownloadAssetsCommand::pluginExplorerPath() }}"></script>
+<div id="graphiql">
+    <div id="graphiql-loading">Loading…</div>
+</div>
+
+<script src="{{ GraphiQLAsset::graphiQLJS() }}"></script>
+<script src="{{ GraphiQLAsset::pluginExplorerJS() }}"></script>
 <script>
     const fetcher = GraphiQL.createFetcher({
         url: '{{ $url }}',
         subscriptionUrl: '{{ $subscriptionUrl }}',
     });
+    const explorer = GraphiQLPluginExplorer.explorerPlugin();
 
     function GraphiQLWithExplorer() {
-        const [query, setQuery] = React.useState('');
-
         return React.createElement(GraphiQL, {
             fetcher,
-            query,
-            onEditQuery: setQuery,
-            defaultEditorToolsVisibility: true,
             plugins: [
-                GraphiQLPluginExplorer.useExplorerPlugin({
-                    query,
-                    onEdit: setQuery,
-                }),
+                explorer,
             ],
+            // See https://github.com/graphql/graphiql/tree/main/packages/graphiql#props for available settings
         });
     }
 
