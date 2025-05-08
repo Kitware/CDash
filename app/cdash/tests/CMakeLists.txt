@@ -40,7 +40,12 @@ function(add_laravel_test TestName)
   )
 endfunction()
 
-# Tests with no dependencies which require the database to be available
+# Tests with no dependencies whatsoever
+function(add_unit_test TestName)
+  add_laravel_test(${TestName})
+endfunction()
+
+# Tests with no dependencies on other tests which require the database to be available
 function(add_feature_test TestName)
   add_laravel_test(${TestName})
   set_property(TEST ${TestName} APPEND PROPERTY DEPENDS /CDash/XmlHandler/UpdateHandler)
@@ -65,15 +70,15 @@ endif()
 # Tests from this point to the next cdash_install() are expected to not need database or other
 # system resources.
 
-add_laravel_test(/Unit/app/ControllerNameTest)
+add_unit_test(/Unit/app/ControllerNameTest)
 
-add_laravel_test(/Unit/app/FillableAttributesTest)
+add_unit_test(/Unit/app/FillableAttributesTest)
 
-add_laravel_test(/Unit/app/Validators/PasswordTest)
+add_unit_test(/Unit/app/Validators/PasswordTest)
 
-add_laravel_test(/Unit/app/Middleware/InternalTest)
+add_unit_test(/Unit/app/Middleware/InternalTest)
 
-add_laravel_test(/Unit/app/Models/TestOutputTest)
+add_unit_test(/Unit/app/Models/TestOutputTest)
 
 # TODO: Is this test useful now?
 add_legacy_unit_test(/PHPUnitTest)
@@ -82,7 +87,7 @@ add_legacy_unit_test(/CDash/ServiceContainer)
 
 add_legacy_unit_test(/CDash/LinkifyCompilerOutput)
 
-add_laravel_test(/Unit/app/Console/Command/ValidateXmlCommandTest)
+add_unit_test(/Unit/app/Console/Command/ValidateXmlCommandTest)
 
 ###################################################################################################
 
