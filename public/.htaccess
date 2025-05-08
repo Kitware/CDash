@@ -24,4 +24,6 @@
     <FilesMatch "\.(css|js|svg|gif|png)$">
         Header set Cache-Control "max-age=31536000"
     </FilesMatch>
+
+    Header set Content-Security-Policy "default-src 'self' 'unsafe-inline' 'unsafe-eval'; font-src 'self' data:"
 </IfModule>
