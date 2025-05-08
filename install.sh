@@ -63,6 +63,9 @@ else
     fi
 fi
 
+echo "Downloading GraphiQL assets..."
+php artisan graphiql:download-assets
+
 echo "Waiting for database to come online..."
 until php artisan db:monitor ; do sleep 1; done
 
