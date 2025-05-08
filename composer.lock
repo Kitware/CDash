@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ac6248116e956cda53d6e62c38c16936",
+    "content-hash": "4319f8f1024efde61f5f35695317a6f3",
     "packages": [
         {
             "name": "24slides/laravel-saml2",
@@ -3126,16 +3126,16 @@
         },
         {
             "name": "mll-lab/laravel-graphiql",
-            "version": "v3.3.2",
+            "version": "v3.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mll-lab/laravel-graphiql.git",
-                "reference": "ddad2580094fc0ea68065546ada07b3eabe02baa"
+                "reference": "d1605697fd7a9081d961315386864b9fb2d352f1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mll-lab/laravel-graphiql/zipball/ddad2580094fc0ea68065546ada07b3eabe02baa",
-                "reference": "ddad2580094fc0ea68065546ada07b3eabe02baa",
+                "url": "https://api.github.com/repos/mll-lab/laravel-graphiql/zipball/d1605697fd7a9081d961315386864b9fb2d352f1",
+                "reference": "d1605697fd7a9081d961315386864b9fb2d352f1",
                 "shasum": ""
             },
             "require": {
@@ -3186,9 +3186,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mll-lab/laravel-graphiql/issues",
-                "source": "https://github.com/mll-lab/laravel-graphiql/tree/v3.3.2"
+                "source": "https://github.com/mll-lab/laravel-graphiql/tree/v3.3.3"
             },
-            "time": "2025-04-01T08:12:53+00:00"
+            "time": "2025-05-06T07:56:13+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -12411,7 +12411,7 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {},
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
@@ -12434,5 +12434,5 @@
         "ext-xdebug": "*",
         "ext-zip": "*"
     },
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }
