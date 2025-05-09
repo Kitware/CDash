@@ -25,7 +25,7 @@ final class UserController extends AbstractController
 {
     public function userPage(): View
     {
-        return $this->view('admin.user', 'My Profile');
+        return $this->vue('user-homepage', 'My Profile', [], false);
     }
 
     public function userPageContent(): JsonResponse
