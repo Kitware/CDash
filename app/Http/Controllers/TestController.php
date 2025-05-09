@@ -34,7 +34,7 @@ final class TestController extends AbstractProjectController
         }
 
         $this->setProjectById($projectid);
-        return $this->view('test.details', 'Test Results');
+        return $this->vue('test-details', 'Test Results', [], false);
     }
 
     public function apiTestDetails(): JsonResponse|StreamedResponse

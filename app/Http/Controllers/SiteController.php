@@ -94,7 +94,9 @@ final class SiteController extends AbstractController
 
     public function viewSite(Site $site): View
     {
-        return $this->view('site.view-site', $site->name)
-            ->with('site', $site);
+        return $this->vue('sites-id-page', $site->name, [
+            'site-id' => $site->id,
+            'user-id' => auth()->user()?->id,
+        ]);
     }
 }

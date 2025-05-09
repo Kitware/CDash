@@ -11,7 +11,7 @@ final class EditProjectController extends AbstractProjectController
     {
         Gate::authorize('create-project');
 
-        return $this->view('admin.project', 'Create Project');
+        return $this->vue('edit-project', 'Create Project', ['projectid' => 0], false);
     }
 
     // Render the edit project form.
@@ -20,6 +20,6 @@ final class EditProjectController extends AbstractProjectController
         $this->setProjectById((int) $project_id);
         Gate::authorize('edit-project', $this->project);
 
-        return $this->view('admin.project', 'Edit Project');
+        return $this->vue('edit-project', 'Edit Project', ['projectid' => $this->project->Id], false);
     }
 }

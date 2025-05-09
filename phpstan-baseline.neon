@@ -1689,6 +1689,11 @@ parameters:
 			path: app/Http/Controllers/ProjectInvitationController.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Contracts\\\\Auth\\\\Guard\\:\\:user\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Controllers/ProjectMembersController.php
+
+		-
 			message: "#^Access to an undefined property object\\:\\:\\$numdefects\\.$#"
 			count: 2
 			path: app/Http/Controllers/ProjectOverviewController.php
@@ -2077,6 +2082,11 @@ parameters:
 			message: "#^Parameter \\#1 \\$value of method Carbon\\\\Carbon\\:\\:addSeconds\\(\\) expects int, \\(float\\|int\\) given\\.$#"
 			count: 1
 			path: app/Http/Controllers/RemoteProcessingController.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Contracts\\\\Auth\\\\Guard\\:\\:user\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Controllers/SiteController.php
 
 		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\SiteController\\:\\:siteStatistics\\(\\) never returns Illuminate\\\\Http\\\\RedirectResponse so it can be removed from the return type\\.$#"
@@ -2608,6 +2618,11 @@ parameters:
 			message: "#^Parameter \\#1 \\$string of function strlen expects string, array\\|string given\\.$#"
 			count: 2
 			path: app/Http/Controllers/UserNoteController.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Contracts\\\\Auth\\\\Guard\\:\\:user\\(\\)\\.$#"
+			count: 1
+			path: app/Http/Controllers/UsersController.php
 
 		-
 			message: "#^Parameter \\#2 \\$build of class CDash\\\\Controller\\\\Api\\\\ViewTest constructor expects CDash\\\\Model\\\\Build, CDash\\\\Model\\\\Build\\|null given\\.$#"

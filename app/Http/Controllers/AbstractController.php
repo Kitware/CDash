@@ -51,6 +51,17 @@ abstract class AbstractController extends BaseController
             ->with('angular_controller', $controller_name);
     }
 
+    /**
+     * @param array<string,mixed> $props
+     */
+    protected function vue(string $component, string $title, array $props = [], bool $enableDaisyUI = true): View
+    {
+        return $this->view('vue', $title)
+            ->with('componentName', $component)
+            ->with('props', $props)
+            ->with('daisyui', $enableDaisyUI);
+    }
+
     public static function getCDashVersion(): string
     {
         return file_get_contents(public_path('VERSION'));

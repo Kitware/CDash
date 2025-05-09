@@ -201,6 +201,6 @@ final class ProjectController extends AbstractProjectController
     {
         $this->setProjectById($project_id);
 
-        return $this->view('project.sites', 'Sites');
+        return $this->vue('project-sites-page', 'Sites', ['project-id' => $this->project->Id]);
     }
 }
