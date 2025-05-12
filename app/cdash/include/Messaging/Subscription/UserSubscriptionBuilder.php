@@ -13,9 +13,6 @@ class UserSubscriptionBuilder implements SubscriptionBuilderInterface
     /** @var SubscriptionFactory */
     private $subscriptionFactory;
 
-    /** @var SubscriptionCollection */
-    private $subscriptions;
-
     /**
      * SubscriptionBuilder constructor.
      */
@@ -51,17 +48,6 @@ class UserSubscriptionBuilder implements SubscriptionBuilderInterface
                 $subscriptions->add($subscription);
             }
         }
-    }
-
-    /**
-     * @return SubscriptionCollection
-     */
-    protected function getSubscriptionCollection()
-    {
-        if (is_null($this->subscriptions)) {
-            $this->subscriptions = new SubscriptionCollection();
-        }
-        return $this->subscriptions;
     }
 
     /**

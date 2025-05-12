@@ -74,16 +74,6 @@ class Coverage
         }
     }
 
-    /** Return the name of a build */
-    public function GetFiles(): array|false
-    {
-        if (!$this->BuildId) {
-            abort(500, 'Coverage GetFiles(): BuildId not set');
-        }
-
-        return EloquentCoverage::where('buildid', $this->BuildId)->pluck('fileid')->toArray();
-    }
-
     /** Return true if this build already has coverage for this file,
      * false otherwise.
      **/

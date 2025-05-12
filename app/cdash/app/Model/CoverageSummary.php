@@ -329,30 +329,6 @@ class CoverageSummary
         return true;
     }
 
-    /** Return the list of buildid which are contributing to the dashboard */
-    public function GetBuilds($projectid, $timestampbegin, $timestampend): array|false
-    {
-        $db = Database::getInstance();
-        $coverage = $db->executePrepared('
-                        SELECT buildid
-                        FROM coveragesummary, build
-                        WHERE
-                            coveragesummary.buildid=build.id
-                            AND build.projectid=?
-                            AND build.starttime>?
-                            AND endtime<?', [intval($projectid), $timestampbegin, $timestampend]);
-        if ($coverage === false) {
-            add_last_sql_error('CoverageSummary:GetBuilds');
-            return false;
-        }
-
-        $buildids = [];
-        foreach ($coverage as $coverage_array) {
-            $buildids[] = intval($coverage_array['buildid']);
-        }
-        return $buildids;
-    }
-
     /** Return whether or not a CoverageSummary exists for this build. */
     public function Exists(): bool
     {

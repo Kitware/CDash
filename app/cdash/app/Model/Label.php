@@ -47,13 +47,6 @@ class Label
         return $model === null ? '' : $model->text;
     }
 
-    /** Get the id from a label */
-    public function GetIdFromText(): int
-    {
-        $model = EloquentLabel::where('text', $this->Text);
-        return $model->count() > 0 ? $model->first()->id : 0;
-    }
-
     public function GetTextFromBuildFailure(): array|false
     {
         if (!$this->BuildFailureId) {

@@ -146,47 +146,6 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
         }
     }
 
-    private function setEmailPreference($status, $chars)
-    {
-        $pdo = Database::getInstance()->getPdo();
-
-        $sql = "
-            SELECT
-              a.summaryemail,
-              b.emailmaxchars
-            FROM buildgroup a
-              JOIN  project b ON a.projectid = b.id
-            WHERE
-            a.name = 'Experimental'
-            AND a.projectid={$this->projectId}
-        ";
-
-        $stmt = $pdo->query($sql);
-        [$this->summaryEmail, $this->emailMaxChars] = $stmt->fetch();
-
-        $sql = "
-            UPDATE buildgroup
-            SET summaryemail = {$status}
-            WHERE
-                name = 'Experimental'
-            AND projectid = {$this->projectId}
-        ";
-
-        if (!$pdo->exec($sql)) {
-            $this->fail("Query failed: $sql");
-        }
-
-        $sql = "
-            UPDATE project
-            SET emailmaxchars = {$chars}
-            WHERE id = {$this->projectId}
-        ";
-
-        if (!$pdo->exec($sql)) {
-            $this->fail("Query failed: $sql");
-        }
-    }
-
     private function restoreEmailPreference()
     {
         $pdo = Database::getInstance()->getPdo();
