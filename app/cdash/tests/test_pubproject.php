@@ -21,7 +21,7 @@ class PubProjectTestCase extends KWWebTestCase
         $settings = [
             'Name' => 'ProjectTest',
             'Description' => 'This is a project test for cdash',
-            'EmailAdministrator' => 1];
+        ];
         $this->ProjectId = $this->createProject($settings);
     }
 

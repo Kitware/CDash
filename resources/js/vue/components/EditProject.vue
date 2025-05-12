@@ -1301,42 +1301,6 @@
                     <td />
                     <td>
                       <div align="right">
-                        <strong>Email administrator:</strong>
-                      </div>
-                    </td>
-                    <td>
-                      <input
-                        v-model="cdash.project.EmailAdministrator"
-                        type="checkbox"
-                        name="emailAdministrator"
-                        @change="cdash.changesmade = true"
-                        @focus="showHelp('emailAdministrator_help')"
-                      >
-                      <a
-                        href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
-                        target="blank"
-                      >
-                        <img
-                          :src="$baseURL + '/img/help.gif'"
-                          border="0"
-                          @mouseover="showHelp('emailAdministrator_help')"
-                        >
-                      </a>
-                      <span
-                        id="emailAdministrator_help"
-                        class="help_content"
-                      >
-                        <b>Email administator</b>
-                        <br>
-                        Enable/Disable sending email when the XML parsing fails or
-                        any issues related to the project administration.
-                      </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td />
-                    <td>
-                      <div align="right">
                         <strong>Email low coverage:</strong>
                       </div>
                     </td>

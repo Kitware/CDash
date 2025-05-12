@@ -35,7 +35,6 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 use PDO;
 use ReflectionObject;
 use ReflectionProperty;
@@ -78,7 +77,6 @@ class Project
     public $TestTimeMaxStatus;
     public $EmailMaxItems;
     public $EmailMaxChars;
-    public $EmailAdministrator;
     public $ShowIPAddresses;
     public $DisplayLabels;
     public $ShareLabelFilters;
@@ -121,9 +119,6 @@ class Project
         }
         if (empty($this->EmailRedundantFailures)) {
             $this->EmailRedundantFailures = 0;
-        }
-        if (empty($this->EmailAdministrator)) {
-            $this->EmailAdministrator = 0;
         }
         if (empty($this->ShowIPAddresses)) {
             $this->ShowIPAddresses = 0;
@@ -267,7 +262,6 @@ class Project
             'emailtesttimingchanged' => (int) $this->EmailTestTimingChanged,
             'emailbrokensubmission' => (int) $this->EmailBrokenSubmission,
             'emailredundantfailures' => (int) $this->EmailRedundantFailures,
-            'emailadministrator' => (int) $this->EmailAdministrator,
             'showipaddresses' => (int) $this->ShowIPAddresses,
             'displaylabels' => (int) $this->DisplayLabels,
             'sharelabelfilters' => (int) $this->ShareLabelFilters,
@@ -357,7 +351,6 @@ class Project
             $this->EmailTestTimingChanged = $project->emailtesttimingchanged;
             $this->EmailBrokenSubmission = $project->emailbrokensubmission;
             $this->EmailRedundantFailures = $project->emailredundantfailures;
-            $this->EmailAdministrator = $project->emailadministrator;
             $this->ShowIPAddresses = $project->showipaddresses;
             $this->DisplayLabels = $project->displaylabels;
             $this->ShareLabelFilters = $project->sharelabelfilters;
@@ -890,41 +883,6 @@ class Project
             $labelids[] = (int) $label_array->id;
         }
         return array_unique($labelids);
-    }
-
-    /** Send an email to the administrator of the project */
-    public function SendEmailToAdmin(string $subject, string $body): bool
-    {
-        if (!$this->Id) {
-            throw new RuntimeException('ID not set for project');
-        }
-
-        if (!$this->Filled) {
-            $this->Fill();
-        }
-
-        if (intval($this->EmailAdministrator) === 0) {
-            return true;
-        }
-
-        $project = EloquentProject::findOrFail((int) $this->Id);
-        $recipients = $project->administrators()->get()->pluck('email')->toArray();
-
-        if (count($recipients) > 0) {
-            $projectname = $this->Name;
-            $emailtitle = 'CDash [' . $projectname . '] - Administration ';
-            $emailbody = 'Object: ' . $subject . "\n";
-            $emailbody .= $body . "\n";
-
-            $emailbody .= "\n-CDash\n";
-
-            Mail::raw($emailbody, function ($message) use ($emailtitle, $recipients) {
-                $message->subject($emailtitle)
-                    ->to($recipients);
-            });
-        }
-
-        return true;
     }
 
     /**
