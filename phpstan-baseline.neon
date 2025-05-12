@@ -2765,11 +2765,6 @@ parameters:
 			path: app/Jobs/ProcessSubmission.php
 
 		-
-			message: "#^Binary operation \"\\.\" between 'An XML submission…' and mixed results in an error\\.$#"
-			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
 			message: "#^Binary operation \"\\.\" between \\(list\\<string\\>\\|string\\|null\\) and '_' results in an error\\.$#"
 			count: 2
 			path: app/Jobs/ProcessSubmission.php
@@ -8822,7 +8817,7 @@ parameters:
 
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 19
+			count: 18
 			path: app/cdash/app/Model/Project.php
 
 		-
@@ -9042,11 +9037,6 @@ parameters:
 
 		-
 			message: "#^Property CDash\\\\Model\\\\Project\\:\\:\\$DocumentationUrl has no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Property CDash\\\\Model\\\\Project\\:\\:\\$EmailAdministrator has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Project.php
 

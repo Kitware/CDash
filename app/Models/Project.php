@@ -29,7 +29,6 @@ use Illuminate\Support\Facades\Auth;
  * @property int $emailtesttimingchanged
  * @property int $emailbrokensubmission
  * @property int $emailredundantfailures
- * @property int $emailadministrator
  * @property int $showipaddresses
  * @property string $cvsviewertype
  * @property int $testtimestd
@@ -77,7 +76,6 @@ class Project extends Model
         'emailtesttimingchanged',
         'emailbrokensubmission',
         'emailredundantfailures',
-        'emailadministrator',
         'showipaddresses',
         'cvsviewertype',
         'testtimestd',

@@ -467,10 +467,6 @@ class ProcessSubmission implements ShouldQueue
         if ($handler == null) {
             // TODO: Add as much context as possible to this message
             Log::error('error: could not create handler based on xml content');
-
-            $Project->SendEmailToAdmin('Cannot create handler based on XML content',
-                'An XML submission from ' . $ip . ' to the project ' . get_project_name($projectid) . ' cannot be parsed. The content of the file is as follows: ' . $content);
-
             abort(400, 'Could not create handler based on xml content');
         }
 
