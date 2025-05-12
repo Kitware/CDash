@@ -41,7 +41,7 @@ class UniqueDiffsTestCase extends KWWebTestCase
         $stmt->execute([$this->BuildId, 0, 1, -1]);
         try {
             $stmt->execute([$this->BuildId, 0, 2, -2]);
-        } catch (PDOException $exception) {
+        } catch (PDOException) {
             $this->checkIntegrityViolation($stmt);
         }
 
@@ -54,7 +54,7 @@ class UniqueDiffsTestCase extends KWWebTestCase
         $stmt->execute([$this->BuildId, 0, -1]);
         try {
             $stmt->execute([$this->BuildId, 0, -2]);
-        } catch (PDOException $exception) {
+        } catch (PDOException) {
             $this->checkIntegrityViolation($stmt);
         }
 
@@ -68,7 +68,7 @@ class UniqueDiffsTestCase extends KWWebTestCase
         $stmt->execute([$this->BuildId, 0, 1, -1]);
         try {
             $stmt->execute([$this->BuildId, 0, 2, -2]);
-        } catch (PDOException $exception) {
+        } catch (PDOException) {
             $this->checkIntegrityViolation($stmt);
         }
 

@@ -72,7 +72,6 @@ class ViewTest extends BuildApi
         $onlynotrun = 0;
         $onlydelta = 0;
         $extraquery = '';
-        $display = '';
 
         if (isset($_GET['onlypassed'])) {
             $onlypassed = 1;

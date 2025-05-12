@@ -72,7 +72,6 @@ final class SubscribeProjectController extends AbstractProjectController
         @$UpdateSubscription = $_POST['updatesubscription'];
         @$Unsubscribe = $_POST['unsubscribe'];
         @$Role = $_POST['role'];
-        @$Credentials = $_POST['credentials'];
         @$EmailType = $_POST['emailtype'];
         if (!isset($_POST['emailmissingsites'])) {
             $EmailMissingSites = 0;

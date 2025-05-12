@@ -95,8 +95,6 @@ class DynamicAnalysis
 
         $this->BuildId = intval($this->BuildId);
 
-        $db = Database::getInstance();
-
         if (config('database.default') == 'pgsql') {
             // postgresql doesn't support multiple delete
             //

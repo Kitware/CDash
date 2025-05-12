@@ -141,7 +141,7 @@ class BuildGroupRuleTestCase extends KWWebTestCase
                 'expected' => 1,
             ];
             try {
-                $response = $client->request('POST',
+                $client->request('POST',
                     $this->url . '/api/v1/build.php',
                     ['json' => $payload]);
             } catch (ClientException $e) {
@@ -159,7 +159,7 @@ class BuildGroupRuleTestCase extends KWWebTestCase
             'newgroupid' => $group->GetId(),
         ];
         try {
-            $response = $client->request('POST',
+            $client->request('POST',
                 $this->url . '/api/v1/build.php',
                 ['json' => $payload]);
         } catch (ClientException $e) {

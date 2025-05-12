@@ -11572,11 +11572,6 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
-			message: "#^Cannot access offset 'filename' on mixed\\.$#"
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
 			message: "#^Cannot access offset 'filesize' on mixed\\.$#"
 			count: 1
 			path: app/cdash/include/common.php

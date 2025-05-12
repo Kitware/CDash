@@ -517,7 +517,6 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
 
             $count = count($rows);
 
-            $success = false;
             switch ($label) {
                 case 'MyExperimentalFeature':
                     $success = $count === 1 && in_array('MyExperimentalFeature', $rows);

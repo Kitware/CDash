@@ -135,7 +135,7 @@ class BuildPropertiesTestCase extends KWWebTestCase
         }
         $defects = ['builderrors', 'buildwarnings', 'testfailed'];
         $query_string = http_build_query(['buildid' => $buildids, 'defect' => $defects]);
-        $response = $this->get($this->url . "/api/v1/buildProperties.php?$query_string");
+        $this->get($this->url . "/api/v1/buildProperties.php?$query_string");
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
         $num_defects = count($jsonobj['defects']);
@@ -215,7 +215,7 @@ class BuildPropertiesTestCase extends KWWebTestCase
                     'form_params' => $fields,
                 ]
             );
-        } catch (ClientException $e) {
+        } catch (ClientException) {
             $this->fail("POST submit failed for $buildname");
         }
 

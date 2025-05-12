@@ -159,7 +159,6 @@ class ManageMeasurementsTestCase extends KWWebTestCase
 
         // POST to manageMeasurements.php to add 'Processors', 'I/O Wait Time',
         // and 'Peak Memory' as test measurements for these projects.
-        $measurement_ids = [];
         $this->ProjectId = get_project_id('InsightExample');
         $this->SubProjectId = get_project_id('SubProjectExample');
         $new_measurements = ['Processors', 'I/O Wait Time', 'Peak Memory'];

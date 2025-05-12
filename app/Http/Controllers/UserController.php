@@ -117,7 +117,7 @@ final class UserController extends AbstractController
         while ($row = $stmt->fetch()) {
             try {
                 $Site = Site::findOrFail($row['siteid']);
-            } catch (ModelNotFoundException $e) {
+            } catch (ModelNotFoundException) {
                 abort(500, 'Invalid relation between site2user and site tables.');
             }
 

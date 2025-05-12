@@ -130,7 +130,7 @@ class UpdateHandler extends AbstractXmlHandler implements ActionableBuildInterfa
                 // repository to figure out what changed.
                 try {
                     Repository::compareCommits($this->Update, $this->GetProject());
-                } catch (Exception $e) {
+                } catch (Exception) {
                     // Do nothing.
                 }
             }

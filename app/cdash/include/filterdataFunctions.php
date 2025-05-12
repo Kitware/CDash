@@ -1034,7 +1034,6 @@ function parse_filter_from_request($field_var, $compare_var, $value_var,
 //
 function get_filterdata_from_request($page_id = '')
 {
-    $xml = '';
     $filterdata = [];
     $filters = [];
     $filterdata['hasdateclause'] = 0;

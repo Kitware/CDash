@@ -275,7 +275,6 @@ class OpenCoverTarHandler extends AbstractXmlHandler
     public function ParseOpenCoverFile($buildid, $fileinfo)
     {
         // Parse this XML file.
-        $parser = xml_parser_create();
         $fileContents = file_get_contents($fileinfo->getPath() . DIRECTORY_SEPARATOR . $fileinfo->getFilename());
         $parser = xml_parser_create();
         xml_set_element_handler($parser, [$this, 'startElement'], [$this, 'endElement']);

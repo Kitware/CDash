@@ -70,11 +70,6 @@ class PutDynamicBuildsTestCase extends KWWebTestCase
         $this->verifyListGetsCreated($client, $starttime_stmt, $build_rules);
 
         // Make sure bar and baz got soft-deleted.
-        $endtime_stmt = $this->PDO->prepare('
-            SELECT endtime FROM build2grouprule
-            WHERE buildname     = :buildname AND
-                  parentgroupid = :parentgroupid AND
-                  siteid        = 0');
         foreach (['bar', 'baz'] as $match) {
             $query_params = [
                 ':buildname' => $match,
@@ -115,7 +110,7 @@ class PutDynamicBuildsTestCase extends KWWebTestCase
             'buildgroupid' => $this->ChildGroupId,
             'dynamiclist' => $build_rules,
         ];
-        $response = $client->request('PUT',
+        $client->request('PUT',
             $this->url . '/api/v1/buildgroup.php',
             ['body' => json_encode($payload)]);
 

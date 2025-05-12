@@ -58,8 +58,6 @@ class AggregateSubProjectCoverageTestCase extends KWWebTestCase
 
     public function testVerifyResults()
     {
-        $success = true;
-
         // Verify parent results.
         $this->get($this->url . '/api/v1/index.php?project=CrossSubProjectExample&date=2016-02-16');
         $content = $this->getBrowser()->getContent();

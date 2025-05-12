@@ -114,7 +114,6 @@ function rest_delete()
 function rest_post($pdo, $projectid)
 {
     $now = gmdate(FMT_DATETIME);
-    $error_msg = '';
 
     if (isset($_POST['newbuildgroup'])) {
         // Create a new buildgroup or return an existing one.

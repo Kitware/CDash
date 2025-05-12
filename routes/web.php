@@ -49,7 +49,7 @@ Route::get('ping', function (Response $response) {
     try {
         DB::connection()->getPdo();
         $response->setContent('OK');
-    } catch (Exception $exception) {
+    } catch (Exception) {
         $response->setStatusCode(503);
     }
     return $response;

@@ -453,7 +453,6 @@ class ProcessSubmission implements ShouldQueue
 
         $Project = new Project();
         $Project->Id = $projectid;
-        $xml_info = [];
         // Figure out what type of XML file this is.
         $xml_info = SubmissionUtils::get_xml_type($filehandle, $filename);
 

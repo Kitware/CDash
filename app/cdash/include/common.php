@@ -446,7 +446,6 @@ function unlink_uploaded_file($fileid)
     }
 
     $sha1sum = $row['sha1sum'];
-    $filename = $row['filename'];
     $filesize = $row['filesize'];
 
     $shareCount = 0;

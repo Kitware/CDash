@@ -33,9 +33,6 @@ class TestDiffUtil
 
     private static function computeDifferencesForType(Build $build, Build $previous_build, int $type): bool
     {
-        $tests = [];
-        $previous_tests = [];
-
         switch ($type) {
             case TestDiffType::NotRun->value:
                 $tests = $build->GetNotRunTests();

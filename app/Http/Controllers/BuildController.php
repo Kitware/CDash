@@ -563,8 +563,6 @@ final class BuildController extends AbstractBuildController
 
         $this->setBuildById(intval($_GET['buildid'] ?? -1));
 
-        $db = Database::getInstance();
-
         $date = TestingDay::get($this->project, $this->build->StartTime);
         $response = begin_JSON_response();
         get_dashboard_JSON($this->project->Name, $date, $response);
@@ -915,7 +913,6 @@ final class BuildController extends AbstractBuildController
         // Build
         $response['build'] = Build::MarshalResponseArray($this->build, $extra_build_fields);
 
-        $builderror = $service->get(BuildError::class);
         $buildfailure = $service->get(BuildFailure::class);
 
         // Set the error

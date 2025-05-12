@@ -64,7 +64,6 @@ class ProjectWebPageTestCase extends KWWebTestCase
 
     public function testSubmissionInsightBuild()
     {
-        $url = $this->url . '/submit.php?project=InsightExample';
         $rep = dirname(__FILE__) . '/data/InsightExperimentalExample';
         $file = "$rep/Insight_Experimental_Build.xml";
         $this->assertTrue($this->submission('InsightExample', $file), "Submission of $file failed");
@@ -72,7 +71,6 @@ class ProjectWebPageTestCase extends KWWebTestCase
 
     public function testSubmissionInsightConfigure()
     {
-        $url = $this->url . '/submit.php?project=InsightExample';
         $rep = dirname(__FILE__) . '/data/InsightExperimentalExample';
         $file = "$rep/Insight_Experimental_Configure.xml";
         $this->assertTrue($this->submission('InsightExample', $file), "Submission of $file failed");
@@ -80,7 +78,6 @@ class ProjectWebPageTestCase extends KWWebTestCase
 
     public function testSubmissionInsightCoverage()
     {
-        $url = $this->url . '/submit.php?project=InsightExample';
         $rep = dirname(__FILE__) . '/data/InsightExperimentalExample';
         $file = "$rep/Insight_Experimental_Coverage.xml";
         $this->assertTrue($this->submission('InsightExample', $file), "Submission of $file failed");
@@ -88,7 +85,6 @@ class ProjectWebPageTestCase extends KWWebTestCase
 
     public function testSubmissionInsightCoverageLog()
     {
-        $url = $this->url . '/submit.php?project=InsightExample';
         $rep = dirname(__FILE__) . '/data/InsightExperimentalExample';
         $file = "$rep/Insight_Experimental_CoverageLog.xml";
         if (!$this->submission('InsightExample', $file)) {
@@ -134,7 +130,6 @@ class ProjectWebPageTestCase extends KWWebTestCase
 
     public function testSubmissionInsightDynamicAnalysis()
     {
-        $url = $this->url . '/submit.php?project=InsightExample';
         $rep = dirname(__FILE__) . '/data/InsightExperimentalExample';
         $file = "$rep/Insight_Experimental_DynamicAnalysis.xml";
         if (!$this->submission('InsightExample', $file)) {
@@ -145,7 +140,6 @@ class ProjectWebPageTestCase extends KWWebTestCase
 
     public function testSubmissionInsightNotes()
     {
-        $url = $this->url . '/submit.php?project=InsightExample';
         $rep = dirname(__FILE__) . '/data/InsightExperimentalExample';
         $file = "$rep/Insight_Experimental_Notes.xml";
         if (!$this->submission('InsightExample', $file)) {
@@ -156,7 +150,6 @@ class ProjectWebPageTestCase extends KWWebTestCase
 
     public function testSubmissionInsightTest()
     {
-        $url = $this->url . '/submit.php?project=InsightExample';
         $rep = dirname(__FILE__) . '/data/InsightExperimentalExample';
         $file = "$rep/Insight_Experimental_Test.xml";
         if (!$this->submission('InsightExample', $file)) {
