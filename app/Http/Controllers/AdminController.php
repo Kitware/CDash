@@ -95,7 +95,7 @@ final class AdminController extends AbstractController
                 $builds[] = (int) $build_array->id;
             }
 
-            DatabaseCleanupUtils::removeBuildChunked($builds);
+            DatabaseCleanupUtils::removeBuildsChunked($builds);
             $alert = 'Removed ' . count($builds) . ' builds.';
         }
 
