@@ -62,7 +62,7 @@ class DatabaseCleanupUtils
         $s = 'removing old buildids for projectid: ' . $projectid;
         Log::info($s);
         echo '  -- ' . $s . "\n";
-        self::removeBuildChunked($buildids);
+        self::removeBuildsChunked($buildids);
     }
 
     /** Remove the first builds that are at the beginning of the queue */
@@ -97,7 +97,7 @@ class DatabaseCleanupUtils
         if ($echo) {
             echo '  -- ' . $s . "\n"; // for "interactive" command line feedback
         }
-        self::removeBuildChunked($buildids);
+        self::removeBuildsChunked($buildids);
     }
 
     /**
@@ -281,13 +281,10 @@ class DatabaseCleanupUtils
     /**
      * Call removeBuild() in batches of 100.
      *
-     * @param array<int>|int $buildids
+     * @param array<int> $buildids
      */
-    public static function removeBuildChunked($buildids): void
+    public static function removeBuildsChunked(array $buildids): void
     {
-        if (!is_array($buildids)) {
-            self::removeBuild($buildid);
-        }
         foreach (array_chunk($buildids, 100) as $chunk) {
             self::removeBuild($chunk);
         }

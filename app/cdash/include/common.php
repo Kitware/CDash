@@ -422,7 +422,7 @@ function remove_project_builds($projectid): void
     foreach ($build as $build_array) {
         $buildids[] = (int) $build_array->id;
     }
-    DatabaseCleanupUtils::removeBuildChunked($buildids);
+    DatabaseCleanupUtils::removeBuildsChunked($buildids);
 }
 
 /**

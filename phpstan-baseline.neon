@@ -3294,17 +3294,7 @@ parameters:
 			path: app/Utils/DatabaseCleanupUtils.php
 
 		-
-			message: "#^Parameter \\#1 \\$array of function array_chunk expects array, array\\<int\\>\\|int given\\.$#"
-			count: 1
-			path: app/Utils/DatabaseCleanupUtils.php
-
-		-
-			message: "#^Parameter \\#1 \\$buildids of static method App\\\\Utils\\\\DatabaseCleanupUtils\\:\\:removeBuildChunked\\(\\) expects array\\<int\\>\\|int, array given\\.$#"
-			count: 1
-			path: app/Utils/DatabaseCleanupUtils.php
-
-		-
-			message: "#^Undefined variable\\: \\$buildid$#"
+			message: "#^Parameter \\#1 \\$buildids of static method App\\\\Utils\\\\DatabaseCleanupUtils\\:\\:removeBuildsChunked\\(\\) expects array\\<int\\>, array given\\.$#"
 			count: 1
 			path: app/Utils/DatabaseCleanupUtils.php
 
