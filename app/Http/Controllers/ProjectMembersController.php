@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Models\Project;
+use App\Models\User;
 use Illuminate\View\View;
 
 final class ProjectMembersController extends AbstractProjectController
@@ -12,6 +14,16 @@ final class ProjectMembersController extends AbstractProjectController
     {
         $this->setProjectById($project_id);
 
-        return $this->view('project.members', 'Members');
+        $eloquentProject = Project::findOrFail((int) $this->project->Id);
+
+        /** @var ?User $user */
+        $user = auth()->user();
+
+        return $this->vue('project-members-page', 'Members', [
+            'project-id' => $this->project->Id,
+            'user-id' => $user?->id,
+            'can-invite-users' => $user?->can('inviteUser', $eloquentProject) ?? false,
+            'can-remove-users' => $user?->can('removeUser', $eloquentProject) ?? false,
+        ]);
     }
 }

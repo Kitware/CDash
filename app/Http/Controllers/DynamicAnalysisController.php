@@ -14,7 +14,7 @@ final class DynamicAnalysisController extends AbstractBuildController
     public function viewDynamicAnalysis(int $buildid): View
     {
         $this->setBuildById($buildid);
-        return $this->view('dynamicanalysis.dynamic-analysis', 'Dynamic Analysis');
+        return $this->vue('view-dynamic-analysis', 'Dynamic Analysis', ['buildid' => $this->build->Id], false);
     }
 
     public function viewDynamicAnalysisFile(): View

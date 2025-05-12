@@ -16,7 +16,7 @@ final class ManageMeasurementsController extends AbstractProjectController
         $this->setProjectById((int) $project_id);
         Gate::authorize('edit-project', $this->project);
 
-        return $this->view('admin.measurements', 'Test Measurements');
+        return $this->vue('manage-measurements', 'Test Measurements', ['projectid' => $this->project->Id ?? 0], false);
     }
 
     public function apiGet(): JsonResponse
