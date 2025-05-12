@@ -6,7 +6,6 @@ use App\Models\User;
 use CDash\Database;
 use CDash\Model\Label;
 use CDash\Model\LabelEmail;
-use CDash\Model\Project;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;

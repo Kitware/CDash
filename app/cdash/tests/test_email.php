@@ -2,7 +2,6 @@
 
 use App\Enums\TestDiffType;
 use App\Models\Site;
-use App\Models\TestDiff;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 

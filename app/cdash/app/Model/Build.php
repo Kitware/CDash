@@ -20,7 +20,6 @@ namespace CDash\Model;
 use App\Models\Build as EloquentBuild;
 use App\Models\Site;
 use App\Models\Test;
-use App\Models\User;
 use App\Utils\DatabaseCleanupUtils;
 use App\Utils\RepositoryUtils;
 use App\Utils\SubmissionUtils;

@@ -13,7 +13,6 @@ use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\Project;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;

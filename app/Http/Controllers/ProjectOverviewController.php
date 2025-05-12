@@ -3,10 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Utils\PageTimer;
-use CDash\Database;
-use CDash\Model\Project;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;

@@ -23,7 +23,6 @@ use CDash\Model\Build;
 use CDash\Model\BuildConfigure;
 use CDash\Model\BuildError;
 use CDash\Model\BuildErrorFilter;
-use CDash\Model\Project;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
