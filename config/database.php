@@ -2,6 +2,10 @@
 
 use Illuminate\Database\DBAL\TimestampType;
 
+if (env('DB_CONNECTION') === 'mysql') {
+    throw new Exception('MySQL is no longer supported.  Please migrate your database to Postgres.');
+}
+
 return [
     /*
     |--------------------------------------------------------------------------
@@ -14,7 +18,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'mysql'),
+    'default' => 'pgsql',
 
     /*
     |--------------------------------------------------------------------------
