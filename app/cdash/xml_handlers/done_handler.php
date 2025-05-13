@@ -15,7 +15,6 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-use CDash\Model\Build;
 use CDash\Model\BuildUpdate;
 use CDash\Model\PendingSubmissions;
 use CDash\Model\Project;

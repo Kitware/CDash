@@ -97,7 +97,7 @@ class AuthTokenTestCase extends KWWebTestCase
         // without being logged in.
         $exception_thrown = false;
         try {
-            $response = $client->request('GET',
+            $client->request('GET',
                 $this->url . '/api/v1/index.php?project=AuthTokenProject');
         } catch (ClientException $e) {
             $exception_thrown = true;

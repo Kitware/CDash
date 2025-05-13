@@ -8,7 +8,6 @@ use App\Utils\PageTimer;
 use App\Utils\TestingDay;
 use CDash\Database;
 use CDash\Model\Build;
-use CDash\Model\Coverage;
 use CDash\Model\CoverageFile;
 use CDash\Model\CoverageFileLog;
 use CDash\Model\Project;

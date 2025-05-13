@@ -46,7 +46,7 @@ class RedundantTestsTestCase extends KWWebTestCase
             'position' => 1,
         ];
         try {
-            $response = $client->request('POST',
+            $client->request('POST',
                 $this->url . '/api/v1/manageMeasurements.php',
                 ['json' => ['projectid' => $this->project->Id, 'measurements' => $measurements]]);
         } catch (ClientException $e) {

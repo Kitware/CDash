@@ -365,7 +365,7 @@ class UnparsedSubmissionProcessor
         try {
             DB::connection()->getPdo();
             return true;
-        } catch (Exception $e) {
+        } catch (Exception) {
             return false;
         }
     }

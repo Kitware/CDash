@@ -170,23 +170,6 @@ class CoverageFile
         return true;
     }
 
-    /** Get the path */
-    public function GetPath()
-    {
-        if (!$this->Id) {
-            abort(500, 'CoverageFile GetPath(): Id not set');
-        }
-
-        $stmt = $this->PDO->prepare(
-            'SELECT fullpath FROM coveragefile WHERE id=:id');
-        $stmt->bindParam(':id', $this->Id);
-        if (!pdo_execute($stmt)) {
-            return false;
-        }
-        $row = $stmt->fetch();
-        return $row['fullpath'];
-    }  // GetPath
-
     // Get the fileid from the name
     public function GetIdFromName($file, $buildid)
     {

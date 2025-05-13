@@ -29,7 +29,7 @@ class TimelineTestCase extends KWWebTestCase
             'expected' => $expected,
         ];
         try {
-            $response = $client->request('POST',
+            $client->request('POST',
                 $this->url . '/api/v1/build.php',
                 ['json' => $payload]);
         } catch (ClientException $e) {

@@ -7,7 +7,6 @@ use App\Listeners\SuccessfulLdapAuthListener;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
 use SocialiteProviders\GitHub\GitHubExtendSocialite;
 use SocialiteProviders\GitLab\GitLabExtendSocialite;
 use SocialiteProviders\Google\GoogleExtendSocialite;

@@ -23,9 +23,6 @@ abstract class Topic implements TopicInterface
 
     protected $topicData;
 
-    /** @var Build */
-    private $build;
-
     /** @var BuildCollection */
     private $buildCollection;
 
@@ -54,23 +51,6 @@ abstract class Topic implements TopicInterface
         $collection->add($build);
         $this->setTopicData($build);
         return $this;
-    }
-
-    /**
-     * @return Topic
-     */
-    public function setBuild(Build $build)
-    {
-        $this->build = $build;
-        return $this;
-    }
-
-    /**
-     * @return Build
-     */
-    public function getBuild()
-    {
-        return $this->build;
     }
 
     /**

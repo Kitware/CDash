@@ -33,8 +33,6 @@ class TestOverview extends ResultsApi
 
     public function getResponse()
     {
-        $response = [];
-
         $has_subprojects = $this->project->GetNumberOfSubProjects() > 0;
 
         // Begin our JSON response.

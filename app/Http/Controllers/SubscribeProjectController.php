@@ -6,7 +6,6 @@ use App\Models\User;
 use CDash\Database;
 use CDash\Model\Label;
 use CDash\Model\LabelEmail;
-use CDash\Model\Project;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -73,7 +72,6 @@ final class SubscribeProjectController extends AbstractProjectController
         @$UpdateSubscription = $_POST['updatesubscription'];
         @$Unsubscribe = $_POST['unsubscribe'];
         @$Role = $_POST['role'];
-        @$Credentials = $_POST['credentials'];
         @$EmailType = $_POST['emailtype'];
         if (!isset($_POST['emailmissingsites'])) {
             $EmailMissingSites = 0;

@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace App\Utils;
 
 use App\Enums\TestDiffType;
-use App\Models\TestDiff;
 use CDash\Model\Build;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 /**
  * This class is responsible for populating the `testdiff` table.
@@ -35,9 +33,6 @@ class TestDiffUtil
 
     private static function computeDifferencesForType(Build $build, Build $previous_build, int $type): bool
     {
-        $tests = [];
-        $previous_tests = [];
-
         switch ($type) {
             case TestDiffType::NotRun->value:
                 $tests = $build->GetNotRunTests();

@@ -19,7 +19,6 @@ namespace CDash\Controller\Api;
 
 use App\Utils\TestingDay;
 use CDash\Database;
-use CDash\Model\Build;
 use CDash\Model\Project;
 use DateInterval;
 use DateTime;

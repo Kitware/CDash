@@ -121,7 +121,7 @@ class BuildRelationshipTestCase extends KWWebTestCase
         ];
         foreach ($payloads as $payload) {
             try {
-                $response = $client->request('POST',
+                $client->request('POST',
                     $this->url . '/api/v1/relateBuilds.php',
                     ['json' => $payload]);
             } catch (ClientException $e) {

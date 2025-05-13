@@ -251,7 +251,7 @@ class UploadHandler extends AbstractXmlHandler
                     if (!Storage::exists($uploadFilepath)) {
                         try {
                             $fileToUpload = new File($this->TmpFilename);
-                        } catch (FileNotFoundException $e) {
+                        } catch (FileNotFoundException) {
                             Log::error("Could not find file {$this->TmpFilename} to upload");
                             unlink($this->TmpFilename);
                             $this->UploadError = true;

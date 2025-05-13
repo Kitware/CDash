@@ -65,7 +65,7 @@ final class SubmissionController extends AbstractProjectController
         if ($filename !== null) {
             try {
                 Storage::move('inbox/' . $filename, 'failed/' . $filename);
-            } catch (UnableToMoveFile $e) {
+            } catch (UnableToMoveFile) {
                 Log::error("Failed to move {$filename} from inbox/ to failed/");
             }
         }
@@ -154,7 +154,6 @@ final class SubmissionController extends AbstractProjectController
 
         // Figure out what type of XML file this is.
         $stored_filename = 'inbox/' . $filename;
-        $xml_info = [];
         $xml_info = SubmissionUtils::get_xml_type(Storage::readStream($stored_filename), $stored_filename);
 
         if ($xml_info['xml_handler'] !== '') {
@@ -259,7 +258,7 @@ final class SubmissionController extends AbstractProjectController
 
         try {
             $expected_sha1sum = decrypt($request->input('sha1sum'));
-        } catch (DecryptException $e) {
+        } catch (DecryptException) {
             return response('This feature is disabled', Response::HTTP_CONFLICT);
         }
 

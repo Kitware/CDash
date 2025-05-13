@@ -106,7 +106,6 @@ class DynamicAnalysisSummary
                         UPDATE dynamicanalysissummary
                         SET checker=:checker, numdefects=:numdefects
                         WHERE buildid=:buildid');
-                $error_name = 'DynamicAnalysisSummary Update';
             } else {
                 // We only support one such summary per build, so if we're
                 // not append we delete any row that exists for this build
