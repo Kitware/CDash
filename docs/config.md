@@ -26,7 +26,6 @@ Please see that file for a full list of configuration options.
 | APP_URL | The root URL of CDash | https://localhost |
 | DB_DATABASE | The name of CDash's database | cdash |
 | DB_HOST | The hostname of the database server | localhost |
-| DB_CONNECTION | The type of database used by CDash | mysql |
 | DB_USERNAME | The database user used by CDash | root |
 | DB_PASSWORD | The password of CDash's database user | secret |
 

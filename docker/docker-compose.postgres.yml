@@ -1,13 +1,11 @@
 services:
   website:
     environment:
-      DB_CONNECTION: pgsql
       DB_LOGIN: postgres
       DB_PORT: 5432
   # Uncomment this section for production postgres installations.
   #worker:
   #  environment:
-  #    DB_CONNECTION: pgsql
   #    DB_LOGIN: postgres
   #    DB_PORT: 5432
 
