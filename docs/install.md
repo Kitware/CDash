@@ -8,7 +8,7 @@ If you'd like to install CDash in a [Docker](https://www.docker.com) container, 
 Before installing CDash, you will need:
 
 - A web server: [Apache](https://httpd.apache.org) or [NGINX](https://www.nginx.com)
-- A database: [MySQL v8.x+](https://www.mysql.com) or [PostgreSQL v9.2+](https://www.postgresql.org)
+- A database: [PostgreSQL v9.2+](https://www.postgresql.org)
 - [PHP 8.x](https://www.php.net)
 - [Composer v2.x](https://getcomposer.org) (to install PHP dependencies)
 - [npm v8](https://www.npmjs.com/) (to install Javascript dependencies)
@@ -23,7 +23,7 @@ CDash needs the following PHP modules installed and enabled.
 - gd
 - ldap
 - mbstring
-- pdo_mysql or pdo_pgsql
+- pdo_pgsql
 - xsl
 - posix
 - simplexml

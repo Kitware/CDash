@@ -51,7 +51,6 @@ RUN apt-get update && \
         bz2 \
         gd \
         ldap \
-        pdo_mysql \
         pdo_pgsql \
         xsl \
         opcache \
@@ -172,7 +171,6 @@ RUN dnf install -y \
       php-gd \
       php-ldap \
       php-mbstring \
-      php-mysqlnd \
       php-pdo \
       php-opcache
 
