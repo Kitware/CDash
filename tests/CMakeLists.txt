@@ -28,7 +28,6 @@ add_test(
 )
 set_tests_properties(php_static_analysis PROPERTIES
   DISABLED "$<STREQUAL:${CDASH_IMAGE},ubi>" # Disable PHPStan on the UBI image since lcobucci/jwt gets removed
-  PROCESSORS 2
 )
 
 # Run the JS linter

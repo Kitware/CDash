@@ -14,7 +14,6 @@ function(add_cypress_e2e_test TestName)
     ENVIRONMENT "HOME=${CDash_BINARY_DIR};"
     DISABLED "$<STREQUAL:${CDASH_IMAGE},ubi>"
     RESOURCE_LOCK "cypress;APP_URL" # Cypress can only run one at a time due to xvfb issues and needs a consistent APP_URL
-    PROCESSORS 2
   )
 endfunction()
 

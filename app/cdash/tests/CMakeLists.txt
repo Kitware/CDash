@@ -57,7 +57,6 @@ function(add_browser_test TestName)
   set_property(TEST ${TestName} PROPERTY RESOURCE_LOCK
     APP_URL # All browser tests need exclusive access to the APP_URL configuration setting
   )
-  set_property(TEST ${TestName} PROPERTY PROCESSORS 2)
 endfunction()
 
 # phpunit tests

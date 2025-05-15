@@ -11,7 +11,6 @@ function(add_cypress_component_test TestName)
     ENVIRONMENT "HOME=${CDash_BINARY_DIR};"
     DISABLED "$<STREQUAL:${CDASH_IMAGE},ubi>"
     RESOURCE_LOCK "cypress"
-    PROCESSORS 2
   )
 endfunction()
 
