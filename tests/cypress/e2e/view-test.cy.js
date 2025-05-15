@@ -9,7 +9,7 @@ describe('viewTest', () => {
   it('shows link to queryTests.php', () => {
     cy.visit('viewTest.php?buildid=1');
 
-    const default_filters = 'queryTests.php?project=TestCompressionExample&date=2009-12-18&filtercount=1&showfilters=1&field1=status&compare1=62&value1=Passed';
+    const default_filters = 'queryTests.php?project=TestCompressionExample&date=2009-12-18&filtercount=1&showfilters=1&field1=status&compare1=62&value1=passed';
     cy.get('#navigation').find('a').contains('Tests Query').should('have.attr', 'href').and('contains', default_filters);
   });
 

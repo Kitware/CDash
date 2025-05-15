@@ -212,7 +212,7 @@ $currentDateString = now()->toDateString();
                             </li>
                             <li>
                                 <!-- This only excludes passing tests for performance reasons. TODO: show all tests. -->
-                                <a href="{{ url('/queryTests.php') }}?project={{rawurlencode($project->Name)}}&date={{$currentDateString}}&filtercount=1&showfilters=1&field1=status&compare1=62&value1=Passed">
+                                <a href="{{ url('/queryTests.php') }}?project={{rawurlencode($project->Name)}}&date={{$currentDateString}}&filtercount=1&showfilters=1&field1=status&compare1=62&value1=passed">
                                     Tests
                                 </a>
                             </li>
