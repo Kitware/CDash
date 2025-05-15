@@ -283,6 +283,8 @@ RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then \
         npm install --omit=dev; \
     fi
 
+RUN php artisan graphiql:download-assets
+
 # In development, we install the development .env by default
 # This could be switched to regular environment variables inserted via docker compose in the future.
 RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then \
