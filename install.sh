@@ -52,6 +52,7 @@ php artisan down --render="maintenance" --refresh=5
 
 if $INITIAL_DOCKER_INSTALL; then
   echo "Skipping vendor installation..."
+  echo "Skipping GraphiQL update..."
 else
   echo "Updating vendor dependencies..."
     if $DEVELOPMENT; then
@@ -61,10 +62,10 @@ else
       npm install --omit=dev
       composer install --no-dev --optimize-autoloader
     fi
-fi
 
-echo "Downloading GraphiQL assets..."
-php artisan graphiql:download-assets
+    echo "Downloading GraphiQL assets..."
+    php artisan graphiql:download-assets
+fi
 
 echo "Waiting for database to come online..."
 until php artisan db:monitor ; do sleep 1; done
