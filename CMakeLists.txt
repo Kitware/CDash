@@ -59,16 +59,13 @@ find_program(NPX_EXE NAMES npx PATHS c:/usr/bin/npx /usr/bin/npx REQUIRED)
 set(PHPUNIT "${CDash_SOURCE_DIR}/vendor/bin/phpunit")
 
 set_property(GLOBAL PROPERTY INSTALL_CDASH_COUNT "0")
-function(cdash_install)
-  get_property(OLD_COUNT GLOBAL PROPERTY INSTALL_CDASH_COUNT)
-  math(EXPR NEW_COUNT "${OLD_COUNT}+1")
-  set_property(GLOBAL PROPERTY INSTALL_CDASH_COUNT "${NEW_COUNT}")
+function(cdash_install TestName)
   add_test(
-    NAME install_${NEW_COUNT}
+    NAME ${TestName}
     COMMAND ${PHP_EXE} ${testing_dir}/singletest.php ${testing_dir}/test_install.php
   )
   set_tests_properties(
-    install_${NEW_COUNT} PROPERTIES
+    ${TestName} PROPERTIES
     FAIL_REGULAR_EXPRESSION ".*Failures: [1-9]+.*;.*Exceptions: [1-9]+.*"
   )
 endfunction()

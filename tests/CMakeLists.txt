@@ -23,13 +23,11 @@ add_test(
 # Run PHPStan static analysis tool
 add_test(
   NAME php_static_analysis
-  # Giving PHPStan 2GB of memory makes it run faster, and should be well inside the limits of the CI machines
-  COMMAND ${CMAKE_SOURCE_DIR}/vendor/bin/phpstan analyse --memory-limit=2G
+  COMMAND ${CMAKE_SOURCE_DIR}/vendor/bin/phpstan analyse --memory-limit=8G
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 set_tests_properties(php_static_analysis PROPERTIES
-  # Disable PHPStan on the UBI image since lcobucci/jwt gets removed
-  DISABLED "$<STREQUAL:${CDASH_IMAGE},ubi>"
+  DISABLED "$<STREQUAL:${CDASH_IMAGE},ubi>" # Disable PHPStan on the UBI image since lcobucci/jwt gets removed
 )
 
 # Run the JS linter
