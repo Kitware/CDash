@@ -41,10 +41,14 @@ describe('query tests', () => {
     });
   });
 
-  it('displays the right default filters', () => {
-    cy.visit('index.php?project=InsightExample');
-    const today_str = new Date().toISOString().slice(0, 10);
-    const default_filters = `queryTests.php?project=InsightExample&date=${today_str}&filtercount=1&showfilters=1&field1=status&compare1=62&value1=Passed`;
-    cy.get('#navigation').find('a').contains('Tests Query').should('have.attr', 'href').and('contains', default_filters);
+  it('displays the correct default filters', () => {
+    cy.visit('index.php?project=Trilinos');
+    const expected_url = 'queryTests.php?project=Trilinos&date=2011-07-22&filtercount=1&showfilters=1&field1=status&compare1=62&value1=passed';
+    cy.get('#navigation').find('a').contains('Tests Query').should('have.attr', 'href').and('contains', expected_url);
+
+    // load the page and verify the expected number of tests.
+    cy.visit(expected_url);
+    cy.get('#numtests').should('contain', 'Query  Tests: 126 matches');
+    cy.get('#queryTestsTable').find('tbody').find('tr').should('have.length', 25);
   });
 });
