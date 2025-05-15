@@ -20,7 +20,7 @@ return [
         'redirect' => env('APP_URL') . '/auth/github/callback',
         'enable' => env('GITHUB_ENABLE', false),
         'oauth' => true,
-        'display_name' => 'GitHub',
+        'display_name' => env('GITHUB_DISPLAY_NAME', 'GitHub'),
     ],
     'gitlab' => [
         'client_id' => env('GITLAB_CLIENT_ID'),
@@ -29,7 +29,7 @@ return [
         'instance_uri' => env('GITLAB_DOMAIN'),
         'enable' => env('GITLAB_ENABLE', false),
         'oauth' => true,
-        'display_name' => 'GitLab',
+        'display_name' => env('GITLAB_DISPLAY_NAME', 'GitLab'),
     ],
 
     'google' => [
@@ -39,7 +39,7 @@ return [
         'redirect' => env('APP_URL') . '/auth/google/callback',
         'enable' => env('GOOGLE_ENABLE', false),
         'oauth' => true,
-        'display_name' => 'Google',
+        'display_name' => env('GOOGLE_DISPLAY_NAME', 'Google'),
     ],
 
     'pingidentity' => [
@@ -52,7 +52,7 @@ return [
         'user_endpoint' => env('PINGIDENTITY_USER_ENDPOINT', '/idp/userinfo.openid'),
         'enable' => env('PINGIDENTITY_ENABLE', false),
         'oauth' => true,
-        'display_name' => 'PingIdentity',
+        'display_name' => env('PINGIDENTITY_DISPLAY_NAME', 'PingIdentity'),
     ],
 
     'mailgun' => [
