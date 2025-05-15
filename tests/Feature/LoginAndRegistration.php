@@ -268,6 +268,32 @@ class LoginAndRegistration extends TestCase
     }
 
     /**
+     * @return array<array<string>>
+     */
+    public static function oauthProviders(): array
+    {
+        return [
+            ['github'],
+            ['gitlab'],
+            ['google'],
+            ['pingidentity'],
+        ];
+    }
+
+    /**
+     * @dataProvider oauthProviders
+     */
+    public function testCustomOauthDisplayNames(string $serviceName): void
+    {
+        // Enable PingIdentity, verify the button appears.
+        config(["services.$serviceName.enable" => true]);
+        $displayName = Str::uuid()->toString();
+        config(["services.$serviceName.display_name" => $displayName]);
+        $response = $this->get('/login');
+        $response->assertSeeText($displayName);
+    }
+
+    /**
      * Test PingIdentity authentication
      */
     public function testPingIdentityProvider(): void

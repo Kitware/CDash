@@ -68,7 +68,8 @@ To begin, you will need to
 | GITHUB_ENABLE | Whether or not to use GitHub as an OAuth2 provider. | false |
 | GITHUB_CLIENT_ID | The Client ID assigned to your GitHub OAuth2 app. | '' |
 | GITHUB_CLIENT_SECRET | The Client Secret created for your GitHub OAuth2 app. | '' |
-| GITHUB_AUTO_REGISTER_NEW_USERS | Whether to automatically register a new user or provide them the Registration form | false
+| GITHUB_AUTO_REGISTER_NEW_USERS | Whether to automatically register a new user or provide them the Registration form | false |
+| GITHUB_DISPLAY_NAME | The text displayed on the GitHub OAuth2 login button | GitHub |
 
 ###### GitLab
 
@@ -80,7 +81,9 @@ First [configure GitLab as an OAuth2 authentication identity provider](https://d
 | GITLAB_CLIENT_ID | The OAuth 2 Client ID from the Application ID field. | '' |
 | GITLAB_CLIENT_SECRET | The OAuth 2 Client Secret from the Secret field. | '' |
 | GITLAB_DOMAIN | The GitLab server to authenticate against. | https://gitlab.com |
-| GITLAB_AUTO_REGISTER_NEW_USERS | Whether to automatically register a new user or provide them the Registration form | false
+| GITLAB_AUTO_REGISTER_NEW_USERS | Whether to automatically register a new user or provide them the Registration form | false |
+| GITLAB_DISPLAY_NAME | The text displayed on the GitLab OAuth2 login button | GitLab |
+
 ###### Google
 
 Begin by [creating OAuth2 credentials for your Google project](https://developers.google.com/identity/protocols/oauth2/web-server#prerequisites). Then fill out the following `.env` variables:
@@ -90,7 +93,8 @@ Begin by [creating OAuth2 credentials for your Google project](https://developer
 | GOOGLE_ENABLE | Whether or not to use Google as an OAuth2 provider. | false |
 | GOOGLE_CLIENT_ID | The client ID from your Google OAuth2 credentials. | '' |
 | GOOGLE_CLIENT_SECRET | The client secret from your Google OAuth2 credentials. | '' |
-| GOOGLE_AUTO_REGISTER_NEW_USERS | Whether to automatically register a new user or provide them the Registration form | false
+| GOOGLE_AUTO_REGISTER_NEW_USERS | Whether to automatically register a new user or provide them the Registration form | false |
+| GOOGLE_DISPLAY_NAME | The text displayed on the Google OAuth2 login button | Google |
 
 ###### PingIdentity
 
@@ -105,7 +109,8 @@ Begin by [creating OAuth2 client in your PingIdentity console](https://docs.ping
 | PINGIDENTITY_AUTH_ENDPOINT |  The URL fragment to the endpoint to ask for Authorization | '/as/authorization.oauth2' |
 | PINGIDENTITY_TOKEN_ENDPOINT | The URL fragment to the endpoint to ask for the Token | '/as/token.oauth2' |
 | PINGIDENTITY_USER_ENDPOINT | The URL fragment to the endpoint to ask for the user's information with the token | '/idp/userinfo.openid' |
-| PINGIDENTITY_AUTO_REGISTER_NEW_USERS | Whether to automatically register a new user or provide them the Registration form | false
+| PINGIDENTITY_AUTO_REGISTER_NEW_USERS | Whether to automatically register a new user or provide them the Registration form | false |
+| PINGIDENTITY_DISPLAY_NAME | The text displayed on the PingIdentity OAuth2 login button | PingIdentity |
 
 ## SAML2
 
