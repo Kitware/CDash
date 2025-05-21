@@ -104,7 +104,7 @@ final class RemoteProcessingController extends AbstractController
             return response('File not found', Response::HTTP_NOT_FOUND);
         }
 
-        $retry_handler = new RetryHandler(Storage::path("inprogress/{$filename}"));
+        $retry_handler = new RetryHandler("inprogress/{$filename}");
         $retry_handler->increment();
 
         // Move file back to inbox.

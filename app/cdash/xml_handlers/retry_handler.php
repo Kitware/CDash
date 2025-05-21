@@ -26,6 +26,7 @@ class RetryHandler
     public function __construct($filename)
     {
         $this->FileName = $filename;
+        $this->Retries = 0;
     }
 
     /** Increments the "retries" attribute on the root element of the specified
