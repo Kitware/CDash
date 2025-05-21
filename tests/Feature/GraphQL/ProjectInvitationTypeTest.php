@@ -11,7 +11,7 @@ use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
 use Tests\Traits\CreatesUsers;
 
-class UserInvitationTypeTest extends TestCase
+class ProjectInvitationTypeTest extends TestCase
 {
     use CreatesUsers;
     use CreatesProjects;
@@ -71,7 +71,7 @@ class UserInvitationTypeTest extends TestCase
             }
         ', [
             'id' => $this->project->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'project' => [
                     'invitations' => [
@@ -94,7 +94,7 @@ class UserInvitationTypeTest extends TestCase
                     ],
                 ],
             ],
-        ], true);
+        ]);
     }
 
     public function testNormalUserCannotViewInvitations(): void
@@ -107,7 +107,7 @@ class UserInvitationTypeTest extends TestCase
             'invitation_timestamp' => Carbon::now(),
         ]);
 
-        $this->actingAs($this->adminUser)->graphQL('
+        $this->actingAs($this->normalUser)->graphQL('
             query($id: ID) {
                 project(id: $id) {
                     invitations {
@@ -121,15 +121,7 @@ class UserInvitationTypeTest extends TestCase
             }
         ', [
             'id' => $this->project->id,
-        ])->assertJson([
-            'data' => [
-                'project' => [
-                    'invitations' => [
-                        'edges' => [],
-                    ],
-                ],
-            ],
-        ], true);
+        ])->assertGraphQLErrorMessage('This action is unauthorized.');
     }
 
     public function testAnonymousUserCannotViewInvitations(): void
@@ -156,14 +148,6 @@ class UserInvitationTypeTest extends TestCase
             }
         ', [
             'id' => $this->project->id,
-        ])->assertJson([
-            'data' => [
-                'project' => [
-                    'invitations' => [
-                        'edges' => [],
-                    ],
-                ],
-            ],
-        ], true);
+        ])->assertGraphQLErrorMessage('This action is unauthorized.');
     }
 }
