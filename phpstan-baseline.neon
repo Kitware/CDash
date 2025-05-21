@@ -27950,32 +27950,7 @@ parameters:
 			path: app/cdash/xml_handlers/project_handler.php
 
 		-
-			message: "#^Cannot access offset 'retries' on SimpleXMLElement\\|false\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/retry_handler.php
-
-		-
-			message: "#^Cannot call method attributes\\(\\) on SimpleXMLElement\\|false\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/retry_handler.php
-
-		-
-			message: "#^Class RetryHandler has an uninitialized property \\$Retries\\. Give it default value or assign it in the constructor\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/retry_handler.php
-
-		-
-			message: "#^Method RetryHandler\\:\\:__construct\\(\\) has parameter \\$filename with no type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/retry_handler.php
-
-		-
-			message: "#^Method RetryHandler\\:\\:increment\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/retry_handler.php
-
-		-
-			message: "#^Property RetryHandler\\:\\:\\$FileName has no type specified\\.$#"
+			message: "#^SimpleXMLElement does not accept int\\.$#"
 			count: 1
 			path: app/cdash/xml_handlers/retry_handler.php
 

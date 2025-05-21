@@ -29,7 +29,7 @@ class DoneHandlerTestCase extends KWWebTestCase
 
     public function testDoneHandlerRemote()
     {
-        if (config('filesystem.default') !== 'local') {
+        if (config('filesystems.default') !== 'local') {
             // Skip this test case if we're already testing remote storage.
             return;
         }
