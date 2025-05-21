@@ -872,7 +872,7 @@ function extract_tar(string $stored_filepath): string
     Storage::disk('local')->makeDirectory($localTmpDirPath);
     $dirName = Storage::disk('local')->path($localTmpDirPath);
 
-    if (config('filesystem.default') !== 'local') {
+    if (config('filesystems.default') !== 'local') {
         // Download this file to the local Storage tmp dir.
         $remote_stored_filepath = $stored_filepath;
         $stored_filepath = 'tmp/' . basename($stored_filepath);
@@ -889,7 +889,7 @@ function extract_tar(string $stored_filepath): string
             throw new PEAR_Exception($pear_error->getMessage());
         });
         $tar_extract_result = $tar->extract($dirName);
-        if (config('filesystem.default') !== 'local') {
+        if (config('filesystems.default') !== 'local') {
             Storage::disk('local')->delete($stored_filepath);
         }
         if ($tar_extract_result === false) {
@@ -898,7 +898,7 @@ function extract_tar(string $stored_filepath): string
         }
         return $dirName;
     } catch (PEAR_Exception $e) {
-        if (config('filesystem.default') !== 'local') {
+        if (config('filesystems.default') !== 'local') {
             Storage::disk('local')->delete($stored_filepath);
         }
         Storage::disk('local')->deleteDirectory($localTmpDirPath);

@@ -72,7 +72,7 @@ abstract class AbstractXmlHandler extends AbstractSubmissionHandler
             if (!Storage::exists($path)) {
                 throw new FileNotFoundException($path);
             }
-            if (config('filesystem.default') === 'local') {
+            if (config('filesystems.default') === 'local') {
                 $xml->load(Storage::path($path), LIBXML_PARSEHUGE);
             } else {
                 // Temporarily download the file because DOMDocument->load takes a path,
