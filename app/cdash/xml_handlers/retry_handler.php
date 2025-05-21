@@ -20,10 +20,10 @@
  **/
 class RetryHandler
 {
-    private $FileName;
+    private string $FileName;
     public int $Retries;
 
-    public function __construct($filename)
+    public function __construct(string $filename)
     {
         $this->FileName = $filename;
         $this->Retries = 0;
@@ -32,7 +32,7 @@ class RetryHandler
     /** Increments the "retries" attribute on the root element of the specified
      * XML  file,or sets it to 1 if it does not yet exist.
      **/
-    public function increment()
+    public function increment(): bool
     {
         if (!Storage::exists($this->FileName)) {
             return false;
@@ -44,6 +44,9 @@ class RetryHandler
         }
 
         $xml = simplexml_load_string($contents);
+        if ($xml === false) {
+            return false;
+        }
         $attributes = $xml->attributes();
         if (isset($attributes['retries'])) {
             $this->Retries = intval($attributes['retries']) + 1;
@@ -52,6 +55,6 @@ class RetryHandler
         }
         $xml['retries'] = $this->Retries;
 
-        return Storage::put($this->FileName, $xml->asXML());
+        return Storage::put($this->FileName, (string) $xml->asXML());
     }
 }
