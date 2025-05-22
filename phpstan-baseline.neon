@@ -29441,6 +29441,16 @@ parameters:
 			path: tests/Feature/SlowPageTest.php
 
 		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Build\\>\\:\\:count\\(\\)\\.$#"
+			count: 1
+			path: tests/Feature/Submission/CaseInsensitivity/CaseInsensitivityTest.php
+
+		-
+			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Build\\>\\:\\:first\\(\\)\\.$#"
+			count: 1
+			path: tests/Feature/Submission/CaseInsensitivity/CaseInsensitivityTest.php
+
+		-
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\SiteInformation\\>\\:\\:count\\(\\)\\.$#"
 			count: 1
 			path: tests/Feature/Traits/UpdatesSiteInformationTest.php
