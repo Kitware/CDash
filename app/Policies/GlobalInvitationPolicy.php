@@ -7,6 +7,11 @@ use App\Models\User;
 
 class GlobalInvitationPolicy
 {
+    public function viewInvitations(?User $currentUser): bool
+    {
+        return $this->createInvitation($currentUser);
+    }
+
     public function createInvitation(?User $currentUser): bool
     {
         if (config('cdash.username_password_authentication_enabled') === false) {

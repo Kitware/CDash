@@ -53,7 +53,7 @@ type Query {
     id: ID @eq
   ): Site @find
 
-  invitations: [GlobalInvitation!]! @paginate(type: CONNECTION) @orderBy(column: "id")
+  invitations: [GlobalInvitation!]! @canResolved(ability: "viewInvitations") @paginate(type: CONNECTION) @orderBy(column: "id")
 }
 
 
@@ -176,8 +176,9 @@ type Project {
   "Users with the administrator role for this project."
   administrators: [User!]! @belongsToMany(type: CONNECTION) @orderBy(column: "id")
 
+  # Can't return null on authorization failure due to Lighthouse bug with connections and can* directives.
   "Invitations to this project which have not been accepted yet."
-  invitations: [ProjectInvitation!]! @hasMany(type: CONNECTION) @orderBy(column: "id")
+  invitations: [ProjectInvitation!]! @canRoot(ability: "inviteUser") @hasMany(type: CONNECTION) @orderBy(column: "id")
 }
 
 enum ProjectVisibility {

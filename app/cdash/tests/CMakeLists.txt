@@ -202,7 +202,7 @@ add_feature_test(/Feature/GraphQL/NoteTypeTest)
 
 add_feature_test(/Feature/GraphQL/CoverageTypeTest)
 
-add_feature_test(/Feature/GraphQL/UserInvitationTypeTest)
+add_feature_test(/Feature/GraphQL/ProjectInvitationTypeTest)
 
 add_feature_test(/Feature/GraphQL/LabelTypeTest)
 
@@ -311,6 +311,10 @@ add_feature_test(/Feature/GraphQL/Mutations/RevokeGlobalInvitationTest)
 # Needs RUN_SERIAL to verify that only the expected users are created
 add_feature_test(/Feature/GlobalInvitationAcceptanceTest)
 set_property(TEST /Feature/GlobalInvitationAcceptanceTest APPEND PROPERTY RUN_SERIAL TRUE)
+
+# Requires exclusive access to the global_invitations table
+add_feature_test(/Feature/GraphQL/GlobalInvitationTypeTest)
+set_property(TEST /Feature/GraphQL/GlobalInvitationTypeTest APPEND PROPERTY RUN_SERIAL TRUE)
 
 add_feature_test(/Feature/GraphQL/Mutations/RemoveUserTest)
 
