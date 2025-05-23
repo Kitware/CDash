@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="test_case_insensitivity"
+	BuildStamp="20250522-1338-my-custom-group"
+	Name="localhost"
+	Generator="ctest-3.31"
+	CompilerName=""
+	CompilerVersion=""
+	OSName="macOS"
+	Hostname="localhost"
+	>
+	<Build>
+		<StartDateTime>May 22 09:38 EDT</StartDateTime>
+		<StartBuildTime>1747921120</StartBuildTime>
+		<BuildCommand>cmake --build . --config "Release"</BuildCommand>
+		<Log Encoding="base64" Compression="bin/gzip"/>
+		<EndDateTime>May 22 09:38 EDT</EndDateTime>
+		<EndBuildTime>1747921122</EndBuildTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Build>
+</Site>
