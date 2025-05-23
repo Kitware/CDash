@@ -2,7 +2,7 @@ Unfamiliar with Docker?  [Start here](https://docs.docker.com/get-started/).
 
 ## Quick Start (testing installation) ##
 
-The following instructions spin up CDash & MySQL for local experimentation.
+The following instructions spin up CDash for local experimentation.
 
 1. If you haven't done so already, begin by cloning the CDash repository:
 
@@ -16,7 +16,7 @@ cd CDash
 ```bash
 docker compose -f docker/docker-compose.yml \
                -f docker/docker-compose.dev.yml \
-               -f docker/docker-compose.mysql.yml \
+               -f docker/docker-compose.postgres.yml \
                --env-file .env.dev up -d
 ```
 
@@ -42,12 +42,12 @@ ctest
 ## Configuration
 
 ### Why so many YAML files?
-You may have noticed that CDash's `docker compose` configuration is [split across multiple files](https://docs.docker.com/compose/extends/). The allows us to support various workflows (MySQL vs. Postgres, production vs. development) while minimizing code duplication.
+You may have noticed that CDash's `docker compose` configuration is [split across multiple files](https://docs.docker.com/compose/extends/). The allows us to support various workflows (production vs. development, local vs MinIO storaage, etc) while minimizing code duplication.
 
-For example, to use Postgres instead of MySQL, pass `-f docker/docker-compose.postgres.yml` instead of `-f docker/docker-compose.mysql.yml` to the `docker compose` commands mentioned in this document.
+For example, to use MinIO instead of local storage, pass `-f docker/docker-compose.minioyml` to the `docker compose` commands mentioned in this document.
 
 ### Changing the default configuration
-To change the default database password, modify `DB_PASSWORD` in `docker/docker-compose.mysql.yml` or `docker/docker-compose.postgres.yml`.
+To change the default database password, modify `DB_PASSWORD` in `docker/docker-compose.postgres.yml`.
 
 Once you're happy with your changes, re-run `docker compose up` (with the appropriate`-f` flags) to build and run services for CDash and its database.
 
@@ -76,7 +76,7 @@ To set up a CDash production instance using docker compose, follow these steps:
 docker compose --env-file .env \
 	   -f docker/docker-compose.yml \
 	   -f docker/docker-compose.production.yml \
-	   -f docker/docker-compose.mysql.yml \
+	   -f docker/docker-compose.postgres.yml \
 	    up -d
 ```
 
@@ -88,7 +88,7 @@ If you're using prebuilt images from DockerHub, run the following command to dow
 ```
 docker compose -f docker/docker-compose.yml \
                -f docker/docker-compose.production.yml \
-               -f docker/docker-compose.mysql.yml \
+               -f docker/docker-compose.postgres.yml \
                pull cdash
 ```
 
@@ -103,6 +103,5 @@ If you're done experimenting with CDash locally and you would like to remove the
 ```bash
 docker volume ls                      # shows what volumes are defined on your system
 docker volume rm cdash_storage        # CDash's local storage for submission files
-docker volume rm cdash_mysqldata      # for mysql
 docker volume rm cdash_postgresqldata # for postgres
 ```

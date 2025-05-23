@@ -64,7 +64,6 @@
   },
   "suggest": {
     "ext-memcached": "",
-    "ext-pdo_mysql": "",
     "ext-pdo_pgsql": "",
     "ext-phar": ""
   },
