@@ -302,7 +302,8 @@ class Index extends ResultsApi
             b.testpassed AS counttestspassed,
             b.testtimestatusfailed AS countteststimestatusfailed,
             cs.loctested, cs.locuntested,
-            csd.loctested AS loctesteddiff, csd.locuntested AS locuntesteddiff,
+            cs.loctesteddiff,
+            cs.locuntesteddiff,
             das.checker, das.numdefects,
             sp.id AS subprojectid,
             sp.groupid AS subprojectgroup,
@@ -318,7 +319,6 @@ class Index extends ResultsApi
                 LEFT JOIN build2update AS b2u ON (b2u.buildid=b.id)
                 LEFT JOIN buildupdate AS bu ON (b2u.updateid=bu.id)
                 LEFT JOIN coveragesummary AS cs ON (cs.buildid=b.id)
-                LEFT JOIN coveragesummarydiff AS csd ON (csd.buildid=b.id)
                 LEFT JOIN dynamicanalysissummary AS das ON (das.buildid=b.id)
                 LEFT JOIN builderrordiff AS be_diff ON (be_diff.buildid=b.id AND be_diff.type=0)
                 LEFT JOIN builderrordiff AS bw_diff ON (bw_diff.buildid=b.id AND bw_diff.type=1)
