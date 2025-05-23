@@ -145,20 +145,11 @@ function rest_post($pdo, $projectid)
         $inputRows = $_POST['newLayout'];
         if (count($inputRows) > 0) {
             // Remove old build group layout for this project.
-            if (config('database.default') == 'pgsql') {
-                // We use a subquery here because postgres doesn't support
-                // JOINs in a DELETE statement.
-                $sql = "
-                    DELETE FROM buildgroupposition WHERE buildgroupid IN
-                    (SELECT bgp.buildgroupid FROM buildgroupposition AS bgp
-                    LEFT JOIN buildgroup AS bg ON (bgp.buildgroupid = bg.id)
-                    WHERE bg.projectid = ?)";
-            } else {
-                $sql = "
-                    DELETE bgp FROM buildgroupposition AS bgp
-                    LEFT JOIN buildgroup AS bg ON (bgp.buildgroupid = bg.id)
-                    WHERE bg.projectid = ?";
-            }
+            $sql = "
+                DELETE FROM buildgroupposition WHERE buildgroupid IN
+                (SELECT bgp.buildgroupid FROM buildgroupposition AS bgp
+                LEFT JOIN buildgroup AS bg ON (bgp.buildgroupid = bg.id)
+                WHERE bg.projectid = ?)";
             $stmt = $pdo->prepare($sql);
             pdo_execute($stmt, [$projectid]);
 

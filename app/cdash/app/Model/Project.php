@@ -820,12 +820,7 @@ class Project
         $todaytime -= 3600 * 24 * $days;
         $today = date(FMT_DATETIMESTD, $todaytime);
 
-        $straightjoin = '';
-        if (config('database.default') != 'pgsql') {
-            $straightjoin = 'STRAIGHT_JOIN';
-        }
-
-        $labels = DB::select("
+        $labels = DB::select('
                       (
                           SELECT labelid AS id
                           FROM label2build, build
@@ -842,14 +837,14 @@ class Project
                               AND build.projectid=?
                               AND build.starttime>?
                       ) UNION (
-                          SELECT $straightjoin labelid AS id
+                          SELECT labelid AS id
                           FROM build, label2coveragefile
                           WHERE
                               label2coveragefile.buildid=build.id
                               AND build.projectid=?
                               AND build.starttime>?
                       ) UNION (
-                          SELECT $straightjoin labelid AS id
+                          SELECT labelid AS id
                           FROM build, buildfailure, label2buildfailure
                           WHERE
                               label2buildfailure.buildfailureid=buildfailure.id
@@ -857,7 +852,7 @@ class Project
                               AND build.projectid=?
                               AND build.starttime>?
                       ) UNION (
-                          SELECT $straightjoin labelid AS id
+                          SELECT labelid AS id
                           FROM build, dynamicanalysis, label2dynamicanalysis
                           WHERE
                               label2dynamicanalysis.dynamicanalysisid=dynamicanalysis.id
@@ -865,7 +860,7 @@ class Project
                               AND build.projectid=?
                               AND build.starttime>?
                       )
-                  ", [
+                  ', [
             intval($this->Id),
             $today,
             intval($this->Id),

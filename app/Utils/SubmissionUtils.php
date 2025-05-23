@@ -279,16 +279,10 @@ class SubmissionUtils
             WHERE buildid=:buildid AND type=:type');
         } else {
             // Insert new record.
-            $duplicate_sql = '';
-            if (config('database.default') !== 'pgsql') {
-                $duplicate_sql =
-                    'ON DUPLICATE KEY UPDATE difference_positive=:npositives, difference_negative=:nnegatives';
-            }
             $stmt = $pdo->prepare(
-                "INSERT INTO builderrordiff
+                'INSERT INTO builderrordiff
             (buildid, type, difference_positive, difference_negative)
-            VALUES (:buildid, :type, :npositives, :nnegatives)
-            $duplicate_sql");
+            VALUES (:buildid, :type, :npositives, :nnegatives)');
         }
         $stmt->bindValue(':buildid', $buildid);
         $stmt->bindValue(':type', $warning);

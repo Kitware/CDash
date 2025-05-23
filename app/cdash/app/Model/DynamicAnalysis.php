@@ -95,29 +95,16 @@ class DynamicAnalysis
 
         $this->BuildId = intval($this->BuildId);
 
-        if (config('database.default') == 'pgsql') {
-            // postgresql doesn't support multiple delete
-            //
-            // TODO: (williamjallen) Figure out what to do with the potential race condition caused here.
-            //       Ideally this should be done via a cascading delete, or at least in a single transaction.
-            DB::delete('
-                 DELETE FROM dynamicanalysisdefect
-                 USING dynamicanalysis
-                 WHERE
-                     dynamicanalysis.buildid = ?
-                     AND dynamicanalysis.id = dynamicanalysisdefect.dynamicanalysisid
-            ', [$this->BuildId]);
+        // postgresql doesn't support multiple delete
+        DB::delete('
+             DELETE FROM dynamicanalysisdefect
+             USING dynamicanalysis
+             WHERE
+                 dynamicanalysis.buildid = ?
+                 AND dynamicanalysis.id = dynamicanalysisdefect.dynamicanalysisid
+        ', [$this->BuildId]);
 
-            DB::delete('DELETE FROM dynamicanalysis WHERE dynamicanalysis.buildid = ?', [$this->BuildId]);
-        } else {
-            DB::delete('
-                DELETE dynamicanalysisdefect, dynamicanalysis
-                FROM dynamicanalysisdefect, dynamicanalysis
-                WHERE
-                 dynamicanalysis.buildid=?
-                 AND dynamicanalysis.id=dynamicanalysisdefect.dynamicanalysisid
-            ', [$this->BuildId]);
-        }
+        DB::delete('DELETE FROM dynamicanalysis WHERE dynamicanalysis.buildid = ?', [$this->BuildId]);
         DB::delete('DELETE FROM dynamicanalysis WHERE buildid=?', [$this->BuildId]);
     }
 

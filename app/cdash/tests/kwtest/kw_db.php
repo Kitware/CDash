@@ -27,11 +27,6 @@ class database
     public function __construct($type)
     {
         switch ($type) {
-            case 'mysql':
-                $this->dbo = new dbo_mysql();
-                $this->type = 'mysql';
-                break;
-
             case 'pgsql':
                 $this->dbo = new dbo_pgsql();
                 $this->type = 'pgsql';
@@ -157,66 +152,6 @@ class dbo
     public function setConnection($connection)
     {
         $this->connection = $connection;
-    }
-}
-
-class dbo_mysql extends dbo
-{
-    public function connect()
-    {
-    }
-
-    public function getDSN()
-    {
-        return "mysql:{$this->connection}={$this->host}";
-    }
-
-    public function disconnect()
-    {
-        $this->dbconnect = null;
-    }
-
-    public function create($db)
-    {
-        $dbh = new PDO($this->getDSN(), $this->user, $this->password);
-        if (!$dbh->query("CREATE DATABASE IF NOT EXISTS $db")) {
-            $this->disconnect();
-            return false;
-        }
-        $this->disconnect();
-        return true;
-    }
-
-    public function drop($db)
-    {
-        $dbh = new PDO($this->getDSN(), $this->user, $this->password);
-        if (!$dbh->query("DROP DATABASE IF EXISTS $db")) {
-            $this->disconnect();
-            return false;
-        }
-        $this->disconnect();
-        return true;
-    }
-
-    public function connectToDb()
-    {
-        $db = CDash\Database::getInstance();
-        return $db->getPdo() instanceof PDO;
-    }
-
-    public function query($query)
-    {
-        $this->connectToDb();
-        $resource = pdo_query($query);
-        if (!$resource || $resource === true) {
-            return false;
-        }
-        $result = [];
-        while ($row = pdo_fetch_array($resource, PDO::FETCH_ASSOC)) {
-            $result[] = $row;
-        }
-        $this->disconnect();
-        return $result;
     }
 }
 

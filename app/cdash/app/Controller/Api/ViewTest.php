@@ -215,19 +215,6 @@ class ViewTest extends BuildApi
             $onlydelta_extra = ' AND build2test.newstatus=1 ';
         }
 
-        // Postgres differs from MySQL on how to aggregate results
-        // into a single column.
-        $labeljoin_sql = '';
-        $label_sql = '';
-        $groupby_sql = '';
-        if ($this->project->DisplayLabels && config('database.default') != 'pgsql') {
-            $labeljoin_sql = '
-                LEFT JOIN label2test AS l2t ON (l2t.testid=bt.id)
-                LEFT JOIN label AS l ON (l.id=l2t.labelid)';
-            $label_sql = ", GROUP_CONCAT(DISTINCT l.text SEPARATOR ', ') AS labels";
-            $groupby_sql = ' GROUP BY bt.id';
-        }
-
         if ($this->build->GetParentId() == Build::PARENT_BUILD) {
             $parentBuildFieldSql = ', sp2b.subprojectid, sp.name subprojectname';
             $parentBuildJoinSql = 'JOIN build b ON (b.id = bt.buildid)
@@ -242,11 +229,10 @@ class ViewTest extends BuildApi
 
         $sql = "
             SELECT bt.status, bt.newstatus, bt.timestatus, bt.time, bt.buildid, bt.details,
-                   bt.id AS buildtestid, bt.testname $label_sql $parentBuildFieldSql
+                   bt.id AS buildtestid, bt.testname $parentBuildFieldSql
                        FROM build2test AS bt
                        $parentBuildJoinSql
-                       $labeljoin_sql
-                       WHERE $parentBuildWhere $status $this->filterSQL $limitnew $groupby_sql
+                       WHERE $parentBuildWhere $status $this->filterSQL $limitnew
                        $this->limitSQL";
         $stmt = $this->db->prepare($sql);
         $this->db->execute($stmt, $params);
@@ -478,21 +464,15 @@ class ViewTest extends BuildApi
     {
         $retval = [];
 
-        // STRAIGHT_JOIN is a MySQL specific enhancement.
-        $join_type = 'INNER JOIN';
-        if (config('database.default') === 'mysql') {
-            $join_type = 'STRAIGHT_JOIN';
-        }
-
-        $summary_query = "
+        $summary_query = '
             SELECT DISTINCT b2t.status FROM build AS b
-            $join_type build2group AS b2g ON (b.id = b2g.buildid)
-            $join_type build2test AS b2t ON (b.id = b2t.buildid)
+            INNER JOIN build2group AS b2g ON (b.id = b2g.buildid)
+            INNER JOIN build2test AS b2t ON (b.id = b2t.buildid)
             WHERE b2g.groupid = :groupid
             AND b.projectid = :projectid
             AND b.starttime >= :begin
             AND b.starttime < :end
-            AND b2t.testname = :testname";
+            AND b2t.testname = :testname';
         $params = [
             ':groupid' => $groupid,
             ':projectid' => $projectid,

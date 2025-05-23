@@ -4543,14 +4543,6 @@ parameters:
 			path: app/cdash/app/Controller/Api/Index.php
 
 		-
-			message: """
-				#^Call to deprecated method executePreparedSingleRow\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
-			path: app/cdash/app/Controller/Api/Index.php
-
-		-
 			message: "#^Call to function array_search\\(\\) requires parameter \\#3 to be set\\.$#"
 			count: 2
 			path: app/cdash/app/Controller/Api/Index.php
@@ -4558,11 +4550,6 @@ parameters:
 		-
 			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
 			count: 5
-			path: app/cdash/app/Controller/Api/Index.php
-
-		-
-			message: "#^Cannot access offset 'a' on array\\|false\\|null\\.$#"
-			count: 1
 			path: app/cdash/app/Controller/Api/Index.php
 
 		-
@@ -5473,7 +5460,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
-			count: 7
+			count: 6
 			path: app/cdash/app/Controller/Api/ViewTest.php
 
 		-
@@ -7371,7 +7358,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 4
+			count: 3
 			path: app/cdash/app/Model/BuildUpdate.php
 
 		-
@@ -7738,7 +7725,7 @@ parameters:
 
 		-
 			message: "#^Access to an undefined property object\\:\\:\\$log\\.$#"
-			count: 2
+			count: 1
 			path: app/cdash/app/Model/CoverageFileLog.php
 
 		-
@@ -7771,7 +7758,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 3
+			count: 2
 			path: app/cdash/app/Model/CoverageFileLog.php
 
 		-
@@ -7851,6 +7838,11 @@ parameters:
 
 		-
 			message: "#^Only booleans are allowed in a negated boolean, object\\|null given\\.$#"
+			count: 1
+			path: app/cdash/app/Model/CoverageFileLog.php
+
+		-
+			message: "#^Parameter \\#2 \\$string of function explode expects string, string\\|false given\\.$#"
 			count: 1
 			path: app/cdash/app/Model/CoverageFileLog.php
 
@@ -8090,7 +8082,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 6
+			count: 5
 			path: app/cdash/app/Model/DynamicAnalysis.php
 
 		-
@@ -8817,7 +8809,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
-			count: 3
+			count: 2
 			path: app/cdash/app/Model/Project.php
 
 		-
@@ -11888,7 +11880,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 7
+			count: 5
 			path: app/cdash/include/common.php
 
 		-
@@ -11898,7 +11890,7 @@ parameters:
 
 		-
 			message: "#^Only booleans are allowed in a negated boolean, mixed given\\.$#"
-			count: 2
+			count: 1
 			path: app/cdash/include/common.php
 
 		-
@@ -12150,7 +12142,7 @@ parameters:
 
 		-
 			message: "#^Access to an undefined property DefaultFilters\\:\\:\\$TextConcat\\.$#"
-			count: 2
+			count: 1
 			path: app/cdash/include/filterdataFunctions.php
 
 		-
@@ -13014,7 +13006,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 4
+			count: 3
 			path: app/cdash/public/api/v1/buildgroup.php
 
 		-
@@ -16310,21 +16302,13 @@ parameters:
 				#^Call to deprecated function pdo_fetch_array\\(\\)\\:
 				04/01/2023$#
 			"""
-			count: 2
+			count: 1
 			path: app/cdash/tests/kwtest/kw_db.php
 
 		-
 			message: """
 				#^Call to deprecated function pdo_query\\(\\)\\:
 				04/01/2023$#
-			"""
-			count: 2
-			path: app/cdash/tests/kwtest/kw_db.php
-
-		-
-			message: """
-				#^Call to deprecated method getPdo\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 1
 			path: app/cdash/tests/kwtest/kw_db.php
@@ -16510,56 +16494,6 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_db.php
 
 		-
-			message: "#^Method dbo_mysql\\:\\:connect\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_db.php
-
-		-
-			message: "#^Method dbo_mysql\\:\\:connectToDb\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_db.php
-
-		-
-			message: "#^Method dbo_mysql\\:\\:create\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_db.php
-
-		-
-			message: "#^Method dbo_mysql\\:\\:create\\(\\) has parameter \\$db with no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_db.php
-
-		-
-			message: "#^Method dbo_mysql\\:\\:disconnect\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_db.php
-
-		-
-			message: "#^Method dbo_mysql\\:\\:drop\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_db.php
-
-		-
-			message: "#^Method dbo_mysql\\:\\:drop\\(\\) has parameter \\$db with no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_db.php
-
-		-
-			message: "#^Method dbo_mysql\\:\\:getDSN\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_db.php
-
-		-
-			message: "#^Method dbo_mysql\\:\\:query\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_db.php
-
-		-
-			message: "#^Method dbo_mysql\\:\\:query\\(\\) has parameter \\$query with no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_db.php
-
-		-
 			message: "#^Method dbo_pgsql\\:\\:create\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_db.php
@@ -16596,7 +16530,7 @@ parameters:
 
 		-
 			message: "#^Only booleans are allowed in a negated boolean, PDOStatement\\|false given\\.$#"
-			count: 4
+			count: 1
 			path: app/cdash/tests/kwtest/kw_db.php
 
 		-
@@ -16641,11 +16575,6 @@ parameters:
 
 		-
 			message: "#^Property dbo\\:\\:\\$user has no type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/kwtest/kw_db.php
-
-		-
-			message: "#^Strict comparison using \\=\\=\\= between PDOStatement and true will always evaluate to false\\.$#"
 			count: 1
 			path: app/cdash/tests/kwtest/kw_db.php
 
@@ -23309,11 +23238,6 @@ parameters:
 		-
 			message: "#^Method ProjectInDbTestCase\\:\\:testUser2Project\\(\\) has no return type specified\\.$#"
 			count: 1
-			path: app/cdash/tests/test_projectindb.php
-
-		-
-			message: "#^Only booleans are allowed in a negated boolean, int\\<\\-1, 1\\> given\\.$#"
-			count: 2
 			path: app/cdash/tests/test_projectindb.php
 
 		-

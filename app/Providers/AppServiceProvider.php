@@ -12,7 +12,6 @@ define('FMT_DATETIMEDISPLAY', 'M d, Y - H:i T');  // date and time standard
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
@@ -30,11 +29,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Validator::extendImplicit('complexity', 'App\Validators\Password@complexity');
-
-        /* For migrations on MySQL older than 5.7.7 * */
-        if (config('database.default') !== 'pgsql') {
-            Schema::defaultStringLength(191);
-        }
 
         URL::forceRootUrl(Config::get('app.url'));
 

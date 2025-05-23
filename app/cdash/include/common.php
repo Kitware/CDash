@@ -559,13 +559,7 @@ function make_cdash_url(string $url): string
  */
 function qnum($num)
 {
-    if (!config('database.default') || (config('database.default') == 'mysql')) {
-        return "'$num'";
-    } elseif (config('database.default') == 'pgsql') {
-        return $num != '' ? $num : '0';
-    } else {
-        return $num;
-    }
+    return $num != '' ? $num : '0';
 }
 
 /**
