@@ -897,28 +897,28 @@ function get_sql_compare_and_value($compare, $value)
 
         case 63:
             // string contains
-            $sql_compare = 'LIKE';
+            $sql_compare = 'ILIKE';
             $sql_value = "'%$value%'";
 
             break;
 
         case 64:
             // string does not contain
-            $sql_compare = 'NOT LIKE';
+            $sql_compare = 'NOT ILIKE';
             $sql_value = "'%$value%'";
 
             break;
 
         case 65:
             // string starts with
-            $sql_compare = 'LIKE';
+            $sql_compare = 'ILIKE';
             $sql_value = "'$value%'";
 
             break;
 
         case 66:
             // string ends with
-            $sql_compare = 'LIKE';
+            $sql_compare = 'ILIKE';
             $sql_value = "'%$value'";
 
             break;
