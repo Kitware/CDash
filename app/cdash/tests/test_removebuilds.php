@@ -354,11 +354,6 @@ class RemoveBuildsTestCase extends KWWebTestCase
             'type' => 0,
             'difference' => 1,
         ]);
-        DB::table('coveragesummarydiff')->insert([
-            'buildid' => $build->Id,
-            'loctested' => 1,
-            'locuntested' => 1,
-        ]);
         DB::table('summaryemail')->insert([
             'buildid' => $build->Id,
             'date' => $time,
@@ -454,7 +449,6 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $this->verify('buildtesttime', 'buildid', '=', $build->Id, 1);
         $this->verify('configureerrordiff', 'buildid', '=', $build->Id, 1);
         $this->verify('coveragesummary', 'buildid', '=', $build->Id, 1);
-        $this->verify('coveragesummarydiff', 'buildid', '=', $build->Id, 1);
         $this->verify('coveragefilelog', 'buildid', '=', $build->Id, 2);
         $this->verify('dynamicanalysissummary', 'buildid', '=', $build->Id, 1);
         $this->verify('summaryemail', 'buildid', '=', $build->Id, 1);
@@ -534,7 +528,6 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $this->verify('coveragefile', 'id', 'IN', $coveragefileids, 1, $extra_msg);
         $this->verify('coveragefilelog', 'buildid', '=', $build->Id, 0, $extra_msg);
         $this->verify('coveragesummary', 'buildid', '=', $build->Id, 0, $extra_msg);
-        $this->verify('coveragesummarydiff', 'buildid', '=', $build->Id, 0, $extra_msg);
         $this->verify('dynamicanalysis', 'buildid', '=', $build->Id, 0, $extra_msg);
         $this->verify('dynamicanalysissummary', 'buildid', '=', $build->Id, 0, $extra_msg);
         $this->verify('dynamicanalysisdefect', 'dynamicanalysisid', '=', $dynamicanalysisid, 0, $extra_msg);
@@ -578,7 +571,6 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $this->verify('coveragefile', 'id', 'IN', $coveragefileids, 0, $extra_msg);
         $this->verify('coveragefilelog', 'buildid', '=', $existing_build->Id, 0, $extra_msg);
         $this->verify('coveragesummary', 'buildid', '=', $existing_build->Id, 0, $extra_msg);
-        $this->verify('coveragesummarydiff', 'buildid', '=', $existing_build->Id, 0, $extra_msg);
         $this->verify('dynamicanalysis', 'buildid', '=', $existing_build->Id, 0, $extra_msg);
         $this->verify('dynamicanalysissummary', 'buildid', '=', $existing_build->Id, 0, $extra_msg);
         $this->verify('dynamicanalysisdefect', 'dynamicanalysisid', '=', $dynamicanalysisid, 0, $extra_msg);

@@ -7954,11 +7954,6 @@ parameters:
 			path: app/cdash/app/Model/CoverageSummary.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\CoverageSummaryDiff\\>\\:\\:exists\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/app/Model/CoverageSummary.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\CoverageSummary\\:\\:AddCoverage\\(\\) has parameter \\$coverage with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/CoverageSummary.php
