@@ -17,7 +17,6 @@
 
 namespace CDash\Model;
 
-use App\Models\CoverageSummaryDiff;
 use CDash\Database;
 use Illuminate\Support\Facades\DB;
 
@@ -50,8 +49,6 @@ class CoverageSummary
         }
 
         $db = Database::getInstance();
-
-        DB::delete('DELETE FROM coveragesummarydiff WHERE buildid=?', [intval($this->BuildId)]);
 
         // coverage file are kept unless they are shared
         $coverage = $db->executePrepared('SELECT fileid FROM coverage WHERE buildid=?', [intval($this->BuildId)]);
@@ -292,7 +289,7 @@ class CoverageSummary
 
         // Look at the number of errors and warnings differences
         $coverage = $db->executePreparedSingleRow('
-                        SELECT loctested, locuntested
+                        SELECT loctested, locuntested, loctesteddiff, locuntesteddiff
                         FROM coveragesummary
                         WHERE buildid=?
                     ', [intval($this->BuildId)]);
@@ -315,15 +312,17 @@ class CoverageSummary
             $loctesteddiff = $loctested - $previousloctested;
             $locuntesteddiff = $locuntested - $previouslocuntested;
 
-            // Don't log if no diff unless an entry already exists for this build.
-            if (CoverageSummaryDiff::where(['buildid' => $this->BuildId])->exists() || $loctesteddiff !== 0 || $locuntesteddiff !== 0) {
-                CoverageSummaryDiff::updateOrCreate([
-                    'buildid' => $this->BuildId,
-                ], [
-                    'loctested' => $loctesteddiff,
-                    'locuntested' => $locuntesteddiff,
-                ]);
-            }
+            DB::update('
+                UPDATE coveragesummary
+                SET
+                    loctesteddiff = ?,
+                    locuntesteddiff = ?
+                WHERE buildid = ?
+            ', [
+                $loctesteddiff,
+                $locuntesteddiff,
+                intval($this->BuildId),
+            ]);
         }
 
         return true;

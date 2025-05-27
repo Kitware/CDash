@@ -1777,13 +1777,12 @@ final class CoverageController extends AbstractBuildController
                           (SELECT count(buildid) FROM label2build WHERE buildid=b.id) AS numlabels,
                           cs.loctested,
                           cs.locuntested,
-                          csd.loctested AS loctesteddiff,
-                          csd.locuntested AS locuntesteddiff
+                          cs.loctesteddiff,
+                          cs.locuntesteddiff
                       FROM build AS b
                       INNER JOIN build2group AS b2g ON (b2g.buildid=b.id)
                       INNER JOIN buildgroup AS g ON (g.id=b2g.groupid)
                       INNER JOIN coveragesummary AS cs ON (cs.buildid = b.id)
-                      LEFT JOIN coveragesummarydiff AS csd ON (csd.buildid = b.id)
                       LEFT JOIN subproject2build AS sp2b ON (sp2b.buildid = b.id)
                       LEFT JOIN subproject AS sp ON (sp2b.subprojectid = sp.id)
                       WHERE
