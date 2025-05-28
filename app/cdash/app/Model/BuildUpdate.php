@@ -175,28 +175,16 @@ class BuildUpdate
                 $nwarnings += $this->GetNumberOfWarnings();
                 $nfiles += $this->GetNumberOfFiles();
 
-                if (config('database.default') == 'pgsql') {
-                    // pgsql doesn't have concat...
-                    DB::table('buildupdate')
-                        ->where('id', $this->UpdateId)
-                        ->update([
-                            'endtime' => $this->EndTime,
-                            'status' => $this->Status,
-                            'command' => DB::raw("command || '$this->Command'"),
-                            'nfiles' => $nfiles,
-                            'warnings' => $nwarnings,
-                        ]);
-                } else {
-                    DB::table('buildupdate')
-                        ->where('id', $this->UpdateId)
-                        ->update([
-                            'endtime' => $this->EndTime,
-                            'status' => $this->Status,
-                            'command' => DB::raw("CONCAT(command, '$this->Command')"),
-                            'nfiles' => $nfiles,
-                            'warnings' => $nwarnings,
-                        ]);
-                }
+                // pgsql doesn't have concat...
+                DB::table('buildupdate')
+                    ->where('id', $this->UpdateId)
+                    ->update([
+                        'endtime' => $this->EndTime,
+                        'status' => $this->Status,
+                        'command' => DB::raw("command || '$this->Command'"),
+                        'nfiles' => $nfiles,
+                        'warnings' => $nwarnings,
+                    ]);
             }
 
             foreach ($this->Files as $file) {

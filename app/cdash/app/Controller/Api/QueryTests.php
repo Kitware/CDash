@@ -337,12 +337,6 @@ class QueryTests extends ResultsApi
             $output_select = ', testoutput.output';
         }
 
-        if (config('database.default') === 'pgsql') {
-            $text_concat = "array_to_string(array_agg(DISTINCT text), ', ')";
-        } else {
-            $text_concat = "GROUP_CONCAT(DISTINCT text SEPARATOR ', ')";
-        }
-
         $query_params[':projectid'] = $this->project->Id;
         $rows = DB::select("
                     SELECT
@@ -361,7 +355,7 @@ class QueryTests extends ResultsApi
                         site.name AS sitename,
                         build2test.testname AS testname,
                         (
-                            SELECT $text_concat
+                            SELECT array_to_string(array_agg(DISTINCT text), ', ')
                             FROM
                                 label,
                                 label2test

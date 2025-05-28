@@ -65,11 +65,7 @@ final class AdminController extends AbstractController
 
         // Delete the builds
         if (isset($_POST['Submit'])) {
-            if (config('database.default') === 'pgsql') {
-                $timestamp_sql = "CAST(CONCAT(?, '-', ?, '-', ?, ' 00:00:00') AS timestamp)";
-            } else {
-                $timestamp_sql = "TIMESTAMP(CONCAT(?, '-', ?, '-', ?, ' 00:00:00'))";
-            }
+            $timestamp_sql = "CAST(CONCAT(?, '-', ?, '-', ?, ' 00:00:00') AS timestamp)";
 
             $build = DB::select("
                          SELECT id

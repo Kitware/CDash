@@ -1288,55 +1288,29 @@ class Index extends ResultsApi
 
                 // Compute historical average to get approximate expected time.
                 // PostgreSQL doesn't have the necessary functions for this.
-                if (config('database.default') === 'pgsql') {
-                    $query = $db->executePrepared('
-                                 SELECT submittime
-                                 FROM
-                                     build,
-                                     build2group
-                                 WHERE
-                                     build2group.buildid=build.id
-                                     AND siteid=?
-                                     AND name=?
-                                     AND type=?
-                                     AND build2group.groupid=?
-                                 ORDER BY id DESC
-                                 LIMIT 5
-                             ', [intval($siteid), $buildname, $buildtype, intval($groupid)]);
+                $query = $db->executePrepared('
+                    SELECT submittime
+                    FROM
+                        build,
+                        build2group
+                    WHERE
+                        build2group.buildid=build.id
+                        AND siteid=?
+                        AND name=?
+                        AND type=?
+                        AND build2group.groupid=?
+                    ORDER BY id DESC
+                    LIMIT 5
+                ', [intval($siteid), $buildname, $buildtype, intval($groupid)]);
 
-                    $time = 0;
-                    foreach ($query as $query_array) {
-                        $time += strtotime(date('H:i:s', strtotime($query_array['submittime'])));
-                    }
-                    if (count($query) > 0) {
-                        $time /= count($query);
-                    }
-                    $nextExpected = strtotime(date('H:i:s', $time) . ' UTC');
-                } else {
-                    $query = $db->executePreparedSingleRow('
-                                 SELECT AVG(TIME_TO_SEC(TIME(submittime))) AS a
-                                 FROM (
-                                     SELECT submittime
-                                     FROM
-                                         build,
-                                         build2group
-                                     WHERE
-                                         build2group.buildid=build.id
-                                         AND siteid=?
-                                         AND name=?
-                                         AND type=?
-                                         AND build2group.groupid=?
-                                     ORDER BY id DESC
-                                     LIMIT 5
-                                 ) AS t
-                             ', [intval($siteid), $buildname, $buildtype, $groupid]);
-                    $time = intval($query['a']);
-                    $hours = floor($time / 3600);
-                    $time = ($time % 3600);
-                    $minutes = floor($time / 60);
-                    $seconds = ($time % 60);
-                    $nextExpected = strtotime($hours . ':' . $minutes . ':' . $seconds . ' UTC');
+                $time = 0;
+                foreach ($query as $query_array) {
+                    $time += strtotime(date('H:i:s', strtotime($query_array['submittime'])));
                 }
+                if (count($query) > 0) {
+                    $time /= count($query);
+                }
+                $nextExpected = strtotime(date('H:i:s', $time) . ' UTC');
 
                 $divname = $build2grouprule_array['siteid'] . '_' . $build2grouprule_array['buildname'];
                 $divname = str_replace('+', '_', $divname);

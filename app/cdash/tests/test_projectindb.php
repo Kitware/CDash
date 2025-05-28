@@ -55,11 +55,7 @@ class ProjectInDbTestCase extends KWWebTestCase
         $query = 'SELECT COUNT(*) FROM buildgroupposition WHERE buildgroupid IN (SELECT id FROM buildgroup WHERE projectid=';
         $query .= $this->projecttestid . ')';
         $result = $this->db->query($query);
-        if (!strcmp($this->db->getType(), 'pgsql')) {
-            $this->assertEqual($result[0]['count'], 3);
-        } elseif (!strcmp($this->db->getType(), 'mysql')) {
-            $this->assertEqual($result[0]['COUNT(*)'], 3);
-        }
+        $this->assertEqual($result[0]['count'], 3);
     }
 
     public function testUser2Project()

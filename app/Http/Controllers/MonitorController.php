@@ -137,46 +137,6 @@ final class MonitorController extends AbstractController
      */
     private function resultsPerHour(string $table, string $field): Collection
     {
-        if (config('database.default') === 'mysql') {
-            return $this->mySQLResultsPerHour($table, $field);
-        } else {
-            return $this->postgreSQLResultsPerHour($table, $field);
-        }
-    }
-
-    /**
-     * MySQL implementation of resultsPerHour
-     *
-     * @return Collection<int,stdClass>
-     */
-    private function mySQLResultsPerHour(string $table, string $field): Collection
-    {
-        // Group jobs by hour.
-        // We achieve this by:
-        // 1) subtracting the seconds
-        // 2) subtracting the minutes
-        // 3) casting the result to a UNIX timestamp
-        return DB::table($table)
-            ->select(DB::raw("
-              UNIX_TIMESTAMP(
-                DATE_SUB(
-                  DATE_SUB({$field}, INTERVAL MINUTE({$field}) MINUTE),
-                  INTERVAL SECOND({$field}) SECOND
-                )
-              ) AS truncated_time,
-              COUNT(1) AS n_jobs
-            "))
-            ->groupBy('truncated_time')
-            ->get();
-    }
-
-    /**
-     * Postgres implementation of resultsPerHour
-     *
-     * @return Collection<int,stdClass>
-     */
-    private function postgreSQLResultsPerHour(string $table, string $field): Collection
-    {
         // Group jobs by hour.
         // We achieve this by:
         // 1) using DATE_TRUNC() to truncate timestamps to the hour

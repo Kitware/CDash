@@ -46,14 +46,7 @@ class DefaultFilters implements PageSpecificFilters
 {
     public function __construct()
     {
-        // The way we concatenate text into a single value
-        // depends on our database backend.
-
-        if (config('database.default') === 'pgsql') {
-            $this->TextConcat = "array_to_string(array_agg(text), ', ')";
-        } else {
-            $this->TextConcat = "GROUP_CONCAT(text SEPARATOR ', ')";
-        }
+        $this->TextConcat = "array_to_string(array_agg(text), ', ')";
     }
 
     public function getDefaultFilter()
@@ -312,11 +305,7 @@ class IndexPhpFilters extends DefaultFilters
                 break;
 
             case 'updateduration':
-                if (config('database.default') === 'pgsql') {
-                    $sql_field = 'ROUND(EXTRACT(EPOCH FROM (bu.endtime - bu.starttime))::numeric / 60, 1)';
-                } else {
-                    $sql_field = 'ROUND(TIMESTAMPDIFF(SECOND,bu.starttime,bu.endtime)/60.0,1)';
-                }
+                $sql_field = 'ROUND(EXTRACT(EPOCH FROM (bu.endtime - bu.starttime))::numeric / 60, 1)';
 
                 break;
 

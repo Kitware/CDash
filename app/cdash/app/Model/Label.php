@@ -64,10 +64,6 @@ class Label
 
     private function InsertAssociation(string $table, string $field1, ?int $value1 = null, ?string $field2 = null, ?int $value2 = null): void
     {
-        $duplicate_sql = '';
-        if (config('database.default') !== 'pgsql') {
-            $duplicate_sql = 'ON DUPLICATE KEY UPDATE labelid=labelid';
-        }
         if (!empty($value1)) {
             if (!empty($value2)) {
                 $query = DB::select("
@@ -85,7 +81,6 @@ class Label
                     DB::insert("
                         INSERT INTO $table (labelid, $field1, $field2)
                         VALUES (?, ?, ?)
-                        $duplicate_sql
                     ", [intval($this->Id), $value1, $value2]);
                 }
             } else {
@@ -104,7 +99,6 @@ class Label
                     DB::insert("
                         INSERT INTO $table (labelid, $field1)
                         VALUES (?, ?)
-                        $duplicate_sql
                     ", [intval($this->Id), $value1]);
                 }
             }

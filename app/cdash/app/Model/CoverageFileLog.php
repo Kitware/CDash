@@ -126,11 +126,7 @@ class CoverageFileLog
             return false;
         }
 
-        if (config('database.default') == 'pgsql') {
-            $log = stream_get_contents($row->log);
-        } else {
-            $log = $row->log;
-        }
+        $log = stream_get_contents($row->log);
 
         $log_entries = explode(';', $log);
         // Make an initial pass through $log_entries to see what lines
