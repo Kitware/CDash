@@ -26,8 +26,14 @@ final class RemoveProjectUser extends AbstractMutation
             $user === null
             || $project === null
             || $userToRemove === null
-            || $userToRemove->id === $user->id
-            || $user->cannot('removeUser', $project)
+            || (
+                $userToRemove->id === $user->id
+                && $user->cannot('leave', $project)
+            )
+            || (
+                $userToRemove->id !== $user->id
+                && $user->cannot('removeUser', $project)
+            )
             || !$project->users()->where('id', $userToRemove->id)->exists()
         ) {
             abort(401, 'This action is unauthorized.');

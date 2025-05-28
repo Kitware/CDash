@@ -302,6 +302,8 @@ add_feature_test(/Feature/Traits/UpdatesSiteInformationTest)
 
 add_feature_test(/Feature/GraphQL/Mutations/ChangeGlobalRoleTest)
 
+add_feature_test(/Feature/GraphQL/Mutations/JoinProjectTest)
+
 # Needs RUN_SERIAL to verify that no unexpected invitations are created
 add_feature_test(/Feature/GraphQL/Mutations/CreateGlobalInvitationTest)
 set_property(TEST /Feature/GraphQL/Mutations/CreateGlobalInvitationTest APPEND PROPERTY RUN_SERIAL TRUE)

@@ -82,6 +82,9 @@ type Mutation {
   "Remove a user from a project."
   removeProjectUser(input: RemoveProjectUserInput! @spread): RemoveProjectUserMutationPayload! @field(resolver: "RemoveProjectUser")
 
+  "Join a project directly.  Only useful for public and protected projects.  Use invitations to add users to private projects."
+  joinProject(input: JoinProjectInput! @spread): JoinProjectMutationPayload! @field(resolver: "JoinProject")
+
   "Invite a user to this CDash instance by email."
   createGlobalInvitation(input: CreateGlobalInvitationInput! @spread): CreateGlobalInvitationMutationPayload! @field(resolver: "CreateGlobalInvitation")
 
@@ -280,6 +283,17 @@ input RemoveProjectUserInput {
 
 
 type RemoveProjectUserMutationPayload implements MutationPayloadInterface {
+  "Optional error message."
+  message: String
+}
+
+
+input JoinProjectInput {
+  projectId: ID!
+}
+
+
+type JoinProjectMutationPayload implements MutationPayloadInterface {
   "Optional error message."
   message: String
 }

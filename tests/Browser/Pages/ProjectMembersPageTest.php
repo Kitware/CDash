@@ -504,4 +504,54 @@ class ProjectMembersPageTest extends BrowserTestCase
                 });
         });
     }
+
+    public function testJoinLeaveWorkflow(): void
+    {
+        $user = $this->makeNormalUser();
+        $this->users[] = $user;
+
+        self::assertEmpty($this->project->users()->get());
+
+        $this->browse(function (Browser $browser) use ($user) {
+            $browser->loginAs($user)
+                ->visit("/projects/{$this->project->id}/members")
+                ->waitFor('@join-project-button')
+                ->assertMissing('@leave-project-button')
+                ->click('@join-project-button')
+                ->waitForReload()
+            ;
+        });
+
+        self::assertContains($user->id, $this->project->users()->pluck('id'));
+        self::assertCount(1, $this->project->users()->get());
+
+        $this->browse(function (Browser $browser) use ($user) {
+            $browser->loginAs($user)
+                ->visit("/projects/{$this->project->id}/members")
+                ->waitFor('@leave-project-button')
+                ->assertMissing('@join-project-button')
+                ->assertMissing('@leave-project-modal')
+                ->click('@leave-project-button')
+                ->waitFor('@leave-project-modal')
+                ->click('@leave-project-modal-cancel-button')
+                ->waitUntilMissing('@leave-project-modal')
+                ->assertVisible('@leave-project-button')
+                ->click('@leave-project-button')
+                ->click('@leave-project-modal-button')
+                ->waitForReload()
+            ;
+        });
+
+        self::assertEmpty($this->project->users()->get());
+    }
+
+    public function testAnonymousUserCannotSeeJoinButton(): void
+    {
+        $this->browse(function (Browser $browser) {
+            $browser->visit("/projects/{$this->project->id}/members")
+                ->assertMissing('@join-project-button')
+                ->assertMissing('@leave-project-button')
+            ;
+        });
+    }
 }

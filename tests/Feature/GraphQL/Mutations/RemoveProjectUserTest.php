@@ -183,7 +183,7 @@ class RemoveProjectUserTest extends TestCase
         $this->assertNotProjectMember($userToDelete);
     }
 
-    public function testProjectAdminCannotDeleteSelf(): void
+    public function testProjectAdminCanDeleteSelf(): void
     {
         $projectAdmin = $this->addUserToProject(true);
 
@@ -204,12 +204,12 @@ class RemoveProjectUserTest extends TestCase
         ])->assertJson([
             'data' => [
                 'removeProjectUser' => [
-                    'message' => 'This action is unauthorized.',
+                    'message' => null,
                 ],
             ],
         ], true);
 
-        $this->assertProjectMember($projectAdmin);
+        $this->assertNotProjectMember($projectAdmin);
     }
 
     public function testRegularProjectUserCannotDeleteProjectMembers(): void

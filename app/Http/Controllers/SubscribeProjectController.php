@@ -68,10 +68,7 @@ final class SubscribeProjectController extends AbstractProjectController
         }
 
         // If we ask to subscribe
-        @$Subscribe = $_POST['subscribe'];
         @$UpdateSubscription = $_POST['updatesubscription'];
-        @$Unsubscribe = $_POST['unsubscribe'];
-        @$Role = $_POST['role'];
         @$EmailType = $_POST['emailtype'];
         if (!isset($_POST['emailmissingsites'])) {
             $EmailMissingSites = 0;
@@ -90,26 +87,7 @@ final class SubscribeProjectController extends AbstractProjectController
         $LabelEmail->ProjectId = $this->project->Id;
         $LabelEmail->UserId = $user->id;
 
-        if ($Unsubscribe) {
-            DB::delete('DELETE FROM user2project WHERE userid=? AND projectid=?', [$user->id, $this->project->Id]);
-
-            // Remove the claim sites for this project if they are only part of this project
-            DB::delete('
-                DELETE FROM site2user
-                WHERE
-                    userid=?
-                    AND siteid NOT IN (
-                        SELECT build.siteid
-                        FROM build, user2project AS up
-                        WHERE
-                            up.projectid = build.projectid
-                            AND up.userid=?
-                            AND up.role>0
-                        GROUP BY build.siteid
-                    )
-            ', [$user->id, $user->id]);
-            return redirect('/user?note=unsubscribedtoproject');
-        } elseif ($UpdateSubscription) {
+        if ($UpdateSubscription) {
             $emailcategory_update = intval($_POST['emailcategory_update'] ?? 0);
             $emailcategory_configure = intval($_POST['emailcategory_configure'] ?? 0);
             $emailcategory_warning = intval($_POST['emailcategory_warning'] ?? 0);
@@ -122,7 +100,6 @@ final class SubscribeProjectController extends AbstractProjectController
                 $db->executePrepared('
                 UPDATE user2project
                 SET
-                    role=?,
                     emailtype=?,
                     emailcategory=?,
                     emailmissingsites=?,
@@ -131,7 +108,6 @@ final class SubscribeProjectController extends AbstractProjectController
                     userid=?
                     AND projectid=?
             ', [
-                    $Role,
                     $EmailType,
                     $EmailCategory,
                     $EmailMissingSites,
@@ -139,24 +115,6 @@ final class SubscribeProjectController extends AbstractProjectController
                     $user->id,
                     $this->project->Id,
                 ]);
-
-                if ($Role == 0) {
-                    // Remove the claim sites for this project if they are only part of this project
-                    DB::delete('
-                        DELETE FROM site2user
-                        WHERE
-                            userid=?
-                            AND siteid NOT IN (
-                                SELECT build.siteid
-                                FROM build, user2project AS up
-                                WHERE
-                                    up.projectid=build.projectid
-                                    AND up.userid=?
-                                    AND up.role>0
-                                GROUP BY build.siteid
-                            )
-                    ', [$user->id, $user->id]);
-                }
             }
 
             if (isset($_POST['emaillabels'])) {
@@ -166,77 +124,6 @@ final class SubscribeProjectController extends AbstractProjectController
             }
             // Redirect
             return redirect('/user');
-        } elseif ($Subscribe) {
-            $emailcategory_update = intval($_POST['emailcategory_update'] ?? 0);
-            $emailcategory_configure = intval($_POST['emailcategory_configure'] ?? 0);
-            $emailcategory_warning = intval($_POST['emailcategory_warning'] ?? 0);
-            $emailcategory_error = intval($_POST['emailcategory_error'] ?? 0);
-            $emailcategory_test = intval($_POST['emailcategory_test'] ?? 0);
-            $emailcategory_dynamicanalysis = intval($_POST['emailcategory_dynamicanalysis'] ?? 0);
-
-            $EmailCategory = $emailcategory_update + $emailcategory_configure + $emailcategory_warning + $emailcategory_error + $emailcategory_test + $emailcategory_dynamicanalysis;
-            if (!empty($user2project)) {
-                $db->executePrepared('
-                UPDATE user2project
-                SET
-                    role=?,
-                    emailtype=?,
-                    emailcategory=?.
-                    emailmissingsites=?,
-                    emailsuccess=?
-                WHERE
-                    userid=?
-                    AND projectid=?
-            ', [
-                    $Role,
-                    $EmailType,
-                    $EmailCategory,
-                    $EmailMissingSites,
-                    $EmailSuccess,
-                    $user->id,
-                    $this->project->Id,
-                ]);
-
-                if ($Role == 0) {
-                    // Remove the claim sites for this project if they are only part of this project
-                    DB::delete('
-                        DELETE FROM site2user
-                        WHERE
-                            userid=?
-                            AND siteid NOT IN (
-                                SELECT build.siteid
-                                FROM build, user2project AS up
-                                WHERE
-                                    up.projectid0=build.projectid
-                                    AND up.userid=?
-                                    AND up.role>0
-                                GROUP BY build.siteid
-                            )
-                    ', [$user->id, $user->id]);
-                }
-            } else {
-                $db->executePrepared('
-                INSERT INTO user2project (
-                    role,
-                    userid,
-                    projectid,
-                    emailtype,
-                    emailcategory,
-                    emailsuccess,
-                    emailmissingsites
-                )
-                VALUES (?, ?, ?, ?, ?, ?, ?)
-            ', [
-                    $Role,
-                    $user->id,
-                    $this->project->Id,
-                    $EmailType,
-                    $EmailCategory,
-                    $EmailSuccess,
-                    $EmailMissingSites,
-                ]);
-            }
-            return redirect('/user?note=subscribedtoproject');
         }
 
         $xml .= '<project>';

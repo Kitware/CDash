@@ -6,6 +6,8 @@ if (isset($project)) {
 $hideRegistration = config('auth.user_registration_form_enabled') === false;
 
 $currentDateString = now()->toDateString();
+
+$userInProject = isset($project) && auth()->user() !== null && \App\Models\Project::findOrFail($project->Id)->users()->where('id', auth()->user()->id)->exists();
 @endphp
 
 <div id="header">
@@ -152,9 +154,14 @@ $currentDateString = now()->toDateString();
                                 ng-class="::{endsubmenu: cdash.projectrole}">
                                 <a class="cdash-link" ng-href="@{{::cdash.bugtracker}}"> Bug Tracker</a>
                             </li>
-                            <li ng-if="!cdash.projectrole" class="endsubmenu">
-                                <a class="cdash-link" ng-href="{{ url('/subscribeProject.php') }}?projectid=@{{::cdash.projectid}}">Subscribe</a>
+                            <li class="endsubmenu">
+                                <a class="cdash-link" ng-href="{{ url('/projects') }}/@{{::cdash.projectid}}/members">Members</a>
                             </li>
+                            @if($userInProject)
+                                <li class="endsubmenu">
+                                    <a class="cdash-link" ng-href="{{ url('/subscribeProject.php') }}?projectid=@{{::cdash.projectid}}">Notifications</a>
+                                </li>
+                            @endif
                         </ul>
                     </li>
                     <li ng-if="cdash.user.admin == 1 && !cdash.noproject && cdash.projectid !== undefined" id="admin">
@@ -163,11 +170,6 @@ $currentDateString = now()->toDateString();
                             <li>
                                 <a class="cdash-link" ng-href="{{ url('/project') }}/@{{::cdash.projectid}}/edit">
                                     Project
-                                </a>
-                            </li>
-                            <li>
-                                <a class="cdash-link" ng-href="{{ url('/projects') }}/@{{::cdash.projectid}}/members">
-                                    Users
                                 </a>
                             </li>
                             <li>
@@ -261,11 +263,20 @@ $currentDateString = now()->toDateString();
                                     </a>
                                 </li>
                             @endif
-                            <li>
-                                <a href="{{ url('/subscribeProject.php') }}?projectid={{ $project->Id }}">
-                                    Subscribe
-                                </a>
-                            </li>
+                            @if(isset($project))
+                                <li>
+                                    <a href="{{ url("/projects/{$project->Id}/members") }}">
+                                        Users
+                                    </a>
+                                </li>
+                            @endif
+                            @if($userInProject)
+                                <li>
+                                    <a href="{{ url('/subscribeProject.php') }}?projectid={{ $project->Id }}">
+                                        Notifications
+                                    </a>
+                                </li>
+                            @endif
                         </ul>
                     </li>
                     @can('edit-project', $project)
@@ -275,11 +286,6 @@ $currentDateString = now()->toDateString();
                                 <li>
                                     <a href="{{ url('/project') }}/{{ $project->Id }}/edit">
                                         Project
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ url("/projects/{$project->Id}/members") }}">
-                                        Users
                                     </a>
                                 </li>
                                 <li>
