@@ -134,7 +134,7 @@ ENTRYPOINT ["/bin/bash", "/cdash/docker/docker-entrypoint.sh"]
 # The base image for UBI-based images
 ###############################################################################
 
-FROM registry.access.redhat.com/ubi9/php-82 AS cdash-ubi-intermediate
+FROM registry.access.redhat.com/ubi9/php-83 AS cdash-ubi-intermediate
 
 ARG BASE_IMAGE
 ARG DEVELOPMENT_BUILD
