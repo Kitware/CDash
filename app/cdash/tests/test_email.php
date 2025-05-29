@@ -43,11 +43,14 @@ class EmailTestCase extends KWWebTestCase
             return;
         }
 
-        $this->actingAs(['email' => 'user1@kw', 'password' => 'user1'])
-            ->connect($this->url . "/subscribeProject.php?projectid={$this->project}");
-        $this->setField('credentials[0]', 'user1kw');
-        $this->setField('emailsuccess', '1');
-        $this->clickSubmitByName('subscribe');
+        $user->projects()->attach($this->project, [
+            'role' => 0,
+            'emailtype' => 1,
+            'emailcategory' => 126,
+            'emailsuccess' => 1,
+            'emailmissingsites' => 0,
+        ]);
+
         if (!$this->checkLog($this->logfilename)) {
             $this->fail('Errors logged');
         }

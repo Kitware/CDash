@@ -24,6 +24,8 @@ final class ProjectMembersController extends AbstractProjectController
             'user-id' => $user?->id,
             'can-invite-users' => $user?->can('inviteUser', $eloquentProject) ?? false,
             'can-remove-users' => $user?->can('removeUser', $eloquentProject) ?? false,
+            'can-join-project' => $user?->can('join', $eloquentProject) ?? false,
+            'can-leave-project' => $user?->can('leave', $eloquentProject) ?? false,
         ]);
     }
 }

@@ -3,94 +3,144 @@
     class="tw-flex tw-flex-col tw-gap-4"
     data-test="project-members-page"
   >
-    <div
-      v-if="canInviteUsers"
-      class="tw-flex tw-flex-row tw-w-full"
-    >
+    <div class="tw-flex tw-flex-row tw-w-full tw-gap-2 tw-justify-end">
       <button
-        class="tw-ml-auto tw-btn"
+        v-if="canInviteUsers"
+        class="tw-btn"
         data-test="invite-members-button"
         onclick="invite_members_modal.showModal()"
       >
         Invite Members
       </button>
-      <dialog
-        id="invite_members_modal"
-        data-test="invite-members-modal"
-        class="tw-modal"
+      <button
+        v-if="canJoinProject"
+        class="tw-btn tw-btn-outline tw-btn-success"
+        data-test="join-project-button"
+        @click="joinProject"
       >
-        <div class="tw-modal-box tw-flex tw-flex-col tw-gap-4 tw-w-full">
-          <h3 class="tw-text-lg tw-font-bold">
-            Invite Members
-          </h3>
-          <div
-            v-if="inviteMembersModalError"
-            class="tw-text-error tw-font-bold"
-            data-test="invite-members-modal-error-text"
+        Join Project
+      </button>
+      <button
+        v-if="canLeaveProject"
+        class="tw-btn tw-btn-outline tw-btn-error"
+        data-test="leave-project-button"
+        onclick="leave_project_modal.showModal()"
+      >
+        Leave Project
+      </button>
+    </div>
+    <dialog
+      id="leave_project_modal"
+      data-test="leave-project-modal"
+      class="tw-modal"
+    >
+      <div class="tw-modal-box tw-flex tw-flex-col tw-gap-4 tw-w-full">
+        <h3 class="tw-text-lg tw-font-bold">
+          Confirm
+        </h3>
+        Are you sure you want to leave this project?
+        <form
+          method="dialog"
+          class="tw-flex tw-flex-row tw-w-full tw-gap-2"
+        >
+          <button
+            class="tw-btn tw-ml-auto"
+            data-test="leave-project-modal-cancel-button"
           >
-            {{ inviteMembersModalError }}
-          </div>
-          <div>
-            <div class="tw-label tw-font-bold">
-              Email
-            </div>
-            <label class="tw-input tw-input-bordered tw-flex tw-items-center tw-w-full tw-gap-2">
-              <font-awesome-icon :icon="FA.faEnvelope" />
-              <input
-                v-model="inviteMembersModalEmail"
-                type="email"
-                class="tw-grow"
-                placeholder="example@example.com"
-                required
-                data-test="invite-members-modal-email"
-              >
-            </label>
-          </div>
-          <div>
-            <div class="tw-label tw-font-bold">
-              Role
-            </div>
-            <select
-              v-model="inviteMembersModalRole"
-              class="tw-select tw-select-bordered tw-w-full"
-              data-test="invite-members-modal-role"
-            >
-              <option
-                v-for="type in USER_TYPES"
-                :value="type"
-              >
-                {{ humanReadableRole(type) }}
-              </option>
-            </select>
-          </div>
-          <form
-            method="dialog"
-            class="tw-flex tw-flex-row tw-w-full tw-gap-2"
+            Cancel
+          </button>
+          <button
+            class="tw-btn tw-btn-error"
+            data-test="leave-project-modal-button"
+            @click="leaveProject"
           >
-            <button
-              class="tw-btn tw-ml-auto"
-              data-test="invite-members-modal-cancel-button"
+            Leave
+          </button>
+        </form>
+      </div>
+      <form
+        method="dialog"
+        class="tw-modal-backdrop"
+      >
+        <button>Cancel</button>
+      </form>
+    </dialog>
+    <dialog
+      id="invite_members_modal"
+      data-test="invite-members-modal"
+      class="tw-modal"
+    >
+      <div class="tw-modal-box tw-flex tw-flex-col tw-gap-4 tw-w-full">
+        <h3 class="tw-text-lg tw-font-bold">
+          Invite Members
+        </h3>
+        <div
+          v-if="inviteMembersModalError"
+          class="tw-text-error tw-font-bold"
+          data-test="invite-members-modal-error-text"
+        >
+          {{ inviteMembersModalError }}
+        </div>
+        <div>
+          <div class="tw-label tw-font-bold">
+            Email
+          </div>
+          <label class="tw-input tw-input-bordered tw-flex tw-items-center tw-w-full tw-gap-2">
+            <font-awesome-icon :icon="FA.faEnvelope" />
+            <input
+              v-model="inviteMembersModalEmail"
+              type="email"
+              class="tw-grow"
+              placeholder="example@example.com"
+              required
+              data-test="invite-members-modal-email"
             >
-              Cancel
-            </button>
-            <button
-              class="tw-btn tw-btn-primary"
-              :disabled="inviteMembersModalEmail.length === 0"
-              data-test="invite-members-modal-invite-button"
-              @click="inviteUserByEmail"
+          </label>
+        </div>
+        <div>
+          <div class="tw-label tw-font-bold">
+            Role
+          </div>
+          <select
+            v-model="inviteMembersModalRole"
+            class="tw-select tw-select-bordered tw-w-full"
+            data-test="invite-members-modal-role"
+          >
+            <option
+              v-for="type in USER_TYPES"
+              :value="type"
             >
-              Invite
-            </button>
-          </form>
+              {{ humanReadableRole(type) }}
+            </option>
+          </select>
         </div>
         <form
           method="dialog"
-          class="tw-modal-backdrop"
+          class="tw-flex tw-flex-row tw-w-full tw-gap-2"
         >
-          <button>Cancel</button>
+          <button
+            class="tw-btn tw-ml-auto"
+            data-test="invite-members-modal-cancel-button"
+          >
+            Cancel
+          </button>
+          <button
+            class="tw-btn tw-btn-primary"
+            :disabled="inviteMembersModalEmail.length === 0"
+            data-test="invite-members-modal-invite-button"
+            @click="inviteUserByEmail"
+          >
+            Invite
+          </button>
         </form>
-      </dialog>
-    </div>
+      </div>
+      <form
+        method="dialog"
+        class="tw-modal-backdrop"
+      >
+        <button>Cancel</button>
+      </form>
+    </dialog>
     <loading-indicator
       v-if="canInviteUsers"
       :is-loading="!projectInvitations"
@@ -245,6 +295,21 @@ export default {
       type: Boolean,
       required: true,
     },
+
+    canJoinProject: {
+      type: Boolean,
+      required: true,
+    },
+
+    canLeaveProject: {
+      type: Boolean,
+      required: true,
+    },
+  },
+
+  setup(props) {
+    // Basic sanity checks...
+    console.assert(!(props.canJoinProject && props.canLeaveProject));
   },
 
   data() {
@@ -388,6 +453,9 @@ export default {
             },
           });
         }
+      },
+      skip() {
+        return !this.canInviteUsers;
       },
     },
   },
@@ -582,6 +650,46 @@ export default {
         },
       }).catch((error) => {
         console.error(error);
+      });
+    },
+
+    joinProject() {
+      this.$apollo.mutate({
+        mutation: gql`mutation ($projectId: ID!) {
+          joinProject(input: {
+            projectId: $projectId
+          }) {
+            message
+          }
+        }`,
+        variables: {
+          projectId: this.projectId,
+        },
+      }).catch((error) => {
+        console.error(error);
+      }).then(() => {
+        window.location.reload();
+      });
+    },
+
+    leaveProject() {
+      this.$apollo.mutate({
+        mutation: gql`mutation ($userId: ID!, $projectId: ID!) {
+          removeProjectUser(input: {
+            userId: $userId
+            projectId: $projectId
+          }) {
+            message
+          }
+        }`,
+        variables: {
+          userId: this.userId,
+          projectId: this.projectId,
+        },
+      }).catch((error) => {
+        console.error(error);
+      }).then(() => {
+        window.location.reload();
       });
     },
   },

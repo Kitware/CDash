@@ -98,8 +98,7 @@ class ProjectPolicy
             return false;
         }
 
-        // If an LDAP filter has been specified and LDAP is enabled, CDash controls the entire members list.
-        if ((bool) config('cdash.ldap_enabled') && $project->ldapfilter !== null && $project->ldapfilter !== '') {
+        if ($this->isLdapControlledMembership($project)) {
             return false;
         }
 
@@ -111,13 +110,40 @@ class ProjectPolicy
         return $this->update($currentUser, $project);
     }
 
+    /**
+     * Whether the current user can remove other users or not.  Use leave() to determine whether
+     * the current user can remove themselves from the project.
+     */
     public function removeUser(User $currentUser, Project $project): bool
     {
-        // If an LDAP filter has been specified and LDAP is enabled, CDash controls the entire members list.
-        if ((bool) config('cdash.ldap_enabled') && $project->ldapfilter !== null && $project->ldapfilter !== '') {
+        if ($this->isLdapControlledMembership($project)) {
             return false;
         }
 
         return $this->update($currentUser, $project);
+    }
+
+    public function join(User $currentUser, Project $project): bool
+    {
+        if (!$this->view($currentUser, $project)) {
+            return false;
+        }
+
+        if ($this->isLdapControlledMembership($project)) {
+            return false;
+        }
+
+        return !$project->users()->where('id', $currentUser->id)->exists();
+    }
+
+    public function leave(User $currentUser, Project $project): bool
+    {
+        return !$this->isLdapControlledMembership($project) && $project->users()->where('id', $currentUser->id)->exists();
+    }
+
+    private function isLdapControlledMembership(Project $project): bool
+    {
+        // If a LDAP filter has been specified and LDAP is enabled, CDash controls the entire members list.
+        return (bool) config('cdash.ldap_enabled') && $project->ldapfilter !== null && $project->ldapfilter !== '';
     }
 }

@@ -48,67 +48,12 @@
   <div id="wizard">
       <ul>
           <li>
-            <a class="cdash-link" href="#fragment-1"><span>Select your role in this project</span></a></li>
-          <li>
             <a class="cdash-link" href="#fragment-3"><span>Email Notifications</span></a></li>
           <li>
             <a class="cdash-link" href="#fragment-4"><span>Email Category</span></a></li>
           <li>
             <a class="cdash-link" href="#fragment-5"><span>Email Labels</span></a></li>
       </ul>
-    <div id="fragment-1" class="tab_content" >
-      <div class="tab_help"></div>
-        <table width="800" >
-          <tr>
-            <td></td>
-            <td><input type="radio" onchange="saveChanges();" name="role" value="0" checked="checked">
-            <xsl:if test="/cdash/role=0">
-            <xsl:attribute name="checked"></xsl:attribute>
-            </xsl:if>
-            </input>
-             Normal user <i>(you are working on or using this project)</i></td>
-          </tr>
-           <tr>
-            <td></td>
-            <td><input type="radio" onchange="saveChanges();" name="role" value="1">
-             <xsl:if test="/cdash/role=1">
-            <xsl:attribute name="checked"></xsl:attribute>
-            </xsl:if>
-            </input>
-             Site maintainer <i>(you are responsible for machines that are submitting builds for this project)</i></td>
-          </tr>
-          <xsl:if test="/cdash/role>1">
-           <tr>
-            <td></td>
-            <td ><b>Warning: if you change to a normal or maintainer role you won't be able to go back.</b> </td>
-            </tr>
-          <tr>
-            <td></td>
-            <td ><input type="radio" onchange="saveChanges();" name="role" value="2" checked="checked">
-            <xsl:if test="/cdash/role=2">
-            <xsl:attribute name="checked"></xsl:attribute>
-            </xsl:if>
-            </input>
-             Project Administrator <i>(You are administering the project)</i></td>
-          </tr>
-          </xsl:if>
-          <xsl:if test="/cdash/role>2">
-           <tr>
-            <td></td>
-            <td ><input type="radio" onchange="saveChanges();" name="role" value="3">
-             <xsl:if test="/cdash/role=3">
-            <xsl:attribute name="checked"></xsl:attribute>
-            </xsl:if>
-            </input>
-              Project Super Administrator<i>(You have full control of this project)</i></td>
-          </tr>
-          </xsl:if>
-           <tr>
-            <td></td>
-            <td bgcolor="#FFFFFF"></td>
-          </tr>
-        </table>
-    </div>
     <div id="fragment-3" class="tab_content" >
       <div class="tab_help"></div>
         <table width="800" >
@@ -312,18 +257,12 @@
   <div style="width:900px;margin-left:auto;margin-right:auto;text-align:right;">
   <table width="100%" border="0">
   <tr>
-    <td style="text-align:left;" ><input type="submit" onclick="return confirm('Are you sure you want to unsubscribe?')" name="unsubscribe" value="Unsubscribe"/></td>
     <td><span id="changesmade" style="color:red;display:none;">*Changes need to be updated </span>
     <input type="submit" onclick="SubmitForm()" name="updatesubscription" value="Update Subscription"/></td>
    </tr>
   </table>
   </div>
   </xsl:if>
-  <xsl:if test="/cdash/edit=0">
-   <div style="width:900px;margin-left:auto;margin-right:auto;text-align:right;"><br/>
-  <input type="submit" name="subscribe" value="Subscribe"/>
-  </div>
-</xsl:if>
 
 </form>
 </td>
