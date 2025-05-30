@@ -409,25 +409,34 @@ add_php_test(projectmodel)
 set_tests_properties(projectmodel PROPERTIES DEPENDS projectindb)
 
 add_php_test(querytests)
-set_tests_properties(querytests PROPERTIES DEPENDS projectmodel)
+set_tests_properties(querytests PROPERTIES DEPENDS projectindb)
 
 add_php_test(testoverview)
-set_tests_properties(testoverview PROPERTIES DEPENDS querytests)
+set_tests_properties(testoverview PROPERTIES DEPENDS projectindb)
 
 add_php_test(viewconfigure)
-set_tests_properties(viewconfigure PROPERTIES DEPENDS testoverview)
+set_tests_properties(viewconfigure PROPERTIES DEPENDS projectindb)
 
 add_php_test(viewdynamicanalysis)
-set_tests_properties(viewdynamicanalysis PROPERTIES DEPENDS viewconfigure)
+set_tests_properties(viewdynamicanalysis PROPERTIES DEPENDS projectindb)
 
 add_php_test(viewdynamicanalysisfile)
-set_tests_properties(viewdynamicanalysisfile PROPERTIES DEPENDS viewdynamicanalysis)
+set_tests_properties(viewdynamicanalysisfile PROPERTIES DEPENDS projectindb)
 
 add_php_test(buildmodel)
-set_tests_properties(buildmodel PROPERTIES DEPENDS viewdynamicanalysisfile)
+set_tests_properties(buildmodel PROPERTIES DEPENDS projectindb)
 
 add_legacy_unit_test(/CDash/Model/PendingSubmissions)
-set_tests_properties(/CDash/Model/PendingSubmissions PROPERTIES DEPENDS buildmodel)
+set_property(TEST /CDash/Model/PendingSubmissions PROPERTY DEPENDS
+  pubproject
+  projectmodel
+  querytests
+  testoverview
+  viewconfigure
+  viewdynamicanalysis
+  viewdynamicanalysisfile
+  buildmodel
+)
 
 add_php_test(projectxmlsequence)
 set_tests_properties(projectxmlsequence PROPERTIES DEPENDS /CDash/Model/PendingSubmissions)
