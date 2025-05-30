@@ -518,14 +518,14 @@ set_tests_properties(crosssubprojectcoverage PROPERTIES DEPENDS passwordcomplexi
 add_php_test(aggregatesubprojectcoverage)
 set_tests_properties(aggregatesubprojectcoverage PROPERTIES DEPENDS crosssubprojectcoverage)
 
+add_php_test(dynamicanalysissummary)
+set_tests_properties(dynamicanalysissummary PROPERTIES DEPENDS aggregatesubprojectcoverage)
+
 add_php_test(configurewarnings)
-set_tests_properties(configurewarnings PROPERTIES DEPENDS aggregatesubprojectcoverage)
+set_tests_properties(configurewarnings PROPERTIES DEPENDS dynamicanalysissummary)
 
 add_php_test(filtertestlabels)
-set_tests_properties(filtertestlabels PROPERTIES DEPENDS configurewarnings)
-
-add_php_test(dynamicanalysissummary)
-set_tests_properties(dynamicanalysissummary PROPERTIES DEPENDS filtertestlabels)
+set_tests_properties(filtertestlabels PROPERTIES DEPENDS dynamicanalysissummary)
 
 add_php_test(viewsubprojects)
 set_tests_properties(viewsubprojects PROPERTIES DEPENDS dynamicanalysissummary)
@@ -544,6 +544,8 @@ set_tests_properties(imagecomparison PROPERTIES DEPENDS dynamicanalysissummary)
 
 add_php_test(createprojectpermissions)
 set_property(TEST createprojectpermissions PROPERTY DEPENDS
+  configurewarnings
+  filtertestlabels
   viewsubprojects
   truncateoutput
   csvexport
