@@ -3,8 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * This migration takes the place of Laravel's default schema loading functionality to apply CDash-specific
      * logic at schema load time.  The only manual changes to a default pgsql schema dump are as follows:
@@ -17,15 +16,14 @@ return new class extends Migration
      *
      * 2. All statements regarding the saml2_tenants table were removed manually because the SAML plugin injects
      *    its own migrations which create the table for us.
-     *
      */
     public function up(): void
     {
-        /**
+        /*
          * If any migrations have been run, this is an existing database which doesn't need tables to be created.
          */
         if (count(DB::select('SELECT * FROM migrations')) > 0) {
-            /**
+            /*
              * If this is an existing database, we verify that all the pre-4.0 migrations have been run properly.
              * CDash users must upgrade to 4.0 before upgrading to subsequent versions to ensure they have all
              * the 3.x migrations which were squashed in 4.1.
