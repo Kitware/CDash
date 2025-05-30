@@ -88,6 +88,10 @@ add_legacy_unit_test(/CDash/LinkifyCompilerOutput)
 
 add_unit_test(/Unit/app/Console/Command/ValidateXmlCommandTest)
 
+add_php_test(seconds_from_interval)
+
+add_php_test(extracttar)
+
 ###################################################################################################
 
 add_laravel_test(/Feature/CDashTest)
@@ -407,28 +411,34 @@ add_php_test(projectmodel)
 set_tests_properties(projectmodel PROPERTIES DEPENDS projectindb)
 
 add_php_test(querytests)
-set_tests_properties(querytests PROPERTIES DEPENDS projectmodel)
-
-add_php_test(sitestatistics)
-set_tests_properties(sitestatistics PROPERTIES DEPENDS querytests)
+set_tests_properties(querytests PROPERTIES DEPENDS projectindb)
 
 add_php_test(testoverview)
-set_tests_properties(testoverview PROPERTIES DEPENDS sitestatistics)
+set_tests_properties(testoverview PROPERTIES DEPENDS projectindb)
 
 add_php_test(viewconfigure)
-set_tests_properties(viewconfigure PROPERTIES DEPENDS testoverview)
+set_tests_properties(viewconfigure PROPERTIES DEPENDS projectindb)
 
 add_php_test(viewdynamicanalysis)
-set_tests_properties(viewdynamicanalysis PROPERTIES DEPENDS viewconfigure)
+set_tests_properties(viewdynamicanalysis PROPERTIES DEPENDS projectindb)
 
 add_php_test(viewdynamicanalysisfile)
-set_tests_properties(viewdynamicanalysisfile PROPERTIES DEPENDS viewdynamicanalysis)
+set_tests_properties(viewdynamicanalysisfile PROPERTIES DEPENDS projectindb)
 
 add_php_test(buildmodel)
-set_tests_properties(buildmodel PROPERTIES DEPENDS viewdynamicanalysisfile)
+set_tests_properties(buildmodel PROPERTIES DEPENDS projectindb)
 
 add_legacy_unit_test(/CDash/Model/PendingSubmissions)
-set_tests_properties(/CDash/Model/PendingSubmissions PROPERTIES DEPENDS buildmodel)
+set_property(TEST /CDash/Model/PendingSubmissions PROPERTY DEPENDS
+  pubproject
+  projectmodel
+  querytests
+  testoverview
+  viewconfigure
+  viewdynamicanalysis
+  viewdynamicanalysisfile
+  buildmodel
+)
 
 add_php_test(projectxmlsequence)
 set_tests_properties(projectxmlsequence PROPERTIES DEPENDS /CDash/Model/PendingSubmissions)
@@ -508,44 +518,46 @@ set_tests_properties(crosssubprojectcoverage PROPERTIES DEPENDS passwordcomplexi
 add_php_test(aggregatesubprojectcoverage)
 set_tests_properties(aggregatesubprojectcoverage PROPERTIES DEPENDS crosssubprojectcoverage)
 
+add_php_test(dynamicanalysissummary)
+set_tests_properties(dynamicanalysissummary PROPERTIES DEPENDS aggregatesubprojectcoverage)
+
 add_php_test(configurewarnings)
-set_tests_properties(configurewarnings PROPERTIES DEPENDS aggregatesubprojectcoverage)
+set_tests_properties(configurewarnings PROPERTIES DEPENDS dynamicanalysissummary)
 
 add_php_test(filtertestlabels)
-set_tests_properties(filtertestlabels PROPERTIES DEPENDS configurewarnings)
-
-add_php_test(seconds_from_interval)
-set_tests_properties(seconds_from_interval PROPERTIES DEPENDS filtertestlabels)
-
-add_php_test(dynamicanalysissummary)
-set_tests_properties(dynamicanalysissummary PROPERTIES DEPENDS seconds_from_interval)
+set_tests_properties(filtertestlabels PROPERTIES DEPENDS dynamicanalysissummary)
 
 add_php_test(viewsubprojects)
 set_tests_properties(viewsubprojects PROPERTIES DEPENDS dynamicanalysissummary)
 
 add_php_test(truncateoutput)
-set_tests_properties(truncateoutput PROPERTIES DEPENDS viewsubprojects)
+set_tests_properties(truncateoutput PROPERTIES DEPENDS dynamicanalysissummary)
 
 add_php_test(csvexport)
-set_tests_properties(csvexport PROPERTIES DEPENDS truncateoutput)
+set_tests_properties(csvexport PROPERTIES DEPENDS dynamicanalysissummary)
 
 add_php_test(uniquediffs)
-set_tests_properties(uniquediffs PROPERTIES DEPENDS csvexport)
+set_tests_properties(uniquediffs PROPERTIES DEPENDS dynamicanalysissummary)
 
 add_php_test(imagecomparison)
-set_tests_properties(imagecomparison PROPERTIES DEPENDS uniquediffs)
+set_tests_properties(imagecomparison PROPERTIES DEPENDS dynamicanalysissummary)
 
 add_php_test(createprojectpermissions)
-set_tests_properties(createprojectpermissions PROPERTIES DEPENDS imagecomparison)
+set_property(TEST createprojectpermissions PROPERTY DEPENDS
+  configurewarnings
+  filtertestlabels
+  viewsubprojects
+  truncateoutput
+  csvexport
+  uniquediffs
+  imagecomparison
+)
 
 add_php_test(testgraphpermissions)
 set_tests_properties(testgraphpermissions PROPERTIES DEPENDS createprojectpermissions)
 
-add_php_test(extracttar)
-set_tests_properties(extracttar PROPERTIES DEPENDS testgraphpermissions)
-
 add_php_test(pdoexecutelogserrors)
-set_tests_properties(pdoexecutelogserrors PROPERTIES DEPENDS extracttar)
+set_tests_properties(pdoexecutelogserrors PROPERTIES DEPENDS testgraphpermissions)
 
 add_php_test(revisionfilteracrossdates)
 set_tests_properties(revisionfilteracrossdates PROPERTIES DEPENDS actualtrilinossubmission)
@@ -601,89 +613,128 @@ set_tests_properties(submission_assign_buildid PROPERTIES DEPENDS buildrelations
 add_php_test(donehandler)
 set_tests_properties(donehandler PROPERTIES DEPENDS submission_assign_buildid)
 
+####################################
+
 add_php_test(changeid)
 set_tests_properties(changeid PROPERTIES DEPENDS donehandler)
 
 add_php_test(expiredbuildrules)
-set_tests_properties(expiredbuildrules PROPERTIES DEPENDS changeid)
+set_tests_properties(expiredbuildrules PROPERTIES DEPENDS donehandler)
 
 add_php_test(filterblocks)
-set_tests_properties(filterblocks PROPERTIES DEPENDS expiredbuildrules)
+set_tests_properties(filterblocks PROPERTIES DEPENDS donehandler)
 
 add_php_test(indexnextprevious)
-set_tests_properties(indexnextprevious PROPERTIES DEPENDS filterblocks)
+set_tests_properties(indexnextprevious PROPERTIES DEPENDS donehandler)
 
 add_php_test(putdynamicbuilds)
-set_tests_properties(putdynamicbuilds PROPERTIES DEPENDS indexnextprevious)
+set_tests_properties(putdynamicbuilds PROPERTIES DEPENDS donehandler)
 
 add_php_test(commitauthornotification)
-set_tests_properties(commitauthornotification PROPERTIES DEPENDS putdynamicbuilds)
+set_tests_properties(commitauthornotification PROPERTIES
+  DEPENDS donehandler
+  RUN_SERIAL TRUE
+)
 
 add_php_test(subscribeprojectshowlabels)
-set_tests_properties(subscribeprojectshowlabels PROPERTIES DEPENDS putdynamicbuilds)
+set_tests_properties(subscribeprojectshowlabels PROPERTIES DEPENDS donehandler)
 
 add_php_test(consistenttestingday)
-set_tests_properties(consistenttestingday PROPERTIES DEPENDS subscribeprojectshowlabels)
+set_tests_properties(consistenttestingday PROPERTIES DEPENDS donehandler)
 
 add_php_test(numericupdate)
-set_tests_properties(numericupdate PROPERTIES DEPENDS consistenttestingday)
+set_tests_properties(numericupdate PROPERTIES DEPENDS donehandler)
 
 add_php_test(attachedfiles)
-set_tests_properties(attachedfiles PROPERTIES DEPENDS numericupdate)
+set_tests_properties(attachedfiles PROPERTIES DEPENDS donehandler)
 
 add_php_test(subprojectorder)
-set_tests_properties(subprojectorder PROPERTIES DEPENDS attachedfiles)
+set_tests_properties(subprojectorder PROPERTIES DEPENDS donehandler)
 
 add_php_test(testimages)
-set_tests_properties(testimages PROPERTIES DEPENDS subprojectorder)
+set_tests_properties(testimages PROPERTIES DEPENDS donehandler)
 
 add_php_test(dynamicanalysislogs)
-set_tests_properties(dynamicanalysislogs PROPERTIES DEPENDS testimages)
+set_tests_properties(dynamicanalysislogs PROPERTIES DEPENDS donehandler)
 
 add_php_test(namedmeasurements)
-set_tests_properties(namedmeasurements PROPERTIES DEPENDS dynamicanalysislogs)
+set_tests_properties(namedmeasurements PROPERTIES DEPENDS donehandler)
 
 add_php_test(longbuildname)
-set_tests_properties(longbuildname PROPERTIES DEPENDS namedmeasurements)
+set_tests_properties(longbuildname PROPERTIES DEPENDS donehandler)
 
 add_php_test(multiplelabelsfortests)
-set_tests_properties(multiplelabelsfortests PROPERTIES DEPENDS longbuildname)
+set_tests_properties(multiplelabelsfortests PROPERTIES DEPENDS donehandler)
 
 add_php_test(subprojecttestfilters)
-set_tests_properties(subprojecttestfilters PROPERTIES DEPENDS multiplelabelsfortests)
+set_tests_properties(subprojecttestfilters PROPERTIES DEPENDS donehandler)
 
 add_php_test(dynamicanalysisdefectlongtype)
-set_tests_properties(dynamicanalysisdefectlongtype PROPERTIES DEPENDS multiplelabelsfortests)
+set_tests_properties(dynamicanalysisdefectlongtype PROPERTIES DEPENDS donehandler)
 
 add_php_test(starttimefromnotes)
-set_tests_properties(starttimefromnotes PROPERTIES DEPENDS dynamicanalysisdefectlongtype)
+set_tests_properties(starttimefromnotes PROPERTIES DEPENDS donehandler)
 
 add_php_test(starttimefromupload)
-set_tests_properties(starttimefromupload PROPERTIES DEPENDS starttimefromnotes)
+set_tests_properties(starttimefromupload PROPERTIES
+  DEPENDS donehandler
+  RUN_SERIAL TRUE
+)
 
 add_php_test(querytestsfilterlabels)
-set_tests_properties(querytestsfilterlabels PROPERTIES DEPENDS starttimefromupload)
+set_tests_properties(querytestsfilterlabels PROPERTIES DEPENDS donehandler)
 
 add_php_test(lotsofsubprojects)
-set_tests_properties(lotsofsubprojects PROPERTIES DEPENDS querytestsfilterlabels)
+set_tests_properties(lotsofsubprojects PROPERTIES DEPENDS donehandler)
 
 add_php_test(querytestsrevisionfilter)
-set_tests_properties(querytestsrevisionfilter PROPERTIES DEPENDS lotsofsubprojects)
+set_tests_properties(querytestsrevisionfilter PROPERTIES DEPENDS donehandler)
 
 add_php_test(redundanttests)
-set_tests_properties(redundanttests PROPERTIES DEPENDS querytestsrevisionfilter)
+set_tests_properties(redundanttests PROPERTIES DEPENDS donehandler)
 
 add_php_test(configureappend)
-set_tests_properties(configureappend PROPERTIES DEPENDS redundanttests)
+set_tests_properties(configureappend PROPERTIES DEPENDS donehandler)
 
 add_php_test(notesparsererrormessages)
-set_tests_properties(notesparsererrormessages PROPERTIES DEPENDS configureappend)
+set_tests_properties(notesparsererrormessages PROPERTIES
+  DEPENDS donehandler
+  RUN_SERIAL TRUE
+)
 
 add_laravel_test(/Feature/SubProjectDependencies)
-set_tests_properties(/Feature/SubProjectDependencies PROPERTIES DEPENDS notesparsererrormessages)
+set_tests_properties(/Feature/SubProjectDependencies PROPERTIES DEPENDS donehandler)
 
 add_php_test(misassignedconfigure)
-set_tests_properties(misassignedconfigure PROPERTIES DEPENDS /Feature/SubProjectDependencies)
+set_property(TEST misassignedconfigure PROPERTY DEPENDS
+  changeid
+  expiredbuildrules
+  filterblocks
+  indexnextprevious
+  putdynamicbuilds
+  commitauthornotification
+  subscribeprojectshowlabels
+  consistenttestingday
+  numericupdate
+  attachedfiles
+  subprojectorder
+  testimages
+  dynamicanalysislogs
+  namedmeasurements
+  longbuildname
+  multiplelabelsfortests
+  subprojecttestfilters
+  dynamicanalysisdefectlongtype
+  starttimefromnotes
+  starttimefromupload
+  querytestsfilterlabels
+  lotsofsubprojects
+  querytestsrevisionfilter
+  redundanttests
+  configureappend
+  notesparsererrormessages
+  /Feature/SubProjectDependencies
+)
 
 add_subdirectory(ctest)
 add_subdirectory(autoremovebuilds)
