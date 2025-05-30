@@ -523,19 +523,25 @@ add_php_test(viewsubprojects)
 set_tests_properties(viewsubprojects PROPERTIES DEPENDS dynamicanalysissummary)
 
 add_php_test(truncateoutput)
-set_tests_properties(truncateoutput PROPERTIES DEPENDS viewsubprojects)
+set_tests_properties(truncateoutput PROPERTIES DEPENDS dynamicanalysissummary)
 
 add_php_test(csvexport)
-set_tests_properties(csvexport PROPERTIES DEPENDS truncateoutput)
+set_tests_properties(csvexport PROPERTIES DEPENDS dynamicanalysissummary)
 
 add_php_test(uniquediffs)
-set_tests_properties(uniquediffs PROPERTIES DEPENDS csvexport)
+set_tests_properties(uniquediffs PROPERTIES DEPENDS dynamicanalysissummary)
 
 add_php_test(imagecomparison)
-set_tests_properties(imagecomparison PROPERTIES DEPENDS uniquediffs)
+set_tests_properties(imagecomparison PROPERTIES DEPENDS dynamicanalysissummary)
 
 add_php_test(createprojectpermissions)
-set_tests_properties(createprojectpermissions PROPERTIES DEPENDS imagecomparison)
+set_property(TEST createprojectpermissions PROPERTY DEPENDS
+  viewsubprojects
+  truncateoutput
+  csvexport
+  uniquediffs
+  imagecomparison
+)
 
 add_php_test(testgraphpermissions)
 set_tests_properties(testgraphpermissions PROPERTIES DEPENDS createprojectpermissions)
