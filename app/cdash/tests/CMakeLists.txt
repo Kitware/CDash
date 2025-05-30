@@ -88,6 +88,8 @@ add_legacy_unit_test(/CDash/LinkifyCompilerOutput)
 
 add_unit_test(/Unit/app/Console/Command/ValidateXmlCommandTest)
 
+add_php_test(seconds_from_interval)
+
 ###################################################################################################
 
 add_laravel_test(/Feature/CDashTest)
@@ -514,11 +516,8 @@ set_tests_properties(configurewarnings PROPERTIES DEPENDS aggregatesubprojectcov
 add_php_test(filtertestlabels)
 set_tests_properties(filtertestlabels PROPERTIES DEPENDS configurewarnings)
 
-add_php_test(seconds_from_interval)
-set_tests_properties(seconds_from_interval PROPERTIES DEPENDS filtertestlabels)
-
 add_php_test(dynamicanalysissummary)
-set_tests_properties(dynamicanalysissummary PROPERTIES DEPENDS seconds_from_interval)
+set_tests_properties(dynamicanalysissummary PROPERTIES DEPENDS filtertestlabels)
 
 add_php_test(viewsubprojects)
 set_tests_properties(viewsubprojects PROPERTIES DEPENDS dynamicanalysissummary)
