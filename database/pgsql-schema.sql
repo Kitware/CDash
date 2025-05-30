@@ -2,40 +2,6 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 17.2 (Debian 17.2-1.pgdg120+1)
--- Dumped by pg_dump version 17.2 (Debian 17.2-1.pgdg120+1)
-
-SET statement_timeout = 0;
-SET lock_timeout = 0;
-SET idle_in_transaction_session_timeout = 0;
-root@c25034cfa33e:/# ls /var/lib/postgresql/data
-base  global  pg_commit_ts  pg_dynshmem  pg_hba.conf  pg_ident.conf  pg_logical  pg_multixact  pg_notify  pg_replslot  pg_serial  pg_snapshots  pg_stat  pg_stat_tmp  pg_subtrans  pg_tblspc  pg_twophase  PG_VERSION  pg_wal  pg_xact  postgresql.auto.conf  postgresql.conf  postmaster.opts  postmaster.pid
-root@c25034cfa33e:/# cp pgsql-schema.sql /var/lib/postgresql/data/pgsql-schema.sql
-root@c25034cfa33e:/# ls /var/lib/postgresql/data
-base  global  pg_commit_ts  pg_dynshmem  pg_hba.conf  pg_ident.conf  pg_logical  pg_multixact  pg_notify  pg_replslot  pg_serial  pg_snapshots  pgsql-schema.sql  pg_stat  pg_stat_tmp  pg_subtrans  pg_tblspc  pg_twophase  PG_VERSION  pg_wal  pg_xact  postgresql.auto.conf  postgresql.conf  postmaster.opts  postmaster.pid
-root@c25034cfa33e:/# cat pgsql-schema.sql
---
--- PostgreSQL database dump
---
-
--- Dumped from database version 17.2 (Debian 17.2-1.pgdg120+1)
--- Dumped by pg_dump version 17.2 (Debian 17.2-1.pgdg120+1)
-
-SET statement_timeout = 0;
-SET lock_timeout = 0;
-SET idle_in_transaction_session_timeout = 0;
-SET transaction_timeout = 0;
-SET client_encoding = 'UTF8';
-SET standard_conforming_strings = on;
-SELECT pg_catalog.set_config('search_path', '', false);
-SET check_function_bodies = false;
-SET xmloption = content;
-SET client_min_messages = warning;
-SET row_security = off;
-
-SET default_tablespace = '';
-
-SET default_table_access_method = heap;
 
 --
 -- Name: apitoken; Type: TABLE; Schema: public; Owner: -
@@ -1282,37 +1248,6 @@ ALTER SEQUENCE public.measurement_id_seq OWNED BY public.measurement.id;
 
 
 --
--- Name: migrations; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.migrations (
-                                 id integer NOT NULL,
-                                 migration character varying(255) NOT NULL,
-                                 batch integer NOT NULL
-);
-
-
---
--- Name: migrations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.migrations_id_seq
-  AS integer
-  START WITH 1
-  INCREMENT BY 1
-  NO MINVALUE
-  NO MAXVALUE
-  CACHE 1;
-
-
---
--- Name: migrations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.migrations_id_seq OWNED BY public.migrations.id;
-
-
---
 -- Name: note; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1527,47 +1462,6 @@ CREATE SEQUENCE public.repositories_id_seq
 --
 
 ALTER SEQUENCE public.repositories_id_seq OWNED BY public.repositories.id;
-
-
---
--- Name: saml2_tenants; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.saml2_tenants (
-                                    id integer NOT NULL,
-                                    uuid uuid NOT NULL,
-                                    key character varying(255),
-                                    idp_entity_id character varying(255) NOT NULL,
-                                    idp_login_url character varying(255) NOT NULL,
-                                    idp_logout_url character varying(255) NOT NULL,
-                                    idp_x509_cert text NOT NULL,
-                                    metadata json NOT NULL,
-                                    created_at timestamp(0) without time zone,
-                                    updated_at timestamp(0) without time zone,
-                                    deleted_at timestamp(0) without time zone,
-                                    relay_state_url character varying(255),
-                                    name_id_format character varying(255) DEFAULT 'persistent'::character varying NOT NULL
-);
-
-
---
--- Name: saml2_tenants_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.saml2_tenants_id_seq
-  AS integer
-  START WITH 1
-  INCREMENT BY 1
-  NO MINVALUE
-  NO MAXVALUE
-  CACHE 1;
-
-
---
--- Name: saml2_tenants_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.saml2_tenants_id_seq OWNED BY public.saml2_tenants.id;
 
 
 --
@@ -2268,13 +2162,6 @@ ALTER TABLE ONLY public.measurement ALTER COLUMN id SET DEFAULT nextval('public.
 
 
 --
--- Name: migrations id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.migrations ALTER COLUMN id SET DEFAULT nextval('public.migrations_id_seq'::regclass);
-
-
---
 -- Name: note id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2300,13 +2187,6 @@ ALTER TABLE ONLY public.project_invitations ALTER COLUMN id SET DEFAULT nextval(
 --
 
 ALTER TABLE ONLY public.repositories ALTER COLUMN id SET DEFAULT nextval('public.repositories_id_seq'::regclass);
-
-
---
--- Name: saml2_tenants id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.saml2_tenants ALTER COLUMN id SET DEFAULT nextval('public.saml2_tenants_id_seq'::regclass);
 
 
 --
@@ -2890,14 +2770,6 @@ ALTER TABLE ONLY public.measurement
 
 
 --
--- Name: migrations migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.migrations
-  ADD CONSTRAINT migrations_pkey PRIMARY KEY (id);
-
-
---
 -- Name: note note_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2967,14 +2839,6 @@ ALTER TABLE ONLY public.related_builds
 
 ALTER TABLE ONLY public.repositories
   ADD CONSTRAINT repositories_pkey PRIMARY KEY (id);
-
-
---
--- Name: saml2_tenants saml2_tenants_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.saml2_tenants
-  ADD CONSTRAINT saml2_tenants_pkey PRIMARY KEY (id);
 
 
 --
