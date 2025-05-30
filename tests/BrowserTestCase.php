@@ -33,6 +33,7 @@ abstract class BrowserTestCase extends BaseTestCase
         file_put_contents(base_path('.env'), $env_after_substitution);
 
         Browser::$baseUrl = 'http://website:8080';
+        Browser::$waitSeconds = 10;
     }
 
     public function tearDown(): void
