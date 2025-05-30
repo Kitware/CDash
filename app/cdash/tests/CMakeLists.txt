@@ -90,6 +90,8 @@ add_unit_test(/Unit/app/Console/Command/ValidateXmlCommandTest)
 
 add_php_test(seconds_from_interval)
 
+add_php_test(extracttar)
+
 ###################################################################################################
 
 add_laravel_test(/Feature/CDashTest)
@@ -552,11 +554,8 @@ set_property(TEST createprojectpermissions PROPERTY DEPENDS
 add_php_test(testgraphpermissions)
 set_tests_properties(testgraphpermissions PROPERTIES DEPENDS createprojectpermissions)
 
-add_php_test(extracttar)
-set_tests_properties(extracttar PROPERTIES DEPENDS testgraphpermissions)
-
 add_php_test(pdoexecutelogserrors)
-set_tests_properties(pdoexecutelogserrors PROPERTIES DEPENDS extracttar)
+set_tests_properties(pdoexecutelogserrors PROPERTIES DEPENDS testgraphpermissions)
 
 add_php_test(revisionfilteracrossdates)
 set_tests_properties(revisionfilteracrossdates PROPERTIES DEPENDS actualtrilinossubmission)
