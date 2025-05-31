@@ -308,6 +308,17 @@ class Project
             $this->Fill();
             return true;
         }
+
+        // Do a case insensitive search to more gracefully support users of
+        // CDash instances that migrated from MySQL to Postgres.
+        $name_lower = strtolower($this->Name);
+        $project_row = EloquentProject::whereRaw('LOWER(name) = ?', [$name_lower])->first();
+        if ($project_row !== null) {
+            $this->Id = $project_row->id;
+            $this->Name = $project_row->name;
+            return true;
+        }
+
         return false;
     }
 

@@ -214,6 +214,8 @@ add_feature_test(/Feature/GraphQL/BuildCommandOutputTypeTest)
 
 add_feature_test(/Feature/Submission/Instrumentation/BuildInstrumentationTest)
 
+add_feature_test(/Feature/Submission/CaseInsensitivity/CaseInsensitivityTest)
+
 add_feature_test(/Feature/RouteAccessTest)
 
 add_feature_test(/Feature/Monitor)

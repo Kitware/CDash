@@ -456,7 +456,7 @@ class BuildGroup
         }
 
         // If we reach this far, none of the rules matched.
-        // Just use the default group for the build type.
+        // Try to use the default group for the build type.
         $default_model = EloquentBuildGroup::where([
             'name' => $build->Type,
             'projectid' => $build->ProjectId,
@@ -465,6 +465,19 @@ class BuildGroup
             return $default_model->id;
         }
 
+        // If that failed, perform a case insensitive search for the build type.
+        // This is to better support users of CDash instances that migrated from
+        // MySQL to Postgres.
+        $type_lower = strtolower($build->Type);
+        $default_model = EloquentBuildGroup::whereRaw(
+            'LOWER(name) = ? AND projectid = ?',
+            [$type_lower, $build->ProjectId]
+        )->first();
+        if ($default_model !== null) {
+            return $default_model->id;
+        }
+
+        // When all else fails, put the build in the Experimental group.
         return EloquentBuildGroup::where([
             'name' => 'Experimental',
             'projectid' => (int) $build->ProjectId,
