@@ -33,7 +33,7 @@ class Measurement extends Model
     ];
 
     /**
-     * @return BelongsTo<Project, self>
+     * @return BelongsTo<Project, $this>
      */
     public function project(): BelongsTo
     {

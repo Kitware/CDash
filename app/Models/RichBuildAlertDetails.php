@@ -44,7 +44,7 @@ class RichBuildAlertDetails extends Model
     ];
 
     /**
-     * @return HasManyThrough<Build>
+     * @return HasManyThrough<Build, RichBuildAlert, $this>
      */
     public function builds(): HasManyThrough
     {

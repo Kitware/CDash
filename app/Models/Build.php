@@ -45,7 +45,7 @@ use Illuminate\Support\Carbon;
  * @property string $compilername
  * @property string $compilerversion
  *
- * @method static Builder betweenDates(?Carbon $starttime, ?Carbon $endtime)
+ * @method static Builder<Build> betweenDates(?Carbon $starttime, ?Carbon $endtime)
  *
  * @mixin Builder<Build>
  */
@@ -116,7 +116,7 @@ class Build extends Model
     ];
 
     /**
-     * @return BelongsToMany<Note>
+     * @return BelongsToMany<Note, $this>
      */
     public function notes(): BelongsToMany
     {
@@ -125,7 +125,7 @@ class Build extends Model
     }
 
     /**
-     * @return BelongsTo<Project, self>
+     * @return BelongsTo<Project, $this>
      */
     public function project(): BelongsTo
     {
@@ -149,7 +149,7 @@ class Build extends Model
     }
 
     /**
-     * @return HasMany<Test>
+     * @return HasMany<Test, $this>
      */
     public function tests(): HasMany
     {
@@ -157,7 +157,7 @@ class Build extends Model
     }
 
     /**
-     * @return HasOneThrough<Configure>
+     * @return HasOneThrough<Configure, BuildConfigure, $this>
      */
     public function configure(): HasOneThrough
     {
@@ -165,7 +165,7 @@ class Build extends Model
     }
 
     /**
-     * @return BelongsTo<Site, self>
+     * @return BelongsTo<Site, $this>
      */
     public function site(): BelongsTo
     {
@@ -173,7 +173,7 @@ class Build extends Model
     }
 
     /**
-     * @return HasMany<BasicBuildAlert>
+     * @return HasMany<BasicBuildAlert, $this>
      */
     public function basicAlerts(): HasMany
     {
@@ -181,7 +181,7 @@ class Build extends Model
     }
 
     /**
-     * @return HasMany<BasicBuildAlert>
+     * @return HasMany<BasicBuildAlert, $this>
      */
     public function basicErrors(): HasMany
     {
@@ -190,7 +190,7 @@ class Build extends Model
     }
 
     /**
-     * @return HasMany<BasicBuildAlert>
+     * @return HasMany<BasicBuildAlert, $this>
      */
     public function basicWarnings(): HasMany
     {
@@ -199,7 +199,7 @@ class Build extends Model
     }
 
     /**
-     * @return HasMany<Comment>
+     * @return HasMany<Comment, $this>
      */
     public function comments(): HasMany
     {
@@ -207,7 +207,7 @@ class Build extends Model
     }
 
     /**
-     * @return BelongsToMany<BuildGroup>
+     * @return BelongsToMany<BuildGroup, $this>
      */
     public function buildGroups(): BelongsToMany
     {
@@ -215,7 +215,7 @@ class Build extends Model
     }
 
     /**
-     * @return HasMany<Coverage>
+     * @return HasMany<Coverage, $this>
      */
     public function coverageResults(): HasMany
     {
@@ -223,7 +223,7 @@ class Build extends Model
     }
 
     /**
-     * @return BelongsToMany<Label>
+     * @return BelongsToMany<Label, $this>
      */
     public function labels(): BelongsToMany
     {
@@ -231,7 +231,7 @@ class Build extends Model
     }
 
     /**
-     * @return BelongsToMany<UploadFile>
+     * @return BelongsToMany<UploadFile, $this>
      */
     public function uploadedFiles(): BelongsToMany
     {
@@ -239,7 +239,7 @@ class Build extends Model
     }
 
     /**
-     * @return HasMany<BuildCommand>
+     * @return HasMany<BuildCommand, $this>
      */
     public function commands(): HasMany
     {
@@ -247,7 +247,7 @@ class Build extends Model
     }
 
     /**
-     * @return HasMany<Target>
+     * @return HasMany<Target, $this>
      */
     public function targets(): HasMany
     {
@@ -255,7 +255,7 @@ class Build extends Model
     }
 
     /**
-     * @return HasMany<self>
+     * @return HasMany<Build, $this>
      */
     public function children(): HasMany
     {

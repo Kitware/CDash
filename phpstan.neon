@@ -15,6 +15,10 @@ parameters:
             # Don't analyze these files because they cause PHPStan to crash
             - app/cdash/tests/kwtest/simpletest
 
+    ignoreErrors:
+        # Laravel does some magic behind the scenes to support both static and dynamic access for most methods.
+        - '#Dynamic call to static method Illuminate.*::[a-zA-Z]+\(\)#'
+
     exceptions:
         uncheckedExceptionRegexes:
             - '#^Exception$#'
@@ -31,6 +35,8 @@ parameters:
             - 'Illuminate\Database\Eloquent\ModelNotFoundException'
             - 'GuzzleHttp\Exception\GuzzleException'
             - 'Carbon\Exceptions\InvalidFormatException'
+            - 'Illuminate\Http\Client\ConnectionException'
+            - 'Illuminate\Http\Exceptions\HttpResponseException'
 
         check:
             tooWideThrowType: true

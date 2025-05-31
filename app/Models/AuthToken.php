@@ -64,7 +64,7 @@ class AuthToken extends Model
     }
 
     /**
-     * @return HasOne<User>
+     * @return HasOne<User, $this>
      */
     public function user(): HasOne
     {

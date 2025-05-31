@@ -46,7 +46,7 @@ class SubProject extends Model
     ];
 
     /**
-     * @return BelongsTo<Project, self>
+     * @return BelongsTo<Project, $this>
      */
     public function project(): BelongsTo
     {
@@ -57,7 +57,7 @@ class SubProject extends Model
      * Return the subprojects which depended upon this subproject on the specified date.
      * If no date is provided, the current date is used.
      *
-     * @return BelongsToMany<self>
+     * @return BelongsToMany<self, $this>
      */
     public function children(?Carbon $date = null): BelongsToMany
     {

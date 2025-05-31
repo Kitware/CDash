@@ -31,7 +31,7 @@ class BuildCommandOutput extends Model
     ];
 
     /**
-     * @return BelongsTo<BuildCommand, self>
+     * @return BelongsTo<BuildCommand, $this>
      */
     public function command(): BelongsTo
     {

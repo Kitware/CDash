@@ -78,7 +78,7 @@ class User extends Authenticatable implements MustVerifyEmail, LdapAuthenticatab
     }
 
     /**
-     * @return HasMany<AuthToken>
+     * @return HasMany<AuthToken, $this>
      */
     public function authTokens(): HasMany
     {
@@ -86,7 +86,7 @@ class User extends Authenticatable implements MustVerifyEmail, LdapAuthenticatab
     }
 
     /**
-     * @return BelongsToMany<Project>
+     * @return BelongsToMany<Project, $this>
      */
     public function projects(): BelongsToMany
     {

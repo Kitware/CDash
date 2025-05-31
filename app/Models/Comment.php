@@ -46,7 +46,7 @@ class Comment extends Model
     ];
 
     /**
-     * @return HasOne<User>
+     * @return HasOne<User, $this>
      */
     public function user(): HasOne
     {
@@ -54,7 +54,7 @@ class Comment extends Model
     }
 
     /**
-     * @return HasOne<Build>
+     * @return HasOne<Build, $this>
      */
     public function build(): HasOne
     {

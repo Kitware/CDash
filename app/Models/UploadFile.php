@@ -37,7 +37,7 @@ class UploadFile extends Model
     ];
 
     /**
-     * @return BelongsToMany<Build>
+     * @return BelongsToMany<Build, $this>
      */
     public function builds(): BelongsToMany
     {

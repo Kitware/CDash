@@ -212,12 +212,22 @@ parameters:
 			path: app/GraphQL/Directives/FilterDirective.php
 
 		-
-			message: "#^Method App\\\\GraphQL\\\\Directives\\\\FilterDirective\\:\\:applyFilters\\(\\) has parameter \\$builder with generic class Illuminate\\\\Database\\\\Eloquent\\\\Builder but does not specify its types\\: TModelClass$#"
+			message: "#^Generic type Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\Relation\\<Illuminate\\\\Database\\\\Eloquent\\\\Model\\> in PHPDoc tag @param for parameter \\$builder does not specify all template types of class Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\Relation\\: TRelatedModel, TDeclaringModel, TResult$#"
 			count: 1
 			path: app/GraphQL/Directives/FilterDirective.php
 
 		-
-			message: "#^Method App\\\\GraphQL\\\\Directives\\\\FilterDirective\\:\\:applyFilters\\(\\) has parameter \\$builder with generic class Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\Relation but does not specify its types\\: TRelatedModel$#"
+			message: "#^Generic type Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\Relation\\<Illuminate\\\\Database\\\\Eloquent\\\\Model\\> in PHPDoc tag @return does not specify all template types of class Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\Relation\\: TRelatedModel, TDeclaringModel, TResult$#"
+			count: 1
+			path: app/GraphQL/Directives/FilterDirective.php
+
+		-
+			message: "#^Method App\\\\GraphQL\\\\Directives\\\\FilterDirective\\:\\:applyFilters\\(\\) has parameter \\$builder with generic class Illuminate\\\\Database\\\\Eloquent\\\\Builder but does not specify its types\\: TModel$#"
+			count: 1
+			path: app/GraphQL/Directives/FilterDirective.php
+
+		-
+			message: "#^Method App\\\\GraphQL\\\\Directives\\\\FilterDirective\\:\\:applyFilters\\(\\) has parameter \\$builder with generic class Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\Relation but does not specify its types\\: TRelatedModel, TDeclaringModel, TResult$#"
 			count: 1
 			path: app/GraphQL/Directives/FilterDirective.php
 
@@ -257,19 +267,9 @@ parameters:
 			path: app/GraphQL/Directives/FilterableDirective.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Contracts\\\\Auth\\\\Guard\\:\\:user\\(\\)\\.$#"
-			count: 1
-			path: app/GraphQL/Mutations/ChangeGlobalRole.php
-
-		-
 			message: "#^Parameter \\#1 \\$args \\(array\\{userId\\: int, role\\: App\\\\Enums\\\\GlobalRole\\}\\) of method App\\\\GraphQL\\\\Mutations\\\\ChangeGlobalRole\\:\\:mutate\\(\\) should be contravariant with parameter \\$args \\(array\\<string, mixed\\>\\) of method App\\\\GraphQL\\\\Mutations\\\\AbstractMutation\\:\\:mutate\\(\\)$#"
 			count: 1
 			path: app/GraphQL/Mutations/ChangeGlobalRole.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Contracts\\\\Auth\\\\Guard\\:\\:user\\(\\)\\.$#"
-			count: 1
-			path: app/GraphQL/Mutations/ChangeProjectRole.php
 
 		-
 			message: "#^Parameter \\#1 \\$args \\(array\\{userId\\: int, projectId\\: int, role\\: App\\\\Enums\\\\ProjectRole\\}\\) of method App\\\\GraphQL\\\\Mutations\\\\ChangeProjectRole\\:\\:mutate\\(\\) should be contravariant with parameter \\$args \\(array\\<string, mixed\\>\\) of method App\\\\GraphQL\\\\Mutations\\\\AbstractMutation\\:\\:mutate\\(\\)$#"
@@ -277,29 +277,9 @@ parameters:
 			path: app/GraphQL/Mutations/ChangeProjectRole.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Contracts\\\\Auth\\\\Guard\\:\\:user\\(\\)\\.$#"
-			count: 1
-			path: app/GraphQL/Mutations/ClaimSite.php
-
-		-
 			message: "#^Parameter \\#1 \\$args \\(array\\{siteId\\: int\\}\\) of method App\\\\GraphQL\\\\Mutations\\\\ClaimSite\\:\\:mutate\\(\\) should be contravariant with parameter \\$args \\(array\\<string, mixed\\>\\) of method App\\\\GraphQL\\\\Mutations\\\\AbstractMutation\\:\\:mutate\\(\\)$#"
 			count: 1
 			path: app/GraphQL/Mutations/ClaimSite.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Contracts\\\\Auth\\\\Guard\\:\\:user\\(\\)\\.$#"
-			count: 1
-			path: app/GraphQL/Mutations/CreateGlobalInvitation.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\GlobalInvitation\\>\\:\\:exists\\(\\)\\.$#"
-			count: 1
-			path: app/GraphQL/Mutations/CreateGlobalInvitation.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\User\\>\\:\\:exists\\(\\)\\.$#"
-			count: 1
-			path: app/GraphQL/Mutations/CreateGlobalInvitation.php
 
 		-
 			message: "#^Parameter \\#1 \\$args \\(array\\{email\\: string, role\\: App\\\\Enums\\\\GlobalRole\\}\\) of method App\\\\GraphQL\\\\Mutations\\\\CreateGlobalInvitation\\:\\:mutate\\(\\) should be contravariant with parameter \\$args \\(array\\<string, mixed\\>\\) of method App\\\\GraphQL\\\\Mutations\\\\AbstractMutation\\:\\:mutate\\(\\)$#"
@@ -307,54 +287,14 @@ parameters:
 			path: app/GraphQL/Mutations/CreateGlobalInvitation.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Contracts\\\\Auth\\\\Guard\\:\\:user\\(\\)\\.$#"
-			count: 1
-			path: app/GraphQL/Mutations/InviteToProject.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\ProjectInvitation\\>\\:\\:exists\\(\\)\\.$#"
-			count: 1
-			path: app/GraphQL/Mutations/InviteToProject.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\User\\>\\:\\:exists\\(\\)\\.$#"
-			count: 1
-			path: app/GraphQL/Mutations/InviteToProject.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\User\\>\\:\\:where\\(\\)\\.$#"
-			count: 1
-			path: app/GraphQL/Mutations/InviteToProject.php
-
-		-
 			message: "#^Parameter \\#1 \\$args \\(array\\{email\\: string, projectId\\: int, role\\: App\\\\Enums\\\\ProjectRole\\}\\) of method App\\\\GraphQL\\\\Mutations\\\\InviteToProject\\:\\:mutate\\(\\) should be contravariant with parameter \\$args \\(array\\<string, mixed\\>\\) of method App\\\\GraphQL\\\\Mutations\\\\AbstractMutation\\:\\:mutate\\(\\)$#"
 			count: 1
 			path: app/GraphQL/Mutations/InviteToProject.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Contracts\\\\Auth\\\\Guard\\:\\:user\\(\\)\\.$#"
-			count: 1
-			path: app/GraphQL/Mutations/JoinProject.php
-
-		-
 			message: "#^Parameter \\#1 \\$args \\(array\\{projectId\\: int\\}\\) of method App\\\\GraphQL\\\\Mutations\\\\JoinProject\\:\\:mutate\\(\\) should be contravariant with parameter \\$args \\(array\\<string, mixed\\>\\) of method App\\\\GraphQL\\\\Mutations\\\\AbstractMutation\\:\\:mutate\\(\\)$#"
 			count: 1
 			path: app/GraphQL/Mutations/JoinProject.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Contracts\\\\Auth\\\\Guard\\:\\:user\\(\\)\\.$#"
-			count: 1
-			path: app/GraphQL/Mutations/RemoveProjectUser.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\User\\>\\:\\:exists\\(\\)\\.$#"
-			count: 1
-			path: app/GraphQL/Mutations/RemoveProjectUser.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\User\\>\\:\\:where\\(\\)\\.$#"
-			count: 1
-			path: app/GraphQL/Mutations/RemoveProjectUser.php
 
 		-
 			message: "#^Parameter \\#1 \\$args \\(array\\{userId\\: int, projectId\\: int\\}\\) of method App\\\\GraphQL\\\\Mutations\\\\RemoveProjectUser\\:\\:mutate\\(\\) should be contravariant with parameter \\$args \\(array\\<string, mixed\\>\\) of method App\\\\GraphQL\\\\Mutations\\\\AbstractMutation\\:\\:mutate\\(\\)$#"
@@ -377,19 +317,9 @@ parameters:
 			path: app/GraphQL/Mutations/RevokeProjectInvitation.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Contracts\\\\Auth\\\\Guard\\:\\:user\\(\\)\\.$#"
-			count: 1
-			path: app/GraphQL/Mutations/UnclaimSite.php
-
-		-
 			message: "#^Parameter \\#1 \\$args \\(array\\{siteId\\: int\\}\\) of method App\\\\GraphQL\\\\Mutations\\\\UnclaimSite\\:\\:mutate\\(\\) should be contravariant with parameter \\$args \\(array\\<string, mixed\\>\\) of method App\\\\GraphQL\\\\Mutations\\\\AbstractMutation\\:\\:mutate\\(\\)$#"
 			count: 1
 			path: app/GraphQL/Mutations/UnclaimSite.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Contracts\\\\Auth\\\\Guard\\:\\:user\\(\\)\\.$#"
-			count: 1
-			path: app/GraphQL/Mutations/UpdateSiteDescription.php
 
 		-
 			message: "#^Parameter \\#1 \\$args \\(array\\{siteId\\: int, description\\: string\\}\\) of method App\\\\GraphQL\\\\Mutations\\\\UpdateSiteDescription\\:\\:mutate\\(\\) should be contravariant with parameter \\$args \\(array\\<string, mixed\\>\\) of method App\\\\GraphQL\\\\Mutations\\\\AbstractMutation\\:\\:mutate\\(\\)$#"
@@ -420,16 +350,6 @@ parameters:
 			message: "#^Class App\\\\Http\\\\Controllers\\\\AbstractBuildController has an uninitialized property \\$build\\. Give it default value or assign it in the constructor\\.$#"
 			count: 1
 			path: app/Http/Controllers/AbstractBuildController.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Routing\\\\UrlGenerator\\:\\:full\\(\\)\\.$#"
-			count: 3
-			path: app/Http/Controllers/AbstractController.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Session\\\\Store\\:\\:put\\(\\)\\.$#"
-			count: 1
-			path: app/Http/Controllers/AbstractController.php
 
 		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\AbstractController\\:\\:getCDashVersion\\(\\) should return string but returns string\\|false\\.$#"
@@ -655,16 +575,6 @@ parameters:
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 2
-			path: app/Http/Controllers/BuildController.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\Note\\>\\:\\:count\\(\\)\\.$#"
-			count: 1
-			path: app/Http/Controllers/BuildController.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Comment\\>\\:\\:with\\(\\)\\.$#"
-			count: 1
 			path: app/Http/Controllers/BuildController.php
 
 		-
@@ -1476,6 +1386,21 @@ parameters:
 			path: app/Http/Controllers/CoverageController.php
 
 		-
+			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
+			count: 2
+			path: app/Http/Controllers/DynamicAnalysisController.php
+
+		-
+			message: "#^Access to an undefined property object\\:\\:\\$name\\.$#"
+			count: 1
+			path: app/Http/Controllers/DynamicAnalysisController.php
+
+		-
+			message: "#^Access to an undefined property object\\:\\:\\$status\\.$#"
+			count: 1
+			path: app/Http/Controllers/DynamicAnalysisController.php
+
+		-
 			message: "#^Cannot access property \\$name on App\\\\Models\\\\Site\\|null\\.$#"
 			count: 2
 			path: app/Http/Controllers/DynamicAnalysisController.php
@@ -1529,11 +1454,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$page_id of static method App\\\\Http\\\\Controllers\\\\FilterController\\:\\:isDatePage\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: app/Http/Controllers/FilterController.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\User\\>\\:\\:exists\\(\\)\\.$#"
-			count: 1
-			path: app/Http/Controllers/GlobalInvitationController.php
 
 		-
 			message: "#^Only booleans are allowed in a ternary operator condition, mixed given\\.$#"
@@ -1601,21 +1521,6 @@ parameters:
 			path: app/Http/Controllers/ManageMeasurementsController.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Measurement\\>\\:\\:delete\\(\\)\\.$#"
-			count: 1
-			path: app/Http/Controllers/ManageMeasurementsController.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Measurement\\>\\:\\:orderBy\\(\\)\\.$#"
-			count: 1
-			path: app/Http/Controllers/ManageMeasurementsController.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Measurement\\>\\:\\:where\\(\\)\\.$#"
-			count: 1
-			path: app/Http/Controllers/ManageMeasurementsController.php
-
-		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\ManageMeasurementsController\\:\\:show\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/Http/Controllers/ManageMeasurementsController.php
@@ -1638,11 +1543,6 @@ parameters:
 		-
 			message: "#^Binary operation \"\\-\" between int\\<1, max\\> and mixed results in an error\\.$#"
 			count: 1
-			path: app/Http/Controllers/MonitorController.php
-
-		-
-			message: "#^Cannot access property \\$truncated_time on stdClass\\|null\\.$#"
-			count: 8
 			path: app/Http/Controllers/MonitorController.php
 
 		-
@@ -1682,26 +1582,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$value of function intval expects array\\|bool\\|float\\|int\\|resource\\|string\\|null, mixed given\\.$#"
 			count: 2
 			path: app/Http/Controllers/ProjectController.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Contracts\\\\Auth\\\\Guard\\:\\:user\\(\\)\\.$#"
-			count: 1
-			path: app/Http/Controllers/ProjectInvitationController.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\Project\\>\\:\\:exists\\(\\)\\.$#"
-			count: 1
-			path: app/Http/Controllers/ProjectInvitationController.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\Project\\>\\:\\:where\\(\\)\\.$#"
-			count: 1
-			path: app/Http/Controllers/ProjectInvitationController.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Contracts\\\\Auth\\\\Guard\\:\\:user\\(\\)\\.$#"
-			count: 1
-			path: app/Http/Controllers/ProjectMembersController.php
 
 		-
 			message: "#^Access to an undefined property object\\:\\:\\$numdefects\\.$#"
@@ -2089,16 +1969,6 @@ parameters:
 			path: app/Http/Controllers/RemoteProcessingController.php
 
 		-
-			message: "#^Parameter \\#1 \\$value of method Carbon\\\\Carbon\\:\\:addSeconds\\(\\) expects int, \\(float\\|int\\) given\\.$#"
-			count: 1
-			path: app/Http/Controllers/RemoteProcessingController.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Contracts\\\\Auth\\\\Guard\\:\\:user\\(\\)\\.$#"
-			count: 1
-			path: app/Http/Controllers/SiteController.php
-
-		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\SiteController\\:\\:siteStatistics\\(\\) never returns Illuminate\\\\Http\\\\RedirectResponse so it can be removed from the return type\\.$#"
 			count: 1
 			path: app/Http/Controllers/SiteController.php
@@ -2162,11 +2032,6 @@ parameters:
 			path: app/Http/Controllers/SubProjectController.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\SubProject\\>\\:\\:pluck\\(\\)\\.$#"
-			count: 1
-			path: app/Http/Controllers/SubProjectController.php
-
-		-
 			message: "#^Only booleans are allowed in an if condition, mixed given\\.$#"
 			count: 1
 			path: app/Http/Controllers/SubProjectController.php
@@ -2187,7 +2052,7 @@ parameters:
 			path: app/Http/Controllers/SubProjectController.php
 
 		-
-			message: "#^Parameter \\#1 \\$time of static method Carbon\\\\Carbon\\:\\:parse\\(\\) expects DateTimeInterface\\|string\\|null, mixed given\\.$#"
+			message: "#^Parameter \\#1 \\$time of static method Carbon\\\\Carbon\\:\\:parse\\(\\) expects Carbon\\\\Month\\|Carbon\\\\WeekDay\\|DateTimeInterface\\|float\\|int\\|string\\|null, mixed given\\.$#"
 			count: 1
 			path: app/Http/Controllers/SubProjectController.php
 
@@ -2495,11 +2360,6 @@ parameters:
 			path: app/Http/Controllers/UserController.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Build\\>\\:\\:count\\(\\)\\.$#"
-			count: 1
-			path: app/Http/Controllers/UserController.php
-
-		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
 			count: 1
 			path: app/Http/Controllers/UserController.php
@@ -2623,11 +2483,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$string of function strlen expects string, array\\|string given\\.$#"
 			count: 2
 			path: app/Http/Controllers/UserNoteController.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Contracts\\\\Auth\\\\Guard\\:\\:user\\(\\)\\.$#"
-			count: 1
-			path: app/Http/Controllers/UsersController.php
 
 		-
 			message: "#^Parameter \\#2 \\$build of class CDash\\\\Controller\\\\Api\\\\ViewTest constructor expects CDash\\\\Model\\\\Build, CDash\\\\Model\\\\Build\\|null given\\.$#"
@@ -2976,11 +2831,6 @@ parameters:
 			path: app/Jobs/ProcessSubmission.php
 
 		-
-			message: "#^Parameter \\#1 \\$value of method Carbon\\\\Carbon\\:\\:addSeconds\\(\\) expects int, \\(float\\|int\\) given\\.$#"
-			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
 			message: "#^Parameter \\#2 \\$data of function xml_parse expects string, string\\|false given\\.$#"
 			count: 2
 			path: app/Jobs/ProcessSubmission.php
@@ -3011,7 +2861,7 @@ parameters:
 			path: app/Jobs/ProcessSubmission.php
 
 		-
-			message: "#^Parameter \\#1 \\$value of method Carbon\\\\Carbon\\:\\:subHours\\(\\) expects int, mixed given\\.$#"
+			message: "#^Parameter \\#1 \\$value of method Carbon\\\\Carbon\\:\\:subHours\\(\\) expects float\\|int, mixed given\\.$#"
 			count: 1
 			path: app/Jobs/PruneJobs.php
 
@@ -3019,26 +2869,6 @@ parameters:
 			message: "#^Part \\$lifetime \\(mixed\\) of encapsed string cannot be cast to string\\.$#"
 			count: 1
 			path: app/Jobs/PruneJobs.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\UploadFile\\>\\:\\:pluck\\(\\)\\.$#"
-			count: 1
-			path: app/Jobs/PruneUploads.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\UploadFile\\>\\:\\:sum\\(\\)\\.$#"
-			count: 1
-			path: app/Jobs/PruneUploads.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Build\\>\\:\\:chunk\\(\\)\\.$#"
-			count: 1
-			path: app/Jobs/PruneUploads.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Build\\>\\:\\:with\\(\\)\\.$#"
-			count: 1
-			path: app/Jobs/PruneUploads.php
 
 		-
 			message: "#^Parameter \\#1 \\$filters of static method LdapRecord\\\\Query\\\\Builder\\:\\:rawFilter\\(\\) expects array\\|string, string\\|true given\\.$#"
@@ -3066,44 +2896,9 @@ parameters:
 			path: app/Listeners/EmailSentListener.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\BasicBuildAlert\\>\\:\\:where\\(\\)\\.$#"
-			count: 2
-			path: app/Models/Build.php
-
-		-
-			message: "#^PHPDoc tag @method for method App\\\\Models\\\\Build\\:\\:betweenDates\\(\\) return type contains generic class Illuminate\\\\Database\\\\Eloquent\\\\Builder but does not specify its types\\: TModelClass$#"
-			count: 1
-			path: app/Models/Build.php
-
-		-
 			message: "#^Parameter \\$get of static method Illuminate\\\\Database\\\\Eloquent\\\\Casts\\\\Attribute\\<mixed,mixed\\>\\:\\:make\\(\\) expects \\(callable\\(mixed, mixed\\)\\: string\\)\\|null, Closure\\(mixed, array\\)\\: string given\\.$#"
 			count: 1
 			path: app/Models/GlobalInvitation.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\Site\\>\\:\\:distinct\\(\\)\\.$#"
-			count: 1
-			path: app/Models/Project.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Build\\>\\:\\:orWhere\\(\\)\\.$#"
-			count: 1
-			path: app/Models/Project.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Build\\>\\:\\:where\\(\\)\\.$#"
-			count: 2
-			path: app/Models/Project.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\SubProject\\>\\:\\:orWhere\\(\\)\\.$#"
-			count: 1
-			path: app/Models/Project.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\SubProject\\>\\:\\:where\\(\\)\\.$#"
-			count: 3
-			path: app/Models/Project.php
 
 		-
 			message: "#^Parameter \\$get of static method Illuminate\\\\Database\\\\Eloquent\\\\Casts\\\\Attribute\\<mixed,mixed\\>\\:\\:make\\(\\) expects \\(callable\\(mixed, mixed\\)\\: string\\)\\|null, Closure\\(mixed, array\\)\\: string given\\.$#"
@@ -3121,22 +2916,17 @@ parameters:
 			path: app/Models/Site.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\SubProject\\>\\:\\:orWhere\\(\\)\\.$#"
-			count: 1
-			path: app/Models/SubProject.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\SubProject\\>\\:\\:where\\(\\)\\.$#"
-			count: 2
-			path: app/Models/SubProject.php
-
-		-
 			message: "#^Method App\\\\Models\\\\Test\\:\\:getLabels\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/Models/Test.php
 
 		-
 			message: "#^Part \\$host_base \\(mixed\\) of encapsed string cannot be cast to string\\.$#"
+			count: 1
+			path: app/Models/Test.php
+
+		-
+			message: "#^Property App\\\\Models\\\\Test\\:\\:\\$attributes type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/Models/Test.php
 
@@ -3156,22 +2946,10 @@ parameters:
 			path: app/Models/TestOutput.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\Project\\>\\:\\:exists\\(\\)\\.$#"
-			count: 2
-			path: app/Policies/ProjectPolicy.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\User\\>\\:\\:exists\\(\\)\\.$#"
-			count: 5
-			path: app/Policies/ProjectPolicy.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\User\\>\\:\\:where\\(\\)\\.$#"
-			count: 5
-			path: app/Policies/ProjectPolicy.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Foundation\\\\Application\\:\\:isProduction\\(\\)\\.$#"
+			message: """
+				#^Call to deprecated method forceRootUrl\\(\\) of class Illuminate\\\\Routing\\\\UrlGenerator\\:
+				Use useOrigin$#
+			"""
 			count: 1
 			path: app/Providers/AppServiceProvider.php
 
@@ -3181,7 +2959,7 @@ parameters:
 			path: app/Providers/AppServiceProvider.php
 
 		-
-			message: "#^Parameter \\#1 \\$root of static method Illuminate\\\\Support\\\\Facades\\\\URL\\:\\:forceRootUrl\\(\\) expects string\\|null, mixed given\\.$#"
+			message: "#^Parameter \\#1 \\$root of static method Illuminate\\\\Routing\\\\UrlGenerator\\:\\:forceRootUrl\\(\\) expects string\\|null, mixed given\\.$#"
 			count: 1
 			path: app/Providers/AppServiceProvider.php
 
@@ -3231,11 +3009,6 @@ parameters:
 			path: app/Utils/AuthTokenUtil.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\AuthToken\\>\\:\\:leftJoin\\(\\)\\.$#"
-			count: 3
-			path: app/Utils/AuthTokenUtil.php
-
-		-
 			message: "#^Implicit array creation is not allowed \\- variable \\$params does not exist\\.$#"
 			count: 1
 			path: app/Utils/AuthTokenUtil.php
@@ -3266,26 +3039,6 @@ parameters:
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 3
-			path: app/Utils/DatabaseCleanupUtils.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\Build\\>\\:\\:limit\\(\\)\\.$#"
-			count: 1
-			path: app/Utils/DatabaseCleanupUtils.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\Build\\>\\:\\:orderBy\\(\\)\\.$#"
-			count: 1
-			path: app/Utils/DatabaseCleanupUtils.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<Illuminate\\\\Database\\\\Eloquent\\\\Model\\>\\:\\:whereIn\\(\\)\\.$#"
-			count: 5
-			path: app/Utils/DatabaseCleanupUtils.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<Illuminate\\\\Database\\\\Eloquent\\\\Model\\>\\:\\:whereNotIn\\(\\)\\.$#"
-			count: 5
 			path: app/Utils/DatabaseCleanupUtils.php
 
 		-
@@ -4758,11 +4511,6 @@ parameters:
 			path: app/cdash/app/Controller/Api/Index.php
 
 		-
-			message: "#^Property CDash\\\\Controller\\\\Api\\\\Index\\:\\:\\$numChildrenForBuildCache \\(array\\<int, int\\>\\|null\\) does not accept array\\<int\\|string, mixed\\>\\.$#"
-			count: 1
-			path: app/cdash/app/Controller/Api/Index.php
-
-		-
 			message: "#^Property CDash\\\\Controller\\\\Api\\\\Index\\:\\:\\$parentId has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Controller/Api/Index.php
@@ -4879,11 +4627,6 @@ parameters:
 
 		-
 			message: "#^Cannot cast mixed to int\\.$#"
-			count: 1
-			path: app/cdash/app/Controller/Api/QueryTests.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Measurement\\>\\:\\:orderBy\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/app/Controller/Api/QueryTests.php
 
@@ -5130,16 +4873,6 @@ parameters:
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 2
-			path: app/cdash/app/Controller/Api/TestDetails.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Measurement\\>\\:\\:orderBy\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/app/Controller/Api/TestDetails.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Measurement\\>\\:\\:pluck\\(\\)\\.$#"
-			count: 1
 			path: app/cdash/app/Controller/Api/TestDetails.php
 
 		-
@@ -5461,16 +5194,6 @@ parameters:
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 6
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\Label\\>\\:\\:pluck\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Measurement\\>\\:\\:orderBy\\(\\)\\.$#"
-			count: 1
 			path: app/cdash/app/Controller/Api/ViewTest.php
 
 		-
@@ -6008,11 +5731,6 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\Build\\>\\:\\:exists\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
 			count: 2
 			path: app/cdash/app/Model/Build.php
@@ -6379,11 +6097,6 @@ parameters:
 			path: app/cdash/app/Model/BuildConfigure.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\BuildConfigure\\>\\:\\:count\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildConfigure.php
-
-		-
 			message: "#^If condition is always false\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildConfigure.php
@@ -6610,11 +6323,6 @@ parameters:
 			path: app/cdash/app/Model/BuildError.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\BasicBuildAlert\\>\\:\\:orderBy\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildError.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\BuildError\\:\\:GetErrorsForBuild\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildError.php
@@ -6631,11 +6339,6 @@ parameters:
 
 		-
 			message: "#^Method CDash\\\\Model\\\\BuildError\\:\\:marshal\\(\\) has parameter \\$revision with no type specified\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildError.php
-
-		-
-			message: "#^Parameter \\#1 \\$array of function extract is passed by reference, so it expects variables only\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildError.php
 
@@ -7001,11 +6704,6 @@ parameters:
 			path: app/cdash/app/Model/BuildGroup.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\BuildGroup\\>\\:\\:exists\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildGroup.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\BuildGroup\\:\\:GetBuildGroups\\(\\) has parameter \\$begin with no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildGroup.php
@@ -7169,11 +6867,6 @@ parameters:
 			message: "#^Property CDash\\\\Model\\\\BuildGroupRule\\:\\:\\$StartTime has no type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/BuildGroupRule.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\BuildProperties\\>\\:\\:exists\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/app/Model/BuildProperties.php
 
 		-
 			message: "#^Property CDash\\\\Model\\\\BuildProperties\\:\\:\\$Filled is never read, only written\\.$#"
@@ -7573,11 +7266,6 @@ parameters:
 			path: app/cdash/app/Model/Coverage.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\Coverage\\>\\:\\:exists\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Coverage.php
-
-		-
 			message: "#^Method CDash\\\\Model\\\\Coverage\\:\\:AddLabel\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Coverage.php
@@ -7947,16 +7635,6 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'c' on array\\|false\\|null\\.$#"
-			count: 1
-			path: app/cdash/app/Model/CoverageSummary.php
-
-		-
-			message: "#^Cannot access property \\$loctested on mixed\\.$#"
-			count: 1
-			path: app/cdash/app/Model/CoverageSummary.php
-
-		-
-			message: "#^Cannot access property \\$locuntested on mixed\\.$#"
 			count: 1
 			path: app/cdash/app/Model/CoverageSummary.php
 
@@ -8793,31 +8471,6 @@ parameters:
 			path: app/cdash/app/Model/Project.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\BlockedBuild\\>\\:\\:findOrFail\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Build\\>\\:\\:betweenDates\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Build\\>\\:\\:count\\(\\)\\.$#"
-			count: 2
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Build\\>\\:\\:max\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\SubProject\\>\\:\\:count\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
 			message: "#^Implicit array creation is not allowed \\- variable \\$rep might not exist\\.$#"
 			count: 1
 			path: app/cdash/app/Model/Project.php
@@ -9297,31 +8950,6 @@ parameters:
 
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\SubProject\\>\\:\\:exists\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\SubProject\\>\\:\\:exists\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\SubProject\\>\\:\\:where\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\SubProject\\>\\:\\:first\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\SubProject\\>\\:\\:where\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/app/Model/SubProject.php
 
@@ -11649,11 +11277,6 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Filesystem\\\\FilesystemAdapter\\:\\:path\\(\\)\\.$#"
-			count: 2
-			path: app/cdash/include/common.php
-
-		-
 			message: "#^Function DeleteDirectory\\(\\) throws checked exception UnexpectedValueException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
@@ -12040,6 +11663,11 @@ parameters:
 
 		-
 			message: "#^Parameter \\#3 \\$subject of function preg_replace expects array\\|string, array\\<int, string\\>\\|string\\|null given\\.$#"
+			count: 1
+			path: app/cdash/include/common.php
+
+		-
+			message: "#^Parameter \\#3 \\$subject of function str_replace expects array\\|string, string\\|false given\\.$#"
 			count: 1
 			path: app/cdash/include/common.php
 
@@ -13243,16 +12871,6 @@ parameters:
 			path: app/cdash/public/api/v1/index.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Measurement\\>\\:\\:exists\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/index.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Measurement\\>\\:\\:where\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/public/api/v1/index.php
-
-		-
 			message: "#^Offset 'loctested' might not exist on array\\{\\}\\|array\\{thresholdgreen\\?\\: int\\|null, thresholdyellow\\?\\: float, label\\?\\: string\\|false, loctested\\?\\: int, locuntested\\?\\: int, position\\?\\: int, coverages\\?\\: list\\<array\\{buildid\\: int, childlink\\?\\: non\\-falsy\\-string, percentage\\: float, locuntested\\: int, loctested\\: int, datefull\\: int\\|false, date\\: string, dateelapsed\\: string, \\.\\.\\.\\}\\|array\\{buildid\\: int, childlink\\?\\: non\\-falsy\\-string, percentage\\: float, locuntested\\: int, loctested\\: int, percentagediff\\: float, locuntesteddiff\\: int, loctesteddiff\\: int\\<1, max\\>, \\.\\.\\.\\}\\>\\}\\.$#"
 			count: 2
 			path: app/cdash/public/api/v1/index.php
@@ -13510,11 +13128,6 @@ parameters:
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 3
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\Project\\>\\:\\:exists\\(\\)\\.$#"
-			count: 1
 			path: app/cdash/public/api/v1/project.php
 
 		-
@@ -15743,6 +15356,14 @@ parameters:
 			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
 
 		-
+			message: """
+				#^Call to deprecated method forceRootUrl\\(\\) of class Illuminate\\\\Routing\\\\UrlGenerator\\:
+				Use useOrigin$#
+			"""
+			count: 1
+			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
+
+		-
 			message: "#^Dynamic call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertCount\\(\\)\\.$#"
 			count: 4
 			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
@@ -17877,11 +17498,6 @@ parameters:
 			path: app/cdash/tests/test_authtoken.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\AuthToken\\>\\:\\:Exists\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/tests/test_authtoken.php
-
-		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
 			count: 1
 			path: app/cdash/tests/test_authtoken.php
@@ -18132,7 +17748,7 @@ parameters:
 			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
 
 		-
-			message: "#^Parameter \\#1 \\$time of method CDash\\\\Model\\\\BuildGroup\\:\\:SetEndTime\\(\\) expects Illuminate\\\\Support\\\\Carbon, Illuminate\\\\Support\\\\Carbon\\|false given\\.$#"
+			message: "#^Parameter \\#1 \\$time of method CDash\\\\Model\\\\BuildGroup\\:\\:SetEndTime\\(\\) expects Illuminate\\\\Support\\\\Carbon, Illuminate\\\\Support\\\\Carbon\\|null given\\.$#"
 			count: 1
 			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
 
@@ -18368,7 +17984,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'status' on mixed\\.$#"
-			count: 2
+			count: 1
 			path: app/cdash/tests/test_branchcoverage.php
 
 		-
@@ -19750,7 +19366,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'status' on mixed\\.$#"
-			count: 2
+			count: 1
 			path: app/cdash/tests/test_crosssubprojectcoverage.php
 
 		-
@@ -20374,28 +19990,8 @@ parameters:
 			path: app/cdash/tests/test_email.php
 
 		-
-			message: "#^Cannot access property \\$buildid on mixed\\.$#"
-			count: 4
-			path: app/cdash/tests/test_email.php
-
-		-
-			message: "#^Cannot access property \\$difference_negative on mixed\\.$#"
-			count: 4
-			path: app/cdash/tests/test_email.php
-
-		-
-			message: "#^Cannot access property \\$difference_positive on mixed\\.$#"
-			count: 4
-			path: app/cdash/tests/test_email.php
-
-		-
 			message: "#^Cannot access property \\$id on App\\\\Models\\\\Site\\|null\\.$#"
 			count: 2
-			path: app/cdash/tests/test_email.php
-
-		-
-			message: "#^Cannot access property \\$id on mixed\\.$#"
-			count: 6
 			path: app/cdash/tests/test_email.php
 
 		-
@@ -20404,8 +20000,8 @@ parameters:
 			path: app/cdash/tests/test_email.php
 
 		-
-			message: "#^Cannot access property \\$type on mixed\\.$#"
-			count: 4
+			message: "#^Cannot access property \\$id on stdClass\\|null\\.$#"
+			count: 6
 			path: app/cdash/tests/test_email.php
 
 		-
@@ -21103,7 +20699,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'numtestfail' on mixed\\.$#"
-			count: 4
+			count: 3
 			path: app/cdash/tests/test_filtertestlabels.php
 
 		-
@@ -21113,7 +20709,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'numtestpass' on mixed\\.$#"
-			count: 4
+			count: 3
 			path: app/cdash/tests/test_filtertestlabels.php
 
 		-
@@ -21514,7 +21110,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'status' on mixed\\.$#"
-			count: 2
+			count: 1
 			path: app/cdash/tests/test_javajsoncoverage.php
 
 		-
@@ -21562,7 +21158,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'status' on mixed\\.$#"
-			count: 2
+			count: 1
 			path: app/cdash/tests/test_jscovercoverage.php
 
 		-
@@ -21645,11 +21241,6 @@ parameters:
 			path: app/cdash/tests/test_limitedbuilds.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Build\\>\\:\\:count\\(\\)\\.$#"
-			count: 3
-			path: app/cdash/tests/test_limitedbuilds.php
-
-		-
 			message: "#^Method LimitedBuildsTestCase\\:\\:submitBuild\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/cdash/tests/test_limitedbuilds.php
@@ -21708,7 +21299,7 @@ parameters:
 			path: app/cdash/tests/test_longbuildname.php
 
 		-
-			message: "#^Cannot access property \\$log on mixed\\.$#"
+			message: "#^Cannot access property \\$log on App\\\\Models\\\\Configure\\|null\\.$#"
 			count: 1
 			path: app/cdash/tests/test_longbuildname.php
 
@@ -22123,7 +21714,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'status' on mixed\\.$#"
-			count: 2
+			count: 1
 			path: app/cdash/tests/test_multicoverage.php
 
 		-
@@ -22849,7 +22440,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'status' on mixed\\.$#"
-			count: 2
+			count: 1
 			path: app/cdash/tests/test_nobackup.php
 
 		-
@@ -23043,7 +22634,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'status' on mixed\\.$#"
-			count: 4
+			count: 2
 			path: app/cdash/tests/test_opencovercoverage.php
 
 		-
@@ -24008,11 +23599,6 @@ parameters:
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
 				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#
 			"""
-			count: 1
-			path: app/cdash/tests/test_starttimefromupload.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\Build\\>\\:\\:firstOrFail\\(\\)\\.$#"
 			count: 1
 			path: app/cdash/tests/test_starttimefromupload.php
 
@@ -25834,16 +25420,6 @@ parameters:
 			path: app/cdash/xml_handlers/BazelJSON_handler.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\SubProject\\>\\:\\:exists\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/BazelJSON_handler.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\SubProject\\>\\:\\:where\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/BazelJSON_handler.php
-
-		-
 			message: "#^Foreach overwrites \\$line with its value variable\\.$#"
 			count: 2
 			path: app/cdash/xml_handlers/BazelJSON_handler.php
@@ -26809,11 +26385,6 @@ parameters:
 			path: app/cdash/xml_handlers/build_handler.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\SiteInformation\\>\\:\\:count\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/build_handler.php
-
-		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 18
 			path: app/cdash/xml_handlers/build_handler.php
@@ -27014,11 +26585,6 @@ parameters:
 			path: app/cdash/xml_handlers/configure_handler.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\SiteInformation\\>\\:\\:count\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/configure_handler.php
-
-		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 7
 			path: app/cdash/xml_handlers/configure_handler.php
@@ -27159,11 +26725,6 @@ parameters:
 			path: app/cdash/xml_handlers/coverage_handler.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\SiteInformation\\>\\:\\:count\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/coverage_handler.php
-
-		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 10
 			path: app/cdash/xml_handlers/coverage_handler.php
@@ -27246,11 +26807,6 @@ parameters:
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 2
-			path: app/cdash/xml_handlers/coverage_junit_handler.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\SiteInformation\\>\\:\\:count\\(\\)\\.$#"
-			count: 1
 			path: app/cdash/xml_handlers/coverage_junit_handler.php
 
 		-
@@ -27549,11 +27105,6 @@ parameters:
 			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\SiteInformation\\>\\:\\:count\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
-
-		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 18
 			path: app/cdash/xml_handlers/dynamic_analysis_handler.php
@@ -27681,11 +27232,6 @@ parameters:
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 2
-			path: app/cdash/xml_handlers/note_handler.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\SiteInformation\\>\\:\\:count\\(\\)\\.$#"
-			count: 1
 			path: app/cdash/xml_handlers/note_handler.php
 
 		-
@@ -27914,11 +27460,6 @@ parameters:
 			path: app/cdash/xml_handlers/testing_handler.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\SiteInformation\\>\\:\\:count\\(\\)\\.$#"
-			count: 1
-			path: app/cdash/xml_handlers/testing_handler.php
-
-		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 25
 			path: app/cdash/xml_handlers/testing_handler.php
@@ -28081,11 +27622,6 @@ parameters:
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 4
-			path: app/cdash/xml_handlers/testing_j_unit_handler.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\SiteInformation\\>\\:\\:count\\(\\)\\.$#"
-			count: 1
 			path: app/cdash/xml_handlers/testing_j_unit_handler.php
 
 		-
@@ -28326,11 +27862,6 @@ parameters:
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 2
-			path: app/cdash/xml_handlers/upload_handler.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\SiteInformation\\>\\:\\:count\\(\\)\\.$#"
-			count: 1
 			path: app/cdash/xml_handlers/upload_handler.php
 
 		-
@@ -28594,16 +28125,6 @@ parameters:
 			path: server.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\User\\>\\:\\:exists\\(\\)\\.$#"
-			count: 1
-			path: tests/Browser/Pages/ProjectMembersPageTest.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\User\\>\\:\\:pluck\\(\\)\\.$#"
-			count: 4
-			path: tests/Browser/Pages/ProjectMembersPageTest.php
-
-		-
 			message: "#^Method Tests\\\\Browser\\\\Pages\\\\ProjectMembersPageTest\\:\\:testFullInvitationWorkflow\\(\\) throws checked exception OverflowException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: tests/Browser/Pages/ProjectMembersPageTest.php
@@ -28670,6 +28191,14 @@ parameters:
 			path: tests/Feature/AutoRemoveBuildsCommand.php
 
 		-
+			message: """
+				#^Call to deprecated method forceRootUrl\\(\\) of class Illuminate\\\\Routing\\\\UrlGenerator\\:
+				Use useOrigin$#
+			"""
+			count: 5
+			path: tests/Feature/CDashTest.php
+
+		-
 			message: "#^Method Tests\\\\Feature\\\\CDashTest\\:\\:testCDashBasicRequest\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: tests/Feature/CDashTest.php
@@ -28710,34 +28239,14 @@ parameters:
 			path: tests/Feature/GitHubWebhook.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\GlobalInvitation\\>\\:\\:exists\\(\\)\\.$#"
-			count: 8
-			path: tests/Feature/GlobalInvitationAcceptanceTest.php
-
-		-
 			message: "#^Method Tests\\\\Feature\\\\GlobalInvitationAcceptanceTest\\:\\:createInvitation\\(\\) throws checked exception OverflowException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: tests/Feature/GlobalInvitationAcceptanceTest.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Testing\\\\TestResponse\\:\\:assertGraphQLErrorMessage\\(\\)\\.$#"
-			count: 1
-			path: tests/Feature/GraphQL/FilterTest.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Testing\\\\TestResponse\\:\\:assertGraphQLErrorMessage\\(\\)\\.$#"
-			count: 2
-			path: tests/Feature/GraphQL/GlobalInvitationTypeTest.php
-
-		-
 			message: "#^Method Tests\\\\Feature\\\\GraphQL\\\\GlobalInvitationTypeTest\\:\\:createInvitation\\(\\) throws checked exception OverflowException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: tests/Feature/GraphQL/GlobalInvitationTypeTest.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\User\\>\\:\\:pluck\\(\\)\\.$#"
-			count: 64
-			path: tests/Feature/GraphQL/Mutations/ChangeProjectRoleTest.php
 
 		-
 			message: "#^Method Tests\\\\Feature\\\\GraphQL\\\\Mutations\\\\CreateGlobalInvitationTest\\:\\:testAdminCreatesInvitationCorrectly\\(\\) throws checked exception OverflowException but it's missing from the PHPDoc @throws tag\\.$#"
@@ -28800,21 +28309,6 @@ parameters:
 			path: tests/Feature/GraphQL/Mutations/InviteToProjectTest.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\User\\>\\:\\:exists\\(\\)\\.$#"
-			count: 4
-			path: tests/Feature/GraphQL/Mutations/RemoveProjectUserTest.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\User\\>\\:\\:pluck\\(\\)\\.$#"
-			count: 2
-			path: tests/Feature/GraphQL/Mutations/RemoveProjectUserTest.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\GlobalInvitation\\>\\:\\:exists\\(\\)\\.$#"
-			count: 5
-			path: tests/Feature/GraphQL/Mutations/RevokeGlobalInvitationTest.php
-
-		-
 			message: "#^Method Tests\\\\Feature\\\\GraphQL\\\\Mutations\\\\RevokeGlobalInvitationTest\\:\\:testAdminCanDeleteInvitation\\(\\) throws checked exception OverflowException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: tests/Feature/GraphQL/Mutations/RevokeGlobalInvitationTest.php
@@ -28855,11 +28349,6 @@ parameters:
 			path: tests/Feature/GraphQL/Mutations/RevokeProjectInvitationTest.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Testing\\\\TestResponse\\:\\:assertGraphQLErrorMessage\\(\\)\\.$#"
-			count: 2
-			path: tests/Feature/GraphQL/ProjectInvitationTypeTest.php
-
-		-
 			message: "#^Method Tests\\\\Feature\\\\GraphQL\\\\ProjectInvitationTypeTest\\:\\:testAdminCanViewInvitations\\(\\) throws checked exception OverflowException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: tests/Feature/GraphQL/ProjectInvitationTypeTest.php
@@ -28873,11 +28362,6 @@ parameters:
 			message: "#^Method Tests\\\\Feature\\\\GraphQL\\\\ProjectInvitationTypeTest\\:\\:testNormalUserCannotViewInvitations\\(\\) throws checked exception OverflowException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: tests/Feature/GraphQL/ProjectInvitationTypeTest.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Testing\\\\TestResponse\\:\\:assertGraphQLErrorMessage\\(\\)\\.$#"
-			count: 5
-			path: tests/Feature/GraphQL/ProjectTypeTest.php
 
 		-
 			message: "#^Cannot access offset 'edges' on mixed\\.$#"
@@ -28915,19 +28399,9 @@ parameters:
 			path: tests/Feature/GraphQL/SiteTypeTest.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\User\\>\\:\\:pluck\\(\\)\\.$#"
-			count: 8
-			path: tests/Feature/GraphQL/SiteTypeTest.php
-
-		-
-			message: "#^Parameter \\#1 \\$time of static method Carbon\\\\Carbon\\:\\:parse\\(\\) expects DateTimeInterface\\|string\\|null, mixed given\\.$#"
+			message: "#^Parameter \\#1 \\$time of static method Carbon\\\\Carbon\\:\\:parse\\(\\) expects Carbon\\\\Month\\|Carbon\\\\WeekDay\\|DateTimeInterface\\|float\\|int\\|string\\|null, mixed given\\.$#"
 			count: 1
 			path: tests/Feature/GraphQL/SiteTypeTest.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\SuccessfulJob\\>\\:\\:count\\(\\)\\.$#"
-			count: 4
-			path: tests/Feature/Jobs/PruneJobsTest.php
 
 		-
 			message: "#^Cannot access offset 0 on mixed\\.$#"
@@ -28935,13 +28409,16 @@ parameters:
 			path: tests/Feature/LdapIntegration.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\User\\>\\:\\:pluck\\(\\)\\.$#"
-			count: 3
-			path: tests/Feature/LdapIntegration.php
-
-		-
 			message: "#^Call to an undefined method Mockery\\\\Expectation\\:\\:shouldReceive\\(\\)\\.$#"
 			count: 2
+			path: tests/Feature/LoginAndRegistration.php
+
+		-
+			message: """
+				#^Call to deprecated method forceRootUrl\\(\\) of class Illuminate\\\\Routing\\\\UrlGenerator\\:
+				Use useOrigin$#
+			"""
+			count: 1
 			path: tests/Feature/LoginAndRegistration.php
 
 		-
@@ -28960,7 +28437,7 @@ parameters:
 			path: tests/Feature/LoginAndRegistration.php
 
 		-
-			message: "#^Parameter \\#1 \\$model of method Illuminate\\\\Foundation\\\\Testing\\\\TestCase\\:\\:assertModelExists\\(\\) expects Illuminate\\\\Database\\\\Eloquent\\\\Model, App\\\\Models\\\\User\\|null given\\.$#"
+			message: "#^Parameter \\#1 \\$model of method Illuminate\\\\Foundation\\\\Testing\\\\TestCase\\:\\:assertModelExists\\(\\) expects Illuminate\\\\Database\\\\Eloquent\\\\Model\\|string, App\\\\Models\\\\User\\|null given\\.$#"
 			count: 2
 			path: tests/Feature/LoginAndRegistration.php
 
@@ -28968,6 +28445,14 @@ parameters:
 			message: "#^Parameter \\#1 \\$user of method Illuminate\\\\Foundation\\\\Testing\\\\TestCase\\:\\:assertAuthenticatedAs\\(\\) expects Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable, App\\\\Models\\\\User\\|null given\\.$#"
 			count: 3
 			path: tests/Feature/LoginAndRegistration.php
+
+		-
+			message: """
+				#^Call to deprecated method forceRootUrl\\(\\) of class Illuminate\\\\Routing\\\\UrlGenerator\\:
+				Use useOrigin$#
+			"""
+			count: 1
+			path: tests/Feature/Monitor.php
 
 		-
 			message: "#^Cannot access offset 'color' on mixed\\.$#"
@@ -29010,24 +28495,30 @@ parameters:
 			path: tests/Feature/Monitor.php
 
 		-
+			message: """
+				#^Call to deprecated method forceRootUrl\\(\\) of class Illuminate\\\\Routing\\\\UrlGenerator\\:
+				Use useOrigin$#
+			"""
+			count: 1
+			path: tests/Feature/PasswordRotation.php
+
+		-
 			message: "#^Parameter \\#1 \\$user of method Illuminate\\\\Foundation\\\\Testing\\\\TestCase\\:\\:actingAs\\(\\) expects Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable, App\\\\Models\\\\User\\|null given\\.$#"
 			count: 3
 			path: tests/Feature/PasswordRotation.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<App\\\\Models\\\\User\\>\\:\\:pluck\\(\\)\\.$#"
-			count: 2
-			path: tests/Feature/ProjectInvitationAcceptanceTest.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\ProjectInvitation\\>\\:\\:pluck\\(\\)\\.$#"
-			count: 14
-			path: tests/Feature/ProjectInvitationAcceptanceTest.php
-
-		-
 			message: "#^Method Tests\\\\Feature\\\\ProjectInvitationAcceptanceTest\\:\\:createInvitation\\(\\) throws checked exception OverflowException but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: tests/Feature/ProjectInvitationAcceptanceTest.php
+
+		-
+			message: """
+				#^Call to deprecated method forceRootUrl\\(\\) of class Illuminate\\\\Routing\\\\UrlGenerator\\:
+				Use useOrigin$#
+			"""
+			count: 1
+			path: tests/Feature/ProjectPermissions.php
 
 		-
 			message: "#^Class Tests\\\\Feature\\\\PurgeUnusedProjectsCommand has an uninitialized property \\$project1\\. Give it default value or assign it in the constructor\\.$#"
@@ -29040,6 +28531,22 @@ parameters:
 			path: tests/Feature/PurgeUnusedProjectsCommand.php
 
 		-
+			message: """
+				#^Call to deprecated method forceRootUrl\\(\\) of class Illuminate\\\\Routing\\\\UrlGenerator\\:
+				Use useOrigin$#
+			"""
+			count: 1
+			path: tests/Feature/RemoteWorkers.php
+
+		-
+			message: """
+				#^Call to deprecated method forceRootUrl\\(\\) of class Illuminate\\\\Routing\\\\UrlGenerator\\:
+				Use useOrigin$#
+			"""
+			count: 1
+			path: tests/Feature/RouteAccessTest.php
+
+		-
 			message: "#^Method Tests\\\\Feature\\\\RouteAccessTest\\:\\:adminRoutes\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: tests/Feature/RouteAccessTest.php
@@ -29048,16 +28555,6 @@ parameters:
 			message: "#^Method Tests\\\\Feature\\\\RouteAccessTest\\:\\:protectedRoutes\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: tests/Feature/RouteAccessTest.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Http\\\\Response\\:\\:content\\(\\)\\.$#"
-			count: 2
-			path: tests/Feature/SlowPageTest.php
-
-		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\<App\\\\Models\\\\SiteInformation\\>\\:\\:count\\(\\)\\.$#"
-			count: 1
-			path: tests/Feature/Traits/UpdatesSiteInformationTest.php
 
 		-
 			message: "#^Cannot access property \\$admin on App\\\\Models\\\\User\\|null\\.$#"

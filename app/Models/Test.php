@@ -75,7 +75,7 @@ class Test extends Model
     ];
 
     /**
-     * @return BelongsTo<Build, self>
+     * @return BelongsTo<Build, $this>
      */
     public function build(): BelongsTo
     {
@@ -83,7 +83,7 @@ class Test extends Model
     }
 
     /**
-     * @return BelongsTo<TestOutput, self>
+     * @return BelongsTo<TestOutput, $this>
      */
     public function testOutput(): BelongsTo
     {
@@ -91,7 +91,7 @@ class Test extends Model
     }
 
     /**
-     * @return HasMany<TestMeasurement>
+     * @return HasMany<TestMeasurement, $this>
      */
     public function testMeasurements(): HasMany
     {
@@ -99,7 +99,7 @@ class Test extends Model
     }
 
     /**
-     * @return BelongsToMany<\App\Models\Label>
+     * @return BelongsToMany<\App\Models\Label, $this>
      */
     public function labels(): BelongsToMany
     {

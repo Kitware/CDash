@@ -53,7 +53,7 @@ class BuildCommand extends Model
     ];
 
     /**
-     * @return BelongsTo<Build, self>
+     * @return BelongsTo<Build, $this>
      */
     public function build(): BelongsTo
     {
@@ -61,7 +61,7 @@ class BuildCommand extends Model
     }
 
     /**
-     * @return HasMany<BuildMeasurement>
+     * @return HasMany<BuildMeasurement, $this>
      */
     public function measurements(): HasMany
     {
@@ -73,7 +73,7 @@ class BuildCommand extends Model
      *
      * https://cmake.org/cmake/help/git-master/manual/cmake-instrumentation.7.html#v1-snippet-file
      *
-     * @return BelongsTo<Target, self>
+     * @return BelongsTo<Target, $this>
      */
     public function target(): BelongsTo
     {
@@ -81,7 +81,7 @@ class BuildCommand extends Model
     }
 
     /**
-     * @return HasMany<BuildCommandOutput>
+     * @return HasMany<BuildCommandOutput, $this>
      */
     public function outputs(): HasMany
     {

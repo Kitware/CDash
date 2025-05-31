@@ -116,7 +116,7 @@ class Project extends Model
      *
      * Note: This is *not* all of the users who have access to this project!
      *
-     * @return BelongsToMany<User>
+     * @return BelongsToMany<User, $this>
      */
     public function users(): BelongsToMany
     {
@@ -126,7 +126,7 @@ class Project extends Model
     /**
      * Get the users with the lowest user role.
      *
-     * @return BelongsToMany<User>
+     * @return BelongsToMany<User, $this>
      */
     public function basicUsers(): BelongsToMany
     {
@@ -137,7 +137,7 @@ class Project extends Model
     /**
      * Get the users who have the administrator role for this project
      *
-     * @return BelongsToMany<User>
+     * @return BelongsToMany<User, $this>
      */
     public function administrators(): BelongsToMany
     {
@@ -172,7 +172,7 @@ class Project extends Model
     /**
      * Get the subprojects as of a specified date, or the latest subprojects if no date specified.
      *
-     * @return HasMany<SubProject>
+     * @return HasMany<SubProject, $this>
      */
     public function subprojects(?Carbon $date = null): HasMany
     {
@@ -189,7 +189,7 @@ class Project extends Model
     }
 
     /**
-     * @return HasMany<Measurement>
+     * @return HasMany<Measurement, $this>
      */
     public function measurements(): HasMany
     {
@@ -197,7 +197,7 @@ class Project extends Model
     }
 
     /**
-     * @return HasMany<BuildGroup>
+     * @return HasMany<BuildGroup, $this>
      */
     public function buildgroups(): HasMany
     {
@@ -205,7 +205,7 @@ class Project extends Model
     }
 
     /**
-     * @return HasMany<Build>
+     * @return HasMany<Build, $this>
      */
     public function builds(): HasMany
     {
@@ -220,7 +220,7 @@ class Project extends Model
      * TODO: Share code with builds().  As of Laravel 10, aggregates added to hasMany relations
      *       with conditional clauses are unsupported/broken.  A reusable scope may be a better approach.
      *
-     * @return HasOne<Build>
+     * @return HasOne<Build, $this>
      */
     public function mostRecentBuild(): HasOne
     {
@@ -232,7 +232,7 @@ class Project extends Model
     }
 
     /**
-     * @return HasMany<BlockedBuild>
+     * @return HasMany<BlockedBuild, $this>
      */
     public function blockedbuilds(): HasMany
     {
@@ -243,7 +243,7 @@ class Project extends Model
      * Queries the sites which have submitted builds to this project.  A convenience method to
      * get sites from all builds in aggregate form.
      *
-     * @return BelongsToMany<Site>
+     * @return BelongsToMany<Site, $this>
      */
     public function sites(): BelongsToMany
     {
@@ -251,7 +251,7 @@ class Project extends Model
     }
 
     /**
-     * @return HasMany<ProjectInvitation>
+     * @return HasMany<ProjectInvitation, $this>
      */
     public function invitations(): HasMany
     {
