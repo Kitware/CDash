@@ -58,7 +58,7 @@
     "vue": "^3.5.16",
     "vue-loader": "^17.4.2",
     "vuedraggable": "^4.1.0",
-    "webpack": "^5.99.7"
+    "webpack": "^5.99.9"
   },
   "devDependencies": {
     "@vue/test-utils": "^2.4.6",
