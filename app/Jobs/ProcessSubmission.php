@@ -18,6 +18,8 @@ use CDash\Messaging\Notification\NotificationDirector;
 use CDash\Messaging\Subscription\SubscriptionCollection;
 use CDash\Model\Build;
 use CDash\Model\BuildEmail;
+use CDash\Model\BuildGroup;
+use CDash\Model\BuildUpdate;
 use CDash\Model\PendingSubmissions;
 use CDash\Model\Project;
 use CDash\Model\Repository;
@@ -26,11 +28,13 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use RetryHandler;
+use RuntimeException;
 use Throwable;
 use UpdateHandler;
 
@@ -263,7 +267,7 @@ class ProcessSubmission implements ShouldQueue
 
         // Send emails about update problems.
         if ($handler instanceof UpdateHandler) {
-            send_update_email($handler, intval($projectid));
+            self::send_update_email($handler, intval($projectid));
         }
 
         // Send more general build emails.
@@ -570,6 +574,100 @@ class ProcessSubmission implements ShouldQueue
             });
 
             BuildEmail::SaveNotification($notification);
+        }
+    }
+
+    /** function to send email to site maintainers when the update step fails */
+    private static function send_update_email(UpdateHandler $handler, int $projectid): void
+    {
+        $Project = new Project();
+        $Project->Id = $projectid;
+        $Project->Fill();
+
+        // If we shouldn't sent any emails we stop
+        if ($Project->EmailBrokenSubmission == 0) {
+            return;
+        }
+
+        // If the handler has a buildid (it should), we use it
+        if (isset($handler->BuildId) && $handler->BuildId > 0) {
+            $buildid = $handler->BuildId;
+        } else {
+            // Get the build id
+            $name = $handler->getBuildName();
+            $stamp = $handler->getBuildStamp();
+            $sitename = $handler->getSiteName();
+
+            $buildid = intval(DB::select('
+            SELECT build.id AS id
+            FROM build, site
+            WHERE
+                build.name=?
+                AND build.stamp=?
+                AND build.projectid=?
+                AND build.siteid=site.id
+                AND site.name=?
+            ORDER BY build.id DESC
+        ', [$name, $stamp, $projectid, $sitename])[0]->id ?? -1);
+        }
+
+        if ($buildid < 0) {
+            return;
+        }
+
+        //  Check if the group as no email
+        $Build = new Build();
+        $Build->Id = $buildid;
+        $groupid = $Build->GetGroup();
+
+        $BuildGroup = new BuildGroup();
+        $BuildGroup->SetId($groupid);
+
+        // If we specified no email we stop here
+        if ($BuildGroup->GetSummaryEmail() == 2) {
+            return;
+        }
+
+        // Send out update errors to site maintainers
+        $update_errors = check_email_update_errors(intval($buildid));
+        if ($update_errors['errors']) {
+            // Find the site maintainer(s)
+            $sitename = $handler->getSiteName();
+            $siteid = $handler->GetSite()->id;
+            $recipients = [];
+
+            $db = Database::getInstance();
+            $email_addresses = $db->executePrepared('
+                               SELECT email
+                               FROM users, site2user
+                               WHERE
+                                   users.id=site2user.userid
+                                   AND site2user.siteid=?
+                           ', [$siteid]);
+            foreach ($email_addresses as $email_addresses_array) {
+                $recipients[] = $email_addresses_array['email'];
+            }
+
+            if (!empty($recipients)) {
+                // Generate the email to send
+                $subject = 'CDash [' . $Project->Name . '] - Update Errors for ' . $sitename;
+
+                $buildUpdate = new BuildUpdate();
+                $buildUpdate->BuildId = $buildid;
+                $update = $buildUpdate->GetUpdateForBuild();
+                if ($update === false) {
+                    throw new RuntimeException('Error querying update status for build ' . $buildid);
+                }
+
+                $body = "$sitename has encountered errors during the Update step and you have been identified as the maintainer of this site.\n\n";
+                $body .= "*Update Errors*\n";
+                $body .= 'Status: ' . $update['status'] . ' (' . url('/build/' . $buildid . '/update') . ")\n";
+
+                Mail::raw($body, function ($message) use ($subject, $recipients) {
+                    $message->subject($subject)
+                        ->to($recipients);
+                });
+            }
         }
     }
 }

@@ -2785,6 +2785,16 @@ parameters:
 			path: app/Jobs/ProcessSubmission.php
 
 		-
+			message: "#^Access to an undefined property UpdateHandler\\:\\:\\$BuildId\\.$#"
+			count: 1
+			path: app/Jobs/ProcessSubmission.php
+
+		-
+			message: "#^Argument of an invalid type array\\|false supplied for foreach, only iterables are supported\\.$#"
+			count: 1
+			path: app/Jobs/ProcessSubmission.php
+
+		-
 			message: "#^Binary operation \"\\.\" between \\(list\\<string\\>\\|string\\|null\\) and '_' results in an error\\.$#"
 			count: 2
 			path: app/Jobs/ProcessSubmission.php
@@ -2799,7 +2809,7 @@ parameters:
 				#^Call to deprecated method executePrepared\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 1
+			count: 2
 			path: app/Jobs/ProcessSubmission.php
 
 		-
@@ -2808,6 +2818,11 @@ parameters:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 3
+			path: app/Jobs/ProcessSubmission.php
+
+		-
+			message: "#^Call to static method select\\(\\) on an unknown class App\\\\Jobs\\\\DB\\.$#"
+			count: 1
 			path: app/Jobs/ProcessSubmission.php
 
 		-
@@ -2822,7 +2837,7 @@ parameters:
 
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 4
+			count: 5
 			path: app/Jobs/ProcessSubmission.php
 
 		-
@@ -2832,7 +2847,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 4
+			count: 6
 			path: app/Jobs/ProcessSubmission.php
 
 		-
@@ -12675,13 +12690,8 @@ parameters:
 			path: app/cdash/include/pdo.php
 
 		-
-			message: "#^Access to an undefined property UpdateHandler\\:\\:\\$BuildId\\.$#"
-			count: 1
-			path: app/cdash/include/sendemail.php
-
-		-
 			message: "#^Argument of an invalid type array\\|false supplied for foreach, only iterables are supported\\.$#"
-			count: 2
+			count: 1
 			path: app/cdash/include/sendemail.php
 
 		-
@@ -12697,7 +12707,7 @@ parameters:
 				#^Call to deprecated method executePrepared\\(\\) of class CDash\\\\Database\\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
-			count: 2
+			count: 1
 			path: app/cdash/include/sendemail.php
 
 		-
@@ -12742,7 +12752,7 @@ parameters:
 
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 3
+			count: 2
 			path: app/cdash/include/sendemail.php
 
 		-
@@ -12792,7 +12802,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 12
+			count: 10
 			path: app/cdash/include/sendemail.php
 
 		-
