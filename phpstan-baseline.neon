@@ -3372,9 +3372,30 @@ parameters:
 			path: app/Utils/PageTimer.php
 
 		-
+			message: "#^Argument of an invalid type array\\|false supplied for foreach, only iterables are supported\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: """
+				#^Call to deprecated function add_last_sql_error\\(\\)\\:
+				04/22/2023$#
+			"""
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
 			message: """
 				#^Call to deprecated function pdo_execute\\(\\)\\:
 				v2\\.5\\.0 01/22/2018$#
+			"""
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: """
+				#^Call to deprecated method executePrepared\\(\\) of class CDash\\\\Database\\:
+				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			"""
 			count: 1
 			path: app/Utils/RepositoryUtils.php
@@ -3422,7 +3443,7 @@ parameters:
 
 		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 9
+			count: 11
 			path: app/Utils/RepositoryUtils.php
 
 		-
@@ -3432,7 +3453,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 1
+			count: 3
 			path: app/Utils/RepositoryUtils.php
 
 		-
@@ -3572,6 +3593,16 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_diff_url\\(\\) has parameter \\$revision with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_email_summary\\(\\) has parameter \\$errorkey with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:get_email_summary\\(\\) has parameter \\$errors with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/Utils/RepositoryUtils.php
 
@@ -3826,6 +3857,11 @@ parameters:
 			path: app/Utils/RepositoryUtils.php
 
 		-
+			message: "#^Parameter \\#1 \\$array of function array_slice expects array, array\\|false given\\.$#"
+			count: 4
+			path: app/Utils/RepositoryUtils.php
+
+		-
 			message: "#^Parameter \\#1 \\$handle of function curl_close expects CurlHandle, \\(CurlHandle\\|false\\) given\\.$#"
 			count: 1
 			path: app/Utils/RepositoryUtils.php
@@ -3853,6 +3889,11 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$string of function strlen expects string, string\\|false given\\.$#"
 			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Parameter \\#1 \\$value of function count expects array\\|Countable, array\\|false given\\.$#"
+			count: 5
 			path: app/Utils/RepositoryUtils.php
 
 		-
@@ -12720,27 +12761,6 @@ parameters:
 			path: app/cdash/include/pdo.php
 
 		-
-			message: "#^Argument of an invalid type array\\|false supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: app/cdash/include/sendemail.php
-
-		-
-			message: """
-				#^Call to deprecated function add_last_sql_error\\(\\)\\:
-				04/22/2023$#
-			"""
-			count: 1
-			path: app/cdash/include/sendemail.php
-
-		-
-			message: """
-				#^Call to deprecated method executePrepared\\(\\) of class CDash\\\\Database\\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			"""
-			count: 1
-			path: app/cdash/include/sendemail.php
-
-		-
 			message: "#^Cannot access offset 'builderrorsnegative' on array\\{builderrorspositive\\: int, builderrorsnegative\\: int, buildwarningspositive\\: int, buildwarningsnegative\\: int, configureerrors\\: int, configurewarnings\\: int, testpassedpositive\\: int, testpassednegative\\: int, \\.\\.\\.\\}\\|false\\.$#"
 			count: 1
 			path: app/cdash/include/sendemail.php
@@ -12776,11 +12796,6 @@ parameters:
 			path: app/cdash/include/sendemail.php
 
 		-
-			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
-			count: 2
-			path: app/cdash/include/sendemail.php
-
-		-
 			message: "#^Function check_email_errors\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/cdash/include/sendemail.php
@@ -12791,18 +12806,8 @@ parameters:
 			path: app/cdash/include/sendemail.php
 
 		-
-			message: "#^Function get_email_summary\\(\\) has parameter \\$errorkey with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/sendemail.php
-
-		-
-			message: "#^Function get_email_summary\\(\\) has parameter \\$errors with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/include/sendemail.php
-
-		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 9
+			count: 7
 			path: app/cdash/include/sendemail.php
 
 		-
@@ -12821,13 +12826,8 @@ parameters:
 			path: app/cdash/include/sendemail.php
 
 		-
-			message: "#^Parameter \\#1 \\$array of function array_slice expects array, array\\|false given\\.$#"
-			count: 4
-			path: app/cdash/include/sendemail.php
-
-		-
 			message: "#^Parameter \\#1 \\$value of function count expects array\\|Countable, array\\|false given\\.$#"
-			count: 6
+			count: 1
 			path: app/cdash/include/sendemail.php
 
 		-
