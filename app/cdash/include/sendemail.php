@@ -17,13 +17,7 @@
 
 use App\Models\Configure;
 use CDash\Database;
-use CDash\Messaging\Notification\Email\EmailBuilder;
-use CDash\Messaging\Notification\Email\EmailMessage;
-use CDash\Messaging\Notification\NotificationCollection;
-use CDash\Messaging\Notification\NotificationDirector;
-use CDash\Messaging\Subscription\SubscriptionCollection;
 use CDash\Model\Build;
-use CDash\Model\BuildEmail;
 use CDash\Model\BuildGroup;
 use CDash\Model\BuildUpdate;
 use CDash\Model\DynamicAnalysis;
@@ -579,48 +573,5 @@ function send_update_email(UpdateHandler $handler, int $projectid): void
                     ->to($recipients);
             });
         }
-    }
-}
-
-/** Main function to send email if necessary */
-function sendemail(ActionableBuildInterface $handler, int $projectid): void
-{
-    $Project = new Project();
-    $Project->Id = $projectid;
-    $Project->Fill();
-
-    // If we shouldn't send any emails we stop
-    if ($Project->EmailBrokenSubmission == 0) {
-        return;
-    }
-
-    $buildGroup = $handler->GetBuildGroup();
-    if ($buildGroup->GetSummaryEmail() == 2) {
-        return;
-    }
-
-    $subscriptions = new SubscriptionCollection();
-
-    foreach ($handler->GetSubscriptionBuilderCollection() as $builder) {
-        $builder->build($subscriptions);
-    }
-
-    // TODO: remove NotificationCollection then pass subscriptions to constructor
-    $builder = new EmailBuilder(new NotificationCollection());
-    $builder->setSubscriptions($subscriptions);
-
-    $director = new NotificationDirector();
-    $notifications = $director->build($builder);
-
-    /**
-     * @var EmailMessage $notification
-     */
-    foreach ($notifications as $notification) {
-        Mail::raw($notification->getBody(), function ($message) use ($notification) {
-            $message->subject($notification->getSubject())
-                ->to($notification->getRecipient());
-        });
-
-        BuildEmail::SaveNotification($notification);
     }
 }

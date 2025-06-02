@@ -2811,6 +2811,11 @@ parameters:
 			path: app/Jobs/ProcessSubmission.php
 
 		-
+			message: "#^Cannot call method build\\(\\) on mixed\\.$#"
+			count: 1
+			path: app/Jobs/ProcessSubmission.php
+
+		-
 			message: "#^Cannot cast mixed to int\\.$#"
 			count: 2
 			path: app/Jobs/ProcessSubmission.php
@@ -2827,7 +2832,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 2
+			count: 4
 			path: app/Jobs/ProcessSubmission.php
 
 		-
@@ -12736,11 +12741,6 @@ parameters:
 			path: app/cdash/include/sendemail.php
 
 		-
-			message: "#^Cannot call method build\\(\\) on mixed\\.$#"
-			count: 1
-			path: app/cdash/include/sendemail.php
-
-		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 3
 			path: app/cdash/include/sendemail.php
@@ -12792,7 +12792,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 14
+			count: 12
 			path: app/cdash/include/sendemail.php
 
 		-
