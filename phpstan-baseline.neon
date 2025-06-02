@@ -2821,11 +2821,6 @@ parameters:
 			path: app/Jobs/ProcessSubmission.php
 
 		-
-			message: "#^Call to static method select\\(\\) on an unknown class App\\\\Jobs\\\\DB\\.$#"
-			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
 			message: "#^Cannot call method build\\(\\) on mixed\\.$#"
 			count: 1
 			path: app/Jobs/ProcessSubmission.php
@@ -3401,6 +3396,11 @@ parameters:
 			path: app/Utils/RepositoryUtils.php
 
 		-
+			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
 			message: "#^Cannot access offset 'cvsurl' on array\\|false\\|null\\.$#"
 			count: 1
 			path: app/Utils/RepositoryUtils.php
@@ -3427,6 +3427,11 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
+			count: 8
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
 			count: 1
 			path: app/Utils/RepositoryUtils.php
 
@@ -3502,6 +3507,26 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:generate_JIRA_new_issue_link\\(\\) has parameter \\$users with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:generate_broken_build_message\\(\\) has parameter \\$Build with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:generate_broken_build_message\\(\\) has parameter \\$Project with no type specified\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:generate_broken_build_message\\(\\) has parameter \\$emailtext with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Method App\\\\Utils\\\\RepositoryUtils\\:\\:generate_broken_build_message\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/Utils/RepositoryUtils.php
 
@@ -3832,6 +3857,11 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$subject of function preg_match expects string, string\\|true given\\.$#"
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			message: "#^Parameter \\#2 \\$timestamp of function date expects int\\|null, int\\|false given\\.$#"
 			count: 1
 			path: app/Utils/RepositoryUtils.php
 
@@ -12711,11 +12741,6 @@ parameters:
 			path: app/cdash/include/sendemail.php
 
 		-
-			message: "#^Call to function in_array\\(\\) requires parameter \\#3 to be set\\.$#"
-			count: 1
-			path: app/cdash/include/sendemail.php
-
-		-
 			message: "#^Cannot access offset 'builderrorsnegative' on array\\{builderrorspositive\\: int, builderrorsnegative\\: int, buildwarningspositive\\: int, buildwarningsnegative\\: int, configureerrors\\: int, configurewarnings\\: int, testpassedpositive\\: int, testpassednegative\\: int, \\.\\.\\.\\}\\|false\\.$#"
 			count: 1
 			path: app/cdash/include/sendemail.php
@@ -12766,26 +12791,6 @@ parameters:
 			path: app/cdash/include/sendemail.php
 
 		-
-			message: "#^Function generate_broken_build_message\\(\\) has parameter \\$Build with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/sendemail.php
-
-		-
-			message: "#^Function generate_broken_build_message\\(\\) has parameter \\$Project with no type specified\\.$#"
-			count: 1
-			path: app/cdash/include/sendemail.php
-
-		-
-			message: "#^Function generate_broken_build_message\\(\\) has parameter \\$emailtext with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/include/sendemail.php
-
-		-
-			message: "#^Function generate_broken_build_message\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/include/sendemail.php
-
-		-
 			message: "#^Function get_email_summary\\(\\) has parameter \\$errorkey with no type specified\\.$#"
 			count: 1
 			path: app/cdash/include/sendemail.php
@@ -12796,13 +12801,8 @@ parameters:
 			path: app/cdash/include/sendemail.php
 
 		-
-			message: "#^Loose comparison via \"\\!\\=\" is not allowed\\.$#"
-			count: 7
-			path: app/cdash/include/sendemail.php
-
-		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 10
+			count: 9
 			path: app/cdash/include/sendemail.php
 
 		-
@@ -12828,11 +12828,6 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$value of function count expects array\\|Countable, array\\|false given\\.$#"
 			count: 6
-			path: app/cdash/include/sendemail.php
-
-		-
-			message: "#^Parameter \\#2 \\$timestamp of function date expects int\\|null, int\\|false given\\.$#"
-			count: 1
 			path: app/cdash/include/sendemail.php
 
 		-
