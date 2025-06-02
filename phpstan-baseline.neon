@@ -2842,7 +2842,7 @@ parameters:
 
 		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 6
+			count: 7
 			path: app/Jobs/ProcessSubmission.php
 
 		-
@@ -2862,6 +2862,11 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Jobs\\\\ProcessSubmission\\:\\:__construct\\(\\) has parameter \\$projectid with no type specified\\.$#"
+			count: 1
+			path: app/Jobs/ProcessSubmission.php
+
+		-
+			message: "#^Method App\\\\Jobs\\\\ProcessSubmission\\:\\:check_email_update_errors\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: app/Jobs/ProcessSubmission.php
 
@@ -12801,13 +12806,8 @@ parameters:
 			path: app/cdash/include/sendemail.php
 
 		-
-			message: "#^Function check_email_update_errors\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: app/cdash/include/sendemail.php
-
-		-
 			message: "#^Loose comparison via \"\\=\\=\" is not allowed\\.$#"
-			count: 7
+			count: 6
 			path: app/cdash/include/sendemail.php
 
 		-

@@ -17,7 +17,6 @@
 
 use App\Models\Configure;
 use CDash\Model\Build;
-use CDash\Model\BuildUpdate;
 use CDash\Model\DynamicAnalysis;
 
 /** Check for errors for a given build. Return false if no errors */
@@ -92,25 +91,6 @@ function check_email_errors(int $buildid, bool $checktesttimeingchanged, int $te
             $errors['fixes']['buildwarning_fixes'] = $error_differences['buildwarningsnegative'];
             $errors['fixes']['test_fixes'] = $error_differences['testfailednegative'] + $error_differences['testnotrunnegative'];
         }
-    }
-    return $errors;
-}
-
-/** Check for update errors for a given build. */
-function check_email_update_errors(int $buildid): array
-{
-    $errors = [];
-    $errors['errors'] = true;
-    $errors['hasfixes'] = false;
-
-    // Update errors
-    $BuildUpdate = new BuildUpdate();
-    $BuildUpdate->BuildId = $buildid;
-    $errors['update_errors'] = $BuildUpdate->GetNumberOfErrors();
-
-    // Green build we return
-    if ($errors['update_errors'] == 0) {
-        $errors['errors'] = false;
     }
     return $errors;
 }

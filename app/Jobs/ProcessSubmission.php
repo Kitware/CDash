@@ -629,7 +629,7 @@ class ProcessSubmission implements ShouldQueue
         }
 
         // Send out update errors to site maintainers
-        $update_errors = check_email_update_errors(intval($buildid));
+        $update_errors = self::check_email_update_errors(intval($buildid));
         if ($update_errors['errors']) {
             // Find the site maintainer(s)
             $sitename = $handler->getSiteName();
@@ -669,5 +669,24 @@ class ProcessSubmission implements ShouldQueue
                 });
             }
         }
+    }
+
+    /** Check for update errors for a given build. */
+    private static function check_email_update_errors(int $buildid): array
+    {
+        $errors = [];
+        $errors['errors'] = true;
+        $errors['hasfixes'] = false;
+
+        // Update errors
+        $BuildUpdate = new BuildUpdate();
+        $BuildUpdate->BuildId = $buildid;
+        $errors['update_errors'] = $BuildUpdate->GetNumberOfErrors();
+
+        // Green build we return
+        if ($errors['update_errors'] == 0) {
+            $errors['errors'] = false;
+        }
+        return $errors;
     }
 }
