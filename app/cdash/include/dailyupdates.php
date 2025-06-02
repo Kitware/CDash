@@ -192,8 +192,6 @@ function cleanUserTemp(): void
 /** Add daily changes if necessary */
 function addDailyChanges(int $projectid): void
 {
-    require_once 'include/sendemail.php';
-
     $project = new Project();
     $project->Id = $projectid;
     $project->Fill();

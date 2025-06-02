@@ -38,8 +38,6 @@ use RuntimeException;
 use Throwable;
 use UpdateHandler;
 
-require_once 'include/sendemail.php';
-
 class ProcessSubmission implements ShouldQueue
 {
     use Dispatchable;
