@@ -759,53 +759,9 @@ final class BuildController extends AbstractBuildController
     public function files(int $build_id): View
     {
         $this->setBuildById($build_id);
-
-        $uploadFilesOrURLs = EloquentBuild::findOrFail($build_id)->uploadedFiles()->get();
-
-        $urls = [];
-        $files = [];
-
-        /** @var UploadFile $uploadFileOrURL */
-        foreach ($uploadFilesOrURLs as $uploadFileOrURL) {
-            if ($uploadFileOrURL->isurl) {
-                $urls[] = [
-                    'id' => (int) $uploadFileOrURL->id,
-                    'filename' => htmlspecialchars($uploadFileOrURL->filename),
-                ];
-            } else {
-                $filesize = $uploadFileOrURL->filesize;
-                $ext = 'b';
-                if ($filesize > 1024) {
-                    $filesize /= 1024;
-                    $ext = 'Kb';
-                }
-                if ($filesize > 1024) {
-                    $filesize /= 1024;
-                    $ext = 'Mb';
-                }
-                if ($filesize > 1024) {
-                    $filesize /= 1024;
-                    $ext = 'Gb';
-                }
-                if ($filesize > 1024) {
-                    $filesize /= 1024;
-                    $ext = 'Tb';
-                }
-                $files[] = [
-                    'id' => (int) $uploadFileOrURL->id,
-                    'href' => url("/build/{$build_id}/file/{$uploadFileOrURL->id}"),
-                    'sha1sum' => $uploadFileOrURL->sha1sum,
-                    'filename' => $uploadFileOrURL->filename,
-                    'filesize' => $uploadFileOrURL->filesize,
-                    'filesizedisplay' => round($filesize) . ' ' . $ext,
-                ];
-            }
-        }
-
-        return $this->view('build.files', 'Files')
-            ->with('build', $this->build)
-            ->with('files', $files)
-            ->with('urls', $urls);
+        return $this->vue('build-files-page', 'Uploads', [
+            'build-id' => $build_id,
+        ], true);
     }
 
     public function build_file(int $build_id, int $file_id): StreamedResponse

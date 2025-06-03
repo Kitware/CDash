@@ -48,13 +48,6 @@ class UploadFileTestCase extends KWWebTestCase
         }
         $this->BuildId = $query[0]['buildid'];
 
-        $content = $this->connect("{$this->url}/build/{$this->BuildId}/files");
-        if (!$content) {
-            return;
-        }
-
-        $this->assertClickable('http://www.kitware.com/company/about.html');
-
         // Verify content exists on disk
         $query = $this->db->query("SELECT id, sha1sum FROM uploadfile WHERE filename='CMakeCache.txt'");
         if (count($query) == 0) {
