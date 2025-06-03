@@ -36,7 +36,7 @@
     "nuwave/lighthouse": "6.54.0",
     "pear/archive_tar": "1.5.0",
     "php-di/php-di": "7.0.10",
-    "ramsey/uuid": "4.7.6",
+    "ramsey/uuid": "4.8.1",
     "shiftonelabs/laravel-sqs-fifo-queue": "3.0.3",
     "socialiteproviders/github": "4.1.0",
     "socialiteproviders/gitlab": "4.1.0",
