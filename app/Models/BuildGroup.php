@@ -55,7 +55,7 @@ class BuildGroup extends Model
     ];
 
     /**
-     * @return BelongsTo<Project, self>
+     * @return BelongsTo<Project, $this>
      */
     public function project(): BelongsTo
     {
@@ -63,7 +63,7 @@ class BuildGroup extends Model
     }
 
     /**
-     * @return BelongsToMany<Build>
+     * @return BelongsToMany<Build, $this>
      */
     public function builds(): BelongsToMany
     {
@@ -74,7 +74,7 @@ class BuildGroup extends Model
      * All the positions this group has ever been in.  Most users probably want to use a scoped
      * version of this relationship instead.
      *
-     * @return HasMany<BuildGroupPosition>
+     * @return HasMany<BuildGroupPosition, $this>
      */
     public function positions(): HasMany
     {

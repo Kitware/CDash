@@ -61,12 +61,14 @@ class DatabaseCleanupUtils
 
         $s = 'removing old buildids for projectid: ' . $projectid;
         Log::info($s);
-        echo '  -- ' . $s . "\n";
+        if (app()->runningInConsole()) {
+            echo '  -- ' . $s . "\n";
+        }
         self::removeBuildsChunked($buildids);
     }
 
     /** Remove the first builds that are at the beginning of the queue */
-    public static function removeFirstBuilds(int $projectid, int $days, int $maxbuilds, bool $force = false, bool $echo = true): void
+    public static function removeFirstBuilds(int $projectid, int $days, int $maxbuilds, bool $force = false): void
     {
         @set_time_limit(0);
         $remove_builds = config('cdash.autoremove_builds');
@@ -94,7 +96,7 @@ class DatabaseCleanupUtils
 
         $s = 'removing old buildids for projectid: ' . $projectid;
         Log::info($s);
-        if ($echo) {
+        if (app()->runningInConsole()) {
             echo '  -- ' . $s . "\n"; // for "interactive" command line feedback
         }
         self::removeBuildsChunked($buildids);

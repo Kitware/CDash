@@ -1036,7 +1036,7 @@ class Project
 
         // Remove old builds.
         $num_to_remove = $num_builds - $max_builds;
-        DatabaseCleanupUtils::removeFirstBuilds($this->Id, -1, $num_to_remove, true, false);
+        DatabaseCleanupUtils::removeFirstBuilds($this->Id, -1, $num_to_remove, true);
 
         Log::info("Too many builds for $this->Name");
         return true;

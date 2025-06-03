@@ -35,7 +35,7 @@ class Target extends Model
     ];
 
     /**
-     * @return BelongsTo<Build, self>
+     * @return BelongsTo<Build, $this>
      */
     public function build(): BelongsTo
     {
@@ -43,7 +43,7 @@ class Target extends Model
     }
 
     /**
-     * @return BelongsToMany<Label>
+     * @return BelongsToMany<Label, $this>
      */
     public function labels(): BelongsToMany
     {
@@ -51,7 +51,7 @@ class Target extends Model
     }
 
     /**
-     * @return HasMany<BuildCommand>
+     * @return HasMany<BuildCommand, $this>
      */
     public function commands(): HasMany
     {

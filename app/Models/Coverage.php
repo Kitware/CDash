@@ -38,7 +38,7 @@ class Coverage extends Model
     ];
 
     /**
-     * @return BelongsTo<Build, self>
+     * @return BelongsTo<Build, $this>
      */
     public function build(): BelongsTo
     {

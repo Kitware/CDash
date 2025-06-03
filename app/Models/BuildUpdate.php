@@ -48,7 +48,7 @@ class BuildUpdate extends Model
     ];
 
     /**
-     * @return BelongsToMany<Build>
+     * @return BelongsToMany<Build, $this>
      */
     public function builds(): BelongsToMany
     {

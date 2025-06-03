@@ -13,7 +13,7 @@ class TestImage extends Model
     public $timestamps = false;
 
     /**
-     * @return BelongsTo<TestOutput, self>
+     * @return BelongsTo<TestOutput, $this>
      */
     public function testOutput(): BelongsTo
     {

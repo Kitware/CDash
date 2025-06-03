@@ -44,7 +44,7 @@ class BuildConfigure extends Model
     ];
 
     /**
-     * @return BelongsTo<Build, self>
+     * @return BelongsTo<Build, $this>
      */
     public function build(): BelongsTo
     {
@@ -52,7 +52,7 @@ class BuildConfigure extends Model
     }
 
     /**
-     * @return HasOne<Configure>
+     * @return HasOne<Configure, $this>
      */
     public function configure(): HasOne
     {

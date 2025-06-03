@@ -37,7 +37,7 @@ class BuildGroupPosition extends Model
     ];
 
     /**
-     * @return BelongsTo<BuildGroup,self>
+     * @return BelongsTo<BuildGroup,$this>
      */
     public function buildGroup(): BelongsTo
     {

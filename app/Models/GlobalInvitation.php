@@ -53,7 +53,7 @@ class GlobalInvitation extends Model
     }
 
     /**
-     * @return BelongsTo<User, GlobalInvitation>
+     * @return BelongsTo<User, $this>
      */
     public function invitedBy(): BelongsTo
     {

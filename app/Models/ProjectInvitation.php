@@ -53,7 +53,7 @@ class ProjectInvitation extends Model
     }
 
     /**
-     * @return BelongsTo<User, ProjectInvitation>
+     * @return BelongsTo<User, $this>
      */
     public function invitedBy(): BelongsTo
     {
@@ -61,7 +61,7 @@ class ProjectInvitation extends Model
     }
 
     /**
-     * @return BelongsTo<Project, ProjectInvitation>
+     * @return BelongsTo<Project, $this>
      */
     public function project(): BelongsTo
     {

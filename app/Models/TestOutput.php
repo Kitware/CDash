@@ -34,7 +34,7 @@ class TestOutput extends Model
     ];
 
     /**
-     * @return HasMany<Test>
+     * @return HasMany<Test, $this>
      */
     public function tests(): HasMany
     {

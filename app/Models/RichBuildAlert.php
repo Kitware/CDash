@@ -35,7 +35,7 @@ class RichBuildAlert extends Model
     ];
 
     /**
-     * @return BelongsTo<Build, self>
+     * @return BelongsTo<Build, $this>
      */
     public function build(): BelongsTo
     {
@@ -43,7 +43,7 @@ class RichBuildAlert extends Model
     }
 
     /**
-     * @return HasOne<RichBuildAlertDetails>
+     * @return HasOne<RichBuildAlertDetails, $this>
      */
     public function details(): HasOne
     {

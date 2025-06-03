@@ -42,7 +42,7 @@ class Site extends Model
     ];
 
     /**
-     * @return HasMany<SiteInformation>
+     * @return HasMany<SiteInformation, $this>
      */
     public function information(): HasMany
     {
@@ -53,19 +53,21 @@ class Site extends Model
      * Get the most recent information available.  If a date is provided, get the
      * most recent information available as of that date.
      *
-     * @return HasOne<SiteInformation>
+     * @return HasOne<SiteInformation, $this>
      */
     public function mostRecentInformation(?Carbon $date = null): HasOne
     {
         return $this->information()
             ->one()
             ->ofMany(['timestamp' => 'max'], function (Builder $query) use ($date) {
-                $query->where('timestamp', '<=', $date ?? Carbon::maxValue());
+                if ($date !== null) {
+                    $query->where('timestamp', '<=', $date);
+                }
             });
     }
 
     /**
-     * @return BelongsToMany<User>
+     * @return BelongsToMany<User, $this>
      */
     public function maintainers(): BelongsToMany
     {

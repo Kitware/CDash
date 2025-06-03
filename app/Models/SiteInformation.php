@@ -65,7 +65,7 @@ class SiteInformation extends Model
     ];
 
     /**
-     * @return BelongsTo<Site, self>
+     * @return BelongsTo<Site, $this>
      */
     public function site(): BelongsTo
     {

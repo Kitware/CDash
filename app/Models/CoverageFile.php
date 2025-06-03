@@ -31,7 +31,7 @@ class CoverageFile extends Model
     ];
 
     /**
-     * @return HasManyThrough<Build>
+     * @return HasManyThrough<Build, Coverage, $this>
      */
     public function builds(): HasManyThrough
     {

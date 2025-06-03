@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Database\DBAL\TimestampType;
-
 if (env('DB_CONNECTION') === 'mysql') {
     throw new Exception('MySQL is no longer supported.  Please migrate your database to Postgres.');
 }
@@ -64,14 +62,4 @@ return [
     */
 
     'migrations' => 'migrations',
-
-    /*
-     * See this issue for information about why this is necessary:
-     * - https://github.com/laravel/framework/issues/16526
-     */
-    'dbal' => [
-        'types' => [
-            'timestamp' => TimestampType::class,
-        ],
-    ],
 ];
