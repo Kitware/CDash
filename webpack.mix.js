@@ -112,6 +112,9 @@ mix.webpackConfig({
   stats: {
     children: true,
   },
+  output: {
+    chunkFilename: 'assets/js/[contenthash].js',
+  },
   optimization: {
     runtimeChunk: false,
   },
