@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "22834fbeebc094906281ee1553896a3e",
+    "content-hash": "fc04659719009e3158c731d11355e12b",
     "packages": [
         {
             "name": "24slides/laravel-saml2",
@@ -3543,16 +3543,16 @@
         },
         {
             "name": "nuwave/lighthouse",
-            "version": "v6.54.0",
+            "version": "v6.57.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nuwave/lighthouse.git",
-                "reference": "fe37f79bf530ab10ac8b57e0f2958b70236322f2"
+                "reference": "84e43f6ded2c1cad309d939185520e83da13101a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nuwave/lighthouse/zipball/fe37f79bf530ab10ac8b57e0f2958b70236322f2",
-                "reference": "fe37f79bf530ab10ac8b57e0f2958b70236322f2",
+                "url": "https://api.github.com/repos/nuwave/lighthouse/zipball/84e43f6ded2c1cad309d939185520e83da13101a",
+                "reference": "84e43f6ded2c1cad309d939185520e83da13101a",
                 "shasum": ""
             },
             "require": {
@@ -3670,7 +3670,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2025-03-25T16:18:27+00:00"
+            "time": "2025-05-21T11:50:13+00:00"
         },
         {
             "name": "onelogin/php-saml",
@@ -8142,16 +8142,16 @@
         },
         {
             "name": "thecodingmachine/safe",
-            "version": "v3.0.2",
+            "version": "v3.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thecodingmachine/safe.git",
-                "reference": "22ffad3248982a784f9870a37aeb2e522bd19645"
+                "reference": "2cdd579eeaa2e78e51c7509b50cc9fb89a956236"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thecodingmachine/safe/zipball/22ffad3248982a784f9870a37aeb2e522bd19645",
-                "reference": "22ffad3248982a784f9870a37aeb2e522bd19645",
+                "url": "https://api.github.com/repos/thecodingmachine/safe/zipball/2cdd579eeaa2e78e51c7509b50cc9fb89a956236",
+                "reference": "2cdd579eeaa2e78e51c7509b50cc9fb89a956236",
                 "shasum": ""
             },
             "require": {
@@ -8261,7 +8261,7 @@
             "description": "PHP core functions that throw exceptions instead of returning FALSE on error",
             "support": {
                 "issues": "https://github.com/thecodingmachine/safe/issues",
-                "source": "https://github.com/thecodingmachine/safe/tree/v3.0.2"
+                "source": "https://github.com/thecodingmachine/safe/tree/v3.3.0"
             },
             "funding": [
                 {
@@ -8277,7 +8277,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-02-19T19:23:00+00:00"
+            "time": "2025-05-14T06:15:44+00:00"
         },
         {
             "name": "tijsverkoyen/css-to-inline-styles",
