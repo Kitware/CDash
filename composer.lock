@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c7514a811f1a6f42e1e8298bc3ac9f84",
+    "content-hash": "15ed21b36ba9adc55db1b8be77651f75",
     "packages": [
         {
             "name": "24slides/laravel-saml2",
@@ -2077,16 +2077,16 @@
         },
         {
             "name": "laravel/socialite",
-            "version": "v5.20.0",
+            "version": "v5.21.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/socialite.git",
-                "reference": "30972c12a41f71abeb418bc9ff157da8d9231519"
+                "reference": "d83639499ad14985c9a6a9713b70073300ce998d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/socialite/zipball/30972c12a41f71abeb418bc9ff157da8d9231519",
-                "reference": "30972c12a41f71abeb418bc9ff157da8d9231519",
+                "url": "https://api.github.com/repos/laravel/socialite/zipball/d83639499ad14985c9a6a9713b70073300ce998d",
+                "reference": "d83639499ad14985c9a6a9713b70073300ce998d",
                 "shasum": ""
             },
             "require": {
@@ -2145,7 +2145,7 @@
                 "issues": "https://github.com/laravel/socialite/issues",
                 "source": "https://github.com/laravel/socialite"
             },
-            "time": "2025-04-21T14:21:34+00:00"
+            "time": "2025-05-19T12:56:37+00:00"
         },
         {
             "name": "laravel/ui",
