@@ -489,6 +489,10 @@ type Build {
   commands(
     filters: _ @filter
   ): [BuildCommand!]! @hasMany(type: CONNECTION) @orderBy(column: "id", direction: ASC)
+
+  urls: [UploadedUrl!]! @hasMany(relation: "uploadedFiles", type: CONNECTION, scopes: ["urls"]) @orderBy(column: "id", direction: ASC)
+
+  files: [UploadedFile!]! @hasMany(relation: "uploadedFiles", type: CONNECTION, scopes: ["files"]) @orderBy(column: "id", direction: ASC)
 }
 
 
@@ -829,4 +833,25 @@ type Target {
   labels(
     filters: _ @filter
   ): [Label!]! @belongsToMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)
+}
+
+
+type UploadedUrl @model(class: "App\\Models\\UploadFile") {
+  "Unique primary key."
+  id: ID!
+
+  href: String! @rename(attribute: "filename")
+}
+
+
+type UploadedFile @model(class: "App\\Models\\UploadFile") {
+  "Unique primary key.  Use /build/<id>/file/<id> to download the file by ID."
+  id: ID!
+
+  name: String! @rename(attribute: "filename")
+
+  sha1sum: String!
+
+  "File size in bytes."
+  size: Int! @rename(attribute: "filesize")
 }

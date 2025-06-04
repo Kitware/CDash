@@ -51,4 +51,20 @@ class UploadFile extends Model
     {
         return new File(storage_path("app/upload/{$this->sha1sum}"));
     }
+
+    /**
+     * @param Builder<self> $query
+     */
+    public function scopeFiles(Builder $query): void
+    {
+        $query->where('isurl', false);
+    }
+
+    /**
+     * @param Builder<self> $query
+     */
+    public function scopeUrls(Builder $query): void
+    {
+        $query->where('isurl', true);
+    }
 }

@@ -322,6 +322,8 @@ add_feature_test(/Feature/GraphQL/Mutations/RemoveUserTest)
 
 add_browser_test(/Browser/Pages/UsersPageTest)
 
+add_browser_test(/Browser/Pages/BuildFilesPageTest)
+
 ###################################################################################################
 
 set_property(TEST install_2 APPEND PROPERTY DEPENDS
