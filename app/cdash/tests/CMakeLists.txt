@@ -673,7 +673,10 @@ add_php_test(dynamicanalysisdefectlongtype)
 set_tests_properties(dynamicanalysisdefectlongtype PROPERTIES DEPENDS donehandler)
 
 add_php_test(starttimefromnotes)
-set_tests_properties(starttimefromnotes PROPERTIES DEPENDS donehandler)
+set_tests_properties(starttimefromnotes PROPERTIES
+  DEPENDS donehandler
+  RUN_SERIAL TRUE
+)
 
 add_php_test(starttimefromupload)
 set_tests_properties(starttimefromupload PROPERTIES
