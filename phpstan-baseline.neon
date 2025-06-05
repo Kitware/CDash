@@ -193,12 +193,12 @@ parameters:
 
 		-
 			message: "#^Access to an undefined property GraphQL\\\\Language\\\\AST\\\\ListTypeNode\\|GraphQL\\\\Language\\\\AST\\\\NamedTypeNode\\|GraphQL\\\\Language\\\\AST\\\\NonNullTypeNode\\:\\:\\$name\\.$#"
-			count: 1
+			count: 4
 			path: app/GraphQL/Directives/FilterDirective.php
 
 		-
 			message: "#^Access to an undefined property GraphQL\\\\Language\\\\AST\\\\ListTypeNode\\|GraphQL\\\\Language\\\\AST\\\\NamedTypeNode\\|GraphQL\\\\Language\\\\AST\\\\NonNullTypeNode\\:\\:\\$type\\.$#"
-			count: 1
+			count: 4
 			path: app/GraphQL/Directives/FilterDirective.php
 
 		-
@@ -232,18 +232,28 @@ parameters:
 			path: app/GraphQL/Directives/FilterDirective.php
 
 		-
+			message: "#^Method App\\\\GraphQL\\\\Directives\\\\FilterDirective\\:\\:handleBuilder\\(\\) never returns Illuminate\\\\Database\\\\Query\\\\Builder so it can be removed from the return type\\.$#"
+			count: 1
+			path: app/GraphQL/Directives/FilterDirective.php
+
+		-
 			message: "#^Parameter \\#1 \\$array of function array_key_first expects array, mixed given\\.$#"
 			count: 1
 			path: app/GraphQL/Directives/FilterDirective.php
 
 		-
+			message: "#^Parameter \\#2 \\$array of function array_key_exists expects array, array\\<string, GraphQL\\\\Language\\\\AST\\\\Node&GraphQL\\\\Language\\\\AST\\\\TypeDefinitionNode\\>\\|GraphQL\\\\Language\\\\AST\\\\NodeList\\<GraphQL\\\\Language\\\\AST\\\\Node&GraphQL\\\\Language\\\\AST\\\\TypeDefinitionNode\\> given\\.$#"
+			count: 1
+			path: app/GraphQL/Directives/FilterDirective.php
+
+		-
 			message: "#^Parameter \\#2 \\$array of function array_key_exists expects array, mixed given\\.$#"
-			count: 4
+			count: 5
 			path: app/GraphQL/Directives/FilterDirective.php
 
 		-
 			message: "#^Parameter \\#2 \\$filterName of method App\\\\GraphQL\\\\Directives\\\\FilterDirective\\:\\:createMultiFilterInput\\(\\) expects string, mixed given\\.$#"
-			count: 1
+			count: 2
 			path: app/GraphQL/Directives/FilterDirective.php
 
 		-
