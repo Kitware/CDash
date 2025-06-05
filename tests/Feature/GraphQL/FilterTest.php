@@ -2,18 +2,23 @@
 
 namespace Tests\Feature\GraphQL;
 
+use App\Enums\TargetType;
 use App\Models\Project;
+use App\Models\Site;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTruncation;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
+use Tests\Traits\CreatesSites;
 use Tests\Traits\CreatesUsers;
 
 class FilterTest extends TestCase
 {
     use CreatesProjects;
     use CreatesUsers;
+    use CreatesSites;
     use DatabaseTruncation;
 
     /**
@@ -25,6 +30,11 @@ class FilterTest extends TestCase
      * @var array<User>
      */
     private array $users;
+
+    /**
+     * @var array<Site>
+     */
+    private array $sites = [];
 
     protected function setUp(): void
     {
@@ -39,9 +49,6 @@ class FilterTest extends TestCase
         // A couple private projects so we can check visibility (enum) filtering
         $this->projects['private1'] = $this->makePrivateProject('private1');
         $this->projects['private2'] = $this->makePrivateProject('private2');
-
-        // Wipe any existing users before creating new ones
-        User::query()->delete();
 
         $this->users = [
             'normal' => $this->makeNormalUser(),
@@ -60,6 +67,11 @@ class FilterTest extends TestCase
             $user->delete();
         }
         $this->users = [];
+
+        foreach ($this->sites as $site) {
+            $site->delete();
+        }
+        $this->sites = [];
 
         parent::tearDown();
     }
@@ -499,5 +511,491 @@ class FilterTest extends TestCase
                 }
             }
         ')->assertGraphQLErrorMessage('Validation failed for the field [projects].');
+    }
+
+    public function testFilterByRelationship(): void
+    {
+        $build1uuid = Str::uuid()->toString();
+        $this->projects['public1']->builds()->create([
+            'name' => 'build1',
+            'uuid' => $build1uuid,
+        ]);
+        $build2uuid = Str::uuid()->toString();
+        $this->projects['public1']->builds()->create([
+            'name' => 'build1',
+            'uuid' => $build2uuid,
+        ]);
+
+        $this->actingAs($this->users['admin'])->graphQL('
+            query($uuid: String!) {
+                projects(filters: {
+                    has: {
+                        builds: {
+                            eq: {
+                                uuid: $uuid
+                            }
+                        }
+                    }
+                }) {
+                    edges {
+                        node {
+                            name
+                        }
+                    }
+                }
+            }
+        ', [
+            'uuid' => $build1uuid,
+        ])->assertJson([
+            'data' => [
+                'projects' => [
+                    'edges' => [
+                        [
+                            'node' => [
+                                'name' => $this->projects['public1']->name,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ], true);
+    }
+
+    public function testFilterByRelationshipAndRegularField(): void
+    {
+        $build1uuid = Str::uuid()->toString();
+        $this->projects['public1']->builds()->create([
+            'name' => 'build1',
+            'uuid' => $build1uuid,
+        ]);
+        $build2uuid = Str::uuid()->toString();
+        $this->projects['public1']->builds()->create([
+            'name' => 'build2',
+            'uuid' => $build2uuid,
+        ]);
+
+        $this->actingAs($this->users['admin'])->graphQL('
+            query($uuid: String!, $projectname: String!) {
+                projects(filters: {
+                    any: [
+                        {
+                            has: {
+                                builds: {
+                                    eq: {
+                                        uuid: $uuid
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            eq: {
+                                name: $projectname
+                            }
+                        }
+                    ]
+                }) {
+                    edges {
+                        node {
+                            name
+                        }
+                    }
+                }
+            }
+        ', [
+            'uuid' => $build1uuid,
+            'projectname' => $this->projects['public2']->name,
+        ])->assertJson([
+            'data' => [
+                'projects' => [
+                    'edges' => [
+                        [
+                            'node' => [
+                                'name' => $this->projects['public1']->name,
+                            ],
+                        ],
+                        [
+                            'node' => [
+                                'name' => $this->projects['public2']->name,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ], true);
+    }
+
+    public function testFilterByAnyMultipleFieldsInRelationship(): void
+    {
+        $build1uuid = Str::uuid()->toString();
+        $build1name = Str::uuid()->toString();
+        $this->projects['public1']->builds()->create([
+            'name' => $build1name,
+            'uuid' => $build1uuid,
+        ]);
+        $build2uuid = Str::uuid()->toString();
+        $build2name = Str::uuid()->toString();
+        $this->projects['public2']->builds()->create([
+            'name' => $build2name,
+            'uuid' => $build2uuid,
+        ]);
+
+        $this->actingAs($this->users['admin'])->graphQL('
+            query($uuid: String!, $buildname: String!) {
+                projects(filters: {
+                    has: {
+                        builds: {
+                            any: [
+                                {
+                                    eq: {
+                                        uuid: $uuid
+                                    }
+                                },
+                                {
+                                    eq: {
+                                        name: $buildname
+                                    }
+                                },
+                            ]
+                        }
+                    }
+                }) {
+                    edges {
+                        node {
+                            name
+                        }
+                    }
+                }
+            }
+        ', [
+            'uuid' => $build1uuid,
+            'buildname' => $build2name,
+        ])->assertJson([
+            'data' => [
+                'projects' => [
+                    'edges' => [
+                        [
+                            'node' => [
+                                'name' => $this->projects['public1']->name,
+                            ],
+                        ],
+                        [
+                            'node' => [
+                                'name' => $this->projects['public2']->name,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ], true);
+    }
+
+    public function testFilterByAllMultipleFieldsInRelationshipNoneIfNotOnSameRecord(): void
+    {
+        $build1uuid = Str::uuid()->toString();
+        $build1name = Str::uuid()->toString();
+        $this->projects['public1']->builds()->create([
+            'name' => $build1name,
+            'uuid' => $build1uuid,
+        ]);
+        $build2uuid = Str::uuid()->toString();
+        $build2name = Str::uuid()->toString();
+        $this->projects['public1']->builds()->create([
+            'name' => $build2name,
+            'uuid' => $build2uuid,
+        ]);
+
+        $this->actingAs($this->users['admin'])->graphQL('
+            query($uuid: String!, $buildname: String!) {
+                projects(filters: {
+                    has: {
+                        builds: {
+                            all: [
+                                {
+                                    eq: {
+                                        uuid: $uuid
+                                    }
+                                },
+                                {
+                                    eq: {
+                                        name: $buildname
+                                    }
+                                },
+                            ]
+                        }
+                    }
+                }) {
+                    edges {
+                        node {
+                            name
+                        }
+                    }
+                }
+            }
+        ', [
+            'uuid' => $build1uuid,
+            'buildname' => $build2name,
+        ])->assertJson([
+            'data' => [
+                'projects' => [
+                    'edges' => [],
+                ],
+            ],
+        ], true);
+    }
+
+    public function testFilterByAllMultipleFieldsInRelationshipReturnsIfConditionsOnSameRecord(): void
+    {
+        $build1uuid = Str::uuid()->toString();
+        $build1name = Str::uuid()->toString();
+        $this->projects['public1']->builds()->create([
+            'name' => $build1name,
+            'uuid' => $build1uuid,
+        ]);
+        $build2uuid = Str::uuid()->toString();
+        $build2name = Str::uuid()->toString();
+        $this->projects['public1']->builds()->create([
+            'name' => $build2name,
+            'uuid' => $build2uuid,
+        ]);
+
+        $this->actingAs($this->users['admin'])->graphQL('
+            query($uuid: String!, $buildname: String!) {
+                projects(filters: {
+                    has: {
+                        builds: {
+                            all: [
+                                {
+                                    eq: {
+                                        uuid: $uuid
+                                    }
+                                },
+                                {
+                                    eq: {
+                                        name: $buildname
+                                    }
+                                },
+                            ]
+                        }
+                    }
+                }) {
+                    edges {
+                        node {
+                            name
+                        }
+                    }
+                }
+            }
+        ', [
+            'uuid' => $build1uuid,
+            'buildname' => $build1name,
+        ])->assertJson([
+            'data' => [
+                'projects' => [
+                    'edges' => [
+                        [
+                            'node' => [
+                                'name' => $this->projects['public1']->name,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ], true);
+    }
+
+    public function testFilterByAnyMultipleRelationships(): void
+    {
+        $this->sites['site1'] = $this->makeSite();
+
+        $build1uuid = Str::uuid()->toString();
+        $this->projects['public1']->builds()->create([
+            'name' => 'build1',
+            'uuid' => $build1uuid,
+        ]);
+        $build2uuid = Str::uuid()->toString();
+        $this->projects['public2']->builds()->create([
+            'name' => 'build2',
+            'uuid' => $build2uuid,
+            'siteid' => $this->sites['site1']->id,
+        ]);
+
+        $this->actingAs($this->users['admin'])->graphQL('
+            query($uuid: String!, $siteid: ID!) {
+                projects(filters: {
+                    any: [
+                        {
+                            has: {
+                                builds: {
+                                    eq: {
+                                        uuid: $uuid
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            has: {
+                                sites: {
+                                    eq: {
+                                        id: $siteid
+                                    }
+                                }
+                            }
+                        },
+                    ]
+                }) {
+                    edges {
+                        node {
+                            name
+                        }
+                    }
+                }
+            }
+        ', [
+            'uuid' => $build1uuid,
+            'siteid' => $this->sites['site1']->id,
+        ])->assertJson([
+            'data' => [
+                'projects' => [
+                    'edges' => [
+                        [
+                            'node' => [
+                                'name' => $this->projects['public1']->name,
+                            ],
+                        ],
+                        [
+                            'node' => [
+                                'name' => $this->projects['public2']->name,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ], true);
+    }
+
+    public function testFilterByAllMultipleRelationships(): void
+    {
+        $this->sites['site1'] = $this->makeSite();
+
+        $build1uuid = Str::uuid()->toString();
+        $this->projects['public1']->builds()->create([
+            'name' => 'build1',
+            'uuid' => $build1uuid,
+        ]);
+        $build2uuid = Str::uuid()->toString();
+        $this->projects['public1']->builds()->create([
+            'name' => 'build2',
+            'uuid' => $build2uuid,
+            'siteid' => $this->sites['site1']->id,
+        ]);
+
+        $this->actingAs($this->users['admin'])->graphQL('
+            query($uuid: String!, $siteid: ID!) {
+                projects(filters: {
+                    all: [
+                        {
+                            has: {
+                                builds: {
+                                    eq: {
+                                        uuid: $uuid
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            has: {
+                                sites: {
+                                    eq: {
+                                        id: $siteid
+                                    }
+                                }
+                            }
+                        },
+                    ]
+                }) {
+                    edges {
+                        node {
+                            name
+                        }
+                    }
+                }
+            }
+        ', [
+            'uuid' => $build1uuid,
+            'siteid' => $this->sites['site1']->id,
+        ])->assertJson([
+            'data' => [
+                'projects' => [
+                    'edges' => [
+                        [
+                            'node' => [
+                                'name' => $this->projects['public1']->name,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ], true);
+    }
+
+    public function testFilterByRelationshipsOfRelationships(): void
+    {
+        $build1uuid = Str::uuid()->toString();
+        $target1name = Str::uuid()->toString();
+        $this->projects['public1']->builds()->create([
+            'name' => 'build1',
+            'uuid' => $build1uuid,
+        ])->targets()->create([
+            'name' => $target1name,
+            'type' => TargetType::UNKNOWN,
+        ]);
+
+        $build2uuid = Str::uuid()->toString();
+        $target2name = Str::uuid()->toString();
+        $this->projects['public2']->builds()->create([
+            'name' => 'build1',
+            'uuid' => $build2uuid,
+        ])->targets()->create([
+            'name' => $target2name,
+            'type' => TargetType::UNKNOWN,
+        ]);
+
+        $this->actingAs($this->users['admin'])->graphQL('
+            query($targetname: String!) {
+                projects(filters: {
+                    has: {
+                        builds: {
+                            has: {
+                                targets: {
+                                    eq: {
+                                        name: $targetname
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }) {
+                    edges {
+                        node {
+                            name
+                        }
+                    }
+                }
+            }
+        ', [
+            'targetname' => $target1name,
+        ])->assertJson([
+            'data' => [
+                'projects' => [
+                    'edges' => [
+                        [
+                            'node' => [
+                                'name' => $this->projects['public1']->name,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ], true);
     }
 }
