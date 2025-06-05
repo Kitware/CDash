@@ -23562,16 +23562,6 @@ parameters:
 			path: app/cdash/tests/test_sequenceindependence.php
 
 		-
-			message: "#^Call to deprecated method pass\\(\\) of class SimpleTestCase\\.$#"
-			count: 1
-			path: app/cdash/tests/test_sitestatistics.php
-
-		-
-			message: "#^Method SiteStatisticsTestCase\\:\\:testSiteStatistics\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/cdash/tests/test_sitestatistics.php
-
-		-
 			message: """
 				#^Call to deprecated method submission\\(\\) of class KWWebTestCase\\:
 				12/09/2024  Use \\\\Test\\\\Traits\\\\CreatesSubmissions instead$#

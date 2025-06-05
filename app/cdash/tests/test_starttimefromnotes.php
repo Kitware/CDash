@@ -35,6 +35,7 @@ class StartTimeFromNotesTestCase extends KWWebTestCase
             'NightlyTime' => '18:00:00 America/Denver',
         ]);
         $this->project->Fill();
+        $this->deleteLog($this->logfilename);
 
         // Submit our testing data.
         $file = dirname(__FILE__) . '/data/StartTimeFromNotes/Notes.xml';
