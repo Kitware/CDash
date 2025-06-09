@@ -346,6 +346,9 @@ set_tests_properties(subprojectorder PROPERTIES DEPENDS /CDash/XmlHandler/Update
 add_php_test(dynamicanalysislogs)
 set_tests_properties(dynamicanalysislogs PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
+add_php_test(dynamicanalysisdefectlongtype)
+set_tests_properties(dynamicanalysisdefectlongtype PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
 ###################################################################################################
 
 set_property(TEST install_2 APPEND PROPERTY DEPENDS
@@ -379,6 +382,7 @@ set_property(TEST install_2 APPEND PROPERTY DEPENDS
   attachedfiles
   subprojectorder
   dynamicanalysislogs
+  dynamicanalysisdefectlongtype
 )
 
 
@@ -658,11 +662,8 @@ set_tests_properties(multiplelabelsfortests PROPERTIES DEPENDS longbuildname)
 add_php_test(subprojecttestfilters)
 set_tests_properties(subprojecttestfilters PROPERTIES DEPENDS multiplelabelsfortests)
 
-add_php_test(dynamicanalysisdefectlongtype)
-set_tests_properties(dynamicanalysisdefectlongtype PROPERTIES DEPENDS multiplelabelsfortests)
-
 add_php_test(starttimefromnotes)
-set_tests_properties(starttimefromnotes PROPERTIES DEPENDS dynamicanalysisdefectlongtype)
+set_tests_properties(starttimefromnotes PROPERTIES DEPENDS subprojecttestfilters)
 
 add_php_test(starttimefromupload)
 set_tests_properties(starttimefromupload PROPERTIES DEPENDS starttimefromnotes)
