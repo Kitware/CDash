@@ -787,6 +787,8 @@ type Coverage {
   "Unique primary key."
   id: ID! @filterable
 
+  filePath: String! @with(relation: "file") @method(name: "getFilePath")
+
   linesOfCodeTested: Int! @rename(attribute: "loctested") @filterable
 
   linesOfCodeUntested: Int! @rename(attribute: "locuntested") @filterable
