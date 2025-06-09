@@ -20,7 +20,7 @@ describe('the test page', () => {
 
 
   it('can be reached from the testSummary page', () => {
-    cy.visit('testSummary.php?project=27&name=nap&date=2018-01-25');
+    cy.visit('testSummary.php?project=23&name=nap&date=2018-01-25');
     // find the link to the test page and click it
     cy.get('#testSummaryTable').find('tbody').find('tr').eq(0).find('td').eq(3).find('a').click();
     // make sure we're really on the test page
@@ -29,7 +29,7 @@ describe('the test page', () => {
 
 
   it('loads the right navigation links', () => {
-    cy.visit('testSummary.php?project=27&name=nap&date=2018-01-25');
+    cy.visit('testSummary.php?project=23&name=nap&date=2018-01-25');
     cy.get('#testSummaryTable').find('tbody').find('tr').eq(2).find('td').eq(3).as('test_td');
     cy.get('@test_td').find('a').invoke('attr', 'href').then(test_url => {
       const test_id = test_url.match(/tests?\/([0-9]+)/)[1];
@@ -55,7 +55,7 @@ describe('the test page', () => {
 
 
   it('displays information about the test', () => {
-    cy.visit('testSummary.php?project=27&name=nap&date=2018-01-25');
+    cy.visit('testSummary.php?project=23&name=nap&date=2018-01-25');
     cy.get('#testSummaryTable').find('tbody').find('tr').eq(2).find('td').eq(3).click();
 
     // verify information for the test we clicked on
@@ -65,7 +65,7 @@ describe('the test page', () => {
     // test name
     cy.get('a#summary_link').should('contain', 'nap');
     // link to test summary page
-    cy.get('a#summary_link').invoke('attr', 'href').should('contain', 'testSummary.php?project=27&name=nap&date=2018-01-25');
+    cy.get('a#summary_link').invoke('attr', 'href').should('contain', 'testSummary.php?project=23&name=nap&date=2018-01-25');
     // build name this test belongs to
     cy.get('a#build_link').should('contain', 'test_timing');
     // link to corresponding build page
@@ -95,7 +95,7 @@ describe('the test page', () => {
 
 
   it('loads the "Test Time" and "Failing/Passing" graphs', () => {
-    cy.visit('testSummary.php?project=27&name=nap&date=2018-01-25');
+    cy.visit('testSummary.php?project=23&name=nap&date=2018-01-25');
     cy.get('#testSummaryTable').find('tbody').find('tr').eq(2).find('td').eq(3).click();
 
     cy.on('uncaught:exception', (err, runnable) => {
