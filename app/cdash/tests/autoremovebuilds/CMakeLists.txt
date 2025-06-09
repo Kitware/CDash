@@ -39,6 +39,3 @@ set_tests_properties(removebuilds PROPERTIES
   FAIL_REGULAR_EXPRESSION ".*Failures: [1-9]+.*;.*Exceptions: [1-9]+.*"
   DEPENDS deletesubproject
 )
-
-add_laravel_test(/Feature/AutoRemoveBuildsCommand)
-set_tests_properties(/Feature/AutoRemoveBuildsCommand PROPERTIES DEPENDS removebuilds)

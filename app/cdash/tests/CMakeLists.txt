@@ -369,6 +369,8 @@ set_tests_properties(junithandler PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHan
 add_php_test(configurewarnings)
 set_tests_properties(configurewarnings PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
+add_feature_test(/Feature/AutoRemoveBuildsCommand)
+
 ###################################################################################################
 
 set_property(TEST install_2 APPEND PROPERTY DEPENDS
