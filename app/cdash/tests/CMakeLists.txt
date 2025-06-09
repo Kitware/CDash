@@ -328,6 +328,9 @@ add_browser_test(/Browser/Pages/UsersPageTest)
 
 add_browser_test(/Browser/Pages/BuildFilesPageTest)
 
+add_php_test(changeid)
+set_tests_properties(changeid PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
 ###################################################################################################
 
 set_property(TEST install_2 APPEND PROPERTY DEPENDS
@@ -355,6 +358,7 @@ set_property(TEST install_2 APPEND PROPERTY DEPENDS
   /CDash/Messaging/Topic/TestFailureTopic
   /CDash/Messaging/Topic/TopicDecorator
   cypress/e2e/user-profile
+  changeid
 )
 
 
@@ -601,11 +605,8 @@ set_tests_properties(submission_assign_buildid PROPERTIES DEPENDS buildrelations
 add_php_test(donehandler)
 set_tests_properties(donehandler PROPERTIES DEPENDS submission_assign_buildid)
 
-add_php_test(changeid)
-set_tests_properties(changeid PROPERTIES DEPENDS donehandler)
-
 add_php_test(expiredbuildrules)
-set_tests_properties(expiredbuildrules PROPERTIES DEPENDS changeid)
+set_tests_properties(expiredbuildrules PROPERTIES DEPENDS donehandler)
 
 add_php_test(filterblocks)
 set_tests_properties(filterblocks PROPERTIES DEPENDS expiredbuildrules)
