@@ -352,6 +352,9 @@ set_tests_properties(dynamicanalysisdefectlongtype PROPERTIES DEPENDS /CDash/Xml
 add_php_test(configureappend)
 set_tests_properties(configureappend PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
+add_php_test(filterbuilderrors)
+set_tests_properties(filterbuilderrors PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
 ###################################################################################################
 
 set_property(TEST install_2 APPEND PROPERTY DEPENDS
@@ -387,6 +390,7 @@ set_property(TEST install_2 APPEND PROPERTY DEPENDS
   dynamicanalysislogs
   dynamicanalysisdefectlongtype
   configureappend
+  filterbuilderrors
 )
 
 
@@ -621,11 +625,8 @@ set_tests_properties(timestatus PROPERTIES DEPENDS buildproperties)
 add_php_test(bazeljson)
 set_tests_properties(bazeljson PROPERTIES DEPENDS timestatus)
 
-add_php_test(filterbuilderrors)
-set_tests_properties(filterbuilderrors PROPERTIES DEPENDS bazeljson)
-
 add_php_test(buildrelationship)
-set_tests_properties(buildrelationship PROPERTIES DEPENDS filterbuilderrors)
+set_tests_properties(buildrelationship PROPERTIES DEPENDS bazeljson)
 
 add_php_test(submission_assign_buildid)
 set_tests_properties(submission_assign_buildid PROPERTIES DEPENDS buildrelationship)
