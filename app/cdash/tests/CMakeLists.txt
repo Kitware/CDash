@@ -349,6 +349,9 @@ set_tests_properties(dynamicanalysislogs PROPERTIES DEPENDS /CDash/XmlHandler/Up
 add_php_test(dynamicanalysisdefectlongtype)
 set_tests_properties(dynamicanalysisdefectlongtype PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
+add_php_test(configureappend)
+set_tests_properties(configureappend PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
 ###################################################################################################
 
 set_property(TEST install_2 APPEND PROPERTY DEPENDS
@@ -383,6 +386,7 @@ set_property(TEST install_2 APPEND PROPERTY DEPENDS
   subprojectorder
   dynamicanalysislogs
   dynamicanalysisdefectlongtype
+  configureappend
 )
 
 
@@ -680,11 +684,8 @@ set_tests_properties(querytestsrevisionfilter PROPERTIES DEPENDS lotsofsubprojec
 add_php_test(redundanttests)
 set_tests_properties(redundanttests PROPERTIES DEPENDS querytestsrevisionfilter)
 
-add_php_test(configureappend)
-set_tests_properties(configureappend PROPERTIES DEPENDS redundanttests)
-
 add_php_test(notesparsererrormessages)
-set_tests_properties(notesparsererrormessages PROPERTIES DEPENDS configureappend)
+set_tests_properties(notesparsererrormessages PROPERTIES DEPENDS redundanttests)
 
 add_laravel_test(/Feature/SubProjectDependencies)
 set_tests_properties(/Feature/SubProjectDependencies PROPERTIES DEPENDS notesparsererrormessages)
