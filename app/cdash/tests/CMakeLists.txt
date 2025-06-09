@@ -334,6 +334,9 @@ set_tests_properties(changeid PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler
 add_php_test(consistenttestingday)
 set_tests_properties(consistenttestingday PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
+add_php_test(numericupdate)
+set_tests_properties(numericupdate PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
 ###################################################################################################
 
 set_property(TEST install_2 APPEND PROPERTY DEPENDS
@@ -363,6 +366,7 @@ set_property(TEST install_2 APPEND PROPERTY DEPENDS
   cypress/e2e/user-profile
   changeid
   consistenttestingday
+  numericupdate
 )
 
 
@@ -627,11 +631,8 @@ set_tests_properties(commitauthornotification PROPERTIES DEPENDS putdynamicbuild
 add_php_test(subscribeprojectshowlabels)
 set_tests_properties(subscribeprojectshowlabels PROPERTIES DEPENDS putdynamicbuilds)
 
-add_php_test(numericupdate)
-set_tests_properties(numericupdate PROPERTIES DEPENDS subscribeprojectshowlabels)
-
 add_php_test(attachedfiles)
-set_tests_properties(attachedfiles PROPERTIES DEPENDS numericupdate)
+set_tests_properties(attachedfiles PROPERTIES DEPENDS subscribeprojectshowlabels)
 
 add_php_test(subprojectorder)
 set_tests_properties(subprojectorder PROPERTIES DEPENDS attachedfiles)
