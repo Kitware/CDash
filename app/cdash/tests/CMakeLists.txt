@@ -355,6 +355,9 @@ set_tests_properties(configureappend PROPERTIES DEPENDS /CDash/XmlHandler/Update
 add_php_test(filterbuilderrors)
 set_tests_properties(filterbuilderrors PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
+add_php_test(buildproperties)
+set_tests_properties(buildproperties PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
 ###################################################################################################
 
 set_property(TEST install_2 APPEND PROPERTY DEPENDS
@@ -391,6 +394,7 @@ set_property(TEST install_2 APPEND PROPERTY DEPENDS
   dynamicanalysisdefectlongtype
   configureappend
   filterbuilderrors
+  buildproperties
 )
 
 
@@ -616,11 +620,8 @@ set_tests_properties(coveragedirectories PROPERTIES DEPENDS managemeasurements)
 add_php_test(outputcolor)
 set_tests_properties(outputcolor PROPERTIES DEPENDS coveragedirectories)
 
-add_php_test(buildproperties)
-set_tests_properties(buildproperties PROPERTIES DEPENDS outputcolor)
-
 add_php_test(timestatus)
-set_tests_properties(timestatus PROPERTIES DEPENDS buildproperties)
+set_tests_properties(timestatus PROPERTIES DEPENDS outputcolor)
 
 add_php_test(bazeljson)
 set_tests_properties(bazeljson PROPERTIES DEPENDS timestatus)
