@@ -47,12 +47,41 @@ final class FilterDirective extends BaseDirective implements ArgBuilderDirective
         FieldDefinitionNode &$parentField,
         ObjectTypeDefinitionNode|InterfaceTypeDefinitionNode &$parentType,
     ): void {
+        // A hack to get the return type, assuming all lists are paginated...
+        $returnType = Str::replaceEnd('Connection', '', $parentField->type->type->name->value);
+
         $multiFilterName = ASTHelper::qualifiedArgType($argDefinition, $parentField, $parentType) . 'MultiFilterInput';
         $argDefinition->type = Parser::namedType($multiFilterName);
 
-        $defaultFilterType = Str::replaceEnd('Connection', '', $parentField->type->type->name->value) . 'FilterInput';
-        $inputType = $this->directiveArgValue('inputType', $defaultFilterType);
-        $documentAST->setTypeDefinition($this->createMultiFilterInput($multiFilterName, $inputType));
+        $defaultFilterType = $returnType . 'FilterInput';
+        $filterName = $this->directiveArgValue('inputType', $defaultFilterType);
+
+        if (
+            $this->getSubFilterableFieldsForType($argDefinition, $parentType) === []
+            || !str_ends_with($parentField->type->type->name->value, 'Connection')
+            || $this->getSubFilterableFieldsForType($argDefinition, $documentAST->types[$returnType]) === []
+        ) {
+            // Don't create a relationship filter input type because this type has no relationships
+            $documentAST->setTypeDefinition($this->createMultiFilterInput($multiFilterName, $filterName, null));
+        } else {
+            $relatedFieldRelationshipFilterName = Str::replaceEnd('Connection', '', $parentField->type->type->name->value) . 'RelationshipFilterInput';
+            $documentAST->setTypeDefinition($this->createMultiFilterInput($multiFilterName, $filterName, $relatedFieldRelationshipFilterName));
+        }
+
+        // We only have to create the relationship filter input type once per type, and don't create it at all
+        // if there are no relationships present.
+        $relationshipFilterName = $parentType->name->value . 'RelationshipFilterInput';
+        if (
+            !array_key_exists($relationshipFilterName, $documentAST->types)
+            && $this->getSubFilterableFieldsForType($argDefinition, $parentType) !== []
+        ) {
+            $documentAST->setTypeDefinition(
+                $this->createRelationshipFilterInput(
+                    $relationshipFilterName,
+                    $this->getSubFilterableFieldsForType($argDefinition, $parentType)
+                )
+            );
+        }
     }
 
     /**
@@ -69,37 +98,49 @@ final class FilterDirective extends BaseDirective implements ArgBuilderDirective
             throw new InvalidArgumentException('$value parameter must be array');
         }
 
+        if ($builder instanceof QueryBuilder) {
+            throw new InvalidArgumentException('Query builder is not allowed.');
+        }
+
         $this->applyFilters($builder, $value);
 
         return $builder;
     }
 
-    protected function applyFilters(QueryBuilder|EloquentBuilder|Relation $builder, mixed $filter, string $context = 'and', ?string $table = null): void
+    protected function applyFilters(EloquentBuilder|Relation $builder, mixed $filter, string $context = 'and'): void
     {
-        // The query builder isn't able to provide the table being queried, so we pass it down the chain from
-        // eloquent-derived builders which can.
-        if ($builder instanceof EloquentBuilder || $builder instanceof Relation) {
-            $table = $builder->getModel()->getTable();
-        }
+        $table = $builder->getModel()->getTable();
 
         if (array_key_exists('all', $filter)) {
-            $builder->whereNested(
-                function ($subfilterBuilder) use ($filter, $table): void {
+            $builder->where(
+                function ($subfilterBuilder) use ($filter): void {
                     foreach ($filter['all'] as $subfilter) {
-                        $this->applyFilters($subfilterBuilder, $subfilter, 'and', $table);
+                        $this->applyFilters($subfilterBuilder, $subfilter, 'and');
                     }
                 },
-                $context
+                boolean: $context,
             );
         } elseif (array_key_exists('any', $filter)) {
-            $builder->whereNested(
-                function ($subfilterBuilder) use ($filter, $table): void {
+            $builder->where(
+                function ($subfilterBuilder) use ($filter): void {
                     foreach ($filter['any'] as $subfilter) {
-                        $this->applyFilters($subfilterBuilder, $subfilter, 'or', $table);
+                        $this->applyFilters($subfilterBuilder, $subfilter, 'or');
                     }
                 },
-                $context,
+                boolean: $context,
             );
+        } elseif (array_key_exists('has', $filter)) {
+            $relationshipName = array_key_first($filter['has']);
+            $relationshipFilters = $filter['has'][$relationshipName];
+            if ($context === 'and') {
+                $builder->whereHas($relationshipName, function ($subfilterBuilder) use ($relationshipFilters): void {
+                    $this->applyFilters($subfilterBuilder, $relationshipFilters);
+                });
+            } else {
+                $builder->orWhereHas($relationshipName, function ($subfilterBuilder) use ($relationshipFilters): void {
+                    $this->applyFilters($subfilterBuilder, $relationshipFilters);
+                });
+            }
         } else {
             $operators = [
                 'eq' => '=',
@@ -147,26 +188,73 @@ final class FilterDirective extends BaseDirective implements ArgBuilderDirective
      * @throws SyntaxError
      * @throws JsonException
      */
-    protected function createMultiFilterInput(string $multiFilterName, string $filterName): InputObjectTypeDefinitionNode
+    protected function createMultiFilterInput(string $multiFilterName, string $filterName, ?string $relationshipFilterName): InputObjectTypeDefinitionNode
     {
+        if ($relationshipFilterName !== null) {
+            $hasFilter = '"Find nodes which have one or more related notes which match the provided filter."' . PHP_EOL;
+            $hasFilter .= 'has: ' . $relationshipFilterName . '@rules(apply: ["prohibits:any,all,eq,ne,gt,lt,contains"])';
+        } else {
+            $hasFilter = '';
+        }
+
         return Parser::inputObjectTypeDefinition(/* @lang GraphQL */ <<<GRAPHQL
                 input {$multiFilterName} {
                     "Find nodes which match at least one of the provided filters."
-                    any: [{$multiFilterName}] @rules(apply: ["prohibits:all,eq,ne,gt,lt,contains"])
+                    any: [{$multiFilterName}] @rules(apply: ["prohibits:all,has,eq,ne,gt,lt,contains"])
                     "Find nodes which match all of the provided filters."
-                    all: [{$multiFilterName}] @rules(apply: ["prohibits:any,eq,ne,gt,lt,contains"])
+                    all: [{$multiFilterName}] @rules(apply: ["prohibits:any,has,eq,ne,gt,lt,contains"])
+                    {$hasFilter}
                     "Find nodes where the provided field is equal to the provided value."
-                    eq: {$filterName} @rules(apply: ["prohibits:any,all,ne,gt,lt,contains"])
+                    eq: {$filterName} @rules(apply: ["prohibits:any,all,has,ne,gt,lt,contains"])
                     "Find nodes where the provided field is not equal to the provided value."
-                    ne: {$filterName} @rules(apply: ["prohibits:any,all,eq,gt,lt,contains"])
+                    ne: {$filterName} @rules(apply: ["prohibits:any,all,has,eq,gt,lt,contains"])
                     "Find nodes where the provided field is greater than the provided value."
-                    gt: {$filterName} @rules(apply: ["prohibits:any,all,eq,ne,lt,contains"])
+                    gt: {$filterName} @rules(apply: ["prohibits:any,all,has,eq,ne,lt,contains"])
                     "Find nodes where the provided field is less than the provided value."
-                    lt: {$filterName} @rules(apply: ["prohibits:any,all,eq,ne,gt,contains"])
+                    lt: {$filterName} @rules(apply: ["prohibits:any,all,has,eq,ne,gt,contains"])
                     "Find nodes where the provided field contains the provided value."
-                    contains: {$filterName} @rules(apply: ["prohibits:any,all,eq,ne,gt,lt"])
+                    contains: {$filterName} @rules(apply: ["prohibits:any,all,has,eq,ne,gt,lt"])
                 }
             GRAPHQL
         );
+    }
+
+    /**
+     * @param array<string,string> $subFilterableFields
+     *
+     * @throws JsonException
+     * @throws SyntaxError
+     */
+    protected function createRelationshipFilterInput(string $relationshipFilterName, array $subFilterableFields): InputObjectTypeDefinitionNode
+    {
+        $typeDefinition = "input {$relationshipFilterName} {" . PHP_EOL;
+        foreach ($subFilterableFields as $fieldName => $fieldType) {
+            $typeDefinition .= "{$fieldName}: {$fieldType}" . PHP_EOL;
+        }
+        $typeDefinition .= '}' . PHP_EOL;
+        return Parser::inputObjectTypeDefinition($typeDefinition);
+    }
+
+    /**
+     * Find a list of filterable relationships by finding those which return a list and have a @filter directive.
+     *
+     * @return array<string,string> A mapping of field names to their respective ...MultiFilterInput types
+     */
+    private function getSubFilterableFieldsForType(InputValueDefinitionNode $argDefinition, ObjectTypeDefinitionNode|InterfaceTypeDefinitionNode $type): array
+    {
+        $subFilterableFieldNames = [];
+        foreach ($type->fields as $field) {
+            foreach ($field->arguments as $argument) {
+                foreach ($argument->directives as $directive) {
+                    // We abuse the fact that all list return values are paginated to exclude filterable fields which
+                    // cannot have subqueries.
+                    if ($directive->name->value === 'filter' && str_ends_with($field->type->type->name->value, 'Connection')) {
+                        $subFilterableFieldNames[(string) $field->name->value] = ASTHelper::qualifiedArgType($argDefinition, $field, $type) . 'MultiFilterInput';
+                        break 2;
+                    }
+                }
+            }
+        }
+        return $subFilterableFieldNames;
     }
 }
