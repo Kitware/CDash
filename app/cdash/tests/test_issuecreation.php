@@ -6,12 +6,16 @@ use App\Utils\RepositoryUtils;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\Project;
+use Tests\Traits\CreatesUsers;
 
 class IssueCreationTestCase extends KWWebTestCase
 {
+    use CreatesUsers;
+
     protected $PDO;
     protected $Builds;
     protected $Projects;
+    protected User $user;
 
     public function __construct()
     {
@@ -19,6 +23,7 @@ class IssueCreationTestCase extends KWWebTestCase
         $this->Builds = [];
         $this->Projects = [];
         $this->PDO = Database::getInstance()->getPdo();
+        $this->user = $this->makeAdminUser();
     }
 
     public function __destruct()
@@ -27,6 +32,7 @@ class IssueCreationTestCase extends KWWebTestCase
             remove_project_builds($project->Id);
             $project->Delete();
         }
+        $this->user->delete();
     }
 
     public function testIssueCreation()
@@ -85,8 +91,8 @@ class IssueCreationTestCase extends KWWebTestCase
         $clean_build->AddBuild(0, 0);
         $this->Builds['clean'] = $clean_build;
 
-        // Add user1@kw as a project administrator.
-        $userid = User::where('email', 'user1@kw')->firstOrFail()->id;
+        // Add out user as a project administrator.
+        $userid = $this->user->id;
         EloquentProject::findOrFail((int) $this->Projects['CDash']->Id)->users()
             ->attach($userid, [
                 'emailtype' => 3, // receive all emails

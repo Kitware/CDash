@@ -358,6 +358,9 @@ set_tests_properties(filterbuilderrors PROPERTIES DEPENDS /CDash/XmlHandler/Upda
 add_php_test(buildproperties)
 set_tests_properties(buildproperties PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
+add_php_test(issuecreation)
+set_tests_properties(issuecreation PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
 ###################################################################################################
 
 set_property(TEST install_2 APPEND PROPERTY DEPENDS
@@ -395,6 +398,7 @@ set_property(TEST install_2 APPEND PROPERTY DEPENDS
   configureappend
   filterbuilderrors
   buildproperties
+  issuecreation
 )
 
 
@@ -605,11 +609,8 @@ set_tests_properties(authtoken PROPERTIES DEPENDS multiplesubprojects)
 add_php_test(junithandler)
 set_tests_properties(junithandler PROPERTIES DEPENDS authtoken)
 
-add_php_test(issuecreation)
-set_tests_properties(issuecreation PROPERTIES DEPENDS junithandler)
-
 add_php_test(limitedbuilds)
-set_tests_properties(limitedbuilds PROPERTIES DEPENDS issuecreation)
+set_tests_properties(limitedbuilds PROPERTIES DEPENDS junithandler)
 
 add_php_test(managemeasurements)
 set_tests_properties(managemeasurements PROPERTIES DEPENDS limitedbuilds)
