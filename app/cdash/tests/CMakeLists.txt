@@ -364,6 +364,9 @@ set_tests_properties(issuecreation PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHa
 add_php_test(junithandler)
 set_tests_properties(junithandler PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
+add_php_test(configurewarnings)
+set_tests_properties(configurewarnings PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
 ###################################################################################################
 
 set_property(TEST install_2 APPEND PROPERTY DEPENDS
@@ -403,6 +406,7 @@ set_property(TEST install_2 APPEND PROPERTY DEPENDS
   buildproperties
   issuecreation
   junithandler
+  configurewarnings
 )
 
 
@@ -562,11 +566,8 @@ set_tests_properties(crosssubprojectcoverage PROPERTIES DEPENDS passwordcomplexi
 add_php_test(aggregatesubprojectcoverage)
 set_tests_properties(aggregatesubprojectcoverage PROPERTIES DEPENDS crosssubprojectcoverage)
 
-add_php_test(configurewarnings)
-set_tests_properties(configurewarnings PROPERTIES DEPENDS aggregatesubprojectcoverage)
-
 add_php_test(filtertestlabels)
-set_tests_properties(filtertestlabels PROPERTIES DEPENDS configurewarnings)
+set_tests_properties(filtertestlabels PROPERTIES DEPENDS aggregatesubprojectcoverage)
 
 add_php_test(dynamicanalysissummary)
 set_tests_properties(dynamicanalysissummary PROPERTIES DEPENDS filtertestlabels)
