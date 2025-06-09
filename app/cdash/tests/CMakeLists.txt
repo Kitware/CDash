@@ -92,6 +92,8 @@ add_php_test(seconds_from_interval)
 
 add_php_test(extracttar)
 
+add_php_test(passwordcomplexity)
+
 ###################################################################################################
 
 add_laravel_test(/Feature/CDashTest)
@@ -557,11 +559,8 @@ set_tests_properties(replacebuild PROPERTIES DEPENDS buildgetdate)
 add_php_test(sequenceindependence)
 set_tests_properties(sequenceindependence PROPERTIES DEPENDS replacebuild)
 
-add_php_test(passwordcomplexity)
-set_tests_properties(passwordcomplexity PROPERTIES DEPENDS sequenceindependence)
-
 add_php_test(crosssubprojectcoverage)
-set_tests_properties(crosssubprojectcoverage PROPERTIES DEPENDS passwordcomplexity)
+set_tests_properties(crosssubprojectcoverage PROPERTIES DEPENDS sequenceindependence)
 
 add_php_test(aggregatesubprojectcoverage)
 set_tests_properties(aggregatesubprojectcoverage PROPERTIES DEPENDS crosssubprojectcoverage)
