@@ -337,6 +337,9 @@ set_tests_properties(consistenttestingday PROPERTIES DEPENDS /CDash/XmlHandler/U
 add_php_test(numericupdate)
 set_tests_properties(numericupdate PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
+add_php_test(attachedfiles)
+set_tests_properties(attachedfiles PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
 ###################################################################################################
 
 set_property(TEST install_2 APPEND PROPERTY DEPENDS
@@ -367,6 +370,7 @@ set_property(TEST install_2 APPEND PROPERTY DEPENDS
   changeid
   consistenttestingday
   numericupdate
+  attachedfiles
 )
 
 
@@ -631,11 +635,8 @@ set_tests_properties(commitauthornotification PROPERTIES DEPENDS putdynamicbuild
 add_php_test(subscribeprojectshowlabels)
 set_tests_properties(subscribeprojectshowlabels PROPERTIES DEPENDS putdynamicbuilds)
 
-add_php_test(attachedfiles)
-set_tests_properties(attachedfiles PROPERTIES DEPENDS subscribeprojectshowlabels)
-
 add_php_test(subprojectorder)
-set_tests_properties(subprojectorder PROPERTIES DEPENDS attachedfiles)
+set_tests_properties(subprojectorder PROPERTIES DEPENDS subscribeprojectshowlabels)
 
 add_php_test(testimages)
 set_tests_properties(testimages PROPERTIES DEPENDS subprojectorder)
