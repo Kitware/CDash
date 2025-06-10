@@ -43,10 +43,7 @@ class LoginAndRegistration extends TestCase
     public static function tearDownAfterClass(): void
     {
         $user = User::where('email', LoginAndRegistration::$email)->first();
-        if ($user !== null) {
-            DB::table('password')->where('userid', $user->id)->delete();
-            $user->delete();
-        }
+        $user?->delete();
         parent::tearDownAfterClass();
     }
 
