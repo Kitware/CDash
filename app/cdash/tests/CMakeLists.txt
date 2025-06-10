@@ -88,6 +88,12 @@ add_legacy_unit_test(/CDash/LinkifyCompilerOutput)
 
 add_unit_test(/Unit/app/Console/Command/ValidateXmlCommandTest)
 
+add_php_test(seconds_from_interval)
+
+add_php_test(extracttar)
+
+add_php_test(passwordcomplexity)
+
 ###################################################################################################
 
 add_laravel_test(/Feature/CDashTest)
@@ -324,6 +330,47 @@ add_browser_test(/Browser/Pages/UsersPageTest)
 
 add_browser_test(/Browser/Pages/BuildFilesPageTest)
 
+add_php_test(changeid)
+set_tests_properties(changeid PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_php_test(consistenttestingday)
+set_tests_properties(consistenttestingday PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_php_test(numericupdate)
+set_tests_properties(numericupdate PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_php_test(attachedfiles)
+set_tests_properties(attachedfiles PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_php_test(subprojectorder)
+set_tests_properties(subprojectorder PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_php_test(dynamicanalysislogs)
+set_tests_properties(dynamicanalysislogs PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_php_test(dynamicanalysisdefectlongtype)
+set_tests_properties(dynamicanalysisdefectlongtype PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_php_test(configureappend)
+set_tests_properties(configureappend PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_php_test(filterbuilderrors)
+set_tests_properties(filterbuilderrors PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_php_test(buildproperties)
+set_tests_properties(buildproperties PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_php_test(issuecreation)
+set_tests_properties(issuecreation PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_php_test(junithandler)
+set_tests_properties(junithandler PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_php_test(configurewarnings)
+set_tests_properties(configurewarnings PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_feature_test(/Feature/AutoRemoveBuildsCommand)
+
 ###################################################################################################
 
 set_property(TEST install_2 APPEND PROPERTY DEPENDS
@@ -351,6 +398,19 @@ set_property(TEST install_2 APPEND PROPERTY DEPENDS
   /CDash/Messaging/Topic/TestFailureTopic
   /CDash/Messaging/Topic/TopicDecorator
   cypress/e2e/user-profile
+  changeid
+  consistenttestingday
+  numericupdate
+  attachedfiles
+  subprojectorder
+  dynamicanalysislogs
+  dynamicanalysisdefectlongtype
+  configureappend
+  filterbuilderrors
+  buildproperties
+  issuecreation
+  junithandler
+  configurewarnings
 )
 
 
@@ -501,26 +561,17 @@ set_tests_properties(replacebuild PROPERTIES DEPENDS buildgetdate)
 add_php_test(sequenceindependence)
 set_tests_properties(sequenceindependence PROPERTIES DEPENDS replacebuild)
 
-add_php_test(passwordcomplexity)
-set_tests_properties(passwordcomplexity PROPERTIES DEPENDS sequenceindependence)
-
 add_php_test(crosssubprojectcoverage)
-set_tests_properties(crosssubprojectcoverage PROPERTIES DEPENDS passwordcomplexity)
+set_tests_properties(crosssubprojectcoverage PROPERTIES DEPENDS sequenceindependence)
 
 add_php_test(aggregatesubprojectcoverage)
 set_tests_properties(aggregatesubprojectcoverage PROPERTIES DEPENDS crosssubprojectcoverage)
 
-add_php_test(configurewarnings)
-set_tests_properties(configurewarnings PROPERTIES DEPENDS aggregatesubprojectcoverage)
-
 add_php_test(filtertestlabels)
-set_tests_properties(filtertestlabels PROPERTIES DEPENDS configurewarnings)
-
-add_php_test(seconds_from_interval)
-set_tests_properties(seconds_from_interval PROPERTIES DEPENDS filtertestlabels)
+set_tests_properties(filtertestlabels PROPERTIES DEPENDS aggregatesubprojectcoverage)
 
 add_php_test(dynamicanalysissummary)
-set_tests_properties(dynamicanalysissummary PROPERTIES DEPENDS seconds_from_interval)
+set_tests_properties(dynamicanalysissummary PROPERTIES DEPENDS filtertestlabels)
 
 add_php_test(viewsubprojects)
 set_tests_properties(viewsubprojects PROPERTIES DEPENDS dynamicanalysissummary)
@@ -543,11 +594,8 @@ set_tests_properties(createprojectpermissions PROPERTIES DEPENDS imagecomparison
 add_php_test(testgraphpermissions)
 set_tests_properties(testgraphpermissions PROPERTIES DEPENDS createprojectpermissions)
 
-add_php_test(extracttar)
-set_tests_properties(extracttar PROPERTIES DEPENDS testgraphpermissions)
-
 add_php_test(pdoexecutelogserrors)
-set_tests_properties(pdoexecutelogserrors PROPERTIES DEPENDS extracttar)
+set_tests_properties(pdoexecutelogserrors PROPERTIES DEPENDS testgraphpermissions)
 
 add_php_test(revisionfilteracrossdates)
 set_tests_properties(revisionfilteracrossdates PROPERTIES DEPENDS actualtrilinossubmission)
@@ -564,14 +612,8 @@ set_tests_properties(multiplesubprojects PROPERTIES DEPENDS disabledtests)
 add_php_test(authtoken)
 set_tests_properties(authtoken PROPERTIES DEPENDS multiplesubprojects)
 
-add_php_test(junithandler)
-set_tests_properties(junithandler PROPERTIES DEPENDS authtoken)
-
-add_php_test(issuecreation)
-set_tests_properties(issuecreation PROPERTIES DEPENDS junithandler)
-
 add_php_test(limitedbuilds)
-set_tests_properties(limitedbuilds PROPERTIES DEPENDS issuecreation)
+set_tests_properties(limitedbuilds PROPERTIES DEPENDS authtoken)
 
 add_php_test(managemeasurements)
 set_tests_properties(managemeasurements PROPERTIES DEPENDS limitedbuilds)
@@ -582,20 +624,14 @@ set_tests_properties(coveragedirectories PROPERTIES DEPENDS managemeasurements)
 add_php_test(outputcolor)
 set_tests_properties(outputcolor PROPERTIES DEPENDS coveragedirectories)
 
-add_php_test(buildproperties)
-set_tests_properties(buildproperties PROPERTIES DEPENDS outputcolor)
-
 add_php_test(timestatus)
-set_tests_properties(timestatus PROPERTIES DEPENDS buildproperties)
+set_tests_properties(timestatus PROPERTIES DEPENDS outputcolor)
 
 add_php_test(bazeljson)
 set_tests_properties(bazeljson PROPERTIES DEPENDS timestatus)
 
-add_php_test(filterbuilderrors)
-set_tests_properties(filterbuilderrors PROPERTIES DEPENDS bazeljson)
-
 add_php_test(buildrelationship)
-set_tests_properties(buildrelationship PROPERTIES DEPENDS filterbuilderrors)
+set_tests_properties(buildrelationship PROPERTIES DEPENDS bazeljson)
 
 add_php_test(submission_assign_buildid)
 set_tests_properties(submission_assign_buildid PROPERTIES DEPENDS buildrelationship)
@@ -603,11 +639,8 @@ set_tests_properties(submission_assign_buildid PROPERTIES DEPENDS buildrelations
 add_php_test(donehandler)
 set_tests_properties(donehandler PROPERTIES DEPENDS submission_assign_buildid)
 
-add_php_test(changeid)
-set_tests_properties(changeid PROPERTIES DEPENDS donehandler)
-
 add_php_test(expiredbuildrules)
-set_tests_properties(expiredbuildrules PROPERTIES DEPENDS changeid)
+set_tests_properties(expiredbuildrules PROPERTIES DEPENDS donehandler)
 
 add_php_test(filterblocks)
 set_tests_properties(filterblocks PROPERTIES DEPENDS expiredbuildrules)
@@ -624,26 +657,11 @@ set_tests_properties(commitauthornotification PROPERTIES DEPENDS putdynamicbuild
 add_php_test(subscribeprojectshowlabels)
 set_tests_properties(subscribeprojectshowlabels PROPERTIES DEPENDS putdynamicbuilds)
 
-add_php_test(consistenttestingday)
-set_tests_properties(consistenttestingday PROPERTIES DEPENDS subscribeprojectshowlabels)
-
-add_php_test(numericupdate)
-set_tests_properties(numericupdate PROPERTIES DEPENDS consistenttestingday)
-
-add_php_test(attachedfiles)
-set_tests_properties(attachedfiles PROPERTIES DEPENDS numericupdate)
-
-add_php_test(subprojectorder)
-set_tests_properties(subprojectorder PROPERTIES DEPENDS attachedfiles)
-
 add_php_test(testimages)
-set_tests_properties(testimages PROPERTIES DEPENDS subprojectorder)
-
-add_php_test(dynamicanalysislogs)
-set_tests_properties(dynamicanalysislogs PROPERTIES DEPENDS testimages)
+set_tests_properties(testimages PROPERTIES DEPENDS subscribeprojectshowlabels)
 
 add_php_test(namedmeasurements)
-set_tests_properties(namedmeasurements PROPERTIES DEPENDS dynamicanalysislogs)
+set_tests_properties(namedmeasurements PROPERTIES DEPENDS testimages)
 
 add_php_test(longbuildname)
 set_tests_properties(longbuildname PROPERTIES DEPENDS namedmeasurements)
@@ -654,11 +672,8 @@ set_tests_properties(multiplelabelsfortests PROPERTIES DEPENDS longbuildname)
 add_php_test(subprojecttestfilters)
 set_tests_properties(subprojecttestfilters PROPERTIES DEPENDS multiplelabelsfortests)
 
-add_php_test(dynamicanalysisdefectlongtype)
-set_tests_properties(dynamicanalysisdefectlongtype PROPERTIES DEPENDS multiplelabelsfortests)
-
 add_php_test(starttimefromnotes)
-set_tests_properties(starttimefromnotes PROPERTIES DEPENDS dynamicanalysisdefectlongtype)
+set_tests_properties(starttimefromnotes PROPERTIES DEPENDS subprojecttestfilters)
 
 add_php_test(starttimefromupload)
 set_tests_properties(starttimefromupload PROPERTIES DEPENDS starttimefromnotes)
@@ -675,11 +690,8 @@ set_tests_properties(querytestsrevisionfilter PROPERTIES DEPENDS lotsofsubprojec
 add_php_test(redundanttests)
 set_tests_properties(redundanttests PROPERTIES DEPENDS querytestsrevisionfilter)
 
-add_php_test(configureappend)
-set_tests_properties(configureappend PROPERTIES DEPENDS redundanttests)
-
 add_php_test(notesparsererrormessages)
-set_tests_properties(notesparsererrormessages PROPERTIES DEPENDS configureappend)
+set_tests_properties(notesparsererrormessages PROPERTIES DEPENDS redundanttests)
 
 add_laravel_test(/Feature/SubProjectDependencies)
 set_tests_properties(/Feature/SubProjectDependencies PROPERTIES DEPENDS notesparsererrormessages)
