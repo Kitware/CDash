@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\GraphQL;
 
+use App\Models\CoverageFile;
 use App\Models\Project;
 use Illuminate\Support\Str;
 use Tests\TestCase;
@@ -15,6 +16,9 @@ class CoverageTypeTest extends TestCase
 
     private Project $project;
 
+    /** @var array<CoverageFile> */
+    private array $coverageFiles = [];
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -24,6 +28,10 @@ class CoverageTypeTest extends TestCase
 
     protected function tearDown(): void
     {
+        foreach ($this->coverageFiles as $file) {
+            $file->delete();
+        }
+
         // Deleting the project will delete all corresponding builds and coverage results
         $this->project->delete();
 
@@ -35,10 +43,18 @@ class CoverageTypeTest extends TestCase
      */
     public function testBasicFieldAccess(): void
     {
+        $coverageFile = CoverageFile::create([
+            'fullpath' => Str::uuid()->toString(),
+            'file' => Str::uuid()->toString(),
+            'crc32' => 0,
+        ]);
+        $this->coverageFiles[] = $coverageFile;
+
         $this->project->builds()->create([
             'name' => Str::uuid()->toString(),
             'uuid' => Str::uuid()->toString(),
         ])->coverageResults()->create([
+            'fileid' => $coverageFile->id,
             'loctested' => 4,
             'locuntested' => 5,
             'branchestested' => 6,
@@ -56,6 +72,7 @@ class CoverageTypeTest extends TestCase
                                 coverageResults {
                                     edges {
                                         node {
+                                            filePath
                                             linesOfCodeTested
                                             linesOfCodeUntested
                                             branchesTested
@@ -83,6 +100,7 @@ class CoverageTypeTest extends TestCase
                                         'edges' => [
                                             [
                                                 'node' => [
+                                                    'filePath' => $coverageFile->fullpath,
                                                     'linesOfCodeTested' => 4,
                                                     'linesOfCodeUntested' => 5,
                                                     'branchesTested' => 6,

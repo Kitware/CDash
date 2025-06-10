@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * @property int $buildid
@@ -43,5 +44,21 @@ class Coverage extends Model
     public function build(): BelongsTo
     {
         return $this->belongsTo(Build::class, 'buildid');
+    }
+
+    /**
+     * @return HasOne<CoverageFile, $this>
+     */
+    public function file(): HasOne
+    {
+        return $this->hasOne(CoverageFile::class, 'id', 'fileid');
+    }
+
+    /**
+     * A helper method used by Lighthouse to hide the fact that the path lives in a separate table.
+     */
+    public function getFilePath(): ?string
+    {
+        return $this->file?->fullpath;
     }
 }
