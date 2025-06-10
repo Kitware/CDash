@@ -766,6 +766,7 @@ final class BuildController extends AbstractBuildController
 
     public function build_file(int $build_id, int $file_id): StreamedResponse
     {
+        set_time_limit(0);
         $this->setBuildById($build_id);
 
         /** @var ?UploadFile $file */
