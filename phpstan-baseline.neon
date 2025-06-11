@@ -33646,6 +33646,12 @@ parameters:
 			path: config/cdash.php
 
 		-
+			message: '#^Parameter \#2 \$string of function explode expects string, bool\|string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: config/logging.php
+
+		-
 			message: '#^Binary operation "\+" between 2000\|bool\|string and 60 results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 2
