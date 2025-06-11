@@ -169,6 +169,7 @@ class ProcessSubmission implements ShouldQueue
         // Resubmit the file if necessary.
         if (is_a($handler, 'DoneHandler') && $handler->shouldRequeue()) {
             $this->requeueSubmissionFile($handler->getBuild()->Id);
+            return;
         }
 
         if ((int) config('cdash.backup_timeframe') === 0) {
