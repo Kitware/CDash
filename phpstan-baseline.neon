@@ -12643,12 +12643,6 @@ parameters:
 			path: app/cdash/include/Submission/CommitAuthorHandlerInterface.php
 
 		-
-			message: '#^Dynamic call to static method PHPUnit\\Framework\\TestCase\:\:any\(\)\.$#'
-			identifier: staticMethod.dynamicCall
-			count: 3
-			path: app/cdash/include/Test/CDashTestCase.php
-
-		-
 			message: '#^Method CDash\\Test\\CDashTestCase\:\:createMockFromBuilder\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -12712,12 +12706,6 @@ parameters:
 			message: '#^Access to an undefined property PHPUnit\\Framework\\MockObject\\MockObject\:\:\$SubProjectName\.$#'
 			identifier: property.notFound
 			count: 1
-			path: app/cdash/include/Test/CDashUseCaseTestCase.php
-
-		-
-			message: '#^Dynamic call to static method PHPUnit\\Framework\\TestCase\:\:any\(\)\.$#'
-			identifier: staticMethod.dynamicCall
-			count: 5
 			path: app/cdash/include/Test/CDashUseCaseTestCase.php
 
 		-
@@ -16228,12 +16216,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/DatabaseTest.php
 
 		-
-			message: '#^Dynamic call to static method PHPUnit\\Framework\\TestCase\:\:once\(\)\.$#'
-			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/CDash/DatabaseTest.php
-
-		-
 			message: '#^Method DatabaseTest\:\:testExecute\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -16369,12 +16351,6 @@ parameters:
 			message: '#^Dynamic call to static method PHPUnit\\Framework\\Assert\:\:assertTrue\(\)\.$#'
 			identifier: staticMethod.dynamicCall
 			count: 4
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
-
-		-
-			message: '#^Dynamic call to static method PHPUnit\\Framework\\TestCase\:\:any\(\)\.$#'
-			identifier: staticMethod.dynamicCall
-			count: 11
 			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
 
 		-
@@ -16618,12 +16594,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Subscription/UserSubscriptionBuilderTest.php
 
 		-
-			message: '#^Dynamic call to static method PHPUnit\\Framework\\TestCase\:\:any\(\)\.$#'
-			identifier: staticMethod.dynamicCall
-			count: 9
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/UserSubscriptionBuilderTest.php
-
-		-
 			message: '#^Method UserSubscriptionBuilderTest\:\:createFixed\(\) has parameter \$key with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -16750,18 +16720,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Topic/AuthoredTopicTest.php
 
 		-
-			message: '#^Dynamic call to static method PHPUnit\\Framework\\TestCase\:\:any\(\)\.$#'
-			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/AuthoredTopicTest.php
-
-		-
-			message: '#^Dynamic call to static method PHPUnit\\Framework\\TestCase\:\:exactly\(\)\.$#'
-			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/AuthoredTopicTest.php
-
-		-
 			message: '#^Method AuthoredTopicTest\:\:testSubscribesToBuild\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -16825,24 +16783,6 @@ parameters:
 			message: '#^Dynamic call to static method PHPUnit\\Framework\\Assert\:\:assertTrue\(\)\.$#'
 			identifier: staticMethod.dynamicCall
 			count: 9
-			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
-
-		-
-			message: '#^Dynamic call to static method PHPUnit\\Framework\\TestCase\:\:any\(\)\.$#'
-			identifier: staticMethod.dynamicCall
-			count: 6
-			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
-
-		-
-			message: '#^Dynamic call to static method PHPUnit\\Framework\\TestCase\:\:never\(\)\.$#'
-			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
-
-		-
-			message: '#^Dynamic call to static method PHPUnit\\Framework\\TestCase\:\:once\(\)\.$#'
-			identifier: staticMethod.dynamicCall
-			count: 2
 			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
 
 		-
@@ -17236,18 +17176,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Topic/EmailSentTopicTest.php
 
 		-
-			message: '#^Dynamic call to static method PHPUnit\\Framework\\TestCase\:\:any\(\)\.$#'
-			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/EmailSentTopicTest.php
-
-		-
-			message: '#^Dynamic call to static method PHPUnit\\Framework\\TestCase\:\:exactly\(\)\.$#'
-			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/EmailSentTopicTest.php
-
-		-
 			message: '#^Method EmailSentTopicTest\:\:testSubscribesToBuild\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -17281,12 +17209,6 @@ parameters:
 			message: '#^Dynamic call to static method PHPUnit\\Framework\\Assert\:\:assertTrue\(\)\.$#'
 			identifier: staticMethod.dynamicCall
 			count: 3
-			path: app/cdash/tests/case/CDash/Messaging/Topic/FixedTopicTest.php
-
-		-
-			message: '#^Dynamic call to static method PHPUnit\\Framework\\TestCase\:\:any\(\)\.$#'
-			identifier: staticMethod.dynamicCall
-			count: 2
 			path: app/cdash/tests/case/CDash/Messaging/Topic/FixedTopicTest.php
 
 		-
@@ -17446,18 +17368,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Topic/MissingTestTopicTest.php
 
 		-
-			message: '#^Dynamic call to static method PHPUnit\\Framework\\TestCase\:\:any\(\)\.$#'
-			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/MissingTestTopicTest.php
-
-		-
-			message: '#^Dynamic call to static method PHPUnit\\Framework\\TestCase\:\:once\(\)\.$#'
-			identifier: staticMethod.dynamicCall
-			count: 2
-			path: app/cdash/tests/case/CDash/Messaging/Topic/MissingTestTopicTest.php
-
-		-
 			message: '#^Method MissingTestTopicTest\:\:testGetTopicCollection\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -17566,12 +17476,6 @@ parameters:
 			message: '#^Dynamic call to static method PHPUnit\\Framework\\Assert\:\:assertTrue\(\)\.$#'
 			identifier: staticMethod.dynamicCall
 			count: 9
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
-
-		-
-			message: '#^Dynamic call to static method PHPUnit\\Framework\\TestCase\:\:any\(\)\.$#'
-			identifier: staticMethod.dynamicCall
-			count: 5
 			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
 
 		-
@@ -17743,12 +17647,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Topic/TopicDecoratorTest.php
 
 		-
-			message: '#^Dynamic call to static method PHPUnit\\Framework\\TestCase\:\:any\(\)\.$#'
-			identifier: staticMethod.dynamicCall
-			count: 3
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TopicDecoratorTest.php
-
-		-
 			message: '#^Method TopicDecoratorTest\:\:getMockTopic\(\) has invalid return type PHPUnit_Framework_MockObject_MockObject\.$#'
 			identifier: class.notFound
 			count: 1
@@ -17872,12 +17770,6 @@ parameters:
 			message: '#^Dynamic call to static method PHPUnit\\Framework\\Assert\:\:assertTrue\(\)\.$#'
 			identifier: staticMethod.dynamicCall
 			count: 6
-			path: app/cdash/tests/case/CDash/Messaging/Topic/UpdateErrorTopicTest.php
-
-		-
-			message: '#^Dynamic call to static method PHPUnit\\Framework\\TestCase\:\:any\(\)\.$#'
-			identifier: staticMethod.dynamicCall
-			count: 2
 			path: app/cdash/tests/case/CDash/Messaging/Topic/UpdateErrorTopicTest.php
 
 		-
@@ -18127,12 +18019,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Model/BuildFailureTest.php
 
 		-
-			message: '#^Dynamic call to static method PHPUnit\\Framework\\TestCase\:\:once\(\)\.$#'
-			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/CDash/Model/BuildFailureTest.php
-
-		-
 			message: '#^Method BuildFailureTest\:\:testMarshalBuildFailure\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -18289,12 +18175,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Model/BuildTest.php
 
 		-
-			message: '#^Dynamic call to static method PHPUnit\\Framework\\TestCase\:\:once\(\)\.$#'
-			identifier: staticMethod.dynamicCall
-			count: 2
-			path: app/cdash/tests/case/CDash/Model/BuildTest.php
-
-		-
 			message: '#^Method BuildTest\:\:testGetBuildEmailCollection\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -18403,12 +18283,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Model/RepositoryTest.php
 
 		-
-			message: '#^Dynamic call to static method PHPUnit\\Framework\\TestCase\:\:once\(\)\.$#'
-			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/CDash/Model/RepositoryTest.php
-
-		-
 			message: '#^Method RepositoryTest\:\:testGetRepositoryInterfaceReturnsGitHubService\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -18493,12 +18367,6 @@ parameters:
 			message: '#^Dynamic call to static method PHPUnit\\Framework\\Assert\:\:assertTrue\(\)\.$#'
 			identifier: staticMethod.dynamicCall
 			count: 9
-			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
-
-		-
-			message: '#^Dynamic call to static method PHPUnit\\Framework\\TestCase\:\:any\(\)\.$#'
-			identifier: staticMethod.dynamicCall
-			count: 4
 			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
 
 		-
@@ -18658,12 +18526,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Service/RepositoryServiceTest.php
 
 		-
-			message: '#^Dynamic call to static method PHPUnit\\Framework\\TestCase\:\:once\(\)\.$#'
-			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/CDash/Service/RepositoryServiceTest.php
-
-		-
 			message: '#^Method RepositoryServiceTest\:\:testConstruct\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -18701,12 +18563,6 @@ parameters:
 
 		-
 			message: '#^Dynamic call to static method PHPUnit\\Framework\\Assert\:\:equalTo\(\)\.$#'
-			identifier: staticMethod.dynamicCall
-			count: 2
-			path: app/cdash/tests/case/CDash/ServiceContainerTest.php
-
-		-
-			message: '#^Dynamic call to static method PHPUnit\\Framework\\TestCase\:\:once\(\)\.$#'
 			identifier: staticMethod.dynamicCall
 			count: 2
 			path: app/cdash/tests/case/CDash/ServiceContainerTest.php
@@ -18934,7 +18790,7 @@ parameters:
 			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
 
 		-
-			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\|ArrayAccess, mixed given\.$#'
+			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
