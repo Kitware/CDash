@@ -469,7 +469,7 @@ add_php_test(projectmodel)
 set_tests_properties(projectmodel PROPERTIES DEPENDS projectindb)
 
 add_php_test(querytests)
-set_tests_properties(querytests PROPERTIES DEPENDS projectmodel)
+set_tests_properties(querytests PROPERTIES DEPENDS "projectmodel;pubproject")
 
 add_php_test(sitestatistics)
 set_tests_properties(sitestatistics PROPERTIES DEPENDS querytests)
@@ -658,7 +658,7 @@ add_php_test(subscribeprojectshowlabels)
 set_tests_properties(subscribeprojectshowlabels PROPERTIES DEPENDS putdynamicbuilds)
 
 add_php_test(testimages)
-set_tests_properties(testimages PROPERTIES DEPENDS subscribeprojectshowlabels)
+set_tests_properties(testimages PROPERTIES DEPENDS "subscribeprojectshowlabels;commitauthornotification")
 
 add_php_test(namedmeasurements)
 set_tests_properties(namedmeasurements PROPERTIES DEPENDS testimages)
