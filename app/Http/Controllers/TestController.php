@@ -325,14 +325,6 @@ final class TestController extends AbstractProjectController
 
                 $filecontent .= "{$row->sitename},{$row->name},{$row->stamp},{$row->time},";
 
-                if ($this->project->ShowTestTime) {
-                    if ($row->timestatus < $this->project->TestTimeMaxStatus) {
-                        $filecontent .= 'Passed,';
-                    } else {
-                        $filecontent .= 'Failed,';
-                    }
-                }
-
                 switch ($currentStatus) {
                     case 'passed':
                         $filecontent .= 'Passed,';
