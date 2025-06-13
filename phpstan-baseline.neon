@@ -2524,6 +2524,12 @@ parameters:
 			path: app/Http/Controllers/SubmissionController.php
 
 		-
+			message: '#^Cannot call method storeAs\(\) on array\<Illuminate\\Http\\UploadedFile\>\|Illuminate\\Http\\UploadedFile\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Http/Controllers/SubmissionController.php
+
+		-
 			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
 			identifier: notEqual.notAllowed
 			count: 1
@@ -4990,12 +4996,6 @@ parameters:
 			path: app/Utils/UnparsedSubmissionProcessor.php
 
 		-
-			message: '#^Parameter \#1 \$haystack of function strpos expects string, \(list\<string\>\|string\) given\.$#'
-			identifier: argument.type
-			count: 2
-			path: app/Utils/UnparsedSubmissionProcessor.php
-
-		-
 			message: '#^Parameter \#1 \$json of function json_decode expects string, string\|false given\.$#'
 			identifier: argument.type
 			count: 1
@@ -5020,19 +5020,7 @@ parameters:
 			path: app/Utils/UnparsedSubmissionProcessor.php
 
 		-
-			message: '#^Parameter \#1 \$string of function substr expects string, \(list\<string\>\|string\) given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Utils/UnparsedSubmissionProcessor.php
-
-		-
 			message: '#^Part \$build_metadata\[''projectname''\] \(mixed\) of encapsed string cannot be cast to string\.$#'
-			identifier: encapsedStringPart.nonString
-			count: 1
-			path: app/Utils/UnparsedSubmissionProcessor.php
-
-		-
-			message: '#^Part \$filename \(list\<string\>\|string\) of encapsed string cannot be cast to string\.$#'
 			identifier: encapsedStringPart.nonString
 			count: 1
 			path: app/Utils/UnparsedSubmissionProcessor.php
