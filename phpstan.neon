@@ -54,6 +54,9 @@ parameters:
     checkBenevolentUnionTypes: true
     reportAnyTypeWideningInVarTag: true
 
+    parallel:
+        maximumNumberOfProcesses: int(%env.PHPSTAN_CPU%)
+
     level: 9
 
 includes:

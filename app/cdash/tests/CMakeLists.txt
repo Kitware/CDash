@@ -54,9 +54,10 @@ endfunction()
 
 function(add_browser_test TestName)
   add_feature_test(${TestName})
-  set_property(TEST ${TestName} PROPERTY RESOURCE_LOCK
+  set_property(TEST ${TestName} APPEND PROPERTY RESOURCE_LOCK
     APP_URL # All browser tests need exclusive access to the APP_URL configuration setting
   )
+  set_property(TEST ${TestName} APPEND PROPERTY PROCESSORS 2)
 endfunction()
 
 # phpunit tests
