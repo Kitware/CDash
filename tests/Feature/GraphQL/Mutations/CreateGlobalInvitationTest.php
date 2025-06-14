@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTruncation;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Mail;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 use Tests\Traits\CreatesUsers;
 
@@ -64,9 +65,7 @@ class CreateGlobalInvitationTest extends TestCase
         return $return_arr;
     }
 
-    /**
-     * @dataProvider roles
-     */
+    #[DataProvider('roles')]
     public function testAdminCreatesInvitationCorrectly(string $role): void
     {
         Mail::fake();
@@ -271,9 +270,7 @@ class CreateGlobalInvitationTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider invalidEmails
-     */
+    #[DataProvider('invalidEmails')]
     public function testCantCreateInvitationWithInvalidEmail(string $email): void
     {
         Mail::fake();

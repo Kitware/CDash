@@ -8,6 +8,7 @@ use App\Models\BuildCommand;
 use App\Models\Project;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
 use Tests\Traits\CreatesUsers;
@@ -116,9 +117,7 @@ class BuildCommandTypeTest extends TestCase
         return $return_arr;
     }
 
-    /**
-     * @dataProvider commandTypes
-     */
+    #[DataProvider('commandTypes')]
     public function testFilterByType(string $type): void
     {
         /** @var Build $build */

@@ -8,6 +8,7 @@ use App\Models\Project;
 use App\Models\User;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Mail;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
 use Tests\Traits\CreatesUsers;
@@ -60,9 +61,7 @@ class InviteToProjectTest extends TestCase
         return $return_arr;
     }
 
-    /**
-     * @dataProvider roles
-     */
+    #[DataProvider('roles')]
     public function testAdminCreatesInvitationCorrectly(string $role): void
     {
         Mail::fake();
@@ -411,9 +410,7 @@ class InviteToProjectTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider invalidEmails
-     */
+    #[DataProvider('invalidEmails')]
     public function testCantCreateInvitationWithInvalidEmail(string $email): void
     {
         self::assertEmpty($this->project->invitations()->get());
