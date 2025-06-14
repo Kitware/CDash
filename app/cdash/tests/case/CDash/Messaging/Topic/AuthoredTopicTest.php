@@ -26,14 +26,9 @@ class AuthoredTopicTest extends CDashTestCase
 {
     public function testSubscribesToBuild()
     {
-        $mock_topic = $this->getMockForAbstractClass(
-            Topic::class,
-            [],
-            '',
-            false,
-            true,
-            true,
-            ['subscribesToBuild']);
+        $mock_topic = $this->getMockBuilder(Topic::class)
+            ->onlyMethods(['subscribesToBuild'])
+            ->getMock();
 
         $mock_topic->expects($this->any())
             ->method('subscribesToBuild')
