@@ -16552,12 +16552,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Subscription/UserSubscriptionBuilderTest.php
 
 		-
-			message: '#^Call to deprecated method getMockForAbstractClass\(\) of class PHPUnit\\Framework\\MockObject\\MockBuilder\.$#'
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/UserSubscriptionBuilderTest.php
-
-		-
 			message: '#^Call to function in_array\(\) requires parameter \#3 to be set\.$#'
 			identifier: function.strict
 			count: 2
@@ -16682,12 +16676,6 @@ parameters:
 			identifier: missingType.property
 			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/Subscription/UserSubscriptionBuilderTest.php
-
-		-
-			message: '#^Call to deprecated method getMockForAbstractClass\(\) of class PHPUnit\\Framework\\TestCase\.$#'
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/AuthoredTopicTest.php
 
 		-
 			message: '#^Call to method expects\(\) on an unknown class PHPUnit_Framework_MockObject_MockObject\.$#'
@@ -16930,12 +16918,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
 
 		-
-			message: '#^Call to deprecated method getMockForAbstractClass\(\) of class PHPUnit\\Framework\\TestCase\.$#'
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/ConfigureTopicTest.php
-
-		-
 			message: '#^Call to method method\(\) on an unknown class PHPUnit_Framework_MockObject_MockObject\.$#'
 			identifier: class.notFound
 			count: 1
@@ -17144,12 +17126,6 @@ parameters:
 			identifier: phpunit.assertEquals
 			count: 3
 			path: app/cdash/tests/case/CDash/Messaging/Topic/DynamicAnalysisTopicTest.php
-
-		-
-			message: '#^Call to deprecated method getMockForAbstractClass\(\) of class PHPUnit\\Framework\\TestCase\.$#'
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/EmailSentTopicTest.php
 
 		-
 			message: '#^Dynamic call to static method PHPUnit\\Framework\\Assert\:\:assertFalse\(\)\.$#'
@@ -17617,12 +17593,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
 
 		-
-			message: '#^Call to deprecated method getMockForAbstractClass\(\) of class PHPUnit\\Framework\\TestCase\.$#'
-			identifier: method.deprecated
-			count: 3
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TopicDecoratorTest.php
-
-		-
 			message: '#^Dynamic call to static method PHPUnit\\Framework\\Assert\:\:assertInstanceOf\(\)\.$#'
 			identifier: staticMethod.dynamicCall
 			count: 5
@@ -17635,20 +17605,14 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Topic/TopicDecoratorTest.php
 
 		-
-			message: '#^Method TopicDecoratorTest\:\:getMockTopic\(\) has invalid return type PHPUnit_Framework_MockObject_MockObject\.$#'
-			identifier: class.notFound
+			message: '#^Method TopicDecoratorTest\:\:getMockTopic\(\) has no return type specified\.$#'
+			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/Topic/TopicDecoratorTest.php
 
 		-
 			message: '#^Method TopicDecoratorTest\:\:getMockTopic\(\) has parameter \$named with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TopicDecoratorTest.php
-
-		-
-			message: '#^Method TopicDecoratorTest\:\:getMockTopic\(\) should return PHPUnit_Framework_MockObject_MockObject but returns MockTopic&PHPUnit\\Framework\\MockObject\\MockObject\.$#'
-			identifier: return.type
 			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/Topic/TopicDecoratorTest.php
 
@@ -18488,12 +18452,6 @@ parameters:
 			identifier: missingType.parameter
 			count: 1
 			path: app/cdash/tests/case/CDash/NightlyTimeTest.php
-
-		-
-			message: '#^Call to deprecated method getMockForAbstractClass\(\) of class PHPUnit\\Framework\\MockObject\\MockBuilder\.$#'
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/case/CDash/Service/RepositoryServiceTest.php
 
 		-
 			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertInstanceOf\(\) with ''CDash\\\\Service\\\\RepositoryService'' and CDash\\Service\\RepositoryService will always evaluate to true\.$#'

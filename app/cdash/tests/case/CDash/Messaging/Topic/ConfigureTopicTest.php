@@ -33,7 +33,7 @@ class ConfigureTopicTest extends CDashTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->parent = $this->getMockForAbstractClass(Topic::class);
+        $this->parent = $this->getMockBuilder(Topic::class)->getMock();
     }
 
     public function testSubscribesToBuild()

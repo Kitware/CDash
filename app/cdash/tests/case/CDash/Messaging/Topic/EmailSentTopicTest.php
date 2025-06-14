@@ -29,15 +29,9 @@ class EmailSentTopicTest extends CDashTestCase
 {
     public function testSubscribesToBuild()
     {
-        $mock_topic = $this->getMockForAbstractClass(
-            Topic::class,
-            [],
-            '',
-            true,
-            true,
-            true,
-            ['subscribesToBuild', 'getTopicName']
-        );
+        $mock_topic = $this->getMockBuilder(Topic::class)
+            ->onlyMethods(['subscribesToBuild', 'getTopicName'])
+            ->getMock();
 
         $mock_topic->expects($this->exactly(3))
             ->method('subscribesToBuild')

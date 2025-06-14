@@ -153,20 +153,11 @@ class TopicDecoratorTest extends TestCase
         $this->assertNotInstanceOf(AuthoredTopic::class, $collection->get('MockTopic'));
     }
 
-    /**
-     * @return PHPUnit_Framework_MockObject_MockObject
-     */
     private function getMockTopic($named)
     {
-        $mock_topic = $this->getMockForAbstractClass(
-            MockTopic::class,
-            [],
-            '',
-            true,
-            true,
-            true,
-            ['getTopicName']
-        );
+        $mock_topic = $this->getMockBuilder(MockTopic::class)
+            ->onlyMethods(['getTopicName', 'isSubscribedToBy', 'subscribesToBuild'])
+            ->getMock();
 
         $mock_topic->expects($this->any())
             ->method('getTopicName')
@@ -177,15 +168,9 @@ class TopicDecoratorTest extends TestCase
 
     private function getMockTopicFixable($named)
     {
-        $mock_topic = $this->getMockForAbstractClass(
-            MockTopicFixable::class,
-            [],
-            '',
-            true,
-            true,
-            true,
-            ['getTopicName']
-        );
+        $mock_topic = $this->getMockBuilder(MockTopicFixable::class)
+            ->onlyMethods(['getTopicName', 'isSubscribedToBy', 'subscribesToBuild', 'hasFixes', 'getFixes'])
+            ->getMock();
 
         $mock_topic->expects($this->any())
             ->method('getTopicName')
@@ -196,15 +181,9 @@ class TopicDecoratorTest extends TestCase
 
     private function getMockTopicLabelable($named)
     {
-        $mock_topic = $this->getMockForAbstractClass(
-            MockTopicLabelable::class,
-            [],
-            '',
-            true,
-            true,
-            true,
-            ['getTopicName']
-        );
+        $mock_topic = $this->getMockBuilder(MockTopicLabelable::class)
+            ->onlyMethods(['getTopicName', 'isSubscribedToBy', 'subscribesToBuild', 'getLabelsFromBuild', 'setTopicDataWithLabels'])
+            ->getMock();
 
         $mock_topic->expects($this->any())
             ->method('getTopicName')
