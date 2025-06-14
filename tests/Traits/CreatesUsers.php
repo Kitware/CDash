@@ -3,6 +3,7 @@
 namespace Tests\Traits;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 trait CreatesUsers
@@ -65,7 +66,7 @@ trait CreatesUsers
             'email' => $email,
             'institution' => $institution,
         ]);
-        $user->password = $password;
+        $user->password = Hash::make($password);
         $user->admin = $admin;
         $user->save();
         return $user;

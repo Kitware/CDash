@@ -34018,12 +34018,6 @@ parameters:
 			path: tests/Feature/LoginAndRegistration.php
 
 		-
-			message: '#^Missing call to parent\:\:tearDown\(\) method\.$#'
-			identifier: phpunit.callParent
-			count: 1
-			path: tests/Feature/LoginAndRegistration.php
-
-		-
 			message: '#^Parameter \#1 \$model of method Illuminate\\Foundation\\Testing\\TestCase\:\:assertModelExists\(\) expects Illuminate\\Database\\Eloquent\\Model\|string, App\\Models\\User\|null given\.$#'
 			identifier: argument.type
 			count: 2

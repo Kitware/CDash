@@ -16,14 +16,19 @@ use Psr\SimpleCache\InvalidArgumentException;
 use Slides\Saml2\Events\SignedIn as Saml2SignedInEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Tests\TestCase;
+use Tests\Traits\CreatesUsers;
 use Throwable;
 
 class LoginAndRegistration extends TestCase
 {
+    use CreatesUsers;
+
     protected static string $email = 'logintest@user.com';
     protected static string $password = '54321';
 
     protected static string $blockedEmail = 'disabledRegistration@user.com';
+
+    private ?User $user = null;
 
     protected function setUp(): void
     {
@@ -33,18 +38,10 @@ class LoginAndRegistration extends TestCase
 
     protected function tearDown(): void
     {
-        /*
-         * The lack of a call to parent::tearDown() here is intentional.
-         * Otherwise tearDownAfterClass() fails with:
-         * "Target class [config] does not exist."
-         */
-    }
+        User::where('email', LoginAndRegistration::$email)->first()?->delete();
+        $this->user?->delete();
 
-    public static function tearDownAfterClass(): void
-    {
-        $user = User::where('email', LoginAndRegistration::$email)->first();
-        $user?->delete();
-        parent::tearDownAfterClass();
+        parent::tearDown();
     }
 
     public function testCanViewLoginForm(): void
@@ -76,21 +73,25 @@ class LoginAndRegistration extends TestCase
 
     public function testUserCanLoginWithCorrectCredentials(): void
     {
+        $this->user = $this->makeNormalUser(password: '12345');
+        $this->assertModelExists($this->user);
+
         // Verify that users can login with their username and password.
         $response = $this->post('/login', [
-            'email' => LoginAndRegistration::$email,
-            'password' => LoginAndRegistration::$password,
+            'email' => $this->user?->email,
+            'password' => '12345',
         ]);
-        $user = User::where('email', LoginAndRegistration::$email)->first();
-        $this->assertModelExists($user);
-        $this->assertAuthenticatedAs($user);
+        $this->assertModelExists($this->user);
+        $this->assertAuthenticatedAs($this->user);
     }
 
     public function testUserCannotLoginWithIncorrectCredentials(): void
     {
+        $this->user = $this->makeNormalUser(password: '12345');
+
         // Test the incorrect password workflow.
         $response = $this->post('/login', [
-            'email' => LoginAndRegistration::$email,
+            'email' => $this->user->email,
             'password' => 'not_the_right_password',
         ]);
         $response->assertStatus(401);
@@ -109,12 +110,14 @@ class LoginAndRegistration extends TestCase
 
     public function testUserCannotLoginWithDisabledLoginForm(): void
     {
+        $this->user = $this->makeNormalUser(password: '12345');
+
         // Verify that we can't login by POSTing to /login when the
         // relevant config setting is disabled.
         config(['cdash.username_password_authentication_enabled' => false]);
         $response = $this->post('/login', [
-            'email' => LoginAndRegistration::$email,
-            'password' => LoginAndRegistration::$password,
+            'email' => $this->user->email,
+            'password' => '12345',
         ]);
         $this->assertGuest();
     }
