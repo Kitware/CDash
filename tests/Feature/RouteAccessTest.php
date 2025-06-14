@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\URL;
 use LogicException;
 use Mockery\Exception\InvalidCountException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
 use Tests\Traits\CreatesUsers;
@@ -68,9 +69,7 @@ class RouteAccessTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider adminRoutes
-     */
+    #[DataProvider('adminRoutes')]
     public function testAdminRoutes(string $route): void
     {
         $this->get($route)->assertRedirect('login');
@@ -78,9 +77,7 @@ class RouteAccessTest extends TestCase
         $this->actingAs($this->admin_user)->get($route)->assertDontSeeText('You must be an administrator to access this page.');
     }
 
-    /**
-     * @dataProvider protectedRoutes
-     */
+    #[DataProvider('protectedRoutes')]
     public function testProtectedRoutes(string $route): void
     {
         $this->get($route)->assertRedirect('login');

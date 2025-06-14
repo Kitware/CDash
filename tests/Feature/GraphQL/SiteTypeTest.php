@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTruncation;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
 use Tests\Traits\CreatesSites;
@@ -576,9 +577,8 @@ class SiteTypeTest extends TestCase
 
     /**
      * @param array<string,mixed> $params
-     *
-     * @dataProvider nullabilityTestCases
      */
+    #[DataProvider('nullabilityTestCases')]
     public function testSiteInformationColumnNullability(array $params): void
     {
         $this->sites['site1'] = $this->makeSite([

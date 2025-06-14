@@ -5,6 +5,7 @@ namespace Tests\Feature\GraphQL;
 use App\Models\Project;
 use App\Models\TestOutput;
 use Illuminate\Support\Str;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Random\RandomException;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
@@ -129,9 +130,7 @@ class TestTypeTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider statuses
-     */
+    #[DataProvider('statuses')]
     public function testStatusEnum(string $db_value, string $enum_value): void
     {
         $this->project->builds()->create([

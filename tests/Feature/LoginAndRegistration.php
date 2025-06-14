@@ -12,6 +12,7 @@ use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
 use LogicException;
 use Mockery;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\SimpleCache\InvalidArgumentException;
 use Slides\Saml2\Events\SignedIn as Saml2SignedInEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -277,9 +278,7 @@ class LoginAndRegistration extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider oauthProviders
-     */
+    #[DataProvider('oauthProviders')]
     public function testCustomOauthDisplayNames(string $serviceName): void
     {
         // Enable PingIdentity, verify the button appears.
