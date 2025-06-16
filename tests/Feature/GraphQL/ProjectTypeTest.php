@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTruncation;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
 use Tests\Traits\CreatesUsers;
@@ -174,9 +175,8 @@ class ProjectTypeTest extends TestCase
 
     /**
      * @param array<string> $allowable_projects
-     *
-     * @dataProvider projectAccessByUser
      */
+    #[DataProvider('projectAccessByUser')]
     public function testProjectPermissions(?string $user, array $allowable_projects): void
     {
         $expected_json_response = [
@@ -208,9 +208,7 @@ class ProjectTypeTest extends TestCase
             ')->assertJson($expected_json_response, true);
     }
 
-    /**
-     * @dataProvider perProjectAccess
-     */
+    #[DataProvider('perProjectAccess')]
     public function testIndividualProjectPermissions(?string $user, string $project_name, bool $allow_access): void
     {
         $response = ($user === null ? $this : $this->actingAs($this->users[$user]))
@@ -907,9 +905,7 @@ class ProjectTypeTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider createProjectVisibilityRules
-     */
+    #[DataProvider('createProjectVisibilityRules')]
     public function testCreateProjectMaxVisibility(string $user, string $visibility, string $max_visibility, bool $can_create): void
     {
         Config::set('cdash.user_create_projects', true);
@@ -976,9 +972,7 @@ class ProjectTypeTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider authenticatedSubmissionRules
-     */
+    #[DataProvider('authenticatedSubmissionRules')]
     public function testRequireAuthenticatedSubmissions(
         string $user,
         bool $use_authenticated_submits,
