@@ -32,7 +32,7 @@ class RepositoryServiceTest extends CDashTestCase
         parent::setUp();
         $this->setDatabaseMocked();
         $this->repository = $this->getMockBuilder(RepositoryInterface::class)
-            ->getMockForAbstractClass();
+            ->getMock();
     }
 
     public function testConstruct()

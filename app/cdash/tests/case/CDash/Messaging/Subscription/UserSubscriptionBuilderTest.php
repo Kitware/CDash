@@ -69,7 +69,7 @@ class UserSubscriptionBuilderTest extends TestCase
     private function getMockHandler(BuildCollection $builds)
     {
         $mock_handler = $this->getMockBuilder(ActionableBuildInterface::class)
-            ->getMockForAbstractClass();
+            ->getMock();
 
         $mock_project = $this->getMockBuilder(Project::class)
             ->onlyMethods(['GetSubscriberCollection'])
