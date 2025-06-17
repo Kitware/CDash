@@ -46,19 +46,16 @@ class NoteTypeTest extends TestCase
         $this->note1 = Note::create([
             'name' => Str::uuid()->toString(),
             'text' => Str::uuid()->toString(),
-            'crc32' => random_int(0, 100000),
         ]);
 
         $this->note2 = Note::create([
             'name' => Str::uuid()->toString(),
             'text' => Str::uuid()->toString(),
-            'crc32' => random_int(0, 100000),
         ]);
 
         $this->note3 = Note::create([
             'name' => Str::uuid()->toString(),
             'text' => Str::uuid()->toString(),
-            'crc32' => random_int(0, 100000),
         ]);
 
         $this->public_project->builds()->create([

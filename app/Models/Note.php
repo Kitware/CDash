@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property int $id
  * @property string $text
  * @property string $name
- * @property int $crc32
  *
  * @mixin Builder<Note>
  */
@@ -21,14 +20,12 @@ class Note extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'crc32',
         'name',
         'text',
     ];
 
     protected $casts = [
         'id' => 'integer',
-        'crc32' => 'integer',
     ];
 
     /**
