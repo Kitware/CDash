@@ -28,6 +28,9 @@ class RepositoryUtils
         $project = $service->get(Project::class);
         $project->Id = $projectid;
         $project->Fill();
+        if (is_null($project->CvsViewerType)) {
+            return;
+        }
         $cvsviewertype = strtolower($project->CvsViewerType);
 
         $target_fn = $cvsviewertype . '_get_source_dir';
