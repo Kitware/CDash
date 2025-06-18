@@ -201,6 +201,11 @@ RUN chmod -R g=u,o-w /etc/pki/ca-trust/extracted /etc/pki/ca-trust/source/anchor
 # In the future, we may want to consider limiting this for security reasons.
 RUN echo "clear_env = no" >> /etc/php-fpm.d/www.conf
 
+# Redirect PHP worker stdout and stderr into main error log
+# instead of /dev/null
+# https://www.php.net/manual/en/install.fpm.configuration.php
+RUN echo "catch_workers_output = yes" >> /etc/php-fpm.d/www.conf
+
 USER 1001
 
 # Copy CDash (current folder) into /cdash
