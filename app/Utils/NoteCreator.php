@@ -30,28 +30,12 @@ class NoteCreator
     public $time;
     public $text;
 
-    private $crc32;
-
     public function __construct()
     {
         $this->buildid = null;
         $this->name = '';
         $this->time = '';
         $this->text = '';
-        $this->crc32 = '';
-    }
-
-    /** Get the CRC32 */
-    public function computeCrc32()
-    {
-        if (strlen($this->crc32) > 0) {
-            return $this->crc32;
-        }
-        // Compute the CRC32 for the note.
-        $text = pdo_real_escape_string($this->text);
-        $name = pdo_real_escape_string($this->name);
-        $this->crc32 = crc32($text . $name);
-        return $this->crc32;
     }
 
     /**
@@ -60,11 +44,9 @@ class NoteCreator
     public function create()
     {
         // Create the note if it doesn't already exist.
-        $this->computeCrc32();
-        $note = Note::firstOrCreate(['crc32' => $this->crc32], [
+        $note = Note::firstOrCreate([
             'name' => $this->name,
             'text' => $this->text,
-            'crc32' => $this->crc32,
         ]);
 
         // Create the build2note record.

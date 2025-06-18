@@ -3655,21 +3655,6 @@ parameters:
 			path: app/Utils/LdapUtils.php
 
 		-
-			message: '''
-				#^Call to deprecated function pdo_real_escape_string\(\)\:
-				04/01/2023$#
-			'''
-			identifier: function.deprecated
-			count: 2
-			path: app/Utils/NoteCreator.php
-
-		-
-			message: '#^Method App\\Utils\\NoteCreator\:\:computeCrc32\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Utils/NoteCreator.php
-
-		-
 			message: '#^Method App\\Utils\\NoteCreator\:\:create\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -3677,12 +3662,6 @@ parameters:
 
 		-
 			message: '#^Property App\\Utils\\NoteCreator\:\:\$buildid has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: app/Utils/NoteCreator.php
-
-		-
-			message: '#^Property App\\Utils\\NoteCreator\:\:\$crc32 has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
 			path: app/Utils/NoteCreator.php

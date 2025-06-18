@@ -412,7 +412,6 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $note_id = DB::table('note')->insertGetId([
             'text' => 'note for test_removebuildds',
             'name' => 'test_removebuilds.log',
-            'crc32' => $crc32,
         ]);
         $testoutput_id = DB::table('testoutput')->insertGetId([
             'output' => 'testoutput for test_removebuildds',
