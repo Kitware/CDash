@@ -8931,7 +8931,7 @@ parameters:
 				v2\.5\.0 01/22/2018$#
 			'''
 			identifier: function.deprecated
-			count: 10
+			count: 5
 			path: app/cdash/app/Model/CoverageFile.php
 
 		-
@@ -8950,26 +8950,14 @@ parameters:
 			path: app/cdash/app/Model/CoverageFile.php
 
 		-
+			message: '#^Cannot cast mixed to int\.$#'
+			identifier: cast.int
+			count: 1
+			path: app/cdash/app/Model/CoverageFile.php
+
+		-
 			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
 			identifier: equal.notAllowed
-			count: 1
-			path: app/cdash/app/Model/CoverageFile.php
-
-		-
-			message: '#^Method CDash\\Model\\CoverageFile\:\:GetIdFromName\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Model/CoverageFile.php
-
-		-
-			message: '#^Method CDash\\Model\\CoverageFile\:\:GetIdFromName\(\) has parameter \$buildid with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Model/CoverageFile.php
-
-		-
-			message: '#^Method CDash\\Model\\CoverageFile\:\:GetIdFromName\(\) has parameter \$file with no type specified\.$#'
-			identifier: missingType.parameter
 			count: 1
 			path: app/cdash/app/Model/CoverageFile.php
 
@@ -9057,13 +9045,7 @@ parameters:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			'''
 			identifier: method.deprecated
-			count: 3
-			path: app/cdash/app/Model/CoverageFileLog.php
-
-		-
-			message: '#^Cannot access offset ''fullpath'' on array\|false\|null\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
+			count: 2
 			path: app/cdash/app/Model/CoverageFileLog.php
 
 		-

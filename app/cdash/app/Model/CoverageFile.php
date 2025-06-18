@@ -17,8 +17,8 @@
 
 namespace CDash\Model;
 
+use App\Models\CoverageFile as EloquentCoverageFile;
 use CDash\Database;
-use Illuminate\Support\Facades\DB;
 use PDO;
 
 /** This class shouldn't be used externally */
@@ -62,15 +62,11 @@ class CoverageFile
             $file = $this->File;
         }
 
-        $stmt = $this->PDO->prepare(
-            'SELECT id FROM coveragefile WHERE crc32=:crc32');
-        $stmt->bindParam(':crc32', $this->Crc32);
-        pdo_execute($stmt);
-        $existing_file_row = $stmt->fetch(PDO::FETCH_ASSOC);
-        if (is_array($existing_file_row)) {
+        $existing_file_row = EloquentCoverageFile::firstWhere('crc32', $this->Crc32);
+        if ($existing_file_row !== null) {
             // A file already exists with this crc32.
             // Update this object to use the previously existing result's id.
-            $this->Id = $existing_file_row['id'];
+            $this->Id = $existing_file_row->id;
 
             // Update the corresponding coverage row to use this fileid too.
             // First we query for the old fileid used by this coverage entry,
@@ -113,13 +109,11 @@ class CoverageFile
                 }
 
                 // Remove the file if the crc32 is NULL
-                DB::delete('
-                    DELETE FROM coveragefile
-                    WHERE
-                        id = ?
-                        AND file IS NULL
-                        AND crc32 IS NULL
-                ', [$prevfileid]);
+                EloquentCoverageFile::where([
+                    'id' => $prevfileid,
+                    'file' => null,
+                    'crc32' => null,
+                ])->delete();
             }
         } else {
             // The file doesn't exist in the database
@@ -141,53 +135,29 @@ class CoverageFile
             if (is_array($coveragefile_row)) {
                 $this->Id = $coveragefile_row['id'];
             } else {
-                $stmt = $this->PDO->prepare(
-                    'SELECT id, file FROM coveragefile
-                        WHERE fullpath=:fullpath AND file IS NULL
-                        ORDER BY id ASC');
-                $stmt->bindParam(':fullpath', $this->FullPath);
-                pdo_execute($stmt);
-                $coveragefile_row = $stmt->fetch(PDO::FETCH_ASSOC);
-            }
-            if (is_array($coveragefile_row)) {
-                $this->Id = $coveragefile_row['id'];
-            } else {
-                // If we still haven't found an existing fileid
-                // we insert one here.
-                $this->Id = DB::table('coveragefile')->insertGetId([
+                $coveragefile_row = EloquentCoverageFile::firstWhere([
                     'fullpath' => $this->FullPath,
-                    'crc32' => 0,
+                    'file' => null,
                 ]);
+
+                if ($coveragefile_row !== null) {
+                    $this->Id = $coveragefile_row->id;
+                } else {
+                    // If we still haven't found an existing fileid
+                    // we insert one here.
+                    $this->Id = EloquentCoverageFile::create([
+                        'fullpath' => $this->FullPath,
+                        'crc32' => 0,
+                    ])->id;
+                }
             }
 
-            $stmt = $this->PDO->prepare(
-                'UPDATE coveragefile SET file=:file, crc32=:crc32 WHERE id=:id');
-            $stmt->bindParam(':file', $file, PDO::PARAM_LOB);
-            $stmt->bindParam(':crc32', $this->Crc32);
-            $stmt->bindParam(':id', $this->Id);
-            pdo_execute($stmt);
+            EloquentCoverageFile::findOrFail((int) $this->Id)->update([
+                'file' => $file,
+                'crc32' => $this->Crc32,
+            ]);
         }
         return true;
-    }
-
-    // Get the fileid from the name
-    public function GetIdFromName($file, $buildid)
-    {
-        $stmt = $this->PDO->prepare(
-            'SELECT coveragefile.id FROM coveragefile
-                INNER JOIN coverage ON (coveragefile.id=coverage.fileid)
-                WHERE fullpath LIKE :fullpath AND coverage.buildid=:buildid');
-        $file_with_wildcard = "%$file%";
-        $stmt->bindParam(':fullpath', $file_with_wildcard);
-        $stmt->bindParam(':buildid', $buildid);
-        if (!pdo_execute($stmt)) {
-            return false;
-        }
-        $row = $stmt->fetch();
-        if (!array_key_exists('id', $row)) {
-            return false;
-        }
-        return $row['id'];
     }
 
     // Populate $this from existing database results.
@@ -197,21 +167,18 @@ class CoverageFile
             return false;
         }
 
-        $stmt = $this->PDO->prepare('SELECT * FROM coveragefile WHERE id=:id');
-        $stmt->bindParam(':id', $this->Id);
-        pdo_execute($stmt);
-        $row = $stmt->fetch();
-        if (!array_key_exists('id', $row)) {
+        $coverage_file = EloquentCoverageFile::find((int) $this->Id);
+        if ($coverage_file === null) {
             return false;
         }
 
-        $this->FullPath = $row['fullpath'];
-        $this->Crc32 = $row['crc32'];
+        $this->FullPath = $coverage_file->fullpath;
+        $this->Crc32 = $coverage_file->crc32;
         if (config('cdash.use_compression')) {
-            if (is_resource($row['file'])) {
-                $this->File = base64_decode(stream_get_contents($row['file']));
+            if (is_resource($coverage_file->file)) {
+                $this->File = base64_decode(stream_get_contents($coverage_file->file));
             } else {
-                $this->File = base64_decode($row['file']);
+                $this->File = base64_decode($coverage_file->file);
             }
 
             @$uncompressedrow = gzuncompress($this->File);
@@ -219,7 +186,8 @@ class CoverageFile
                 $this->File = $uncompressedrow;
             }
         } else {
-            $this->File = $row['file'];
+            // TODO: This branch of the conditional is possibly faulty.  Postgres should always return a resource here.
+            $this->File = $coverage_file->file;
         }
 
         return true;

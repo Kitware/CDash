@@ -17,6 +17,7 @@
 
 namespace CDash\Model;
 
+use App\Models\CoverageFile;
 use CDash\Database;
 use Illuminate\Support\Facades\DB;
 
@@ -97,10 +98,10 @@ class CoverageSummary
                                    ', [$fullpath, intval($this->BuildId)]);
                     if (empty($coveragefile)) {
                         // Create an empty file if doesn't exist.
-                        $fileid = DB::table('coveragefile')->insertGetId([
+                        $fileid = CoverageFile::create([
                             'fullpath' => $fullpath,
                             'crc32' => 0,
-                        ]);
+                        ])->id;
                     } else {
                         $fileid = intval($coveragefile['id']);
                     }
