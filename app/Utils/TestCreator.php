@@ -136,36 +136,6 @@ class TestCreator
     }
 
     /**
-     * Compress test output before storing it in the database.
-     */
-    public function compressOutput(): void
-    {
-        if ($this->alreadyCompressed) {
-            if (config('database.default') === 'pgsql') {
-                $compressed_output = $this->testOutput;
-            } else {
-                $compressed_output = base64_decode($this->testOutput);
-            }
-        } elseif (config('cdash.use_compression')) {
-            $compressed_output = gzcompress($this->testOutput);
-            if ($compressed_output === false) {
-                $compressed_output = $this->testOutput;
-            } else {
-                if (config('database.default') == 'pgsql') {
-                    if (strlen($this->testOutput) < 2000) {
-                        // Compression doesn't help for small chunks.
-                        $compressed_output = $this->testOutput;
-                    }
-                    $compressed_output = base64_encode($compressed_output);
-                }
-            }
-        } else {
-            $compressed_output = $this->testOutput;
-        }
-        $this->testOutput = $compressed_output;
-    }
-
-    /**
      * Set test name, truncated to 255 characters.
      */
     public function setTestName(string $testName): void
@@ -199,7 +169,12 @@ class TestCreator
         if (count($outputid) > 0) {
             $outputid = $outputid[0]->id;
         } else {
-            $this->compressOutput();
+            // Decompress before database insertion if the data was compressed by CTest
+            if ($this->alreadyCompressed) {
+                $this->testOutput = base64_decode($this->testOutput);
+                $this->testOutput = gzuncompress($this->testOutput);
+            }
+
             DB::insert(
                 'INSERT INTO testoutput (path, command, output, crc32)
                 VALUES (:path, :command, :output, :crc32)',

@@ -18,7 +18,6 @@
 namespace CDash\Controller\Api;
 
 use App\Models\Project as EloquentProject;
-use App\Models\TestOutput;
 use App\Utils\RepositoryUtils;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
@@ -133,7 +132,7 @@ class TestDetails extends BuildTestApi
         $test_response['time'] = time_difference($testRow['time'], true, '', true);
         $test_response['command'] = $testRow['command'];
         $test_response['details'] = $testRow['details'];
-        $test_response['output'] = $this->utf8_for_xml(TestOutput::DecompressOutput($testRow['output']));
+        $test_response['output'] = $this->utf8_for_xml($testRow['output']);
 
         if ($this->project->DisplayLabels) {
             $test_response['labels'] = $this->buildtest->getLabels()->keys()->implode(', ');

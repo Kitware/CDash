@@ -78,8 +78,6 @@ add_unit_test(/Unit/app/Validators/PasswordTest)
 
 add_unit_test(/Unit/app/Middleware/InternalTest)
 
-add_unit_test(/Unit/app/Models/TestOutputTest)
-
 # TODO: Is this test useful now?
 add_legacy_unit_test(/PHPUnitTest)
 

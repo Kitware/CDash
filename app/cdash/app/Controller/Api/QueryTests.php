@@ -20,7 +20,6 @@ namespace CDash\Controller\Api;
 use App\Models\Measurement;
 use App\Models\Project as EloquentProject;
 use App\Models\TestMeasurement;
-use App\Models\TestOutput;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\Project;
@@ -78,7 +77,7 @@ class QueryTests extends ResultsApi
             return true;
         }
 
-        $test_output = TestOutput::DecompressOutput($row['output']);
+        $test_output = $row['output'];
 
         // Make sure test output matches (or does not match) the
         // specified filter values.
