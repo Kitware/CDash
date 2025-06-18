@@ -17,6 +17,7 @@
 
 namespace CDash\Model;
 
+use App\Models\Coverage;
 use App\Models\CoverageFile as EloquentCoverageFile;
 use CDash\Database;
 use PDO;
@@ -82,13 +83,12 @@ class CoverageFile
             if (is_array($old_fileid_row)) {
                 $prevfileid = $old_fileid_row['fileid'];
 
-                $stmt = $this->PDO->prepare(
-                    'UPDATE coverage SET fileid=:fileid
-                        WHERE buildid=:buildid AND fileid=:prevfileid');
-                $stmt->bindParam(':fileid', $this->Id);
-                $stmt->bindParam(':buildid', $buildid);
-                $stmt->bindParam(':prevfileid', $prevfileid);
-                pdo_execute($stmt);
+                Coverage::where([
+                    'buildid' => $buildid,
+                    'fileid' => $prevfileid,
+                ])->update([
+                    'fileid' => $this->Id,
+                ]);
 
                 // Similarly update any labels if necessary.
                 $stmt = $this->PDO->prepare(
