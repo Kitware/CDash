@@ -19,7 +19,6 @@ use CDash\Messaging\Subscription\SubscriptionCollection;
 use CDash\Model\Build;
 use CDash\Model\BuildEmail;
 use CDash\Model\BuildGroup;
-use CDash\Model\BuildUpdate;
 use CDash\Model\PendingSubmissions;
 use CDash\Model\Project;
 use CDash\Model\Repository;
@@ -34,7 +33,6 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use RetryHandler;
-use RuntimeException;
 use Throwable;
 use UpdateHandler;
 
@@ -617,10 +615,10 @@ class ProcessSubmission implements ShouldQueue
         //  Check if the group as no email
         $Build = new Build();
         $Build->Id = $buildid;
-        $groupid = $Build->GetGroup();
+        $eloquentBuild = \App\Models\Build::findOrFail((int) $buildid);
 
         $BuildGroup = new BuildGroup();
-        $BuildGroup->SetId($groupid);
+        $BuildGroup->SetId($Build->GetGroup());
 
         // If we specified no email we stop here
         if ($BuildGroup->GetSummaryEmail() == 2) {
@@ -651,16 +649,9 @@ class ProcessSubmission implements ShouldQueue
                 // Generate the email to send
                 $subject = 'CDash [' . $Project->Name . '] - Update Errors for ' . $sitename;
 
-                $buildUpdate = new BuildUpdate();
-                $buildUpdate->BuildId = $buildid;
-                $update = $buildUpdate->GetUpdateForBuild();
-                if ($update === false) {
-                    throw new RuntimeException('Error querying update status for build ' . $buildid);
-                }
-
                 $body = "$sitename has encountered errors during the Update step and you have been identified as the maintainer of this site.\n\n";
                 $body .= "*Update Errors*\n";
-                $body .= 'Status: ' . $update['status'] . ' (' . url('/build/' . $buildid . '/update') . ")\n";
+                $body .= 'Status: ' . $eloquentBuild->updates()->firstOrFail()->status . ' (' . url('/build/' . $buildid . '/update') . ")\n";
 
                 Mail::raw($body, function ($message) use ($subject, $recipients) {
                     $message->subject($subject)
@@ -678,9 +669,7 @@ class ProcessSubmission implements ShouldQueue
         $errors['hasfixes'] = false;
 
         // Update errors
-        $BuildUpdate = new BuildUpdate();
-        $BuildUpdate->BuildId = $buildid;
-        $errors['update_errors'] = $BuildUpdate->GetNumberOfErrors();
+        $errors['update_errors'] = \App\Models\Build::findOrFail($buildid)->updates()->first()->errors ?? 0;
 
         // Green build we return
         if ($errors['update_errors'] == 0) {
