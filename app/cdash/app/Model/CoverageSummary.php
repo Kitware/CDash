@@ -17,6 +17,8 @@
 
 namespace CDash\Model;
 
+use App\Models\Coverage;
+use App\Models\CoverageFile;
 use CDash\Database;
 use Illuminate\Support\Facades\DB;
 
@@ -48,20 +50,18 @@ class CoverageSummary
             abort(500, 'CoverageSummary::RemoveAll(): BuildId not set');
         }
 
-        $db = Database::getInstance();
-
-        // coverage file are kept unless they are shared
-        $coverage = $db->executePrepared('SELECT fileid FROM coverage WHERE buildid=?', [intval($this->BuildId)]);
-        foreach ($coverage as $coverage_array) {
-            $fileid = intval($coverage_array['fileid']);
-            // Make sure the file is not shared
-            $numfiles = $db->executePreparedSingleRow('SELECT count(*) AS c FROM coveragefile WHERE id=?', [$fileid]);
-            if (intval($numfiles['c']) === 1) {
-                DB::delete('DELETE FROM coveragefile WHERE id=?', [$fileid]);
+        // coverage files are kept unless they are shared
+        $build = \App\Models\Build::findOrFail((int) $this->BuildId);
+        /** @var Coverage $coverage */
+        foreach ($build->coverageResults()->get() as $coverage) {
+            /** @var CoverageFile $file */
+            $file = $coverage->file()->first();
+            if ($file->builds()->count() === 1) {
+                $file->delete();
             }
         }
 
-        DB::delete('DELETE FROM coverage WHERE buildid=?', [intval($this->BuildId)]);
+        $build->coverageResults()->delete();
         DB::delete('DELETE FROM coveragefilelog WHERE buildid=?', [intval($this->BuildId)]);
         DB::delete('DELETE FROM coveragesummary WHERE buildid=?', [intval($this->BuildId)]);
     }
@@ -97,10 +97,10 @@ class CoverageSummary
                                    ', [$fullpath, intval($this->BuildId)]);
                     if (empty($coveragefile)) {
                         // Create an empty file if doesn't exist.
-                        $fileid = DB::table('coveragefile')->insertGetId([
+                        $fileid = CoverageFile::create([
                             'fullpath' => $fullpath,
                             'crc32' => 0,
-                        ]);
+                        ])->id;
                     } else {
                         $fileid = intval($coveragefile['id']);
                     }
@@ -141,35 +141,34 @@ class CoverageSummary
                 $this->LocUntested += $locuntested;
 
                 $existing_row_updated = false;
+
+                // TODO: replace the following two conditionals with a single call to updateOrCreate()
                 if ($append) {
                     // UPDATE (instead of INSERT) if this coverage already
                     // exists.
                     $existing_row_updated = DB::transaction(function () use ($coverage, $covered, $loctested, $locuntested, $branchestested, $branchesuntested, $functionstested, $functionsuntested) {
-                        $existing_coverage_row = DB::table('coverage')
-                            ->where('buildid', $this->BuildId)
-                            ->where('fileid', $coverage->CoverageFile->Id)
-                            ->lockForUpdate()
-                            ->first();
-                        if ($existing_coverage_row) {
-                            DB::table('coverage')
-                                ->where('buildid', $this->BuildId)
-                                ->where('fileid', $coverage->CoverageFile->Id)
-                                ->update([
-                                    'covered' => $covered,
-                                    'loctested' => $loctested,
-                                    'locuntested' => $locuntested,
-                                    'branchestested' => $branchestested,
-                                    'branchesuntested' => $branchesuntested,
-                                    'functionstested' => $functionstested,
-                                    'functionsuntested' => $functionsuntested,
-                                ]);
+                        $existing_coverage_row = Coverage::firstWhere([
+                            'buildid' => $this->BuildId,
+                            'fileid' => $coverage->CoverageFile->Id,
+                        ]);
+
+                        if ($existing_coverage_row !== null) {
+                            $existing_coverage_row->update([
+                                'covered' => $covered,
+                                'loctested' => $loctested,
+                                'locuntested' => $locuntested,
+                                'branchestested' => $branchestested,
+                                'branchesuntested' => $branchesuntested,
+                                'functionstested' => $functionstested,
+                                'functionsuntested' => $functionsuntested,
+                            ]);
                             return true;
                         }
                         return false;
                     });
                 }
                 if (!$existing_row_updated) {
-                    DB::table('coverage')->insert([
+                    Coverage::create([
                         'buildid' => $this->BuildId,
                         'fileid' => $fileid,
                         'covered' => $covered,
@@ -205,13 +204,8 @@ class CoverageSummary
 
                 // Recompute how many lines were tested & untested
                 // based on all files covered by this build.
-                $this->LocTested = 0;
-                $this->LocUntested = 0;
-                $rows = DB::table('coverage')->where('buildid', $this->BuildId)->get();
-                foreach ($rows as $row) {
-                    $this->LocTested += $row->loctested;
-                    $this->LocUntested += $row->locuntested;
-                }
+                $this->LocTested = Coverage::where('buildid', (int) $this->BuildId)->sum('loctested');
+                $this->LocUntested = Coverage::where('buildid', (int) $this->BuildId)->sum('locuntested');
 
                 // Update the existing record with this information.
                 DB::table('coveragesummary')

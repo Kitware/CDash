@@ -267,10 +267,7 @@ class CoverageFileLog
 
         // Abort if this log refers to a different version of the file
         // than the one already contained in the aggregate.
-        $row = $db->executePreparedSingleRow('
-                   SELECT id, fullpath FROM coveragefile WHERE id=?
-               ', [intval($this->FileId)]);
-        $path = $row['fullpath'];
+        $path = \App\Models\CoverageFile::findOrFail((int) $this->FileId)->fullpath;
         $row = $db->executePreparedSingleRow('
                    SELECT id
                    FROM coveragefile AS cf
