@@ -395,15 +395,13 @@ final class BuildController extends AbstractBuildController
 
         // Previous build
         if ($previous_buildid > 0 && isset($previous_build)) {
-            $previous_build_update = new BuildUpdate();
-            $previous_build_update->BuildId = $previous_build->Id;
-            $previous_build_update->FillFromBuildId();
+            $previous_build_update = EloquentBuild::findOrFail($previous_buildid)->updates()->first();
 
             $response['previousbuild'] = [
                 'buildid' => $previous_buildid,
                 // Update
-                'nupdateerrors' => $previous_build_update->GetNumberOfErrors(),
-                'nupdatewarnings' => $previous_build_update->GetNumberOfWarnings(),
+                'nupdateerrors' => $previous_build_update->errors ?? 0,
+                'nupdatewarnings' => $previous_build_update->warnings ?? 0,
                 // Configure
                 'nconfigureerrors' => $previous_build->GetNumberOfConfigureErrors(),
                 'nconfigurewarnings' => $previous_build->GetNumberOfConfigureWarnings(),
@@ -421,16 +419,13 @@ final class BuildController extends AbstractBuildController
             $next_build = new Build();
             $next_build->Id = $next_buildid;
             $next_build->FillFromId($next_build->Id);
-
-            $next_build_update = new BuildUpdate();
-            $next_build_update->BuildId = $next_build->Id;
-            $next_build_update->FillFromBuildId();
+            $next_build_update = EloquentBuild::findOrFail($next_buildid)->updates()->first();
 
             $response['nextbuild'] = [
                 'buildid' => $next_buildid,
                 // Update
-                'nupdateerrors' => $next_build_update->GetNumberOfErrors(),
-                'nupdatewarnings' => $next_build_update->GetNumberOfWarnings(),
+                'nupdateerrors' => $next_build_update->errors ?? 0,
+                'nupdatewarnings' => $next_build_update->warnings ?? 0,
                 // Configure
                 'nconfigureerrors' => $next_build->GetNumberOfConfigureErrors(),
                 'nconfigurewarnings' => $next_build->GetNumberOfConfigureWarnings(),
@@ -824,6 +819,8 @@ final class BuildController extends AbstractBuildController
         }
         $this->setBuildById((int) $_GET['buildid']);
 
+        $eloquentBuild = EloquentBuild::findOrFail((int) $this->build->Id);
+
         $service = ServiceContainer::getInstance();
 
         $response = begin_JSON_response();
@@ -857,11 +854,8 @@ final class BuildController extends AbstractBuildController
         ];
 
         // Update
-        $update = $service->get(BuildUpdate::class);
-        $update->BuildId = $this->build->Id;
-        $build_update = $update->GetUpdateForBuild();
-        if (is_array($build_update)) {
-            $revision = $build_update['revision'];
+        if ($eloquentBuild->updates()->exists()) {
+            $revision = $eloquentBuild->updates()->firstOrFail()->revision;
             $extra_build_fields['revision'] = $revision;
         } else {
             $revision = null;

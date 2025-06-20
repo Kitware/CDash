@@ -2845,6 +2845,12 @@ parameters:
 			path: app/Http/Controllers/UserController.php
 
 		-
+			message: '#^Cannot cast mixed to int\.$#'
+			identifier: cast.int
+			count: 1
+			path: app/Http/Controllers/UserController.php
+
+		-
 			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
 			identifier: notEqual.notAllowed
 			count: 1
@@ -2866,12 +2872,6 @@ parameters:
 			message: '#^Only booleans are allowed in a while condition, mixed given\.$#'
 			identifier: while.condNotBoolean
 			count: 3
-			path: app/Http/Controllers/UserController.php
-
-		-
-			message: '#^Only booleans are allowed in an if condition, array\|false given\.$#'
-			identifier: if.condNotBoolean
-			count: 1
 			path: app/Http/Controllers/UserController.php
 
 		-
@@ -8479,78 +8479,12 @@ parameters:
 			path: app/cdash/app/Model/BuildRelationship.php
 
 		-
-			message: '#^Access to an undefined property CDash\\Model\\BuildUpdate\:\:\$updateId\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/cdash/app/Model/BuildUpdate.php
-
-		-
-			message: '#^Access to an undefined property object\:\:\$nfiles\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/cdash/app/Model/BuildUpdate.php
-
-		-
-			message: '#^Access to an undefined property object\:\:\$parentid\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/cdash/app/Model/BuildUpdate.php
-
-		-
-			message: '#^Access to an undefined property object\:\:\$updateid\.$#'
-			identifier: property.notFound
-			count: 2
-			path: app/cdash/app/Model/BuildUpdate.php
-
-		-
-			message: '#^Access to an undefined property object\:\:\$warnings\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/cdash/app/Model/BuildUpdate.php
-
-		-
-			message: '''
-				#^Call to deprecated function add_last_sql_error\(\)\:
-				04/22/2023$#
-			'''
-			identifier: function.deprecated
-			count: 1
-			path: app/cdash/app/Model/BuildUpdate.php
-
-		-
 			message: '''
 				#^Call to deprecated function pdo_execute\(\)\:
 				v2\.5\.0 01/22/2018$#
 			'''
 			identifier: function.deprecated
-			count: 2
-			path: app/cdash/app/Model/BuildUpdate.php
-
-		-
-			message: '''
-				#^Call to deprecated function pdo_real_escape_string\(\)\:
-				04/01/2023$#
-			'''
-			identifier: function.deprecated
-			count: 8
-			path: app/cdash/app/Model/BuildUpdate.php
-
-		-
-			message: '''
-				#^Call to deprecated method executePrepared\(\) of class CDash\\Database\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			'''
-			identifier: method.deprecated
 			count: 1
-			path: app/cdash/app/Model/BuildUpdate.php
-
-		-
-			message: '''
-				#^Call to deprecated method executePreparedSingleRow\(\) of class CDash\\Database\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			'''
-			identifier: method.deprecated
-			count: 3
 			path: app/cdash/app/Model/BuildUpdate.php
 
 		-
@@ -8563,27 +8497,9 @@ parameters:
 			path: app/cdash/app/Model/BuildUpdate.php
 
 		-
-			message: '#^Cannot access offset ''c'' on array\|false\|null\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/app/Model/BuildUpdate.php
-
-		-
-			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
-			identifier: empty.notAllowed
-			count: 4
-			path: app/cdash/app/Model/BuildUpdate.php
-
-		-
-			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
-			identifier: notEqual.notAllowed
-			count: 1
-			path: app/cdash/app/Model/BuildUpdate.php
-
-		-
 			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
 			identifier: equal.notAllowed
-			count: 3
+			count: 2
 			path: app/cdash/app/Model/BuildUpdate.php
 
 		-
@@ -8601,30 +8517,6 @@ parameters:
 		-
 			message: '#^Method CDash\\Model\\BuildUpdate\:\:GetFiles\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/app/Model/BuildUpdate.php
-
-		-
-			message: '#^Method CDash\\Model\\BuildUpdate\:\:GetUpdateForBuild\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/app/Model/BuildUpdate.php
-
-		-
-			message: '#^Only booleans are allowed in a negated boolean, object\|null given\.$#'
-			identifier: booleanNot.exprNotBoolean
-			count: 2
-			path: app/cdash/app/Model/BuildUpdate.php
-
-		-
-			message: '#^Only booleans are allowed in an if condition, object\|null given\.$#'
-			identifier: if.condNotBoolean
-			count: 3
-			path: app/cdash/app/Model/BuildUpdate.php
-
-		-
-			message: '#^Only numeric types are allowed in \+, int\|false given on the right side\.$#'
-			identifier: plus.rightNonNumeric
 			count: 1
 			path: app/cdash/app/Model/BuildUpdate.php
 
@@ -18134,24 +18026,6 @@ parameters:
 			identifier: varTag.nativeType
 			count: 1
 			path: app/cdash/tests/case/CDash/Model/BuildTest.php
-
-		-
-			message: '#^Dynamic call to static method PHPUnit\\Framework\\Assert\:\:assertEquals\(\)\.$#'
-			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/CDash/Model/BuildUpdateTest.php
-
-		-
-			message: '#^Method BuildUpdateTest\:\:testGetUrlForSelf\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Model/BuildUpdateTest.php
-
-		-
-			message: '#^You should use assertSame\(\) instead of assertEquals\(\), because both values are scalars of the same type$#'
-			identifier: phpunit.assertEquals
-			count: 1
-			path: app/cdash/tests/case/CDash/Model/BuildUpdateTest.php
 
 		-
 			message: '#^Access to an undefined property PendingSubmissionsTest\:\:\$mock_build\.$#'

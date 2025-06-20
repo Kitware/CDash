@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Support\Carbon;
 
@@ -260,5 +261,23 @@ class Build extends Model
     public function children(): HasMany
     {
         return $this->hasMany(self::class, 'parentid');
+    }
+
+    /**
+     * @return HasOne<self, $this>
+     */
+    public function parent(): HasOne
+    {
+        return $this->hasOne(self::class, 'id', 'parentid');
+    }
+
+    /**
+     * TODO: Perhaps rename this function in the future to make it less similar to Laravel's update()?
+     *
+     * @return BelongsToMany<BuildUpdate, $this>
+     */
+    public function updates(): BelongsToMany
+    {
+        return $this->belongsToMany(BuildUpdate::class, 'build2update', 'buildid', 'updateid');
     }
 }

@@ -10,7 +10,6 @@ use App\Validators\Password;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildConfigure;
-use CDash\Model\BuildUpdate;
 use CDash\Model\Project;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
@@ -226,6 +225,7 @@ final class UserController extends AbstractController
         $row = $stmt->fetch();
         if ($row) {
             $buildid = $row['id'];
+            $build = \App\Models\Build::findOrFail((int) $buildid);
 
             // Express the date in terms of days (makes more sens)
             $buildtime = strtotime($row['starttime'] . ' UTC');
@@ -269,22 +269,9 @@ final class UserController extends AbstractController
             }
 
             // Update
-            $nupdates = 0;
-            $updateclass = 'normal';
-            $BuildUpdate = new BuildUpdate();
-            $BuildUpdate->BuildId = $buildid;
-            $update_row = $BuildUpdate->GetUpdateForBuild();
-            if ($update_row) {
-                $nupdates = $update_row['nfiles'];
-                if ($nupdates < 0) {
-                    $nupdates = 0;
-                }
-                if ($update_row['warnings'] > 0) {
-                    $updateclass = 'error';
-                }
-            }
-            $response['update'] = $nupdates;
-            $response['updateclass'] = $updateclass;
+            $BuildUpdate = $build->updates()->first();
+            $response['update'] = $BuildUpdate->nfiles ?? 0;
+            $response['updateclass'] = $BuildUpdate !== null && $BuildUpdate->warnings > 0 ? 'error' : 'normal';
 
             // Find the number of errors and warnings
             $Build = new Build();
