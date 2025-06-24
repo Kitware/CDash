@@ -3511,18 +3511,6 @@ parameters:
 			path: app/Models/Test.php
 
 		-
-			message: '#^Call to function base64_decode\(\) requires parameter \#2 to be set\.$#'
-			identifier: function.strict
-			count: 1
-			path: app/Models/TestOutput.php
-
-		-
-			message: '#^Only booleans are allowed in a negated boolean, mixed given\.$#'
-			identifier: booleanNot.exprNotBoolean
-			count: 1
-			path: app/Models/TestOutput.php
-
-		-
 			message: '''
 				#^Call to deprecated method forceRootUrl\(\) of class Illuminate\\Routing\\UrlGenerator\:
 				Use useOrigin$#
@@ -4663,20 +4651,8 @@ parameters:
 			path: app/Utils/TestCreator.php
 
 		-
-			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
-			identifier: equal.notAllowed
-			count: 1
-			path: app/Utils/TestCreator.php
-
-		-
 			message: '#^Method App\\Utils\\TestCreator\:\:saveImage\(\) has parameter \$outputid with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/Utils/TestCreator.php
-
-		-
-			message: '#^Only booleans are allowed in an elseif condition, mixed given\.$#'
-			identifier: elseif.condNotBoolean
 			count: 1
 			path: app/Utils/TestCreator.php
 
@@ -34004,12 +33980,6 @@ parameters:
 			identifier: phpunit.assertEquals
 			count: 1
 			path: tests/Unit/app/Middleware/InternalTest.php
-
-		-
-			message: '#^You should use assertSame\(\) instead of assertEquals\(\), because both values are scalars of the same type$#'
-			identifier: phpunit.assertEquals
-			count: 3
-			path: tests/Unit/app/Models/TestOutputTest.php
 
 		-
 			message: '#^Method App\\Validators\\PasswordTest\:\:testComplexityFailsGivenEmptyPassword\(\) has no return type specified\.$#'
