@@ -7,13 +7,11 @@ namespace App\Utils;
 use App\Models\Configure;
 use CDash\Database;
 use CDash\Model\Build;
-use CDash\Model\BuildUpdate;
 use CDash\Model\DynamicAnalysis;
 use CDash\Model\Project;
 use CDash\ServiceContainer;
 use Illuminate\Support\Facades\Log;
 use PDO;
-use RuntimeException;
 
 class RepositoryUtils
 {
@@ -550,6 +548,8 @@ class RepositoryUtils
         $build = new Build();
         $build->Id = $buildid;
 
+        $eloquentBuild = \App\Models\Build::findOrFail($buildid);
+
         $serverURI = url('/');
         $information = '';
 
@@ -557,16 +557,10 @@ class RepositoryUtils
         if ($errorkey === 'update_errors') {
             $information = "\n\n*Update*\n";
 
-            $buildUpdate = new BuildUpdate();
-            $buildUpdate->BuildId = $buildid;
-            $update = $buildUpdate->GetUpdateForBuild();
-            if ($update === false) {
-                throw new RuntimeException('Error querying update status for build ' . $buildid);
-            }
-
-            $information .= "Status: {$update['status']} ({$serverURI}/build/{$buildid}/update)\n";
+            $update = $eloquentBuild->updates()->firstOrFail();
+            $information .= "Status: {$update->status} ({$serverURI}/build/{$buildid}/update)\n";
             $information .= 'Command: ';
-            $information .= substr($update['command'], 0, $maxchars);
+            $information .= substr($update->command, 0, $maxchars);
             $information .= "\n";
         } elseif ($errorkey == 'configure_errors') {
             // Configure information
