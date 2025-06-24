@@ -73,6 +73,7 @@ export default {
       query: gql`
         query($buildid: ID, $filters: BuildTestsFiltersMultiFilterInput, $after: String) {
           build(id: $buildid) {
+            id
             tests(filters: $filters, after: $after, first: 100) {
               edges {
                 node {
