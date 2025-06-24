@@ -38,8 +38,8 @@
           />
           <filter-row
             v-else-if="entry !== 'deleted'"
-            :operators="result.typeInformation.inputFields.filter(f => f.type.kind !== 'LIST').map(o => o.name)"
-            :type="result.typeInformation.inputFields.filter(f => f.type.kind !== 'LIST')[0].type.name"
+            :operators="operatorTypes.map(o => o.name)"
+            :type="operatorTypes[0].type.name"
             :initial-field="filterToFilterRow(entry).field"
             :initial-operator="filterToFilterRow(entry).operator"
             :initial-value="filterToFilterRow(entry).value"
@@ -157,6 +157,10 @@ export default {
 
     currentCombineType() {
       return this.filters.hasOwnProperty('any') ? 'any' : 'all';
+    },
+
+    operatorTypes() {
+      return this.result.typeInformation.inputFields.filter(f => f.type.kind !== 'LIST' && !f.type.name.endsWith('RelationshipFilterInput'));
     },
   },
 

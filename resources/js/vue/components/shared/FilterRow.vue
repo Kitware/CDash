@@ -122,8 +122,8 @@ export default {
 
   setup(props) {
     const { result, error } = useQuery(gql`
-      query {
-        typeInformation: __type(name: "${props.type}") {
+      query($typeName: String!){
+        typeInformation: __type(name: $typeName) {
           inputFields {
             name
             type {
@@ -136,7 +136,9 @@ export default {
           }
         }
       }
-    `);
+    `, {
+      typeName: props.type,
+    });
 
     return {
       result,
