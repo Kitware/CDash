@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
@@ -44,6 +45,14 @@ class Coverage extends Model
     public function build(): BelongsTo
     {
         return $this->belongsTo(Build::class, 'buildid');
+    }
+
+    /**
+     * @return BelongsToMany<Label, $this>
+     */
+    public function labels(): BelongsToMany
+    {
+        return $this->belongsToMany(Label::class, 'label2coverage', 'coverageid', 'labelid');
     }
 
     /**

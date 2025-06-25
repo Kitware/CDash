@@ -18,7 +18,6 @@
 namespace CDash\Model;
 
 use App\Models\Coverage as EloquentCoverage;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Coverage class. Used by CoverageSummary
@@ -46,32 +45,7 @@ class Coverage
             $this->Labels = [];
         }
 
-        $label->CoverageFileId = $this->CoverageFile->Id;
-        $label->CoverageFileBuildId = (int) $this->BuildId;
         $this->Labels[] = $label;
-    }
-
-    /** Put labels for coverage */
-    public function InsertLabelAssociations($buildid)
-    {
-        if ($buildid
-            && isset($this->CoverageFile)
-            && $this->CoverageFile->Id
-        ) {
-            if (empty($this->Labels)) {
-                return;
-            }
-
-            foreach ($this->Labels as $label) {
-                $label->CoverageFileId = $this->CoverageFile->Id;
-                $label->CoverageFileBuildId = (int) $buildid;
-                $label->Insert();
-            }
-        } else {
-            Log::error('No buildid or coveragefile', [
-                'function' => 'Coverage::InsertLabelAssociations',
-            ]);
-        }
     }
 
     /** Return true if this build already has coverage for this file,
