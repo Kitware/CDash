@@ -506,7 +506,7 @@ class ViewCoveragePhpFilters extends DefaultFilters
                 break;
 
             case 'labels':
-                $sql_field = "(SELECT $this->TextConcat AS labels FROM (SELECT label.text, coverage.fileid, coverage.buildid FROM label, label2coveragefile, coverage WHERE label2coveragefile.labelid=label.id AND label2coveragefile.buildid=coverage.buildid AND label2coveragefile.coveragefileid=coverage.fileid) AS filelabels WHERE fileid=c.fileid AND buildid=c.buildid)";
+                $sql_field = "(SELECT $this->TextConcat AS labels FROM (SELECT label.text, coverage.fileid, coverage.buildid FROM label, label2coverage, coverage WHERE label2coverage.labelid=label.id AND label2coverage.coverageid=coverage.id) AS filelabels WHERE fileid=c.fileid AND buildid=c.buildid)";
 
                 break;
 

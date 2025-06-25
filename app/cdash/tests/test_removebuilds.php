@@ -495,7 +495,7 @@ class RemoveBuildsTestCase extends KWWebTestCase
             $this->verify_get_rows('label2build', 'labelid', 'buildid', '=', $build->Id, 1);
         $this->verify('label', 'id', '=', $labelid, 1);
         $this->verify('label2buildfailure', 'labelid', '=', $labelid, 2);
-        $this->verify('label2coveragefile', 'labelid', '=', $labelid, 3);
+        $this->verify('label2coverage', 'labelid', '=', $labelid, 3);
         $this->verify('label2dynamicanalysis', 'labelid', '=', $labelid, 1);
         $this->verify('label2test', 'labelid', '=', $labelid, 3);
 
@@ -533,7 +533,7 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $this->verify('image', 'id', 'IN', $imgids, 1, $extra_msg);
         $this->verify('label2build', 'buildid', '=', $build->Id, 0, $extra_msg);
         $this->verify('label2buildfailure', 'labelid', '=', $labelid, 1, $extra_msg);
-        $this->verify('label2coveragefile', 'labelid', '=', $labelid, 1, $extra_msg);
+        $this->verify('label2coverage', 'labelid', '=', $labelid, 1, $extra_msg);
         $this->verify('label2dynamicanalysis', 'labelid', '=', $labelid, 0, $extra_msg);
         $this->verify('label2test', 'labelid', '=', $labelid, 1, $extra_msg);
         $this->verify('note', 'id', 'IN', $noteids, 1, $extra_msg);
@@ -576,7 +576,7 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $this->verify('image', 'id', 'IN', $imgids, 0, $extra_msg);
         $this->verify('label2build', 'buildid', '=', $existing_build->Id, 0, $extra_msg);
         $this->verify('label2buildfailure', 'labelid', '=', $labelid, 0, $extra_msg);
-        $this->verify('label2coveragefile', 'labelid', '=', $labelid, 0, $extra_msg);
+        $this->verify('label2coverage', 'labelid', '=', $labelid, 0, $extra_msg);
         $this->verify('label2dynamicanalysis', 'labelid', '=', $labelid, 0, $extra_msg);
         $this->verify('label2test', 'labelid', '=', $labelid, 0, $extra_msg);
         $this->verify('note', 'id', 'IN', $noteids, 0, $extra_msg);

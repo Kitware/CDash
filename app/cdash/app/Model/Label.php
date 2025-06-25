@@ -119,9 +119,6 @@ class Label
 
         $this->InsertAssociation('label2buildfailure', 'buildfailureid', intval($this->BuildFailureId));
 
-        $this->InsertAssociation('label2coveragefile', 'buildid',
-            $this->CoverageFileBuildId, 'coveragefileid', intval($this->CoverageFileId));
-
         $this->InsertAssociation('label2dynamicanalysis', 'dynamicanalysisid', intval($this->DynamicAnalysisId));
 
         $this->Test?->labels()->syncWithoutDetaching([$this->Id]);

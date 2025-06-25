@@ -8683,12 +8683,6 @@ parameters:
 			path: app/cdash/app/Model/BuildUpdateFile.php
 
 		-
-			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
-			identifier: empty.notAllowed
-			count: 1
-			path: app/cdash/app/Model/Coverage.php
-
-		-
 			message: '#^Method CDash\\Model\\Coverage\:\:AddLabel\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -8696,18 +8690,6 @@ parameters:
 
 		-
 			message: '#^Method CDash\\Model\\Coverage\:\:AddLabel\(\) has parameter \$label with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Model/Coverage.php
-
-		-
-			message: '#^Method CDash\\Model\\Coverage\:\:InsertLabelAssociations\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Model/Coverage.php
-
-		-
-			message: '#^Method CDash\\Model\\Coverage\:\:InsertLabelAssociations\(\) has parameter \$buildid with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: app/cdash/app/Model/Coverage.php
@@ -8778,7 +8760,7 @@ parameters:
 				v2\.5\.0 01/22/2018$#
 			'''
 			identifier: function.deprecated
-			count: 4
+			count: 2
 			path: app/cdash/app/Model/CoverageFile.php
 
 		-

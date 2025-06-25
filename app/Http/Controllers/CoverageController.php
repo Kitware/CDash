@@ -232,11 +232,12 @@ final class CoverageController extends AbstractBuildController
             $labels = [];
 
             $covlabels = $db->executePrepared('
-                             SELECT DISTINCT id, text
-                             FROM label, label2coveragefile
+                             SELECT DISTINCT label.id, label.text
+                             FROM label, label2coverage, coverage
                              WHERE
-                                 label.id=label2coveragefile.labelid
-                                 AND label2coveragefile.buildid=?
+                                 label.id=label2coverage.labelid
+                                 AND label2coverage.coverageid=coverage.id
+                                 AND coverage.buildid=?
                          ', [intval($this->build->Id)]);
             foreach ($covlabels as $row) {
                 $labels[$row['id']] = $row['text'];
@@ -253,12 +254,11 @@ final class CoverageController extends AbstractBuildController
                                SELECT
                                    SUM(loctested) AS loctested,
                                    SUM(locuntested) AS locuntested
-                               FROM label2coveragefile, coverage
+                               FROM label2coverage, coverage
                                WHERE
-                                   label2coveragefile.labelid=?
-                                   AND label2coveragefile.buildid=?
-                                   AND coverage.buildid=label2coveragefile.buildid
-                                   AND coverage.fileid=label2coveragefile.coveragefileid
+                                   label2coverage.labelid=?
+                                   AND coverage.buildid=?
+                                   AND coverage.id=label2coverage.coverageid
                            ', [intval($id), intval($this->build->Id)]);
 
                     $loctested = intval($row['loctested']);
@@ -1242,11 +1242,13 @@ final class CoverageController extends AbstractBuildController
                                       SELECT text
                                       FROM
                                           label,
-                                          label2coveragefile
+                                          label2coverage,
+                                          coverage
                                       WHERE
-                                          label.id=label2coveragefile.labelid
-                                          AND label2coveragefile.coveragefileid=?
-                                          AND label2coveragefile.buildid=?
+                                          label.id=label2coverage.labelid
+                                          AND label2coverage.coverageid=coverage.id
+                                          AND coverage.fileid=?
+                                          AND coverage.buildid=?
                                       ORDER BY text ASC
                                   ', [intval($fileid), $this->build->Id]);
                 foreach ($coveragelabels as $coveragelabels_array) {

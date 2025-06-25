@@ -1493,8 +1493,9 @@ class Build
         if (empty($labelarray) || isset($labelarray['coverage']['errors'])) {
             $sql .=
                 ' OR label.id IN
-                    (SELECT labelid AS id FROM label2coveragefile
-                     WHERE label2coveragefile.buildid = :buildid)';
+                    (SELECT labelid AS id FROM label2coverage
+                     INNER JOIN coverage ON (coverage.id=label2coverage.coverageid)
+                     WHERE coverage.buildid = :buildid)';
         }
         if (empty($labelarray) || isset($labelarray['build']['errors'])) {
             $sql .=

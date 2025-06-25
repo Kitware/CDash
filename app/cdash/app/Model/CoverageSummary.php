@@ -19,7 +19,9 @@ namespace CDash\Model;
 
 use App\Models\Coverage;
 use App\Models\CoverageFile;
+use App\Models\Label;
 use CDash\Database;
+use Exception;
 use Illuminate\Support\Facades\DB;
 
 class CoverageSummary
@@ -142,18 +144,20 @@ class CoverageSummary
 
                 $existing_row_updated = false;
 
+                $eloquent_coverage = null;
+
                 // TODO: replace the following two conditionals with a single call to updateOrCreate()
                 if ($append) {
                     // UPDATE (instead of INSERT) if this coverage already
                     // exists.
-                    $existing_row_updated = DB::transaction(function () use ($coverage, $covered, $loctested, $locuntested, $branchestested, $branchesuntested, $functionstested, $functionsuntested) {
-                        $existing_coverage_row = Coverage::firstWhere([
+                    $existing_row_updated = DB::transaction(function () use ($coverage, $covered, $loctested, $locuntested, $branchestested, $branchesuntested, $functionstested, $functionsuntested, &$eloquent_coverage) {
+                        $eloquent_coverage = Coverage::firstWhere([
                             'buildid' => $this->BuildId,
                             'fileid' => $coverage->CoverageFile->Id,
                         ]);
 
-                        if ($existing_coverage_row !== null) {
-                            $existing_coverage_row->update([
+                        if ($eloquent_coverage !== null) {
+                            $eloquent_coverage->update([
                                 'covered' => $covered,
                                 'loctested' => $loctested,
                                 'locuntested' => $locuntested,
@@ -168,7 +172,7 @@ class CoverageSummary
                     });
                 }
                 if (!$existing_row_updated) {
-                    Coverage::create([
+                    $eloquent_coverage = Coverage::create([
                         'buildid' => $this->BuildId,
                         'fileid' => $fileid,
                         'covered' => $covered,
@@ -180,11 +184,15 @@ class CoverageSummary
                         'functionsuntested' => $functionsuntested,
                     ]);
                 }
-            }
 
-            // Add labels
-            foreach ($this->Coverages as &$coverage) {
-                $coverage->InsertLabelAssociations($this->BuildId);
+                // This case should never happen, but we check just in case to make PHPStan happy
+                if ($eloquent_coverage === null) {
+                    throw new Exception('Invalid state: coverage model does not exist.');
+                }
+
+                foreach ($coverage->Labels ?? [] as $label) {
+                    $eloquent_coverage->labels()->syncWithoutDetaching(Label::firstOrCreate(['text' => $label->Text]));
+                }
             }
         }
 
