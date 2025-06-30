@@ -838,9 +838,10 @@ class Project
                               AND build.starttime>?
                       ) UNION (
                           SELECT labelid AS id
-                          FROM build, label2coveragefile
+                          FROM build, label2coverage, coverage
                           WHERE
-                              label2coveragefile.buildid=build.id
+                              label2coverage.coverageid=coverage.id
+                              AND coverage.buildid=build.id
                               AND build.projectid=?
                               AND build.starttime>?
                       ) UNION (

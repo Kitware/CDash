@@ -90,24 +90,6 @@ class CoverageFile
                     'fileid' => $this->Id,
                 ]);
 
-                // Similarly update any labels if necessary.
-                $stmt = $this->PDO->prepare(
-                    'SELECT COUNT(*) AS c FROM label2coveragefile
-                        WHERE buildid=:buildid AND coveragefileid=:prevfileid');
-                $stmt->bindParam(':buildid', $buildid);
-                $stmt->bindParam(':prevfileid', $prevfileid);
-                pdo_execute($stmt);
-                $count_labels_row = $stmt->fetch(PDO::FETCH_ASSOC);
-                if ($count_labels_row['c'] > 0) {
-                    $stmt = $this->PDO->prepare(
-                        'UPDATE label2coveragefile SET coveragefileid=:fileid
-                            WHERE buildid=:buildid AND coveragefileid=:prevfileid');
-                    $stmt->bindParam(':fileid', $this->Id);
-                    $stmt->bindParam(':buildid', $buildid);
-                    $stmt->bindParam(':prevfileid', $prevfileid);
-                    pdo_execute($stmt);
-                }
-
                 // Remove the file if the crc32 is NULL
                 EloquentCoverageFile::where([
                     'id' => $prevfileid,
