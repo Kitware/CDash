@@ -51,7 +51,7 @@
     "fakerphp/faker": "1.24.1",
     "friendsofphp/php-cs-fixer": "3.75.0",
     "larastan/larastan": "3.4.1",
-    "laravel/dusk": "8.3.2",
+    "laravel/dusk": "8.3.3",
     "mockery/mockery": "1.6.12",
     "phpstan/extension-installer": "1.4.3",
     "phpstan/phpstan": "2.1.17",
