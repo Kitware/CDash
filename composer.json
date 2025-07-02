@@ -27,7 +27,7 @@
     "directorytree/ldaprecord-laravel": "3.4.1",
     "guzzlehttp/guzzle": "7.9.3",
     "knplabs/github-api": "3.16.0",
-    "laravel/framework": "12.18.0",
+    "laravel/framework": "12.19.3",
     "laravel/socialite": "5.21.0",
     "laravel/ui": "4.6.1",
     "lcobucci/jwt": "5.5.0",
