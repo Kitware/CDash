@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="dummy_build_name"
+  BuildStamp="dummy_stamp"
+  Name="dummy_name"
+  >
+	<Configure>
+		<StartDateTime>Jul 01 05:53 UTC</StartDateTime>
+		<StartConfigureTime>1751349183</StartConfigureTime>
+		<ConfigureCommand>"/usr/bin/cmake" "-GNinja" "-S/tmp/src" "-B/tmp/build"</ConfigureCommand>
+		<Log>-- The C compiler identification is Clang 21.0.0
+-- The CXX compiler identification is Clang 21.0.0
+...
+-- Configuring done (26.2s)
+-- Generating done (0.2s)
+		-- Build files have been written to: /tmp/build
+</Log>
+		<ConfigureStatus>0</ConfigureStatus>
+		<EndDateTime>Jul 01 05:53 UTC</EndDateTime>
+		<EndConfigureTime>1751349209</EndConfigureTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+		<Commands>
+			<Generate command="&quot;/usr/bin/cmake&quot; &quot;-GNinja&quot; &quot;-S/tmp/src&quot; &quot;-B/tmp/build&quot;" duration="179" result="0" timeStart="1751349209286" version="1" workingDir="/tmp/build">
+				<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
+					<Value>1.24951171875</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="numeric/double" name="AfterHostMemoryUsed">
+					<Value>936768.0</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="numeric/double" name="BeforeCPULoadAverage">
+					<Value>1.24951171875</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="numeric/double" name="BeforeHostMemoryUsed">
+					<Value>932528.0</Value>
+				</NamedMeasurement>
+			</Generate>
+			<Configure command="&quot;/usr/bin/cmake&quot; &quot;-GNinja&quot; &quot;-S/tmp/src&quot; &quot;-B/tmp/build&quot;" duration="26160" result="0" timeStart="1751349183125" version="1" workingDir="/tmp/build">
+				<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
+					<Value>1.24951171875</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="numeric/double" name="AfterHostMemoryUsed">
+					<Value>932528.0</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="numeric/double" name="BeforeCPULoadAverage">
+					<Value>0.0</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="numeric/double" name="BeforeHostMemoryUsed">
+					<Value>0.0</Value>
+				</NamedMeasurement>
+			</Configure>
+		</Commands>
+	</Configure>
+</Site>

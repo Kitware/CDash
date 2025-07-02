@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:include schemaLocation="common.xsd" />
+  <xs:element name="NamedMeasurement">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Value" type="xs:string" />
+      </xs:sequence>
+      <xs:attribute name="type" type="xs:string" use="required" />
+      <xs:attribute name="name" type="xs:string" use="required" />
+    </xs:complexType>
+  </xs:element>
   <xs:element name="Site">
     <xs:complexType>
       <xs:sequence>
@@ -17,6 +26,40 @@
               <xs:element name="EndDateTime" type="xs:string" minOccurs="0" />
               <xs:element name="EndConfigureTime" type="xs:unsignedInt" minOccurs="0" />
               <xs:element name="ElapsedMinutes" type="xs:decimal" />
+              <xs:element name="Commands">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:choice maxOccurs="unbounded">
+                      <xs:element name="Generate">
+                        <xs:complexType>
+                          <xs:sequence>
+                            <xs:element maxOccurs="unbounded" ref="NamedMeasurement"/>
+                          </xs:sequence>
+                          <xs:attribute name="command" use="required"/>
+                          <xs:attribute name="workingDir" use="required"/>
+                          <xs:attribute name="duration" use="required" type="xs:integer"/>
+                          <xs:attribute name="result" use="required"/>
+                          <xs:attribute name="timeStart" use="required" type="xs:integer"/>
+                          <xs:attribute name="version" use="required" type="xs:integer"/>
+                        </xs:complexType>
+                      </xs:element>
+                      <xs:element name="Configure">
+                        <xs:complexType>
+                          <xs:sequence>
+                            <xs:element maxOccurs="unbounded" ref="NamedMeasurement"/>
+                          </xs:sequence>
+                          <xs:attribute name="command" use="required"/>
+                          <xs:attribute name="workingDir" use="required"/>
+                          <xs:attribute name="duration" use="required" type="xs:integer"/>
+                          <xs:attribute name="result" use="required"/>
+                          <xs:attribute name="timeStart" use="required" type="xs:integer"/>
+                          <xs:attribute name="version" use="required" type="xs:integer"/>
+                        </xs:complexType>
+                      </xs:element>
+                    </xs:choice>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
             </xs:sequence>
           </xs:complexType>
         </xs:element>
