@@ -107,7 +107,7 @@ class ValidateXmlCommandTest extends TestCase
      */
     public function testMultipleValidXml(): void
     {
-        $params = $this->formatCommandParams('valid_Build.xml', 'valid_Test.xml');
+        $params = $this->formatCommandParams('valid_Configure.xml', 'valid_Build.xml', 'valid_Test.xml');
         $rc = Artisan::call('submission:validate', $params);
         $output = trim(Artisan::output());
         $this->assertValidationSuccess($output, $rc, 'Multiple valid XML files should pass.');
