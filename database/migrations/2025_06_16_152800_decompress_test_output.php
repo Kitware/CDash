@@ -38,7 +38,15 @@ return new class extends Migration {
                 if ($output === false) {
                     throw new Exception('Error reading stream from database.');
                 }
-                $values[] = $this->decompressOutput($output);
+                $decompressed = $this->decompressOutput($output);
+                if (mb_detect_encoding($decompressed, 'UTF-8', true) === false) {
+                    $decompressed = mb_convert_encoding($decompressed, 'UTF-8', 'UTF-8');
+                    if ($decompressed === false) {
+                        echo "Unable to convert testoutput #{$row->id} to UTF-8\n";
+                        $decompressed = '';
+                    }
+                }
+                $values[] = $decompressed;
             }
 
             // Remove the trailing comma...
