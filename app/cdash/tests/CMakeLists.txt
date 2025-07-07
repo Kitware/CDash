@@ -218,6 +218,7 @@ add_feature_test(/Feature/GraphQL/BuildCommandTypeTest)
 add_feature_test(/Feature/GraphQL/BuildCommandOutputTypeTest)
 
 add_feature_test(/Feature/Submission/Instrumentation/BuildInstrumentationTest)
+add_feature_test(/Feature/Submission/Tests/TestXMLTest)
 
 add_feature_test(/Feature/RouteAccessTest)
 

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="dummy_test_name"
+  BuildStamp="dummy_stamp"
+  Name="dummy_name"
+  >
+	<Testing>
+		<StartDateTime>Jul 07 11:16 EDT</StartDateTime>
+		<StartTestTime>1751901373</StartTestTime>
+		<TestList>
+			<Test>./MyTest&lt;parameterized&gt;</Test>
+		</TestList>
+		<Test Status="passed">
+			<Name>MyTest&lt;parameterized&gt;</Name>
+			<Path>.</Path>
+			<FullName>./MyTest&lt;parameterized&gt;</FullName>
+			<FullCommandLine>/tmp/bin/mytest</FullCommandLine>
+			<Results>
+				<NamedMeasurement type="numeric/double" name="Execution Time">
+					<Value>0.1</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="numeric/double" name="Processors">
+					<Value>1</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="text/string" name="Completion Status">
+					<Value>Completed</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="text/string" name="Command Line">
+					<Value>/tmp/bin/mytest</Value>
+				</NamedMeasurement>
+			</Results>
+		</Test>
+		<EndDateTime>Jul 07 11:16 EDT</EndDateTime>
+		<EndTestTime>1751901373</EndTestTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Testing>
+</Site>

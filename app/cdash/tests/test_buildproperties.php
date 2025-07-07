@@ -63,7 +63,7 @@ class BuildPropertiesTestCase extends KWWebTestCase
         $testcreator = new TestCreator();
         $testcreator->projectid = $this->Project->Id;
         $testcreator->testDetails = '';
-        $testcreator->setTestName('BuildPropUnitTest');
+        $testcreator->testName = 'BuildPropUnitTest';
         $testcreator->testPath = '/tmp';
         $testcreator->testCommand = 'echo foo';
         $testcreator->testOutput = 'foo';
