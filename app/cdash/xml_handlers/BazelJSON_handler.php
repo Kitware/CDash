@@ -172,7 +172,7 @@ class BazelJSONHandler extends AbstractSubmissionHandler
             $testCreator->projectid = $this->GetProject()->Id;
             $testCreator->testCommand = $this->CommandLine;
             $testCreator->testDetails = $testdata->details;
-            $testCreator->setTestName($testdata->name);
+            $testCreator->testName = $testdata->name;
             $testCreator->testStatus = $testdata->status;
 
             if (array_key_exists($testdata->name, $this->TestsOutput)) {

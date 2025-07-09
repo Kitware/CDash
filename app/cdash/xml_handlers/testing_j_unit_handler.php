@@ -163,7 +163,7 @@ class TestingJUnitHandler extends AbstractXmlHandler
                 }
             }
 
-            $this->TestCreator->setTestName($attributes['NAME']);
+            $this->TestCreator->testName = $attributes['NAME'];
             $this->TestCreator->testPath = $attributes['CLASSNAME'];
         } elseif ($name == 'TESTSUITE') {
             // If the XML file doesn't have a <Site> tag then we use the information

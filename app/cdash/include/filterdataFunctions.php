@@ -983,7 +983,7 @@ function parse_filter_from_request($field_var, $compare_var, $value_var,
     $fieldinfo = explode('/', $fieldinfo, 2);
     $field = $fieldinfo[0];
     $compare = htmlspecialchars(pdo_real_escape_string($_REQUEST[$compare_var]));
-    $value = htmlspecialchars(pdo_real_escape_string($_REQUEST[$value_var]));
+    $value = pdo_real_escape_string($_REQUEST[$value_var]);
 
     // The following filter types are considered 'date clauses' so that the
     // default date clause of "builds from today only" is not used...

@@ -43,7 +43,7 @@ class TestCreator
     public $testCommand;
     public $testDetails;
     public $testOutput;
-    private $testName;
+    public $testName;
     public $testPath;
     public $testStatus;
 
@@ -136,18 +136,13 @@ class TestCreator
     }
 
     /**
-     * Set test name, truncated to 255 characters.
-     */
-    public function setTestName(string $testName): void
-    {
-        $this->testName = substr($testName, 0, 255);
-    }
-
-    /**
      * Record this test in the database.
      **/
     public function create(Build $build): void
     {
+        // Truncate testName to 255 characters.
+        $this->testName = substr($this->testName, 0, 255);
+
         $crc32 = $this->computeCrc32();
 
         // TODO: Convert this to Eloquent

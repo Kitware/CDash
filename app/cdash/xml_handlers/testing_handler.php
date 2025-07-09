@@ -283,10 +283,10 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
         } elseif ($parent == 'TEST') {
             switch ($element) {
                 case 'NAME':
-                    $this->TestCreator->setTestName($data);
+                    $this->TestCreator->testName .= $data;
                     break;
                 case 'PATH':
-                    $this->TestCreator->testPath = $data;
+                    $this->TestCreator->testPath .= $data;
                     break;
                 case 'FULLCOMMANDLINE':
                     $this->TestCreator->testCommand .= $data;
