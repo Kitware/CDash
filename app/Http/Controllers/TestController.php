@@ -174,8 +174,8 @@ final class TestController extends AbstractProjectController
         }
         $this->setProjectById(intval($_GET['project'] ?? -1));
 
-        $testName = htmlspecialchars($_GET['name'] ?? '');
-        if ($testName === '') {
+        $testName = $_GET['name'] ?? '';
+        if ($testName === '' || !is_string($testName)) {
             abort(400, 'No test name specified.');
         }
 
