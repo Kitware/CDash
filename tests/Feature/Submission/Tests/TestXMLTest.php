@@ -52,7 +52,6 @@ class TestXMLTest extends TestCase
                 builds {
                   edges {
                     node {
-                      name
                       tests {
                         edges {
                           node {
@@ -67,7 +66,7 @@ class TestXMLTest extends TestCase
             }
         ', [
             'id' => $this->project->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'project' => [
                     'builds' => [
@@ -89,6 +88,6 @@ class TestXMLTest extends TestCase
                     ],
                 ],
             ],
-        ], true);
+        ]);
     }
 }
