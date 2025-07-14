@@ -10,7 +10,7 @@ return new class extends Migration {
 
         $max_id = 0;
         while (true) {
-            $batch_size = 5000;
+            $batch_size = 10;
             $batch = DB::select("
                 SELECT
                     id,
