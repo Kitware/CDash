@@ -15,7 +15,7 @@ import { relayStylePagination } from '@apollo/client/utilities';
 import { DefaultApolloClient } from '@vue/apollo-composable';
 
 const BuildConfigure = Vue.defineAsyncComponent(() => import('./components/BuildConfigure'));
-const BuildNotes = Vue.defineAsyncComponent(() => import('./components/BuildNotes'));
+const BuildNotesPage = Vue.defineAsyncComponent(() => import('./components/BuildNotesPage.vue'));
 const BuildSummary = Vue.defineAsyncComponent(() => import('./components/BuildSummary'));
 const BuildUpdate = Vue.defineAsyncComponent(() => import('./components/BuildUpdate'));
 const EditProject = Vue.defineAsyncComponent(() => import('./components/EditProject'));
@@ -37,7 +37,7 @@ const BuildFilesPage = Vue.defineAsyncComponent(() => import('./components/Build
 
 const cdash_components = {
   BuildConfigure,
-  BuildNotes,
+  BuildNotesPage,
   BuildSummary,
   BuildUpdate,
   EditProject,
@@ -106,6 +106,7 @@ const apolloClient = new ApolloClient({
           labels: relayStylePagination(),
           files: relayStylePagination(),
           urls: relayStylePagination(),
+          notes: relayStylePagination(),
         },
       },
       Site: {

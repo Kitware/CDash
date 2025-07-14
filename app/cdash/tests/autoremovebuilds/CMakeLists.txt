@@ -21,7 +21,6 @@ set_property(TEST autoremovebuilds_on_submit PROPERTY DEPENDS
   cypress/e2e/calendar
   cypress/e2e/colorblind
   cypress/e2e/daterange
-  cypress/e2e/build-notes
   cypress/e2e/sites
   cypress/e2e/view-coverage
   cypress/e2e/tests
