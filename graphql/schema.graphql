@@ -800,6 +800,10 @@ type Coverage {
   functionsTested: Int! @rename(attribute: "functionstested") @filterable
 
   functionsUntested: Int! @rename(attribute: "functionsuntested") @filterable
+
+  labels(
+    filters: _ @filter
+  ): [Label!]! @belongsToMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)
 }
 
 
