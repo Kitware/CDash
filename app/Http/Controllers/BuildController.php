@@ -43,7 +43,11 @@ final class BuildController extends AbstractBuildController
     // Render the build notes page.
     public function notes($build_id = null)
     {
-        return $this->renderBuildPage($build_id, 'notes');
+        $this->setBuildById($build_id);
+
+        return $this->vue('build-notes-page', 'Notes', [
+            'build-id' => $this->build->Id,
+        ]);
     }
 
     // Render the build summary page.

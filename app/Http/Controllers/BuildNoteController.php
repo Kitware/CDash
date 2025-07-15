@@ -72,6 +72,8 @@ final class BuildNoteController extends AbstractBuildController
         }
         $response['notes'] = $notes_response;
 
+        $response['deprecated'] = 'This endpoint will be removed in the next major version of CDash.';
+
         $pageTimer->end($response);
 
         return response()->json(cast_data_for_JSON($response));
