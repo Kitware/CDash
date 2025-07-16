@@ -3,6 +3,7 @@
 namespace Tests\Feature\GraphQL;
 
 use App\Models\CoverageFile;
+use App\Models\Label;
 use App\Models\Project;
 use Illuminate\Support\Str;
 use Tests\TestCase;
@@ -19,6 +20,9 @@ class CoverageTypeTest extends TestCase
     /** @var array<CoverageFile> */
     private array $coverageFiles = [];
 
+    /** @var array<Label> */
+    private array $labels = [];
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -30,6 +34,10 @@ class CoverageTypeTest extends TestCase
     {
         foreach ($this->coverageFiles as $file) {
             $file->delete();
+        }
+
+        foreach ($this->labels as $label) {
+            $label->delete();
         }
 
         // Deleting the project will delete all corresponding builds and coverage results
@@ -107,6 +115,84 @@ class CoverageTypeTest extends TestCase
                                                     'branchesUntested' => 7,
                                                     'functionsTested' => 8,
                                                     'functionsUntested' => 9,
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ], true);
+    }
+
+    public function testLabelRelationship(): void
+    {
+        $coverageFile = CoverageFile::create([
+            'fullpath' => Str::uuid()->toString(),
+            'file' => Str::uuid()->toString(),
+            'crc32' => 0,
+        ]);
+        $this->coverageFiles[] = $coverageFile;
+
+        $label = $this->project->builds()->create([
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+        ])->coverageResults()->create([
+            'fileid' => $coverageFile->id,
+        ])->labels()->create([
+            'text' => Str::uuid()->toString(),
+        ]);
+        $this->labels[] = $label;
+
+        $this->graphQL('
+            query project($id: ID) {
+                project(id: $id) {
+                    builds {
+                        edges {
+                            node {
+                                coverageResults {
+                                    edges {
+                                        node {
+                                            labels {
+                                                edges {
+                                                    node {
+                                                        text
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        ', [
+            'id' => $this->project->id,
+        ])->assertJson([
+            'data' => [
+                'project' => [
+                    'builds' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'coverageResults' => [
+                                        'edges' => [
+                                            [
+                                                'node' => [
+                                                    'labels' => [
+                                                        'edges' => [
+                                                            [
+                                                                'node' => [
+                                                                    'text' => $label->text,
+                                                                ],
+                                                            ],
+                                                        ],
+                                                    ],
                                                 ],
                                             ],
                                         ],
