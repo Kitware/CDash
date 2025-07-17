@@ -48,20 +48,7 @@ class CoverageFile
 
         // Compute the crc32 of the file (before compression for backward compatibility)
         $this->Crc32 = crc32($this->FullPath . $this->File);
-        if (config('cdash.use_compression')) {
-            $file = gzcompress($this->File);
-            if ($file === false) {
-                $file = $this->File;
-            } else {
-                if (strlen($this->File) < 2000) {
-                    // compression doesn't help for small chunk
-                    $file = $this->File;
-                }
-                $file = base64_encode($file);
-            }
-        } else {
-            $file = $this->File;
-        }
+        $file = $this->File;
 
         $existing_file_row = EloquentCoverageFile::firstWhere('crc32', $this->Crc32);
         if ($existing_file_row !== null) {
@@ -156,21 +143,7 @@ class CoverageFile
 
         $this->FullPath = $coverage_file->fullpath;
         $this->Crc32 = $coverage_file->crc32;
-        if (config('cdash.use_compression')) {
-            if (is_resource($coverage_file->file)) {
-                $this->File = base64_decode(stream_get_contents($coverage_file->file));
-            } else {
-                $this->File = base64_decode($coverage_file->file);
-            }
-
-            @$uncompressedrow = gzuncompress($this->File);
-            if ($uncompressedrow !== false) {
-                $this->File = $uncompressedrow;
-            }
-        } else {
-            // TODO: This branch of the conditional is possibly faulty.  Postgres should always return a resource here.
-            $this->File = $coverage_file->file;
-        }
+        $this->File = $coverage_file->file;
 
         return true;
     }
