@@ -15,6 +15,7 @@
  * =========================================================================
  */
 
+use App\Http\Submission\Handlers\ActionableBuildInterface;
 use CDash\Collection\SubscriberCollection;
 use CDash\Database;
 use CDash\Messaging\Notification\Email\EmailBuilder;

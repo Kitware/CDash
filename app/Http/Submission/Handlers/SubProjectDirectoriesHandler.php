@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Http\Submission\Handlers;
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -19,6 +21,7 @@ use CDash\Model\Build;
 use CDash\Model\Project;
 use CDash\Model\SubProject;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class SubProjectDirectoriesHandler extends AbstractSubmissionHandler
 {

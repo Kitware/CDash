@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Http\Submission\Handlers;
+
 use CDash\Model\Build;
 use CDash\Model\Project;
 

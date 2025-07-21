@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Http\Submission\Handlers;
+
 use App\Models\Site;
 use CDash\Collection\BuildCollection;
 use CDash\Collection\SubscriptionBuilderCollection;

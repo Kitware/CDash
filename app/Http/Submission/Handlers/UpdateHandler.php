@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Http\Submission\Handlers;
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -32,6 +34,7 @@ use CDash\Model\Project;
 use CDash\Model\Repository;
 use CDash\Model\SubscriberInterface;
 use CDash\Submission\CommitAuthorHandlerInterface;
+use Exception;
 
 /** Write the updates in one block
  *  In case of a lot of updates this might take up some memory */

@@ -15,6 +15,7 @@
  * =========================================================================
  */
 
+use App\Http\Submission\Handlers\UpdateHandler;
 use CDash\Messaging\Notification\NotifyOn;
 use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
 use CDash\Messaging\Subscription\CommitAuthorSubscriptionBuilder;

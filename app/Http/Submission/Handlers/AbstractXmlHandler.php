@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Http\Submission\Handlers;
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -20,6 +22,7 @@ use App\Utils\Stack;
 use CDash\Model\Build;
 use CDash\Model\Project;
 use CDash\ServiceContainer;
+use DOMDocument;
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\UnableToReadFile;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;

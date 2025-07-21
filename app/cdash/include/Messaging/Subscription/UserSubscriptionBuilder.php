@@ -2,7 +2,7 @@
 
 namespace CDash\Messaging\Subscription;
 
-use ActionableBuildInterface;
+use App\Http\Submission\Handlers\ActionableBuildInterface;
 use CDash\Model\SubscriberInterface;
 
 class UserSubscriptionBuilder implements SubscriptionBuilderInterface

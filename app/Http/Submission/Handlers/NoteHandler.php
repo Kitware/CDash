@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Http\Submission\Handlers;
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -21,6 +23,7 @@ use App\Models\SiteInformation;
 use App\Utils\NoteCreator;
 use App\Utils\SubmissionUtils;
 use CDash\Model\Project;
+use Illuminate\Support\Facades\Log;
 
 class NoteHandler extends AbstractXmlHandler
 {

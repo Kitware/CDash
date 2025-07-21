@@ -5,22 +5,22 @@ declare(strict_types=1);
 namespace App\Utils;
 
 use App\Exceptions\BadSubmissionException;
-use BuildHandler;
+use App\Http\Submission\Handlers\BuildHandler;
+use App\Http\Submission\Handlers\ConfigureHandler;
+use App\Http\Submission\Handlers\CoverageHandler;
+use App\Http\Submission\Handlers\CoverageJUnitHandler;
+use App\Http\Submission\Handlers\CoverageLogHandler;
+use App\Http\Submission\Handlers\DoneHandler;
+use App\Http\Submission\Handlers\DynamicAnalysisHandler;
+use App\Http\Submission\Handlers\NoteHandler;
+use App\Http\Submission\Handlers\ProjectHandler;
+use App\Http\Submission\Handlers\TestingHandler;
+use App\Http\Submission\Handlers\TestingJUnitHandler;
+use App\Http\Submission\Handlers\UpdateHandler;
+use App\Http\Submission\Handlers\UploadHandler;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildUpdate;
-use ConfigureHandler;
-use CoverageHandler;
-use CoverageJUnitHandler;
-use CoverageLogHandler;
-use DoneHandler;
-use DynamicAnalysisHandler;
-use NoteHandler;
-use ProjectHandler;
-use TestingHandler;
-use TestingJUnitHandler;
-use UpdateHandler;
-use UploadHandler;
 
 class SubmissionUtils
 {
@@ -29,7 +29,7 @@ class SubmissionUtils
      *
      * @return array{
      *     file_handle: mixed,
-     *     xml_handler: 'BuildHandler'|'ConfigureHandler'|'CoverageHandler'|'CoverageJUnitHandler'|'CoverageLogHandler'|'DoneHandler'|'DynamicAnalysisHandler'|'NoteHandler'|'ProjectHandler'|'TestingHandler'|'TestingJUnitHandler'|'UpdateHandler'|'UploadHandler',
+     *     xml_handler: 'App\Http\Submission\Handlers\BuildHandler'|'App\Http\Submission\Handlers\ConfigureHandler'|'App\Http\Submission\Handlers\CoverageHandler'|'App\Http\Submission\Handlers\CoverageJUnitHandler'|'App\Http\Submission\Handlers\CoverageLogHandler'|'App\Http\Submission\Handlers\DoneHandler'|'App\Http\Submission\Handlers\DynamicAnalysisHandler'|'App\Http\Submission\Handlers\NoteHandler'|'App\Http\Submission\Handlers\ProjectHandler'|'App\Http\Submission\Handlers\TestingHandler'|'App\Http\Submission\Handlers\TestingJUnitHandler'|'App\Http\Submission\Handlers\UpdateHandler'|'App\Http\Submission\Handlers\UploadHandler',
      *     xml_type: 'Build'|'Configure'|'Coverage'|'CoverageJUnit'|'CoverageLog'|'Done'|'DynamicAnalysis'|'Notes'|'Project'|'Test'|'TestJUnit'|'Update'|'Upload',
      * }
      *
