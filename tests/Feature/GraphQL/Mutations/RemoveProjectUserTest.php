@@ -83,13 +83,13 @@ class RemoveProjectUserTest extends TestCase
         ', [
             'projectId' => $this->project->id,
             'userId' => $userToDelete->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'removeProjectUser' => [
                     'message' => null,
                 ],
             ],
-        ], true);
+        ]);
 
         $this->assertNotProjectMember($userToDelete);
     }
@@ -113,13 +113,13 @@ class RemoveProjectUserTest extends TestCase
         ', [
             'projectId' => $this->project->id,
             'userId' => $userToDelete->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'removeProjectUser' => [
                     'message' => 'This action is unauthorized.',
                 ],
             ],
-        ], true);
+        ]);
 
         $this->assertProjectMember($userToDelete);
     }
@@ -142,13 +142,13 @@ class RemoveProjectUserTest extends TestCase
         ', [
             'projectId' => $this->project->id,
             'userId' => $userToDelete->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'removeProjectUser' => [
                     'message' => 'This action is unauthorized.',
                 ],
             ],
-        ], true);
+        ]);
 
         $this->assertProjectMember($userToDelete);
     }
@@ -172,13 +172,13 @@ class RemoveProjectUserTest extends TestCase
         ', [
             'projectId' => $this->project->id,
             'userId' => $userToDelete->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'removeProjectUser' => [
                     'message' => null,
                 ],
             ],
-        ], true);
+        ]);
 
         $this->assertNotProjectMember($userToDelete);
     }
@@ -201,13 +201,13 @@ class RemoveProjectUserTest extends TestCase
         ', [
             'projectId' => $this->project->id,
             'userId' => $projectAdmin->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'removeProjectUser' => [
                     'message' => null,
                 ],
             ],
-        ], true);
+        ]);
 
         $this->assertNotProjectMember($projectAdmin);
     }
@@ -231,13 +231,13 @@ class RemoveProjectUserTest extends TestCase
         ', [
             'projectId' => $this->project->id,
             'userId' => $userToDelete->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'removeProjectUser' => [
                     'message' => 'This action is unauthorized.',
                 ],
             ],
-        ], true);
+        ]);
 
         $this->assertProjectMember($userToDelete);
     }
@@ -261,13 +261,13 @@ class RemoveProjectUserTest extends TestCase
         ', [
             'projectId' => $this->project->id,
             'userId' => $this->users['normal']->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'removeProjectUser' => [
                     'message' => 'This action is unauthorized.',
                 ],
             ],
-        ], true);
+        ]);
 
         self::assertTrue($this->users['normal']->refresh()->exists());
     }
@@ -288,13 +288,13 @@ class RemoveProjectUserTest extends TestCase
         ', [
             'projectId' => $this->project->id,
             'userId' => 123456789,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'removeProjectUser' => [
                     'message' => 'This action is unauthorized.',
                 ],
             ],
-        ], true);
+        ]);
     }
 
     public function testHandlesMissingProject(): void
@@ -314,13 +314,13 @@ class RemoveProjectUserTest extends TestCase
         ', [
             'projectId' => 123456789,
             'userId' => $this->users['normal']->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'removeProjectUser' => [
                     'message' => 'This action is unauthorized.',
                 ],
             ],
-        ], true);
+        ]);
     }
 
     public function testCannotDeleteProjectMembersIfManagedByLdap(): void
@@ -346,13 +346,13 @@ class RemoveProjectUserTest extends TestCase
         ', [
             'projectId' => $this->project->id,
             'userId' => $userToDelete->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'removeProjectUser' => [
                     'message' => 'This action is unauthorized.',
                 ],
             ],
-        ], true);
+        ]);
 
         $this->assertProjectMember($userToDelete);
     }
@@ -378,13 +378,13 @@ class RemoveProjectUserTest extends TestCase
         ', [
             'projectId' => $this->project->id,
             'userId' => $userToDelete->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'removeProjectUser' => [
                     'message' => null,
                 ],
             ],
-        ], true);
+        ]);
 
         $this->assertNotProjectMember($userToDelete);
     }

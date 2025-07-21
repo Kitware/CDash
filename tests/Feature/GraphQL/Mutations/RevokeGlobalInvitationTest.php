@@ -73,13 +73,13 @@ class RevokeGlobalInvitationTest extends TestCase
             }
         ', [
             'invitationId' => $invitation->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'revokeGlobalInvitation' => [
                     'message' => null,
                 ],
             ],
-        ], true);
+        ]);
 
         self::assertNull(GlobalInvitation::find($invitation->id));
     }
@@ -107,13 +107,13 @@ class RevokeGlobalInvitationTest extends TestCase
             }
         ', [
             'invitationId' => $invitation->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'revokeGlobalInvitation' => [
                     'message' => 'This action is unauthorized.',
                 ],
             ],
-        ], true);
+        ]);
 
         self::assertTrue($invitation->refresh()->exists());
     }
@@ -141,13 +141,13 @@ class RevokeGlobalInvitationTest extends TestCase
             }
         ', [
             'invitationId' => $invitation->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'revokeGlobalInvitation' => [
                     'message' => 'This action is unauthorized.',
                 ],
             ],
-        ], true);
+        ]);
 
         self::assertTrue($invitation->refresh()->exists());
     }
@@ -164,12 +164,12 @@ class RevokeGlobalInvitationTest extends TestCase
             }
         ', [
             'invitationId' => 1234567,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'revokeGlobalInvitation' => [
                     'message' => 'Invitation does not exist.',
                 ],
             ],
-        ], true);
+        ]);
     }
 }

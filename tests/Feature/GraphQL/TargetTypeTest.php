@@ -79,7 +79,7 @@ class TargetTypeTest extends TestCase
             }
         ', [
             'id' => $build->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'build' => [
                     'targets' => [
@@ -129,7 +129,7 @@ class TargetTypeTest extends TestCase
             }
         ', [
             'id' => $build->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'build' => [
                     'targets' => [
@@ -199,7 +199,7 @@ class TargetTypeTest extends TestCase
         ', [
             'id' => $build->id,
             'type' => $type,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'build' => [
                     'targets' => [
@@ -271,7 +271,7 @@ class TargetTypeTest extends TestCase
             }
         ', [
             'id' => $build->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'build' => [
                     'targets' => [

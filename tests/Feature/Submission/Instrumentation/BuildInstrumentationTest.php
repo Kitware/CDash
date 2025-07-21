@@ -247,6 +247,6 @@ class BuildInstrumentationTest extends TestCase
             }
         ', [
             'id' => $this->project->id,
-        ])->assertJson($expected_result_json, true);
+        ])->assertExactJson($expected_result_json);
     }
 }

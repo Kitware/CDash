@@ -54,14 +54,14 @@ class UpdateSiteDescriptionTest extends TestCase
         ', [
             'siteid' => 123456789,
             'description' => Str::uuid()->toString(),
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'updateSiteDescription' => [
                     'site' => null,
                     'message' => 'Requested site not found.',
                 ],
             ],
-        ], true);
+        ]);
 
         self::assertEmpty($this->site->information()->get());
     }
@@ -85,14 +85,14 @@ class UpdateSiteDescriptionTest extends TestCase
         ', [
             'siteid' => $this->site->id,
             'description' => Str::uuid()->toString(),
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'updateSiteDescription' => [
                     'site' => null,
                     'message' => 'Authentication required to edit site descriptions.',
                 ],
             ],
-        ], true);
+        ]);
 
         self::assertEmpty($this->site->information()->get());
     }
@@ -127,7 +127,7 @@ class UpdateSiteDescriptionTest extends TestCase
         ', [
             'siteid' => $this->site->id,
             'description' => $new_description,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'updateSiteDescription' => [
                     'site' => [
@@ -141,7 +141,7 @@ class UpdateSiteDescriptionTest extends TestCase
                     'message' => null,
                 ],
             ],
-        ], true);
+        ]);
 
         $site_information = $this->site->information()->get();
         self::assertCount(2, $site_information);

@@ -34,13 +34,13 @@ class QueryTypeTest extends TestCase
                     id
                 }
             }
-        ')->assertJson([
+        ')->assertExactJson([
             'data' => [
                 'me' => [
                     'id' => (string) $user->id,
                 ],
             ],
-        ], true);
+        ]);
     }
 
     public function testMeFieldWhenSignedOut(): void
@@ -51,11 +51,11 @@ class QueryTypeTest extends TestCase
                     id
                 }
             }
-        ')->assertJson([
+        ')->assertExactJson([
             'data' => [
                 'me' => null,
             ],
-        ], true);
+        ]);
     }
 
     public function testUserFieldInvalidUser(): void
@@ -68,11 +68,11 @@ class QueryTypeTest extends TestCase
                     id
                 }
             }
-        ')->assertJson([
+        ')->assertExactJson([
             'data' => [
                 'user' => null,
             ],
-        ], true);
+        ]);
     }
 
     public function testUserFieldValidUser(): void
@@ -90,13 +90,13 @@ class QueryTypeTest extends TestCase
             }
         ', [
             'userid' => $user->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'user' => [
                     'id' => (string) $user->id,
                 ],
             ],
-        ], true);
+        ]);
     }
 
     public function testUsersFieldBasicAccess(): void
@@ -132,7 +132,7 @@ class QueryTypeTest extends TestCase
         ', [
             'user1' => $user1->id,
             'user2' => $user2->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'users' => [
                     'edges' => [
@@ -149,6 +149,6 @@ class QueryTypeTest extends TestCase
                     ],
                 ],
             ],
-        ], true);
+        ]);
     }
 }

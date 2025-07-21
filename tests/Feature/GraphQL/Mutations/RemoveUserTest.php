@@ -48,13 +48,13 @@ class RemoveUserTest extends TestCase
             }
         ', [
             'userId' => $this->users['normal']->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'removeUser' => [
                     'message' => null,
                 ],
             ],
-        ], true);
+        ]);
         self::assertNotContains($this->users['normal']->id, User::pluck('id'));
     }
 
@@ -71,13 +71,13 @@ class RemoveUserTest extends TestCase
             }
         ', [
             'userId' => $this->users['admin']->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'removeUser' => [
                     'message' => 'This action is unauthorized.',
                 ],
             ],
-        ], true);
+        ]);
         self::assertContains($this->users['normal']->id, User::pluck('id'));
     }
 
@@ -94,13 +94,13 @@ class RemoveUserTest extends TestCase
             }
         ', [
             'userId' => $this->users['admin']->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'removeUser' => [
                     'message' => 'This action is unauthorized.',
                 ],
             ],
-        ], true);
+        ]);
         self::assertContains($this->users['admin']->id, User::pluck('id'));
     }
 
@@ -117,13 +117,13 @@ class RemoveUserTest extends TestCase
             }
         ', [
             'userId' => $this->users['admin']->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'removeUser' => [
                     'message' => 'This action is unauthorized.',
                 ],
             ],
-        ], true);
+        ]);
         self::assertContains($this->users['admin']->id, User::pluck('id'));
     }
 
@@ -139,12 +139,12 @@ class RemoveUserTest extends TestCase
             }
         ', [
             'userId' => 123456789,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'removeUser' => [
                     'message' => 'User does not exist.',
                 ],
             ],
-        ], true);
+        ]);
     }
 }

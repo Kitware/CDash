@@ -67,7 +67,7 @@ class LabelTypeTest extends TestCase
             }
         ', [
             'id' => $build->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'build' => [
                     'labels' => [
@@ -121,7 +121,7 @@ class LabelTypeTest extends TestCase
             }
         ', [
             'id' => $build->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'build' => [
                     'labels' => [
@@ -175,7 +175,7 @@ class LabelTypeTest extends TestCase
             }
         ', [
             'id' => $build->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'build' => [
                     'targets' => [

@@ -55,7 +55,7 @@ class ChangeGlobalRoleTest extends TestCase
         ', [
             'userId' => $this->users['normal']->id,
             'role' => GlobalRole::ADMINISTRATOR,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'changeGlobalRole' => [
                     'message' => null,
@@ -64,7 +64,7 @@ class ChangeGlobalRoleTest extends TestCase
                     ],
                 ],
             ],
-        ], true);
+        ]);
 
         self::assertTrue($this->users['normal']->refresh()->admin);
 
@@ -84,7 +84,7 @@ class ChangeGlobalRoleTest extends TestCase
         ', [
             'userId' => $this->users['normal']->id,
             'role' => GlobalRole::USER,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'changeGlobalRole' => [
                     'message' => null,
@@ -93,7 +93,7 @@ class ChangeGlobalRoleTest extends TestCase
                     ],
                 ],
             ],
-        ], true);
+        ]);
 
         self::assertFalse($this->users['normal']->refresh()->admin);
     }
@@ -117,14 +117,14 @@ class ChangeGlobalRoleTest extends TestCase
         ', [
             'userId' => $this->users['admin']->id,
             'role' => GlobalRole::ADMINISTRATOR,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'changeGlobalRole' => [
                     'message' => 'Insufficient permissions.',
                     'user' => null,
                 ],
             ],
-        ], true);
+        ]);
 
         self::assertFalse($this->users['normal']->refresh()->admin);
     }
@@ -148,14 +148,14 @@ class ChangeGlobalRoleTest extends TestCase
         ', [
             'userId' => $this->users['admin']->id,
             'role' => GlobalRole::USER,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'changeGlobalRole' => [
                     'message' => 'Insufficient permissions.',
                     'user' => null,
                 ],
             ],
-        ], true);
+        ]);
 
         self::assertTrue($this->users['admin']->refresh()->admin);
     }
@@ -177,14 +177,14 @@ class ChangeGlobalRoleTest extends TestCase
         ', [
             'userId' => 123456789,
             'role' => GlobalRole::USER,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'changeGlobalRole' => [
                     'message' => 'Cannot change role for user which does not exist.',
                     'user' => null,
                 ],
             ],
-        ], true);
+        ]);
     }
 
     public function testAnonymousUserCannotChangeRole(): void
@@ -206,14 +206,14 @@ class ChangeGlobalRoleTest extends TestCase
         ', [
             'userId' => $this->users['admin']->id,
             'role' => GlobalRole::USER,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'changeGlobalRole' => [
                     'message' => 'Attempt to invite user when not signed in.',
                     'user' => null,
                 ],
             ],
-        ], true);
+        ]);
 
         self::assertTrue($this->users['admin']->refresh()->admin);
     }

@@ -94,7 +94,7 @@ class InviteToProjectTest extends TestCase
             'email' => $email,
             'projectId' => $this->project->id,
             'role' => $role,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'inviteToProject' => [
                     'message' => null,
@@ -110,7 +110,7 @@ class InviteToProjectTest extends TestCase
                     ],
                 ],
             ],
-        ], true);
+        ]);
 
         self::assertCount(1, $this->project->invitations()->get());
         Mail::assertQueued(InvitedToProject::class);
@@ -139,14 +139,14 @@ class InviteToProjectTest extends TestCase
             'email' => fake()->unique()->email(),
             'projectId' => $this->project->id,
             'role' => 'USER',
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'inviteToProject' => [
                     'message' => 'This action is unauthorized.',
                     'invitedUser' => null,
                 ],
             ],
-        ], true);
+        ]);
 
         self::assertEmpty($this->project->invitations()->get());
         Mail::assertNothingQueued();
@@ -185,14 +185,14 @@ class InviteToProjectTest extends TestCase
             'email' => fake()->unique()->email(),
             'projectId' => $this->project->id,
             'role' => 'USER',
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'inviteToProject' => [
                     'message' => 'This action is unauthorized.',
                     'invitedUser' => null,
                 ],
             ],
-        ], true);
+        ]);
 
         self::assertEmpty($this->project->invitations()->get());
         Mail::assertNothingQueued();
@@ -233,7 +233,7 @@ class InviteToProjectTest extends TestCase
             'email' => $email,
             'projectId' => $this->project->id,
             'role' => 'USER',
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'inviteToProject' => [
                     'message' => null,
@@ -242,7 +242,7 @@ class InviteToProjectTest extends TestCase
                     ],
                 ],
             ],
-        ], true);
+        ]);
 
         self::assertCount(1, $this->project->invitations()->get());
         Mail::assertQueued(InvitedToProject::class);
@@ -283,14 +283,14 @@ class InviteToProjectTest extends TestCase
             'email' => fake()->unique()->email(),
             'projectId' => $this->project->id,
             'role' => 'USER',
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'inviteToProject' => [
                     'message' => 'This action is unauthorized.',
                     'invitedUser' => null,
                 ],
             ],
-        ], true);
+        ]);
 
         self::assertEmpty($this->project->invitations()->get());
         Mail::assertNothingQueued();
@@ -317,14 +317,14 @@ class InviteToProjectTest extends TestCase
             'email' => fake()->unique()->email(),
             'projectId' => 1234567,
             'role' => 'USER',
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'inviteToProject' => [
                     'message' => 'This action is unauthorized.',
                     'invitedUser' => null,
                 ],
             ],
-        ], true);
+        ]);
 
         Mail::assertNothingQueued();
     }
@@ -353,7 +353,7 @@ class InviteToProjectTest extends TestCase
             'email' => $email,
             'projectId' => $this->project->id,
             'role' => 'USER',
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'inviteToProject' => [
                     'message' => null,
@@ -362,7 +362,7 @@ class InviteToProjectTest extends TestCase
                     ],
                 ],
             ],
-        ], true);
+        ]);
 
         self::assertCount(1, $this->project->invitations()->get());
         Mail::assertQueued(InvitedToProject::class, 1);
@@ -384,14 +384,14 @@ class InviteToProjectTest extends TestCase
             'email' => $email,
             'projectId' => $this->project->id,
             'role' => 'USER',
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'inviteToProject' => [
                     'message' => 'Duplicate invitations are not allowed.',
                     'invitedUser' => null,
                 ],
             ],
-        ], true);
+        ]);
 
         self::assertCount(1, $this->project->invitations()->get());
         Mail::assertQueued(InvitedToProject::class, 1);
@@ -432,14 +432,14 @@ class InviteToProjectTest extends TestCase
             'email' => $email,
             'projectId' => $this->project->id,
             'role' => 'USER',
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'inviteToProject' => [
                     'message' => 'The email must be a valid email address.',
                     'invitedUser' => null,
                 ],
             ],
-        ], true);
+        ]);
 
         self::assertEmpty($this->project->invitations()->get());
     }
@@ -475,14 +475,14 @@ class InviteToProjectTest extends TestCase
             'email' => $this->users['normal']->email,
             'projectId' => $this->project->id,
             'role' => 'USER',
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'inviteToProject' => [
                     'message' => 'User is already a member of this project.',
                     'invitedUser' => null,
                 ],
             ],
-        ], true);
+        ]);
 
         self::assertEmpty($this->project->invitations()->get());
     }
@@ -513,14 +513,14 @@ class InviteToProjectTest extends TestCase
             'email' => $this->users['normal']->email,
             'projectId' => $this->project->id,
             'role' => 'USER',
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'inviteToProject' => [
                     'message' => 'This action is unauthorized.',
                     'invitedUser' => null,
                 ],
             ],
-        ], true);
+        ]);
 
         self::assertEmpty($this->project->invitations()->get());
         Mail::assertNothingQueued();
@@ -550,7 +550,7 @@ class InviteToProjectTest extends TestCase
             'email' => $this->users['normal']->email,
             'projectId' => $this->project->id,
             'role' => 'USER',
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'inviteToProject' => [
                     'message' => null,
@@ -559,7 +559,7 @@ class InviteToProjectTest extends TestCase
                     ],
                 ],
             ],
-        ], true);
+        ]);
 
         self::assertCount(1, $this->project->invitations()->get());
         Mail::assertQueued(InvitedToProject::class);

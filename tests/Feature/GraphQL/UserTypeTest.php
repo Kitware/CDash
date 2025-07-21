@@ -42,7 +42,7 @@ class UserTypeTest extends TestCase
                     admin
                 }
             }
-        ')->assertJson([
+        ')->assertExactJson([
             'data' => [
                 'me' => [
                     'id' => (string) $this->normalUser->id,
@@ -53,7 +53,7 @@ class UserTypeTest extends TestCase
                     'admin' => $this->normalUser->admin,
                 ],
             ],
-        ], true);
+        ]);
     }
 
     public function testCanSeeOwnEmail(): void
@@ -67,14 +67,14 @@ class UserTypeTest extends TestCase
             }
         ', [
             'userid' => $this->normalUser->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'user' => [
                     'id' => (string) $this->normalUser->id,
                     'email' => $this->normalUser->email,
                 ],
             ],
-        ], true);
+        ]);
     }
 
     public function testCannotSeeEmailForOtherUsers(): void
@@ -88,14 +88,14 @@ class UserTypeTest extends TestCase
             }
         ', [
             'userid' => $this->adminUser->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'user' => [
                     'id' => (string) $this->adminUser->id,
                     'email' => null,
                 ],
             ],
-        ], true);
+        ]);
     }
 
     public function testAnonUsersCannotSeeEmails(): void
@@ -109,14 +109,14 @@ class UserTypeTest extends TestCase
             }
         ', [
             'userid' => $this->normalUser->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'user' => [
                     'id' => (string) $this->normalUser->id,
                     'email' => null,
                 ],
             ],
-        ], true);
+        ]);
     }
 
     public function testAdminCanSeeAllEmails(): void
@@ -130,13 +130,13 @@ class UserTypeTest extends TestCase
             }
         ', [
             'userid' => $this->normalUser->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'user' => [
                     'id' => (string) $this->normalUser->id,
                     'email' => $this->normalUser->email,
                 ],
             ],
-        ], true);
+        ]);
     }
 }

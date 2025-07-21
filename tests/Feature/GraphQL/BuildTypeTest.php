@@ -112,7 +112,7 @@ class BuildTypeTest extends TestCase
             }
         ', [
             'id' => $this->project->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'project' => [
                     'builds' => [
@@ -151,7 +151,7 @@ class BuildTypeTest extends TestCase
                     ],
                 ],
             ],
-        ], true);
+        ]);
     }
 
     public function testNoBasicWarningsOrBasicErrorsReturnsEmptyArray(): void
@@ -189,7 +189,7 @@ class BuildTypeTest extends TestCase
             }
         ', [
             'id' => $this->project->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'project' => [
                     'builds' => [
@@ -261,7 +261,7 @@ class BuildTypeTest extends TestCase
             }
         ', [
             'id' => $this->project->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'project' => [
                     'builds' => [
@@ -344,7 +344,7 @@ class BuildTypeTest extends TestCase
             }
         ', [
             'id' => $this->project->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'project' => [
                     'builds' => [
@@ -434,7 +434,7 @@ class BuildTypeTest extends TestCase
             }
         ', [
             'id' => $this->project->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'project' => [
                     'builds' => [
@@ -501,7 +501,7 @@ class BuildTypeTest extends TestCase
         ', [
             'projectid' => $this->project->id,
             'buildname' => $builds[2]->name,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'projects' => [
                     'edges' => [
@@ -522,7 +522,7 @@ class BuildTypeTest extends TestCase
                     ],
                 ],
             ],
-        ], true);
+        ]);
     }
 
     public function testTopLevelBuildField(): void
@@ -546,10 +546,10 @@ class BuildTypeTest extends TestCase
             }
         ', [
             'id' => $build1->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'build' => [
-                    'id' => $build1->id,
+                    'id' => (string) $build1->id,
                     'name' => 'build1',
                 ],
             ],
@@ -568,7 +568,7 @@ class BuildTypeTest extends TestCase
             'data' => [
                 'build' => null,
             ],
-        ]);
+        ], true)->assertGraphQLErrorMessage('This action is unauthorized.');
     }
 
     public function testLabelRelationship(): void
@@ -597,7 +597,7 @@ class BuildTypeTest extends TestCase
             }
         ', [
             'id' => $build->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'build' => [
                     'labels' => [
@@ -653,7 +653,7 @@ class BuildTypeTest extends TestCase
             }
         ', [
             'id' => $build->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'build' => [
                     'labels' => [
@@ -704,7 +704,7 @@ class BuildTypeTest extends TestCase
             }
         ', [
             'id' => $build->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'build' => [
                     'targets' => [
@@ -756,7 +756,7 @@ class BuildTypeTest extends TestCase
             }
         ', [
             'id' => $build->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'build' => [
                     'commands' => [
@@ -797,7 +797,7 @@ class BuildTypeTest extends TestCase
             }
         ', [
             'id' => $build->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'build' => [
                     'id' => (string) $build->id,
@@ -846,7 +846,7 @@ class BuildTypeTest extends TestCase
             }
         ', [
             'id' => $build->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'build' => [
                     'id' => (string) $build->id,
@@ -918,7 +918,7 @@ class BuildTypeTest extends TestCase
         ', [
             'id' => $build->id,
             'childid' => $child2->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'build' => [
                     'id' => (string) $build->id,
