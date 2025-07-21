@@ -761,18 +761,15 @@
       </div>
       <br>
 
-      <!-- Display notes for that build -->
+      <!-- Display comments for this build -->
       <div
         v-if="cdash.notes.length > 0 || cdash.user.id > 0"
         class="title-divider"
       >
-        Notes
+        Comments ({{ cdash.notes.length }})
       </div>
 
       <div v-if="cdash.notes.length > 0">
-        <div class="title-divider">
-          Users notes ({{ cdash.notes.length }})
-        </div>
         <div v-for="note in cdash.notes">
           <b>{{ note.status }}</b> by <b>{{ note.user }}</b> at {{ note.date }}
           <pre>{{ note.text }}</pre>
@@ -782,7 +779,7 @@
 
 
       <div v-if="cdash.user.id > 0">
-        <!-- Add Notes -->
+        <!-- Add Comments -->
         <img
           :src="$baseURL + '/img/document.png'"
           title="graph"
@@ -791,7 +788,7 @@
           id="toggle_note"
           @click="toggleNote()"
         >
-          Add a Note to this Build
+          Add a comment to this Build
         </a>
         <div
           v-show="showNote"
@@ -800,7 +797,7 @@
           <table>
             <tbody>
               <tr>
-                <td><b>Note:</b></td>
+                <td><b>Comment:</b></td>
                 <td>
                   <textarea
                     id="note_text"
