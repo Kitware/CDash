@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use CDash\Model\Project;
+use App\Models\Project;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;

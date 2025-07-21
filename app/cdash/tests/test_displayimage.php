@@ -27,7 +27,7 @@ class DisplayImageTestCase extends KWWebTestCase
 
         $project = new Project();
         $project->Name = 'ImageTestProject';
-        $project->Public = Project::ACCESS_PUBLIC;
+        $project->Public = App\Models\Project::ACCESS_PUBLIC;
         $project->ImageId = $image->Id;
         $project->Save();
 
@@ -41,7 +41,7 @@ class DisplayImageTestCase extends KWWebTestCase
             return 1;
         }
 
-        $project->Public = Project::ACCESS_PRIVATE;
+        $project->Public = App\Models\Project::ACCESS_PRIVATE;
         $project->Save();
 
         $response = $this->get($this->url . '/image/' . $image->Id);

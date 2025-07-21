@@ -9985,12 +9985,6 @@ parameters:
 			path: app/cdash/app/Model/Project.php
 
 		-
-			message: '#^Access to an uninitialized property CDash\\Model\\Project\:\:\$AutoremoveMaxBuilds\.$#'
-			identifier: property.uninitialized
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
 			message: '#^Binary operation "\." between mixed and ''UTC'' results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1
@@ -10057,18 +10051,6 @@ parameters:
 			message: '#^Casting to int something that''s already int\.$#'
 			identifier: cast.useless
 			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: '#^Class CDash\\Model\\Project has an uninitialized property \$AutoremoveMaxBuilds\. Give it default value or assign it in the constructor\.$#'
-			identifier: property.uninitialized
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
-			identifier: empty.notAllowed
-			count: 18
 			path: app/cdash/app/Model/Project.php
 
 		-
@@ -10343,12 +10325,6 @@ parameters:
 
 		-
 			message: '#^Property CDash\\Model\\Project\:\:\$ErrorsFilter has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: '#^Property CDash\\Model\\Project\:\:\$Filled has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
 			path: app/cdash/app/Model/Project.php

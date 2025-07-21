@@ -655,7 +655,7 @@ function get_dashboard_JSON($projectname, $date, &$response)
     if ($userid) {
         $project = App\Models\Project::findOrFail((int) $project->Id);
         $response['projectrole'] = (int) ($project->users()->withPivot('role')->find((int) $userid)->pivot->role ?? 0);
-        if ($response['projectrole'] === Project::PROJECT_ADMIN) {
+        if ($response['projectrole'] === App\Models\Project::PROJECT_ADMIN) {
             $response['user']['admin'] = 1;
         }
     }
