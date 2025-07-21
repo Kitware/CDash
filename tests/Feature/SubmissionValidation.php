@@ -48,7 +48,8 @@ class SubmissionValidation extends TestCase
     {
         $this::assertTrue($this->submit('invalid_Configure.xml'), 'Submission of invalid_Configure.xml was not successful when it should have passed.');
         $this::assertTrue($this->submit('invalid_syntax_Build.xml'), 'Submission of invalid_syntax_Build.xml  was not successful when it should have passed.');
-        $this::assertTrue($this->submit('valid_Configure.xml'), 'Submission of valid_Configure.xml was not successful when it should have passed.');
+        $this::assertTrue($this->submit('valid_Configure1.xml'), 'Submission of valid_Configure1.xml was not successful when it should have passed.');
+        $this::assertTrue($this->submit('valid_Configure2.xml'), 'Submission of valid_Configure2.xml was not successful when it should have passed.');
         $this::assertTrue($this->submit('valid_Build.xml'), 'Submission of valid_Build.xml was not successful when it should have passed.');
     }
 
@@ -60,7 +61,8 @@ class SubmissionValidation extends TestCase
         $this->writeEnvEntry('SILENT');
         $this::assertTrue($this->submit('invalid_Configure.xml'), 'Submission of invalid_Configure.xml was not successful when it should have passed.');
         $this::assertTrue($this->submit('invalid_syntax_Build.xml'), 'Submission of invalid_syntax_Build.xml  was not successful when it should have passed.');
-        $this::assertTrue($this->submit('valid_Configure.xml'), 'Submission of valid_Configure.xml was not successful when it should have passed.');
+        $this::assertTrue($this->submit('valid_Configure1.xml'), 'Submission of valid_Configure1.xml was not successful when it should have passed.');
+        $this::assertTrue($this->submit('valid_Configure2.xml'), 'Submission of valid_Configure2.xml was not successful when it should have passed.');
         $this::assertTrue($this->submit('valid_Build.xml'), 'Submission of valid_Build.xml was not successful when it should have passed.');
     }
 
@@ -72,7 +74,8 @@ class SubmissionValidation extends TestCase
         $this->writeEnvEntry('WARN');
         $this::assertTrue($this->submit('invalid_Configure.xml'), 'Submission of invalid_Configure.xml was not successful when it should have passed.');
         $this::assertTrue($this->submit('invalid_syntax_Build.xml'), 'Submission of invalid_syntax_Build.xml  was not successful when it should have passed.');
-        $this::assertTrue($this->submit('valid_Configure.xml'), 'Submission of valid_Configure.xml was not successful when it should have passed.');
+        $this::assertTrue($this->submit('valid_Configure1.xml'), 'Submission of valid_Configure1.xml was not successful when it should have passed.');
+        $this::assertTrue($this->submit('valid_Configure2.xml'), 'Submission of valid_Configure2.xml was not successful when it should have passed.');
         $this::assertTrue($this->submit('valid_Build.xml'), 'Submission of valid_Build.xml was not successful when it should have passed.');
     }
 
@@ -84,7 +87,8 @@ class SubmissionValidation extends TestCase
         $this->writeEnvEntry('REJECT');
         $this::assertFalse($this->submit('invalid_Configure.xml'), 'Submission of invalid_Configure.xml was successful when it should have failed.');
         $this::assertFalse($this->submit('invalid_syntax_Build.xml'), 'Submission of invalid_syntax_Build.xml was successful when it should have failed.');
-        $this::assertTrue($this->submit('valid_Configure.xml'), 'Submission of valid_Configure.xml was not successful when it should have passed.');
+        $this::assertTrue($this->submit('valid_Configure1.xml'), 'Submission of valid_Configure1.xml was not successful when it should have passed.');
+        $this::assertTrue($this->submit('valid_Configure2.xml'), 'Submission of valid_Configure2.xml was not successful when it should have passed.');
         $this::assertTrue($this->submit('valid_Build.xml'), 'Submission of valid_Build.xml was not successful when it should have passed.');
     }
 
