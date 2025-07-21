@@ -25,6 +25,10 @@ class FilterRules implements Rule
             return false;
         }
 
+        if ($model->ldapguid === null) {
+            return false;
+        }
+
         return match (env('LDAP_PROVIDER', 'openldap')) {
             'openldap' => \LdapRecord\Models\OpenLDAP\User::rawFilter($filter)->findByGuid($model->ldapguid) instanceof \LdapRecord\Models\OpenLDAP\User,
             'activedirectory' => \LdapRecord\Models\ActiveDirectory\User::rawFilter($filter)->findByGuid($model->ldapguid) instanceof \LdapRecord\Models\ActiveDirectory\User,

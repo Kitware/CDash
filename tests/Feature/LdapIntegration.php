@@ -12,6 +12,7 @@ use LdapRecord\Models\OpenLDAP\User;
 use Mockery\Exception\InvalidCountException;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
+use Tests\Traits\CreatesUsers;
 
 /**
  * Tests in this file connect to a live LDAP server running in the development environment.
@@ -19,11 +20,17 @@ use Tests\Traits\CreatesProjects;
 class LdapIntegration extends TestCase
 {
     use CreatesProjects;
+    use CreatesUsers;
 
     /**
      * @var array<string,User>
      */
     protected array $users;
+
+    /**
+     * @var array<\App\Models\User>
+     */
+    protected array $database_users = [];
 
     /**
      * @var array<string,Project>
@@ -129,6 +136,11 @@ class LdapIntegration extends TestCase
             $user->delete(true);
         }
         $this->users = [];
+
+        foreach ($this->database_users as $key => $user) {
+            $user->delete();
+        }
+        $this->database_users = [];
 
         foreach ($this->projects as $key => $project) {
             $project->delete();
@@ -267,6 +279,24 @@ class LdapIntegration extends TestCase
         $this->projects['only_group_2']->save();
         $this->artisan('ldap:sync_projects');
         self::assertNotContains($user->email, $this->projects['only_group_2']->users()->pluck('email'));
+    }
+
+    public function testArtisanSyncsGuid(): void
+    {
+        $user = $this->makeNormalUser();
+        $user->email = $this->users['group_1_only_1']->getAttribute('uid')[0];
+        $user->save();
+        $this->database_users[] = $user;
+
+        self::assertNull($user->refresh()->ldapguid);
+        $this->projectAccessAssertions('group_1_only_1', 'only_group_1', false);
+        $this->projectAccessAssertions('group_1_only_1', 'only_group_2', false);
+
+        $this->artisan('ldap:sync_projects');
+
+        self::assertNotNull($user->refresh()->ldapguid);
+        $this->projectAccessAssertions('group_1_only_1', 'only_group_1', true);
+        $this->projectAccessAssertions('group_1_only_1', 'only_group_2', false);
     }
 
     protected function projectAccessAssertions(string $user, string $project, bool $should_access): void
