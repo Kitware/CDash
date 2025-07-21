@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="dummy_build_name"
+  BuildStamp="dummy_stamp"
+  Name="dummy_name"
+  >
+	<Configure>
+		<StartDateTime>Jul 01 05:54 UTC</StartDateTime>
+		<StartConfigureTime>1751349243</StartConfigureTime>
+		<ConfigureCommand>"/usr/bin/cmake" "-GNinja" "-S/tmp/src" "-B/tmp/build"</ConfigureCommand>
+		<Log>-- The C compiler identification is Clang 21.0.0
+-- The CXX compiler identification is Clang 21.0.0
+...
+-- Configuring done (26.2s)
+-- Generating done (0.2s)
+		-- Build files have been written to: /tmp/build
+</Log>
+		<ConfigureStatus>0</ConfigureStatus>
+		<EndDateTime>Jul 01 05:54 UTC</EndDateTime>
+		<EndConfigureTime>1751349269</EndConfigureTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Configure>
+</Site>
