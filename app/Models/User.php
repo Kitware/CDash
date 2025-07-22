@@ -21,8 +21,8 @@ use LdapRecord\Laravel\Auth\LdapAuthenticatable;
  * @property string $password
  * @property Carbon $password_updated_at
  * @property string $institution
- * @property string $ldapdomain
- * @property string $ldapguid
+ * @property ?string $ldapdomain
+ * @property ?string $ldapguid
  *
  * @mixin Builder<User>
  */

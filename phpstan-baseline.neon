@@ -3639,6 +3639,12 @@ parameters:
 		-
 			message: '#^Called ''env'' outside of the config directory which returns null when the config is cached, use ''config''\.$#'
 			identifier: larastan.noEnvCallsOutsideOfConfig
+			count: 2
+			path: app/Utils/LdapUtils.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
 			count: 1
 			path: app/Utils/LdapUtils.php
 
@@ -33684,7 +33690,13 @@ parameters:
 		-
 			message: '#^Cannot access offset 0 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 48
+			count: 49
+			path: tests/Feature/LdapIntegration.php
+
+		-
+			message: '#^Property App\\Models\\User\:\:\$email \(string\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
 			path: tests/Feature/LdapIntegration.php
 
 		-
