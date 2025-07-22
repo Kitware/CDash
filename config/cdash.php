@@ -78,7 +78,6 @@ return [
     // Specify whether users are allowed to create "submit only" tokens which are valid for all projects
     'allow_submit_only_tokens' => env('ALLOW_SUBMIT_ONLY_TOKENS', true),
     'unlimited_projects' => $unlimited_projects,
-    'use_compression' => env('USE_COMPRESSION', true),
     'user_create_projects' => env('USER_CREATE_PROJECTS', false),
     // Defaults to public.  Only meaningful if USER_CREATE_PROJECT=true.
     'max_project_visibility' => env('MAX_PROJECT_VISIBILITY', 'PUBLIC'),
