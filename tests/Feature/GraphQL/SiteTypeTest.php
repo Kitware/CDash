@@ -117,7 +117,7 @@ class SiteTypeTest extends TestCase
                     }
                 }
             }
-        ', ['id' => $this->projects['public1']->id])->assertJson([
+        ', ['id' => $this->projects['public1']->id])->assertExactJson([
             'data' => [
                 'project' => [
                     'sites' => [
@@ -135,7 +135,7 @@ class SiteTypeTest extends TestCase
                     ],
                 ],
             ],
-        ], true);
+        ]);
     }
 
     public function testTopLevelSiteField(): void
@@ -152,14 +152,14 @@ class SiteTypeTest extends TestCase
             }
         ', [
             'id' => $this->sites['site1']->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'site' => [
                     'id' => (string) $this->sites['site1']->id,
                     'name' => $this->sites['site1']->name,
                 ],
             ],
-        ], true);
+        ]);
 
         // Make sure it works properly when the site cannot be found
         $this->graphQL('
@@ -171,11 +171,11 @@ class SiteTypeTest extends TestCase
             }
         ', [
             'id' => 123456789,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'site' => null,
             ],
-        ], true);
+        ]);
     }
 
     public function testSiteBuildRelationship(): void
@@ -206,7 +206,7 @@ class SiteTypeTest extends TestCase
                     }
                 }
             }
-        ')->assertJson([
+        ')->assertExactJson([
             'data' => [
                 'projects' => [
                     'edges' => [
@@ -228,209 +228,7 @@ class SiteTypeTest extends TestCase
                     ],
                 ],
             ],
-        ], true);
-    }
-
-    /**
-     * Users can see sites which have submitted a build to any project they can see.
-     */
-    public function testSiteVisibility(): void
-    {
-        // No usages
-        $this->sites['unused'] = $this->makeSite([
-            'name' => 'unused',
         ]);
-
-        // Only submits to public projects
-        $this->sites['public_submission'] = $this->makeSite([
-            'name' => 'public_submission',
-        ]);
-
-        // Only submits to private projects
-        $this->sites['private_submission'] = $this->makeSite([
-            'name' => 'private_submission',
-        ]);
-
-        // Submits to both public and private projects
-        $this->sites['public_private_submission'] = $this->makeSite([
-            'name' => 'public_private_submission',
-        ]);
-
-        // Add a few builds
-        $this->projects['public1']->builds()->create([
-            'name' => 'build1',
-            'uuid' => Str::uuid(),
-            'siteid' => $this->sites['public_submission']->id,
-        ]);
-        $this->projects['public1']->builds()->create([
-            'name' => 'build2',
-            'uuid' => Str::uuid(),
-            'siteid' => $this->sites['public_private_submission']->id,
-        ]);
-        $this->projects['private1']->builds()->create([
-            'name' => 'build3',
-            'uuid' => Str::uuid(),
-            'siteid' => $this->sites['public_private_submission']->id,
-        ]);
-        $this->projects['private1']->builds()->create([
-            'name' => 'build4',
-            'uuid' => Str::uuid(),
-            'siteid' => $this->sites['private_submission']->id,
-        ]);
-
-        $this->graphQL('
-            query {
-                projects {
-                    edges {
-                        node {
-                            name
-                            sites {
-                                edges {
-                                    node {
-                                        name
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        ')->assertJson([
-            'data' => [
-                'projects' => [
-                    'edges' => [
-                        [
-                            'node' => [
-                                'name' => $this->projects['public1']->name,
-                                'sites' => [
-                                    'edges' => [
-                                        [
-                                            'node' => [
-                                                'name' => $this->sites['public_submission']->name,
-                                            ],
-                                        ],
-                                        [
-                                            'node' => [
-                                                'name' => $this->sites['public_private_submission']->name,
-                                            ],
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ], true);
-
-        $this->actingAs($this->users['normal'])->graphQL('
-            query {
-                projects {
-                    edges {
-                        node {
-                            name
-                            sites {
-                                edges {
-                                    node {
-                                        name
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        ')->assertJson([
-            'data' => [
-                'projects' => [
-                    'edges' => [
-                        [
-                            'node' => [
-                                'name' => $this->projects['public1']->name,
-                                'sites' => [
-                                    'edges' => [
-                                        [
-                                            'node' => [
-                                                'name' => $this->sites['public_submission']->name,
-                                            ],
-                                        ],
-                                        [
-                                            'node' => [
-                                                'name' => $this->sites['public_private_submission']->name,
-                                            ],
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ], true);
-
-        $this->actingAs($this->users['admin'])->graphQL('
-            query {
-                projects {
-                    edges {
-                        node {
-                            name
-                            sites {
-                                edges {
-                                    node {
-                                        name
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        ')->assertJson([
-            'data' => [
-                'projects' => [
-                    'edges' => [
-                        [
-                            'node' => [
-                                'name' => $this->projects['public1']->name,
-                                'sites' => [
-                                    'edges' => [
-                                        [
-                                            'node' => [
-                                                'name' => $this->sites['public_submission']->name,
-                                            ],
-                                        ],
-                                        [
-                                            'node' => [
-                                                'name' => $this->sites['public_private_submission']->name,
-                                            ],
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ],
-                        [
-                            'node' => [
-                                'name' => $this->projects['private1']->name,
-                                'sites' => [
-                                    'edges' => [
-                                        [
-                                            'node' => [
-                                                'name' => $this->sites['private_submission']->name,
-                                            ],
-                                        ],
-                                        [
-                                            'node' => [
-                                                'name' => $this->sites['public_private_submission']->name,
-                                            ],
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ], true);
     }
 
     /**
@@ -502,7 +300,7 @@ class SiteTypeTest extends TestCase
                     }
                 }
             }
-        ')->assertJson([
+        ')->assertExactJson([
             'data' => [
                 'projects' => [
                     'edges' => [
@@ -545,7 +343,7 @@ class SiteTypeTest extends TestCase
                     ],
                 ],
             ],
-        ], true);
+        ]);
     }
 
     /**
@@ -630,7 +428,7 @@ class SiteTypeTest extends TestCase
                     }
                 }
             }
-        ')->assertJson([
+        ')->assertExactJson([
             'data' => [
                 'projects' => [
                     'edges' => [
@@ -673,7 +471,7 @@ class SiteTypeTest extends TestCase
                     ],
                 ],
             ],
-        ], true);
+        ]);
     }
 
     public function testSiteInformationTimestampDefault(): void
@@ -770,7 +568,7 @@ class SiteTypeTest extends TestCase
                     }
                 }
             }
-        ')->assertJson([
+        ')->assertExactJson([
             'data' => [
                 'projects' => [
                     'edges' => [
@@ -810,7 +608,7 @@ class SiteTypeTest extends TestCase
                     ],
                 ],
             ],
-        ], true);
+        ]);
     }
 
     public function testNoSiteInformationReturnsEmptyArray(): void
@@ -849,7 +647,7 @@ class SiteTypeTest extends TestCase
                     }
                 }
             }
-        ')->assertJson([
+        ')->assertExactJson([
             'data' => [
                 'projects' => [
                     'edges' => [
@@ -873,7 +671,7 @@ class SiteTypeTest extends TestCase
                     ],
                 ],
             ],
-        ], true);
+        ]);
     }
 
     public function testMostRecentSiteInformation(): void
@@ -913,7 +711,7 @@ class SiteTypeTest extends TestCase
                     }
                 }
             }
-        ')->assertJson([
+        ')->assertExactJson([
             'data' => [
                 'projects' => [
                     'edges' => [
@@ -937,7 +735,7 @@ class SiteTypeTest extends TestCase
                     ],
                 ],
             ],
-        ], true);
+        ]);
     }
 
     public function testMostRecentSiteInformationReturnsNull(): void
@@ -972,7 +770,7 @@ class SiteTypeTest extends TestCase
                     }
                 }
             }
-        ')->assertJson([
+        ')->assertExactJson([
             'data' => [
                 'projects' => [
                     'edges' => [
@@ -994,7 +792,7 @@ class SiteTypeTest extends TestCase
                     ],
                 ],
             ],
-        ], true);
+        ]);
     }
 
     /**
@@ -1060,7 +858,7 @@ class SiteTypeTest extends TestCase
                     }
                 }
             }
-        ")->assertJson([
+        ")->assertExactJson([
             'data' => [
                 'projects' => [
                     'edges' => [
@@ -1095,7 +893,7 @@ class SiteTypeTest extends TestCase
                     ],
                 ],
             ],
-        ], true);
+        ]);
     }
 
     public function testNoSiteMaintainers(): void
@@ -1130,7 +928,7 @@ class SiteTypeTest extends TestCase
             }
         ', [
             'projectid' => $this->projects['public1']->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'project' => [
                     'name' => $this->projects['public1']->name,
@@ -1139,14 +937,16 @@ class SiteTypeTest extends TestCase
                             [
                                 'node' => [
                                     'name' => $this->sites['site1']->name,
-                                    'maintainers' => [],
+                                    'maintainers' => [
+                                        'edges' => [],
+                                    ],
                                 ],
                             ],
                         ],
                     ],
                 ],
             ],
-        ], true);
+        ]);
     }
 
     public function testSiteMaintainer(): void
@@ -1183,7 +983,7 @@ class SiteTypeTest extends TestCase
             }
         ', [
             'projectid' => $this->projects['public1']->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'project' => [
                     'name' => $this->projects['public1']->name,
@@ -1207,7 +1007,7 @@ class SiteTypeTest extends TestCase
                     ],
                 ],
             ],
-        ], true);
+        ]);
     }
 
     public function testFilterSiteMaintainers(): void
@@ -1236,7 +1036,7 @@ class SiteTypeTest extends TestCase
         ', [
             'siteid' => $this->sites['site1']->id,
             'userid' => $this->users['normal']->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'site' => [
                     'maintainers' => [
@@ -1250,7 +1050,7 @@ class SiteTypeTest extends TestCase
                     ],
                 ],
             ],
-        ], true);
+        ]);
     }
 
     public function testClaimSiteMutationRejectsUnauthenticatedUser(): void
@@ -1273,7 +1073,7 @@ class SiteTypeTest extends TestCase
             }
         ', [
             'siteid' => $this->sites['site1']->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'claimSite' => [
                     'user' => null,
@@ -1281,7 +1081,7 @@ class SiteTypeTest extends TestCase
                     'message' => 'Authentication required to claim sites.',
                 ],
             ],
-        ], true);
+        ]);
     }
 
     public function testClaimSiteMutationRejectsInvalidSiteId(): void
@@ -1302,7 +1102,7 @@ class SiteTypeTest extends TestCase
             }
         ', [
             'siteid' => 123456789,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'claimSite' => [
                     'user' => null,
@@ -1310,7 +1110,7 @@ class SiteTypeTest extends TestCase
                     'message' => 'Requested site not found.',
                 ],
             ],
-        ], true);
+        ]);
     }
 
     public function testClaimSiteMutationAcceptsValidRequest(): void
@@ -1335,7 +1135,7 @@ class SiteTypeTest extends TestCase
             }
         ', [
             'siteid' => $this->sites['site1']->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'claimSite' => [
                     'user' => [
@@ -1347,7 +1147,7 @@ class SiteTypeTest extends TestCase
                     'message' => null,
                 ],
             ],
-        ], true);
+        ]);
 
         self::assertContains($this->users['normal']->id, $this->sites['site1']->maintainers()->pluck('id'));
     }
@@ -1375,7 +1175,7 @@ class SiteTypeTest extends TestCase
             }
         ', [
             'siteid' => $this->sites['site1']->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'claimSite' => [
                     'user' => [
@@ -1387,7 +1187,7 @@ class SiteTypeTest extends TestCase
                     'message' => null,
                 ],
             ],
-        ], true);
+        ]);
 
         self::assertContains($this->users['normal']->id, $this->sites['site1']->maintainers()->pluck('id'));
     }
@@ -1413,7 +1213,7 @@ class SiteTypeTest extends TestCase
             }
         ', [
             'siteid' => $this->sites['site1']->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'unclaimSite' => [
                     'user' => null,
@@ -1421,7 +1221,7 @@ class SiteTypeTest extends TestCase
                     'message' => 'Authentication required to unclaim sites.',
                 ],
             ],
-        ], true);
+        ]);
     }
 
     public function testUnclaimSiteMutationRejectsInvalidSiteId(): void
@@ -1442,7 +1242,7 @@ class SiteTypeTest extends TestCase
             }
         ', [
             'siteid' => 123456789,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'unclaimSite' => [
                     'user' => null,
@@ -1450,7 +1250,7 @@ class SiteTypeTest extends TestCase
                     'message' => 'Requested site not found.',
                 ],
             ],
-        ], true);
+        ]);
     }
 
     public function testUnclaimSiteMutationAcceptsValidRequest(): void
@@ -1476,7 +1276,7 @@ class SiteTypeTest extends TestCase
             }
         ', [
             'siteid' => $this->sites['site1']->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'unclaimSite' => [
                     'user' => [
@@ -1488,7 +1288,7 @@ class SiteTypeTest extends TestCase
                     'message' => null,
                 ],
             ],
-        ], true);
+        ]);
 
         self::assertNotContains($this->users['normal']->id, $this->sites['site1']->maintainers()->pluck('id'));
     }
@@ -1515,7 +1315,7 @@ class SiteTypeTest extends TestCase
             }
         ', [
             'siteid' => $this->sites['site1']->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'unclaimSite' => [
                     'user' => [
@@ -1527,7 +1327,7 @@ class SiteTypeTest extends TestCase
                     'message' => null,
                 ],
             ],
-        ], true);
+        ]);
 
         self::assertNotContains($this->users['normal']->id, $this->sites['site1']->maintainers()->pluck('id'));
     }

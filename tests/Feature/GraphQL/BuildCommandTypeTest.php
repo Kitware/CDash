@@ -78,7 +78,7 @@ class BuildCommandTypeTest extends TestCase
             }
         ', [
             'id' => $build->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'build' => [
                     'commands' => [
@@ -160,7 +160,7 @@ class BuildCommandTypeTest extends TestCase
         ', [
             'id' => $build->id,
             'type' => $type,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'build' => [
                     'commands' => [
@@ -232,7 +232,7 @@ class BuildCommandTypeTest extends TestCase
             }
         ', [
             'id' => $build->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'build' => [
                     'commands' => [

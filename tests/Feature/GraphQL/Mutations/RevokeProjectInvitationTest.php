@@ -69,13 +69,13 @@ class RevokeProjectInvitationTest extends TestCase
             }
         ', [
             'invitationId' => $invitation->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'revokeProjectInvitation' => [
                     'message' => null,
                 ],
             ],
-        ], true);
+        ]);
 
         self::assertEmpty($this->project->invitations()->get());
     }
@@ -102,13 +102,13 @@ class RevokeProjectInvitationTest extends TestCase
             }
         ', [
             'invitationId' => $invitation->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'revokeProjectInvitation' => [
                     'message' => 'This action is unauthorized.',
                 ],
             ],
-        ], true);
+        ]);
 
         self::assertCount(1, $this->project->invitations()->get());
     }
@@ -135,13 +135,13 @@ class RevokeProjectInvitationTest extends TestCase
             }
         ', [
             'invitationId' => $invitation->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'revokeProjectInvitation' => [
                     'message' => 'This action is unauthorized.',
                 ],
             ],
-        ], true);
+        ]);
 
         self::assertCount(1, $this->project->invitations()->get());
     }
@@ -178,13 +178,13 @@ class RevokeProjectInvitationTest extends TestCase
             }
         ', [
             'invitationId' => $invitation->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'revokeProjectInvitation' => [
                     'message' => 'This action is unauthorized.',
                 ],
             ],
-        ], true);
+        ]);
 
         self::assertCount(1, $this->project->invitations()->get());
     }
@@ -221,13 +221,13 @@ class RevokeProjectInvitationTest extends TestCase
             }
         ', [
             'invitationId' => $invitation->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'revokeProjectInvitation' => [
                     'message' => null,
                 ],
             ],
-        ], true);
+        ]);
 
         self::assertEmpty($this->project->invitations()->get());
     }
@@ -244,12 +244,12 @@ class RevokeProjectInvitationTest extends TestCase
             }
         ', [
             'invitationId' => 1234567,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'revokeProjectInvitation' => [
                     'message' => 'Invitation does not exist.',
                 ],
             ],
-        ], true);
+        ]);
     }
 }

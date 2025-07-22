@@ -315,19 +315,19 @@ class LdapIntegration extends TestCase
         ]);
 
         if ($should_access) {
-            $result->assertJson([
+            $result->assertExactJson([
                 'data' => [
                     'project' => [
                         'name' => $project->name,
                     ],
                 ],
-            ], true);
+            ]);
         } else {
-            $result->assertJson([
+            $result->assertExactJson([
                 'data' => [
                     'project' => null,
                 ],
-            ], true);
+            ]);
         }
 
         $this->get('/logout')->assertRedirect('/');

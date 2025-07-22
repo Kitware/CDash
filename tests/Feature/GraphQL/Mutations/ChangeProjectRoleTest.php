@@ -94,7 +94,7 @@ class ChangeProjectRoleTest extends TestCase
             'userId' => $this->users['projectMember']->id,
             'projectId' => $this->project->id,
             'role' => ProjectRole::ADMINISTRATOR,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'changeProjectRole' => [
                     'message' => null,
@@ -106,7 +106,7 @@ class ChangeProjectRoleTest extends TestCase
                     ],
                 ],
             ],
-        ], true);
+        ]);
 
         self::assertNotContains($this->users['admin']->id, $this->project->users()->pluck('id'));
         self::assertContains($this->users['projectMember']->id, $this->project->administrators()->pluck('id'));
@@ -141,7 +141,7 @@ class ChangeProjectRoleTest extends TestCase
             'userId' => $this->users['projectMember']->id,
             'projectId' => $this->project->id,
             'role' => ProjectRole::ADMINISTRATOR,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'changeProjectRole' => [
                     'message' => null,
@@ -153,7 +153,7 @@ class ChangeProjectRoleTest extends TestCase
                     ],
                 ],
             ],
-        ], true);
+        ]);
 
         self::assertNotContains($this->users['admin']->id, $this->project->users()->pluck('id'));
         self::assertContains($this->users['projectMember']->id, $this->project->administrators()->pluck('id'));
@@ -188,7 +188,7 @@ class ChangeProjectRoleTest extends TestCase
             'userId' => $this->users['projectAdmin']->id,
             'projectId' => $this->project->id,
             'role' => ProjectRole::USER,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'changeProjectRole' => [
                     'message' => 'This action is unauthorized.',
@@ -196,7 +196,7 @@ class ChangeProjectRoleTest extends TestCase
                     'project' => null,
                 ],
             ],
-        ], true);
+        ]);
 
         self::assertNotContains($this->users['admin']->id, $this->project->users()->pluck('id'));
         self::assertContains($this->users['projectMember']->id, $this->project->basicUsers()->pluck('id'));
@@ -231,7 +231,7 @@ class ChangeProjectRoleTest extends TestCase
             'userId' => $this->users['projectMember']->id,
             'projectId' => $this->project->id,
             'role' => ProjectRole::ADMINISTRATOR,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'changeProjectRole' => [
                     'message' => 'This action is unauthorized.',
@@ -239,7 +239,7 @@ class ChangeProjectRoleTest extends TestCase
                     'project' => null,
                 ],
             ],
-        ], true);
+        ]);
 
         self::assertNotContains($this->users['admin']->id, $this->project->users()->pluck('id'));
         self::assertContains($this->users['projectMember']->id, $this->project->basicUsers()->pluck('id'));
@@ -274,7 +274,7 @@ class ChangeProjectRoleTest extends TestCase
             'userId' => $this->users['admin']->id,
             'projectId' => $this->project->id,
             'role' => ProjectRole::USER,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'changeProjectRole' => [
                     'message' => 'This action is unauthorized.',
@@ -282,7 +282,7 @@ class ChangeProjectRoleTest extends TestCase
                     'project' => null,
                 ],
             ],
-        ], true);
+        ]);
 
         self::assertNotContains($this->users['admin']->id, $this->project->users()->pluck('id'));
         self::assertContains($this->users['projectMember']->id, $this->project->basicUsers()->pluck('id'));
@@ -317,7 +317,7 @@ class ChangeProjectRoleTest extends TestCase
             'userId' => $this->users['nonmemberUser']->id,
             'projectId' => $this->project->id,
             'role' => ProjectRole::USER,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'changeProjectRole' => [
                     'message' => 'This action is unauthorized.',
@@ -325,7 +325,7 @@ class ChangeProjectRoleTest extends TestCase
                     'project' => null,
                 ],
             ],
-        ], true);
+        ]);
 
         self::assertNotContains($this->users['admin']->id, $this->project->users()->pluck('id'));
         self::assertContains($this->users['projectMember']->id, $this->project->basicUsers()->pluck('id'));
@@ -360,7 +360,7 @@ class ChangeProjectRoleTest extends TestCase
             'userId' => 12345678,
             'projectId' => $this->project->id,
             'role' => ProjectRole::USER,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'changeProjectRole' => [
                     'message' => 'Cannot change role for user which does not exist.',
@@ -368,7 +368,7 @@ class ChangeProjectRoleTest extends TestCase
                     'project' => null,
                 ],
             ],
-        ], true);
+        ]);
 
         self::assertNotContains($this->users['admin']->id, $this->project->users()->pluck('id'));
         self::assertContains($this->users['projectMember']->id, $this->project->basicUsers()->pluck('id'));
@@ -403,7 +403,7 @@ class ChangeProjectRoleTest extends TestCase
             'userId' => $this->users['projectMember']->id,
             'projectId' => 12345678,
             'role' => ProjectRole::USER,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'changeProjectRole' => [
                     'message' => 'This action is unauthorized.',
@@ -411,7 +411,7 @@ class ChangeProjectRoleTest extends TestCase
                     'project' => null,
                 ],
             ],
-        ], true);
+        ]);
 
         self::assertNotContains($this->users['admin']->id, $this->project->users()->pluck('id'));
         self::assertContains($this->users['projectMember']->id, $this->project->basicUsers()->pluck('id'));

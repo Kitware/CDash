@@ -102,13 +102,13 @@ class FilterTest extends TestCase
                     }
                 }
             }
-        ")->assertJson([
+        ")->assertExactJson([
             'data' => [
                 'projects' => [
                     'edges' => $expected_edges,
                 ],
             ],
-        ], true);
+        ]);
     }
 
     public function testEqualOperator(): void
@@ -159,6 +159,8 @@ class FilterTest extends TestCase
             'public1',
             'public2',
             'public3',
+            'private1',
+            'private2',
         ]);
     }
 
@@ -288,7 +290,7 @@ class FilterTest extends TestCase
                     }
                 }
             }
-        ')->assertJson([
+        ')->assertExactJson([
             'data' => [
                 'projects' => [
                     'edges' => [
@@ -307,7 +309,7 @@ class FilterTest extends TestCase
                     ],
                 ],
             ],
-        ], true);
+        ]);
     }
 
     public function testFilterByAttributeNotInQuery(): void
@@ -326,7 +328,7 @@ class FilterTest extends TestCase
                     }
                 }
             }
-        ')->assertJson([
+        ')->assertExactJson([
             'data' => [
                 'projects' => [
                     'edges' => [
@@ -343,7 +345,7 @@ class FilterTest extends TestCase
                     ],
                 ],
             ],
-        ], true);
+        ]);
     }
 
     public function testNestedFilters(): void
@@ -440,7 +442,7 @@ class FilterTest extends TestCase
                     }
                 }
             }
-        ')->assertJson([
+        ')->assertExactJson([
             'data' => [
                 'projects' => [
                     'edges' => [
@@ -487,7 +489,7 @@ class FilterTest extends TestCase
                     ],
                 ],
             ],
-        ], true);
+        ]);
     }
 
     public function testProhibitsMultipleFieldsInSingleFilterObject(): void
@@ -546,7 +548,7 @@ class FilterTest extends TestCase
             }
         ', [
             'uuid' => $build1uuid,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'projects' => [
                     'edges' => [
@@ -558,7 +560,7 @@ class FilterTest extends TestCase
                     ],
                 ],
             ],
-        ], true);
+        ]);
     }
 
     public function testFilterByRelationshipAndRegularField(): void
@@ -604,7 +606,7 @@ class FilterTest extends TestCase
         ', [
             'uuid' => $build1uuid,
             'projectname' => $this->projects['public2']->name,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'projects' => [
                     'edges' => [
@@ -621,7 +623,7 @@ class FilterTest extends TestCase
                     ],
                 ],
             ],
-        ], true);
+        ]);
     }
 
     public function testFilterByAnyMultipleFieldsInRelationship(): void
@@ -669,7 +671,7 @@ class FilterTest extends TestCase
         ', [
             'uuid' => $build1uuid,
             'buildname' => $build2name,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'projects' => [
                     'edges' => [
@@ -686,7 +688,7 @@ class FilterTest extends TestCase
                     ],
                 ],
             ],
-        ], true);
+        ]);
     }
 
     public function testFilterByAllMultipleFieldsInRelationshipNoneIfNotOnSameRecord(): void
@@ -734,13 +736,13 @@ class FilterTest extends TestCase
         ', [
             'uuid' => $build1uuid,
             'buildname' => $build2name,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'projects' => [
                     'edges' => [],
                 ],
             ],
-        ], true);
+        ]);
     }
 
     public function testFilterByAllMultipleFieldsInRelationshipReturnsIfConditionsOnSameRecord(): void
@@ -788,7 +790,7 @@ class FilterTest extends TestCase
         ', [
             'uuid' => $build1uuid,
             'buildname' => $build1name,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'projects' => [
                     'edges' => [
@@ -800,7 +802,7 @@ class FilterTest extends TestCase
                     ],
                 ],
             ],
-        ], true);
+        ]);
     }
 
     public function testFilterByAnyMultipleRelationships(): void
@@ -853,7 +855,7 @@ class FilterTest extends TestCase
         ', [
             'uuid' => $build1uuid,
             'siteid' => $this->sites['site1']->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'projects' => [
                     'edges' => [
@@ -870,7 +872,7 @@ class FilterTest extends TestCase
                     ],
                 ],
             ],
-        ], true);
+        ]);
     }
 
     public function testFilterByAllMultipleRelationships(): void
@@ -923,7 +925,7 @@ class FilterTest extends TestCase
         ', [
             'uuid' => $build1uuid,
             'siteid' => $this->sites['site1']->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'projects' => [
                     'edges' => [
@@ -935,7 +937,7 @@ class FilterTest extends TestCase
                     ],
                 ],
             ],
-        ], true);
+        ]);
     }
 
     public function testFilterByRelationshipsOfRelationships(): void
@@ -984,7 +986,7 @@ class FilterTest extends TestCase
             }
         ', [
             'targetname' => $target1name,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'projects' => [
                     'edges' => [
@@ -996,6 +998,6 @@ class FilterTest extends TestCase
                     ],
                 ],
             ],
-        ], true);
+        ]);
     }
 }

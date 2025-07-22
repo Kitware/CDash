@@ -101,7 +101,7 @@ class TestMeasurementTypeTest extends TestCase
             }
         ', [
             'id' => $this->project->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'project' => [
                     'builds' => [
@@ -142,6 +142,6 @@ class TestMeasurementTypeTest extends TestCase
                     ],
                 ],
             ],
-        ], true);
+        ]);
     }
 }

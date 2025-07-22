@@ -97,7 +97,7 @@ class CoverageTypeTest extends TestCase
             }
         ', [
             'id' => $this->project->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'project' => [
                     'builds' => [
@@ -125,7 +125,7 @@ class CoverageTypeTest extends TestCase
                     ],
                 ],
             ],
-        ], true);
+        ]);
     }
 
     public function testLabelRelationship(): void
@@ -173,7 +173,7 @@ class CoverageTypeTest extends TestCase
             }
         ', [
             'id' => $this->project->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'project' => [
                     'builds' => [
@@ -203,6 +203,6 @@ class CoverageTypeTest extends TestCase
                     ],
                 ],
             ],
-        ], true);
+        ]);
     }
 }

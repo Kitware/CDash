@@ -205,7 +205,7 @@ class ProjectTypeTest extends TestCase
                         }
                     }
                 }
-            ')->assertJson($expected_json_response, true);
+            ')->assertExactJson($expected_json_response);
     }
 
     #[DataProvider('perProjectAccess')]
@@ -223,19 +223,19 @@ class ProjectTypeTest extends TestCase
             ]);
 
         if ($allow_access) {
-            $response->assertJson([
+            $response->assertExactJson([
                 'data' => [
                     'project' => [
                         'name' => $this->projects[$project_name]->name,
                     ],
                 ],
-            ], true);
+            ]);
         } else {
-            $response->assertJson([
+            $response->assertExactJson([
                 'data' => [
                     'project' => null,
                 ],
-            ], true);
+            ]);
         }
     }
 
@@ -284,7 +284,7 @@ class ProjectTypeTest extends TestCase
                     }
                 }
             }
-        ')->assertJson([
+        ')->assertExactJson([
             'data' => [
                 'projects' => [
                     'edges' => [
@@ -334,7 +334,7 @@ class ProjectTypeTest extends TestCase
                     ],
                 ],
             ],
-        ], true);
+        ]);
     }
 
     public function testCreateProjectNoUser(): void
@@ -441,14 +441,14 @@ class ProjectTypeTest extends TestCase
 
         $project = Project::where('name', $name)->firstOrFail();
 
-        $response->assertJson([
+        $response->assertExactJson([
             'data' => [
                 'createProject' => [
                     'id' => (string) $project->id,
                     'name' => $name,
                 ],
             ],
-        ], true);
+        ]);
 
         $project->delete();
     }
@@ -475,14 +475,14 @@ class ProjectTypeTest extends TestCase
 
         $project = Project::where('name', $name)->firstOrFail();
 
-        $response->assertJson([
+        $response->assertExactJson([
             'data' => [
                 'createProject' => [
                     'id' => (string) $project->id,
                     'name' => $name,
                 ],
             ],
-        ], true);
+        ]);
 
         $project->delete();
     }
@@ -506,7 +506,7 @@ class ProjectTypeTest extends TestCase
                     }
                 }
             }
-        ')->assertJson([
+        ')->assertExactJson([
             'data' => [
                 'projects' => [
                     'edges' => [
@@ -532,13 +532,15 @@ class ProjectTypeTest extends TestCase
                         [
                             'node' => [
                                 'name' => $this->projects['public2']->name,
-                                'administrators' => [],
+                                'administrators' => [
+                                    'edges' => [],
+                                ],
                             ],
                         ],
                     ],
                 ],
             ],
-        ], true);
+        ]);
     }
 
     public function testGetProjectAdministratorsAsNormalUser(): void
@@ -560,7 +562,7 @@ class ProjectTypeTest extends TestCase
                     }
                 }
             }
-        ')->assertJson([
+        ')->assertExactJson([
             'data' => [
                 'projects' => [
                     'edges' => [
@@ -586,25 +588,33 @@ class ProjectTypeTest extends TestCase
                         [
                             'node' => [
                                 'name' => $this->projects['public2']->name,
-                                'administrators' => [],
+                                'administrators' => [
+                                    'edges' => [],
+                                ],
                             ],
                         ],
                         [
                             'node' => [
                                 'name' => $this->projects['protected1']->name,
-                                'administrators' => [],
+                                'administrators' => [
+                                    'edges' => [],
+                                ],
                             ],
                         ],
                         [
                             'node' => [
                                 'name' => $this->projects['protected2']->name,
-                                'administrators' => [],
+                                'administrators' => [
+                                    'edges' => [],
+                                ],
                             ],
                         ],
                         [
                             'node' => [
                                 'name' => $this->projects['private1']->name,
-                                'administrators' => [],
+                                'administrators' => [
+                                    'edges' => [],
+                                ],
                             ],
                         ],
                         [
@@ -624,7 +634,7 @@ class ProjectTypeTest extends TestCase
                     ],
                 ],
             ],
-        ], true);
+        ]);
     }
 
     public function testGetProjectAdministratorsAsAdmin(): void
@@ -646,7 +656,7 @@ class ProjectTypeTest extends TestCase
                     }
                 }
             }
-        ')->assertJson([
+        ')->assertExactJson([
             'data' => [
                 'projects' => [
                     'edges' => [
@@ -672,25 +682,33 @@ class ProjectTypeTest extends TestCase
                         [
                             'node' => [
                                 'name' => $this->projects['public2']->name,
-                                'administrators' => [],
+                                'administrators' => [
+                                    'edges' => [],
+                                ],
                             ],
                         ],
                         [
                             'node' => [
                                 'name' => $this->projects['protected1']->name,
-                                'administrators' => [],
+                                'administrators' => [
+                                    'edges' => [],
+                                ],
                             ],
                         ],
                         [
                             'node' => [
                                 'name' => $this->projects['protected2']->name,
-                                'administrators' => [],
+                                'administrators' => [
+                                    'edges' => [],
+                                ],
                             ],
                         ],
                         [
                             'node' => [
                                 'name' => $this->projects['private1']->name,
-                                'administrators' => [],
+                                'administrators' => [
+                                    'edges' => [],
+                                ],
                             ],
                         ],
                         [
@@ -710,13 +728,15 @@ class ProjectTypeTest extends TestCase
                         [
                             'node' => [
                                 'name' => $this->projects['private3']->name,
-                                'administrators' => [],
+                                'administrators' => [
+                                    'edges' => [],
+                                ],
                             ],
                         ],
                     ],
                 ],
             ],
-        ], true);
+        ]);
     }
 
     public function testGetProjectUsersAsAdmin(): void
@@ -738,26 +758,32 @@ class ProjectTypeTest extends TestCase
                     }
                 }
             }
-        ')->assertJson([
+        ')->assertExactJson([
             'data' => [
                 'projects' => [
                     'edges' => [
                         [
                             'node' => [
                                 'name' => $this->projects['public1']->name,
-                                'basicUsers' => [],
+                                'basicUsers' => [
+                                    'edges' => [],
+                                ],
                             ],
                         ],
                         [
                             'node' => [
                                 'name' => $this->projects['public2']->name,
-                                'basicUsers' => [],
+                                'basicUsers' => [
+                                    'edges' => [],
+                                ],
                             ],
                         ],
                         [
                             'node' => [
                                 'name' => $this->projects['protected1']->name,
-                                'basicUsers' => [],
+                                'basicUsers' => [
+                                    'edges' => [],
+                                ],
                             ],
                         ],
                         [
@@ -791,19 +817,23 @@ class ProjectTypeTest extends TestCase
                         [
                             'node' => [
                                 'name' => $this->projects['private2']->name,
-                                'basicUsers' => [],
+                                'basicUsers' => [
+                                    'edges' => [],
+                                ],
                             ],
                         ],
                         [
                             'node' => [
                                 'name' => $this->projects['private3']->name,
-                                'basicUsers' => [],
+                                'basicUsers' => [
+                                    'edges' => [],
+                                ],
                             ],
                         ],
                     ],
                 ],
             ],
-        ], true);
+        ]);
     }
 
     public function testProjectVisibilityValue(): void
@@ -819,7 +849,7 @@ class ProjectTypeTest extends TestCase
                     }
                 }
             }
-        ')->assertJson([
+        ')->assertExactJson([
             'data' => [
                 'projects' => [
                     'edges' => [
@@ -868,7 +898,7 @@ class ProjectTypeTest extends TestCase
                     ],
                 ],
             ],
-        ], true);
+        ]);
     }
 
     /**
@@ -930,13 +960,13 @@ class ProjectTypeTest extends TestCase
 
         if ($can_create) {
             $project = Project::where('name', $name)->firstOrFail();
-            $response->assertJson([
+            $response->assertExactJson([
                 'data' => [
                     'createProject' => [
                         'visibility' => $visibility,
                     ],
                 ],
-            ], true);
+            ]);
             $project->delete();
         } else {
             // A final check to ensure this project wasn't created anyway
@@ -1001,13 +1031,13 @@ class ProjectTypeTest extends TestCase
 
         if ($result) {
             $project = Project::where('name', $name)->firstOrFail();
-            $response->assertJson([
+            $response->assertExactJson([
                 'data' => [
                     'createProject' => [
                         'authenticateSubmissions' => $use_authenticated_submits,
                     ],
                 ],
-            ], true);
+            ]);
             $project->delete();
         } else {
             // A final check to ensure this project wasn't created anyway
@@ -1039,7 +1069,7 @@ class ProjectTypeTest extends TestCase
                     }
                 }
             }
-        ')->assertJson([
+        ')->assertExactJson([
             'data' => [
                 'projects' => [
                     'edges' => [
@@ -1056,7 +1086,7 @@ class ProjectTypeTest extends TestCase
                     ],
                 ],
             ],
-        ], true);
+        ]);
     }
 
     public function testMostRecentBuild(): void
@@ -1091,7 +1121,7 @@ class ProjectTypeTest extends TestCase
                     }
                 }
             }
-        ')->assertJson([
+        ')->assertExactJson([
             'data' => [
                 'projects' => [
                     'edges' => [
@@ -1112,7 +1142,7 @@ class ProjectTypeTest extends TestCase
                     ],
                 ],
             ],
-        ], true);
+        ]);
     }
 
     public function testBuildCountFieldWithNoFilters(): void
@@ -1156,7 +1186,7 @@ class ProjectTypeTest extends TestCase
                     }
                 }
             }
-        ')->assertJson([
+        ')->assertExactJson([
             'data' => [
                 'projects' => [
                     'edges' => [
@@ -1175,7 +1205,7 @@ class ProjectTypeTest extends TestCase
                     ],
                 ],
             ],
-        ], true);
+        ]);
     }
 
     public function testBuildCountFieldWithFilters(): void
@@ -1223,7 +1253,7 @@ class ProjectTypeTest extends TestCase
                     }
                 }
             }
-        ')->assertJson([
+        ')->assertExactJson([
             'data' => [
                 'projects' => [
                     'edges' => [
@@ -1242,6 +1272,6 @@ class ProjectTypeTest extends TestCase
                     ],
                 ],
             ],
-        ], true);
+        ]);
     }
 }

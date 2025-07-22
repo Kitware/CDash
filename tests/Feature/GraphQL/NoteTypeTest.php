@@ -115,7 +115,7 @@ class NoteTypeTest extends TestCase
             }
         ', [
             'id' => $this->public_project->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'project' => [
                     'builds' => [
@@ -147,6 +147,6 @@ class NoteTypeTest extends TestCase
                     ],
                 ],
             ],
-        ], true);
+        ]);
     }
 }

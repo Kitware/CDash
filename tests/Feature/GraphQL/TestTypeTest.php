@@ -87,7 +87,7 @@ class TestTypeTest extends TestCase
             }
         ', [
             'id' => $this->project->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'project' => [
                     'builds' => [
@@ -113,7 +113,7 @@ class TestTypeTest extends TestCase
                     ],
                 ],
             ],
-        ], true);
+        ]);
     }
 
     /**
@@ -164,7 +164,7 @@ class TestTypeTest extends TestCase
             }
         ', [
             'id' => $this->project->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'project' => [
                     'builds' => [
@@ -188,7 +188,7 @@ class TestTypeTest extends TestCase
                     ],
                 ],
             ],
-        ], true);
+        ]);
     }
 
     public function testLabelRelationship(): void
@@ -226,7 +226,7 @@ class TestTypeTest extends TestCase
             }
         ', [
             'id' => $build->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'build' => [
                     'tests' => [
@@ -237,7 +237,7 @@ class TestTypeTest extends TestCase
                                         'edges' => [
                                             [
                                                 'node' => [
-                                                    'id' => $label->id,
+                                                    'id' => (string) $label->id,
                                                     'text' => $label->text,
                                                 ],
                                             ],
@@ -301,7 +301,7 @@ class TestTypeTest extends TestCase
         ', [
             'id' => $build->id,
             'labeltext' => $label1->text,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'build' => [
                     'tests' => [

@@ -78,7 +78,7 @@ class BuildCommandOutputTypeTest extends TestCase
             }
         ', [
             'id' => $build->id,
-        ])->assertJson([
+        ])->assertExactJson([
             'data' => [
                 'build' => [
                     'commands' => [
