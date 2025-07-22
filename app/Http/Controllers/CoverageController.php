@@ -907,7 +907,7 @@ final class CoverageController extends AbstractBuildController
                 // directory view
 
                 $row[] = '<a class="cdash-link" href="viewCoverage.php?buildid=' . $this->build->Id . '&#38;status=6&#38;dir=' . $covfile['fullpath'] . '">' . $covfile['fullpath'] . '</a>';
-            } elseif (!$covfile['covered'] || !($this->project->ShowCoverageCode || $role >= Project::PROJECT_ADMIN)) {
+            } elseif (!$covfile['covered'] || !($this->project->ShowCoverageCode || $role >= EloquentProject::PROJECT_ADMIN)) {
                 $row[] = $covfile['fullpath'];
             } else {
                 $row[] = '<a class="cdash-link" href="viewCoverageFile.php?buildid=' . $this->build->Id . '&#38;fileid=' . $covfile['fileid'] . '">' . $covfile['fullpath'] . '</a>';

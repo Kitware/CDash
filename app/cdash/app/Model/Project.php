@@ -43,13 +43,6 @@ use RuntimeException;
 /** Main project class */
 class Project
 {
-    public const PROJECT_ADMIN = 2;
-    public const PROJECT_USER = 0;
-
-    public const ACCESS_PRIVATE = 0;
-    public const ACCESS_PUBLIC = 1;
-    public const ACCESS_PROTECTED = 2;
-
     public $Name;
     public $Id;
     public $Description;
@@ -66,109 +59,46 @@ class Project
     public $NightlyTime;
     public $NightlyDateTime;
     public $NightlyTimezone;
-    public $EmailLowCoverage;
-    public $EmailTestTimingChanged;
-    public $EmailBrokenSubmission;
-    public $EmailRedundantFailures;
+    public $EmailLowCoverage = 0;
+    public $EmailTestTimingChanged = 0;
+    public $EmailBrokenSubmission = 0;
+    public $EmailRedundantFailures = 0;
     public $CvsViewerType;
     public $TestTimeStd;
     public $TestTimeStdThreshold;
-    public $ShowTestTime;
+    public $ShowTestTime = 0;
     public $TestTimeMaxStatus;
-    public $EmailMaxItems;
-    public $EmailMaxChars;
-    public $ShowIPAddresses;
-    public $DisplayLabels;
-    public $ShareLabelFilters;
-    public $ViewSubProjectsLink;
-    public $AuthenticateSubmissions;
-    public $ShowCoverageCode;
-    public $AutoremoveTimeframe;
-    public int $AutoremoveMaxBuilds;
-    public $UploadQuota;
-    public $WarningsFilter;
-    public $ErrorsFilter;
+    public $EmailMaxItems = 5;
+    public $EmailMaxChars = 255;
+    public $ShowIPAddresses = 0;
+    public $DisplayLabels = 0;
+    public $ShareLabelFilters = 0;
+    public $ViewSubProjectsLink = 0;
+    public $AuthenticateSubmissions = 0;
+    public $ShowCoverageCode = 0;
+    public $AutoremoveTimeframe = 0;
+    public int $AutoremoveMaxBuilds = 300;
+    public $UploadQuota = 0;
+    public $WarningsFilter = '';
+    public $ErrorsFilter = '';
     public ?string $LdapFilter = null;
     public ?string $Banner = null;
-    /** @var Database */
-    private $PDO;
+    private Database $PDO;
 
     /**
      * @var SubscriberCollection
      */
     private $SubscriberCollection;
 
-    public $Filled;
+    public bool $Filled = false;
 
     public function __construct()
     {
-        $this->Initialize(); // why?
-    }
-
-    /** Initialize non defined variables */
-    private function Initialize(): void
-    {
-        if (empty($this->EmailLowCoverage)) {
-            $this->EmailLowCoverage = 0;
-        }
-        if (empty($this->EmailTestTimingChanged)) {
-            $this->EmailTestTimingChanged = 0;
-        }
-        if (empty($this->EmailBrokenSubmission)) {
-            $this->EmailBrokenSubmission = 0;
-        }
-        if (empty($this->EmailRedundantFailures)) {
-            $this->EmailRedundantFailures = 0;
-        }
-        if (empty($this->ShowIPAddresses)) {
-            $this->ShowIPAddresses = 0;
-        }
-        if (empty($this->ShowTestTime)) {
-            $this->ShowTestTime = 0;
-        }
-        if (empty($this->DisplayLabels)) {
-            $this->DisplayLabels = 0;
-        }
-        if (empty($this->ShareLabelFilters)) {
-            $this->ShareLabelFilters = 0;
-        }
-        if (empty($this->ViewSubProjectsLink)) {
-            $this->ViewSubProjectsLink = 0;
-        }
-        if (empty($this->AuthenticateSubmissions)) {
-            $this->AuthenticateSubmissions = 0;
-        }
-        if (empty($this->ShowCoverageCode)) {
-            $this->ShowCoverageCode = 0;
-        }
-        if (empty($this->AutoremoveTimeframe)) {
-            $this->AutoremoveTimeframe = 0;
-        }
-        if (empty($this->AutoremoveMaxBuilds)) {
-            $this->AutoremoveMaxBuilds = 300;
-        }
-        if (empty($this->UploadQuota)) {
-            $this->UploadQuota = 0;
-        }
-        if (empty($this->EmailMaxItems)) {
-            $this->EmailMaxItems = 5;
-        }
-        if (empty($this->EmailMaxChars)) {
-            $this->EmailMaxChars = 255;
-        }
-        if (empty($this->WarningsFilter)) {
-            $this->WarningsFilter = '';
-        }
-        if (empty($this->ErrorsFilter)) {
-            $this->ErrorsFilter = '';
-        }
         $this->PDO = Database::getInstance();
-
-        $this->Filled = false;
     }
 
     /** Add a build group */
-    public function AddBuildGroup(BuildGroup $buildgroup): void
+    protected function AddBuildGroup(BuildGroup $buildgroup): void
     {
         $buildgroup->SetProjectId($this->Id);
         $buildgroup->Save();
@@ -180,47 +110,6 @@ class Project
         if (!$this->Id || EloquentProject::find($this->Id) === null) {
             return false;
         }
-        // Remove the project groups and rules
-        // TODO: (williamjallen) This can be done with one delete statement for each table...
-        $buildgroup = DB::select('SELECT * FROM buildgroup WHERE projectid=?', [intval($this->Id)]);
-        foreach ($buildgroup as $buildgroup_array) {
-            $groupid = intval($buildgroup_array->id);
-            DB::delete('DELETE FROM buildgroupposition WHERE buildgroupid=?', [$groupid]);
-            DB::delete('DELETE FROM build2grouprule WHERE groupid=?', [$groupid]);
-            DB::delete('DELETE FROM build2group WHERE groupid=?', [$groupid]);
-        }
-
-        DB::delete('DELETE FROM buildgroup WHERE projectid=?', [intval($this->Id)]);
-        DB::delete('DELETE FROM blockbuild WHERE projectid=?', [intval($this->Id)]);
-        DB::delete('DELETE FROM user2project WHERE projectid=?', [intval($this->Id)]);
-        DB::delete('DELETE FROM labelemail WHERE projectid=?', [intval($this->Id)]);
-        DB::delete('DELETE FROM labelemail WHERE projectid=?', [intval($this->Id)]);
-        DB::delete('DELETE FROM project2repositories WHERE projectid=?', [intval($this->Id)]);
-
-        DB::delete('DELETE FROM dailyupdate WHERE projectid=?', [intval($this->Id)]);
-        DB::delete('DELETE FROM build_filters WHERE projectid=?', [intval($this->Id)]);
-
-        // Delete any repositories that aren't shared with other projects.
-        // TODO: (williamjallen) rewrite this to use a single query...
-        $repositories_query = DB::select('
-                                  SELECT repositoryid
-                                  FROM project2repositories
-                                  WHERE projectid=?
-                                  ORDER BY repositoryid
-                              ', [(int) $this->Id]);
-        foreach ($repositories_query as $repository_array) {
-            $repoid = (int) $repository_array->repositoryid;
-            $projects_query = DB::select('
-                                  SELECT COUNT(projectid) AS c
-                                  FROM project2repositories
-                                  WHERE repositoryid=?
-                              ', [$repoid]);
-            if ($projects_query[0]->c > 1) {
-                continue;
-            }
-            DB::delete('DELETE FROM repositories WHERE id=?', [$repoid]);
-        }
-        DB::delete('DELETE FROM project2repositories WHERE projectid=?', [intval($this->Id)]);
 
         EloquentProject::findOrFail((int) $this->Id)->delete();
 
@@ -242,7 +131,7 @@ class Project
     {
         // Trim the name
         $this->Name = trim($this->Name);
-        $this->Initialize();
+        $this->Filled = false; // TODO: Is this necessary?
 
         $project = EloquentProject::findOrNew($this->Id);
         $project->fill([
