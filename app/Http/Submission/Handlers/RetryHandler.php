@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Http\Submission\Handlers;
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -14,6 +16,8 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
+use Illuminate\Support\Facades\Storage;
 
 /** Because this class uses SimpleXML it is only suitable for use with small
  * XML files that can fit into memory.

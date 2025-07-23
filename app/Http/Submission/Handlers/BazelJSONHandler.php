@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Http\Submission\Handlers;
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -25,6 +27,7 @@ use CDash\Model\BuildError;
 use CDash\Model\BuildErrorFilter;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use stdClass;
 
 class BazelJSONHandler extends AbstractSubmissionHandler
 {

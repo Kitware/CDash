@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Submission\Handlers\UpdateHandler;
 use CDash\Test\CDashUseCaseTestCase;
 use CDash\Test\UseCase\UpdateUseCase;
 use CDash\Test\UseCase\UseCase;

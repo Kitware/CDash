@@ -2,7 +2,7 @@
 
 namespace CDash\Submission;
 
-use ActionableBuildInterface;
+use App\Http\Submission\Handlers\ActionableBuildInterface;
 
 interface CommitAuthorHandlerInterface extends ActionableBuildInterface
 {

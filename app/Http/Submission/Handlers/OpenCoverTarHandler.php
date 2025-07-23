@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Http\Submission\Handlers;
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -21,6 +23,9 @@ use CDash\Model\CoverageFile;
 use CDash\Model\CoverageFileLog;
 use CDash\Model\CoverageSummary;
 use League\Flysystem\UnableToReadFile;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 
 class OpenCoverTarHandler extends AbstractXmlHandler

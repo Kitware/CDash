@@ -15,6 +15,7 @@
  * =========================================================================
  */
 
+use App\Http\Submission\Handlers\ConfigureHandler;
 use CDash\Messaging\Notification\NotifyOn;
 use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
 use CDash\Messaging\Subscription\UserSubscriptionBuilder;

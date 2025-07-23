@@ -17,7 +17,7 @@
 
 namespace CDash\Messaging\Subscription;
 
-use ActionableBuildInterface;
+use App\Http\Submission\Handlers\ActionableBuildInterface;
 
 interface SubscriptionBuilderInterface
 {

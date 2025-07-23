@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Http\Submission\Handlers;
+
 use App\Http\Submission\Traits\UpdatesSiteInformation;
 use App\Models\Site;
 use App\Models\SiteInformation;

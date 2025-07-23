@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Submission\Handlers\ConfigureHandler;
 use CDash\Model\BuildConfigure;
 use CDash\Test\CDashUseCaseTestCase;
 use CDash\Test\UseCase\ConfigUseCase;

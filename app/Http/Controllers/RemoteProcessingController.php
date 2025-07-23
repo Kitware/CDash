@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Submission\Handlers\RetryHandler;
 use App\Jobs\ProcessSubmission;
 use CDash\Model\PendingSubmissions;
 use Exception;
 use Illuminate\Support\Facades\Storage;
-use RetryHandler;
 use Symfony\Component\HttpFoundation\Response;
 
 final class RemoteProcessingController extends AbstractController

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Submission\Handlers\TestingHandler;
 use CDash\Collection\BuildCollection;
 use CDash\Model\Build;
 use CDash\Test\CDashUseCaseTestCase;

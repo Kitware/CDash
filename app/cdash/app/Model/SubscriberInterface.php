@@ -17,7 +17,7 @@
 
 namespace CDash\Model;
 
-use ActionableBuildInterface;
+use App\Http\Submission\Handlers\ActionableBuildInterface;
 use CDash\Messaging\Preferences\NotificationPreferences;
 use CDash\Messaging\Preferences\NotificationPreferencesInterface;
 use CDash\Messaging\Topic\TopicCollection;

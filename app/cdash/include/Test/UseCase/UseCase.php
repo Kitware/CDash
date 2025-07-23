@@ -2,7 +2,7 @@
 
 namespace CDash\Test\UseCase;
 
-use AbstractXmlHandler;
+use App\Http\Submission\Handlers\AbstractXmlHandler;
 use CDash\Test\CDashUseCaseTestCase;
 use DOMDocument;
 use DOMElement;

@@ -2,14 +2,17 @@
 
 namespace App\Jobs;
 
-use AbstractSubmissionHandler;
-use ActionableBuildInterface;
 use App\Exceptions\BadSubmissionException;
+use App\Http\Submission\Handlers\AbstractSubmissionHandler;
+use App\Http\Submission\Handlers\ActionableBuildInterface;
+use App\Http\Submission\Handlers\BuildPropertiesJSONHandler;
+use App\Http\Submission\Handlers\DoneHandler;
+use App\Http\Submission\Handlers\RetryHandler;
+use App\Http\Submission\Handlers\UpdateHandler;
 use App\Models\BuildFile;
 use App\Models\SuccessfulJob;
 use App\Utils\SubmissionUtils;
 use App\Utils\UnparsedSubmissionProcessor;
-use BuildPropertiesJSONHandler;
 use CDash\Database;
 use CDash\Messaging\Notification\Email\EmailBuilder;
 use CDash\Messaging\Notification\Email\EmailMessage;
@@ -32,9 +35,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
-use RetryHandler;
 use Throwable;
-use UpdateHandler;
 
 class ProcessSubmission implements ShouldQueue
 {
@@ -165,7 +166,7 @@ class ProcessSubmission implements ShouldQueue
         }
 
         // Resubmit the file if necessary.
-        if (is_a($handler, 'DoneHandler') && $handler->shouldRequeue()) {
+        if (is_a($handler, DoneHandler::class) && $handler->shouldRequeue()) {
             $this->requeueSubmissionFile($handler->getBuild()->Id);
             return;
         }
@@ -398,7 +399,6 @@ class ProcessSubmission implements ShouldQueue
         $sitename = $row['name'];
 
         // Include the handler file for this type of submission.
-        $include_file = 'xml_handlers/' . $buildfile->type . '_handler.php';
         $valid_types = [
             'BazelJSON',
             'BuildPropertiesJSON',
@@ -408,15 +408,14 @@ class ProcessSubmission implements ShouldQueue
             'OpenCoverTar',
             'SubProjectDirectories',
         ];
-        if (stream_resolve_include_path($include_file) === false || !in_array($buildfile->type, $valid_types, true)) {
-            Log::error("Project: $projectid.  No handler include file for {$buildfile->type} (tried $include_file)");
+        if (!in_array($buildfile->type, $valid_types, true)) {
+            Log::error("Project: $projectid.  No handler include file for {$buildfile->type}");
             $buildfile->delete();
             return false;
         }
-        require_once $include_file;
 
         // Instantiate the handler.
-        $className = $buildfile->type . 'Handler';
+        $className = 'App\\Http\\Submission\\Handlers\\' . $buildfile->type . 'Handler';
         if (!class_exists($className)) {
             Log::error("Project: $projectid.  No handler class for {$buildfile->type}");
             $buildfile->delete();

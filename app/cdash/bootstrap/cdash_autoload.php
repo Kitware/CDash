@@ -6,7 +6,6 @@ function cdash_autoload($className)
     $inc_dir = "{$cdash_root}/include";
     $app_dir = "{$cdash_root}/app";
     $model_dir = "{$cdash_root}/models";
-    $xml_dir = "{$cdash_root}/xml_handlers";
     $filenames = null;
 
     if (str_contains($className, 'CDash\\')) {
@@ -16,9 +15,6 @@ function cdash_autoload($className)
         $loc2 = "{$app_dir}/{$loc2}.php";
 
         $filenames = [realpath($loc1), realpath($loc2)];
-    } elseif (str_ends_with($className, 'Handler') || str_contains($className, 'ActionableBuildInterface')) {
-        $name_parts = preg_split('/(?=[A-Z])/', $className);
-        $filenames = "{$xml_dir}/" . strtolower(implode('_', array_slice($name_parts, 1))) . '.php';
     } else {
         if (str_contains($className, '\\')) {
             $filenames = preg_replace('/\\\/', '/', $className);

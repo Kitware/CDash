@@ -17,13 +17,13 @@
 
 namespace CDash\Test\UseCase;
 
-use AbstractXmlHandler;
+use App\Http\Submission\Handlers\AbstractXmlHandler;
+use App\Http\Submission\Handlers\DynamicAnalysisHandler;
 use CDash\Model\Project;
 use DOMDocument;
 use DOMElement;
 use DOMNode;
 use DOMText;
-use DynamicAnalysisHandler;
 use Exception;
 
 class DynamicAnalysisUseCase extends UseCase

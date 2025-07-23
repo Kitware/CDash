@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Http\Submission\Handlers;
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$

@@ -17,7 +17,9 @@ namespace CDash\Model;
 
 use CDash\Database;
 use CDash\Lib\Repository\GitHub;
+use CDash\Lib\Repository\RepositoryInterface;
 use CDash\Service\RepositoryService;
+use Exception;
 use ReflectionClass;
 
 class Repository
@@ -99,7 +101,7 @@ class Repository
     {
         try {
             $repositoryInterface = self::getRepositoryInterface($project);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             report($e);
             return null;
         }
@@ -120,7 +122,7 @@ class Repository
             default:
                 $msg =
                     "No repository interface defined for $project->CvsViewerType";
-                throw new \Exception($msg);
+                throw new Exception($msg);
                 return;
         }
         return $service;

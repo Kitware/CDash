@@ -15,6 +15,7 @@
  * =========================================================================
  */
 
+use App\Http\Submission\Handlers\DynamicAnalysisHandler;
 use CDash\Model\Build;
 use CDash\Model\DynamicAnalysis;
 use CDash\Test\CDashUseCaseTestCase;

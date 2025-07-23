@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Http\Submission\Handlers;
+
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
@@ -18,6 +20,7 @@
 use CDash\Model\Build;
 use CDash\Model\BuildProperties;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class BuildPropertiesJSONHandler extends AbstractSubmissionHandler
 {

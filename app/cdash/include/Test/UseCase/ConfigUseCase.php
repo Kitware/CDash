@@ -2,9 +2,9 @@
 
 namespace CDash\Test\UseCase;
 
-use AbstractXmlHandler;
+use App\Http\Submission\Handlers\AbstractXmlHandler;
+use App\Http\Submission\Handlers\ConfigureHandler;
 use CDash\Model\Project;
-use ConfigureHandler;
 use DOMDocument;
 use DOMElement;
 use DOMText;

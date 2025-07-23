@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Submission\Handlers\DynamicAnalysisHandler;
 use CDash\Messaging\Notification\NotifyOn;
 use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
 use CDash\Messaging\Subscription\UserSubscriptionBuilder;

@@ -2,13 +2,13 @@
 
 namespace CDash\Test\UseCase;
 
-use AbstractXmlHandler;
+use App\Http\Submission\Handlers\AbstractXmlHandler;
+use App\Http\Submission\Handlers\UpdateHandler;
 use CDash\Model\Project;
 use DOMDocument;
 use DOMElement;
 use DOMText;
 use Exception;
-use UpdateHandler;
 
 class UpdateUseCase extends UseCase
 {
