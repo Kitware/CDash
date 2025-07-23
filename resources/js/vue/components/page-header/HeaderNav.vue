@@ -183,4 +183,9 @@ export default {
         text-decoration: none;
         width: 100%;
     }
+
+    svg {
+      display: inline-block;
+      vertical-align: middle;
+    }
 </style>
