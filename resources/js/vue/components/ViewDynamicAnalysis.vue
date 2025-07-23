@@ -3,26 +3,9 @@
     <p>{{ cdash.error }}</p>
   </section>
   <section v-else>
+    <BuildSummaryCard :build-id="buildid" />
+
     <loading-indicator :is-loading="loading">
-      <h3>Dynamic analysis started on {{ cdash.build.buildtime }}</h3>
-
-      <table border="0">
-        <tbody>
-          <tr>
-            <td align="right">
-              <b>Site Name:</b>
-            </td>
-            <td>{{ cdash.build.site }}</td>
-          </tr>
-          <tr>
-            <td align="right">
-              <b>Build Name:</b>
-            </td>
-            <td>{{ cdash.build.buildname }}</td>
-          </tr>
-        </tbody>
-      </table>
-
       <div class="buildgroup">
         <table
           cellspacing="0"
@@ -103,9 +86,11 @@
 <script>
 import ApiLoader from './shared/ApiLoader';
 import LoadingIndicator from './shared/LoadingIndicator.vue';
+import BuildSummaryCard from './shared/BuildSummaryCard.vue';
+
 export default {
   name: 'ViewDynamicAnalysis',
-  components: {LoadingIndicator},
+  components: {BuildSummaryCard, LoadingIndicator},
 
   props: {
     buildid: {
