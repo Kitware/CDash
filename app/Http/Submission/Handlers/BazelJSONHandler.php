@@ -605,19 +605,22 @@ class BazelJSONHandler extends AbstractSubmissionHandler
                         }
                         $testdata->status =
                             strtolower($json_array['testSummary']['overallStatus']);
-                        if ($testdata->status === 'failed') {
-                            $this->NumTestsFailed[$subproject_name]++;
-                            $testdata->details = 'Completed (Failed)';
+                        if ($testdata->status === 'passed' || $testdata->status === 'flaky') {
+                            $this->NumTestsPassed[$subproject_name]++;
+                            $testdata->status = 'passed';
+                            $testdata->details = 'Completed';
                         } elseif ($testdata->status === 'timeout') {
-                            $testdata->status = 'failed';
                             $this->NumTestsFailed[$subproject_name]++;
+                            $testdata->status = 'failed';
                             $testdata->details = 'Completed (Timeout)';
                             // "TIMEOUT" message is only in stderr, not stdout
                             // Make sure that it is displayed.
                             $this->TestsOutput[$testdata->name] = "TIMEOUT\n\n";
                         } elseif (!empty($testdata->status)) {
-                            $this->NumTestsPassed[$subproject_name]++;
-                            $testdata->details = 'Completed';
+                            // "failed", "flaky", etc...  See here for the set of possible values:
+                            // https://github.com/bazelbuild/bazel/blob/5b2baea3d70e2e1381bc6dbfb0327130d00d98ee/src/main/java/com/google/devtools/build/lib/buildeventstream/proto/build_event_stream.proto#L676
+                            $this->NumTestsFailed[$subproject_name]++;
+                            $testdata->details = 'Completed (Failed)';
                         }
                         break;
                     }
@@ -716,19 +719,22 @@ class BazelJSONHandler extends AbstractSubmissionHandler
         $testdata->time = $test_time;
         $testdata->details = '';
 
-        if ($testdata->status === 'failed') {
-            $this->NumTestsFailed[$subproject_name]++;
-            $testdata->details = 'Completed (Failed)';
+        if ($testdata->status === 'passed' || $testdata->status === 'flaky') {
+            $this->NumTestsPassed[$subproject_name]++;
+            $testdata->status = 'passed';
+            $testdata->details = 'Completed';
         } elseif ($testdata->status === 'timeout') {
-            $testdata->status = 'failed';
             $this->NumTestsFailed[$subproject_name]++;
+            $testdata->status = 'failed';
             $testdata->details = 'Completed (Timeout)';
             // "TIMEOUT" message is only in stderr, not stdout
             // Make sure that it is displayed.
             $this->TestsOutput[$testdata->name] = "TIMEOUT\n\n";
         } elseif (!empty($testdata->status)) {
-            $this->NumTestsPassed[$subproject_name]++;
-            $testdata->details = 'Completed';
+            // "failed", "flaky", etc...  See here for the set of possible values:
+            // https://github.com/bazelbuild/bazel/blob/5b2baea3d70e2e1381bc6dbfb0327130d00d98ee/src/main/java/com/google/devtools/build/lib/buildeventstream/proto/build_event_stream.proto#L676
+            $this->NumTestsFailed[$subproject_name]++;
+            $testdata->details = 'Completed (Failed)';
         }
 
         $this->Tests[] = $testdata;
