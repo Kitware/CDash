@@ -126,9 +126,7 @@ class CoverageFileLog
             return false;
         }
 
-        $log = stream_get_contents($row->log);
-
-        $log_entries = explode(';', $log);
+        $log_entries = explode(';', $row->log);
         // Make an initial pass through $log_entries to see what lines
         // it contains.
         $lines_retrieved = [];
