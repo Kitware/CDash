@@ -31,6 +31,7 @@ use CDash\Test\UseCase\UseCase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
 {
@@ -39,7 +40,7 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
 
     private static int $projectid = -1;
 
-    /** @var Database|PHPUnit_Framework_MockObject_MockObject */
+    /** @var Database|MockObject */
     private $db;
 
     /** @var ActionableBuildInterface */

@@ -3,6 +3,7 @@
 use CDash\Database;
 use CDash\Singleton;
 use CDash\Test\CDashTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class DatabaseTest extends CDashTestCase
 {
@@ -56,7 +57,7 @@ class DatabaseTest extends CDashTestCase
     public function testExecute()
     {
         $input_params = ['param1', 'param2'];
-        /** @var PDOStatement|PHPUnit_Framework_MockObject_MockObject $stmt */
+        /** @var PDOStatement|MockObject $stmt */
         $stmt = $this->getMockBuilder('\PDOStatement')
             ->getMock();
         $stmt

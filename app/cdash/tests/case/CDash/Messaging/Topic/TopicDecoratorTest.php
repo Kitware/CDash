@@ -29,6 +29,7 @@ use CDash\Messaging\Topic\Topic;
 use CDash\Messaging\Topic\TopicCollection;
 use CDash\Messaging\Topic\TopicDecorator;
 use CDash\Messaging\Topic\TopicInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
 
 abstract class MockTopic extends Topic implements Decoratable
@@ -45,7 +46,7 @@ class TopicDecoratorTest extends TestCase
 {
     public function testDecorateGivenFixesEmailPreference()
     {
-        /** @var TopicInterface|PHPUnit_Framework_MockObject_MockObject $mock_topic */
+        /** @var TopicInterface|MockObject $mock_topic */
         $mock_topic = $this->getMockTopic('MockTopic');
         $collection = new TopicCollection();
         $collection->add($mock_topic);
@@ -70,7 +71,7 @@ class TopicDecoratorTest extends TestCase
 
     public function testDecorateGivenEmailRedundantPreference()
     {
-        /** @var TopicInterface|PHPUnit_Framework_MockObject_MockObject $mock_topic */
+        /** @var TopicInterface|MockObject $mock_topic */
         $mock_topic = $this->getMockTopic('MockTopic');
         $collection = new TopicCollection();
         $collection->add($mock_topic);
@@ -83,7 +84,7 @@ class TopicDecoratorTest extends TestCase
 
     public function testDecorateGivenGroupFilterableEmailPreference()
     {
-        /** @var TopicInterface|PHPUnit_Framework_MockObject_MockObject $mock_topic */
+        /** @var TopicInterface|MockObject $mock_topic */
         $mock_topic = $this->getMockTopic('MockTopic');
         $collection = new TopicCollection();
         $collection->add($mock_topic);
@@ -101,7 +102,7 @@ class TopicDecoratorTest extends TestCase
 
     public function testDecorateGivenLabelsEmailPreference()
     {
-        /** @var TopicInterface|PHPUnit_Framework_MockObject_MockObject $mock_topic */
+        /** @var TopicInterface|MockObject $mock_topic */
         $mock_topic = $this->getMockTopic('MockTopic');
         $collection = new TopicCollection();
         $collection->add($mock_topic);
@@ -115,7 +116,7 @@ class TopicDecoratorTest extends TestCase
 
         $this->assertNotInstanceOf(LabeledTopic::class, $collection->get('MockTopic'));
 
-        /** @var TopicInterface|PHPUnit_Framework_MockObject_MockObject $mock_topic */
+        /** @var TopicInterface|MockObject $mock_topic */
         $mock_topic = $this->getMockTopicLabelable('MockTopic');
         $collection = new TopicCollection();
         $collection->add($mock_topic);
@@ -127,7 +128,7 @@ class TopicDecoratorTest extends TestCase
 
     public function testDecorateGivenAuthoredEmailPreference()
     {
-        /** @var TopicInterface|PHPUnit_Framework_MockObject_MockObject $mock_topic */
+        /** @var TopicInterface|MockObject $mock_topic */
         $mock_topic = $this->getMockTopic('MockTopic');
         $collection = new TopicCollection();
         $collection->add($mock_topic);

@@ -18,6 +18,7 @@
 use CDash\Collection\BuildEmailCollection;
 use CDash\Model\Build;
 use CDash\Test\CDashTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class BuildTest extends CDashTestCase
 {
@@ -40,7 +41,7 @@ class BuildTest extends CDashTestCase
     {
         // This is a bad idea, don't do this
         // TODO: refactor asap
-        /** @var Build|PHPUnit_Framework_MockObject_MockObject $sut */
+        /** @var Build|MockObject $sut */
         $sut = $this->getMockBuilder(Build::class)
             ->onlyMethods(['GetErrorDifferences', 'GetPreviousBuildId'])
             ->getMock();

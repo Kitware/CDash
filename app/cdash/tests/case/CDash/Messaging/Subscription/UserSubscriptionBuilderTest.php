@@ -28,6 +28,7 @@ use CDash\Model\BuildGroup;
 use CDash\Model\Project;
 use CDash\Model\Subscriber;
 use CDash\Test\BuildDiffForTesting;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
 
 class UserSubscriptionBuilderTest extends TestCase
@@ -46,7 +47,7 @@ class UserSubscriptionBuilderTest extends TestCase
             ->add($buildA)
             ->add($buildB);
 
-        /** @var BuildHandler|PHPUnit_Framework_MockObject_MockObject $mock_build_submission */
+        /** @var BuildHandler|MockObject $mock_build_submission */
         $mock_build_submission = $this->getMockHandler($buildCollection);
 
         // Insted of using mocked method return this allows us to use the actual logic

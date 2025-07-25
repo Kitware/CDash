@@ -21,6 +21,7 @@ use CDash\Messaging\Topic\Topic;
 use CDash\Model\Build;
 use CDash\Model\Subscriber;
 use CDash\Test\CDashTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class AuthoredTopicTest extends CDashTestCase
 {
@@ -34,7 +35,7 @@ class AuthoredTopicTest extends CDashTestCase
             ->method('subscribesToBuild')
             ->willReturn(true);
 
-        /** @var Build|PHPUnit_Framework_MockObject_MockObject $build */
+        /** @var Build|MockObject $build */
         $build = $this->getMockBuilder(Build::class)
             ->onlyMethods(['GetCommitAuthors'])
             ->getMock();

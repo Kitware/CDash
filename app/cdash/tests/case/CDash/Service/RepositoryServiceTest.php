@@ -20,11 +20,12 @@ use CDash\Model\Build;
 use CDash\Model\BuildUpdate;
 use CDash\Service\RepositoryService;
 use CDash\Test\CDashTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use Ramsey\Uuid\Uuid;
 
 class RepositoryServiceTest extends CDashTestCase
 {
-    /** @var RepositoryInterface|PHPUnit_Framework_MockObject_MockObject */
+    /** @var RepositoryInterface|MockObject */
     private $repository;
 
     public function setUp(): void
