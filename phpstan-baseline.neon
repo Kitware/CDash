@@ -12208,12 +12208,6 @@ parameters:
 			path: app/cdash/app/Model/CoverageFileLog.php
 
 		-
-			message: '#^Parameter \#2 \$string of function explode expects string, string\|false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/app/Model/CoverageFileLog.php
-
-		-
 			message: '#^Property CDash\\Model\\CoverageFileLog\:\:\$AggregateBuildId has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
