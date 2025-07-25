@@ -468,15 +468,15 @@ export default {
     },
 
     humanReadableOverallStartTime() {
-      return DateTime.fromISO(this.build.startTime).toLocaleString(DateTime.DATETIME_MED_WITH_SECONDS);
+      return DateTime.fromISO(this.build.startTime).toLocaleString(DateTime.DATETIME_FULL_WITH_SECONDS);
     },
 
     humanReadableOverallEndTime() {
-      return DateTime.fromISO(this.build.endTime).toLocaleString(DateTime.DATETIME_MED_WITH_SECONDS);
+      return DateTime.fromISO(this.build.endTime).toLocaleString(DateTime.DATETIME_FULL_WITH_SECONDS);
     },
 
     humanReadableSubmissionTime() {
-      return DateTime.fromISO(this.build.submissionTime).toLocaleString(DateTime.DATETIME_MED_WITH_SECONDS);
+      return DateTime.fromISO(this.build.submissionTime).toLocaleString(DateTime.DATETIME_FULL_WITH_SECONDS);
     },
 
     /**
