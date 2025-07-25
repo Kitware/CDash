@@ -36,9 +36,10 @@ class TestXMLTest extends TestCase
     }
 
     /**
-     * Test parsing valid Test.xml file(s).
+     * Test parsing a valid Test.xml file that contains angle brackets
+     * in the test name.
      */
-    public function testValidXML(): void
+    public function testAngleBracketsInName(): void
     {
         $this->submitFiles($this->project->name, [
             base_path(
@@ -47,41 +48,70 @@ class TestXMLTest extends TestCase
         ]);
 
         $this->graphQL('
-            query project($id: ID) {
-              project(id: $id) {
-                builds {
+            query build($id: ID) {
+              build(id: $id) {
+                tests {
                   edges {
                     node {
-                      tests {
-                        edges {
-                          node {
-                            name
-                          }
-                        }
-                      }
+                      name
                     }
                   }
                 }
               }
             }
         ', [
-            'id' => $this->project->id,
+            'id' => $this->project->builds()->firstOrFail()->id,
         ])->assertExactJson([
             'data' => [
-                'project' => [
-                    'builds' => [
+                'build' => [
+                    'tests' => [
                         'edges' => [
                             [
                                 'node' => [
-                                    'tests' => [
-                                        'edges' => [
-                                            [
-                                                'node' => [
-                                                    'name' => 'MyTest<parameterized>',
-                                                ],
-                                            ],
-                                        ],
-                                    ],
+                                    'name' => 'MyTest<parameterized>',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+    }
+
+    /**
+     * Test parsing a valid Test.xml file that contains non-UTF-8 characters
+     * in the test output.
+     */
+    public function testNonUTF8Output(): void
+    {
+        $this->submitFiles($this->project->name, [
+            base_path(
+                'tests/Feature/Submission/Tests/data/non_utf8_output.xml'
+            ),
+        ]);
+
+        $this->graphQL('
+            query build($id: ID) {
+              build(id: $id) {
+                tests {
+                  edges {
+                    node {
+                      name
+                    }
+                  }
+                }
+              }
+            }
+        ', [
+            'id' => $this->project->builds()->firstOrFail()->id,
+        ])->assertExactJson([
+            'data' => [
+                'build' => [
+                    'tests' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'name' => 'NonUtf8Output',
                                 ],
                             ],
                         ],

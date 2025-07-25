@@ -170,6 +170,14 @@ class TestCreator
                 $this->testOutput = gzuncompress($this->testOutput);
             }
 
+            if (mb_detect_encoding($this->testOutput, 'UTF-8', true) === false) {
+                $this->testOutput = mb_convert_encoding($this->testOutput, 'UTF-8', 'UTF-8');
+                if ($this->testOutput === false) {
+                    Log::error("Unable to encode {$this->testName} output as UTF-8");
+                    $this->testOutput = '';
+                }
+            }
+
             DB::insert(
                 'INSERT INTO testoutput (path, command, output, crc32)
                 VALUES (:path, :command, :output, :crc32)',
