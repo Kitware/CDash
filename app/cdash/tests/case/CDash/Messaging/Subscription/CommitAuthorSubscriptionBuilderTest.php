@@ -26,6 +26,7 @@ use CDash\Model\Build;
 use CDash\Model\BuildGroup;
 use CDash\Model\Project;
 use CDash\Test\BuildDiffForTesting;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
 
 class CommitAuthorSubscriptionBuilderTest extends TestCase
@@ -105,7 +106,7 @@ class CommitAuthorSubscriptionBuilderTest extends TestCase
     }
 
     /**
-     * @return ActionableBuildInterface|PHPUnit_Framework_MockObject_MockObject
+     * @return ActionableBuildInterface|MockObject
      */
     public function getMockSubmission($key, $handler_class)
     {
@@ -115,12 +116,12 @@ class CommitAuthorSubscriptionBuilderTest extends TestCase
 
         $mock_site = Mockery::mock(Site::class);
 
-        /** @var Build|PHPUnit_Framework_MockObject_MockObject $mock_build */
+        /** @var Build|MockObject $mock_build */
         $mock_build = $this->createMockBuildWithDiff(
             $this->createNew($key)
         );
 
-        /** @var BuildGroup|PHPUnit_Framework_MockObject_MockObject $mock_group */
+        /** @var BuildGroup|MockObject $mock_group */
         $mock_group = $this->getMockBuilder(BuildGroup::class)
             ->disableOriginalConstructor()
             ->onlyMethods(['isNotifyingCommitters'])
@@ -130,7 +131,7 @@ class CommitAuthorSubscriptionBuilderTest extends TestCase
             ->method('isNotifyingCommitters')
             ->willReturn(true);
 
-        /** @var ActionableBuildInterface|PHPUnit_Framework_MockObject_MockObject $mock_handler */
+        /** @var ActionableBuildInterface|MockObject $mock_handler */
         $mock_handler = $this->getMockBuilder($handler_class)
             ->disableOriginalConstructor()
             ->onlyMethods(['GetProject', 'GetSite', 'GetBuildCollection', 'GetCommitAuthors', 'GetBuildGroup', 'GetTopicCollectionForSubscriber'])

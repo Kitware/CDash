@@ -15580,12 +15580,6 @@ parameters:
 			path: app/cdash/include/Test/CDashTestCase.php
 
 		-
-			message: '#^Method CDash\\Test\\CDashTestCase\:\:getMockBuild\(\) has invalid return type PHPUnit_Framework_MockObject_MockObject\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/cdash/include/Test/CDashTestCase.php
-
-		-
 			message: '#^Method CDash\\Test\\CDashTestCase\:\:setDatabaseMocked\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -19105,12 +19099,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/DatabaseTest.php
 
 		-
-			message: '#^Call to method expects\(\) on an unknown class PHPUnit_Framework_MockObject_MockObject\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/cdash/tests/case/CDash/DatabaseTest.php
-
-		-
 			message: '#^Cannot access offset ''CDash\\\\Database'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -19161,18 +19149,6 @@ parameters:
 		-
 			message: '#^Method DatabaseTest\:\:testInstance\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/DatabaseTest.php
-
-		-
-			message: '#^PHPDoc tag @var for variable \$stmt contains unknown class PHPUnit_Framework_MockObject_MockObject\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/cdash/tests/case/CDash/DatabaseTest.php
-
-		-
-			message: '#^PHPDoc tag @var with type PDOStatement&PHPUnit_Framework_MockObject_MockObject is not subtype of native type PHPUnit\\Framework\\MockObject\\MockObject\.$#'
-			identifier: varTag.nativeType
 			count: 1
 			path: app/cdash/tests/case/CDash/DatabaseTest.php
 
@@ -19237,21 +19213,9 @@ parameters:
 			path: app/cdash/tests/case/CDash/LinkifyCompilerOutputTest.php
 
 		-
-			message: '#^Access to property \$Id on an unknown class PHPUnit_Framework_MockObject_MockObject\.$#'
-			identifier: class.notFound
-			count: 2
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
-
-		-
 			message: '#^Call to function in_array\(\) requires parameter \#3 to be set\.$#'
 			identifier: function.strict
 			count: 2
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
-
-		-
-			message: '#^Call to method expects\(\) on an unknown class PHPUnit_Framework_MockObject_MockObject\.$#'
-			identifier: class.notFound
-			count: 11
 			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
 
 		-
@@ -19297,12 +19261,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
 
 		-
-			message: '#^Method CommitAuthorSubscriptionBuilderTest\:\:createMockBuildWithDiff\(\) has invalid return type PHPUnit_Framework_MockObject_MockObject\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
-
-		-
 			message: '#^Method CommitAuthorSubscriptionBuilderTest\:\:createMockBuildWithDiff\(\) has parameter \$diff with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -19335,12 +19293,6 @@ parameters:
 		-
 			message: '#^Method CommitAuthorSubscriptionBuilderTest\:\:getDiff\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
-
-		-
-			message: '#^Method CommitAuthorSubscriptionBuilderTest\:\:getMockSubmission\(\) has invalid return type PHPUnit_Framework_MockObject_MockObject\.$#'
-			identifier: class.notFound
 			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
 
@@ -19411,48 +19363,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
 
 		-
-			message: '#^PHPDoc tag @var for variable \$build contains unknown class PHPUnit_Framework_MockObject_MockObject\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
-
-		-
-			message: '#^PHPDoc tag @var for variable \$mock_build contains unknown class PHPUnit_Framework_MockObject_MockObject\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
-
-		-
-			message: '#^PHPDoc tag @var for variable \$mock_group contains unknown class PHPUnit_Framework_MockObject_MockObject\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
-
-		-
-			message: '#^PHPDoc tag @var for variable \$mock_handler contains unknown class PHPUnit_Framework_MockObject_MockObject\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
-
-		-
-			message: '#^PHPDoc tag @var with type App\\Http\\Submission\\Handlers\\ActionableBuildInterface&PHPUnit_Framework_MockObject_MockObject is not subtype of native type PHPUnit\\Framework\\MockObject\\MockObject\.$#'
-			identifier: varTag.nativeType
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
-
-		-
-			message: '#^PHPDoc tag @var with type CDash\\Model\\Build&PHPUnit_Framework_MockObject_MockObject is not subtype of native type PHPUnit\\Framework\\MockObject\\MockObject\.$#'
-			identifier: varTag.nativeType
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
-
-		-
-			message: '#^PHPDoc tag @var with type CDash\\Model\\BuildGroup&PHPUnit_Framework_MockObject_MockObject is not subtype of native type PHPUnit\\Framework\\MockObject\\MockObject\.$#'
-			identifier: varTag.nativeType
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
-
-		-
 			message: '#^PHPDoc tag @var with type CDash\\Model\\Project is not subtype of native type PHPUnit\\Framework\\MockObject\\MockObject\.$#'
 			identifier: varTag.nativeType
 			count: 1
@@ -19471,33 +19381,21 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
 
 		-
+			message: '#^Trying to mock an undefined method GetCommitAuthors\(\) on class App\\Http\\Submission\\Handlers\\ActionableBuildInterface\.$#'
+			identifier: phpunit.mockMethod
+			count: 1
+			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
+
+		-
 			message: '#^Unable to resolve the template type T in call to method PHPUnit\\Framework\\TestCase\:\:getMockBuilder\(\)$#'
 			identifier: argument.templateType
 			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
 
 		-
-			message: '#^Access to property \$Id on an unknown class PHPUnit_Framework_MockObject_MockObject\.$#'
-			identifier: class.notFound
-			count: 2
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/UserSubscriptionBuilderTest.php
-
-		-
-			message: '#^Access to property \$Name on an unknown class PHPUnit_Framework_MockObject_MockObject\.$#'
-			identifier: class.notFound
-			count: 4
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/UserSubscriptionBuilderTest.php
-
-		-
 			message: '#^Call to function in_array\(\) requires parameter \#3 to be set\.$#'
 			identifier: function.strict
 			count: 2
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/UserSubscriptionBuilderTest.php
-
-		-
-			message: '#^Call to method expects\(\) on an unknown class PHPUnit_Framework_MockObject_MockObject\.$#'
-			identifier: class.notFound
-			count: 3
 			path: app/cdash/tests/case/CDash/Messaging/Subscription/UserSubscriptionBuilderTest.php
 
 		-
@@ -19527,12 +19425,6 @@ parameters:
 		-
 			message: '#^Method UserSubscriptionBuilderTest\:\:createFixed\(\) should return array but return statement is missing\.$#'
 			identifier: return.missing
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/UserSubscriptionBuilderTest.php
-
-		-
-			message: '#^Method UserSubscriptionBuilderTest\:\:createMockBuildWithDiff\(\) has invalid return type PHPUnit_Framework_MockObject_MockObject\.$#'
-			identifier: class.notFound
 			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/Subscription/UserSubscriptionBuilderTest.php
 
@@ -19585,24 +19477,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Subscription/UserSubscriptionBuilderTest.php
 
 		-
-			message: '#^PHPDoc tag @var for variable \$build contains unknown class PHPUnit_Framework_MockObject_MockObject\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/UserSubscriptionBuilderTest.php
-
-		-
-			message: '#^PHPDoc tag @var for variable \$mock_build_submission contains unknown class PHPUnit_Framework_MockObject_MockObject\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/UserSubscriptionBuilderTest.php
-
-		-
-			message: '#^PHPDoc tag @var with type CDash\\Model\\Build&PHPUnit_Framework_MockObject_MockObject is not subtype of native type PHPUnit\\Framework\\MockObject\\MockObject\.$#'
-			identifier: varTag.nativeType
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/UserSubscriptionBuilderTest.php
-
-		-
 			message: '#^Property UserSubscriptionBuilderTest\:\:\$diff has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
@@ -19613,12 +19487,6 @@ parameters:
 			identifier: missingType.property
 			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/Subscription/UserSubscriptionBuilderTest.php
-
-		-
-			message: '#^Call to method expects\(\) on an unknown class PHPUnit_Framework_MockObject_MockObject\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/AuthoredTopicTest.php
 
 		-
 			message: '#^Dynamic call to static method PHPUnit\\Framework\\Assert\:\:assertFalse\(\)\.$#'
@@ -19639,33 +19507,9 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Topic/AuthoredTopicTest.php
 
 		-
-			message: '#^PHPDoc tag @var for variable \$build contains unknown class PHPUnit_Framework_MockObject_MockObject\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/AuthoredTopicTest.php
-
-		-
-			message: '#^PHPDoc tag @var with type CDash\\Model\\Build&PHPUnit_Framework_MockObject_MockObject is not subtype of native type PHPUnit\\Framework\\MockObject\\MockObject\.$#'
-			identifier: varTag.nativeType
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/AuthoredTopicTest.php
-
-		-
-			message: '#^Access to property \$Id on an unknown class PHPUnit_Framework_MockObject_MockObject\.$#'
-			identifier: class.notFound
-			count: 4
-			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
-
-		-
 			message: '#^Call to function in_array\(\) requires parameter \#3 to be set\.$#'
 			identifier: function.strict
 			count: 2
-			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
-
-		-
-			message: '#^Call to method expects\(\) on an unknown class PHPUnit_Framework_MockObject_MockObject\.$#'
-			identifier: class.notFound
-			count: 7
 			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
 
 		-
@@ -19713,12 +19557,6 @@ parameters:
 		-
 			message: '#^Method BuildErrorTopicTest\:\:createFixed\(\) should return array but return statement is missing\.$#'
 			identifier: return.missing
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
-
-		-
-			message: '#^Method BuildErrorTopicTest\:\:createMockBuildWithDiff\(\) has invalid return type PHPUnit_Framework_MockObject_MockObject\.$#'
-			identifier: class.notFound
 			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
 
@@ -19825,18 +19663,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
 
 		-
-			message: '#^PHPDoc tag @var for variable \$build contains unknown class PHPUnit_Framework_MockObject_MockObject\.$#'
-			identifier: class.notFound
-			count: 2
-			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
-
-		-
-			message: '#^PHPDoc tag @var with type CDash\\Model\\Build&PHPUnit_Framework_MockObject_MockObject is not subtype of native type PHPUnit\\Framework\\MockObject\\MockObject\.$#'
-			identifier: varTag.nativeType
-			count: 2
-			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
-
-		-
 			message: '#^Property BuildErrorTopicTest\:\:\$diff has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
@@ -19853,12 +19679,6 @@ parameters:
 			identifier: phpunit.assertEquals
 			count: 6
 			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
-
-		-
-			message: '#^Call to method method\(\) on an unknown class PHPUnit_Framework_MockObject_MockObject\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/ConfigureTopicTest.php
 
 		-
 			message: '#^Dynamic call to static method PHPUnit\\Framework\\Assert\:\:assertCount\(\)\.$#'
@@ -19959,18 +19779,6 @@ parameters:
 		-
 			message: '#^Method ConfigureTopicTest\:\:testSubscribesToBuild\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/ConfigureTopicTest.php
-
-		-
-			message: '#^Property ConfigureTopicTest\:\:\$parent \(CDash\\Messaging\\Topic\\Topic&PHPUnit_Framework_MockObject_MockObject\) does not accept CDash\\Messaging\\Topic\\Topic&PHPUnit\\Framework\\MockObject\\MockObject\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/ConfigureTopicTest.php
-
-		-
-			message: '#^Property ConfigureTopicTest\:\:\$parent has unknown class PHPUnit_Framework_MockObject_MockObject as its type\.$#'
-			identifier: class.notFound
 			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/Topic/ConfigureTopicTest.php
 
@@ -20083,20 +19891,8 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Topic/EmailSentTopicTest.php
 
 		-
-			message: '#^Access to property \$Id on an unknown class PHPUnit_Framework_MockObject_MockObject\.$#'
-			identifier: class.notFound
-			count: 2
-			path: app/cdash/tests/case/CDash/Messaging/Topic/FixedTopicTest.php
-
-		-
 			message: '#^Call to function in_array\(\) requires parameter \#3 to be set\.$#'
 			identifier: function.strict
-			count: 2
-			path: app/cdash/tests/case/CDash/Messaging/Topic/FixedTopicTest.php
-
-		-
-			message: '#^Call to method expects\(\) on an unknown class PHPUnit_Framework_MockObject_MockObject\.$#'
-			identifier: class.notFound
 			count: 2
 			path: app/cdash/tests/case/CDash/Messaging/Topic/FixedTopicTest.php
 
@@ -20127,12 +19923,6 @@ parameters:
 		-
 			message: '#^Method FixedTopicTest\:\:createFixed\(\) should return array but return statement is missing\.$#'
 			identifier: return.missing
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/FixedTopicTest.php
-
-		-
-			message: '#^Method FixedTopicTest\:\:createMockBuildWithDiff\(\) has invalid return type PHPUnit_Framework_MockObject_MockObject\.$#'
-			identifier: class.notFound
 			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/Topic/FixedTopicTest.php
 
@@ -20197,18 +19987,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Topic/FixedTopicTest.php
 
 		-
-			message: '#^PHPDoc tag @var for variable \$build contains unknown class PHPUnit_Framework_MockObject_MockObject\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/FixedTopicTest.php
-
-		-
-			message: '#^PHPDoc tag @var with type CDash\\Model\\Build&PHPUnit_Framework_MockObject_MockObject is not subtype of native type PHPUnit\\Framework\\MockObject\\MockObject\.$#'
-			identifier: varTag.nativeType
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/FixedTopicTest.php
-
-		-
 			message: '#^Property FixedTopicTest\:\:\$diff has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
@@ -20219,18 +19997,6 @@ parameters:
 			identifier: missingType.property
 			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/Topic/FixedTopicTest.php
-
-		-
-			message: '#^Access to property \$Id on an unknown class PHPUnit_Framework_MockObject_MockObject\.$#'
-			identifier: class.notFound
-			count: 6
-			path: app/cdash/tests/case/CDash/Messaging/Topic/MissingTestTopicTest.php
-
-		-
-			message: '#^Call to method expects\(\) on an unknown class PHPUnit_Framework_MockObject_MockObject\.$#'
-			identifier: class.notFound
-			count: 3
-			path: app/cdash/tests/case/CDash/Messaging/Topic/MissingTestTopicTest.php
 
 		-
 			message: '#^Call to method get\(\) on an unknown class CDash\\Messaging\\Topic\\Illuminate\\Support\\Collection\.$#'
@@ -20299,34 +20065,10 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Topic/MissingTestTopicTest.php
 
 		-
-			message: '#^PHPDoc tag @var for variable \$build1 contains unknown class PHPUnit_Framework_MockObject_MockObject\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/MissingTestTopicTest.php
-
-		-
-			message: '#^PHPDoc tag @var for variable \$build2 contains unknown class PHPUnit_Framework_MockObject_MockObject\.$#'
-			identifier: class.notFound
-			count: 2
-			path: app/cdash/tests/case/CDash/Messaging/Topic/MissingTestTopicTest.php
-
-		-
-			message: '#^PHPDoc tag @var with type CDash\\Model\\Build&PHPUnit_Framework_MockObject_MockObject is not subtype of native type PHPUnit\\Framework\\MockObject\\MockObject\.$#'
-			identifier: varTag.nativeType
-			count: 3
-			path: app/cdash/tests/case/CDash/Messaging/Topic/MissingTestTopicTest.php
-
-		-
 			message: '#^You should use assertSame\(\) instead of assertEquals\(\), because both values are scalars of the same type$#'
 			identifier: phpunit.assertEquals
 			count: 4
 			path: app/cdash/tests/case/CDash/Messaging/Topic/MissingTestTopicTest.php
-
-		-
-			message: '#^Access to property \$Id on an unknown class PHPUnit_Framework_MockObject_MockObject\.$#'
-			identifier: class.notFound
-			count: 2
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
 
 		-
 			message: '''
@@ -20340,12 +20082,6 @@ parameters:
 		-
 			message: '#^Call to function in_array\(\) requires parameter \#3 to be set\.$#'
 			identifier: function.strict
-			count: 2
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
-
-		-
-			message: '#^Call to method expects\(\) on an unknown class PHPUnit_Framework_MockObject_MockObject\.$#'
-			identifier: class.notFound
 			count: 2
 			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
 
@@ -20394,12 +20130,6 @@ parameters:
 		-
 			message: '#^Method TestFailureTopicTest\:\:createFixed\(\) should return array but return statement is missing\.$#'
 			identifier: return.missing
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
-
-		-
-			message: '#^Method TestFailureTopicTest\:\:createMockBuildWithDiff\(\) has invalid return type PHPUnit_Framework_MockObject_MockObject\.$#'
-			identifier: class.notFound
 			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
 
@@ -20500,18 +20230,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
 
 		-
-			message: '#^PHPDoc tag @var for variable \$build contains unknown class PHPUnit_Framework_MockObject_MockObject\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
-
-		-
-			message: '#^PHPDoc tag @var with type CDash\\Model\\Build&PHPUnit_Framework_MockObject_MockObject is not subtype of native type PHPUnit\\Framework\\MockObject\\MockObject\.$#'
-			identifier: varTag.nativeType
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
-
-		-
 			message: '#^Property TestFailureTopicTest\:\:\$diff has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
@@ -20608,32 +20326,8 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Topic/TopicDecoratorTest.php
 
 		-
-			message: '#^PHPDoc tag @var for variable \$mock_topic contains unknown class PHPUnit_Framework_MockObject_MockObject\.$#'
-			identifier: class.notFound
-			count: 6
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TopicDecoratorTest.php
-
-		-
-			message: '#^Access to property \$Id on an unknown class PHPUnit_Framework_MockObject_MockObject\.$#'
-			identifier: class.notFound
-			count: 2
-			path: app/cdash/tests/case/CDash/Messaging/Topic/UpdateErrorTopicTest.php
-
-		-
 			message: '#^Call to function in_array\(\) requires parameter \#3 to be set\.$#'
 			identifier: function.strict
-			count: 2
-			path: app/cdash/tests/case/CDash/Messaging/Topic/UpdateErrorTopicTest.php
-
-		-
-			message: '#^Call to method GetDiffWithPreviousBuild\(\) on an unknown class PHPUnit_Framework_MockObject_MockObject\.$#'
-			identifier: class.notFound
-			count: 4
-			path: app/cdash/tests/case/CDash/Messaging/Topic/UpdateErrorTopicTest.php
-
-		-
-			message: '#^Call to method expects\(\) on an unknown class PHPUnit_Framework_MockObject_MockObject\.$#'
-			identifier: class.notFound
 			count: 2
 			path: app/cdash/tests/case/CDash/Messaging/Topic/UpdateErrorTopicTest.php
 
@@ -20676,12 +20370,6 @@ parameters:
 		-
 			message: '#^Method UpdateErrorTopicTest\:\:createFixed\(\) should return array but return statement is missing\.$#'
 			identifier: return.missing
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/UpdateErrorTopicTest.php
-
-		-
-			message: '#^Method UpdateErrorTopicTest\:\:createMockBuildWithDiff\(\) has invalid return type PHPUnit_Framework_MockObject_MockObject\.$#'
-			identifier: class.notFound
 			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/Topic/UpdateErrorTopicTest.php
 
@@ -20760,18 +20448,6 @@ parameters:
 		-
 			message: '#^Method UpdateErrorTopicTest\:\:testSubscribesToBuild\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/UpdateErrorTopicTest.php
-
-		-
-			message: '#^PHPDoc tag @var for variable \$build contains unknown class PHPUnit_Framework_MockObject_MockObject\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/UpdateErrorTopicTest.php
-
-		-
-			message: '#^PHPDoc tag @var with type CDash\\Model\\Build&PHPUnit_Framework_MockObject_MockObject is not subtype of native type PHPUnit\\Framework\\MockObject\\MockObject\.$#'
-			identifier: varTag.nativeType
 			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/Topic/UpdateErrorTopicTest.php
 
@@ -21004,27 +20680,9 @@ parameters:
 			path: app/cdash/tests/case/CDash/Model/BuildRelationshipTest.php
 
 		-
-			message: '#^Access to property \$Id on an unknown class PHPUnit_Framework_MockObject_MockObject\.$#'
-			identifier: class.notFound
-			count: 2
-			path: app/cdash/tests/case/CDash/Model/BuildTest.php
-
-		-
-			message: '#^Call to method GetDiffWithPreviousBuild\(\) on an unknown class PHPUnit_Framework_MockObject_MockObject\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/cdash/tests/case/CDash/Model/BuildTest.php
-
-		-
 			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertInstanceOf\(\) with ''CDash\\\\Collection\\\\BuildEmailCollection'' and CDash\\Collection\\BuildEmailCollection will always evaluate to true\.$#'
 			identifier: method.alreadyNarrowedType
 			count: 1
-			path: app/cdash/tests/case/CDash/Model/BuildTest.php
-
-		-
-			message: '#^Call to method expects\(\) on an unknown class PHPUnit_Framework_MockObject_MockObject\.$#'
-			identifier: class.notFound
-			count: 2
 			path: app/cdash/tests/case/CDash/Model/BuildTest.php
 
 		-
@@ -21078,18 +20736,6 @@ parameters:
 		-
 			message: '#^Missing call to parent\:\:setUp\(\) method\.$#'
 			identifier: phpunit.callParent
-			count: 1
-			path: app/cdash/tests/case/CDash/Model/BuildTest.php
-
-		-
-			message: '#^PHPDoc tag @var for variable \$sut contains unknown class PHPUnit_Framework_MockObject_MockObject\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/cdash/tests/case/CDash/Model/BuildTest.php
-
-		-
-			message: '#^PHPDoc tag @var with type CDash\\Model\\Build&PHPUnit_Framework_MockObject_MockObject is not subtype of native type PHPUnit\\Framework\\MockObject\\MockObject\.$#'
-			identifier: varTag.nativeType
 			count: 1
 			path: app/cdash/tests/case/CDash/Model/BuildTest.php
 
@@ -21265,18 +20911,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
 
 		-
-			message: '#^Property MultipleSubprojectsEmailTest\:\:\$db \(CDash\\Database&PHPUnit_Framework_MockObject_MockObject\) does not accept CDash\\Database&PHPUnit\\Framework\\MockObject\\MockObject\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
-
-		-
-			message: '#^Property MultipleSubprojectsEmailTest\:\:\$db has unknown class PHPUnit_Framework_MockObject_MockObject as its type\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
-
-		-
 			message: '#^Property MultipleSubprojectsEmailTest\:\:\$submission \(App\\Http\\Submission\\Handlers\\ActionableBuildInterface\) does not accept App\\Http\\Submission\\Handlers\\AbstractXmlHandler\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -21355,12 +20989,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Service/RepositoryServiceTest.php
 
 		-
-			message: '#^Call to method expects\(\) on an unknown class PHPUnit_Framework_MockObject_MockObject\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/cdash/tests/case/CDash/Service/RepositoryServiceTest.php
-
-		-
 			message: '#^Dynamic call to static method PHPUnit\\Framework\\Assert\:\:assertInstanceOf\(\)\.$#'
 			identifier: staticMethod.dynamicCall
 			count: 1
@@ -21375,18 +21003,6 @@ parameters:
 		-
 			message: '#^Method RepositoryServiceTest\:\:testSetStatusOnStart\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Service/RepositoryServiceTest.php
-
-		-
-			message: '#^Property RepositoryServiceTest\:\:\$repository \(CDash\\Lib\\Repository\\RepositoryInterface&PHPUnit_Framework_MockObject_MockObject\) does not accept CDash\\Lib\\Repository\\RepositoryInterface&PHPUnit\\Framework\\MockObject\\MockObject\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: app/cdash/tests/case/CDash/Service/RepositoryServiceTest.php
-
-		-
-			message: '#^Property RepositoryServiceTest\:\:\$repository has unknown class PHPUnit_Framework_MockObject_MockObject as its type\.$#'
-			identifier: class.notFound
 			count: 1
 			path: app/cdash/tests/case/CDash/Service/RepositoryServiceTest.php
 

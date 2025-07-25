@@ -24,6 +24,7 @@ use CDash\Model\BuildError;
 use CDash\Model\Subscriber;
 use CDash\Test\BuildDiffForTesting;
 use CDash\Test\CDashTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class BuildErrorTopicTest extends CDashTestCase
 {
@@ -173,7 +174,7 @@ class BuildErrorTopicTest extends CDashTestCase
         $sut = new BuildErrorTopic();
         $sut->setType(Build::TYPE_ERROR);
 
-        /** @var Build|PHPUnit_Framework_MockObject_MockObject $build */
+        /** @var Build|MockObject $build */
         $build = $this->getMockBuilder(Build::class)
             ->onlyMethods(['GetErrorDifferences'])
             ->getMock();

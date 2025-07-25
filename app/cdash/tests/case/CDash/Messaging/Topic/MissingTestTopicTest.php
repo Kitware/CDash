@@ -19,6 +19,7 @@ use CDash\Messaging\Topic\MissingTestTopic;
 use CDash\Messaging\Topic\Topic;
 use CDash\Model\Build;
 use Illuminate\Support\Collection;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
 
 class MissingTestTopicTest extends TestCase
@@ -27,7 +28,7 @@ class MissingTestTopicTest extends TestCase
     {
         $sut = new MissingTestTopic();
 
-        /** @var Build|PHPUnit_Framework_MockObject_MockObject $build1 */
+        /** @var Build|MockObject $build1 */
         $build1 = $this->getMockBuilder(Build::class)
             ->onlyMethods(['GetMissingTests'])
             ->getMock();
@@ -39,7 +40,7 @@ class MissingTestTopicTest extends TestCase
 
         $this->assertFalse($sut->subscribesToBuild($build1));
 
-        /** @var Build|PHPUnit_Framework_MockObject_MockObject $build2 */
+        /** @var Build|MockObject $build2 */
         $build2 = $this->getMockBuilder(Build::class)
             ->onlyMethods(['GetMissingTests'])
             ->getMock();
@@ -86,7 +87,7 @@ class MissingTestTopicTest extends TestCase
 
         $this->assertEquals(0, $sut->getTopicCount());
 
-        /** @var Build|PHPUnit_Framework_MockObject_MockObject $build2 */
+        /** @var Build|MockObject $build2 */
         $build2 = $this->getMockBuilder(Build::class)
             ->onlyMethods(['GetMissingTests'])
             ->getMock();

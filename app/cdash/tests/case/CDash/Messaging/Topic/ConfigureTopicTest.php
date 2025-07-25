@@ -24,10 +24,11 @@ use CDash\Model\BuildConfigure;
 use CDash\Model\Label;
 use CDash\Model\Subscriber;
 use CDash\Test\CDashTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class ConfigureTopicTest extends CDashTestCase
 {
-    /** @var Topic|PHPUnit_Framework_MockObject_MockObject */
+    /** @var Topic|MockObject */
     private $parent;
 
     public function setUp(): void

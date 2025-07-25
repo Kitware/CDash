@@ -18,7 +18,7 @@
 namespace CDash\Test;
 
 use CDash\Model\Build;
-use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
 
 trait BuildDiffForTesting
 {
@@ -73,11 +73,11 @@ trait BuildDiffForTesting
     }
 
     /**
-     * @return Build|PHPUnit_Framework_MockObject_MockObject
+     * @return Build|MockObject
      */
     protected function createMockBuildWithDiff($diff)
     {
-        /** @var Build|PHPUnit_Framework_MockObject_MockObject $build */
+        /** @var Build|MockObject $build */
         $build = $this->getMockBuilder(Build::class)
             ->onlyMethods(['GetErrorDifferences', 'GetPreviousBuildId'])
             ->getMock();
