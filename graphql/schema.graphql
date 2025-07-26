@@ -467,7 +467,7 @@ type Build {
   compilerVersion: String @rename(attribute: "compilerversion") @filterable
 
   """
-  Child builds associated wirh this parent build.  Note that CDash only supports one level of
+  Child builds associated with this parent build.  Note that CDash only supports one level of
   subprojects, so no child builds will have children of their own.
   """
   children(
@@ -475,6 +475,10 @@ type Build {
   ): [Build!]! @hasMany(type: CONNECTION) @orderBy(column: "id")
 
   coverageResults(
+    filters: _ @filter
+  ): [Coverage!]! @belongsToMany(type: CONNECTION, relation: "coverage") @orderBy(column: "id", direction: DESC) @deprecated(reason: "Use 'coverage' instead.")
+
+  coverage(
     filters: _ @filter
   ): [Coverage!]! @belongsToMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)
 
@@ -783,11 +787,9 @@ type Note {
 """
 Coverage result for a particular build+file combination.
 """
-type Coverage {
+type Coverage @model(class: "App\\Models\\CoverageView") {
   "Unique primary key."
   id: ID! @filterable
-
-  filePath: String! @with(relation: "file") @method(name: "getFilePath")
 
   linesOfCodeTested: Int! @rename(attribute: "loctested") @filterable
 
@@ -800,6 +802,8 @@ type Coverage {
   functionsTested: Int! @rename(attribute: "functionstested") @filterable
 
   functionsUntested: Int! @rename(attribute: "functionsuntested") @filterable
+
+  filePath: String @rename(attribute: "fullpath") @filterable
 
   labels(
     filters: _ @filter
