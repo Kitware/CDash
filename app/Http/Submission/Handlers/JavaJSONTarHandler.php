@@ -174,9 +174,7 @@ class JavaJSONTarHandler extends AbstractSubmissionHandler
         $lineNumber = 0;
 
         foreach ($coverageLines as $coverageLine) {
-            $sourceLine = $coverageLine['source'];
-            $coverageFile->File .= rtrim($sourceLine);
-            $coverageFile->File .= '<br>';
+            $coverageFile->File .= $coverageLine['source'];
 
             $timesHit = $coverageLine['covered'];
 
@@ -201,7 +199,6 @@ class JavaJSONTarHandler extends AbstractSubmissionHandler
         }
 
         // Save these models to the database.
-        $coverageFile->TrimLastNewline();
         $coverageFile->Update($buildid);
         $coverageFileLog->BuildId = $buildid;
         $coverageFileLog->FileId = $coverageFile->Id;

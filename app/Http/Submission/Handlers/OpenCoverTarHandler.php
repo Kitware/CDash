@@ -200,7 +200,6 @@ class OpenCoverTarHandler extends AbstractXmlHandler
             }
 
             // Save these models to the database.
-            $coverageFile->TrimLastNewline();
             $coverageFile->Update($this->Build->Id);
             $coverageFileLog->BuildId = $this->Build->Id;
             $coverageFileLog->FileId = $coverageFile->Id;
@@ -246,13 +245,12 @@ class OpenCoverTarHandler extends AbstractXmlHandler
         if ($this->coverageFile) {
             foreach ($fileContents as $key => $line) {
                 $trimmedLine = trim($line);
-                $displayLine = rtrim($line);
                 // Matches the beginning of a comment block
                 if (preg_match("/\/[*]+/", $trimmedLine)) {
                     $inlongComment = true;
                 }
 
-                $this->coverageFile->File .= $displayLine . '<br>';
+                $this->coverageFile->File .= $line;
                 if (!(preg_match("/^\/\//", $trimmedLine)
                    or preg_match('/using /', $trimmedLine)
                    or preg_match('/^namespace/', $trimmedLine)

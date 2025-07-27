@@ -11,6 +11,7 @@ use CDash\Model\Build;
 use CDash\Model\CoverageFile;
 use CDash\Model\CoverageFileLog;
 use CDash\Model\Project;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -482,8 +483,11 @@ final class CoverageController extends AbstractBuildController
         $coverageFile->Id = $fileid;
         $coverageFile->Load();
 
-        // Generating the html file
-        $file_array = explode('<br>', $coverageFile->File);
+        // Split on all forms of line breaks
+        $file_array = preg_split('/\R/', rtrim($coverageFile->File));
+        if ($file_array === false) {
+            throw new Exception('Error parsing coverage file.');
+        }
         $i = 0;
 
         // Load the coverage info.

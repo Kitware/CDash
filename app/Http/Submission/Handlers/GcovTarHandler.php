@@ -293,7 +293,7 @@ class GcovTarHandler extends AbstractSubmissionHandler
                 // Separate out delimited values from this line.
                 $timesHit = trim($fields[0]);
                 $lineNumber = (int) trim($fields[1]);
-                $sourceLine = rtrim($fields[2]);
+                $sourceLine = $fields[2];
 
                 // check for duplicate line output
                 if ($lineNumber <= $last_lineNumber) {
@@ -303,8 +303,6 @@ class GcovTarHandler extends AbstractSubmissionHandler
 
                 if ($lineNumber > 0) {
                     $coverageFile->File .= $sourceLine;
-                    // cannot be <br/> for backward compatibility.
-                    $coverageFile->File .= '<br>';
                 }
 
                 // This is how gcov indicates a line of unexecutable code.
@@ -368,7 +366,6 @@ class GcovTarHandler extends AbstractSubmissionHandler
         }
 
         // Save these models to the database.
-        $coverageFile->TrimLastNewline();
         $coverageFile->Update($buildid);
         $coverageFileLog->BuildId = $buildid;
         $coverageFileLog->FileId = $coverageFile->Id;
@@ -464,15 +461,12 @@ class GcovTarHandler extends AbstractSubmissionHandler
         $lines = file($fileinfo);
         $lineNumber = 0;
         foreach ($lines as $line) {
-            $sourceLine = rtrim($line);
-            $coverageFile->File .= $sourceLine;
-            $coverageFile->File .= '<br>';
+            $coverageFile->File .= $line;
             $coverageFileLog->AddLine($lineNumber, 0);
             $lineNumber++;
         }
 
         // Save this source file to the database.
-        $coverageFile->TrimLastNewline();
         $coverageFile->Update($this->Build->Id);
 
         // Check if this build already has coverage for this file.
