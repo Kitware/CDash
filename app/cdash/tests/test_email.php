@@ -119,7 +119,7 @@ class EmailTestCase extends KWWebTestCase
         $url = url('/');
 
         $expected = [
-            'testing.INFO: Sent email titled \'PASSED (w=6): EmailProjectExample - Win32-MSVC2009 - Nightly\' to user1@kw {"projectid":3,"subject":"PASSED (w=6): EmailProjectExample - Win32-MSVC2009 - Nightly","body":"Congratulations. A submission to CDash for the project EmailProjectExample has fixed warnings. You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.',
+            'testing.INFO: Sent email titled \'PASSED (w=6): EmailProjectExample - Win32-MSVC2009 - Nightly\' to user1@kw {"uri":"http://localhost:8080/submit.php?project=EmailProjectExample","projectid":3,"subject":"PASSED (w=6): EmailProjectExample - Win32-MSVC2009 - Nightly","body":"Congratulations. A submission to CDash for the project EmailProjectExample has fixed warnings. You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.',
             "{$url}/build/",
             'Project: EmailProjectExample',
             'Site: Dash20.kitware',
@@ -145,7 +145,7 @@ class EmailTestCase extends KWWebTestCase
         }
         $url = url('/');
         $expected = [
-            'testing.INFO: Sent email titled \'PASSED (t=2): EmailProjectExample - Win32-MSVC2009 - Nightly\' to user1@kw {"projectid":3,"subject":"PASSED (t=2): EmailProjectExample - Win32-MSVC2009 - Nightly","body":"Congratulations. A submission to CDash for the project EmailProjectExample has fixed failing tests. You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.',
+            'testing.INFO: Sent email titled \'PASSED (t=2): EmailProjectExample - Win32-MSVC2009 - Nightly\' to user1@kw {"uri":"http://localhost:8080/submit.php?project=EmailProjectExample","projectid":3,"subject":"PASSED (t=2): EmailProjectExample - Win32-MSVC2009 - Nightly","body":"Congratulations. A submission to CDash for the project EmailProjectExample has fixed failing tests. You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.',
             "{$url}/build/",
             'Project: EmailProjectExample',
             'Site: Dash20.kitware',

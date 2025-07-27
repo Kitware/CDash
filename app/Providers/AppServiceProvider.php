@@ -12,6 +12,7 @@ define('FMT_DATETIMEDISPLAY', 'M d, Y - H:i T');  // date and time standard
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
@@ -28,6 +29,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Log::shareContext([
+            // Limit the size of the string to prevent users from (un)intentionally filling
+            // up the logs with a very long query string.
+            'uri' => substr(request()->uri(), 0, 1000),
+        ]);
+
         Validator::extendImplicit('complexity', 'App\Validators\Password@complexity');
 
         URL::forceRootUrl(Config::get('app.url'));
