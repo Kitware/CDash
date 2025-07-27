@@ -373,6 +373,9 @@ set_tests_properties(configurewarnings PROPERTIES DEPENDS /CDash/XmlHandler/Upda
 
 add_feature_test(/Feature/AutoRemoveBuildsCommand)
 
+add_php_test(externallinksfromtests)
+set_tests_properties(externallinksfromtests PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
 ###################################################################################################
 
 set_property(TEST install_2 APPEND PROPERTY DEPENDS
@@ -413,6 +416,7 @@ set_property(TEST install_2 APPEND PROPERTY DEPENDS
   issuecreation
   junithandler
   configurewarnings
+  externallinksfromtests
 )
 
 
@@ -548,11 +552,8 @@ set_tests_properties(testhistory PROPERTIES DEPENDS subprojectnextprevious)
 add_php_test(expectedandmissing)
 set_tests_properties(expectedandmissing PROPERTIES DEPENDS testhistory)
 
-add_php_test(externallinksfromtests)
-set_tests_properties(externallinksfromtests PROPERTIES DEPENDS expectedandmissing)
-
 add_php_test(timesummary)
-set_tests_properties(timesummary PROPERTIES DEPENDS externallinksfromtests)
+set_tests_properties(timesummary PROPERTIES DEPENDS expectedandmissing)
 
 add_php_test(buildgetdate)
 set_tests_properties(buildgetdate PROPERTIES DEPENDS timesummary)
