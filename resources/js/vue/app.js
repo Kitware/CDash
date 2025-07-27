@@ -34,6 +34,7 @@ const SitesIdPage = Vue.defineAsyncComponent(() => import('./components/SitesIdP
 const ProjectMembersPage = Vue.defineAsyncComponent(() => import('./components/ProjectMembersPage.vue'));
 const UsersPage = Vue.defineAsyncComponent(() => import('./components/UsersPage.vue'));
 const BuildFilesPage = Vue.defineAsyncComponent(() => import('./components/BuildFilesPage.vue'));
+const BuildTargetsPage = Vue.defineAsyncComponent(() => import('./components/BuildTargetsPage.vue'));
 
 const cdash_components = {
   BuildConfigure,
@@ -56,6 +57,7 @@ const cdash_components = {
   ProjectMembersPage,
   UsersPage,
   BuildFilesPage,
+  BuildTargetsPage,
 };
 
 /**
@@ -107,6 +109,7 @@ const apolloClient = new ApolloClient({
           files: relayStylePagination(),
           urls: relayStylePagination(),
           notes: relayStylePagination(),
+          targets: relayStylePagination(),
         },
       },
       Site: {

@@ -332,6 +332,8 @@ add_browser_test(/Browser/Pages/BuildFilesPageTest)
 
 add_browser_test(/Browser/Pages/BuildNotesPageTest)
 
+add_browser_test(/Browser/Pages/BuildTargetsPageTest)
+
 add_php_test(changeid)
 set_tests_properties(changeid PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
