@@ -30,9 +30,6 @@ class Label
 
     public $BuildId;
     public $BuildFailureId;
-    public $CoverageFileId;
-    public int $CoverageFileBuildId = 0;
-    public $DynamicAnalysisId;
     public ?Test $Test = null;
 
     public function SetText(?string $text): void
@@ -118,8 +115,6 @@ class Label
         $this->InsertAssociation('label2build', 'buildid', intval($this->BuildId));
 
         $this->InsertAssociation('label2buildfailure', 'buildfailureid', intval($this->BuildFailureId));
-
-        $this->InsertAssociation('label2dynamicanalysis', 'dynamicanalysisid', intval($this->DynamicAnalysisId));
 
         $this->Test?->labels()->syncWithoutDetaching([$this->Id]);
 

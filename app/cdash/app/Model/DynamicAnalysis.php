@@ -17,8 +17,10 @@
 
 namespace CDash\Model;
 
+use App\Models\Build;
+use App\Models\DynamicAnalysis as EloquentDynamicAnalysis;
+use App\Models\Label;
 use CDash\Database;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class DynamicAnalysis
@@ -64,7 +66,6 @@ class DynamicAnalysis
 
     public function AddLabel($label): void
     {
-        $label->DynamicAnalysisId = $this->Id;
         $this->Labels[] = $label;
     }
 
@@ -75,15 +76,14 @@ class DynamicAnalysis
             abort(500, 'DynamicAnalysis::GetNumberOfErrors BuildId not set');
         }
 
-        $db = Database::getInstance();
+        $build = Build::find((int) $this->BuildId);
+        if ($build === null) {
+            return 0;
+        }
 
-        $query = $db->executePreparedSingleRow("
-                     SELECT count(*) AS c
-                     FROM dynamicanalysis
-                     WHERE buildid=? AND status IN ('notrun', 'failed')
-                 ", [$this->BuildId]);
-
-        return intval($query['c']);
+        return $build->dynamicAnalyses()
+            ->whereIn('status', ['notrun', 'failed'])
+            ->count();
     }
 
     /** Remove all the dynamic analysis associated with a buildid */
@@ -93,19 +93,7 @@ class DynamicAnalysis
             abort(500, 'DynamicAnalysis::RemoveAll BuildId not set');
         }
 
-        $this->BuildId = intval($this->BuildId);
-
-        // postgresql doesn't support multiple delete
-        DB::delete('
-             DELETE FROM dynamicanalysisdefect
-             USING dynamicanalysis
-             WHERE
-                 dynamicanalysis.buildid = ?
-                 AND dynamicanalysis.id = dynamicanalysisdefect.dynamicanalysisid
-        ', [$this->BuildId]);
-
-        DB::delete('DELETE FROM dynamicanalysis WHERE dynamicanalysis.buildid = ?', [$this->BuildId]);
-        DB::delete('DELETE FROM dynamicanalysis WHERE buildid=?', [$this->BuildId]);
+        Build::findOrFail((int) $this->BuildId)->dynamicAnalyses()->delete();
     }
 
     /** Insert labels */
@@ -116,9 +104,11 @@ class DynamicAnalysis
         }
 
         if ($this->Id) {
+            $dynamicAnalysis = EloquentDynamicAnalysis::findOrFail((int) $this->Id);
             foreach ($this->Labels as $label) {
-                $label->DynamicAnalysisId = $this->Id;
-                $label->Insert();
+                $dynamicAnalysis->labels()->attach(
+                    Label::firstOrCreate(['text' => $label->Text ?? ''])->id
+                );
             }
         } else {
             Log::error('No DynamicAnalysis::Id - cannot call $label->Insert...', [
@@ -182,47 +172,14 @@ class DynamicAnalysis
         $this->Log ??= '';
         $this->BuildId = intval($this->BuildId);
 
-        $db = Database::getInstance();
-
-        $id = '';
-        $idvalue = [];
-        $prepared_array = $db->createPreparedArray(7);
-        if ($this->Id) {
-            $id = 'id, ';
-            $idvalue = [$this->Id];
-            $prepared_array = $db->createPreparedArray(8);
-        }
-
-        $query = $db->executePrepared("
-                     INSERT INTO dynamicanalysis (
-                         $id
-                         buildid,
-                         status,
-                         checker,
-                         name,
-                         path,
-                         fullcommandline,
-                         log
-                     )
-                     VALUES $prepared_array
-                 ", array_merge($idvalue, [
-            $this->BuildId,
-            $this->Status,
-            $this->Checker,
-            $this->Name,
-            $path,
-            $fullCommandLine,
-            $this->Log,
-        ]));
-
-        if ($query === false) {
-            add_last_sql_error('DynamicAnalysis Insert', 0, $this->BuildId);
-            return false;
-        }
-
-        if (!$this->Id) {
-            $this->Id = DB::getPdo()->lastInsertId();
-        }
+        $this->Id = Build::findOrFail($this->BuildId)->dynamicAnalyses()->create([
+            'status' => $this->Status,
+            'checker' => $this->Checker,
+            'name' => $this->Name,
+            'path' => $path,
+            'fullcommandline' => $fullCommandLine,
+            'log' => $this->Log,
+        ])->id;
 
         // Add the defects
         if (!empty($this->Defects)) {
@@ -250,24 +207,18 @@ class DynamicAnalysis
             return true;
         }
 
-        $stmt = $this->PDO->prepare(
-            'SELECT * FROM dynamicanalysis WHERE id = ?');
-        if (!pdo_execute($stmt, [$this->Id])) {
+        $model = EloquentDynamicAnalysis::find((int) $this->Id);
+        if ($model === null) {
             return false;
         }
 
-        $row = $stmt->fetch();
-        if (!$row) {
-            return false;
-        }
-
-        $this->BuildId = $row['buildid'];
-        $this->Status = $row['status'];
-        $this->Checker = $row['checker'];
-        $this->Name = $row['name'];
-        $this->Path = $row['path'];
-        $this->FullCommandLine = $row['fullcommandline'];
-        $this->Log = $row['log'];
+        $this->BuildId = $model->buildid;
+        $this->Status = $model->status;
+        $this->Checker = $model->checker;
+        $this->Name = $model->name;
+        $this->Path = $model->path;
+        $this->FullCommandLine = $model->fullcommandline;
+        $this->Log = $model->log;
 
         return true;
     }
