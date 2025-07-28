@@ -24775,12 +24775,6 @@ parameters:
 			path: app/cdash/tests/test_buildproperties.php
 
 		-
-			message: '#^Only booleans are allowed in an if condition, CDash\\Model\\Project given\.$#'
-			identifier: if.condNotBoolean
-			count: 1
-			path: app/cdash/tests/test_buildproperties.php
-
-		-
 			message: '#^Parameter \#1 \$json of function json_decode expects string, string\|false given\.$#'
 			identifier: argument.type
 			count: 1
@@ -24819,12 +24813,6 @@ parameters:
 		-
 			message: '#^Property BuildPropertiesTestCase\:\:\$PDO has no type specified\.$#'
 			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/test_buildproperties.php
-
-		-
-			message: '#^Property BuildPropertiesTestCase\:\:\$Project \(CDash\\Model\\Project\) does not accept null\.$#'
-			identifier: assign.propertyType
 			count: 1
 			path: app/cdash/tests/test_buildproperties.php
 
