@@ -104,6 +104,8 @@ Route::get('/viewDynamicAnalysis.php', function (Request $request) {
     return redirect("/builds/{$buildid}/dynamic_analysis", 301);
 });
 
+Route::get('/builds/{build_id}/targets', 'BuildController@targets')->whereNumber('build_id');
+
 Route::get('/build/{build_id}/files', 'BuildController@files')->whereNumber('build_id');
 Route::get('/viewFiles.php', function (Request $request) {
     $buildid = $request->query('buildid');

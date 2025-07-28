@@ -34,6 +34,18 @@ require_once 'include/api_common.php';
 
 final class BuildController extends AbstractBuildController
 {
+    public function targets(int $build_id): View
+    {
+        $this->setBuildById($build_id);
+
+        $filters = json_decode(request()->get('filters')) ?? ['all' => []];
+
+        return $this->vue('build-targets-page', 'Targets', [
+            'build-id' => $this->build->Id,
+            'initial-filters' => $filters,
+        ]);
+    }
+
     // Render the build configure page.
     public function configure($build_id = null)
     {
