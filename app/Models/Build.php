@@ -216,11 +216,21 @@ class Build extends Model
     }
 
     /**
+     * @deprecated 07/27/2025 Use this relation only to edit the underlying coverage table.  Use coverage() instead.
+     *
      * @return HasMany<Coverage, $this>
      */
     public function coverageResults(): HasMany
     {
         return $this->hasMany(Coverage::class, 'buildid');
+    }
+
+    /**
+     * @return HasMany<CoverageView, $this>
+     */
+    public function coverage(): HasMany
+    {
+        return $this->hasMany(CoverageView::class, 'buildid');
     }
 
     /**
