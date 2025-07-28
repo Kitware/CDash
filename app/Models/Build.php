@@ -290,4 +290,12 @@ class Build extends Model
     {
         return $this->belongsToMany(BuildUpdate::class, 'build2update', 'buildid', 'updateid');
     }
+
+    /**
+     * @return HasMany<DynamicAnalysis, $this>
+     */
+    public function dynamicAnalyses(): HasMany
+    {
+        return $this->hasMany(DynamicAnalysis::class, 'buildid');
+    }
 }
