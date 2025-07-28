@@ -30,7 +30,7 @@ describe('subProjectGroupOrder', () => {
     // cy.get('#sortable').find('tr').first().find('input[name="group_name"]').should('contain', 'Production');
 
     // navigate to our example of coverage across groups
-    cy.visit('index.php?project=CrossSubProjectExample&parentid=121');
+    cy.visit('index.php?project=CrossSubProjectExample&parentid=120');
     cy.wait(1000);
 
     // make sure that Production is the first group listed after Total
@@ -51,7 +51,7 @@ describe('subProjectGroupOrder', () => {
     cy.get('@save_order_button').click();
 
     // verify that we restored it
-    cy.visit('index.php?project=CrossSubProjectExample&parentid=121');
+    cy.visit('index.php?project=CrossSubProjectExample&parentid=120');
     cy.wait(1000);
     cy.get('#coveragetable').find('tbody').eq(3).should('contain', 'Production');
   });
