@@ -89,7 +89,6 @@ class JSCoverTarHandler extends AbstractSubmissionHandler
             }
 
             // Save these models to the database.
-            $coverageFile->TrimLastNewline();
             $coverageFile->Update($this->Build->Id);
             $coverageFileLog->BuildId = $this->Build->Id;
             $coverageFileLog->FileId = $coverageFile->Id;
@@ -183,8 +182,7 @@ class JSCoverTarHandler extends AbstractSubmissionHandler
                     // Record this line of code if this is the first time that
                     // this file has been encountered.
                     $sourceLine = $coverageEntry['source'][$i - 1];
-                    $coverageFile->File .= rtrim($sourceLine);
-                    $coverageFile->File .= '<br>';
+                    $coverageFile->File .= $sourceLine;
                 }
 
                 $timesHit = $coverageLines[$i];

@@ -168,8 +168,8 @@ class RemoveBuildsTestCase extends KWWebTestCase
         // Coverage
         $file1 = new CoverageFile();
         $file1->FullPath = '/path/to/unshared.php';
-        $file1->File .= 'this unshared line gets covered<br>';
-        $file1->File .= 'this unshared line does not<br>';
+        $file1->File .= 'this unshared line gets covered' . PHP_EOL;
+        $file1->File .= 'this unshared line does not' . PHP_EOL;
 
         $coverage1 = new Coverage();
         $coverage1->Covered = 1;
@@ -180,8 +180,8 @@ class RemoveBuildsTestCase extends KWWebTestCase
 
         $file2 = new CoverageFile();
         $file2->FullPath = '/path/to/shared.php';
-        $file2->File .= 'this shared line gets covered<br>';
-        $file2->File .= 'this shared line does not<br>';
+        $file2->File .= 'this shared line gets covered' . PHP_EOL;
+        $file2->File .= 'this shared line does not' . PHP_EOL;
 
         $coverage2 = new Coverage();
         $coverage2->Covered = 1;
@@ -196,7 +196,6 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $summary->AddCoverage($coverage2);
         $summary->Insert(true);
 
-        $file1->TrimLastNewline();
         $file1->Update($build->Id);
         $log1 = new CoverageFileLog();
         $log1->AddLine(1, 1);
@@ -204,7 +203,6 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $log1->FileId = $file1->Id;
         $log1->Insert(true);
 
-        $file2->TrimLastNewline();
         $file2->Update($build->Id);
         $log2 = new CoverageFileLog();
         $log2->AddLine(1, 1);

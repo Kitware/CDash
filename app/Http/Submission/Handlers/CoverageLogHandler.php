@@ -108,7 +108,6 @@ class CoverageLogHandler extends AbstractXmlHandler
                     continue;
                 }
                 $coverageFileLog = $coverageInfo[1];
-                $coverageFile->TrimLastNewline();
 
                 $buildid = $this->Build->Id;
                 if ($has_subprojects) {
@@ -142,9 +141,7 @@ class CoverageLogHandler extends AbstractXmlHandler
                 $coverageFileLog->Insert(true);
             }
         } elseif ($name == 'LINE') {
-            $this->CurrentCoverageFile->File .= rtrim($this->CurrentLine);
-            // Cannot be <br/> for backward compatibility.
-            $this->CurrentCoverageFile->File .= '<br>';
+            $this->CurrentCoverageFile->File .= $this->CurrentLine . PHP_EOL;
         } elseif ($name == 'FILE') {
             // Store these objects to be inserted after we're guaranteed
             // to have a valid buildid.

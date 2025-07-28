@@ -4309,12 +4309,6 @@ parameters:
 			path: app/Http/Submission/Handlers/CoverageLogHandler.php
 
 		-
-			message: '#^Call to an undefined method object\:\:TrimLastNewline\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: app/Http/Submission/Handlers/CoverageLogHandler.php
-
-		-
 			message: '#^Call to an undefined method object\:\:Update\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -12020,12 +12014,6 @@ parameters:
 
 		-
 			message: '#^Method CDash\\Model\\CoverageFile\:\:Load\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Model/CoverageFile.php
-
-		-
-			message: '#^Method CDash\\Model\\CoverageFile\:\:TrimLastNewline\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: app/cdash/app/Model/CoverageFile.php
