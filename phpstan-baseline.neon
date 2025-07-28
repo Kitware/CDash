@@ -27919,12 +27919,6 @@ parameters:
 			path: app/cdash/tests/test_longbuildname.php
 
 		-
-			message: '#^Property LongBuildNameTestCase\:\:\$project has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/test_longbuildname.php
-
-		-
 			message: '''
 				#^Call to deprecated method submission\(\) of class KWWebTestCase\:
 				12/09/2024  Use \\Test\\Traits\\CreatesSubmissions instead$#

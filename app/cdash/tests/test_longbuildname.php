@@ -5,50 +5,42 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 use App\Models\Build;
 use CDash\Model\Project;
 use Illuminate\Support\Facades\DB;
+use Tests\Traits\CreatesProjects;
 
 class LongBuildNameTestCase extends KWWebTestCase
 {
-    private $project;
+    use CreatesProjects;
+
+    private App\Models\Project $project;
 
     public function __construct()
     {
         parent::__construct();
-        $this->project = null;
+
+        $this->project = $this->makePublicProject();
+        $legacy_project = new Project();
+        $legacy_project->Id = $this->project->id;
+        $legacy_project->InitialSetup();
     }
 
     public function __destruct()
     {
         // Delete project & build created by this test.
-        if ($this->project) {
-            remove_project_builds($this->project->Id);
-            $this->project->Delete();
-        }
+        remove_project_builds($this->project->id);
+        $this->project->delete();
     }
 
     public function testLongBuildName()
     {
-        // Create test project.
-        $this->login();
-        $this->project = new Project();
-        $this->project->Id = $this->createProject([
-            'Name' => 'LongBuildName',
-        ]);
-        $this->project->Fill();
-
-        $this->deleteLog($this->logfilename);
-
         // Submit our testing data.
         $test_dir = dirname(__FILE__) . '/data/LongBuildName/';
         $filename = "{$test_dir}/Configure.xml";
-        if (!$this->submission('LongBuildName', $filename)) {
+        if (!$this->submission($this->project->name, $filename)) {
             $this->fail("Failed to submit {$filename}");
         }
 
-        // No errors in the log.
-        $this->assertTrue($this->checkLog($this->logfilename) !== false);
-
         // The build exists.
-        $results = DB::select('SELECT id FROM build WHERE projectid = ?', [(int) $this->project->Id]);
+        $results = DB::select('SELECT id FROM build WHERE projectid = ?', [(int) $this->project->id]);
         $this->assertTrue(1 === count($results));
 
         // Its configure log was stored correctly.

@@ -382,6 +382,9 @@ set_tests_properties(buildgetdate PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHan
 add_php_test(replacebuild)
 set_tests_properties(replacebuild PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
+add_php_test(longbuildname)
+set_tests_properties(longbuildname PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
 ###################################################################################################
 
 set_property(TEST install_2 APPEND PROPERTY DEPENDS
@@ -425,6 +428,7 @@ set_property(TEST install_2 APPEND PROPERTY DEPENDS
   externallinksfromtests
   buildgetdate
   replacebuild
+  longbuildname
 )
 
 
@@ -668,11 +672,8 @@ set_tests_properties(testimages PROPERTIES DEPENDS "subscribeprojectshowlabels;c
 add_php_test(namedmeasurements)
 set_tests_properties(namedmeasurements PROPERTIES DEPENDS testimages)
 
-add_php_test(longbuildname)
-set_tests_properties(longbuildname PROPERTIES DEPENDS namedmeasurements)
-
 add_php_test(multiplelabelsfortests)
-set_tests_properties(multiplelabelsfortests PROPERTIES DEPENDS longbuildname)
+set_tests_properties(multiplelabelsfortests PROPERTIES DEPENDS namedmeasurements)
 
 add_php_test(subprojecttestfilters)
 set_tests_properties(subprojecttestfilters PROPERTIES DEPENDS multiplelabelsfortests)
