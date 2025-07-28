@@ -10,11 +10,13 @@ use CDash\Model\BuildFailure;
 use CDash\Model\Project;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
+use Tests\Traits\CreatesProjects;
 
 class BuildPropertiesTestCase extends KWWebTestCase
 {
-    /** @var Project Project */
-    private $Project;
+    use CreatesProjects;
+
+    private App\Models\Project $Project;
     private $PDO;
     private $Builds;
 
@@ -22,31 +24,21 @@ class BuildPropertiesTestCase extends KWWebTestCase
     {
         parent::__construct();
         $this->PDO = Database::getInstance();
-        $this->Project = null;
+
+        $this->Project = $this->makePublicProject();
+        $legacy_project = new Project();
+        $legacy_project->Id = $this->Project->id;
+        $legacy_project->InitialSetup();
     }
 
     public function __destruct()
     {
-        if ($this->Project) {
-            remove_project_builds($this->Project->Id);
-            $this->Project->Delete();
-        }
+        remove_project_builds($this->Project->id);
+        $this->Project->delete();
     }
 
     public function testUploadBuildProperties()
     {
-        // Create testing project.
-        $this->login();
-        $settings = [
-            'Name' => 'BuildPropertiesProject',
-        ];
-        $projectid = $this->createProject($settings);
-        if ($projectid < 1) {
-            $this->fail('Failed to create project');
-        }
-        $this->Project = new Project();
-        $this->Project->Id = $projectid;
-
         // Create a series of builds.
         $this->Builds = [];
         $this->create_build('clean', 'clean.json', '20170526-0500', 'ad4ff396f78f60b61ef8b18be034dfee');
@@ -61,7 +53,7 @@ class BuildPropertiesTestCase extends KWWebTestCase
 
         // Add a test for these builds.
         $testcreator = new TestCreator();
-        $testcreator->projectid = $this->Project->Id;
+        $testcreator->projectid = $this->Project->id;
         $testcreator->testDetails = '';
         $testcreator->testName = 'BuildPropUnitTest';
         $testcreator->testPath = '/tmp';
@@ -146,7 +138,7 @@ class BuildPropertiesTestCase extends KWWebTestCase
 
     public function testComputeClassifiers()
     {
-        $this->get($this->url . '/api/v1/buildProperties.php?project=BuildPropertiesProject&begin=2017-05-26&end=2017-05-29');
+        $this->get($this->url . '/api/v1/buildProperties.php?project=' . $this->Project->name . '&begin=2017-05-26&end=2017-05-29');
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
         $builds = [];
@@ -196,7 +188,7 @@ class BuildPropertiesTestCase extends KWWebTestCase
         $timestamp = strtotime($date);
         // Do the POST step of the submission.
         $fields = [
-            'project' => 'BuildPropertiesProject',
+            'project' => $this->Project->name,
             'build' => $buildname,
             'site' => 'localhost',
             'stamp' => "$date-Experimental",

@@ -209,7 +209,7 @@ final class BuildPropertiesController extends AbstractBuildController
         }
 
         $pdo = Database::getInstance()->getPdo();
-        $placeholder_str = Database::getInstance()->createPreparedArray(count($_GET['buildid']));
+        $placeholder_str = Database::getInstance()->createPreparedArray(is_array($_GET['buildid']) ? count($_GET['buildid']) : 1);
 
         $defects_response = [];
         foreach ($_GET['defect'] as $defect) {
