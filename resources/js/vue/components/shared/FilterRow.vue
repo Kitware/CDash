@@ -13,7 +13,7 @@
         class="tw-select tw-select-xs tw-select-bordered tw-shrink"
       >
         <option
-          v-for="field in result.typeInformation.inputFields"
+          v-for="field in result.typeInformation.inputFields.filter((x) => x.name !== 'id')"
           :value="field.name"
         >
           {{ humanReadableField(field.name) }}
@@ -175,7 +175,7 @@ export default {
           return;
         }
 
-        this.selectedField = this.initialField ?? result.typeInformation.inputFields[0].name;
+        this.selectedField = this.initialField ?? result.typeInformation.inputFields.filter((x) => x.name !== 'id')[0].name;
 
         this.selectedOperator = this.initialOperator ?? 'eq';
       },
