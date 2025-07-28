@@ -379,6 +379,9 @@ set_tests_properties(externallinksfromtests PROPERTIES DEPENDS /CDash/XmlHandler
 add_php_test(buildgetdate)
 set_tests_properties(buildgetdate PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
+add_php_test(replacebuild)
+set_tests_properties(replacebuild PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
 ###################################################################################################
 
 set_property(TEST install_2 APPEND PROPERTY DEPENDS
@@ -421,6 +424,7 @@ set_property(TEST install_2 APPEND PROPERTY DEPENDS
   configurewarnings
   externallinksfromtests
   buildgetdate
+  replacebuild
 )
 
 
@@ -559,11 +563,8 @@ set_tests_properties(expectedandmissing PROPERTIES DEPENDS testhistory)
 add_php_test(timesummary)
 set_tests_properties(timesummary PROPERTIES DEPENDS expectedandmissing)
 
-add_php_test(replacebuild)
-set_tests_properties(replacebuild PROPERTIES DEPENDS timesummary)
-
 add_php_test(sequenceindependence)
-set_tests_properties(sequenceindependence PROPERTIES DEPENDS replacebuild)
+set_tests_properties(sequenceindependence PROPERTIES DEPENDS timesummary)
 
 add_php_test(crosssubprojectcoverage)
 set_tests_properties(crosssubprojectcoverage PROPERTIES DEPENDS sequenceindependence)
