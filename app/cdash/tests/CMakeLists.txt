@@ -146,6 +146,7 @@ set_tests_properties(/CDash/BuildUseCase PROPERTIES DEPENDS /CDash/XmlHandler/Up
 
 add_legacy_unit_test(/CDash/ConfigUseCase)
 set_tests_properties(/CDash/ConfigUseCase PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+set_property(TEST /CDash/ConfigUseCase APPEND PROPERTY RUN_SERIAL TRUE)
 
 add_legacy_unit_test(/CDash/UpdateUseCase)
 set_tests_properties(/CDash/UpdateUseCase PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
