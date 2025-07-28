@@ -6,13 +6,32 @@
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
+use App\Models\Project;
 use CDash\Model\Build;
+use Illuminate\Support\Str;
+use Tests\Traits\CreatesProjects;
 
 class BuildGetDateTestCase extends KWWebTestCase
 {
+    use CreatesProjects;
+
+    protected Project $project;
+    protected App\Models\Build $build;
+
     public function __construct()
     {
         parent::__construct();
+
+        $this->project = $this->makePublicProject();
+        $this->build = $this->project->builds()->create([
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+        ]);
+    }
+
+    public function __destruct()
+    {
+        $this->project->delete();
     }
 
     public function testBuildGetDate()
@@ -25,8 +44,8 @@ class BuildGetDateTestCase extends KWWebTestCase
         $morning_after = gmdate('Y-m-d H:i:s', strtotime('2009-02-23 09:00:00'));
 
         $build = new Build();
-        $build->Id = 1;
-        $build->ProjectId = 1;
+        $build->Id = $this->build->id;
+        $build->ProjectId = $this->project->id;
         $build->Filled = true;
         $build->GetProject()->Fill();
 
