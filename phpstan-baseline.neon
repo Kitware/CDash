@@ -7852,24 +7852,6 @@ parameters:
 			path: app/Utils/TestCreator.php
 
 		-
-			message: '#^Access to an undefined property App\\Models\\TestImage\:\:\$imgid\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Utils/TestCreator.php
-
-		-
-			message: '#^Access to an undefined property App\\Models\\TestImage\:\:\$outputid\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Utils/TestCreator.php
-
-		-
-			message: '#^Access to an undefined property App\\Models\\TestImage\:\:\$role\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Utils/TestCreator.php
-
-		-
 			message: '''
 				#^Call to deprecated method addLabel\(\) of class App\\Models\\Test\:
 				10/26/2024  The legacy Label class is deprecated\.  Use the labels\(\) Eloquent relationship instead\.$#

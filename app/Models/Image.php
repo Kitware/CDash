@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 /**
  * @property int $id
@@ -29,4 +30,12 @@ class Image extends Model
     protected $casts = [
         'id' => 'integer',
     ];
+
+    /**
+     * @return HasManyThrough<TestOutput, TestImage, $this>
+     */
+    public function testOutputs(): HasManyThrough
+    {
+        return $this->hasManyThrough(TestOutput::class, TestImage::class, 'imgid', 'id', 'id', 'outputid');
+    }
 }
