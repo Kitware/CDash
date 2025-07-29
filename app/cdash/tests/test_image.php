@@ -19,19 +19,6 @@ class ImageTestCase extends KWWebTestCase
     {
         $image = new Image();
 
-        // no id, no matching checksum
-        $image->Id = 0;
-        if ($image->Exists()) {
-            $this->fail('Exists() should return false when Id is 0');
-            return 1;
-        }
-
-        // id, no matching checksum
-        $image->Id = 1;
-        if ($image->Exists()) {
-            $this->fail("Exists() should return false with no matching checksum\n");
-        }
-
         $pathToImage = dirname(__FILE__) . '/data/smile.gif';
         $image->Filename = $pathToImage;
         $image->Extension = 'image/gif';

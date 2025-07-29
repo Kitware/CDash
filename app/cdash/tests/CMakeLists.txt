@@ -335,6 +335,9 @@ add_browser_test(/Browser/Pages/BuildNotesPageTest)
 
 add_browser_test(/Browser/Pages/BuildTargetsPageTest)
 
+add_php_test(image)
+set_tests_properties(image PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
 add_php_test(changeid)
 set_tests_properties(changeid PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
@@ -403,6 +406,7 @@ set_property(TEST install_2 APPEND PROPERTY DEPENDS
   /CDash/Messaging/Topic/TestFailureTopic
   /CDash/Messaging/Topic/TopicDecorator
   cypress/e2e/user-profile
+  image
   changeid
   consistenttestingday
   numericupdate
@@ -458,11 +462,8 @@ set_tests_properties(buildoverview PROPERTIES DEPENDS buildgrouprule)
 add_php_test(committerinfo)
 set_tests_properties(committerinfo PROPERTIES DEPENDS buildoverview)
 
-add_php_test(image)
-set_tests_properties(image PROPERTIES DEPENDS committerinfo)
-
 add_php_test(displayimage)
-set_tests_properties(displayimage PROPERTIES DEPENDS image)
+set_tests_properties(displayimage PROPERTIES DEPENDS committerinfo)
 
 add_php_test(projectindb)
 set_tests_properties(projectindb PROPERTIES DEPENDS displayimage)
