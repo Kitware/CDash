@@ -33,6 +33,6 @@ class ProjectServiceTest extends TestCase
         $project = $project->refresh();
 
         self::assertTrue($project->exists());
-        self::assertEquals(3, $project->buildgroups()->count());
+        self::assertSame(3, $project->buildgroups()->count());
     }
 }

@@ -21,11 +21,6 @@ class BuildInstrumentationTest extends TestCase
 
         $this->project = $this->makePublicProject();
 
-        // The trait doesn't initialize the default buildgroups for us, so we do it manually
-        $legacy_project = new \CDash\Model\Project();
-        $legacy_project->Id = $this->project->id;
-        $legacy_project->InitialSetup();
-
         $this->project->refresh();
     }
 

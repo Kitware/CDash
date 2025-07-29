@@ -7,13 +7,15 @@ use CDash\Model\Project;
 use Illuminate\Foundation\Testing\DatabaseTruncation;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
+use Tests\Traits\CreatesProjects;
 
 class PurgeUnusedProjectsCommand extends TestCase
 {
     use DatabaseTruncation;
+    use CreatesProjects;
 
-    private Project $project1;
-    private Project $project2;
+    private \App\Models\Project $project1;
+    private \App\Models\Project $project2;
 
     /**
      * Feature test for the build:remove artisan command.
@@ -23,15 +25,12 @@ class PurgeUnusedProjectsCommand extends TestCase
     public function testAutoRemoveBuildsCommand()
     {
         // Make a project.
-        $this->project1 = new Project();
-        $this->project1->Name = 'DontRemoveProject';
-        $this->project1->Save();
-        $this->project1->InitialSetup();
+        $this->project1 = $this->makePublicProject('DontRemoveProject');
 
         // Make a build for the project.
         $build = new Build();
         $build->Name = 'test';
-        $build->ProjectId = $this->project1->Id;
+        $build->ProjectId = $this->project1->id;
         $build->SiteId = 1;
         $build->SetStamp('20090223-0115-Experimental');
         $build->StartTime = '2009-02-23 01:15:00';
@@ -40,10 +39,7 @@ class PurgeUnusedProjectsCommand extends TestCase
         $build->AddBuild();
 
         // Make another project.
-        $this->project2 = new Project();
-        $this->project2->Name = 'RemoveProject';
-        $this->project2->Save();
-        $this->project2->InitialSetup();
+        $this->project2 = $this->makePublicProject('RemoveProject');
 
         // Run the command.
         $this->artisan('projects:clean');
@@ -56,10 +52,10 @@ class PurgeUnusedProjectsCommand extends TestCase
     public function tearDown(): void
     {
         if (isset($this->project1)) {
-            $this->project1->Delete();
+            $this->project1->delete();
         }
         if (isset($this->project2)) {
-            $this->project2->Delete();
+            $this->project2->delete();
         }
 
         parent::tearDown();
