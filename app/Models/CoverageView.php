@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -49,5 +50,40 @@ class CoverageView extends Model
     public function labels(): BelongsToMany
     {
         return $this->belongsToMany(Label::class, 'label2coverage', 'coverageid', 'labelid');
+    }
+
+    /**
+     * TODO: Implement a setter so we can fully hide the text representation stored in the database.
+     *
+     * @return Attribute<CoverageLine[],void>
+     */
+    protected function coveredLines(): Attribute
+    {
+        return Attribute::make(
+            get: function (mixed $value, array $attributes): array {
+                if ($attributes['log'] === null) {
+                    return [];
+                }
+
+                $lines = [];
+                foreach (str($attributes['log'])->rtrim(';')->explode(';') as $line_str) {
+                    $line_str = str($line_str);
+
+                    $hasBranches = $line_str->startsWith('b');
+                    $line_str = $line_str->ltrim('b');
+
+                    $lineNumber = $line_str->before(':')->toInteger();
+                    $rightSide = $line_str->after(':');
+
+                    $lines[] = new CoverageLine(
+                        $lineNumber,
+                        !$hasBranches ? $rightSide->toInteger() : null,
+                        $hasBranches ? $rightSide->after('/')->toInteger() : null,
+                        $hasBranches ? $rightSide->before('/')->toInteger() : null,
+                    );
+                }
+                return $lines;
+            },
+        );
     }
 }

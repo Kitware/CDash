@@ -6697,6 +6697,12 @@ parameters:
 			path: app/Listeners/EmailSentListener.php
 
 		-
+			message: '#^Parameter \#1 \$string of function str expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Models/CoverageView.php
+
+		-
 			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1
@@ -32853,7 +32859,7 @@ parameters:
 				07/27/2025 Use this relation only to edit the underlying coverage table\.  Use coverage\(\) instead\.$#
 			'''
 			identifier: method.deprecated
-			count: 2
+			count: 3
 			path: tests/Feature/GraphQL/CoverageTypeTest.php
 
 		-

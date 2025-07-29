@@ -805,9 +805,24 @@ type Coverage @model(class: "App\\Models\\CoverageView") {
 
   filePath: String @rename(attribute: "fullpath") @filterable
 
+  # Note: we deliberately don't use pagination here because the server has to load the entire file
+  # in full anyway, and each record is small.
+  coveredLines: [CoverageLine]!
+
   labels(
     filters: _ @filter
   ): [Label!]! @belongsToMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)
+}
+
+
+"""
+Coverage information for an individual line.
+"""
+type CoverageLine {
+  lineNumber: Int!
+  timesHit: Int
+  totalBranches: Int
+  branchesHit: Int
 }
 
 
