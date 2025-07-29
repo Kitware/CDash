@@ -17,8 +17,9 @@
 
 namespace CDash\Model;
 
+use App\Models\Image as EloquentImage;
 use CDash\Database;
-use PDO;
+use Exception;
 
 class Image
 {
@@ -29,14 +30,11 @@ class Image
 
     public $Data; // Loaded from database or the file referred by Filename.
     public $Name; // Use to track the role for test.
-    /** @var Database */
-    private $PDO;
 
     public function __construct()
     {
         $this->Filename = '';
         $this->Name = '';
-        $this->PDO = Database::getInstance();
     }
 
     private function GetData(): void
@@ -50,25 +48,17 @@ class Image
     }
 
     /** Check if exists */
-    public function Exists(): bool
+    private function Exists(): bool
     {
-        $db = Database::getInstance();
-        // If no id specify return false
-        if ($this->Id) {
-            $query_array = $db->executePreparedSingleRow('SELECT count(*) AS c FROM image WHERE id=?', [$this->Id]);
-            if ($query_array['c'] == 0) {
-                return false;
-            }
-            return true;
-        } else {
-            // Check if the checksum exists
-            $query_array = $db->executePreparedSingleRow('SELECT id FROM image WHERE checksum=?', [$this->Checksum]);
-            if (!empty($query_array)) {
-                $this->Id = $query_array['id'];
-                return true;
-            }
+        $model = EloquentImage::where('id', (int) $this->Id)
+            ->orWhere('checksum', $this->Checksum)
+            ->first();
+        if ($model === null) {
             return false;
         }
+
+        $this->Id = $model->id;
+        return true;
     }
 
     /** Save the image */
@@ -77,40 +67,27 @@ class Image
         // Get the data from the file if necessary
         $this->GetData();
 
+        // Convert this string to a stream so Eloquent handles it as a LOB properly.
+        $stream = fopen('php://temp', 'w+');
+        if ($stream === false) {
+            throw new Exception('Unable to open stream.');
+        }
+        fwrite($stream, $this->Data);
+        rewind($stream);
+
         if (!$this->Exists()) {
-            $success = true;
-            if ($this->Id) {
-                $stmt = $this->PDO->prepare('
-                        INSERT INTO image (id, img, extension, checksum)
-                        VALUES (:id, :img, :extension, :checksum)');
-                $stmt->bindParam(':id', $this->Id);
-                $stmt->bindParam(':img', $this->Data, PDO::PARAM_LOB);
-                $stmt->bindParam(':extension', $this->Extension);
-                $stmt->bindParam(':checksum', $this->Checksum);
-                $success = $this->PDO->execute($stmt);
-            } else {
-                $stmt = $this->PDO->prepare('
-                        INSERT INTO image (img, extension, checksum)
-                        VALUES (:img, :extension, :checksum)');
-                $stmt->bindParam(':img', $this->Data, PDO::PARAM_LOB);
-                $stmt->bindParam(':extension', $this->Extension);
-                $stmt->bindParam(':checksum', $this->Checksum);
-                $this->PDO->execute($stmt);
-                $success = (bool) $this->Id = $this->PDO->getPdo()->lastInsertId();
-            }
-            if (!$success) {
-                return false;
-            }
+            $this->Id = EloquentImage::create([
+                'img' => $stream,
+                'extension' => $this->Extension,
+                'checksum' => $this->Checksum,
+            ])->id;
         } elseif ($update) {
             // Update the current image.
-            $stmt = $this->PDO->prepare('UPDATE image SET img=:img, extension=:extension, checksum=:checksum WHERE id=:id');
-            $stmt->bindParam(':img', $this->Data, PDO::PARAM_LOB);
-            $stmt->bindParam(':extension', $this->Extension);
-            $stmt->bindParam(':checksum', $this->Checksum);
-            $stmt->bindParam(':id', $this->Id);
-            if (!$this->PDO->execute($stmt)) {
-                return false;
-            }
+            return EloquentImage::findOrFail((int) $this->Id)->update([
+                'img' => $stream,
+                'extension' => $this->Extension,
+                'checksum' => $this->Checksum,
+            ]);
         }
         return true;
     }
@@ -118,21 +95,14 @@ class Image
     /** Load the image from the database. */
     public function Load(): bool
     {
-        $stmt = $this->PDO->prepare('SELECT * FROM image WHERE id=?');
-        $this->PDO->execute($stmt, [$this->Id]);
-
-        if (!$row = $stmt->fetch()) {
+        $image = EloquentImage::find((int) $this->Id);
+        if ($image === null) {
             return false;
         }
 
-        $this->Extension = $row['extension'];
-        $this->Checksum = $row['checksum'];
-
-        if (config('database.default') == 'pgsql') {
-            $this->Data = stream_get_contents($row['img']);
-        } else {
-            $this->Data = $row['img'];
-        }
+        $this->Extension = $image->extension;
+        $this->Checksum = $image->checksum;
+        $this->Data = stream_get_contents($image->img);
         return true;
     }
 }
