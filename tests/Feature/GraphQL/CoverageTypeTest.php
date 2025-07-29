@@ -2,9 +2,11 @@
 
 namespace Tests\Feature\GraphQL;
 
+use App\Models\Build;
 use App\Models\CoverageFile;
 use App\Models\Label;
 use App\Models\Project;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
@@ -223,6 +225,130 @@ class CoverageTypeTest extends TestCase
                                                     ],
                                                 ],
                                             ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+    }
+
+    public function testCoverageLines(): void
+    {
+        $coverageFile = CoverageFile::create([
+            'fullpath' => Str::uuid()->toString(),
+            'file' => Str::uuid()->toString(),
+            'crc32' => 0,
+        ]);
+        $this->coverageFiles[] = $coverageFile;
+
+        /** @var Build $build */
+        $build = $this->project->builds()->create([
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        $build->coverageResults()->create([
+            'fileid' => $coverageFile->id,
+        ]);
+
+        $this->graphQL('
+            query build($id: ID) {
+                build(id: $id) {
+                    coverage {
+                        edges {
+                            node {
+                                coveredLines {
+                                    lineNumber
+                                    timesHit
+                                    totalBranches
+                                    branchesHit
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        ', [
+            'id' => $build->id,
+        ])->assertExactJson([
+            'data' => [
+                'build' => [
+                    'coverage' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'coveredLines' => [],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+
+        // TODO: Refactor this once the coverage log is properly normalized in the database.
+        DB::insert('
+            INSERT INTO coveragefilelog (buildid, fileid, log) VALUES(?, ?, ?)
+        ', [
+            $build->id,
+            $coverageFile->id,
+            '1:1;2:0;b3:1/2;b6:0/2;',
+        ]);
+
+        $this->graphQL('
+            query build($id: ID) {
+                build(id: $id) {
+                    coverage {
+                        edges {
+                            node {
+                                coveredLines {
+                                    lineNumber
+                                    timesHit
+                                    totalBranches
+                                    branchesHit
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        ', [
+            'id' => $build->id,
+        ])->assertExactJson([
+            'data' => [
+                'build' => [
+                    'coverage' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'coveredLines' => [
+                                        [
+                                            'lineNumber' => 1,
+                                            'timesHit' => 1,
+                                            'totalBranches' => null,
+                                            'branchesHit' => null,
+                                        ],
+                                        [
+                                            'lineNumber' => 2,
+                                            'timesHit' => 0,
+                                            'totalBranches' => null,
+                                            'branchesHit' => null,
+                                        ],
+                                        [
+                                            'lineNumber' => 3,
+                                            'timesHit' => null,
+                                            'totalBranches' => 2,
+                                            'branchesHit' => 1,
+                                        ],
+                                        [
+                                            'lineNumber' => 6,
+                                            'timesHit' => null,
+                                            'totalBranches' => 2,
+                                            'branchesHit' => 0,
                                         ],
                                     ],
                                 ],
