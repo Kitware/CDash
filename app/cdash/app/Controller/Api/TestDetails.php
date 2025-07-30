@@ -18,6 +18,7 @@
 namespace CDash\Controller\Api;
 
 use App\Models\Project as EloquentProject;
+use App\Models\TestOutput;
 use App\Utils\RepositoryUtils;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
@@ -207,36 +208,37 @@ class TestDetails extends BuildTestApi
 
         // Get any images associated with this test.
         $compareimages_response = [];
-        $stmt = $this->db->prepare(
-            "SELECT imgid, role FROM test2image
-                WHERE outputid = :outputid AND
-                (role = 'TestImage' OR role = 'ValidImage' OR role = 'BaselineImage' OR
-                 role ='DifferenceImage2')
-                ORDER BY id");
-        $this->db->execute($stmt, [':outputid' => $outputid]);
-        while ($row = $stmt->fetch()) {
-            $image_response = [];
-            $image_response['imgid'] = $row['imgid'];
-            $image_response['role'] = $row['role'];
-            $compareimages_response[] = $image_response;
+        $test_images = TestOutput::findOrFail((int) $outputid)
+            ->testImages()
+            ->whereIn('role', [
+                'TestImage',
+                'ValidImage',
+                'BaselineImage',
+                'DifferenceImage2',
+            ])->get();
+        foreach ($test_images as $row) {
+            $compareimages_response[] = [
+                'imgid' => $row->imgid,
+                'role' => $row->role,
+            ];
         }
         if (!empty($compareimages_response)) {
             $test_response['compareimages'] = $compareimages_response;
         }
 
         $images_response = [];
-        $stmt = $this->db->prepare(
-            "SELECT imgid, role FROM test2image
-                WHERE outputid = :outputid AND
-                role != 'ValidImage' AND role != 'BaselineImage' AND
-                role != 'DifferenceImage2'
-                ORDER BY id");
-        $this->db->execute($stmt, [':outputid' => $outputid]);
-        while ($row = $stmt->fetch()) {
-            $image_response = [];
-            $image_response['imgid'] = $row['imgid'];
-            $image_response['role'] = $row['role'];
-            $images_response[] = $image_response;
+        $test_images = TestOutput::findOrFail((int) $outputid)
+            ->testImages()
+            ->whereNotIn('role', [
+                'ValidImage',
+                'BaselineImage',
+                'DifferenceImage2',
+            ])->get();
+        foreach ($test_images as $row) {
+            $images_response[] = [
+                'imgid' => $row->imgid,
+                'role' => $row->role,
+            ];
         }
         if (!empty($images_response)) {
             $test_response['images'] = $images_response;

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
-use App\Models\TestImage;
 use App\Models\User;
 use CDash\Model\Image;
 use CDash\Model\Project;
@@ -70,9 +69,8 @@ class AuthServiceProvider extends ServiceProvider
             }
 
             // Make sure the current user has access to a test result with this image
-            $outputs_with_image = TestImage::where('imgid', '=', $image->Id)->get();
-            foreach ($outputs_with_image as $output) {
-                $buildtests = $output->testOutput?->tests;
+            foreach (\App\Models\Image::findOrFail((int) $image->Id)->testOutputs as $output) {
+                $buildtests = $output->tests;
                 if ($buildtests === null) {
                     continue;
                 }
