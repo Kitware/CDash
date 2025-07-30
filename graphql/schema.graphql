@@ -805,6 +805,8 @@ type Coverage @model(class: "App\\Models\\CoverageView") {
 
   filePath: String @rename(attribute: "fullpath") @filterable
 
+  file: String @filterable @canRoot(ability: "viewCode", action: RETURN_VALUE, returnValue: null)
+
   # Note: we deliberately don't use pagination here because the server has to load the entire file
   # in full anyway, and each record is small.
   coveredLines: [CoverageLine]!

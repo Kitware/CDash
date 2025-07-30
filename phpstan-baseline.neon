@@ -32859,7 +32859,7 @@ parameters:
 				07/27/2025 Use this relation only to edit the underlying coverage table\.  Use coverage\(\) instead\.$#
 			'''
 			identifier: method.deprecated
-			count: 3
+			count: 5
 			path: tests/Feature/GraphQL/CoverageTypeTest.php
 
 		-
