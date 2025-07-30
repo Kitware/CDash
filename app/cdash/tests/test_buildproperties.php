@@ -2,12 +2,12 @@
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
+use App\Models\Project;
 use App\Utils\TestCreator;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildError;
 use CDash\Model\BuildFailure;
-use CDash\Model\Project;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use Tests\Traits\CreatesProjects;
@@ -16,7 +16,7 @@ class BuildPropertiesTestCase extends KWWebTestCase
 {
     use CreatesProjects;
 
-    private App\Models\Project $Project;
+    private Project $Project;
     private $PDO;
     private $Builds;
 
@@ -26,9 +26,6 @@ class BuildPropertiesTestCase extends KWWebTestCase
         $this->PDO = Database::getInstance();
 
         $this->Project = $this->makePublicProject();
-        $legacy_project = new Project();
-        $legacy_project->Id = $this->Project->id;
-        $legacy_project->InitialSetup();
     }
 
     public function __destruct()

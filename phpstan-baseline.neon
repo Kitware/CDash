@@ -32779,12 +32779,6 @@ parameters:
 			path: tests/Feature/AutoRemoveBuildsCommand.php
 
 		-
-			message: '#^Property Tests\\Feature\\AutoRemoveBuildsCommand\:\:\$project has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Feature/AutoRemoveBuildsCommand.php
-
-		-
 			message: '''
 				#^Call to deprecated method forceRootUrl\(\) of class Illuminate\\Routing\\UrlGenerator\:
 				Use useOrigin$#

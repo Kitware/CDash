@@ -379,6 +379,8 @@ set_tests_properties(configurewarnings PROPERTIES DEPENDS /CDash/XmlHandler/Upda
 
 add_feature_test(/Feature/AutoRemoveBuildsCommand)
 
+add_feature_test(/Feature/Services/ProjectServiceTest)
+
 ###################################################################################################
 
 set_property(TEST install_2 APPEND PROPERTY DEPENDS
