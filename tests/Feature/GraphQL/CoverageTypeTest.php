@@ -359,4 +359,107 @@ class CoverageTypeTest extends TestCase
             ],
         ]);
     }
+
+    public function testCodeNotShownWhenShowCoverageCodeIsFalse(): void
+    {
+        $this->project->showcoveragecode = 0;
+        $this->project->save();
+
+        $coverageFile = CoverageFile::create([
+            'fullpath' => Str::uuid()->toString(),
+            'file' => Str::uuid()->toString(),
+            'crc32' => 0,
+        ]);
+        $this->coverageFiles[] = $coverageFile;
+
+        /** @var Build $build */
+        $build = $this->project->builds()->create([
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        $build->coverageResults()->create([
+            'fileid' => $coverageFile->id,
+        ]);
+
+        $this->graphQL('
+            query build($id: ID) {
+                build(id: $id) {
+                    coverage {
+                        edges {
+                            node {
+                                file
+                            }
+                        }
+                    }
+                }
+            }
+        ', [
+            'id' => $build->id,
+        ])->assertExactJson([
+            'data' => [
+                'build' => [
+                    'coverage' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'file' => null,
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+    }
+
+    public function testCodeShownWhenShowCoverageCodeIsTrue(): void
+    {
+        $coverageFile = CoverageFile::create([
+            'fullpath' => Str::uuid()->toString(),
+            'file' => Str::uuid()->toString(),
+            'crc32' => 0,
+        ]);
+        $this->coverageFiles[] = $coverageFile;
+
+        /** @var Build $build */
+        $build = $this->project->builds()->create([
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        $build->coverageResults()->create([
+            'fileid' => $coverageFile->id,
+        ]);
+
+        $this->graphQL('
+            query build($id: ID) {
+                build(id: $id) {
+                    coverage {
+                        edges {
+                            node {
+                                file
+                            }
+                        }
+                    }
+                }
+            }
+        ', [
+            'id' => $build->id,
+        ])->assertExactJson([
+            'data' => [
+                'build' => [
+                    'coverage' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'file' => $coverageFile->file,
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+    }
 }
