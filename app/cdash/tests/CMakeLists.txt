@@ -379,6 +379,21 @@ set_tests_properties(configurewarnings PROPERTIES DEPENDS /CDash/XmlHandler/Upda
 
 add_feature_test(/Feature/AutoRemoveBuildsCommand)
 
+add_php_test(externallinksfromtests)
+set_tests_properties(externallinksfromtests PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_php_test(buildgetdate)
+set_tests_properties(buildgetdate PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_php_test(replacebuild)
+set_tests_properties(replacebuild PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_php_test(longbuildname)
+set_tests_properties(longbuildname PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
+add_php_test(multiplelabelsfortests)
+set_tests_properties(multiplelabelsfortests PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
 ###################################################################################################
 
 set_property(TEST install_2 APPEND PROPERTY DEPENDS
@@ -420,6 +435,11 @@ set_property(TEST install_2 APPEND PROPERTY DEPENDS
   issuecreation
   junithandler
   configurewarnings
+  externallinksfromtests
+  buildgetdate
+  replacebuild
+  longbuildname
+  multiplelabelsfortests
 )
 
 
@@ -552,20 +572,11 @@ set_tests_properties(testhistory PROPERTIES DEPENDS subprojectnextprevious)
 add_php_test(expectedandmissing)
 set_tests_properties(expectedandmissing PROPERTIES DEPENDS testhistory)
 
-add_php_test(externallinksfromtests)
-set_tests_properties(externallinksfromtests PROPERTIES DEPENDS expectedandmissing)
-
 add_php_test(timesummary)
-set_tests_properties(timesummary PROPERTIES DEPENDS externallinksfromtests)
-
-add_php_test(buildgetdate)
-set_tests_properties(buildgetdate PROPERTIES DEPENDS timesummary)
-
-add_php_test(replacebuild)
-set_tests_properties(replacebuild PROPERTIES DEPENDS buildgetdate)
+set_tests_properties(timesummary PROPERTIES DEPENDS expectedandmissing)
 
 add_php_test(sequenceindependence)
-set_tests_properties(sequenceindependence PROPERTIES DEPENDS replacebuild)
+set_tests_properties(sequenceindependence PROPERTIES DEPENDS timesummary)
 
 add_php_test(crosssubprojectcoverage)
 set_tests_properties(crosssubprojectcoverage PROPERTIES DEPENDS sequenceindependence)
@@ -669,14 +680,8 @@ set_tests_properties(testimages PROPERTIES DEPENDS "subscribeprojectshowlabels;c
 add_php_test(namedmeasurements)
 set_tests_properties(namedmeasurements PROPERTIES DEPENDS testimages)
 
-add_php_test(longbuildname)
-set_tests_properties(longbuildname PROPERTIES DEPENDS namedmeasurements)
-
-add_php_test(multiplelabelsfortests)
-set_tests_properties(multiplelabelsfortests PROPERTIES DEPENDS longbuildname)
-
 add_php_test(subprojecttestfilters)
-set_tests_properties(subprojecttestfilters PROPERTIES DEPENDS multiplelabelsfortests)
+set_tests_properties(subprojecttestfilters PROPERTIES DEPENDS namedmeasurements)
 
 add_php_test(starttimefromnotes)
 set_tests_properties(starttimefromnotes PROPERTIES DEPENDS subprojecttestfilters)

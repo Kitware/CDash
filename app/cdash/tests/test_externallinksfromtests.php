@@ -4,16 +4,33 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
+use App\Models\Project;
 use App\Utils\DatabaseCleanupUtils;
 use Illuminate\Support\Facades\DB;
+use Tests\Traits\CreatesProjects;
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 class ExternalLinksFromTestsTestCase extends KWWebTestCase
 {
+    use CreatesProjects;
+
+    protected Project $project;
+
     public function __construct()
     {
         parent::__construct();
+
+        $this->project = $this->makePublicProject();
+
+        $legacy_project = new CDash\Model\Project();
+        $legacy_project->Id = $this->project->id;
+        $legacy_project->InitialSetup();
+    }
+
+    public function __destruct()
+    {
+        $this->project->delete();
     }
 
     public function testExternalLinksFromTests()
@@ -21,7 +38,7 @@ class ExternalLinksFromTestsTestCase extends KWWebTestCase
         // Submit our testing data.
         $file_to_submit =
             dirname(__FILE__) . '/data/ExternalLinksFromTests/Test.xml';
-        if (!$this->submission('InsightExample', $file_to_submit)) {
+        if (!$this->submission($this->project->name, $file_to_submit)) {
             $this->fail("Failed to submit $file_to_submit");
             return 1;
         }

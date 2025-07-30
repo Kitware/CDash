@@ -27763,12 +27763,6 @@ parameters:
 			path: app/cdash/tests/test_longbuildname.php
 
 		-
-			message: '#^Property LongBuildNameTestCase\:\:\$project has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/test_longbuildname.php
-
-		-
 			message: '''
 				#^Call to deprecated method submission\(\) of class KWWebTestCase\:
 				12/09/2024  Use \\Test\\Traits\\CreatesSubmissions instead$#
@@ -28362,12 +28356,6 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
 			identifier: argument.type
-			count: 1
-			path: app/cdash/tests/test_multiplelabelsfortests.php
-
-		-
-			message: '#^Property MultipleLabelsForTestsTestCase\:\:\$project has no type specified\.$#'
-			identifier: missingType.property
 			count: 1
 			path: app/cdash/tests/test_multiplelabelsfortests.php
 

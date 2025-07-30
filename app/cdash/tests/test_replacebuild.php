@@ -4,19 +4,35 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
+use App\Models\Project;
 use App\Utils\DatabaseCleanupUtils;
 use Illuminate\Support\Facades\DB;
+use Tests\Traits\CreatesProjects;
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 class ReplaceBuildTestCase extends KWWebTestCase
 {
+    use CreatesProjects;
+
+    protected Project $project;
+
     protected $OriginalConfigSettings;
 
     public function __construct()
     {
         parent::__construct();
         $this->OriginalConfigSettings = '';
+
+        $this->project = $this->makePublicProject();
+        $legacy_project = new CDash\Model\Project();
+        $legacy_project->Id = $this->project->id;
+        $legacy_project->InitialSetup();
+    }
+
+    public function __destruct()
+    {
+        $this->project->delete();
     }
 
     public function testReplaceBuild()
@@ -26,7 +42,7 @@ class ReplaceBuildTestCase extends KWWebTestCase
 
         // Submit the first test file.
         $rep = dirname(__FILE__) . '/data/ReplaceBuild';
-        if (!$this->submission('EmailProjectExample', "$rep/Build_1.xml")) {
+        if (!$this->submission($this->project->name, "$rep/Build_1.xml")) {
             $this->fail('failed to submit Build_1.xml');
             return 1;
         }
@@ -49,7 +65,7 @@ class ReplaceBuildTestCase extends KWWebTestCase
         }
 
         // Submit the second test file.
-        if (!$this->submission('EmailProjectExample', "$rep/Build_2.xml")) {
+        if (!$this->submission($this->project->name, "$rep/Build_2.xml")) {
             $error_msg = 'Failed to submit Build_2.xml';
             echo "$error_msg\n";
             $success = false;
