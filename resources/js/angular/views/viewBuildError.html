@@ -2,7 +2,7 @@
         <tr>
           <td align="left">
             <b>Site: </b>
-            <a class="cdash-link" href="sites/{{cdash.build.siteid}}">
+            <a class="cdash-link" ng-href="sites/{{cdash.build.siteid}}">
               {{cdash.build.site}}
             </a>
           </td>
@@ -38,7 +38,7 @@
         </tr>
         <tr>
           <td align="left">
-            <a class="cdash-link" href="viewBuildError.php?type={{cdash.nonerrortype}}&buildid={{cdash.build.buildid}}">
+            <a class="cdash-link" ng-href="viewBuildError.php?type={{cdash.nonerrortype}}&buildid={{cdash.build.buildid}}">
               {{cdash.nonerrortypename}}s are here.
             </a>
           </td>
@@ -64,7 +64,7 @@
           <tr ng-repeat="error in pagination.buildErrors">
             <td style="vertical-align:top">{{error.subprojectname}}</td>
             <td>
-              <a class="cdash-link" href="#" ng-click="showErrors = !showErrors">
+              <a class="cdash-link" ng-href="#" ng-click="showErrors = !showErrors">
                 Error building {{error.outputfile}}
               </a>
               <div ng-hide="!showErrors">
