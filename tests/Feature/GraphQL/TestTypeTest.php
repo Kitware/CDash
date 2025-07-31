@@ -124,9 +124,7 @@ class TestTypeTest extends TestCase
         return [
             ['passed', 'PASSED'],
             ['failed', 'FAILED'],
-            ['Timeout', 'TIMEOUT'],
             ['notrun', 'NOT_RUN'],
-            ['Disabled', 'DISABLED'],
         ];
     }
 
@@ -201,6 +199,7 @@ class TestTypeTest extends TestCase
         $label = $build->tests()->create([
             'testname' => Str::uuid()->toString(),
             'outputid' => $this->test_output->id,
+            'status' => 'passed',
         ])->labels()->create([
             'text' => Str::uuid()->toString(),
         ]);
@@ -264,6 +263,7 @@ class TestTypeTest extends TestCase
         $test = $build->tests()->create([
             'testname' => Str::uuid()->toString(),
             'outputid' => $this->test_output->id,
+            'status' => 'passed',
         ]);
 
         $label1 = $test->labels()->create([

@@ -529,11 +529,7 @@ enum TestStatus {
 
   FAILED @enum(value: "failed")
 
-  TIMEOUT @enum(value: "Timeout")
-
   NOT_RUN @enum(value: "notrun")
-
-  DISABLED @enum(value: "Disabled")
 }
 
 
