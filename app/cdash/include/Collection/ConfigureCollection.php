@@ -24,7 +24,7 @@ class ConfigureCollection extends Collection
     /**
      * @return $this
      */
-    public function add(BuildConfigure $configure)
+    public function add(BuildConfigure $configure): static
     {
         $this->addItem($configure, 'Configure');
         return $this;

@@ -23,7 +23,7 @@ require_once 'include/api_common.php';
 final class TestController extends AbstractProjectController
 {
     // Render the test details page.
-    public function details($buildtest_id = null)
+    public function details($buildtest_id = null): View
     {
         $buildtest = Test::findOrFail((int) $buildtest_id);
         $projectid = $buildtest->build?->projectid;

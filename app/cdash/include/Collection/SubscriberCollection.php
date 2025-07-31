@@ -21,7 +21,7 @@ use CDash\Model\SubscriberInterface;
 
 class SubscriberCollection extends Collection
 {
-    public function add(SubscriberInterface $subscriber)
+    public function add(SubscriberInterface $subscriber): static
     {
         $this->addItem($subscriber, $subscriber->getAddress());
         return $this;

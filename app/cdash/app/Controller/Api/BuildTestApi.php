@@ -63,7 +63,7 @@ abstract class BuildTestApi extends BuildApi
         ];
     }
 
-    public function generateTestHistoryQuery()
+    public function generateTestHistoryQuery(): void
     {
         $this->testHistoryQuery =
             "SELECT b.starttime, b2t.id AS buildtestid $this->testHistoryQueryExtraColumns

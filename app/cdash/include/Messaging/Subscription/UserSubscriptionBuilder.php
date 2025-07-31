@@ -21,10 +21,7 @@ class UserSubscriptionBuilder implements SubscriptionBuilderInterface
         $this->submission = $submission;
     }
 
-    /**
-     * @return void
-     */
-    public function build(SubscriptionCollection $subscriptions)
+    public function build(SubscriptionCollection $subscriptions): void
     {
         $factory = $this->getSubscriptionFactory();
 
@@ -52,10 +49,8 @@ class UserSubscriptionBuilder implements SubscriptionBuilderInterface
 
     /**
      * TODO: PHPDI exists now, refactor accordingly
-     *
-     * @return SubscriptionFactory
      */
-    protected function getSubscriptionFactory()
+    protected function getSubscriptionFactory(): SubscriptionFactory
     {
         if (is_null($this->subscriptionFactory)) {
             $this->subscriptionFactory = new SubscriptionFactory();

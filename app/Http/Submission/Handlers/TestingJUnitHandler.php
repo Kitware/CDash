@@ -251,7 +251,7 @@ class TestingJUnitHandler extends AbstractXmlHandler
         }
     }
 
-    private function createBuild()
+    private function createBuild(): void
     {
         // Add the build if necessary.
         if ($this->BuildAdded) {

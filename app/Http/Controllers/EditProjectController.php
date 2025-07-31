@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Gate;
+use Illuminate\View\View;
 
 final class EditProjectController extends AbstractProjectController
 {
     // Render the create project form.
-    public function create()
+    public function create(): View
     {
         Gate::authorize('create-project');
 
@@ -15,7 +16,7 @@ final class EditProjectController extends AbstractProjectController
     }
 
     // Render the edit project form.
-    public function edit($project_id)
+    public function edit($project_id): View
     {
         $this->setProjectById((int) $project_id);
         Gate::authorize('edit-project', $this->project);

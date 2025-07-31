@@ -35,7 +35,7 @@ abstract class NotificationPreferences implements PreferencesInterface, Notifica
         return false;
     }
 
-    public function set($name, $val)
+    public function set($name, $val): static
     {
         if ($this->has($name)) {
             $this->settings[$name] = (bool) $val;
@@ -43,7 +43,7 @@ abstract class NotificationPreferences implements PreferencesInterface, Notifica
         return $this;
     }
 
-    public function has($name)
+    public function has($name): bool
     {
         return in_array($name, $this->properties);
     }
@@ -58,7 +58,7 @@ abstract class NotificationPreferences implements PreferencesInterface, Notifica
         return $this->properties;
     }
 
-    public function setPreferencesFromEmailTypeProperty($emailType)
+    public function setPreferencesFromEmailTypeProperty($emailType): void
     {
         $type = (int) $emailType;
         if ($type === 0) {

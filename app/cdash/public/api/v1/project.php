@@ -61,7 +61,7 @@ switch ($method) {
 }
 
 /** Handle DELETE requests */
-function rest_delete()
+function rest_delete(): void
 {
     $response = [];
     $project = get_project($response);
@@ -78,7 +78,7 @@ function rest_delete()
 }
 
 /** Handle POST requests */
-function rest_post($user)
+function rest_post($user): void
 {
     $response = [];
 
@@ -136,7 +136,7 @@ function rest_post($user)
     }
 }
 
-function get_repo_url_example()
+function get_repo_url_example(): \Illuminate\Http\JsonResponse
 {
     $url = get_param('url');
     $type = get_param('type');
@@ -167,7 +167,7 @@ function rest_get()
     http_response_code(200);
 }
 
-function get_project(&$response)
+function get_project(&$response): false|Project
 {
     // Make sure we have a projectid.
     if (!isset($_REQUEST['project'])) {
@@ -201,7 +201,7 @@ function get_project(&$response)
     return $Project;
 }
 
-function create_project(&$response, $user)
+function create_project(&$response, $user): void
 {
     $Name = $_REQUEST['project']['Name'];
 
@@ -241,7 +241,7 @@ function create_project(&$response, $user)
     http_response_code(200);
 }
 
-function update_project(&$response, $Project, $User)
+function update_project(&$response, $Project, $User): void
 {
     $Project->Fill();
     populate_project($Project);
@@ -250,7 +250,7 @@ function update_project(&$response, $Project, $User)
     http_response_code(200);
 }
 
-function populate_project($Project)
+function populate_project($Project): void
 {
     $project_settings = $_REQUEST['project'];
 

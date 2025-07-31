@@ -267,12 +267,12 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
         }
     }
 
-    public function getBuildStamp()
+    public function getBuildStamp(): string
     {
         return $this->BuildStamp;
     }
 
-    public function getBuildName()
+    public function getBuildName(): string
     {
         return $this->BuildName;
     }
@@ -282,7 +282,7 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
         return $this->SubProjectName;
     }
 
-    private function createBuild($subprojectName)
+    private function createBuild($subprojectName): void
     {
         $factory = $this->getModelFactory();
         $build = $factory->create(Build::class);

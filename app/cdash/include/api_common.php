@@ -26,10 +26,8 @@ use Illuminate\Support\Facades\Gate;
  * XHR post/put/delete data not available through the traditional
  * $_POST global, this method pulls that data straight from the
  * php://input stream.
- *
- * @return void
  */
-function init_api_request()
+function init_api_request(): void
 {
     $method = $_SERVER['REQUEST_METHOD'];
     $isGET = $method === 'GET';
@@ -94,10 +92,8 @@ function can_administrate_project($projectid)
  * Get the named parameter from the request.
  *
  * @param bool $required
- *
- * @return string
  */
-function get_param($name, $required = true)
+function get_param($name, $required = true): string
 {
     $value = $_REQUEST[$name] ?? null;
     if ($required && !$value) {
@@ -106,7 +102,7 @@ function get_param($name, $required = true)
     return pdo_real_escape_string($value);
 }
 
-function get_int_param($name, $required = true)
+function get_int_param($name, $required = true): ?int
 {
     $value = get_param($name, $required);
     if (is_null($value)) {
@@ -123,10 +119,8 @@ function get_int_param($name, $required = true)
  * Pulls the buildid from the request
  *
  * @param bool $required
- *
- * @return int
  */
-function get_request_build_id($required = true)
+function get_request_build_id($required = true): ?int
 {
     $buildid = get_int_param('buildid', $required);
     return $buildid;
@@ -134,10 +128,8 @@ function get_request_build_id($required = true)
 
 /**
  * Pull projectname from request and lookup its ID.
- *
- * @return Project
  */
-function get_project_from_request()
+function get_project_from_request(): ?Project
 {
     $Project = just_get_project_from_request();
     return ($Project && can_access_project($Project->Id)) ? $Project : null;
@@ -145,10 +137,8 @@ function get_project_from_request()
 
 /**
  * Get project given request parameter, 'project'
- *
- * @return mixed|null
  */
-function just_get_project_from_request()
+function just_get_project_from_request(): Project
 {
     if (!isset($_REQUEST['project'])) {
         abort(400, 'Valid project required');
@@ -169,10 +159,8 @@ function just_get_project_from_request()
  * necessary access to the project
  *
  * @param bool $required
- *
- * @return Build|null
  */
-function get_request_build($required = true)
+function get_request_build($required = true): ?Build
 {
     $id = get_request_build_id($required);
     if (is_null($id)) {

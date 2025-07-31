@@ -120,7 +120,7 @@ class JSCoverTarHandler extends AbstractSubmissionHandler
     /**
      * Parse an individual json file.
      **/
-    public function ParseJSCoverFile($fileinfo)
+    public function ParseJSCoverFile($fileinfo): void
     {
         // Parse this JSON file.
         $jsonContents = file_get_contents($fileinfo->getPath() . DIRECTORY_SEPARATOR . $fileinfo->getFilename());

@@ -98,7 +98,7 @@ class JavaJSONTarHandler extends AbstractSubmissionHandler
     /**
      * Parse an individual .java.json file.
      **/
-    public function ParsePackageMap($fileinfo)
+    public function ParsePackageMap($fileinfo): void
     {
         $jsonContents = file_get_contents($fileinfo->getPath() . DIRECTORY_SEPARATOR . $fileinfo->getFilename());
         $jsonDecoded = json_decode($jsonContents, true);
@@ -139,7 +139,7 @@ class JavaJSONTarHandler extends AbstractSubmissionHandler
     /**
      * Parse an individual .java.json file.
      **/
-    public function ParseJavaJSONFile($fileinfo)
+    public function ParseJavaJSONFile($fileinfo): void
     {
         $coverageFileLog = new CoverageFileLog();
         $coverageFile = new CoverageFile();

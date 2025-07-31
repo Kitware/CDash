@@ -49,12 +49,10 @@ class CommitAuthorSubscriptionBuilder implements SubscriptionBuilderInterface
     }
 
     /**
-     * @return void
-     *
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function build(SubscriptionCollection $subscriptions)
+    public function build(SubscriptionCollection $subscriptions): void
     {
         $group = $this->submission->GetBuildGroup();
         if (!$group->isNotifyingCommitters()) {
@@ -88,7 +86,7 @@ class CommitAuthorSubscriptionBuilder implements SubscriptionBuilderInterface
         }
     }
 
-    public function getSubscriptionFactory()
+    public function getSubscriptionFactory(): SubscriptionFactory
     {
         if (!$this->factory) {
             $this->factory = new SubscriptionFactory();

@@ -21,6 +21,7 @@ use App\Models\BuildConfigure as EloquentBuildConfigure;
 use App\Models\Configure as EloquentConfigure;
 use CDash\Database;
 use Exception;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use PDO;
@@ -359,10 +360,8 @@ class BuildConfigure
 
     /**
      * Returns the current BuildConfigure's Label property as a LabelCollection.
-     *
-     * @return Collection
      */
-    public function GetLabelCollection()
+    public function GetLabelCollection(): Collection
     {
         return $this->LabelCollection;
     }

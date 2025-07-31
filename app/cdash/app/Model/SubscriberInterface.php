@@ -21,6 +21,7 @@ use App\Http\Submission\Handlers\ActionableBuildInterface;
 use CDash\Messaging\Preferences\NotificationPreferences;
 use CDash\Messaging\Preferences\NotificationPreferencesInterface;
 use CDash\Messaging\Topic\TopicCollection;
+use Illuminate\Support\Collection;
 
 interface SubscriberInterface
 {
@@ -32,30 +33,15 @@ interface SubscriberInterface
         ?TopicCollection $topics = null,
     );
 
-    /**
-     * @return bool
-     */
-    public function hasBuildTopics(ActionableBuildInterface $build);
+    public function hasBuildTopics(ActionableBuildInterface $build): bool;
 
-    /**
-     * @return TopicCollection
-     */
-    public function getTopics();
+    public function getTopics(): TopicCollection;
 
-    /**
-     * @return string
-     */
-    public function getAddress();
+    public function getAddress(): string;
 
-    public function setAddress($address);
+    public function setAddress($address): static;
 
-    /**
-     * @return string[]
-     */
-    public function getLabels();
+    public function getLabels(): Collection;
 
-    /**
-     * @return NotificationPreferencesInterface
-     */
-    public function getNotificationPreferences();
+    public function getNotificationPreferences(): NotificationPreferencesInterface;
 }

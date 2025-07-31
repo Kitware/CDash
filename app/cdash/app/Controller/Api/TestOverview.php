@@ -31,7 +31,7 @@ class TestOverview extends ResultsApi
         parent::__construct($db, $project);
     }
 
-    public function getResponse()
+    public function getResponse(): array
     {
         $has_subprojects = $this->project->GetNumberOfSubProjects() > 0;
 

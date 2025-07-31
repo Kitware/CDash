@@ -22,7 +22,7 @@ class ConfigUseCaseTest extends CDashUseCaseTestCase
         $this->assertInstanceOf(ConfigUseCase::class, $sut);
     }
 
-    private function checkConfigureForSameness(BuildConfigure $configure)
+    private function checkConfigureForSameness(BuildConfigure $configure): void
     {
         $this->assertEquals($this->errors, $configure->NumberOfErrors);
         $this->assertEquals($this->warnings, $configure->NumberOfWarnings);

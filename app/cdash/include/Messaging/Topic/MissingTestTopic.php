@@ -29,10 +29,8 @@ class MissingTestTopic extends Topic
 
     /**
      * This method queries the build to check for missing tests
-     *
-     * @return bool
      */
-    public function subscribesToBuild(Build $build)
+    public function subscribesToBuild(Build $build): bool
     {
         return $build->GetNumberOfMissingTests() > 0;
     }
@@ -66,24 +64,18 @@ class MissingTestTopic extends Topic
         return $this->collection;
     }
 
-    /**
-     * @return int
-     */
-    public function getTopicCount()
+    public function getTopicCount(): int
     {
         $collection = $this->getTopicCollection();
         return $collection->count();
     }
 
-    /**
-     * @return string
-     */
-    public function getTopicDescription()
+    public function getTopicDescription(): string
     {
         return 'Missing Tests';
     }
 
-    public function getTopicName()
+    public function getTopicName(): string
     {
         return Topic::TEST_MISSING;
     }

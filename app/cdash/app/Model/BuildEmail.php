@@ -54,10 +54,8 @@ class BuildEmail
 
     /**
      * Returns a collection of emails sent given a build and category.
-     *
-     * @return BuildEmailCollection
      */
-    public static function GetEmailSentForBuild($buildId)
+    public static function GetEmailSentForBuild($buildId): BuildEmailCollection
     {
         $collection = new BuildEmailCollection();
         $sql = '
@@ -98,10 +96,8 @@ class BuildEmail
 
     /**
      * Saves a record of the current BuildEmail having been sent.
-     *
-     * @return bool
      */
-    public function Save()
+    public function Save(): bool
     {
         $missing = [];
         foreach ($this->RequiredFields as $field) {
@@ -142,10 +138,7 @@ class BuildEmail
         return $this->Category;
     }
 
-    /**
-     * @return $this
-     */
-    public function SetEmail($email)
+    public function SetEmail($email): static
     {
         $this->Email = $email;
         return $this;
@@ -154,7 +147,7 @@ class BuildEmail
     /**
      * @return $this
      */
-    public function SetSent($exists)
+    public function SetSent($exists): static
     {
         $this->Sent = $exists;
         return $this;
@@ -163,7 +156,7 @@ class BuildEmail
     /**
      * @return $this
      */
-    public function SetCategory($category)
+    public function SetCategory($category): static
     {
         $this->Category = $category;
         return $this;
@@ -172,7 +165,7 @@ class BuildEmail
     /**
      * @return $this
      */
-    public function SetUserId($userId)
+    public function SetUserId($userId): static
     {
         $this->UserId = $userId;
         return $this;
@@ -181,7 +174,7 @@ class BuildEmail
     /**
      * @return $this
      */
-    public function SetBuildId($buildId)
+    public function SetBuildId($buildId): static
     {
         $this->BuildId = $buildId;
         return $this;
@@ -190,7 +183,7 @@ class BuildEmail
     /**
      * @return $this
      */
-    public function SetTime($time = null)
+    public function SetTime($time = null): static
     {
         if (is_null($time)) {
             $time = date('Y-m-d H:i:s');

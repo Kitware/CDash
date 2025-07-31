@@ -18,6 +18,7 @@
 namespace CDash\Model;
 
 use CDash\Database;
+use Illuminate\Support\Collection;
 use PDO;
 
 /**
@@ -33,7 +34,7 @@ class User
     public $Institution;
     public $Admin;
     private $PDO;
-    private $LabelCollection;
+    private Collection $LabelCollection;
 
     public function __construct()
     {
@@ -52,10 +53,8 @@ class User
      * Return's the current User's LabelCollection. If a LabelCollection is not yet defined
      * this method checks the database for the labels of which a users has subscribed and
      * return's them wrapped in a LabelCollection.
-     *
-     * @return Collection
      */
-    public function GetLabelCollection()
+    public function GetLabelCollection(): Collection
     {
         if ($this->LabelCollection->isEmpty()) {
             $sql = '

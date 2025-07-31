@@ -47,13 +47,13 @@ final class BuildController extends AbstractBuildController
     }
 
     // Render the build configure page.
-    public function configure($build_id = null)
+    public function configure($build_id = null): View
     {
         return $this->renderBuildPage($build_id, 'configure');
     }
 
     // Render the build notes page.
-    public function notes($build_id = null)
+    public function notes($build_id = null): View
     {
         $this->setBuildById($build_id);
 
@@ -63,7 +63,7 @@ final class BuildController extends AbstractBuildController
     }
 
     // Render the build summary page.
-    public function summary($build_id = null)
+    public function summary($build_id = null): View
     {
         return $this->renderBuildPage($build_id, 'summary', 'Build Summary');
     }
@@ -85,7 +85,7 @@ final class BuildController extends AbstractBuildController
         ]);
     }
 
-    protected function renderBuildPage(int $build_id, string $page_name, string $page_title = '')
+    protected function renderBuildPage(int $build_id, string $page_name, string $page_title = ''): View
     {
         $this->setBuildById($build_id);
         if ($page_title === '') {

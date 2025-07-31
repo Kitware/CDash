@@ -29,6 +29,7 @@ use CDash\Collection\BuildEmailCollection;
 use CDash\Collection\DynamicAnalysisCollection;
 use CDash\Database;
 use Exception;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
@@ -2477,7 +2478,7 @@ class Build
     /**
      * Returns the current Build's LabelCollection.
      */
-    public function GetLabelCollection()
+    public function GetLabelCollection(): Collection
     {
         return $this->LabelCollection;
     }

@@ -22,10 +22,7 @@ use CDash\Model\Build;
 
 class EmailSentTopic extends Topic
 {
-    /**
-     * @return bool
-     */
-    public function subscribesToBuild(Build $build)
+    public function subscribesToBuild(Build $build): bool
     {
         $category = ActionableTypes::$categories[$this->getTopicName()];
         $subscribe = $this->topic->subscribesToBuild($build)

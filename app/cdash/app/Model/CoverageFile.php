@@ -130,7 +130,7 @@ class CoverageFile
     }
 
     // Populate $this from existing database results.
-    public function Load()
+    public function Load(): bool
     {
         if (!$this->Id) {
             return false;

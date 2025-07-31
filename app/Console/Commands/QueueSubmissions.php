@@ -37,7 +37,7 @@ class QueueSubmissions extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
         // Queue the "build metadata" JSON files first, so they have a chance
         // to get parsed before the subsequent payload files.
@@ -57,7 +57,7 @@ class QueueSubmissions extends Command
         }
     }
 
-    private function queueFile($inboxFile)
+    private function queueFile($inboxFile): void
     {
         $filename = str_replace('inbox/', '', $inboxFile);
         $pos = strpos($filename, '_-_');

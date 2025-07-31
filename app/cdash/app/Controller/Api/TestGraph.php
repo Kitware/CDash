@@ -35,7 +35,7 @@ class TestGraph extends BuildTestApi
         parent::__construct($db, $buildtest);
     }
 
-    public function getResponse()
+    public function getResponse(): array
     {
         $type = $_GET['type'];
         if (!in_array($type, $this->validTypes)) {

@@ -163,7 +163,7 @@ function rest_delete(): void
 }
 
 /** Handle POST requests */
-function rest_post($projectid)
+function rest_post($projectid): void
 {
     if (isset($_POST['newsubproject'])) {
         // Create a new subproject
@@ -228,7 +228,7 @@ function rest_post($projectid)
 }
 
 /** Handle PUT requests */
-function rest_put($projectid)
+function rest_put($projectid): void
 {
     if (isset($_GET['threshold'])) {
         // Modify an existing subproject group.

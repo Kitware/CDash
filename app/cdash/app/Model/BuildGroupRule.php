@@ -59,7 +59,7 @@ class BuildGroupRule
     }
 
     /** Check if the rule already exists */
-    public function Exists()
+    public function Exists(): bool
     {
         // If no group id specified return false.
         if (!$this->GroupId) {
@@ -91,7 +91,7 @@ class BuildGroupRule
     }
 
     /** Insert this rule into the database. */
-    public function Save()
+    public function Save(): bool
     {
         if (!$this->GroupId) {
             Log::error('GroupId not set', [
@@ -123,7 +123,7 @@ class BuildGroupRule
         return false;
     }
 
-    public function SetExpected()
+    public function SetExpected(): bool
     {
         // Insert a new row if one doesn't already exist for this rule.
         if (!$this->Exists()) {
@@ -146,7 +146,7 @@ class BuildGroupRule
             ':siteid' => $this->SiteId]);
     }
 
-    public function GetExpected()
+    public function GetExpected(): int
     {
         $stmt = $this->PDO->prepare(
             'SELECT expected FROM build2grouprule
@@ -165,7 +165,7 @@ class BuildGroupRule
     }
 
     /** Delete a rule */
-    public function Delete($soft = true)
+    public function Delete($soft = true): bool
     {
         if ($soft) {
             return $this->SoftDelete();
@@ -175,7 +175,7 @@ class BuildGroupRule
     }
 
     /** Soft delete (mark a build rule as finished). */
-    private function SoftDelete()
+    private function SoftDelete(): bool
     {
         $now = gmdate(FMT_DATETIME);
         $stmt = $this->PDO->prepare(
@@ -200,7 +200,7 @@ class BuildGroupRule
     }
 
     /** Hard delete (remove a build rule from the database). */
-    private function HardDelete()
+    private function HardDelete(): bool
     {
         $stmt = $this->PDO->prepare(
             'DELETE FROM build2grouprule

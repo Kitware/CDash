@@ -44,10 +44,7 @@ trait BuildDiffForTesting
         'testnotrunnegative',
     ];
 
-    /**
-     * @return array
-     */
-    protected function getDiff()
+    protected function getDiff(): array
     {
         return $this->diff;
     }

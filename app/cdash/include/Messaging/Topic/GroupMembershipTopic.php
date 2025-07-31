@@ -11,10 +11,7 @@ class GroupMembershipTopic extends Topic
      */
     private $group;
 
-    /**
-     * @return bool
-     */
-    public function subscribesToBuild(Build $build)
+    public function subscribesToBuild(Build $build): bool
     {
         $parentTopic = is_null($this->topic) ? true : $this->topic->subscribesToBuild($build);
         $subscribe = $parentTopic && $this->group === $build->GetBuildType();
@@ -24,15 +21,12 @@ class GroupMembershipTopic extends Topic
     /**
      * @param string $group
      */
-    public function setGroup($group)
+    public function setGroup($group): void
     {
         $this->group = $group;
     }
 
-    /**
-     * @return int
-     */
-    public function getTopicCount()
+    public function getTopicCount(): int
     {
         if ($this->topic) {
             return $this->topic->getTopicCount();
@@ -40,10 +34,7 @@ class GroupMembershipTopic extends Topic
         return 0;
     }
 
-    /**
-     * @return bool
-     */
-    public function itemHasTopicSubject(Build $build, $item)
+    public function itemHasTopicSubject(Build $build, $item): bool
     {
         // TODO: q: do we need to do this again here?
         // a: Only if subscribesToBuild has not yet been called, but if it has been called

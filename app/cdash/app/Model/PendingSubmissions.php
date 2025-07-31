@@ -40,7 +40,7 @@ class PendingSubmissions
     }
 
     /** Return true if a record already exists for this build. */
-    public function Exists()
+    public function Exists(): bool
     {
         if (!$this->Build) {
             return false;
@@ -57,7 +57,7 @@ class PendingSubmissions
     }
 
     /** Insert a new record in the database or update an existing one. */
-    public function Save()
+    public function Save(): bool
     {
         if (!$this->Build) {
             Log::error('Build not set', [
@@ -92,7 +92,7 @@ class PendingSubmissions
     }
 
     /** Delete this record from the database. */
-    public function Delete()
+    public function Delete(): bool
     {
         if (!$this->Build) {
             Log::error('Build not set', [
@@ -155,7 +155,7 @@ class PendingSubmissions
     }
 
     // Atomically update an existing pending_submissions record in the database.
-    private function AtomicUpdate($caller, $clause)
+    private function AtomicUpdate($caller, $clause): bool
     {
         if (!$this->Build) {
             Log::error('Build not set', [
@@ -195,22 +195,22 @@ class PendingSubmissions
         return true;
     }
 
-    public function Increment()
+    public function Increment(): bool
     {
         return $this->AtomicUpdate('Increment', 'numfiles = numfiles + 1');
     }
 
-    public function Decrement()
+    public function Decrement(): bool
     {
         return $this->AtomicUpdate('Decrement', 'numfiles = numfiles - 1');
     }
 
-    public function MarkForRecheck()
+    public function MarkForRecheck(): bool
     {
         return $this->AtomicUpdate('MarkForRecheck', 'recheck = 1');
     }
 
-    public static function GetModelForBuildId($buildid)
+    public static function GetModelForBuildId($buildid): PendingSubmissions
     {
         $build = new Build();
         $build->Id = $buildid;
@@ -219,13 +219,13 @@ class PendingSubmissions
         return $pendingSubmissions;
     }
 
-    public static function RecheckForBuildId($buildid)
+    public static function RecheckForBuildId($buildid): bool
     {
         $pendingSubmissions = self::GetModelForBuildId($buildid);
         return $pendingSubmissions->MarkForRecheck();
     }
 
-    public static function IncrementForBuildId($buildid)
+    public static function IncrementForBuildId($buildid): bool
     {
         $pendingSubmissions = self::GetModelForBuildId($buildid);
         return $pendingSubmissions->Increment();

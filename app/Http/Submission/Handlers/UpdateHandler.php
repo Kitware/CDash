@@ -249,7 +249,7 @@ class UpdateHandler extends AbstractXmlHandler implements ActionableBuildInterfa
         return $collection;
     }
 
-    public function GetCommitAuthors()
+    public function GetCommitAuthors(): array
     {
         return $this->Build->GetCommitAuthors();
     }

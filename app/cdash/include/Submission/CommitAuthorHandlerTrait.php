@@ -6,10 +6,7 @@ use CDash\Model\Build;
 
 trait CommitAuthorHandlerTrait
 {
-    /**
-     * @return array
-     */
-    public function GetCommitAuthors()
+    public function GetCommitAuthors(): array
     {
         $authors = [];
         /** @var Build $build */

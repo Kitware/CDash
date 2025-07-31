@@ -6,10 +6,7 @@ abstract class Singleton
 {
     private static $_instances = [];
 
-    /**
-     * @return static
-     */
-    public static function getInstance()
+    public static function getInstance(): static
     {
         if (!isset(self::$_instances[static::class])) {
             self::$_instances[static::class] = new static();
@@ -17,10 +14,7 @@ abstract class Singleton
         return self::$_instances[static::class];
     }
 
-    /**
-     * @return void
-     */
-    public static function setInstance($class, $instance)
+    public static function setInstance($class, $instance): void
     {
         self::$_instances[$class] = $instance;
     }

@@ -949,7 +949,7 @@ class Project
     /**
      * Sets the Project's SubscriberCollection property.
      */
-    public function SetSubscriberCollection(SubscriberCollection $subscribers)
+    public function SetSubscriberCollection(SubscriberCollection $subscribers): void
     {
         $this->SubscriberCollection = $subscribers;
     }

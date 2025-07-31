@@ -27,10 +27,7 @@ class Repository
     public const VIEWER_GITHUB = 'GitHub';
     public const VIEWER_GITLAB = 'GitLab';
 
-    /**
-     * @return array
-     */
-    public static function getViewers()
+    public static function getViewers(): array
     {
         $self = new ReflectionClass(__CLASS__);
         $viewers = [];
@@ -43,7 +40,7 @@ class Repository
         return $viewers;
     }
 
-    public static function setStatus(Build $build, $complete = true)
+    public static function setStatus(Build $build, $complete = true): void
     {
         $buildProperties = new BuildProperties($build);
         $buildProperties->Fill();
@@ -65,7 +62,7 @@ class Repository
         }
     }
 
-    public static function createOrUpdateCheck($sha)
+    public static function createOrUpdateCheck($sha): void
     {
         // Find projectid from sha.
         // If this proves to be unreliable we could use the repositories table
@@ -91,13 +88,13 @@ class Repository
         $repositoryInterface->createCheck($sha);
     }
 
-    public static function compareCommits(BuildUpdate $update, Project $project)
+    public static function compareCommits(BuildUpdate $update, Project $project): void
     {
         $repositoryInterface = self::getRepositoryInterface($project);
         $repositoryInterface->compareCommits($update);
     }
 
-    protected static function getRepositoryService(Project $project)
+    protected static function getRepositoryService(Project $project): ?RepositoryService
     {
         try {
             $repositoryInterface = self::getRepositoryInterface($project);
@@ -108,12 +105,7 @@ class Repository
         return new RepositoryService($repositoryInterface);
     }
 
-    /**
-     * @return RepositoryInterface
-     *
-     * @throws Exception
-     */
-    public static function getRepositoryInterface(Project $project)
+    public static function getRepositoryInterface(Project $project): RepositoryInterface
     {
         switch (strtolower($project->CvsViewerType)) {
             case strtolower(self::VIEWER_GITHUB):
@@ -123,7 +115,6 @@ class Repository
                 $msg =
                     "No repository interface defined for $project->CvsViewerType";
                 throw new Exception($msg);
-                return;
         }
         return $service;
     }

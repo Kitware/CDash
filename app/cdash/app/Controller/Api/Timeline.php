@@ -82,7 +82,7 @@ class Timeline extends Index
         }
     }
 
-    private function generateColorMap()
+    private function generateColorMap(): void
     {
         if (array_key_exists('colorblind', $this->filterdata)
                 && $this->filterdata['colorblind']) {
@@ -142,7 +142,7 @@ class Timeline extends Index
         return $this->getTimelineChartData($stmt);
     }
 
-    private function chartForTestOverview()
+    private function chartForTestOverview(): array
     {
         $this->defectTypes = [
             [
@@ -294,7 +294,7 @@ class Timeline extends Index
         }
     }
 
-    private function getTimelineChartData($builds)
+    private function getTimelineChartData($builds): array
     {
         $response = [];
         $oldest_time_ms = null;
@@ -414,7 +414,7 @@ class Timeline extends Index
         return $response;
     }
 
-    private function initializeDate($timestamp_ms, $date)
+    private function initializeDate($timestamp_ms, $date): void
     {
         // Initialize trends for this date if necessary.
         if (!array_key_exists($timestamp_ms, $this->timeData)) {

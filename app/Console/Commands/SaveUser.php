@@ -34,7 +34,7 @@ class SaveUser extends Command
     /**
      * Create or update a user.
      */
-    public function handle()
+    public function handle(): void
     {
         $email = $this->option('email');
         if (is_null($email)) {

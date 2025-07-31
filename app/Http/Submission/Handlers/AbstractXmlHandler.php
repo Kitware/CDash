@@ -169,12 +169,12 @@ abstract class AbstractXmlHandler extends AbstractSubmissionHandler
         return $this->Site->name;
     }
 
-    public function getBuildStamp()
+    public function getBuildStamp(): string
     {
         return $this->Build->GetStamp();
     }
 
-    public function getBuildName()
+    public function getBuildName(): string
     {
         return $this->Build->Name;
     }

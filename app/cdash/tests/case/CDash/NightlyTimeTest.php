@@ -119,7 +119,7 @@ class NightlyTimeTest extends TestCase
         $this->validateTestingDay('2020-03-09 04:00:59', '2020-03-08');
     }
 
-    private function validateTestingDay($starttime, $expected)
+    private function validateTestingDay($starttime, $expected): void
     {
         $actual = TestingDay::get($this->Project, $starttime);
         $this->assertEquals($expected, $actual);

@@ -8,10 +8,7 @@ class LabeledTopic extends Topic
 {
     private $decoratedSubscribes;
 
-    /**
-     * @return bool
-     */
-    public function subscribesToBuild(Build $build)
+    public function subscribesToBuild(Build $build): bool
     {
         /*
          * The current logic/requirement is that if you are subscribed to labels

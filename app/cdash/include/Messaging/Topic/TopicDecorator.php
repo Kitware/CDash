@@ -27,7 +27,7 @@ use CDash\Singleton;
  */
 class TopicDecorator extends Singleton
 {
-    public static function decorate(TopicCollection $topics, NotificationPreferences $preferences)
+    public static function decorate(TopicCollection $topics, NotificationPreferences $preferences): void
     {
         $self = self::getInstance();
 
@@ -43,10 +43,8 @@ class TopicDecorator extends Singleton
      * For instance, a failing test can be fixed and CDash is able to make the distinction of tests
      * that were previously failing, but are now fixed. Users may wish to be notified of this event
      * and may do so by setting their notification preferences to notify when things get fixed.
-     *
-     * @return void
      */
-    protected function setFixables(NotificationPreferences $preferences, TopicCollection $topics)
+    protected function setFixables(NotificationPreferences $preferences, TopicCollection $topics): void
     {
         if ($preferences->get(NotifyOn::FIXED)) {
             foreach ($topics as $topic) {
@@ -62,10 +60,8 @@ class TopicDecorator extends Singleton
      * The Labelable Interface represents a topic that has the possibility of having a label
      * attached to it. Users may wish to be notified about submissions with a particular label
      * and receive notification of these labeled items by indicating such in their preferences.
-     *
-     * @return void
      */
-    protected function setLabelables(NotificationPreferences $preferences, TopicCollection $topics)
+    protected function setLabelables(NotificationPreferences $preferences, TopicCollection $topics): void
     {
         if ($preferences->get(NotifyOn::LABELED)) {
             foreach ($topics as $topic) {
@@ -81,10 +77,8 @@ class TopicDecorator extends Singleton
      * The notion of deliverable in this case represents something that can be delivered, e.g.
      * a notification of any kind. Specifically this notion exists so that CDash discern if a
      * notification event has already taken place.
-     *
-     * @return void
      */
-    protected function setDeliverables(NotificationPreferences $preferences, TopicCollection $topics)
+    protected function setDeliverables(NotificationPreferences $preferences, TopicCollection $topics): void
     {
         if (!$preferences->get(NotifyOn::REDUNDANT)) {
             foreach ($topics as $topic) {
@@ -94,10 +88,7 @@ class TopicDecorator extends Singleton
         }
     }
 
-    /**
-     * @return void
-     */
-    protected function setGroupFilterables(NotificationPreferences $preferences, TopicCollection $topics)
+    protected function setGroupFilterables(NotificationPreferences $preferences, TopicCollection $topics): void
     {
         if ($preferences->get(NotifyOn::GROUP_NIGHTLY)) {
             foreach ($topics as $topic) {
@@ -115,10 +106,7 @@ class TopicDecorator extends Singleton
         }
     }
 
-    /**
-     * @return void
-     */
-    protected function setAttributables(NotificationPreferences $preferences, TopicCollection $topics)
+    protected function setAttributables(NotificationPreferences $preferences, TopicCollection $topics): void
     {
         if ($preferences->get(NotifyOn::AUTHORED)) {
             foreach ($topics as $topic) {

@@ -32,10 +32,7 @@ class DynamicAnalysisTopic extends Topic implements Decoratable
     /** @var DynamicAnalysisCollection */
     private $collection;
 
-    /**
-     * @return bool
-     */
-    public function subscribesToBuild(Build $build)
+    public function subscribesToBuild(Build $build): bool
     {
         $ancestorSubscribe = is_null($this->topic) ? true : $this->topic->subscribesToBuild($build);
         $collection = $build->GetDynamicAnalysisCollection();
@@ -65,26 +62,17 @@ class DynamicAnalysisTopic extends Topic implements Decoratable
         }
     }
 
-    /**
-     * @return int
-     */
-    public function getTopicCount()
+    public function getTopicCount(): int
     {
         return $this->collection->count();
     }
 
-    /**
-     * @return bool
-     */
-    public function itemHasTopicSubject(Build $build, $item)
+    public function itemHasTopicSubject(Build $build, $item): bool
     {
         return in_array($item->Status, self::$statuses);
     }
 
-    /**
-     * @return DynamicAnalysisCollection
-     */
-    public function getTopicCollection()
+    public function getTopicCollection(): DynamicAnalysisCollection
     {
         if (!$this->collection) {
             $this->collection = new DynamicAnalysisCollection();
@@ -92,26 +80,17 @@ class DynamicAnalysisTopic extends Topic implements Decoratable
         return $this->collection;
     }
 
-    /**
-     * @return string
-     */
-    public function getTopicName()
+    public function getTopicName(): string
     {
         return Topic::DYNAMIC_ANALYSIS;
     }
 
-    /**
-     * @return string
-     */
-    public function getTopicDescription()
+    public function getTopicDescription(): string
     {
         return 'Dynamic analysis tests failing or not run';
     }
 
-    /**
-     * @return bool
-     */
-    public function isSubscribedToBy(SubscriberInterface $subscriber)
+    public function isSubscribedToBy(SubscriberInterface $subscriber): bool
     {
         $subscribes = false;
         $preferences = $subscriber->getNotificationPreferences();

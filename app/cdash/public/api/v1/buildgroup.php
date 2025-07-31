@@ -59,7 +59,7 @@ switch ($method) {
 }
 
 /** Handle DELETE requests */
-function rest_delete()
+function rest_delete(): void
 {
     if (isset($_GET['buildgroupid'])) {
         // Delete the specified BuildGroup.
@@ -290,7 +290,7 @@ function rest_post($pdo, $projectid)
 }
 
 /** Handle PUT requests */
-function rest_put($projectid)
+function rest_put($projectid): void
 {
     if (isset($_GET['buildgroup'])) {
         // Modify an existing buildgroup.

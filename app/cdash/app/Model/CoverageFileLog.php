@@ -40,7 +40,7 @@ class CoverageFileLog
         $this->PreviousAggregateParentId = null;
     }
 
-    public function AddLine($number, $code)
+    public function AddLine($number, $code): void
     {
         if (array_key_exists($number, $this->Lines)) {
             $this->Lines[$number] += (int) $code;
@@ -49,13 +49,13 @@ class CoverageFileLog
         }
     }
 
-    public function AddBranch($number, $covered, $total)
+    public function AddBranch($number, $covered, $total): void
     {
         $this->Branches[$number] = "$covered/$total";
     }
 
     /** Update the content of the file */
-    public function Insert($append = false)
+    public function Insert($append = false): bool
     {
         if (!$this->BuildId || !is_numeric($this->BuildId)) {
             Log::error('BuildId not set', [
@@ -107,7 +107,7 @@ class CoverageFileLog
         return true;
     }
 
-    public function Load($for_update = false)
+    public function Load($for_update = false): bool
     {
         if ($for_update) {
             $row = DB::table('coveragefilelog')
@@ -181,7 +181,7 @@ class CoverageFileLog
         return true;
     }
 
-    public function GetStats()
+    public function GetStats(): array
     {
         $stats = [];
         $stats['loctested'] = 0;
@@ -205,7 +205,7 @@ class CoverageFileLog
     }
 
     /** Update the aggregate coverage build to include these results. */
-    public function UpdateAggregate()
+    public function UpdateAggregate(): void
     {
         if (!$this->Build) {
             $this->Build = new Build();

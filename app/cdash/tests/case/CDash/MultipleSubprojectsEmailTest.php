@@ -131,10 +131,7 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
         }
     }
 
-    /**
-     * @return NotificationCollection
-     */
-    private function getNotifications(array $subscribers)
+    private function getNotifications(array $subscribers): NotificationCollection
     {
         $this->submission = $this->useCase->build();
         $project = $this->submission->GetProject();

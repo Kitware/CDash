@@ -35,7 +35,7 @@ class TestingDay
      * As a side effect, this function also changes the default timezone to
      * the one specified in the project's settings.
      */
-    public static function get(Project $project, $date)
+    public static function get(Project $project, $date): string
     {
         // Make sure the project is populated from the database.
         $project->Fill();

@@ -145,11 +145,9 @@ class ProcessSubmission implements ShouldQueue
     /**
      * Execute the job.
      *
-     * @return void
-     *
      * @throws BadSubmissionException
      */
-    public function handle()
+    public function handle(): void
     {
         // Move file from inbox to inprogress.
         if (!$this->renameSubmissionFile("inbox/{$this->filename}", "inprogress/{$this->filename}")) {
@@ -325,7 +323,7 @@ class ProcessSubmission implements ShouldQueue
 
     /** Determine the descriptive filename for a submission file. */
     private static function generateBackupFileName($projectname, $subprojectname, $buildname,
-        $sitename, $stamp, $fileNameWithExt)
+        $sitename, $stamp, $fileNameWithExt): string
     {
         // Generate a timestamp to include in the filename.
         $currenttimestamp = microtime(true) * 100;

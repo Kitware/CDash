@@ -24,7 +24,7 @@ class BuildEmailCollection extends Collection
     /**
      * @return $this
      */
-    public function add(BuildEmail $buildEmail)
+    public function add(BuildEmail $buildEmail): static
     {
         $email = $buildEmail->GetEmail();
         if (in_array($email, $this->keys)) {
@@ -35,10 +35,7 @@ class BuildEmailCollection extends Collection
         return $this;
     }
 
-    /**
-     * @return CollectionCollection
-     */
-    public function sortByCategory()
+    public function sortByCategory(): CollectionCollection
     {
         $collection = new CollectionCollection();
 

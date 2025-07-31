@@ -418,7 +418,7 @@ class ViewTest extends BuildApi
         return $response;
     }
 
-    private function getTestHistory($testname, $previous_buildids)
+    private function getTestHistory($testname, $previous_buildids): array
     {
         $retval = [];
 
@@ -460,7 +460,7 @@ class ViewTest extends BuildApi
         return $retval;
     }
 
-    private function getTestSummary($testname, $projectid, $groupid, $begin, $end)
+    private function getTestSummary($testname, $projectid, $groupid, $begin, $end): array
     {
         $retval = [];
 
@@ -513,7 +513,7 @@ class ViewTest extends BuildApi
         return $retval;
     }
 
-    private function loadTestDetails()
+    private function loadTestDetails(): void
     {
         // Parse input arguments.
         $tests = [];
@@ -589,7 +589,7 @@ class ViewTest extends BuildApi
     }
 
     // Export test results as CSV file.
-    private function exportAsCsv($etestquery, $etest, $stmt, $projectshowtesttime, $testtimemaxstatus)
+    private function exportAsCsv($etestquery, $etest, $stmt, $projectshowtesttime, $testtimemaxstatus): string
     {
         // Store named measurements in an array
         if (!is_null($etestquery)) {

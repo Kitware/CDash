@@ -7,11 +7,12 @@ use App\Models\Project as EloquentProject;
 use App\Utils\PageTimer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\View\View;
 
 final class ManageMeasurementsController extends AbstractProjectController
 {
     // Render the 'manage measurements' page.
-    public function show($project_id)
+    public function show($project_id): View
     {
         $this->setProjectById((int) $project_id);
         Gate::authorize('edit-project', $this->project);

@@ -33,10 +33,8 @@ class PurgeUnusedProjects extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         foreach (Project::doesntHave('builds')->get() as $project) {
             echo 'Deleting project: ' . $project->name . PHP_EOL;

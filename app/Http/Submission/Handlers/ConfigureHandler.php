@@ -315,12 +315,12 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
         }
     }
 
-    public function getBuildStamp()
+    public function getBuildStamp(): string
     {
         return $this->BuildStamp;
     }
 
-    public function getBuildName()
+    public function getBuildName(): string
     {
         return $this->BuildName;
     }

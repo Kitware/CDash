@@ -21,7 +21,7 @@ use CDash\Model\Build;
 
 class BuildCollection extends Collection
 {
-    public function add(Build $build)
+    public function add(Build $build): static
     {
         $name = $build->SubProjectName ? $build->SubProjectName : $build->Name;
         $this->addItem($build, $name);

@@ -15,10 +15,7 @@ class FixedTopic extends Topic
     /** @var bool */
     private $decoratedSubscribes;
 
-    /**
-     * @return bool
-     */
-    public function subscribesToBuild(Build $build)
+    public function subscribesToBuild(Build $build): bool
     {
         $this->decoratedSubscribes = $this->topic->subscribesToBuild($build);
         return $this->decoratedSubscribes
@@ -53,7 +50,7 @@ class FixedTopic extends Topic
         return $templates;
     }
 
-    public function getFixed()
+    public function getFixed(): array
     {
         return $this->fixes;
     }

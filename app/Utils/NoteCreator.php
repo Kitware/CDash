@@ -41,7 +41,7 @@ class NoteCreator
     /**
      * Record this note in the database.
      **/
-    public function create()
+    public function create(): void
     {
         // Create the note if it doesn't already exist.
         $note = Note::firstOrCreate([
