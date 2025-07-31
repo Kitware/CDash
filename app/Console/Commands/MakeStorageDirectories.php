@@ -22,10 +22,8 @@ class MakeStorageDirectories extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return int
      */
-    public function handle()
+    public function handle(): int
     {
         $storage_path = storage_path();
         $dirs_to_check = [

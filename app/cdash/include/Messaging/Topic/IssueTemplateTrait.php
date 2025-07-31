@@ -19,10 +19,7 @@ namespace CDash\Messaging\Topic;
 
 trait IssueTemplateTrait
 {
-    /**
-     * @return string
-     */
-    public function getTemplate()
+    public function getTemplate(): string
     {
         return 'issue';
     }

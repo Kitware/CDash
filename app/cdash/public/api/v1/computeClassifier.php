@@ -106,7 +106,7 @@ echo json_encode(cast_data_for_JSON($classifiers));
 
 
 // Convert a property value into a string.
-function value_to_string($value)
+function value_to_string($value): string
 {
     if (is_bool($value)) {
         $value = ($value) ? 'true' : 'false';
@@ -118,7 +118,7 @@ function value_to_string($value)
 
 
 // Count number of true and false samples in this group of builds.
-function count_samples($samples)
+function count_samples($samples): array
 {
     $numSucceeded = 0;
     $numFailed = 0;
@@ -162,7 +162,7 @@ function compute_classifier_score($inGroup, $outGroup)
 
 // For a given numerical property, find the threshold value that best classifies
 // the builds.
-function find_numerical_classifier($propertyName, $propertyData, $builds)
+function find_numerical_classifier($propertyName, $propertyData, $builds): array
 {
     $bestThreshold = null;
     $bestScore = -1;

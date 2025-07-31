@@ -34,7 +34,7 @@ class RemoveUser extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
         $email = $this->option('email');
         if (is_null($email)) {

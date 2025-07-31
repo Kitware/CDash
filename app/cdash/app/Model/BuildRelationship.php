@@ -45,7 +45,7 @@ class BuildRelationship
     }
 
     /** Return true if a relationship already exists between these two builds */
-    public function Exists()
+    public function Exists(): bool
     {
         if (!$this->Build || !$this->RelatedBuild) {
             return false;
@@ -64,7 +64,7 @@ class BuildRelationship
     }
 
     /** Insert a new record in the database or update an existing one. */
-    public function Save(&$error_msg)
+    public function Save(&$error_msg): bool
     {
         $required_params =
             ['Build', 'RelatedBuild', 'Project', 'Relationship'];
@@ -133,7 +133,7 @@ class BuildRelationship
     }
 
     /** Delete this record from the database. */
-    public function Delete(&$error_msg)
+    public function Delete(&$error_msg): bool
     {
         $required_params = ['Build', 'RelatedBuild'];
         foreach ($required_params as $param) {
@@ -159,7 +159,7 @@ class BuildRelationship
     }
 
     /** Retrieve details for a given token. */
-    public function Fill()
+    public function Fill(): bool
     {
         if ($this->Filled) {
             return true;
@@ -189,7 +189,7 @@ class BuildRelationship
     }
 
     /** Return an array representing this object. */
-    public function marshal()
+    public function marshal(): array
     {
         return [
             'buildid' => $this->Build->Id,
@@ -199,7 +199,7 @@ class BuildRelationship
     }
 
     /** Return marshaled arrays for all the builds related to this one. */
-    public function GetRelationships($build)
+    public function GetRelationships($build): false|array
     {
         $response = [];
         $stmt = $this->PDO->prepare(

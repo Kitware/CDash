@@ -31,7 +31,7 @@ class CheckKey extends Command
         parent::__construct();
     }
 
-    public function handle()
+    public function handle(): int
     {
         if (trim(config('app.key')) === '') {
             echo 'Error: APP_KEY environment variable is not set.  You can use the following randomly generated key:' . PHP_EOL;

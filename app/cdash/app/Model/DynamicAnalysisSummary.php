@@ -36,13 +36,13 @@ class DynamicAnalysisSummary
     }
 
     /** Add defects to the summary */
-    public function AddDefects($defects)
+    public function AddDefects($defects): void
     {
         $this->NumDefects += $defects;
     }
 
     /** Check if a summary already exists for this build. */
-    public function Exists()
+    public function Exists(): bool
     {
         if ($this->BuildId < 1) {
             return false;

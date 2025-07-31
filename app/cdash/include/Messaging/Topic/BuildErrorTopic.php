@@ -22,10 +22,8 @@ class BuildErrorTopic extends Topic implements Decoratable, Fixable, Labelable
      * similarly build failures) this method will return true if the user has not already
      * been notified for those events or if the has been notified but there are new events
      * not included in the previous notification.
-     *
-     * @return bool
      */
-    public function subscribesToBuild(Build $build)
+    public function subscribesToBuild(Build $build): bool
     {
         if ($this->subscriber) {
             $send_redundant = $this->subscriber->getNotificationPreferences()->get(NotifyOn::REDUNDANT);
@@ -59,10 +57,7 @@ class BuildErrorTopic extends Topic implements Decoratable, Fixable, Labelable
         }
     }
 
-    /**
-     * @return int
-     */
-    public function getTopicCount()
+    public function getTopicCount(): int
     {
         $collection = $this->getTopicCollection();
         return $collection->count();
@@ -72,15 +67,12 @@ class BuildErrorTopic extends Topic implements Decoratable, Fixable, Labelable
      * @return bool
      *              // TODO: refactor itemHasTopicSubject, remove callables from Topic and subclasses & remove Build from signature
      */
-    public function itemHasTopicSubject(Build $build, $item)
+    public function itemHasTopicSubject(Build $build, $item): bool
     {
         return $item->Type === $this->type;
     }
 
-    /**
-     * @return BuildErrorCollection
-     */
-    public function getTopicCollection()
+    public function getTopicCollection(): BuildErrorCollection
     {
         if (!$this->collection) {
             $this->collection = new BuildErrorCollection();
@@ -91,46 +83,38 @@ class BuildErrorTopic extends Topic implements Decoratable, Fixable, Labelable
     /**
      * @return $this
      */
-    public function setType($type)
+    public function setType($type): static
     {
         $this->type = $type;
         return $this;
     }
 
-    public function getTopicName()
+    public function getTopicName(): string
     {
         return $this->type == Build::TYPE_ERROR ? Topic::BUILD_ERROR : Topic::BUILD_WARNING;
     }
 
-    public function getTopicDescription()
+    public function getTopicDescription(): string
     {
         return $this->type === Build::TYPE_ERROR ? 'Errors' : 'Warnings';
     }
 
-    /**
-     * @return bool
-     */
-    public function hasFixes()
+    public function hasFixes(): bool
     {
         $key = $this->getTopicName();
         return $this->diff && $this->diff[$key]['fixed'] > 0;
     }
 
-    /**
-     * @return array
-     */
-    public function getFixes()
+    public function getFixes(): array
     {
         $key = $this->getTopicName();
         if ($this->diff) {
             return $this->diff[$key];
         }
+        return [];
     }
 
-    /**
-     * @return Collection
-     */
-    public function getLabelsFromBuild(Build $build)
+    public function getLabelsFromBuild(Build $build): Collection
     {
         $collection = collect();
         if (isset($build->Errors)) {
@@ -148,20 +132,14 @@ class BuildErrorTopic extends Topic implements Decoratable, Fixable, Labelable
         return $collection;
     }
 
-    /**
-     * @return void
-     */
-    public function setTopicDataWithLabels(Build $build, Collection $labels)
+    public function setTopicDataWithLabels(Build $build, Collection $labels): void
     {
         // We've already determined that the build has the subscribed labels
         // so here we can just use setTopicData
         $this->setTopicData($build);
     }
 
-    /**
-     * @return bool
-     */
-    public function isSubscribedToBy(SubscriberInterface $subscriber)
+    public function isSubscribedToBy(SubscriberInterface $subscriber): bool
     {
         $subscribes = false;
         $preferences = $subscriber->getNotificationPreferences();

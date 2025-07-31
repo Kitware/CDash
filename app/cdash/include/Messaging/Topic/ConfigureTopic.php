@@ -30,10 +30,7 @@ class ConfigureTopic extends Topic implements Decoratable, Labelable
 
     private $collection;
 
-    /**
-     * @return bool
-     */
-    public function subscribesToBuild(Build $build)
+    public function subscribesToBuild(Build $build): bool
     {
         $conf = $build->GetBuildConfigure();
         $subscribe = $conf->NumberOfErrors > 0;
@@ -48,12 +45,12 @@ class ConfigureTopic extends Topic implements Decoratable, Labelable
         $collection->addItem($configure, $key);
     }
 
-    public function getTopicName()
+    public function getTopicName(): string
     {
         return self::CONFIGURE;
     }
 
-    public function getTopicCount()
+    public function getTopicCount(): int
     {
         $collection = $this->getTopicCollection();
         $configure = $collection->current();
@@ -64,12 +61,12 @@ class ConfigureTopic extends Topic implements Decoratable, Labelable
         return $count;
     }
 
-    public function getTopicDescription()
+    public function getTopicDescription(): string
     {
         return 'Configure Errors';
     }
 
-    public function getTopicCollection()
+    public function getTopicCollection(): ConfigureCollection
     {
         if (!$this->collection) {
             $this->collection = new ConfigureCollection();
@@ -82,15 +79,12 @@ class ConfigureTopic extends Topic implements Decoratable, Labelable
      *
      * TODO: this breaks interface segregation principle, refactor
      */
-    public function itemHasTopicSubject(Build $build, $item)
+    public function itemHasTopicSubject(Build $build, $item): bool
     {
         return true;
     }
 
-    /**
-     * @return Collection
-     */
-    public function getLabelsFromBuild(Build $build)
+    public function getLabelsFromBuild(Build $build): Collection
     {
         // TODO: refactor, allow multiple collections to be merged with one another
         $configure = $build->GetBuildConfigure();
@@ -107,19 +101,13 @@ class ConfigureTopic extends Topic implements Decoratable, Labelable
         return $collection;
     }
 
-    /**
-     * @return void
-     */
-    public function setTopicDataWithLabels(Build $build, Collection $labels)
+    public function setTopicDataWithLabels(Build $build, Collection $labels): void
     {
         $collection = $this->getTopicCollection();
         $collection->add($build->GetBuildConfigure());
     }
 
-    /**
-     * @return bool
-     */
-    public function isSubscribedToBy(SubscriberInterface $subscriber)
+    public function isSubscribedToBy(SubscriberInterface $subscriber): bool
     {
         $subscribes = false;
         $preferences = $subscriber->getNotificationPreferences();

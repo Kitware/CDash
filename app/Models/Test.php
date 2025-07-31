@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 
 /**
@@ -124,7 +125,7 @@ class Test extends Model
      *
      * @deprecated 08/24/2024  The legacy Label class is deprecated.  Use the labels() Eloquent relationship instead.
      **/
-    public function getLabels()
+    public function getLabels(): Collection
     {
         if (is_null($this->labels)) {
             $this->labels = collect();

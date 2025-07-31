@@ -140,7 +140,7 @@ class SubmissionUtils
     }
 
     /** Extract the date from the build stamp */
-    public static function extract_date_from_buildstamp($buildstamp)
+    public static function extract_date_from_buildstamp($buildstamp): string
     {
         return substr($buildstamp, 0, strpos($buildstamp, '-', strpos($buildstamp, '-') + 1));
     }
@@ -150,7 +150,7 @@ class SubmissionUtils
      *
      * TODO: Find a better home for this
      */
-    public static function compute_error_difference($buildid, $previousbuildid, $warning)
+    public static function compute_error_difference($buildid, $previousbuildid, $warning): void
     {
         $pdo = Database::getInstance()->getPdo();
         // Look at the difference positive and negative test errors

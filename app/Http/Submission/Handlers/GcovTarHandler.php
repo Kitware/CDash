@@ -157,7 +157,7 @@ class GcovTarHandler extends AbstractSubmissionHandler
     /**
      * Parse an individual .gcov file.
      **/
-    public function ParseGcovFile($fileinfo)
+    public function ParseGcovFile($fileinfo): void
     {
         $coverageFileLog = new CoverageFileLog();
         $coverageFileLog->AggregateBuildId = $this->AggregateBuildId;
@@ -398,7 +398,7 @@ class GcovTarHandler extends AbstractSubmissionHandler
     /**
      * Parse the Labels.json file.
      **/
-    public function ParseLabelsFile($fileinfo)
+    public function ParseLabelsFile($fileinfo): void
     {
         // read the file & decode the JSON.
         $jsonContents = file_get_contents($fileinfo->getPath() . DIRECTORY_SEPARATOR . $fileinfo->getFilename());

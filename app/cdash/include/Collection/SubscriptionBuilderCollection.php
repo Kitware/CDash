@@ -21,7 +21,7 @@ use CDash\Messaging\Subscription\SubscriptionBuilderInterface;
 
 class SubscriptionBuilderCollection extends Collection
 {
-    public function add(SubscriptionBuilderInterface $builder)
+    public function add(SubscriptionBuilderInterface $builder): static
     {
         $this->addItem($builder, $builder::class);
         return $this;

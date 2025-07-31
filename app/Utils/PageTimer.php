@@ -32,7 +32,7 @@ class PageTimer
         $this->start = LARAVEL_START;
     }
 
-    public function end(&$response)
+    public function end(&$response): void
     {
         $this->end = microtime(true);
         $this->duration = round($this->end - LARAVEL_START, 2);

@@ -27,10 +27,7 @@ class UpdateErrorTopic extends Topic implements Decoratable, Fixable
 
     private $diff;
 
-    /**
-     * @return bool
-     */
-    public function subscribesToBuild(Build $build)
+    public function subscribesToBuild(Build $build): bool
     {
         $this->diff = $build->GetDiffWithPreviousBuild();
         $buildUpdate = $build->GetBuildUpdate();
@@ -40,35 +37,29 @@ class UpdateErrorTopic extends Topic implements Decoratable, Fixable
     /**
      * @return $this
      */
-    public function addBuild(Build $build)
+    public function addBuild(Build $build): static
     {
         $collection = $this->getBuildCollection();
         $collection->add($build);
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function itemHasTopicSubject(Build $build, $item)
+    public function itemHasTopicSubject(Build $build, $item): bool
     {
         return true;
     }
 
-    public function getTopicName()
+    public function getTopicName(): string
     {
         return Topic::UPDATE_ERROR;
     }
 
-    public function getTopicDescription()
+    public function getTopicDescription(): string
     {
         return 'Update Errors';
     }
 
-    /**
-     * @return bool
-     */
-    public function isSubscribedToBy(SubscriberInterface $subscriber)
+    public function isSubscribedToBy(SubscriberInterface $subscriber): bool
     {
         $subscribes = false;
         $preferences = $subscriber->getNotificationPreferences();
@@ -80,10 +71,7 @@ class UpdateErrorTopic extends Topic implements Decoratable, Fixable
         return $subscribes;
     }
 
-    /**
-     * @return bool
-     */
-    public function hasFixes()
+    public function hasFixes(): bool
     {
         $hasFixes = false;
 
@@ -109,10 +97,7 @@ class UpdateErrorTopic extends Topic implements Decoratable, Fixable
         return $hasFixes;
     }
 
-    /**
-     * @return array
-     */
-    public function getFixes()
+    public function getFixes(): array
     {
         return $this->diff;
     }

@@ -22,8 +22,5 @@ use CDash\Model\SubscriberInterface;
 interface Decoratable
 {
     // TODO: consider changing param to NotificationsPreferences
-    /**
-     * @return bool
-     */
-    public function isSubscribedToBy(SubscriberInterface $subscriber);
+    public function isSubscribedToBy(SubscriberInterface $subscriber): bool;
 }

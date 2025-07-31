@@ -32,7 +32,7 @@ class BuildPropertiesJSONHandler extends AbstractSubmissionHandler
     /**
      * Parse the build properties file.
      **/
-    public function Parse($filename)
+    public function Parse($filename): bool
     {
         // Test that this file contains valid JSON that PHP can decode.
         $json_str = Storage::get($filename);

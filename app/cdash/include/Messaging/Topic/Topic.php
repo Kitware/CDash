@@ -42,10 +42,7 @@ abstract class Topic implements TopicInterface
         $this->topic = $topic;
     }
 
-    /**
-     * @return $this
-     */
-    public function addBuild(Build $build)
+    public function addBuild(Build $build): static
     {
         $collection = $this->getBuildCollection();
         $collection->add($build);
@@ -53,10 +50,7 @@ abstract class Topic implements TopicInterface
         return $this;
     }
 
-    /**
-     * @return Topic
-     */
-    public function setSubscriber(SubscriberInterface $subscriber)
+    public function setSubscriber(SubscriberInterface $subscriber): static
     {
         $this->subscriber = $subscriber;
         if ($this->topic) {
@@ -76,10 +70,7 @@ abstract class Topic implements TopicInterface
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function itemHasTopicSubject(Build $build, $item)
+    public function itemHasTopicSubject(Build $build, $item): bool
     {
         $hasTopic = false;
         if ($this->topic) {
@@ -102,10 +93,8 @@ abstract class Topic implements TopicInterface
      * A method of convenience that returns of the class without the trailing 'Topic'. If a child
      * class does not conform to the conventional naming--i.e. the name of the Topic followed by
      * the word 'Topic'--then it should override this method.
-     *
-     * @return string
      */
-    public function getTopicName()
+    public function getTopicName(): string
     {
         $name = '';
         if ($this->topic) {
@@ -114,7 +103,7 @@ abstract class Topic implements TopicInterface
         return $name;
     }
 
-    public function getTopicDescription()
+    public function getTopicDescription(): string
     {
         if ($this->topic) {
             return $this->topic->getTopicDescription();
@@ -131,7 +120,7 @@ abstract class Topic implements TopicInterface
         return $this->buildCollection;
     }
 
-    public function getLabels()
+    public function getLabels(): array
     {
         if ($this->topic) {
             return $this->topic->getLabels();
@@ -139,7 +128,7 @@ abstract class Topic implements TopicInterface
         return [];
     }
 
-    public function getTopicCount()
+    public function getTopicCount(): int
     {
         if ($this->topic) {
             return $this->topic->getTopicCount();
@@ -149,10 +138,8 @@ abstract class Topic implements TopicInterface
 
     /**
      * @param null $category
-     *
-     * @return bool
      */
-    public function hasSubscriberAlreadyBeenNotified(Build $build, $category = null)
+    public function hasSubscriberAlreadyBeenNotified(Build $build, $category = null): bool
     {
         $collection = $build->GetBuildEmailCollection();
         $address = $this->subscriber->getAddress();

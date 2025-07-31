@@ -161,7 +161,7 @@ class CommitAuthorSubscriptionBuilderTest extends TestCase
         return $mock_handler;
     }
 
-    public function getCommitAuthors()
+    public function getCommitAuthors(): array
     {
         return ['com.mitter@company.tld', 'auth.or@company.tld'];
     }

@@ -243,7 +243,7 @@ class GitHub implements RepositoryInterface
      *
      * @return array<int, array<string, int|string>>
      */
-    public function dedupeAndSortBuildRows($rows)
+    public function dedupeAndSortBuildRows($rows): array
     {
         // Gather up all the rows that have non-unique build names.
         $build_names = [];

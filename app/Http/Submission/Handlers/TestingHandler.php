@@ -319,12 +319,12 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
         }
     }
 
-    public function getBuildStamp()
+    public function getBuildStamp(): string
     {
         return $this->BuildStamp;
     }
 
-    public function getBuildName()
+    public function getBuildName(): string
     {
         return $this->BuildName;
     }
@@ -334,7 +334,7 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
         return $this->SubProjectName;
     }
 
-    private function createBuild()
+    private function createBuild(): void
     {
         if (!array_key_exists($this->SubProjectName, $this->NumberTestsFailed)) {
             $this->NumberTestsFailed[$this->SubProjectName] = 0;

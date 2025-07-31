@@ -39,7 +39,7 @@ class Coverage
     public $Labels;
 
     // Purposely no Insert function. Everything is done from the coverage summary
-    public function AddLabel($label)
+    public function AddLabel($label): void
     {
         if (!isset($this->Labels)) {
             $this->Labels = [];

@@ -9,7 +9,7 @@ use CDash\Collection\Collection;
  */
 class SubscriptionCollection extends Collection
 {
-    public function add(Subscription $item)
+    public function add(Subscription $item): static
     {
         if ($item->getRecipient()) {
             parent::addItem($item, $item->getRecipient());

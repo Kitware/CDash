@@ -42,7 +42,7 @@ class RepositoryUtils
      * a source file.  This only works properly if the source dir's name matches
      * the repo's name, ie it was not renamed as it was cloned.
      **/
-    public static function github_get_source_dir($projecturl, $file_path)
+    public static function github_get_source_dir($projecturl, $file_path): string
     {
         $repo_name = basename($projecturl);
         $offset = stripos($file_path, $repo_name);
@@ -73,7 +73,7 @@ class RepositoryUtils
     }
 
     /** Return the GitLab diff URL */
-    public static function get_gitlab_diff_url($projecturl, $directory, $file, $revision)
+    public static function get_gitlab_diff_url($projecturl, $directory, $file, $revision): string
     {
         // Since GitLab supports arbitrarily nested groups, there is a `/-/`
         // component to start per-project resources.
@@ -115,7 +115,7 @@ class RepositoryUtils
     }
 
     /** Return the GitHub revision URL */
-    public static function get_github_revision_url($projecturl, $revision, $priorrevision)
+    public static function get_github_revision_url($projecturl, $revision, $priorrevision): string
     {
         if ($priorrevision) {
             $revision_url = "$projecturl/compare/$priorrevision...$revision";
@@ -126,7 +126,7 @@ class RepositoryUtils
     }
 
     /** Return the GitLab revision URL */
-    public static function get_gitlab_revision_url($projecturl, $revision, $priorrevision)
+    public static function get_gitlab_revision_url($projecturl, $revision, $priorrevision): string
     {
         return self::get_github_revision_url($projecturl, $revision, $priorrevision);
     }
@@ -157,7 +157,7 @@ class RepositoryUtils
         }
     }
 
-    public static function linkify_compiler_output($projecturl, $source_dir, $revision, $compiler_output)
+    public static function linkify_compiler_output($projecturl, $source_dir, $revision, $compiler_output): string
     {
         // Escape HTML characters in compiler output first.  This allows us to properly
         // display characters such as angle brackets in compiler output.
@@ -188,7 +188,7 @@ class RepositoryUtils
     }
 
     /** Post a comment on a pull request */
-    public static function post_pull_request_comment($projectid, $pull_request, $comment, $cdash_url)
+    public static function post_pull_request_comment($projectid, $pull_request, $comment, $cdash_url): void
     {
         if (!is_numeric($projectid)) {
             return;
@@ -214,7 +214,7 @@ class RepositoryUtils
     }
 
     /** Convert GitHub repository viewer URL into corresponding API URL. */
-    public static function get_github_api_url($github_url)
+    public static function get_github_api_url($github_url): string
     {
         /*
          * For a URL of the form:
@@ -231,7 +231,7 @@ class RepositoryUtils
         return $api_url;
     }
 
-    public static function post_github_pull_request_comment(Project $project, $pull_request, $comment, $cdash_url)
+    public static function post_github_pull_request_comment(Project $project, $pull_request, $comment, $cdash_url): void
     {
         $repo = null;
         $repositories = $project->GetRepositories();
@@ -349,7 +349,7 @@ class RepositoryUtils
         return self::$function_name($project->BugTrackerNewIssueUrl, $title, $body, $users);
     }
 
-    public static function generate_Buganizer_new_issue_link($baseurl, $title, $body, $users)
+    public static function generate_Buganizer_new_issue_link($baseurl, $title, $body, $users): string
     {
         $url = "$baseurl&type=BUG&priority=P0&severity=S0&title=$title&description=$body";
         if (!empty($users)) {
@@ -360,7 +360,7 @@ class RepositoryUtils
         return $url;
     }
 
-    public static function generate_JIRA_new_issue_link($baseurl, $title, $body, $users)
+    public static function generate_JIRA_new_issue_link($baseurl, $title, $body, $users): string
     {
         $url = "$baseurl&summary=$title";
         if (!empty($users)) {
@@ -379,7 +379,7 @@ class RepositoryUtils
         return $url;
     }
 
-    public static function generate_GitHub_new_issue_link($baseurl, $title, $body, $users)
+    public static function generate_GitHub_new_issue_link($baseurl, $title, $body, $users): string
     {
         $url = "{$baseurl}title=$title";
         if (!empty($users)) {

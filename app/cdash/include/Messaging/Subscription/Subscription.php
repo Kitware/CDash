@@ -33,49 +33,34 @@ class Subscription implements SubscriptionInterface
         return $this->buildGroup;
     }
 
-    public function setBuildGroup(BuildGroup $buildGroup)
+    public function setBuildGroup(BuildGroup $buildGroup): static
     {
         $this->buildGroup = $buildGroup;
         return $this;
     }
 
-    /**
-     * @return Subscription
-     */
-    public function setSubscriber(SubscriberInterface $subscriber)
+    public function setSubscriber(SubscriberInterface $subscriber): static
     {
         $this->subscriber = $subscriber;
         return $this;
     }
 
-    /**
-     * @return SubscriberInterface
-     */
-    public function getSubscriber()
+    public function getSubscriber(): SubscriberInterface
     {
         return $this->subscriber;
     }
 
-    /**
-     * @return TopicCollection
-     */
-    public function getTopicCollection()
+    public function getTopicCollection(): TopicCollection
     {
         return $this->subscriber->getTopics();
     }
 
-    /**
-     * @return string
-     */
-    public function getRecipient()
+    public function getRecipient(): string
     {
         return $this->subscriber->getAddress();
     }
 
-    /**
-     * @return Subscription
-     */
-    public function setProject(Project $project)
+    public function setProject(Project $project): static
     {
         $this->project = $project;
         return $this;
@@ -92,15 +77,12 @@ class Subscription implements SubscriptionInterface
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public static function getMaxDisplayItems()
+    public static function getMaxDisplayItems(): int
     {
         return self::$max_display_items;
     }
 
-    public static function setMaxDisplayItems($max_display_items)
+    public static function setMaxDisplayItems($max_display_items): void
     {
         // $max_display_items must always have an integer value > zero
         if (is_int($max_display_items) && $max_display_items > 0) {
@@ -113,7 +95,7 @@ class Subscription implements SubscriptionInterface
         return $this->project->GetName();
     }
 
-    public function getTopicDescriptions($case = null)
+    public function getTopicDescriptions($case = null): array
     {
         $descriptions = [];
         foreach ($this->subscriber->getTopics() as $topic) {
@@ -130,7 +112,7 @@ class Subscription implements SubscriptionInterface
      * @return string[]
      *                  TODO: A summary should be a BuildSummary class, create one asap
      */
-    public function getBuildSummary()
+    public function getBuildSummary(): array
     {
         if (!$this->summary) {
             $project = $this->project;
@@ -202,10 +184,7 @@ class Subscription implements SubscriptionInterface
         return $this->summary;
     }
 
-    /**
-     * @return array
-     */
-    public function getTopicTemplates()
+    public function getTopicTemplates(): array
     {
         $templates = [];
         foreach ($this->subscriber->getTopics() as $topic) {

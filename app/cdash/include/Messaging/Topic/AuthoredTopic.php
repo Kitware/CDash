@@ -6,10 +6,7 @@ use CDash\Model\Build;
 
 class AuthoredTopic extends Topic
 {
-    /**
-     * @return bool
-     */
-    public function subscribesToBuild(Build $build)
+    public function subscribesToBuild(Build $build): bool
     {
         $subscribe = $this->topic->subscribesToBuild($build)
             && $build->AuthoredBy($this->subscriber);

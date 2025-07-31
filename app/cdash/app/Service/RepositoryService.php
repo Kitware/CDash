@@ -37,7 +37,7 @@ class RepositoryService
     }
 
     protected function setStatus($context, $description, $revision, $state,
-        $target_url)
+        $target_url): void
     {
         if (strlen($revision) === 0 || strlen($context) === 0) {
             return;
@@ -53,14 +53,14 @@ class RepositoryService
         $this->repository->setStatus($options);
     }
 
-    public function setStatusOnStart(Build $build, $context)
+    public function setStatusOnStart(Build $build, $context): void
     {
         $this->setStatus($context, "Build: {$build->Name}",
             $build->GetBuildUpdate()->Revision, 'pending',
             $build->GetBuildSummaryUrl());
     }
 
-    public function setStatusOnComplete(Build $build, $context)
+    public function setStatusOnComplete(Build $build, $context): void
     {
         $revision = $build->GetBuildUpdate()->Revision;
         $state = 'error';

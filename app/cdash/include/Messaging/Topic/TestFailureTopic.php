@@ -39,10 +39,8 @@ class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
 
     /**
      * This method queries the build to check for failed tests
-     *
-     * @return bool
      */
-    public function subscribesToBuild(Build $build)
+    public function subscribesToBuild(Build $build): bool
     {
         if ($this->subscriber) {
             $preferences = $this->subscriber->getNotificationPreferences();
@@ -78,10 +76,8 @@ class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
 
     /**
      * This method returns the Collection containing a build's failed tests
-     *
-     * @return Collection
      */
-    public function getTopicCollection()
+    public function getTopicCollection(): Collection
     {
         if (!$this->collection) {
             $this->collection = collect();
@@ -97,23 +93,17 @@ class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
      * TODO: is it possible to create a convention where this method can be abstracted to simply:
      *   return __CLASS__;
      */
-    public function getTopicName()
+    public function getTopicName(): string
     {
         return self::TEST_FAILURE;
     }
 
-    /**
-     * @return string
-     */
-    public function getTopicDescription()
+    public function getTopicDescription(): string
     {
         return 'Failing Tests';
     }
 
-    /**
-     * @return int
-     */
-    public function getTopicCount()
+    public function getTopicCount(): int
     {
         return $this->getTopicCollection()->count();
     }
@@ -123,26 +113,18 @@ class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
      * topic's TestCollection.
      *
      * @param Test $item
-     *
-     * @return bool
      */
-    public function itemHasTopicSubject(Build $build, $item)
+    public function itemHasTopicSubject(Build $build, $item): bool
     {
         return $item->status === Test::FAILED;
     }
 
-    /**
-     * @return bool
-     */
-    public function hasFixes()
+    public function hasFixes(): bool
     {
         return $this->diff && $this->diff['TestFailure']['failed']['fixed'] > 0;
     }
 
-    /**
-     * @return array
-     */
-    public function getFixes()
+    public function getFixes(): array
     {
         $fixed = [];
         if ($this->diff) {
@@ -151,10 +133,7 @@ class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
         return $fixed;
     }
 
-    /**
-     * @return void
-     */
-    public function setTopicDataWithLabels(Build $build, Collection $labels)
+    public function setTopicDataWithLabels(Build $build, Collection $labels): void
     {
         $collection = $this->getTopicCollection();
         $buildtests = $build->GetTestCollection();
@@ -171,10 +150,7 @@ class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
         }
     }
 
-    /**
-     * @return Collection
-     */
-    public function getLabelsFromBuild(Build $build)
+    public function getLabelsFromBuild(Build $build): Collection
     {
         $buildtests = $build->GetTestCollection();
         $collection = collect();
@@ -190,10 +166,7 @@ class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
         return $collection;
     }
 
-    /**
-     * @return bool
-     */
-    public function isSubscribedToBy(SubscriberInterface $subscriber)
+    public function isSubscribedToBy(SubscriberInterface $subscriber): bool
     {
         $subscribes = false;
         $preferences = $subscriber->getNotificationPreferences();

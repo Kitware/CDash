@@ -108,10 +108,8 @@ final class CDash extends AbstractController
     /**
      * Returns JSON responses for CDash API requests or regular response given an
      * un-decodable json response
-     *
-     * @return ResponseFactory|JsonResponse|Response|\Symfony\Component\HttpFoundation\Response
      */
-    protected function handleApiRequest()
+    protected function handleApiRequest(): Response|JsonResponse|\Symfony\Component\HttpFoundation\Response|ResponseFactory
     {
         $json = $this->getRequestContents();
         $status = http_response_code(); // this should be empty if not previously set

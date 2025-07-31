@@ -21,7 +21,7 @@ use CDash\Model\DynamicAnalysis;
 
 class DynamicAnalysisCollection extends Collection
 {
-    public function add(DynamicAnalysis $analysis)
+    public function add(DynamicAnalysis $analysis): static
     {
         $this->addItem($analysis, $analysis->Name);
         return $this;

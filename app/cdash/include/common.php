@@ -353,7 +353,7 @@ function get_project_name($projectid): string
 /**
  * Get the geolocation from IP address
  */
-function get_geolocation($ip)
+function get_geolocation($ip): array
 {
     $location = [];
 
@@ -608,7 +608,7 @@ function begin_JSON_response(): array
 /**
  * TODO: pass in project object, not just name, prevents yet another unnecessary query to db.
  */
-function get_dashboard_JSON($projectname, $date, &$response)
+function get_dashboard_JSON($projectname, $date, &$response): void
 {
     $service = ServiceContainer::getInstance();
 

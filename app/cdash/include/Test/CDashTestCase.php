@@ -47,7 +47,7 @@ class CDashTestCase extends TestCase
         parent::tearDown();
     }
 
-    protected function setDatabaseMocked()
+    protected function setDatabaseMocked(): void
     {
         $this->originalDatabase = Database::getInstance();
 
@@ -81,17 +81,14 @@ class CDashTestCase extends TestCase
         Database::setInstance(Database::class, $mock_pdo);
     }
 
-    protected function createMockFromBuilder($className)
+    protected function createMockFromBuilder($className): MockObject
     {
         return $this->getMockBuilder($className)
             ->disableOriginalConstructor()
             ->getMock();
     }
 
-    /**
-     * @return MockObject|Build
-     */
-    protected function getMockBuild()
+    protected function getMockBuild(): MockObject
     {
         return $this->createMockFromBuilder(Build::class);
     }

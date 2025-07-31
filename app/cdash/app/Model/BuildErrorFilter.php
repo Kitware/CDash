@@ -32,7 +32,7 @@ class BuildErrorFilter
         $this->Project = $project;
     }
 
-    public function Exists()
+    public function Exists(): bool
     {
         $stmt = $this->PDO->prepare(
             'SELECT projectid FROM build_filters
@@ -44,7 +44,7 @@ class BuildErrorFilter
         return false;
     }
 
-    public function AddOrUpdateFilters($warnings, $errors)
+    public function AddOrUpdateFilters($warnings, $errors): bool
     {
         if ($this->Exists()) {
             $stmt = $this->PDO->prepare(
@@ -69,12 +69,12 @@ class BuildErrorFilter
         return false;
     }
 
-    public function FilterWarning($warning)
+    public function FilterWarning($warning): bool
     {
         return $this->FilterText($warning, $this->WarningsFilter);
     }
 
-    public function FilterError($error)
+    public function FilterError($error): bool
     {
         return $this->FilterText($error, $this->ErrorsFilter);
     }
@@ -84,7 +84,7 @@ class BuildErrorFilter
         return $this->ErrorsFilter;
     }
 
-    public function SetErrorsFilter($filter)
+    public function SetErrorsFilter($filter): void
     {
         $this->ErrorsFilter = $filter;
     }
@@ -94,12 +94,12 @@ class BuildErrorFilter
         return $this->WarningsFilter;
     }
 
-    public function SetWarningsFilter($filter)
+    public function SetWarningsFilter($filter): void
     {
         $this->WarningsFilter = $filter;
     }
 
-    public function Fill()
+    public function Fill(): void
     {
         $stmt = $this->PDO->prepare(
             'SELECT * FROM build_filters WHERE projectid = :projectid');
@@ -111,7 +111,7 @@ class BuildErrorFilter
         }
     }
 
-    private function FilterText($subject, $filterString)
+    private function FilterText($subject, $filterString): bool
     {
         if ($filterString) {
             foreach (preg_split("/\R/", $filterString) as $filter) {

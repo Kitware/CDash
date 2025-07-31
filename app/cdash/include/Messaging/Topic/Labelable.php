@@ -22,13 +22,7 @@ use Illuminate\Support\Collection;
 
 interface Labelable
 {
-    /**
-     * @return Collection
-     */
-    public function getLabelsFromBuild(Build $build);
+    public function getLabelsFromBuild(Build $build): Collection;
 
-    /**
-     * @return void
-     */
-    public function setTopicDataWithLabels(Build $build, Collection $labels);
+    public function setTopicDataWithLabels(Build $build, Collection $labels): void;
 }

@@ -19,13 +19,7 @@ namespace CDash\Messaging\Topic;
 
 interface Fixable
 {
-    /**
-     * @return bool
-     */
-    public function hasFixes();
+    public function hasFixes(): bool;
 
-    /**
-     * @return array
-     */
-    public function getFixes();
+    public function getFixes(): array;
 }

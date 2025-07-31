@@ -19,10 +19,7 @@ use CDash\Model\Build;
 
 class BuildGroupSummaryTopic extends Topic
 {
-    /**
-     * @return bool
-     */
-    public function subscribesToBuild(Build $build)
+    public function subscribesToBuild(Build $build): bool
     {
         $subscribe = $this->topic->subscribesToBuild($build)
             && !$this->hasSubscriberAlreadyBeenNotified($build);

@@ -717,7 +717,7 @@ class BazelJSONHandler extends AbstractSubmissionHandler
         $this->Configures[$subproject_name] = $configure;
     }
 
-    private function CreateNewTest($buildid, $test_status, $test_time, $test_name, $subproject_name)
+    private function CreateNewTest($buildid, $test_status, $test_time, $test_name, $subproject_name): void
     {
         $testdata = new stdClass();
         $testdata->buildid = $buildid;
@@ -747,7 +747,7 @@ class BazelJSONHandler extends AbstractSubmissionHandler
         $this->Tests[] = $testdata;
     }
 
-    private function IsTestName($name)
+    private function IsTestName($name): bool
     {
         foreach ($this->Tests as $testdata) {
             if ($testdata->name === $name) {
@@ -768,7 +768,7 @@ class BazelJSONHandler extends AbstractSubmissionHandler
         }
     }
 
-    private function RecordError($build_error, $type, $subproject_name)
+    private function RecordError($build_error, $type, $subproject_name): void
     {
         $text_with_context = $build_error->Text . $build_error->PostContext;
 

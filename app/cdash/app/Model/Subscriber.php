@@ -23,6 +23,7 @@ use CDash\Messaging\Preferences\NotificationPreferences;
 use CDash\Messaging\Topic\Topic;
 use CDash\Messaging\Topic\TopicCollection;
 use CDash\Messaging\Topic\TopicDecorator;
+use Illuminate\Support\Collection;
 
 /**
  * Class Subscriber
@@ -55,10 +56,7 @@ class Subscriber implements SubscriberInterface
         $this->user = $user ? $user : new User();
     }
 
-    /**
-     * @return bool
-     */
-    public function hasBuildTopics(ActionableBuildInterface $submission)
+    public function hasBuildTopics(ActionableBuildInterface $submission): bool
     {
         $topics = $this->getTopics();
         $collection = $submission->GetTopicCollectionForSubscriber($this);
@@ -86,10 +84,7 @@ class Subscriber implements SubscriberInterface
         return $topics->count() > 0;
     }
 
-    /**
-     * @return TopicCollection
-     */
-    public function getTopics()
+    public function getTopics(): TopicCollection
     {
         if (is_null($this->topics)) {
             $this->topics = new TopicCollection();
@@ -97,35 +92,23 @@ class Subscriber implements SubscriberInterface
         return $this->topics;
     }
 
-    /**
-     * @return string
-     */
-    public function getAddress()
+    public function getAddress(): string
     {
         return $this->user->Email;
     }
 
-    /**
-     * @return Subscriber
-     */
-    public function setAddress($address)
+    public function setAddress($address): static
     {
         $this->user->Email = $address;
         return $this;
     }
 
-    /**
-     * @return Collection
-     */
-    public function getLabels()
+    public function getLabels(): Collection
     {
         return $this->user->GetLabelCollection();
     }
 
-    /**
-     * @return Subscriber
-     */
-    public function setLabels(array $labels)
+    public function setLabels(array $labels): static
     {
         foreach ($labels as $label) {
             $this->user->AddLabel($label);
@@ -133,15 +116,12 @@ class Subscriber implements SubscriberInterface
         return $this;
     }
 
-    /**
-     * @return NotificationPreferences
-     */
-    public function getNotificationPreferences()
+    public function getNotificationPreferences(): NotificationPreferences
     {
         return $this->preferences;
     }
 
-    public function setUserId($userId)
+    public function setUserId($userId): static
     {
         $this->user->Id = $userId;
         return $this;

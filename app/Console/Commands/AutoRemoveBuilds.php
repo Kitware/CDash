@@ -37,7 +37,7 @@ class AutoRemoveBuilds extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
         set_time_limit(0);
 

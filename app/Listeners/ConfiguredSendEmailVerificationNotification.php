@@ -21,7 +21,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 class ConfiguredSendEmailVerificationNotification
 {
-    public function handle(Registered $event)
+    public function handle(Registered $event): void
     {
         /** @var User|MustVerifyEmail $user */
         $user = $event->user;

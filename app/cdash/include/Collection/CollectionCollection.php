@@ -22,7 +22,7 @@ class CollectionCollection extends Collection
     /**
      * @return $this
      */
-    public function add(Collection $collection)
+    public function add(Collection $collection): static
     {
         $this->addItem($collection, $collection::class);
         return $this;

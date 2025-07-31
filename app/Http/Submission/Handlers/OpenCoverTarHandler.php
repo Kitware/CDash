@@ -75,7 +75,7 @@ class OpenCoverTarHandler extends AbstractXmlHandler
      *  subdirectory and the file name, append '.cs' to get the file path
      *  in the un-tarred directory
      **/
-    public function parseFullName($string)
+    public function parseFullName($string): false|string
     {
         foreach ($this->currentModule as $path) {
             $filePath = str_ireplace($path, '', $string);
@@ -89,7 +89,7 @@ class OpenCoverTarHandler extends AbstractXmlHandler
 
     // Queries for the coverage objects for both adding source and
     // adding coverage values
-    public function getCoverageObjects($path)
+    public function getCoverageObjects($path): void
     {
         if (!array_key_exists($path, $this->CoverageFileLogs)) {
             $coverageFileLog = new CoverageFileLog();
@@ -275,7 +275,7 @@ class OpenCoverTarHandler extends AbstractXmlHandler
     /**
      * Parse an individual XML file.
      **/
-    public function ParseOpenCoverFile($buildid, $fileinfo)
+    public function ParseOpenCoverFile($buildid, $fileinfo): void
     {
         // Parse this XML file.
         $fileContents = file_get_contents($fileinfo->getPath() . DIRECTORY_SEPARATOR . $fileinfo->getFilename());

@@ -48,7 +48,7 @@ class QueryTests extends ResultsApi
         $this->numExtraMeasurements = 0;
     }
 
-    private function checkForSpecialFilters($filterdata)
+    private function checkForSpecialFilters($filterdata): void
     {
         $filters = $this->flattenFilters();
         foreach ($filters as $filter) {
@@ -71,7 +71,7 @@ class QueryTests extends ResultsApi
         }
     }
 
-    private function rowSurvivesTestOutputFilter($row, &$build)
+    private function rowSurvivesTestOutputFilter($row, &$build): bool
     {
         if (!$this->filterOnTestOutput) {
             return true;
@@ -151,7 +151,7 @@ class QueryTests extends ResultsApi
 
     // Find and apply a safe delimiter for converting a substring into a
     // regular expression.
-    private function applySafeDelimiter($pattern)
+    private function applySafeDelimiter($pattern): string
     {
         foreach ($this->delimiters as $delimiter) {
             if (!str_contains($pattern, $delimiter)) {
@@ -167,7 +167,7 @@ class QueryTests extends ResultsApi
      * @param array<string,mixed> $test
      * @param array<TestMeasurement> $testmeasurements
      */
-    private function addExtraMeasurements(array &$test, array $testmeasurements)
+    private function addExtraMeasurements(array &$test, array $testmeasurements): void
     {
         if ($this->hasProcessors) {
             $test['nprocs'] = '';
@@ -194,7 +194,7 @@ class QueryTests extends ResultsApi
         }
     }
 
-    public function getResponse()
+    public function getResponse(): array
     {
         $response = begin_JSON_response();
         $response['title'] = "{$this->project->Name} - Query Tests";

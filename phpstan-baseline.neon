@@ -61,12 +61,6 @@ parameters:
 			path: app/Console/Commands/AutoRemoveBuilds.php
 
 		-
-			message: '#^Method App\\Console\\Commands\\AutoRemoveBuilds\:\:handle\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Console/Commands/AutoRemoveBuilds.php
-
-		-
 			message: '#^Only booleans are allowed in a while condition, mixed given\.$#'
 			identifier: while.condNotBoolean
 			count: 1
@@ -97,28 +91,10 @@ parameters:
 			path: app/Console/Commands/AutoRemoveBuilds.php
 
 		-
-			message: '#^Method App\\Console\\Commands\\CheckKey\:\:handle\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Console/Commands/CheckKey.php
-
-		-
 			message: '#^Parameter \#1 \$string of function trim expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: app/Console/Commands/CheckKey.php
-
-		-
-			message: '#^Method App\\Console\\Commands\\QueueSubmissions\:\:handle\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Console/Commands/QueueSubmissions.php
-
-		-
-			message: '#^Method App\\Console\\Commands\\QueueSubmissions\:\:queueFile\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Console/Commands/QueueSubmissions.php
 
 		-
 			message: '#^Method App\\Console\\Commands\\QueueSubmissions\:\:queueFile\(\) has parameter \$inboxFile with no type specified\.$#'
@@ -163,12 +139,6 @@ parameters:
 			path: app/Console/Commands/QueueSubmissions.php
 
 		-
-			message: '#^Method App\\Console\\Commands\\RemoveUser\:\:handle\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Console/Commands/RemoveUser.php
-
-		-
 			message: '#^Only booleans are allowed in a negated boolean, App\\Models\\User\|null given\.$#'
 			identifier: booleanNot.exprNotBoolean
 			count: 1
@@ -183,12 +153,6 @@ parameters:
 		-
 			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
 			identifier: equal.notAllowed
-			count: 1
-			path: app/Console/Commands/SaveUser.php
-
-		-
-			message: '#^Method App\\Console\\Commands\\SaveUser\:\:handle\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/Console/Commands/SaveUser.php
 
@@ -655,6 +619,12 @@ parameters:
 			path: app/Http/Controllers/BuildController.php
 
 		-
+			message: '#^Cannot access offset ''from'' on array\|false\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Http/Controllers/BuildController.php
+
+		-
 			message: '#^Cannot access offset ''id'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
@@ -674,6 +644,12 @@ parameters:
 
 		-
 			message: '#^Cannot access offset ''subprojectid'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			message: '#^Cannot access offset ''to'' on array\|false\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: app/Http/Controllers/BuildController.php
@@ -757,38 +733,14 @@ parameters:
 			path: app/Http/Controllers/BuildController.php
 
 		-
-			message: '#^Method App\\Http\\Controllers\\BuildController\:\:configure\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Http/Controllers/BuildController.php
-
-		-
 			message: '#^Method App\\Http\\Controllers\\BuildController\:\:configure\(\) has parameter \$build_id with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: app/Http/Controllers/BuildController.php
 
 		-
-			message: '#^Method App\\Http\\Controllers\\BuildController\:\:notes\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Http/Controllers/BuildController.php
-
-		-
 			message: '#^Method App\\Http\\Controllers\\BuildController\:\:notes\(\) has parameter \$build_id with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/Http/Controllers/BuildController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\BuildController\:\:renderBuildPage\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Http/Controllers/BuildController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\BuildController\:\:summary\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/Http/Controllers/BuildController.php
 
@@ -1729,18 +1681,6 @@ parameters:
 			path: app/Http/Controllers/DynamicAnalysisController.php
 
 		-
-			message: '#^Method App\\Http\\Controllers\\EditProjectController\:\:create\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Http/Controllers/EditProjectController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\EditProjectController\:\:edit\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Http/Controllers/EditProjectController.php
-
-		-
 			message: '#^Method App\\Http\\Controllers\\EditProjectController\:\:edit\(\) has parameter \$project_id with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -1864,12 +1804,6 @@ parameters:
 			message: '#^Cannot cast mixed to int\.$#'
 			identifier: cast.int
 			count: 4
-			path: app/Http/Controllers/ManageMeasurementsController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\ManageMeasurementsController\:\:show\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
 			path: app/Http/Controllers/ManageMeasurementsController.php
 
 		-
@@ -2695,12 +2629,6 @@ parameters:
 			path: app/Http/Controllers/TestController.php
 
 		-
-			message: '#^Method App\\Http\\Controllers\\TestController\:\:details\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Http/Controllers/TestController.php
-
-		-
 			message: '#^Method App\\Http\\Controllers\\TestController\:\:details\(\) has parameter \$buildtest_id with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -3139,18 +3067,6 @@ parameters:
 			path: app/Http/Submission/Handlers/AbstractXmlHandler.php
 
 		-
-			message: '#^Method App\\Http\\Submission\\Handlers\\AbstractXmlHandler\:\:getBuildName\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Http/Submission/Handlers/AbstractXmlHandler.php
-
-		-
-			message: '#^Method App\\Http\\Submission\\Handlers\\AbstractXmlHandler\:\:getBuildStamp\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Http/Submission/Handlers/AbstractXmlHandler.php
-
-		-
 			message: '#^Method App\\Http\\Submission\\Handlers\\AbstractXmlHandler\:\:getElement\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -3355,12 +3271,6 @@ parameters:
 			path: app/Http/Submission/Handlers/BazelJSONHandler.php
 
 		-
-			message: '#^Method App\\Http\\Submission\\Handlers\\BazelJSONHandler\:\:CreateNewTest\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Http/Submission/Handlers/BazelJSONHandler.php
-
-		-
 			message: '#^Method App\\Http\\Submission\\Handlers\\BazelJSONHandler\:\:CreateNewTest\(\) has parameter \$buildid with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -3421,12 +3331,6 @@ parameters:
 			path: app/Http/Submission/Handlers/BazelJSONHandler.php
 
 		-
-			message: '#^Method App\\Http\\Submission\\Handlers\\BazelJSONHandler\:\:IsTestName\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Http/Submission/Handlers/BazelJSONHandler.php
-
-		-
 			message: '#^Method App\\Http\\Submission\\Handlers\\BazelJSONHandler\:\:IsTestName\(\) has parameter \$name with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -3453,12 +3357,6 @@ parameters:
 		-
 			message: '#^Method App\\Http\\Submission\\Handlers\\BazelJSONHandler\:\:ParseLine\(\) has parameter \$line with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/Http/Submission/Handlers/BazelJSONHandler.php
-
-		-
-			message: '#^Method App\\Http\\Submission\\Handlers\\BazelJSONHandler\:\:RecordError\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/Http/Submission/Handlers/BazelJSONHandler.php
 
@@ -3715,18 +3613,6 @@ parameters:
 			path: app/Http/Submission/Handlers/BuildHandler.php
 
 		-
-			message: '#^Method App\\Http\\Submission\\Handlers\\BuildHandler\:\:getBuildName\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Http/Submission/Handlers/BuildHandler.php
-
-		-
-			message: '#^Method App\\Http\\Submission\\Handlers\\BuildHandler\:\:getBuildStamp\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Http/Submission/Handlers/BuildHandler.php
-
-		-
 			message: '#^Method App\\Http\\Submission\\Handlers\\BuildHandler\:\:getSubProjectName\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -3901,12 +3787,6 @@ parameters:
 			path: app/Http/Submission/Handlers/BuildHandler.php
 
 		-
-			message: '#^Method App\\Http\\Submission\\Handlers\\BuildPropertiesJSONHandler\:\:Parse\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Http/Submission/Handlers/BuildPropertiesJSONHandler.php
-
-		-
 			message: '#^Method App\\Http\\Submission\\Handlers\\BuildPropertiesJSONHandler\:\:Parse\(\) has parameter \$filename with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -3969,18 +3849,6 @@ parameters:
 		-
 			message: '#^Method App\\Http\\Submission\\Handlers\\ConfigureHandler\:\:endElement\(\) has parameter \$parser with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/Http/Submission/Handlers/ConfigureHandler.php
-
-		-
-			message: '#^Method App\\Http\\Submission\\Handlers\\ConfigureHandler\:\:getBuildName\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Http/Submission/Handlers/ConfigureHandler.php
-
-		-
-			message: '#^Method App\\Http\\Submission\\Handlers\\ConfigureHandler\:\:getBuildStamp\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/Http/Submission/Handlers/ConfigureHandler.php
 
@@ -4573,12 +4441,6 @@ parameters:
 			path: app/Http/Submission/Handlers/DynamicAnalysisHandler.php
 
 		-
-			message: '#^Method App\\Http\\Submission\\Handlers\\DynamicAnalysisHandler\:\:createBuild\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Http/Submission/Handlers/DynamicAnalysisHandler.php
-
-		-
 			message: '#^Method App\\Http\\Submission\\Handlers\\DynamicAnalysisHandler\:\:createBuild\(\) has parameter \$subprojectName with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -4593,18 +4455,6 @@ parameters:
 		-
 			message: '#^Method App\\Http\\Submission\\Handlers\\DynamicAnalysisHandler\:\:endElement\(\) has parameter \$parser with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/Http/Submission/Handlers/DynamicAnalysisHandler.php
-
-		-
-			message: '#^Method App\\Http\\Submission\\Handlers\\DynamicAnalysisHandler\:\:getBuildName\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Http/Submission/Handlers/DynamicAnalysisHandler.php
-
-		-
-			message: '#^Method App\\Http\\Submission\\Handlers\\DynamicAnalysisHandler\:\:getBuildStamp\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/Http/Submission/Handlers/DynamicAnalysisHandler.php
 
@@ -4759,20 +4609,8 @@ parameters:
 			path: app/Http/Submission/Handlers/GcovTarHandler.php
 
 		-
-			message: '#^Method App\\Http\\Submission\\Handlers\\GcovTarHandler\:\:ParseGcovFile\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Http/Submission/Handlers/GcovTarHandler.php
-
-		-
 			message: '#^Method App\\Http\\Submission\\Handlers\\GcovTarHandler\:\:ParseGcovFile\(\) has parameter \$fileinfo with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/Http/Submission/Handlers/GcovTarHandler.php
-
-		-
-			message: '#^Method App\\Http\\Submission\\Handlers\\GcovTarHandler\:\:ParseLabelsFile\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/Http/Submission/Handlers/GcovTarHandler.php
 
@@ -4969,12 +4807,6 @@ parameters:
 			path: app/Http/Submission/Handlers/JSCoverTarHandler.php
 
 		-
-			message: '#^Method App\\Http\\Submission\\Handlers\\JSCoverTarHandler\:\:ParseJSCoverFile\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Http/Submission/Handlers/JSCoverTarHandler.php
-
-		-
 			message: '#^Method App\\Http\\Submission\\Handlers\\JSCoverTarHandler\:\:ParseJSCoverFile\(\) has parameter \$fileinfo with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -5047,20 +4879,8 @@ parameters:
 			path: app/Http/Submission/Handlers/JavaJSONTarHandler.php
 
 		-
-			message: '#^Method App\\Http\\Submission\\Handlers\\JavaJSONTarHandler\:\:ParseJavaJSONFile\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Http/Submission/Handlers/JavaJSONTarHandler.php
-
-		-
 			message: '#^Method App\\Http\\Submission\\Handlers\\JavaJSONTarHandler\:\:ParseJavaJSONFile\(\) has parameter \$fileinfo with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/Http/Submission/Handlers/JavaJSONTarHandler.php
-
-		-
-			message: '#^Method App\\Http\\Submission\\Handlers\\JavaJSONTarHandler\:\:ParsePackageMap\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/Http/Submission/Handlers/JavaJSONTarHandler.php
 
@@ -5289,7 +5109,7 @@ parameters:
 		-
 			message: '#^Access to an undefined property App\\Http\\Submission\\Handlers\\OpenCoverTarHandler\:\:\$tarDir\.$#'
 			identifier: property.notFound
-			count: 3
+			count: 4
 			path: app/Http/Submission/Handlers/OpenCoverTarHandler.php
 
 		-
@@ -5341,12 +5161,6 @@ parameters:
 			path: app/Http/Submission/Handlers/OpenCoverTarHandler.php
 
 		-
-			message: '#^Method App\\Http\\Submission\\Handlers\\OpenCoverTarHandler\:\:ParseOpenCoverFile\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Http/Submission/Handlers/OpenCoverTarHandler.php
-
-		-
 			message: '#^Method App\\Http\\Submission\\Handlers\\OpenCoverTarHandler\:\:ParseOpenCoverFile\(\) has parameter \$buildid with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -5371,20 +5185,8 @@ parameters:
 			path: app/Http/Submission/Handlers/OpenCoverTarHandler.php
 
 		-
-			message: '#^Method App\\Http\\Submission\\Handlers\\OpenCoverTarHandler\:\:getCoverageObjects\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Http/Submission/Handlers/OpenCoverTarHandler.php
-
-		-
 			message: '#^Method App\\Http\\Submission\\Handlers\\OpenCoverTarHandler\:\:getCoverageObjects\(\) has parameter \$path with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/Http/Submission/Handlers/OpenCoverTarHandler.php
-
-		-
-			message: '#^Method App\\Http\\Submission\\Handlers\\OpenCoverTarHandler\:\:parseFullName\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/Http/Submission/Handlers/OpenCoverTarHandler.php
 
@@ -5458,6 +5260,12 @@ parameters:
 			message: '#^Only booleans are allowed in an if condition, int\|false given\.$#'
 			identifier: if.condNotBoolean
 			count: 3
+			path: app/Http/Submission/Handlers/OpenCoverTarHandler.php
+
+		-
+			message: '#^Only booleans are allowed in an if condition, string\|false given\.$#'
+			identifier: if.condNotBoolean
+			count: 1
 			path: app/Http/Submission/Handlers/OpenCoverTarHandler.php
 
 		-
@@ -5701,12 +5509,6 @@ parameters:
 			path: app/Http/Submission/Handlers/TestingHandler.php
 
 		-
-			message: '#^Method App\\Http\\Submission\\Handlers\\TestingHandler\:\:createBuild\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Http/Submission/Handlers/TestingHandler.php
-
-		-
 			message: '#^Method App\\Http\\Submission\\Handlers\\TestingHandler\:\:endElement\(\) has parameter \$name with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -5715,18 +5517,6 @@ parameters:
 		-
 			message: '#^Method App\\Http\\Submission\\Handlers\\TestingHandler\:\:endElement\(\) has parameter \$parser with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/Http/Submission/Handlers/TestingHandler.php
-
-		-
-			message: '#^Method App\\Http\\Submission\\Handlers\\TestingHandler\:\:getBuildName\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Http/Submission/Handlers/TestingHandler.php
-
-		-
-			message: '#^Method App\\Http\\Submission\\Handlers\\TestingHandler\:\:getBuildStamp\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/Http/Submission/Handlers/TestingHandler.php
 
@@ -5890,12 +5680,6 @@ parameters:
 			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
 			identifier: equal.notAllowed
 			count: 20
-			path: app/Http/Submission/Handlers/TestingJUnitHandler.php
-
-		-
-			message: '#^Method App\\Http\\Submission\\Handlers\\TestingJUnitHandler\:\:createBuild\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
 			path: app/Http/Submission/Handlers/TestingJUnitHandler.php
 
 		-
@@ -6517,12 +6301,6 @@ parameters:
 			path: app/Jobs/ProcessSubmission.php
 
 		-
-			message: '#^Method App\\Jobs\\ProcessSubmission\:\:generateBackupFileName\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
 			message: '#^Method App\\Jobs\\ProcessSubmission\:\:generateBackupFileName\(\) has parameter \$buildname with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -6673,12 +6451,6 @@ parameters:
 			path: app/Ldap/Rules/FilterRules.php
 
 		-
-			message: '#^Method App\\Listeners\\ConfiguredSendEmailVerificationNotification\:\:handle\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Listeners/ConfiguredSendEmailVerificationNotification.php
-
-		-
 			message: '#^Only booleans are allowed in an if condition, mixed given\.$#'
 			identifier: if.condNotBoolean
 			count: 1
@@ -6721,8 +6493,8 @@ parameters:
 			path: app/Models/Site.php
 
 		-
-			message: '#^Method App\\Models\\Test\:\:getLabels\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Method App\\Models\\Test\:\:getLabels\(\) return type with generic class Illuminate\\Support\\Collection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
 			count: 1
 			path: app/Models/Test.php
 
@@ -6877,12 +6649,6 @@ parameters:
 			path: app/Utils/LdapUtils.php
 
 		-
-			message: '#^Method App\\Utils\\NoteCreator\:\:create\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Utils/NoteCreator.php
-
-		-
 			message: '#^Property App\\Utils\\NoteCreator\:\:\$buildid has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
@@ -6909,12 +6675,6 @@ parameters:
 		-
 			message: '#^Class App\\Utils\\PageTimer has an uninitialized property \$duration\. Give it default value or assign it in the constructor\.$#'
 			identifier: property.uninitialized
-			count: 1
-			path: app/Utils/PageTimer.php
-
-		-
-			message: '#^Method App\\Utils\\PageTimer\:\:end\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/Utils/PageTimer.php
 
@@ -7072,12 +6832,6 @@ parameters:
 			path: app/Utils/RepositoryUtils.php
 
 		-
-			message: '#^Method App\\Utils\\RepositoryUtils\:\:generate_Buganizer_new_issue_link\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
 			message: '#^Method App\\Utils\\RepositoryUtils\:\:generate_Buganizer_new_issue_link\(\) has parameter \$baseurl with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -7102,12 +6856,6 @@ parameters:
 			path: app/Utils/RepositoryUtils.php
 
 		-
-			message: '#^Method App\\Utils\\RepositoryUtils\:\:generate_GitHub_new_issue_link\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
 			message: '#^Method App\\Utils\\RepositoryUtils\:\:generate_GitHub_new_issue_link\(\) has parameter \$baseurl with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -7128,12 +6876,6 @@ parameters:
 		-
 			message: '#^Method App\\Utils\\RepositoryUtils\:\:generate_GitHub_new_issue_link\(\) has parameter \$users with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
-			message: '#^Method App\\Utils\\RepositoryUtils\:\:generate_JIRA_new_issue_link\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/Utils/RepositoryUtils.php
 
@@ -7252,12 +6994,6 @@ parameters:
 			path: app/Utils/RepositoryUtils.php
 
 		-
-			message: '#^Method App\\Utils\\RepositoryUtils\:\:get_github_api_url\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
 			message: '#^Method App\\Utils\\RepositoryUtils\:\:get_github_api_url\(\) has parameter \$github_url with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -7294,12 +7030,6 @@ parameters:
 			path: app/Utils/RepositoryUtils.php
 
 		-
-			message: '#^Method App\\Utils\\RepositoryUtils\:\:get_github_revision_url\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
 			message: '#^Method App\\Utils\\RepositoryUtils\:\:get_github_revision_url\(\) has parameter \$priorrevision with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -7314,12 +7044,6 @@ parameters:
 		-
 			message: '#^Method App\\Utils\\RepositoryUtils\:\:get_github_revision_url\(\) has parameter \$revision with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
-			message: '#^Method App\\Utils\\RepositoryUtils\:\:get_gitlab_diff_url\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/Utils/RepositoryUtils.php
 
@@ -7344,12 +7068,6 @@ parameters:
 		-
 			message: '#^Method App\\Utils\\RepositoryUtils\:\:get_gitlab_diff_url\(\) has parameter \$revision with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
-			message: '#^Method App\\Utils\\RepositoryUtils\:\:get_gitlab_revision_url\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/Utils/RepositoryUtils.php
 
@@ -7420,12 +7138,6 @@ parameters:
 			path: app/Utils/RepositoryUtils.php
 
 		-
-			message: '#^Method App\\Utils\\RepositoryUtils\:\:github_get_source_dir\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
 			message: '#^Method App\\Utils\\RepositoryUtils\:\:github_get_source_dir\(\) has parameter \$file_path with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -7434,12 +7146,6 @@ parameters:
 		-
 			message: '#^Method App\\Utils\\RepositoryUtils\:\:github_get_source_dir\(\) has parameter \$projecturl with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
-			message: '#^Method App\\Utils\\RepositoryUtils\:\:linkify_compiler_output\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/Utils/RepositoryUtils.php
 
@@ -7468,8 +7174,8 @@ parameters:
 			path: app/Utils/RepositoryUtils.php
 
 		-
-			message: '#^Method App\\Utils\\RepositoryUtils\:\:post_github_pull_request_comment\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Method App\\Utils\\RepositoryUtils\:\:linkify_compiler_output\(\) should return string but returns string\|null\.$#'
+			identifier: return.type
 			count: 1
 			path: app/Utils/RepositoryUtils.php
 
@@ -7488,12 +7194,6 @@ parameters:
 		-
 			message: '#^Method App\\Utils\\RepositoryUtils\:\:post_github_pull_request_comment\(\) has parameter \$pull_request with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
-			message: '#^Method App\\Utils\\RepositoryUtils\:\:post_pull_request_comment\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/Utils/RepositoryUtils.php
 
@@ -7756,12 +7456,6 @@ parameters:
 			path: app/Utils/SubmissionUtils.php
 
 		-
-			message: '#^Method App\\Utils\\SubmissionUtils\:\:compute_error_difference\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Utils/SubmissionUtils.php
-
-		-
 			message: '#^Method App\\Utils\\SubmissionUtils\:\:compute_error_difference\(\) has parameter \$buildid with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -7776,12 +7470,6 @@ parameters:
 		-
 			message: '#^Method App\\Utils\\SubmissionUtils\:\:compute_error_difference\(\) has parameter \$warning with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/Utils/SubmissionUtils.php
-
-		-
-			message: '#^Method App\\Utils\\SubmissionUtils\:\:extract_date_from_buildstamp\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/Utils/SubmissionUtils.php
 
@@ -8009,12 +7697,6 @@ parameters:
 			identifier: argument.type
 			count: 2
 			path: app/Utils/TestDiffUtil.php
-
-		-
-			message: '#^Method App\\Utils\\TestingDay\:\:get\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Utils/TestingDay.php
 
 		-
 			message: '#^Method App\\Utils\\TestingDay\:\:get\(\) has parameter \$date with no type specified\.$#'
@@ -8393,12 +8075,6 @@ parameters:
 			identifier: missingType.property
 			count: 1
 			path: app/cdash/app/Controller/Api/BuildApi.php
-
-		-
-			message: '#^Method CDash\\Controller\\Api\\BuildTestApi\:\:generateTestHistoryQuery\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Controller/Api/BuildTestApi.php
 
 		-
 			message: '#^Property CDash\\Controller\\Api\\BuildTestApi\:\:\$buildtest has no type specified\.$#'
@@ -8790,7 +8466,7 @@ parameters:
 		-
 			message: '#^Access to an undefined property CDash\\Controller\\Api\\QueryTests\:\:\$filterOnTestOutput\.$#'
 			identifier: property.notFound
-			count: 4
+			count: 5
 			path: app/cdash/app/Controller/Api/QueryTests.php
 
 		-
@@ -8802,7 +8478,7 @@ parameters:
 		-
 			message: '#^Access to an undefined property CDash\\Controller\\Api\\QueryTests\:\:\$numExtraMeasurements\.$#'
 			identifier: property.notFound
-			count: 3
+			count: 4
 			path: app/cdash/app/Controller/Api/QueryTests.php
 
 		-
@@ -8866,26 +8542,8 @@ parameters:
 			path: app/cdash/app/Controller/Api/QueryTests.php
 
 		-
-			message: '#^Method CDash\\Controller\\Api\\QueryTests\:\:addExtraMeasurements\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Controller/Api/QueryTests.php
-
-		-
-			message: '#^Method CDash\\Controller\\Api\\QueryTests\:\:applySafeDelimiter\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Controller/Api/QueryTests.php
-
-		-
 			message: '#^Method CDash\\Controller\\Api\\QueryTests\:\:applySafeDelimiter\(\) has parameter \$pattern with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Controller/Api/QueryTests.php
-
-		-
-			message: '#^Method CDash\\Controller\\Api\\QueryTests\:\:checkForSpecialFilters\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/app/Controller/Api/QueryTests.php
 
@@ -8896,14 +8554,8 @@ parameters:
 			path: app/cdash/app/Controller/Api/QueryTests.php
 
 		-
-			message: '#^Method CDash\\Controller\\Api\\QueryTests\:\:getResponse\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Controller/Api/QueryTests.php
-
-		-
-			message: '#^Method CDash\\Controller\\Api\\QueryTests\:\:rowSurvivesTestOutputFilter\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Method CDash\\Controller\\Api\\QueryTests\:\:getResponse\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
 			count: 1
 			path: app/cdash/app/Controller/Api/QueryTests.php
 
@@ -9178,14 +8830,14 @@ parameters:
 			path: app/cdash/app/Controller/Api/TestDetails.php
 
 		-
-			message: '#^Method CDash\\Controller\\Api\\TestDetails\:\:utf8_for_xml\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Method CDash\\Controller\\Api\\TestDetails\:\:utf8_for_xml\(\) has parameter \$string with no type specified\.$#'
+			identifier: missingType.parameter
 			count: 1
 			path: app/cdash/app/Controller/Api/TestDetails.php
 
 		-
-			message: '#^Method CDash\\Controller\\Api\\TestDetails\:\:utf8_for_xml\(\) has parameter \$string with no type specified\.$#'
-			identifier: missingType.parameter
+			message: '#^Method CDash\\Controller\\Api\\TestDetails\:\:utf8_for_xml\(\) should return string but returns \(list\<string\>\|string\|null\)\.$#'
+			identifier: return.type
 			count: 1
 			path: app/cdash/app/Controller/Api/TestDetails.php
 
@@ -9226,8 +8878,8 @@ parameters:
 			path: app/cdash/app/Controller/Api/TestGraph.php
 
 		-
-			message: '#^Method CDash\\Controller\\Api\\TestGraph\:\:getResponse\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Method CDash\\Controller\\Api\\TestGraph\:\:getResponse\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
 			count: 1
 			path: app/cdash/app/Controller/Api/TestGraph.php
 
@@ -9274,8 +8926,8 @@ parameters:
 			path: app/cdash/app/Controller/Api/TestOverview.php
 
 		-
-			message: '#^Method CDash\\Controller\\Api\\TestOverview\:\:getResponse\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Method CDash\\Controller\\Api\\TestOverview\:\:getResponse\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
 			count: 1
 			path: app/cdash/app/Controller/Api/TestOverview.php
 
@@ -9379,25 +9031,13 @@ parameters:
 			path: app/cdash/app/Controller/Api/Timeline.php
 
 		-
-			message: '#^Method CDash\\Controller\\Api\\Timeline\:\:chartForTestOverview\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Controller/Api/Timeline.php
-
-		-
-			message: '#^Method CDash\\Controller\\Api\\Timeline\:\:generateColorMap\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Method CDash\\Controller\\Api\\Timeline\:\:chartForTestOverview\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
 			count: 1
 			path: app/cdash/app/Controller/Api/Timeline.php
 
 		-
 			message: '#^Method CDash\\Controller\\Api\\Timeline\:\:getResponse\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Controller/Api/Timeline.php
-
-		-
-			message: '#^Method CDash\\Controller\\Api\\Timeline\:\:getTimelineChartData\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: app/cdash/app/Controller/Api/Timeline.php
@@ -9409,15 +9049,15 @@ parameters:
 			path: app/cdash/app/Controller/Api/Timeline.php
 
 		-
-			message: '#^Method CDash\\Controller\\Api\\Timeline\:\:getTimelineChartData\(\) throws checked exception DateMalformedStringException but it''s missing from the PHPDoc @throws tag\.$#'
-			identifier: missingType.checkedException
-			count: 2
+			message: '#^Method CDash\\Controller\\Api\\Timeline\:\:getTimelineChartData\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
 			path: app/cdash/app/Controller/Api/Timeline.php
 
 		-
-			message: '#^Method CDash\\Controller\\Api\\Timeline\:\:initializeDate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
+			message: '#^Method CDash\\Controller\\Api\\Timeline\:\:getTimelineChartData\(\) throws checked exception DateMalformedStringException but it''s missing from the PHPDoc @throws tag\.$#'
+			identifier: missingType.checkedException
+			count: 2
 			path: app/cdash/app/Controller/Api/Timeline.php
 
 		-
@@ -9556,12 +9196,6 @@ parameters:
 			path: app/cdash/app/Controller/Api/ViewTest.php
 
 		-
-			message: '#^Method CDash\\Controller\\Api\\ViewTest\:\:exportAsCsv\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
 			message: '#^Method CDash\\Controller\\Api\\ViewTest\:\:exportAsCsv\(\) has parameter \$etest with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -9592,13 +9226,13 @@ parameters:
 			path: app/cdash/app/Controller/Api/ViewTest.php
 
 		-
-			message: '#^Method CDash\\Controller\\Api\\ViewTest\:\:getResponse\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Method CDash\\Controller\\Api\\ViewTest\:\:exportAsCsv\(\) should return string but returns string\|false\.$#'
+			identifier: return.type
 			count: 1
 			path: app/cdash/app/Controller/Api/ViewTest.php
 
 		-
-			message: '#^Method CDash\\Controller\\Api\\ViewTest\:\:getTestHistory\(\) has no return type specified\.$#'
+			message: '#^Method CDash\\Controller\\Api\\ViewTest\:\:getResponse\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: app/cdash/app/Controller/Api/ViewTest.php
@@ -9616,8 +9250,8 @@ parameters:
 			path: app/cdash/app/Controller/Api/ViewTest.php
 
 		-
-			message: '#^Method CDash\\Controller\\Api\\ViewTest\:\:getTestSummary\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Method CDash\\Controller\\Api\\ViewTest\:\:getTestHistory\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
 			count: 1
 			path: app/cdash/app/Controller/Api/ViewTest.php
 
@@ -9652,8 +9286,8 @@ parameters:
 			path: app/cdash/app/Controller/Api/ViewTest.php
 
 		-
-			message: '#^Method CDash\\Controller\\Api\\ViewTest\:\:loadTestDetails\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Method CDash\\Controller\\Api\\ViewTest\:\:getTestSummary\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
 			count: 1
 			path: app/cdash/app/Controller/Api/ViewTest.php
 
@@ -10315,8 +9949,8 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: '#^Method CDash\\Model\\Build\:\:GetLabelCollection\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Method CDash\\Model\\Build\:\:GetLabelCollection\(\) return type with generic class Illuminate\\Support\\Collection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -10627,8 +10261,8 @@ parameters:
 			path: app/cdash/app/Model/BuildConfigure.php
 
 		-
-			message: '#^Method CDash\\Model\\BuildConfigure\:\:GetLabelCollection\(\) has invalid return type CDash\\Model\\Collection\.$#'
-			identifier: class.notFound
+			message: '#^Method CDash\\Model\\BuildConfigure\:\:GetLabelCollection\(\) return type with generic class Illuminate\\Support\\Collection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
 			count: 1
 			path: app/cdash/app/Model/BuildConfigure.php
 
@@ -10963,12 +10597,6 @@ parameters:
 			path: app/cdash/app/Model/BuildErrorFilter.php
 
 		-
-			message: '#^Method CDash\\Model\\BuildErrorFilter\:\:AddOrUpdateFilters\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Model/BuildErrorFilter.php
-
-		-
 			message: '#^Method CDash\\Model\\BuildErrorFilter\:\:AddOrUpdateFilters\(\) has parameter \$errors with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -10981,32 +10609,8 @@ parameters:
 			path: app/cdash/app/Model/BuildErrorFilter.php
 
 		-
-			message: '#^Method CDash\\Model\\BuildErrorFilter\:\:Exists\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Model/BuildErrorFilter.php
-
-		-
-			message: '#^Method CDash\\Model\\BuildErrorFilter\:\:Fill\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Model/BuildErrorFilter.php
-
-		-
-			message: '#^Method CDash\\Model\\BuildErrorFilter\:\:FilterError\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Model/BuildErrorFilter.php
-
-		-
 			message: '#^Method CDash\\Model\\BuildErrorFilter\:\:FilterError\(\) has parameter \$error with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Model/BuildErrorFilter.php
-
-		-
-			message: '#^Method CDash\\Model\\BuildErrorFilter\:\:FilterText\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/app/Model/BuildErrorFilter.php
 
@@ -11019,12 +10623,6 @@ parameters:
 		-
 			message: '#^Method CDash\\Model\\BuildErrorFilter\:\:FilterText\(\) has parameter \$subject with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Model/BuildErrorFilter.php
-
-		-
-			message: '#^Method CDash\\Model\\BuildErrorFilter\:\:FilterWarning\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/app/Model/BuildErrorFilter.php
 
@@ -11047,20 +10645,8 @@ parameters:
 			path: app/cdash/app/Model/BuildErrorFilter.php
 
 		-
-			message: '#^Method CDash\\Model\\BuildErrorFilter\:\:SetErrorsFilter\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Model/BuildErrorFilter.php
-
-		-
 			message: '#^Method CDash\\Model\\BuildErrorFilter\:\:SetErrorsFilter\(\) has parameter \$filter with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Model/BuildErrorFilter.php
-
-		-
-			message: '#^Method CDash\\Model\\BuildErrorFilter\:\:SetWarningsFilter\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/app/Model/BuildErrorFilter.php
 
@@ -11398,12 +10984,6 @@ parameters:
 			path: app/cdash/app/Model/BuildGroupRule.php
 
 		-
-			message: '#^Method CDash\\Model\\BuildGroupRule\:\:Delete\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Model/BuildGroupRule.php
-
-		-
 			message: '#^Method CDash\\Model\\BuildGroupRule\:\:Delete\(\) has parameter \$soft with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -11422,12 +11002,6 @@ parameters:
 			path: app/cdash/app/Model/BuildGroupRule.php
 
 		-
-			message: '#^Method CDash\\Model\\BuildGroupRule\:\:Exists\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Model/BuildGroupRule.php
-
-		-
 			message: '#^Method CDash\\Model\\BuildGroupRule\:\:FillFromRow\(\) has parameter \$projectid with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -11436,36 +11010,6 @@ parameters:
 		-
 			message: '#^Method CDash\\Model\\BuildGroupRule\:\:FillFromRow\(\) has parameter \$row with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Model/BuildGroupRule.php
-
-		-
-			message: '#^Method CDash\\Model\\BuildGroupRule\:\:GetExpected\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Model/BuildGroupRule.php
-
-		-
-			message: '#^Method CDash\\Model\\BuildGroupRule\:\:HardDelete\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Model/BuildGroupRule.php
-
-		-
-			message: '#^Method CDash\\Model\\BuildGroupRule\:\:Save\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Model/BuildGroupRule.php
-
-		-
-			message: '#^Method CDash\\Model\\BuildGroupRule\:\:SetExpected\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Model/BuildGroupRule.php
-
-		-
-			message: '#^Method CDash\\Model\\BuildGroupRule\:\:SoftDelete\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/app/Model/BuildGroupRule.php
 
@@ -11563,32 +11107,8 @@ parameters:
 			path: app/cdash/app/Model/BuildRelationship.php
 
 		-
-			message: '#^Method CDash\\Model\\BuildRelationship\:\:Delete\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Model/BuildRelationship.php
-
-		-
 			message: '#^Method CDash\\Model\\BuildRelationship\:\:Delete\(\) has parameter \$error_msg with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Model/BuildRelationship.php
-
-		-
-			message: '#^Method CDash\\Model\\BuildRelationship\:\:Exists\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Model/BuildRelationship.php
-
-		-
-			message: '#^Method CDash\\Model\\BuildRelationship\:\:Fill\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Model/BuildRelationship.php
-
-		-
-			message: '#^Method CDash\\Model\\BuildRelationship\:\:GetRelationships\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/app/Model/BuildRelationship.php
 
@@ -11599,8 +11119,8 @@ parameters:
 			path: app/cdash/app/Model/BuildRelationship.php
 
 		-
-			message: '#^Method CDash\\Model\\BuildRelationship\:\:Save\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Method CDash\\Model\\BuildRelationship\:\:GetRelationships\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
 			count: 1
 			path: app/cdash/app/Model/BuildRelationship.php
 
@@ -11611,8 +11131,8 @@ parameters:
 			path: app/cdash/app/Model/BuildRelationship.php
 
 		-
-			message: '#^Method CDash\\Model\\BuildRelationship\:\:marshal\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Method CDash\\Model\\BuildRelationship\:\:marshal\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
 			count: 1
 			path: app/cdash/app/Model/BuildRelationship.php
 
@@ -11899,12 +11419,6 @@ parameters:
 			path: app/cdash/app/Model/BuildUpdateFile.php
 
 		-
-			message: '#^Method CDash\\Model\\Coverage\:\:AddLabel\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Model/Coverage.php
-
-		-
 			message: '#^Method CDash\\Model\\Coverage\:\:AddLabel\(\) has parameter \$label with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -12001,12 +11515,6 @@ parameters:
 			path: app/cdash/app/Model/CoverageFile.php
 
 		-
-			message: '#^Method CDash\\Model\\CoverageFile\:\:Load\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Model/CoverageFile.php
-
-		-
 			message: '#^Method CDash\\Model\\CoverageFile\:\:Update\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -12088,12 +11596,6 @@ parameters:
 			path: app/cdash/app/Model/CoverageFileLog.php
 
 		-
-			message: '#^Method CDash\\Model\\CoverageFileLog\:\:AddBranch\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Model/CoverageFileLog.php
-
-		-
 			message: '#^Method CDash\\Model\\CoverageFileLog\:\:AddBranch\(\) has parameter \$covered with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -12112,12 +11614,6 @@ parameters:
 			path: app/cdash/app/Model/CoverageFileLog.php
 
 		-
-			message: '#^Method CDash\\Model\\CoverageFileLog\:\:AddLine\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Model/CoverageFileLog.php
-
-		-
 			message: '#^Method CDash\\Model\\CoverageFileLog\:\:AddLine\(\) has parameter \$code with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -12130,14 +11626,8 @@ parameters:
 			path: app/cdash/app/Model/CoverageFileLog.php
 
 		-
-			message: '#^Method CDash\\Model\\CoverageFileLog\:\:GetStats\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Model/CoverageFileLog.php
-
-		-
-			message: '#^Method CDash\\Model\\CoverageFileLog\:\:Insert\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Method CDash\\Model\\CoverageFileLog\:\:GetStats\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
 			count: 1
 			path: app/cdash/app/Model/CoverageFileLog.php
 
@@ -12148,20 +11638,8 @@ parameters:
 			path: app/cdash/app/Model/CoverageFileLog.php
 
 		-
-			message: '#^Method CDash\\Model\\CoverageFileLog\:\:Load\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Model/CoverageFileLog.php
-
-		-
 			message: '#^Method CDash\\Model\\CoverageFileLog\:\:Load\(\) has parameter \$for_update with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Model/CoverageFileLog.php
-
-		-
-			message: '#^Method CDash\\Model\\CoverageFileLog\:\:UpdateAggregate\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/app/Model/CoverageFileLog.php
 
@@ -12634,20 +12112,8 @@ parameters:
 			path: app/cdash/app/Model/DynamicAnalysisSummary.php
 
 		-
-			message: '#^Method CDash\\Model\\DynamicAnalysisSummary\:\:AddDefects\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Model/DynamicAnalysisSummary.php
-
-		-
 			message: '#^Method CDash\\Model\\DynamicAnalysisSummary\:\:AddDefects\(\) has parameter \$defects with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Model/DynamicAnalysisSummary.php
-
-		-
-			message: '#^Method CDash\\Model\\DynamicAnalysisSummary\:\:Exists\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/app/Model/DynamicAnalysisSummary.php
 
@@ -12889,12 +12355,6 @@ parameters:
 			path: app/cdash/app/Model/PendingSubmissions.php
 
 		-
-			message: '#^Method CDash\\Model\\PendingSubmissions\:\:AtomicUpdate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Model/PendingSubmissions.php
-
-		-
 			message: '#^Method CDash\\Model\\PendingSubmissions\:\:AtomicUpdate\(\) has parameter \$caller with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -12907,31 +12367,7 @@ parameters:
 			path: app/cdash/app/Model/PendingSubmissions.php
 
 		-
-			message: '#^Method CDash\\Model\\PendingSubmissions\:\:Decrement\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Model/PendingSubmissions.php
-
-		-
-			message: '#^Method CDash\\Model\\PendingSubmissions\:\:Delete\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Model/PendingSubmissions.php
-
-		-
-			message: '#^Method CDash\\Model\\PendingSubmissions\:\:Exists\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Model/PendingSubmissions.php
-
-		-
 			message: '#^Method CDash\\Model\\PendingSubmissions\:\:Fill\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Model/PendingSubmissions.php
-
-		-
-			message: '#^Method CDash\\Model\\PendingSubmissions\:\:GetModelForBuildId\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: app/cdash/app/Model/PendingSubmissions.php
@@ -12955,44 +12391,14 @@ parameters:
 			path: app/cdash/app/Model/PendingSubmissions.php
 
 		-
-			message: '#^Method CDash\\Model\\PendingSubmissions\:\:Increment\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Model/PendingSubmissions.php
-
-		-
-			message: '#^Method CDash\\Model\\PendingSubmissions\:\:IncrementForBuildId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Model/PendingSubmissions.php
-
-		-
 			message: '#^Method CDash\\Model\\PendingSubmissions\:\:IncrementForBuildId\(\) has parameter \$buildid with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: app/cdash/app/Model/PendingSubmissions.php
 
 		-
-			message: '#^Method CDash\\Model\\PendingSubmissions\:\:MarkForRecheck\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Model/PendingSubmissions.php
-
-		-
-			message: '#^Method CDash\\Model\\PendingSubmissions\:\:RecheckForBuildId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Model/PendingSubmissions.php
-
-		-
 			message: '#^Method CDash\\Model\\PendingSubmissions\:\:RecheckForBuildId\(\) has parameter \$buildid with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Model/PendingSubmissions.php
-
-		-
-			message: '#^Method CDash\\Model\\PendingSubmissions\:\:Save\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/app/Model/PendingSubmissions.php
 
@@ -13188,12 +12594,6 @@ parameters:
 		-
 			message: '#^Method CDash\\Model\\Project\:\:Save\(\) throws checked exception Illuminate\\Database\\Eloquent\\MassAssignmentException but it''s missing from the PHPDoc @throws tag\.$#'
 			identifier: missingType.checkedException
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: '#^Method CDash\\Model\\Project\:\:SetSubscriberCollection\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/app/Model/Project.php
 
@@ -13543,26 +12943,8 @@ parameters:
 			path: app/cdash/app/Model/Repository.php
 
 		-
-			message: '#^Method CDash\\Model\\Repository\:\:compareCommits\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Model/Repository.php
-
-		-
-			message: '#^Method CDash\\Model\\Repository\:\:createOrUpdateCheck\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Model/Repository.php
-
-		-
 			message: '#^Method CDash\\Model\\Repository\:\:createOrUpdateCheck\(\) has parameter \$sha with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Model/Repository.php
-
-		-
-			message: '#^Method CDash\\Model\\Repository\:\:getRepositoryService\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/app/Model/Repository.php
 
@@ -13573,26 +12955,20 @@ parameters:
 			path: app/cdash/app/Model/Repository.php
 
 		-
-			message: '#^Method CDash\\Model\\Repository\:\:setStatus\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Model/Repository.php
-
-		-
 			message: '#^Method CDash\\Model\\Repository\:\:setStatus\(\) has parameter \$complete with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: app/cdash/app/Model/Repository.php
 
 		-
-			message: '#^Parameter \#1 \$stmt of method CDash\\Database\:\:execute\(\) expects PDOStatement, PDOStatement\|false given\.$#'
-			identifier: argument.type
+			message: '#^Only booleans are allowed in an if condition, CDash\\Service\\RepositoryService\|null given\.$#'
+			identifier: if.condNotBoolean
 			count: 1
 			path: app/cdash/app/Model/Repository.php
 
 		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
+			message: '#^Parameter \#1 \$stmt of method CDash\\Database\:\:execute\(\) expects PDOStatement, PDOStatement\|false given\.$#'
+			identifier: argument.type
 			count: 1
 			path: app/cdash/app/Model/Repository.php
 
@@ -13813,8 +13189,8 @@ parameters:
 			path: app/cdash/app/Model/Subscriber.php
 
 		-
-			message: '#^Method CDash\\Model\\Subscriber\:\:getLabels\(\) has invalid return type CDash\\Model\\Collection\.$#'
-			identifier: class.notFound
+			message: '#^Method CDash\\Model\\Subscriber\:\:getLabels\(\) return type with generic class Illuminate\\Support\\Collection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
 			count: 1
 			path: app/cdash/app/Model/Subscriber.php
 
@@ -13833,12 +13209,6 @@ parameters:
 		-
 			message: '#^Method CDash\\Model\\Subscriber\:\:setLabels\(\) has parameter \$labels with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/app/Model/Subscriber.php
-
-		-
-			message: '#^Method CDash\\Model\\Subscriber\:\:setUserId\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/app/Model/Subscriber.php
 
@@ -13891,14 +13261,8 @@ parameters:
 			path: app/cdash/app/Model/Subscriber.php
 
 		-
-			message: '#^Return type \(CDash\\Model\\Collection\) of method CDash\\Model\\Subscriber\:\:getLabels\(\) should be compatible with return type \(array\<string\>\) of method CDash\\Model\\SubscriberInterface\:\:getLabels\(\)$#'
-			identifier: method.childReturnType
-			count: 1
-			path: app/cdash/app/Model/Subscriber.php
-
-		-
-			message: '#^Method CDash\\Model\\SubscriberInterface\:\:setAddress\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Method CDash\\Model\\SubscriberInterface\:\:getLabels\(\) return type with generic class Illuminate\\Support\\Collection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
 			count: 1
 			path: app/cdash/app/Model/SubscriberInterface.php
 
@@ -13909,8 +13273,8 @@ parameters:
 			path: app/cdash/app/Model/SubscriberInterface.php
 
 		-
-			message: '#^Method CDash\\Model\\User\:\:GetLabelCollection\(\) has invalid return type CDash\\Model\\Collection\.$#'
-			identifier: class.notFound
+			message: '#^Method CDash\\Model\\User\:\:GetLabelCollection\(\) return type with generic class Illuminate\\Support\\Collection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
 			count: 1
 			path: app/cdash/app/Model/User.php
 
@@ -13945,8 +13309,8 @@ parameters:
 			path: app/cdash/app/Model/User.php
 
 		-
-			message: '#^Property CDash\\Model\\User\:\:\$LabelCollection has no type specified\.$#'
-			identifier: missingType.property
+			message: '#^Property CDash\\Model\\User\:\:\$LabelCollection with generic class Illuminate\\Support\\Collection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
 			count: 1
 			path: app/cdash/app/Model/User.php
 
@@ -13972,12 +13336,6 @@ parameters:
 			message: '#^Cannot access property \$Revision on CDash\\Model\\BuildUpdate\|null\.$#'
 			identifier: property.nonObject
 			count: 2
-			path: app/cdash/app/Service/RepositoryService.php
-
-		-
-			message: '#^Method CDash\\Service\\RepositoryService\:\:setStatus\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
 			path: app/cdash/app/Service/RepositoryService.php
 
 		-
@@ -14011,20 +13369,8 @@ parameters:
 			path: app/cdash/app/Service/RepositoryService.php
 
 		-
-			message: '#^Method CDash\\Service\\RepositoryService\:\:setStatusOnComplete\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Service/RepositoryService.php
-
-		-
 			message: '#^Method CDash\\Service\\RepositoryService\:\:setStatusOnComplete\(\) has parameter \$context with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Service/RepositoryService.php
-
-		-
-			message: '#^Method CDash\\Service\\RepositoryService\:\:setStatusOnStart\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/app/Service/RepositoryService.php
 
@@ -14161,12 +13507,6 @@ parameters:
 			path: app/cdash/include/CDash/ServiceContainer.php
 
 		-
-			message: '#^Method CDash\\ServiceContainer\:\:setContainer\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/include/CDash/ServiceContainer.php
-
-		-
 			message: '#^Method CDash\\ServiceContainer\:\:singleton\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -14175,12 +13515,6 @@ parameters:
 		-
 			message: '#^Method CDash\\ServiceContainer\:\:singleton\(\) has parameter \$class_name with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/include/CDash/ServiceContainer.php
-
-		-
-			message: '#^PHPDoc tag @var with type CDash\\ServiceContainer is not subtype of type static\(CDash\\ServiceContainer\)\.$#'
-			identifier: varTag.type
 			count: 1
 			path: app/cdash/include/CDash/ServiceContainer.php
 
@@ -14225,12 +13559,6 @@ parameters:
 			identifier: new.static
 			count: 1
 			path: app/cdash/include/CDash/Singleton.php
-
-		-
-			message: '#^Method CDash\\Collection\\BuildCollection\:\:add\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/include/Collection/BuildCollection.php
 
 		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
@@ -14299,22 +13627,10 @@ parameters:
 			path: app/cdash/include/Collection/Collection.php
 
 		-
-			message: '#^Method CDash\\Collection\\DynamicAnalysisCollection\:\:add\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Call to an undefined method CDash\\Model\\SubscriberInterface\:\:getUserId\(\)\.$#'
+			identifier: method.notFound
 			count: 1
-			path: app/cdash/include/Collection/DynamicAnalysisCollection.php
-
-		-
-			message: '#^Method CDash\\Collection\\SubscriberCollection\:\:add\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/include/Collection/SubscriberCollection.php
-
-		-
-			message: '#^Method CDash\\Collection\\SubscriptionBuilderCollection\:\:add\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/include/Collection/SubscriptionBuilderCollection.php
+			path: app/cdash/include/Messaging/Notification/Email/EmailBuilder.php
 
 		-
 			message: '#^Cannot access property \$Id on mixed\.$#'
@@ -14413,12 +13729,6 @@ parameters:
 			path: app/cdash/include/Messaging/Preferences/NotificationPreferences.php
 
 		-
-			message: '#^Method CDash\\Messaging\\Preferences\\NotificationPreferences\:\:has\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/include/Messaging/Preferences/NotificationPreferences.php
-
-		-
 			message: '#^Method CDash\\Messaging\\Preferences\\NotificationPreferences\:\:has\(\) has parameter \$name with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -14437,12 +13747,6 @@ parameters:
 			path: app/cdash/include/Messaging/Preferences/NotificationPreferences.php
 
 		-
-			message: '#^Method CDash\\Messaging\\Preferences\\NotificationPreferences\:\:set\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/include/Messaging/Preferences/NotificationPreferences.php
-
-		-
 			message: '#^Method CDash\\Messaging\\Preferences\\NotificationPreferences\:\:set\(\) has parameter \$name with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -14451,12 +13755,6 @@ parameters:
 		-
 			message: '#^Method CDash\\Messaging\\Preferences\\NotificationPreferences\:\:set\(\) has parameter \$val with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/include/Messaging/Preferences/NotificationPreferences.php
-
-		-
-			message: '#^Method CDash\\Messaging\\Preferences\\NotificationPreferences\:\:setPreferencesFromEmailTypeProperty\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/include/Messaging/Preferences/NotificationPreferences.php
 
@@ -14545,12 +13843,6 @@ parameters:
 			path: app/cdash/include/Messaging/Subscription/CommitAuthorSubscriptionBuilder.php
 
 		-
-			message: '#^Method CDash\\Messaging\\Subscription\\CommitAuthorSubscriptionBuilder\:\:getSubscriptionFactory\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/include/Messaging/Subscription/CommitAuthorSubscriptionBuilder.php
-
-		-
 			message: '#^Only booleans are allowed in a negated boolean, CDash\\Messaging\\Subscription\\SubscriptionFactory given\.$#'
 			identifier: booleanNot.exprNotBoolean
 			count: 1
@@ -14617,32 +13909,20 @@ parameters:
 			path: app/cdash/include/Messaging/Subscription/Subscription.php
 
 		-
-			message: '#^Method CDash\\Messaging\\Subscription\\Subscription\:\:getTopicDescriptions\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/include/Messaging/Subscription/Subscription.php
-
-		-
 			message: '#^Method CDash\\Messaging\\Subscription\\Subscription\:\:getTopicDescriptions\(\) has parameter \$case with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: app/cdash/include/Messaging/Subscription/Subscription.php
 
 		-
-			message: '#^Method CDash\\Messaging\\Subscription\\Subscription\:\:getTopicTemplates\(\) return type has no value type specified in iterable type array\.$#'
+			message: '#^Method CDash\\Messaging\\Subscription\\Subscription\:\:getTopicDescriptions\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: app/cdash/include/Messaging/Subscription/Subscription.php
 
 		-
-			message: '#^Method CDash\\Messaging\\Subscription\\Subscription\:\:setBuildGroup\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/include/Messaging/Subscription/Subscription.php
-
-		-
-			message: '#^Method CDash\\Messaging\\Subscription\\Subscription\:\:setMaxDisplayItems\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Method CDash\\Messaging\\Subscription\\Subscription\:\:getTopicTemplates\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
 			count: 1
 			path: app/cdash/include/Messaging/Subscription/Subscription.php
 
@@ -14671,12 +13951,6 @@ parameters:
 			path: app/cdash/include/Messaging/Subscription/Subscription.php
 
 		-
-			message: '#^Return type \(CDash\\Model\\SubscriberInterface\) of method CDash\\Messaging\\Subscription\\Subscription\:\:getSubscriber\(\) should be covariant with return type \(CDash\\Model\\Subscriber\) of method CDash\\Messaging\\Subscription\\SubscriptionInterface\:\:getSubscriber\(\)$#'
-			identifier: method.childReturnType
-			count: 1
-			path: app/cdash/include/Messaging/Subscription/Subscription.php
-
-		-
 			message: '#^Return type \(array\<string\>\) of method CDash\\Messaging\\Subscription\\Subscription\:\:getBuildSummary\(\) should be compatible with return type \(string\) of method CDash\\Messaging\\Subscription\\SubscriptionInterface\:\:getBuildSummary\(\)$#'
 			identifier: method.childReturnType
 			count: 1
@@ -14689,22 +13963,10 @@ parameters:
 			path: app/cdash/include/Messaging/Subscription/Subscription.php
 
 		-
-			message: '#^Method CDash\\Messaging\\Subscription\\SubscriptionCollection\:\:add\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/include/Messaging/Subscription/SubscriptionCollection.php
-
-		-
 			message: '#^Only booleans are allowed in an if condition, string given\.$#'
 			identifier: if.condNotBoolean
 			count: 1
 			path: app/cdash/include/Messaging/Subscription/SubscriptionCollection.php
-
-		-
-			message: '#^Method CDash\\Messaging\\Subscription\\SubscriptionFactory\:\:create\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/include/Messaging/Subscription/SubscriptionFactory.php
 
 		-
 			message: '#^Method CDash\\Messaging\\Topic\\AuthoredTopic\:\:getTemplate\(\) return type has no value type specified in iterable type array\.$#'
@@ -14727,12 +13989,6 @@ parameters:
 		-
 			message: '#^Method CDash\\Messaging\\Topic\\BuildErrorTopic\:\:getFixes\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/include/Messaging/Topic/BuildErrorTopic.php
-
-		-
-			message: '#^Method CDash\\Messaging\\Topic\\BuildErrorTopic\:\:getFixes\(\) should return array but return statement is missing\.$#'
-			identifier: return.missing
 			count: 1
 			path: app/cdash/include/Messaging/Topic/BuildErrorTopic.php
 
@@ -14809,21 +14065,15 @@ parameters:
 			path: app/cdash/include/Messaging/Topic/BuildErrorTopic.php
 
 		-
-			message: '#^Call to an undefined method CDash\\Collection\\Collection\:\:add\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: app/cdash/include/Messaging/Topic/ConfigureTopic.php
-
-		-
 			message: '#^Call to an undefined method CDash\\Messaging\\Preferences\\NotificationPreferencesInterface\:\:get\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: app/cdash/include/Messaging/Topic/ConfigureTopic.php
 
 		-
-			message: '#^Iterating over an object of an unknown class CDash\\Model\\Collection\.$#'
-			identifier: class.notFound
-			count: 1
+			message: '#^Cannot access property \$Text on mixed\.$#'
+			identifier: property.nonObject
+			count: 2
 			path: app/cdash/include/Messaging/Topic/ConfigureTopic.php
 
 		-
@@ -14935,8 +14185,8 @@ parameters:
 			path: app/cdash/include/Messaging/Topic/FixedTopic.php
 
 		-
-			message: '#^Method CDash\\Messaging\\Topic\\FixedTopic\:\:getFixed\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Method CDash\\Messaging\\Topic\\FixedTopic\:\:getFixed\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
 			count: 1
 			path: app/cdash/include/Messaging/Topic/FixedTopic.php
 
@@ -14971,12 +14221,6 @@ parameters:
 			path: app/cdash/include/Messaging/Topic/GroupMembershipTopic.php
 
 		-
-			message: '#^Method CDash\\Messaging\\Topic\\GroupMembershipTopic\:\:setGroup\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/include/Messaging/Topic/GroupMembershipTopic.php
-
-		-
 			message: '#^Only booleans are allowed in an if condition, CDash\\Messaging\\Topic\\Topic given\.$#'
 			identifier: if.condNotBoolean
 			count: 1
@@ -15007,7 +14251,7 @@ parameters:
 			path: app/cdash/include/Messaging/Topic/LabeledTopic.php
 
 		-
-			message: '#^Cannot access property \$Text on string\.$#'
+			message: '#^Cannot access property \$Text on mixed\.$#'
 			identifier: property.nonObject
 			count: 1
 			path: app/cdash/include/Messaging/Topic/LabeledTopic.php
@@ -15226,8 +14470,8 @@ parameters:
 			path: app/cdash/include/Messaging/Topic/Topic.php
 
 		-
-			message: '#^Method CDash\\Messaging\\Topic\\Topic\:\:getLabels\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Method CDash\\Messaging\\Topic\\Topic\:\:getLabels\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
 			count: 1
 			path: app/cdash/include/Messaging/Topic/Topic.php
 
@@ -15286,28 +14530,10 @@ parameters:
 			path: app/cdash/include/Messaging/Topic/Topic.php
 
 		-
-			message: '#^Return type \(CDash\\Messaging\\Topic\\Topic\) of method CDash\\Messaging\\Topic\\Topic\:\:setSubscriber\(\) should be covariant with return type \(\$this\(CDash\\Messaging\\Topic\\TopicInterface\)\) of method CDash\\Messaging\\Topic\\TopicInterface\:\:setSubscriber\(\)$#'
-			identifier: method.childReturnType
-			count: 1
-			path: app/cdash/include/Messaging/Topic/Topic.php
-
-		-
 			message: '#^Call to an undefined method CDash\\Messaging\\Topic\\TopicInterface\:\:getTopicName\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: app/cdash/include/Messaging/Topic/TopicCollection.php
-
-		-
-			message: '#^Method CDash\\Messaging\\Topic\\TopicCollection\:\:add\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/include/Messaging/Topic/TopicCollection.php
-
-		-
-			message: '#^Method CDash\\Messaging\\Topic\\TopicDecorator\:\:decorate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/include/Messaging/Topic/TopicDecorator.php
 
 		-
 			message: '#^Parameter \#1 \$object_or_class of function is_a expects object, mixed given\.$#'
@@ -15406,20 +14632,8 @@ parameters:
 			path: app/cdash/include/Submission/CommitAuthorHandlerInterface.php
 
 		-
-			message: '#^Method CDash\\Test\\CDashTestCase\:\:createMockFromBuilder\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/include/Test/CDashTestCase.php
-
-		-
 			message: '#^Method CDash\\Test\\CDashTestCase\:\:createMockFromBuilder\(\) has parameter \$className with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/include/Test/CDashTestCase.php
-
-		-
-			message: '#^Method CDash\\Test\\CDashTestCase\:\:setDatabaseMocked\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/include/Test/CDashTestCase.php
 
@@ -15462,12 +14676,6 @@ parameters:
 		-
 			message: '#^Access to an undefined property PHPUnit\\Framework\\MockObject\\MockObject\:\:\$SubProjectName\.$#'
 			identifier: property.notFound
-			count: 1
-			path: app/cdash/include/Test/CDashUseCaseTestCase.php
-
-		-
-			message: '#^Method CDash\\Test\\CDashUseCaseTestCase\:\:setUseCaseModelFactory\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/include/Test/CDashUseCaseTestCase.php
 
@@ -16213,8 +15421,8 @@ parameters:
 			path: app/cdash/include/api_common.php
 
 		-
-			message: '#^Cannot access property \$Id on mixed\.$#'
-			identifier: property.nonObject
+			message: '#^Call to function is_null\(\) with string will always evaluate to false\.$#'
+			identifier: function.impossibleType
 			count: 1
 			path: app/cdash/include/api_common.php
 
@@ -16255,12 +15463,6 @@ parameters:
 			path: app/cdash/include/api_common.php
 
 		-
-			message: '#^Function get_int_param\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/include/api_common.php
-
-		-
 			message: '#^Function get_int_param\(\) has parameter \$name with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -16279,13 +15481,13 @@ parameters:
 			path: app/cdash/include/api_common.php
 
 		-
-			message: '#^Function get_project_from_request\(\) should return CDash\\Model\\Project but returns mixed\.$#'
-			identifier: return.type
+			message: '#^Left side of && is always true\.$#'
+			identifier: booleanAnd.leftAlwaysTrue
 			count: 1
 			path: app/cdash/include/api_common.php
 
 		-
-			message: '#^Only booleans are allowed in &&, mixed given on the left side\.$#'
+			message: '#^Only booleans are allowed in &&, CDash\\Model\\Project given on the left side\.$#'
 			identifier: booleanAnd.leftNotBoolean
 			count: 1
 			path: app/cdash/include/api_common.php
@@ -16549,12 +15751,6 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
-			message: '#^Function get_dashboard_JSON\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
 			message: '#^Function get_dashboard_JSON\(\) has parameter \$date with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -16591,14 +15787,14 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
-			message: '#^Function get_geolocation\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Function get_geolocation\(\) has parameter \$ip with no type specified\.$#'
+			identifier: missingType.parameter
 			count: 1
 			path: app/cdash/include/common.php
 
 		-
-			message: '#^Function get_geolocation\(\) has parameter \$ip with no type specified\.$#'
-			identifier: missingType.parameter
+			message: '#^Function get_geolocation\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
 			count: 1
 			path: app/cdash/include/common.php
 
@@ -17146,12 +16342,6 @@ parameters:
 			path: app/cdash/include/filterdataFunctions.php
 
 		-
-			message: '#^Function build_survives_filters\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/include/filterdataFunctions.php
-
-		-
 			message: '#^Function build_survives_filters\(\) has parameter \$build_response with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -17182,20 +16372,8 @@ parameters:
 			path: app/cdash/include/filterdataFunctions.php
 
 		-
-			message: '#^Function filterdata_XML\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/include/filterdataFunctions.php
-
-		-
 			message: '#^Function filterdata_XML\(\) has parameter \$filterdata with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/include/filterdataFunctions.php
-
-		-
-			message: '#^Function generate_filter_sql\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/include/filterdataFunctions.php
 
@@ -17212,12 +16390,6 @@ parameters:
 			path: app/cdash/include/filterdataFunctions.php
 
 		-
-			message: '#^Function generate_filterdata_sql\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/include/filterdataFunctions.php
-
-		-
 			message: '#^Function generate_filterdata_sql\(\) has parameter \$filterdata with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -17226,12 +16398,6 @@ parameters:
 		-
 			message: '#^Function getFilterDefinitionXML invoked with 6 parameters, 5 required\.$#'
 			identifier: arguments.count
-			count: 1
-			path: app/cdash/include/filterdataFunctions.php
-
-		-
-			message: '#^Function getFilterDefinitionXML\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/include/filterdataFunctions.php
 
@@ -17266,25 +16432,19 @@ parameters:
 			path: app/cdash/include/filterdataFunctions.php
 
 		-
-			message: '#^Function get_filterdata_from_request\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/include/filterdataFunctions.php
-
-		-
 			message: '#^Function get_filterdata_from_request\(\) has parameter \$page_id with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: app/cdash/include/filterdataFunctions.php
 
 		-
-			message: '#^Function get_filterurl\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Function get_filterdata_from_request\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
 			count: 1
 			path: app/cdash/include/filterdataFunctions.php
 
 		-
-			message: '#^Function get_label_ids_from_filterdata\(\) has no return type specified\.$#'
+			message: '#^Function get_filterurl\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: app/cdash/include/filterdataFunctions.php
@@ -17296,20 +16456,14 @@ parameters:
 			path: app/cdash/include/filterdataFunctions.php
 
 		-
-			message: '#^Function get_othercombine\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Function get_label_ids_from_filterdata\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
 			count: 1
 			path: app/cdash/include/filterdataFunctions.php
 
 		-
 			message: '#^Function get_othercombine\(\) has parameter \$filtercombine with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/include/filterdataFunctions.php
-
-		-
-			message: '#^Function get_sql_compare_and_value\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/include/filterdataFunctions.php
 
@@ -17326,20 +16480,14 @@ parameters:
 			path: app/cdash/include/filterdataFunctions.php
 
 		-
-			message: '#^Function get_sql_date_value\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Function get_sql_compare_and_value\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
 			count: 1
 			path: app/cdash/include/filterdataFunctions.php
 
 		-
 			message: '#^Function get_sql_date_value\(\) has parameter \$value with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/include/filterdataFunctions.php
-
-		-
-			message: '#^Function parse_filter_from_request\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/include/filterdataFunctions.php
 
@@ -17368,6 +16516,12 @@ parameters:
 			path: app/cdash/include/filterdataFunctions.php
 
 		-
+			message: '#^Function parse_filter_from_request\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/cdash/include/filterdataFunctions.php
+
+		-
 			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
 			identifier: notEqual.notAllowed
 			count: 4
@@ -17380,20 +16534,8 @@ parameters:
 			path: app/cdash/include/filterdataFunctions.php
 
 		-
-			message: '#^Method CompareCoveragePhpFilters\:\:getDefaultFilter\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/include/filterdataFunctions.php
-
-		-
-			message: '#^Method CompareCoveragePhpFilters\:\:getFilterDefinitionsXML\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/include/filterdataFunctions.php
-
-		-
-			message: '#^Method CompareCoveragePhpFilters\:\:getSqlField\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Method CompareCoveragePhpFilters\:\:getDefaultFilter\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
 			count: 1
 			path: app/cdash/include/filterdataFunctions.php
 
@@ -17404,26 +16546,8 @@ parameters:
 			path: app/cdash/include/filterdataFunctions.php
 
 		-
-			message: '#^Method DefaultFilters\:\:getDefaultFilter\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/include/filterdataFunctions.php
-
-		-
-			message: '#^Method DefaultFilters\:\:getDefaultShowLimit\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/include/filterdataFunctions.php
-
-		-
-			message: '#^Method DefaultFilters\:\:getFilterDefinitionsXML\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/include/filterdataFunctions.php
-
-		-
-			message: '#^Method DefaultFilters\:\:getSqlField\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Method DefaultFilters\:\:getDefaultFilter\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
 			count: 1
 			path: app/cdash/include/filterdataFunctions.php
 
@@ -17434,26 +16558,14 @@ parameters:
 			path: app/cdash/include/filterdataFunctions.php
 
 		-
-			message: '#^Method IndexChildrenPhpFilters\:\:getDefaultFilter\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Method IndexChildrenPhpFilters\:\:getDefaultFilter\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
 			count: 1
 			path: app/cdash/include/filterdataFunctions.php
 
 		-
-			message: '#^Method IndexPhpFilters\:\:getDefaultFilter\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/include/filterdataFunctions.php
-
-		-
-			message: '#^Method IndexPhpFilters\:\:getFilterDefinitionsXML\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/include/filterdataFunctions.php
-
-		-
-			message: '#^Method IndexPhpFilters\:\:getSqlField\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Method IndexPhpFilters\:\:getDefaultFilter\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
 			count: 1
 			path: app/cdash/include/filterdataFunctions.php
 
@@ -17482,32 +16594,14 @@ parameters:
 			path: app/cdash/include/filterdataFunctions.php
 
 		-
-			message: '#^Method PageSpecificFilters\:\:getSqlField\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/include/filterdataFunctions.php
-
-		-
 			message: '#^Method PageSpecificFilters\:\:getSqlField\(\) has parameter \$field with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: app/cdash/include/filterdataFunctions.php
 
 		-
-			message: '#^Method QueryTestsPhpFilters\:\:getDefaultFilter\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/include/filterdataFunctions.php
-
-		-
-			message: '#^Method QueryTestsPhpFilters\:\:getFilterDefinitionsXML\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/include/filterdataFunctions.php
-
-		-
-			message: '#^Method QueryTestsPhpFilters\:\:getSqlField\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Method QueryTestsPhpFilters\:\:getDefaultFilter\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
 			count: 1
 			path: app/cdash/include/filterdataFunctions.php
 
@@ -17518,20 +16612,8 @@ parameters:
 			path: app/cdash/include/filterdataFunctions.php
 
 		-
-			message: '#^Method TestOverviewPhpFilters\:\:getDefaultFilter\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/include/filterdataFunctions.php
-
-		-
-			message: '#^Method TestOverviewPhpFilters\:\:getFilterDefinitionsXML\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/include/filterdataFunctions.php
-
-		-
-			message: '#^Method TestOverviewPhpFilters\:\:getSqlField\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Method TestOverviewPhpFilters\:\:getDefaultFilter\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
 			count: 1
 			path: app/cdash/include/filterdataFunctions.php
 
@@ -17542,26 +16624,8 @@ parameters:
 			path: app/cdash/include/filterdataFunctions.php
 
 		-
-			message: '#^Method ViewCoveragePhpFilters\:\:getDefaultFilter\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/include/filterdataFunctions.php
-
-		-
-			message: '#^Method ViewCoveragePhpFilters\:\:getDefaultShowLimit\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/include/filterdataFunctions.php
-
-		-
-			message: '#^Method ViewCoveragePhpFilters\:\:getFilterDefinitionsXML\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/include/filterdataFunctions.php
-
-		-
-			message: '#^Method ViewCoveragePhpFilters\:\:getSqlField\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Method ViewCoveragePhpFilters\:\:getDefaultFilter\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
 			count: 1
 			path: app/cdash/include/filterdataFunctions.php
 
@@ -17572,20 +16636,8 @@ parameters:
 			path: app/cdash/include/filterdataFunctions.php
 
 		-
-			message: '#^Method ViewTestPhpFilters\:\:getDefaultFilter\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/include/filterdataFunctions.php
-
-		-
-			message: '#^Method ViewTestPhpFilters\:\:getFilterDefinitionsXML\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/include/filterdataFunctions.php
-
-		-
-			message: '#^Method ViewTestPhpFilters\:\:getSqlField\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Method ViewTestPhpFilters\:\:getDefaultFilter\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
 			count: 1
 			path: app/cdash/include/filterdataFunctions.php
 
@@ -17605,6 +16657,12 @@ parameters:
 			message: '#^Only booleans are allowed in an if condition, mixed given\.$#'
 			identifier: if.condNotBoolean
 			count: 1
+			path: app/cdash/include/filterdataFunctions.php
+
+		-
+			message: '#^Only booleans are allowed in an if condition, string given\.$#'
+			identifier: if.condNotBoolean
+			count: 2
 			path: app/cdash/include/filterdataFunctions.php
 
 		-
@@ -17646,7 +16704,7 @@ parameters:
 		-
 			message: '#^Unreachable statement \- code above always terminates\.$#'
 			identifier: deadCode.unreachable
-			count: 8
+			count: 7
 			path: app/cdash/include/filterdataFunctions.php
 
 		-
@@ -17845,6 +16903,12 @@ parameters:
 			path: app/cdash/public/api/v1/buildgroup.php
 
 		-
+			message: '#^Cannot access property \$Id on CDash\\Model\\Project\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/cdash/public/api/v1/buildgroup.php
+
+		-
 			message: '#^Cannot cast mixed to int\.$#'
 			identifier: cast.int
 			count: 8
@@ -17869,12 +16933,6 @@ parameters:
 			path: app/cdash/public/api/v1/buildgroup.php
 
 		-
-			message: '#^Function CDash\\Api\\v1\\BuildGroup\\rest_delete\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/public/api/v1/buildgroup.php
-
-		-
 			message: '#^Function CDash\\Api\\v1\\BuildGroup\\rest_post\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -17889,12 +16947,6 @@ parameters:
 		-
 			message: '#^Function CDash\\Api\\v1\\BuildGroup\\rest_post\(\) has parameter \$projectid with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/public/api/v1/buildgroup.php
-
-		-
-			message: '#^Function CDash\\Api\\v1\\BuildGroup\\rest_put\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/public/api/v1/buildgroup.php
 
@@ -17977,20 +17029,14 @@ parameters:
 			path: app/cdash/public/api/v1/computeClassifier.php
 
 		-
-			message: '#^Function CDash\\Api\\v1\\ComputeClassifier\\count_samples\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/public/api/v1/computeClassifier.php
-
-		-
 			message: '#^Function CDash\\Api\\v1\\ComputeClassifier\\count_samples\(\) has parameter \$samples with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: app/cdash/public/api/v1/computeClassifier.php
 
 		-
-			message: '#^Function CDash\\Api\\v1\\ComputeClassifier\\find_numerical_classifier\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Function CDash\\Api\\v1\\ComputeClassifier\\count_samples\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
 			count: 1
 			path: app/cdash/public/api/v1/computeClassifier.php
 
@@ -18013,8 +17059,8 @@ parameters:
 			path: app/cdash/public/api/v1/computeClassifier.php
 
 		-
-			message: '#^Function CDash\\Api\\v1\\ComputeClassifier\\value_to_string\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Function CDash\\Api\\v1\\ComputeClassifier\\find_numerical_classifier\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
 			count: 1
 			path: app/cdash/public/api/v1/computeClassifier.php
 
@@ -18511,12 +17557,6 @@ parameters:
 			path: app/cdash/public/api/v1/project.php
 
 		-
-			message: '#^Function CDash\\Api\\v1\\Project\\create_project\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
 			message: '#^Function CDash\\Api\\v1\\Project\\create_project\(\) has parameter \$response with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -18529,26 +17569,8 @@ parameters:
 			path: app/cdash/public/api/v1/project.php
 
 		-
-			message: '#^Function CDash\\Api\\v1\\Project\\get_project\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
 			message: '#^Function CDash\\Api\\v1\\Project\\get_project\(\) has parameter \$response with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			message: '#^Function CDash\\Api\\v1\\Project\\get_repo_url_example\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			message: '#^Function CDash\\Api\\v1\\Project\\populate_project\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/public/api/v1/project.php
 
@@ -18559,19 +17581,7 @@ parameters:
 			path: app/cdash/public/api/v1/project.php
 
 		-
-			message: '#^Function CDash\\Api\\v1\\Project\\rest_delete\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
 			message: '#^Function CDash\\Api\\v1\\Project\\rest_get\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			message: '#^Function CDash\\Api\\v1\\Project\\rest_post\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: app/cdash/public/api/v1/project.php
@@ -18585,12 +17595,6 @@ parameters:
 		-
 			message: '#^Function CDash\\Api\\v1\\Project\\set_logo\(\) has parameter \$Project with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			message: '#^Function CDash\\Api\\v1\\Project\\update_project\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/public/api/v1/project.php
 
@@ -18619,6 +17623,12 @@ parameters:
 			path: app/cdash/public/api/v1/project.php
 
 		-
+			message: '#^Only booleans are allowed in a negated boolean, CDash\\Model\\Project\|false given\.$#'
+			identifier: booleanNot.exprNotBoolean
+			count: 3
+			path: app/cdash/public/api/v1/project.php
+
+		-
 			message: '#^Only booleans are allowed in an if condition, int\|string\|false given\.$#'
 			identifier: if.condNotBoolean
 			count: 1
@@ -18627,6 +17637,12 @@ parameters:
 		-
 			message: '#^Only booleans are allowed in an if condition, resource\|false given\.$#'
 			identifier: if.condNotBoolean
+			count: 1
+			path: app/cdash/public/api/v1/project.php
+
+		-
+			message: '#^Parameter \#1 \$buildname of method CDash\\Model\\Project\:\:AddBlockedBuild\(\) expects string, mixed given\.$#'
+			identifier: argument.type
 			count: 1
 			path: app/cdash/public/api/v1/project.php
 
@@ -18668,6 +17684,18 @@ parameters:
 
 		-
 			message: '#^Parameter \#2 \$length of function fread expects int\<1, max\>, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/cdash/public/api/v1/project.php
+
+		-
+			message: '#^Parameter \#2 \$sitename of method CDash\\Model\\Project\:\:AddBlockedBuild\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/cdash/public/api/v1/project.php
+
+		-
+			message: '#^Parameter \#3 \$ip of method CDash\\Model\\Project\:\:AddBlockedBuild\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: app/cdash/public/api/v1/project.php
@@ -18775,20 +17803,8 @@ parameters:
 			path: app/cdash/public/api/v1/subproject.php
 
 		-
-			message: '#^Function CDash\\Api\\v1\\SubProject\\rest_post\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/public/api/v1/subproject.php
-
-		-
 			message: '#^Function CDash\\Api\\v1\\SubProject\\rest_post\(\) has parameter \$projectid with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/public/api/v1/subproject.php
-
-		-
-			message: '#^Function CDash\\Api\\v1\\SubProject\\rest_put\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/public/api/v1/subproject.php
 
@@ -18877,12 +17893,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/ConfigUseCaseTest.php
 
 		-
-			message: '#^Method ConfigUseCaseTest\:\:checkConfigureForSameness\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/ConfigUseCaseTest.php
-
-		-
 			message: '#^Method ConfigUseCaseTest\:\:testConfigUseCaseBuild\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -18934,6 +17944,12 @@ parameters:
 			'''
 			identifier: method.deprecated
 			count: 2
+			path: app/cdash/tests/case/CDash/DatabaseTest.php
+
+		-
+			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertInstanceOf\(\) with ''CDash\\\\Database'' and CDash\\Database will always evaluate to true\.$#'
+			identifier: method.alreadyNarrowedType
+			count: 1
 			path: app/cdash/tests/case/CDash/DatabaseTest.php
 
 		-
@@ -19051,6 +18067,12 @@ parameters:
 			path: app/cdash/tests/case/CDash/LinkifyCompilerOutputTest.php
 
 		-
+			message: '#^You should use assertSame\(\) instead of assertEquals\(\), because both values are scalars of the same type$#'
+			identifier: phpunit.assertEquals
+			count: 1
+			path: app/cdash/tests/case/CDash/LinkifyCompilerOutputTest.php
+
+		-
 			message: '#^Call to function in_array\(\) requires parameter \#3 to be set\.$#'
 			identifier: function.strict
 			count: 2
@@ -19123,8 +18145,8 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
 
 		-
-			message: '#^Method CommitAuthorSubscriptionBuilderTest\:\:getCommitAuthors\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Method CommitAuthorSubscriptionBuilderTest\:\:getCommitAuthors\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
 			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
 
@@ -19351,6 +18373,12 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
 
 		-
+			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertInstanceOf\(\) with ''CDash\\\\Collection\\\\BuildErrorCollection'' and CDash\\Collection\\BuildErrorCollection will always evaluate to true\.$#'
+			identifier: method.alreadyNarrowedType
+			count: 1
+			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
+
+		-
 			message: '#^Dynamic call to static method PHPUnit\\Framework\\Assert\:\:assertEquals\(\)\.$#'
 			identifier: staticMethod.dynamicCall
 			count: 6
@@ -19501,6 +18529,12 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
 
 		-
+			message: '#^Parameter \#1 \$build of method CDash\\Messaging\\Topic\\BuildErrorTopic\:\:subscribesToBuild\(\) expects CDash\\Model\\Build, PHPUnit\\Framework\\MockObject\\MockObject given\.$#'
+			identifier: argument.type
+			count: 6
+			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
+
+		-
 			message: '#^Property BuildErrorTopicTest\:\:\$diff has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
@@ -19517,6 +18551,12 @@ parameters:
 			identifier: phpunit.assertEquals
 			count: 6
 			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
+
+		-
+			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertInstanceOf\(\) with ''CDash\\\\Collection\\\\ConfigureCollection'' and CDash\\Collection\\ConfigureCollection will always evaluate to true\.$#'
+			identifier: method.alreadyNarrowedType
+			count: 2
+			path: app/cdash/tests/case/CDash/Messaging/Topic/ConfigureTopicTest.php
 
 		-
 			message: '#^Dynamic call to static method PHPUnit\\Framework\\Assert\:\:assertCount\(\)\.$#'
@@ -19625,6 +18665,12 @@ parameters:
 			identifier: phpunit.assertEquals
 			count: 6
 			path: app/cdash/tests/case/CDash/Messaging/Topic/ConfigureTopicTest.php
+
+		-
+			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertInstanceOf\(\) with ''CDash\\\\Collection\\\\DynamicAnalysisCollection'' and CDash\\Collection\\DynamicAnalysisCollection will always evaluate to true\.$#'
+			identifier: method.alreadyNarrowedType
+			count: 1
+			path: app/cdash/tests/case/CDash/Messaging/Topic/DynamicAnalysisTopicTest.php
 
 		-
 			message: '#^Dynamic call to static method PHPUnit\\Framework\\Assert\:\:assertEquals\(\)\.$#'
@@ -20803,12 +19849,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/NightlyTimeTest.php
 
 		-
-			message: '#^Method NightlyTimeTest\:\:validateTestingDay\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/NightlyTimeTest.php
-
-		-
 			message: '#^Method NightlyTimeTest\:\:validateTestingDay\(\) has parameter \$expected with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -20843,6 +19883,12 @@ parameters:
 			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/case/CDash/Service/RepositoryServiceTest.php
+
+		-
+			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertInstanceOf\(\) with ''CDash\\\\ServiceContainer'' and CDash\\ServiceContainer will always evaluate to true\.$#'
+			identifier: method.alreadyNarrowedType
+			count: 1
+			path: app/cdash/tests/case/CDash/ServiceContainerTest.php
 
 		-
 			message: '#^Dynamic call to static method PHPUnit\\Framework\\Assert\:\:assertInstanceOf\(\)\.$#'

@@ -25,7 +25,7 @@ class BuildErrorCollection extends Collection
      *
      * @return $this
      */
-    public function add($error)
+    public function add($error): static
     {
         $this->addItem($error);
         return $this;

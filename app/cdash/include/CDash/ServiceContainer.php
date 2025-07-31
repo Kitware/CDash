@@ -30,10 +30,7 @@ class ServiceContainer extends Singleton
         $this->container = $builder->build();
     }
 
-    /**
-     * @return Container
-     */
-    public static function container()
+    public static function container(): Container
     {
         return self::getInstance()->getContainer();
     }
@@ -59,14 +56,13 @@ class ServiceContainer extends Singleton
         return $this->container;
     }
 
-    public function setContainer(Container $container)
+    public function setContainer(Container $container): void
     {
         $this->container = $container;
     }
 
     public static function singleton($class_name)
     {
-        /** @var ServiceContainer $self */
         $self = self::getInstance();
         return $self->get($class_name);
     }

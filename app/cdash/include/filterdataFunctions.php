@@ -17,7 +17,7 @@
 
 use Illuminate\Support\Facades\Log;
 
-function getFilterDefinitionXML($key, $uitext, $type, $valuelist, $defaultvalue)
+function getFilterDefinitionXML($key, $uitext, $type, $valuelist, $defaultvalue): string
 {
     $xml = '<def>';
     $xml .= add_XML_value('key', $key);
@@ -39,41 +39,26 @@ interface PageSpecificFilters
 
     public function getFilterDefinitionsXML();
 
-    public function getSqlField($field);
+    public function getSqlField($field): string;
 }
 
-class DefaultFilters implements PageSpecificFilters
+abstract class DefaultFilters implements PageSpecificFilters
 {
     public function __construct()
     {
         $this->TextConcat = "array_to_string(array_agg(text), ', ')";
     }
 
-    public function getDefaultFilter()
-    {
-        trigger_error(
-            'DefaultFilters::getDefaultFilter not implemented: subclass should override',
-            E_USER_WARNING);
-    }
+    abstract public function getDefaultFilter(): array;
 
-    public function getDefaultShowLimit()
+    public function getDefaultShowLimit(): bool
     {
         return true;
     }
 
-    public function getFilterDefinitionsXML()
-    {
-        trigger_error(
-            'DefaultFilters::getFilterDefinitionsXML not implemented: subclass should override',
-            E_USER_WARNING);
-    }
+    abstract public function getFilterDefinitionsXML(): string;
 
-    public function getSqlField($field)
-    {
-        trigger_error(
-            'DefaultFilters::getSqlField not implemented: subclass should override',
-            E_USER_WARNING);
-    }
+    abstract public function getSqlField($field): string;
 }
 
 class IndexPhpFilters extends DefaultFilters
@@ -112,7 +97,7 @@ class IndexPhpFilters extends DefaultFilters
         ];
     }
 
-    public function getDefaultFilter()
+    public function getDefaultFilter(): array
     {
         return [
             'field' => 'site',
@@ -122,7 +107,7 @@ class IndexPhpFilters extends DefaultFilters
         ];
     }
 
-    public function getFilterDefinitionsXML()
+    public function getFilterDefinitionsXML(): string
     {
         $xml = '';
 
@@ -157,7 +142,7 @@ class IndexPhpFilters extends DefaultFilters
         return $xml;
     }
 
-    public function getSqlField($field)
+    public function getSqlField($field): string
     {
         // Some filters can return inaccurate results when we are also
         // filtering by SubProjects.  In these cases we do not modify
@@ -346,7 +331,7 @@ class IndexChildrenPhpFilters extends IndexPhpFilters
         parent::__construct();
     }
 
-    public function getDefaultFilter()
+    public function getDefaultFilter(): array
     {
         return [
             'field' => 'subprojects',
@@ -358,7 +343,7 @@ class IndexChildrenPhpFilters extends IndexPhpFilters
 
 class QueryTestsPhpFilters extends DefaultFilters
 {
-    public function getDefaultFilter()
+    public function getDefaultFilter(): array
     {
         return [
             'field' => 'testname',
@@ -368,7 +353,7 @@ class QueryTestsPhpFilters extends DefaultFilters
         ];
     }
 
-    public function getFilterDefinitionsXML()
+    public function getFilterDefinitionsXML(): string
     {
         $xml = '';
 
@@ -386,7 +371,7 @@ class QueryTestsPhpFilters extends DefaultFilters
         return $xml;
     }
 
-    public function getSqlField($field)
+    public function getSqlField($field): string
     {
         $sql_field = '';
         switch (strtolower($field)) {
@@ -460,7 +445,7 @@ class QueryTestsPhpFilters extends DefaultFilters
 
 class ViewCoveragePhpFilters extends DefaultFilters
 {
-    public function getDefaultFilter()
+    public function getDefaultFilter(): array
     {
         return [
             'field' => 'filename',
@@ -470,14 +455,14 @@ class ViewCoveragePhpFilters extends DefaultFilters
         ];
     }
 
-    public function getDefaultShowLimit()
+    public function getDefaultShowLimit(): bool
     {
         // Do not show the limit field on this page, since the data table
         // has paging capabilities
         return false;
     }
 
-    public function getFilterDefinitionsXML()
+    public function getFilterDefinitionsXML(): string
     {
         $xml = '';
 
@@ -491,7 +476,7 @@ class ViewCoveragePhpFilters extends DefaultFilters
         return $xml;
     }
 
-    public function getSqlField($field)
+    public function getSqlField($field): string
     {
         $sql_field = '';
         switch (strtolower($field)) {
@@ -542,7 +527,7 @@ class ViewCoveragePhpFilters extends DefaultFilters
 
 class ViewTestPhpFilters extends DefaultFilters
 {
-    public function getDefaultFilter()
+    public function getDefaultFilter(): array
     {
         return [
             'field' => 'testname',
@@ -552,7 +537,7 @@ class ViewTestPhpFilters extends DefaultFilters
         ];
     }
 
-    public function getFilterDefinitionsXML()
+    public function getFilterDefinitionsXML(): string
     {
         $xml = '';
 
@@ -566,7 +551,7 @@ class ViewTestPhpFilters extends DefaultFilters
         return $xml;
     }
 
-    public function getSqlField($field)
+    public function getSqlField($field): string
     {
         $sql_field = '';
         switch (strtolower($field)) {
@@ -615,7 +600,7 @@ class ViewTestPhpFilters extends DefaultFilters
 
 class CompareCoveragePhpFilters extends DefaultFilters
 {
-    public function getDefaultFilter()
+    public function getDefaultFilter(): array
     {
         return [
             'field' => 'subproject',
@@ -625,14 +610,14 @@ class CompareCoveragePhpFilters extends DefaultFilters
         ];
     }
 
-    public function getFilterDefinitionsXML()
+    public function getFilterDefinitionsXML(): string
     {
         $xml = '';
         $xml .= getFilterDefinitionXML('subproject', 'SubProject', 'string', '', '');
         return $xml;
     }
 
-    public function getSqlField($field)
+    public function getSqlField($field): string
     {
         $sql_field = '';
         switch (strtolower($field)) {
@@ -650,7 +635,7 @@ class CompareCoveragePhpFilters extends DefaultFilters
 
 class TestOverviewPhpFilters extends DefaultFilters
 {
-    public function getDefaultFilter()
+    public function getDefaultFilter(): array
     {
         return [
             'field' => 'buildname',
@@ -660,7 +645,7 @@ class TestOverviewPhpFilters extends DefaultFilters
         ];
     }
 
-    public function getFilterDefinitionsXML()
+    public function getFilterDefinitionsXML(): string
     {
         $xml = '';
         $xml .= getFilterDefinitionXML('buildname', 'Build Name', 'string', '', '');
@@ -669,7 +654,7 @@ class TestOverviewPhpFilters extends DefaultFilters
         return $xml;
     }
 
-    public function getSqlField($field)
+    public function getSqlField($field): string
     {
         $sql_field = '';
         switch (strtolower($field)) {
@@ -730,14 +715,13 @@ function createPageSpecificFilters($page_id)
             trigger_error('unknown $page_id value: ' . $page_id .
                 ' Add a new subclass of DefaultFilters for ' . $page_id,
                 E_USER_WARNING);
-            return new DefaultFilters();
-            break;
+            throw new InvalidArgumentException('Invalid $page_id provided.');
     }
 }
 
 // Take a php $filterdata structure and return it as an XML string representation
 //
-function filterdata_XML($filterdata)
+function filterdata_XML($filterdata): string
 {
     $debug = $filterdata['debug']; // '0' or '1' -- shows debug info in HTML output
     $filtercombine = $filterdata['filtercombine']; // 'OR' or 'AND'
@@ -791,7 +775,7 @@ function filterdata_XML($filterdata)
     return $xml;
 }
 
-function get_sql_date_value($value)
+function get_sql_date_value($value): string
 {
     // transform from sql_value (assumed UTC)
     // to value (assumed server local timezone):
@@ -807,7 +791,7 @@ function get_sql_date_value($value)
 
 // Translate "comparison operation" and "compare-to value" to SQL equivalents:
 //
-function get_sql_compare_and_value($compare, $value)
+function get_sql_compare_and_value($compare, $value): array
 {
     $sql_compare = '';
     $sql_value = '';
@@ -970,7 +954,7 @@ function get_sql_compare_and_value($compare, $value)
 // This function also sets the 'hasdateclause' field in $filterdata
 // if necessary.
 function parse_filter_from_request($field_var, $compare_var, $value_var,
-    &$filterdata)
+    &$filterdata): array
 {
     $required_params = [$field_var, $compare_var, $value_var];
     foreach ($required_params as $param) {
@@ -1021,7 +1005,7 @@ function parse_filter_from_request($field_var, $compare_var, $value_var,
 //   index.php
 //   viewTest.php
 //
-function get_filterdata_from_request($page_id = '')
+function get_filterdata_from_request($page_id = ''): array
 {
     $filterdata = [];
     $filters = [];
@@ -1129,7 +1113,7 @@ function get_filterdata_from_request($page_id = '')
 }
 
 // Returns SQL for a given filter array.
-function generate_filter_sql($filter, $pageSpecificFilters)
+function generate_filter_sql($filter, $pageSpecificFilters): string
 {
     $field = $filter['field'];
     $compare = $filter['compare'];
@@ -1161,7 +1145,7 @@ function generate_filter_sql($filter, $pageSpecificFilters)
 }
 
 // Returns filter SQL given a populated $filterdata array.
-function generate_filterdata_sql($filterdata)
+function generate_filterdata_sql($filterdata): string
 {
     if (!array_key_exists('filtercount', $filterdata) || $filterdata['filtercount'] < 1) {
         return '';
@@ -1210,7 +1194,7 @@ function generate_filterdata_sql($filterdata)
 }
 
 // Return a list of label IDs that match the specified filterdata.
-function get_label_ids_from_filterdata($filterdata)
+function get_label_ids_from_filterdata($filterdata): array
 {
     $label_ids = [];
     $clauses = 0;
@@ -1258,7 +1242,7 @@ function get_filterurl()
 
 // Returns true if the build should be included based on the specified filters,
 // false otherwise.
-function build_survives_filters($build_response, $filters, $filtercombine)
+function build_survives_filters($build_response, $filters, $filtercombine): bool
 {
     $filtercombine = strtolower($filtercombine);
     $matching_filters_found = false;
@@ -1440,7 +1424,7 @@ function build_survives_filters($build_response, $filters, $filtercombine)
     }
 }
 
-function get_othercombine($filtercombine)
+function get_othercombine($filtercombine): string
 {
     if (strtolower($filtercombine) == 'or') {
         return 'and';
