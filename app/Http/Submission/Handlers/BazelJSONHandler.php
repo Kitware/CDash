@@ -169,6 +169,13 @@ class BazelJSONHandler extends AbstractSubmissionHandler
 
         // Save testing information.
         foreach ($this->Tests as $testdata) {
+            if (!in_array($testdata->status, ['passed', 'failed', 'notrun'], true)) {
+                // The test summary logic inserts a second test which is meant to replace a placeholder
+                // test created by the test result logic.  We don't want to save and then overwrite
+                // that test, so we just skip the placeholders here.
+                continue;
+            }
+
             $testCreator = new TestCreator();
 
             $testCreator->buildTestTime = $testdata->time;

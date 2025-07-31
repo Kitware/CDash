@@ -158,10 +158,6 @@ export default {
         return 'error';
       case 'NOT_RUN':
         return 'warning';
-      case 'TIMEOUT':
-        return 'error';
-      case 'DISABLED':
-        return '';
       default:
         return '';
       }
@@ -175,10 +171,6 @@ export default {
         return 'Failed';
       case 'NOT_RUN':
         return 'Not Run';
-      case 'TIMEOUT':
-        return 'Timeout';
-      case 'DISABLED':
-        return 'Disabled';
       default:
         return status;
       }

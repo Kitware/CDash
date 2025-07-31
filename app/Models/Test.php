@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Config;
  * @property int $id
  * @property int $buildid
  * @property int $outputid
- * @property string $status
+ * @property string $status 'failed' | 'passed' | 'notrun'  TODO: Turn this into a proper enum.
  * @property float $time
  * @property float $timemean
  * @property float $timestd
