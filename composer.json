@@ -59,7 +59,7 @@
     "phpstan/phpstan-mockery": "2.0.0",
     "phpstan/phpstan-phpunit": "2.0.6",
     "phpstan/phpstan-strict-rules": "2.0.6",
-    "phpunit/phpunit": "12.2.5"
+    "phpunit/phpunit": "12.3.0"
   },
   "suggest": {
     "ext-memcached": "",
