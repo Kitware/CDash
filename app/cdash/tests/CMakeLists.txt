@@ -489,11 +489,8 @@ set_tests_properties(viewdynamicanalysisfile PROPERTIES DEPENDS viewdynamicanaly
 add_php_test(buildmodel)
 set_tests_properties(buildmodel PROPERTIES DEPENDS viewdynamicanalysisfile)
 
-add_legacy_unit_test(/CDash/Model/PendingSubmissions)
-set_tests_properties(/CDash/Model/PendingSubmissions PROPERTIES DEPENDS buildmodel)
-
 add_php_test(projectxmlsequence)
-set_tests_properties(projectxmlsequence PROPERTIES DEPENDS /CDash/Model/PendingSubmissions)
+set_tests_properties(projectxmlsequence PROPERTIES DEPENDS buildmodel)
 
 add_php_test(uploadfile)
 set_tests_properties(uploadfile PROPERTIES DEPENDS projectxmlsequence)
