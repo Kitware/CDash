@@ -28876,36 +28876,6 @@ parameters:
 			path: app/cdash/tests/test_projectxmlsequence.php
 
 		-
-			message: '#^Method PubProjectTestCase\:\:testCreateProject\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_pubproject.php
-
-		-
-			message: '#^Method PubProjectTestCase\:\:testEditProject\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_pubproject.php
-
-		-
-			message: '#^Method PubProjectTestCase\:\:testIndexProjectTest\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_pubproject.php
-
-		-
-			message: '#^Method PubProjectTestCase\:\:testProjectTestInDatabase\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_pubproject.php
-
-		-
-			message: '#^Property PubProjectTestCase\:\:\$ProjectId has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/test_pubproject.php
-
-		-
 			message: '''
 				#^Call to deprecated method getPdo\(\) of class CDash\\Database\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#

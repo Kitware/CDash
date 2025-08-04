@@ -470,14 +470,11 @@ set_tests_properties(displayimage PROPERTIES DEPENDS committerinfo)
 add_php_test(projectindb)
 set_tests_properties(projectindb PROPERTIES DEPENDS displayimage)
 
-add_php_test(pubproject)
-set_tests_properties(pubproject PROPERTIES DEPENDS projectindb)
-
 add_php_test(projectmodel)
 set_tests_properties(projectmodel PROPERTIES DEPENDS projectindb)
 
 add_php_test(querytests)
-set_tests_properties(querytests PROPERTIES DEPENDS "projectmodel;pubproject")
+set_tests_properties(querytests PROPERTIES DEPENDS projectmodel)
 
 add_php_test(sitestatistics)
 set_tests_properties(sitestatistics PROPERTIES DEPENDS querytests)

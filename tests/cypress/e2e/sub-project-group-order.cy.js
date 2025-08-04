@@ -2,7 +2,7 @@ describe('subProjectGroupOrder', () => {
 
   it('can change the group order', () => {
     cy.login();
-    cy.visit('manageSubProject.php?projectid=16');
+    cy.visit('manageSubProject.php?projectid=15');
     cy.wait(1000);
 
     // navigate to the 'SubProjects Groups' tab
@@ -37,7 +37,7 @@ describe('subProjectGroupOrder', () => {
     cy.get('#coveragetable').find('tbody').eq(1).should('contain', 'Production'); // this page has some cursed html
 
     // restore group order
-    cy.visit('manageSubProject.php?projectid=16');
+    cy.visit('manageSubProject.php?projectid=15');
     cy.wait(1000);
     cy.get('a').contains('SubProject Groups').click();
     // cy.get('tbody#sortable').contains('tr', 'Production').as('prod_group_tr'); // TODO: (sbelsk) this too

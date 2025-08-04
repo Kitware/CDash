@@ -21,7 +21,7 @@ describe('testSummary', () => {
 
   it('loads accurate information on the test', () => {
     cy.clearCookies();
-    cy.visit('testSummary.php?project=15&name=flaky&date=2015-11-16');
+    cy.visit('testSummary.php?project=14&name=flaky&date=2015-11-16');
 
     // assert expected text in the page headers
     const header_text = 'Testing summary for flaky performed between 2015-11-16T01:00:00 and 2015-11-17T01:00:00';
@@ -69,7 +69,7 @@ describe('testSummary', () => {
 
 
   it('can export the table as CSV', () => {
-    cy.visit('testSummary.php?project=15&name=flaky&date=2015-11-16');
+    cy.visit('testSummary.php?project=14&name=flaky&date=2015-11-16');
 
     // test export to CSV functionality
     cy.get('[data-cy="download-as-csv"]').click();
