@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use League\Flysystem\UnableToReadFile;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 require_once 'include/api_common.php';
@@ -792,7 +793,12 @@ final class BuildController extends AbstractBuildController
         // 1) Render text and images in browser (as opposed to forcing a download).
         // 2) Download other files to the proper filename (not a numeric identifier).
         // 3) Support downloading files that are larger than the PHP memory_limit.
-        $fp = Storage::readStream("upload/{$file->sha1sum}");
+        try {
+            $fp = Storage::readStream("upload/{$file->sha1sum}");
+        } catch (UnableToReadFile $e) {
+            $fp = null;
+            report($e);
+        }
         if ($fp === null) {
             abort(404, 'File not found');
         }

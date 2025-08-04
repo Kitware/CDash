@@ -20,8 +20,8 @@ namespace App\Http\Submission\Handlers;
 use CDash\Model\Build;
 use CDash\Model\Project;
 use CDash\Model\SubProject;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use League\Flysystem\UnableToReadFile;
 
 class SubProjectDirectoriesHandler extends AbstractSubmissionHandler
 {
@@ -40,11 +40,13 @@ class SubProjectDirectoriesHandler extends AbstractSubmissionHandler
     public function Parse($filename)
     {
         $open_list = [];
-        $fp = Storage::readStream($filename);
+        try {
+            $fp = Storage::readStream($filename);
+        } catch (UnableToReadFile $e) {
+            $fp = null;
+            report($e);
+        }
         if ($fp === null) {
-            Log::error("Could not open $filename for parsing", [
-                'function' => 'SubProjectDirectoriesHandler::Parse',
-            ]);
             return false;
         }
         while (($line = fgets($fp)) !== false) {

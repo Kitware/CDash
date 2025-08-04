@@ -21,6 +21,7 @@ use CDash\Model\Build;
 use CDash\Model\BuildProperties;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use League\Flysystem\UnableToReadFile;
 
 class BuildPropertiesJSONHandler extends AbstractSubmissionHandler
 {
@@ -35,13 +36,21 @@ class BuildPropertiesJSONHandler extends AbstractSubmissionHandler
     public function Parse($filename): bool
     {
         // Test that this file contains valid JSON that PHP can decode.
-        $json_str = Storage::get($filename);
+        try {
+            $json_str = Storage::get($filename);
+        } catch (UnableToReadFile $e) {
+            $json_str = null;
+            report($e);
+            return false;
+        }
+
         if ($json_str === null) {
             Log::error("Failed to retrieve $filename from Storage", [
                 'function' => 'BuildPropertiesJSONHandler::Parse',
             ]);
             return false;
         }
+
         $json_obj = json_decode($json_str, true);
         if ($json_obj === null) {
             $err = json_last_error_msg();

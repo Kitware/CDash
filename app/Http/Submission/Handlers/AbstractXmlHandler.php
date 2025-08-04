@@ -24,7 +24,9 @@ use CDash\Model\Project;
 use CDash\ServiceContainer;
 use DOMDocument;
 use Illuminate\Support\Facades\Storage;
+use League\Flysystem\UnableToDeleteFile;
 use League\Flysystem\UnableToReadFile;
+use League\Flysystem\UnableToWriteFile;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 
 abstract class AbstractXmlHandler extends AbstractSubmissionHandler
@@ -85,7 +87,11 @@ abstract class AbstractXmlHandler extends AbstractSubmissionHandler
                     throw UnableToReadFile::fromLocation($path);
                 }
                 $local_path = 'tmp/' . basename($path);
-                Storage::disk('local')->put($local_path, $fp);
+                try {
+                    Storage::disk('local')->put($local_path, $fp);
+                } catch (UnableToWriteFile $e) {
+                    report($e);
+                }
                 $xml->load(Storage::disk('local')->path($local_path), LIBXML_PARSEHUGE);
             }
         }
@@ -103,7 +109,11 @@ abstract class AbstractXmlHandler extends AbstractSubmissionHandler
         }
 
         if ($local_path !== '' && config('filesystems.default') !== 'local') {
-            Storage::disk('local')->delete($local_path);
+            try {
+                Storage::disk('local')->delete($local_path);
+            } catch (UnableToDeleteFile $e) {
+                report($e);
+            }
         }
 
         return $errors;

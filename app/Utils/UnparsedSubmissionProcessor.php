@@ -30,6 +30,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use League\Flysystem\UnableToDeleteFile;
+use League\Flysystem\UnableToReadFile;
+use League\Flysystem\UnableToWriteFile;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -95,7 +98,11 @@ class UnparsedSubmissionProcessor
 
         // Write a marker file so we know to process these files when the DB comes back up.
         if (!Storage::exists('DB_WAS_DOWN')) {
-            Storage::put('DB_WAS_DOWN', '');
+            try {
+                Storage::put('DB_WAS_DOWN', '');
+            } catch (UnableToWriteFile $e) {
+                report($e);
+            }
         }
 
         // Respond with success even though the database is down so that CTest will
@@ -264,13 +271,19 @@ class UnparsedSubmissionProcessor
             $this->serializeDataFileParameters();
 
             if (!Storage::exists('DB_WAS_DOWN')) {
-                Storage::put('DB_WAS_DOWN', '');
+                try {
+                    Storage::put('DB_WAS_DOWN', '');
+                } catch (UnableToWriteFile $e) {
+                    report($e);
+                }
             }
         }
 
         // Write this file to the inbox directory.
         $handle = request()->getContent(true);
-        if (!Storage::put($this->inboxdatafilename, $handle)) {
+        try {
+            Storage::put($this->inboxdatafilename, $handle);
+        } catch (UnableToWriteFile $e) {
             abort(Response::HTTP_INTERNAL_SERVER_ERROR, "Cannot open file ($this->inboxdatafilename)");
         }
 
@@ -288,7 +301,11 @@ class UnparsedSubmissionProcessor
 
         // Check for marker file to see if we need to queue deferred submissions.
         if (Storage::exists('DB_WAS_DOWN')) {
-            Storage::delete('DB_WAS_DOWN');
+            try {
+                Storage::delete('DB_WAS_DOWN');
+            } catch (UnableToDeleteFile $e) {
+                abort(Response::HTTP_INTERNAL_SERVER_ERROR, 'Unable to remove DB_WAS_DOWN marker file');
+            }
             Artisan::call('submission:queue');
         }
 
@@ -306,7 +323,11 @@ class UnparsedSubmissionProcessor
         ]);
 
         if (!$this->project->Exists()) {
-            Storage::delete($this->inboxdatafilename);
+            try {
+                Storage::delete($this->inboxdatafilename);
+            } catch (UnableToDeleteFile $e) {
+                report($e);
+            }
             abort(Response::HTTP_NOT_FOUND, 'Project not found');
         }
 
@@ -315,15 +336,27 @@ class UnparsedSubmissionProcessor
             $token = AuthTokenUtil::getBearerToken();
             $authtoken_hash = AuthTokenUtil::hashToken($token);
             if (!AuthTokenUtil::checkToken($authtoken_hash, $this->project->Id)) {
-                Storage::delete($this->inboxdatafilename);
+                try {
+                    Storage::delete($this->inboxdatafilename);
+                } catch (UnableToDeleteFile $e) {
+                    report($e);
+                }
                 abort(Response::HTTP_FORBIDDEN, 'Forbidden');
             }
         }
 
         // Check that the md5sum of the file matches what we were expecting.
-        $md5sum = SubmissionUtils::hashFileHandle(Storage::readStream($this->inboxdatafilename), 'md5');
+        try {
+            $md5sum = SubmissionUtils::hashFileHandle(Storage::readStream($this->inboxdatafilename), 'md5');
+        } catch (UnableToReadFile $e) {
+            abort(Response::HTTP_INTERNAL_SERVER_ERROR, "Unable to read {$this->inboxdatafilename}");
+        }
         if ($md5sum != $this->md5) {
-            Storage::delete($this->inboxdatafilename);
+            try {
+                Storage::delete($this->inboxdatafilename);
+            } catch (UnableToDeleteFile $e) {
+                report($e);
+            }
             $buildfile->delete();
             abort(Response::HTTP_BAD_REQUEST, "md5 mismatch. expected: {$this->md5}, received: $md5sum");
         }
@@ -392,7 +425,11 @@ class UnparsedSubmissionProcessor
 
         $build_metadata_filename = "{$this->projectname}_-_{$this->token}_-_build-metadata_-_{$uuid}_-__-_.json";
         $inbox_build_metadata_filename = "inbox/{$build_metadata_filename}";
-        Storage::put($inbox_build_metadata_filename, $build_metadata);
+        try {
+            Storage::put($inbox_build_metadata_filename, $build_metadata);
+        } catch (UnableToWriteFile $e) {
+            report($e);
+        }
     }
 
     /** Append data file parameters to the build metadata JSON file. */
@@ -404,7 +441,11 @@ class UnparsedSubmissionProcessor
             abort(Response::HTTP_INTERNAL_SERVER_ERROR, 'Could not find build metadata file');
         }
 
-        $contents = Storage::get($inbox_filename);
+        try {
+            $contents = Storage::get($inbox_filename);
+        } catch (UnableToReadFile $e) {
+            abort(Response::HTTP_INTERNAL_SERVER_ERROR, "Unable to read {$inbox_filename}");
+        }
         $build_metadata = json_decode($contents, true);
         if (!$build_metadata) {
             Log::warning("Failed to parse build metadata JSON {$inbox_filename}");
@@ -421,7 +462,11 @@ class UnparsedSubmissionProcessor
         if ($build_metadata === false) {
             abort(500, 'Invalid JSON array.');
         }
-        Storage::put($inbox_filename, $build_metadata);
+        try {
+            Storage::put($inbox_filename, $build_metadata);
+        } catch (UnableToWriteFile $e) {
+            abort(Response::HTTP_INTERNAL_SERVER_ERROR, "Unable to write {$inbox_filename}");
+        }
     }
 
     /** Deserialize a build metadata JSON file. */

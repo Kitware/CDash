@@ -29,6 +29,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use League\Flysystem\UnableToWriteFile;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 
 /**
@@ -259,8 +260,10 @@ class UploadHandler extends AbstractXmlHandler
                             $this->UploadError = true;
                             return;
                         }
-                        if (Storage::putFileAs('upload', $fileToUpload, (string) $this->UploadFile->sha1sum) === false) {
-                            Log::error("Failed to store {$this->TmpFilename} as {$uploadFilepath}");
+                        try {
+                            Storage::putFileAs('upload', $fileToUpload, (string) $this->UploadFile->sha1sum);
+                        } catch (UnableToWriteFile $e) {
+                            report($e);
                             unlink($this->TmpFilename);
                             $this->UploadError = true;
                             return;

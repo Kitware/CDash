@@ -18,6 +18,8 @@ namespace App\Http\Submission\Handlers;
 =========================================================================*/
 
 use Illuminate\Support\Facades\Storage;
+use League\Flysystem\UnableToReadFile;
+use League\Flysystem\UnableToWriteFile;
 
 /** Because this class uses SimpleXML it is only suitable for use with small
  * XML files that can fit into memory.
@@ -42,7 +44,12 @@ class RetryHandler
             return false;
         }
 
-        $contents = Storage::get($this->FileName);
+        try {
+            $contents = Storage::get($this->FileName);
+        } catch (UnableToReadFile $e) {
+            $contents = null;
+            report($e);
+        }
         if ($contents === null) {
             return false;
         }
@@ -59,6 +66,11 @@ class RetryHandler
         }
         $xml['retries'] = $this->Retries;
 
-        return Storage::put($this->FileName, (string) $xml->asXML());
+        try {
+            return Storage::put($this->FileName, (string) $xml->asXML());
+        } catch (UnableToWriteFile $e) {
+            report($e);
+            return false;
+        }
     }
 }

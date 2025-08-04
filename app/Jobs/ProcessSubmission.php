@@ -35,6 +35,10 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use League\Flysystem\UnableToDeleteFile;
+use League\Flysystem\UnableToMoveFile;
+use League\Flysystem\UnableToReadFile;
+use League\Flysystem\UnableToWriteFile;
 use Throwable;
 
 class ProcessSubmission implements ShouldQueue
@@ -86,7 +90,12 @@ class ProcessSubmission implements ShouldQueue
                 'dest' => $dst,
             ])->ok();
         } else {
-            return Storage::move($src, $dst);
+            try {
+                return Storage::move($src, $dst);
+            } catch (UnableToMoveFile $e) {
+                Log::error("Failed to move file from {$src} to {$dst}");
+                return false;
+            }
         }
     }
 
@@ -99,7 +108,12 @@ class ProcessSubmission implements ShouldQueue
                 'filename' => $filename,
             ])->ok();
         } else {
-            return Storage::delete($filename);
+            try {
+                return Storage::delete($filename);
+            } catch (UnableToDeleteFile $e) {
+                Log::error("Failed to delete file {$filename}");
+                return false;
+            }
         }
     }
 
@@ -125,7 +139,12 @@ class ProcessSubmission implements ShouldQueue
             $retry_handler->increment();
 
             // Move file back to inbox.
-            Storage::move("inprogress/{$this->filename}", "inbox/{$this->filename}");
+            try {
+                Storage::move("inprogress/{$this->filename}", "inbox/{$this->filename}");
+            } catch (UnableToMoveFile $e) {
+                Log::error("Failed to move {$this->filename} from inprogress/ to inbox/");
+                return false;
+            }
 
             // Requeue the file with exponential backoff.
             PendingSubmissions::IncrementForBuildId($this->buildid);
@@ -295,11 +314,12 @@ class ProcessSubmission implements ShouldQueue
         if ($response->status() === 200) {
             // TODO: It's probably possible to use a streaming approach for this instead.
             // The file could be read directly from the stream without needing to explicitly save it somewhere.
-            if (!Storage::put('inbox/' . basename($this->localFilename), $response->body())) {
-                Log::warning('Failed to write file to inbox.');
+            try {
+                Storage::put('inbox/' . basename($this->localFilename), $response->body());
+            } catch (UnableToWriteFile $e) {
+                Log::error("Failed to write {$filename} file to inbox");
                 return false;
             }
-
             return fopen($this->localFilename, 'r');
         } else {
             // Log the status code and requested filename.
@@ -314,7 +334,12 @@ class ProcessSubmission implements ShouldQueue
         if ((bool) config('cdash.remote_workers') && is_string($filename)) {
             return $this->getRemoteSubmissionFileHandle($filename);
         } elseif (Storage::exists($filename)) {
-            return Storage::readStream($filename);
+            try {
+                return Storage::readStream($filename);
+            } catch (UnableToReadFile $e) {
+                Log::error("Unable to stream {$filename}");
+                return false;
+            }
         } else {
             Log::error('Failed to get a file handle for submission (was type ' . gettype($filename) . ')');
             return false;

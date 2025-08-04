@@ -7,6 +7,8 @@ use App\Jobs\ProcessSubmission;
 use CDash\Model\PendingSubmissions;
 use Exception;
 use Illuminate\Support\Facades\Storage;
+use League\Flysystem\UnableToDeleteFile;
+use League\Flysystem\UnableToMoveFile;
 use Symfony\Component\HttpFoundation\Response;
 
 final class RemoteProcessingController extends AbstractController
@@ -63,18 +65,20 @@ final class RemoteProcessingController extends AbstractController
 
         if (config('cdash.backup_timeframe') == 0) {
             // Delete the file.
-            if (Storage::delete($filename)) {
-                return response('OK', Response::HTTP_OK);
-            } else {
+            try {
+                Storage::delete($filename);
+            } catch (UnableToDeleteFile $e) {
                 return response('Deletion failed', Response::HTTP_INTERNAL_SERVER_ERROR);
             }
+            return response('OK', Response::HTTP_OK);
         } elseif (request()->has('dest')) {
             // Rename the file.
-            if (Storage::move($filename, request()->string('dest'))) {
-                return response('OK', Response::HTTP_OK);
-            } else {
+            try {
+                Storage::move($filename, request()->string('dest'));
+            } catch (UnableToMoveFile $e) {
                 return response('Rename failed', Response::HTTP_INTERNAL_SERVER_ERROR);
             }
+            return response('OK', Response::HTTP_OK);
         } else {
             throw new Exception('Invalid request.');
         }
@@ -108,7 +112,11 @@ final class RemoteProcessingController extends AbstractController
         $retry_handler->increment();
 
         // Move file back to inbox.
-        Storage::move("inprogress/{$filename}", "inbox/{$filename}");
+        try {
+            Storage::move("inprogress/{$filename}", "inbox/{$filename}");
+        } catch (UnableToMoveFile $e) {
+            return response("Failed to move {$filename} to inbox", Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
 
         // Requeue the file with exponential backoff.
         PendingSubmissions::IncrementForBuildId($buildid);

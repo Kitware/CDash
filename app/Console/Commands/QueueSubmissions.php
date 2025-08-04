@@ -6,6 +6,7 @@ use App\Jobs\ProcessSubmission;
 use App\Utils\AuthTokenUtil;
 use CDash\Model\Project;
 use Illuminate\Console\Command;
+use League\Flysystem\UnableToMoveFile;
 use Storage;
 
 class QueueSubmissions extends Command
@@ -62,7 +63,11 @@ class QueueSubmissions extends Command
         $filename = str_replace('inbox/', '', $inboxFile);
         $pos = strpos($filename, '_-_');
         if ($pos === false) {
-            Storage::move("inbox/{$filename}", "failed/{$filename}");
+            try {
+                Storage::move("inbox/{$filename}", "failed/{$filename}");
+            } catch (UnableToMoveFile $e) {
+                report($e);
+            }
             echo "Could not extract projectname from $filename\n";
             return;
         }
@@ -71,7 +76,11 @@ class QueueSubmissions extends Command
         $project = new Project();
         $project->FindByName($projectname);
         if (!$project->Id) {
-            Storage::move("inbox/{$filename}", "failed/{$filename}");
+            try {
+                Storage::move("inbox/{$filename}", "failed/{$filename}");
+            } catch (UnableToMoveFile $e) {
+                report($e);
+            }
             echo "Could not find project $projectname\n";
             return;
         }
@@ -81,13 +90,21 @@ class QueueSubmissions extends Command
             $begin = $pos + 3;
             $end = strpos($filename, '_-_', $begin);
             if ($end === false) {
-                Storage::move("inbox/{$filename}", "failed/{$filename}");
+                try {
+                    Storage::move("inbox/{$filename}", "failed/{$filename}");
+                } catch (UnableToMoveFile $e) {
+                    report($e);
+                }
                 echo "Could not extract authtoken from $filename\n";
                 return;
             }
             $len = $end - $begin;
             if (!AuthTokenUtil::checkToken(substr($filename, $begin, $len), $project->Id)) {
-                Storage::move("inbox/{$filename}", "failed/{$filename}");
+                try {
+                    Storage::move("inbox/{$filename}", "failed/{$filename}");
+                } catch (UnableToMoveFile $e) {
+                    report($e);
+                }
                 echo "Invalid authentication token for $filename\n";
                 return;
             }

@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use League\Flysystem\UnableToDeleteFile;
 use League\Flysystem\UnableToMoveFile;
 use League\Flysystem\UnableToReadFile;
 use League\Flysystem\UnableToWriteFile;
@@ -65,7 +66,7 @@ final class SubmissionController extends AbstractProjectController
         if ($filename !== null) {
             try {
                 Storage::move('inbox/' . $filename, 'failed/' . $filename);
-            } catch (UnableToMoveFile) {
+            } catch (UnableToMoveFile $e) {
                 Log::error("Failed to move {$filename} from inbox/ to failed/");
             }
         }
@@ -129,7 +130,11 @@ final class SubmissionController extends AbstractProjectController
         } catch (Exception) {
             // Write a marker file so we know to process these files when the DB comes back up.
             if (!Storage::exists('DB_WAS_DOWN')) {
-                Storage::put('DB_WAS_DOWN', '');
+                try {
+                    Storage::put('DB_WAS_DOWN', '');
+                } catch (UnableToWriteFile $e) {
+                    report($e);
+                }
             }
             $statusarray['status'] = 'OK';
             $statusarray['message'] = 'Database is unavailable.';
@@ -146,7 +151,11 @@ final class SubmissionController extends AbstractProjectController
 
         // Check for valid authentication token if this project requires one.
         if ($this->project->AuthenticateSubmissions && !AuthTokenUtil::checkToken($authtoken_hash, $this->project->Id)) {
-            Storage::delete("inbox/{$filename}");
+            try {
+                Storage::delete("inbox/{$filename}");
+            } catch (UnableToDeleteFile $e) {
+                report($e);
+            }
             $this->failProcessing(null, Response::HTTP_FORBIDDEN, 'Invalid Token');
         } elseif (intval($this->project->Id) < 1) {
             $this->failProcessing($filename, Response::HTTP_NOT_FOUND, 'The requested project does not exist.');
@@ -154,8 +163,15 @@ final class SubmissionController extends AbstractProjectController
 
         // Figure out what type of XML file this is.
         $stored_filename = 'inbox/' . $filename;
-        $xml_info = SubmissionUtils::get_xml_type(Storage::readStream($stored_filename), $stored_filename);
+        try {
+            $xml_stream = Storage::readStream($stored_filename);
+        } catch (UnableToReadFile $e) {
+            $xml_stream = [];
+            report($e);
+            $this->failProcessing($filename, Response::HTTP_INTERNAL_SERVER_ERROR, 'Failed to read submission file.');
+        }
 
+        $xml_info = SubmissionUtils::get_xml_type($xml_stream, $stored_filename);
         if ($xml_info['xml_handler'] !== '') {
             // If validation is enabled and if this file has a corresponding schema, validate it
             $validation_errors = [];
