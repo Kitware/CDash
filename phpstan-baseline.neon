@@ -19624,36 +19624,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Model/BuildTest.php
 
 		-
-			message: '#^Access to an undefined property PendingSubmissionsTest\:\:\$mock_build\.$#'
-			identifier: property.notFound
-			count: 3
-			path: app/cdash/tests/case/CDash/Model/PendingSubmissionsTest.php
-
-		-
-			message: '#^Access to an undefined property PendingSubmissionsTest\:\:\$service\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/cdash/tests/case/CDash/Model/PendingSubmissionsTest.php
-
-		-
-			message: '#^Access to an undefined property PendingSubmissionsTest\:\:\$sut\.$#'
-			identifier: property.notFound
-			count: 14
-			path: app/cdash/tests/case/CDash/Model/PendingSubmissionsTest.php
-
-		-
-			message: '#^Dynamic call to static method PHPUnit\\Framework\\Assert\:\:assertEquals\(\)\.$#'
-			identifier: staticMethod.dynamicCall
-			count: 8
-			path: app/cdash/tests/case/CDash/Model/PendingSubmissionsTest.php
-
-		-
-			message: '#^Method PendingSubmissionsTest\:\:testPendingSubmissionsModel\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Model/PendingSubmissionsTest.php
-
-		-
 			message: '#^Dynamic call to static method PHPUnit\\Framework\\Assert\:\:assertEquals\(\)\.$#'
 			identifier: staticMethod.dynamicCall
 			count: 3

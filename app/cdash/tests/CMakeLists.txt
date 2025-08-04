@@ -93,6 +93,18 @@ add_php_test(extracttar)
 
 add_php_test(passwordcomplexity)
 
+add_legacy_unit_test(/CDash/Model/BuildError)
+
+add_legacy_unit_test(/CDash/Model/Build)
+
+add_legacy_unit_test(/CDash/Model/BuildErrorFilter)
+
+add_legacy_unit_test(/CDash/Model/BuildFailure)
+
+add_legacy_unit_test(/CDash/Model/BuildRelationship)
+
+add_legacy_unit_test(/CDash/Model/Repository)
+
 ###################################################################################################
 
 add_laravel_test(/Feature/CDashTest)
@@ -150,21 +162,6 @@ set_property(TEST /CDash/ConfigUseCase APPEND PROPERTY RUN_SERIAL TRUE)
 
 add_legacy_unit_test(/CDash/UpdateUseCase)
 set_tests_properties(/CDash/UpdateUseCase PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
-
-add_legacy_unit_test(/CDash/Model/BuildError)
-set_tests_properties(/CDash/Model/BuildError PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
-
-add_legacy_unit_test(/CDash/Model/BuildErrorFilter)
-set_tests_properties(/CDash/Model/BuildErrorFilter PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
-
-add_legacy_unit_test(/CDash/Model/BuildFailure)
-set_tests_properties(/CDash/Model/BuildFailure PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
-
-add_legacy_unit_test(/CDash/Model/BuildRelationship)
-set_tests_properties(/CDash/Model/BuildRelationship PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
-
-add_legacy_unit_test(/CDash/Model/Repository)
-set_tests_properties(/CDash/Model/Repository PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_legacy_unit_test(/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilder)
 set_tests_properties(/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilder PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
@@ -388,11 +385,6 @@ set_property(TEST install_2 APPEND PROPERTY DEPENDS
   /CDash/BuildUseCase
   /CDash/ConfigUseCase
   /CDash/UpdateUseCase
-  /CDash/Model/BuildError
-  /CDash/Model/BuildErrorFilter
-  /CDash/Model/BuildFailure
-  /CDash/Model/BuildRelationship
-  /CDash/Model/Repository
   /CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilder
   /CDash/Messaging/Subscription/UserSubscriptionBuilder
   /CDash/Messaging/Topic/UpdateErrorTopic
@@ -494,11 +486,8 @@ set_tests_properties(viewdynamicanalysisfile PROPERTIES DEPENDS viewdynamicanaly
 add_php_test(buildmodel)
 set_tests_properties(buildmodel PROPERTIES DEPENDS viewdynamicanalysisfile)
 
-add_legacy_unit_test(/CDash/Model/PendingSubmissions)
-set_tests_properties(/CDash/Model/PendingSubmissions PROPERTIES DEPENDS buildmodel)
-
 add_php_test(projectxmlsequence)
-set_tests_properties(projectxmlsequence PROPERTIES DEPENDS /CDash/Model/PendingSubmissions)
+set_tests_properties(projectxmlsequence PROPERTIES DEPENDS buildmodel)
 
 add_php_test(uploadfile)
 set_tests_properties(uploadfile PROPERTIES DEPENDS projectxmlsequence)
