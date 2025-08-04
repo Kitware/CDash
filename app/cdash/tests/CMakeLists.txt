@@ -119,8 +119,17 @@ set_tests_properties(/CDash/NightlyTime PROPERTIES DEPENDS /CDash/MultipleSubpro
 add_legacy_unit_test(/CDash/TestUseCase)
 set_tests_properties(/CDash/TestUseCase PROPERTIES DEPENDS /CDash/NightlyTime)
 
+add_legacy_unit_test(/CDash/BuildUseCase)
+set_tests_properties(/CDash/BuildUseCase PROPERTIES DEPENDS /CDash/TestUseCase)
+
+add_legacy_unit_test(/CDash/ConfigUseCase)
+set_tests_properties(/CDash/ConfigUseCase PROPERTIES DEPENDS /CDash/BuildUseCase)
+
+add_legacy_unit_test(/CDash/UpdateUseCase)
+set_tests_properties(/CDash/UpdateUseCase PROPERTIES DEPENDS /CDash/ConfigUseCase)
+
 add_legacy_unit_test(/CDash/XmlHandler/BuildHandler)
-set_tests_properties(/CDash/XmlHandler/BuildHandler PROPERTIES DEPENDS /CDash/TestUseCase)
+set_tests_properties(/CDash/XmlHandler/BuildHandler PROPERTIES DEPENDS /CDash/UpdateUseCase)
 
 add_legacy_unit_test(/CDash/XmlHandler/ConfigureHandler)
 set_tests_properties(/CDash/XmlHandler/ConfigureHandler PROPERTIES DEPENDS /CDash/XmlHandler/BuildHandler)
@@ -152,16 +161,6 @@ set_tests_properties(/CDash/Lib/Repository/GitHub PROPERTIES
     DEPENDS /CDash/XmlHandler/UpdateHandler
     DISABLED "$<STREQUAL:${CDASH_IMAGE},ubi>"
 )
-
-add_legacy_unit_test(/CDash/BuildUseCase)
-set_tests_properties(/CDash/BuildUseCase PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
-
-add_legacy_unit_test(/CDash/ConfigUseCase)
-set_tests_properties(/CDash/ConfigUseCase PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
-set_property(TEST /CDash/ConfigUseCase APPEND PROPERTY RUN_SERIAL TRUE)
-
-add_legacy_unit_test(/CDash/UpdateUseCase)
-set_tests_properties(/CDash/UpdateUseCase PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_legacy_unit_test(/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilder)
 set_tests_properties(/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilder PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
@@ -382,9 +381,6 @@ add_feature_test(/Feature/Services/ProjectServiceTest)
 
 set_property(TEST install_2 APPEND PROPERTY DEPENDS
   /CDash/Lib/Repository/GitHub
-  /CDash/BuildUseCase
-  /CDash/ConfigUseCase
-  /CDash/UpdateUseCase
   /CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilder
   /CDash/Messaging/Subscription/UserSubscriptionBuilder
   /CDash/Messaging/Topic/UpdateErrorTopic
