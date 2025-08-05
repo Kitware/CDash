@@ -17,7 +17,7 @@ class CheckKey extends Command
     /**
      * The console command description.
      *
-     * @var ?string
+     * @var string
      */
     protected $description = 'Check whether the APP_KEY environment variable is set, and print a new one if not';
 

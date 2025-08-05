@@ -17,7 +17,7 @@ class PurgeUnusedProjects extends Command
     /**
      * The console command description.
      *
-     * @var string|null
+     * @var string
      */
     protected $description = 'Delete projects with no builds';
 

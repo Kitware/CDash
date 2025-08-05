@@ -14,7 +14,7 @@ class UpdateLdapProjectMembership extends Command
     protected $signature = 'ldap:sync_projects';
 
     /**
-     * @var ?string
+     * @var string
      */
     protected $description = 'Command description';
 
