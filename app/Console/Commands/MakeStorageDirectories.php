@@ -16,7 +16,7 @@ class MakeStorageDirectories extends Command
     /**
      * The console command description.
      *
-     * @var string|null
+     * @var string
      */
     protected $description = 'Create storage directories if they do not already exist';
 

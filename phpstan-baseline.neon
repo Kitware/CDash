@@ -67,12 +67,6 @@ parameters:
 			path: app/Console/Commands/AutoRemoveBuilds.php
 
 		-
-			message: '#^PHPDoc type string of property App\\Console\\Commands\\AutoRemoveBuilds\:\:\$description is not the same as PHPDoc type string\|null of overridden property Illuminate\\Console\\Command\:\:\$description\.$#'
-			identifier: property.phpDocType
-			count: 1
-			path: app/Console/Commands/AutoRemoveBuilds.php
-
-		-
 			message: '#^Parameter \#1 \$projectid of static method App\\Utils\\DatabaseCleanupUtils\:\:removeFirstBuilds\(\) expects int, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -99,12 +93,6 @@ parameters:
 		-
 			message: '#^Method App\\Console\\Commands\\QueueSubmissions\:\:queueFile\(\) has parameter \$inboxFile with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/Console/Commands/QueueSubmissions.php
-
-		-
-			message: '#^PHPDoc type string of property App\\Console\\Commands\\QueueSubmissions\:\:\$description is not the same as PHPDoc type string\|null of overridden property Illuminate\\Console\\Command\:\:\$description\.$#'
-			identifier: property.phpDocType
 			count: 1
 			path: app/Console/Commands/QueueSubmissions.php
 
@@ -145,12 +133,6 @@ parameters:
 			path: app/Console/Commands/RemoveUser.php
 
 		-
-			message: '#^PHPDoc type string of property App\\Console\\Commands\\RemoveUser\:\:\$description is not the same as PHPDoc type string\|null of overridden property Illuminate\\Console\\Command\:\:\$description\.$#'
-			identifier: property.phpDocType
-			count: 1
-			path: app/Console/Commands/RemoveUser.php
-
-		-
 			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
 			identifier: equal.notAllowed
 			count: 1
@@ -159,12 +141,6 @@ parameters:
 		-
 			message: '#^Only booleans are allowed in an if condition, string\|null given\.$#'
 			identifier: if.condNotBoolean
-			count: 1
-			path: app/Console/Commands/SaveUser.php
-
-		-
-			message: '#^PHPDoc type string of property App\\Console\\Commands\\SaveUser\:\:\$description is not the same as PHPDoc type string\|null of overridden property Illuminate\\Console\\Command\:\:\$description\.$#'
-			identifier: property.phpDocType
 			count: 1
 			path: app/Console/Commands/SaveUser.php
 
@@ -32033,12 +32009,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: tests/Feature/GraphQL/SiteTypeTest.php
-
-		-
-			message: '#^You should use assertSame\(\) instead of assertEquals\(\), because both values are scalars of the same type$#'
-			identifier: phpunit.assertEquals
-			count: 4
-			path: tests/Feature/Jobs/PruneJobsTest.php
 
 		-
 			message: '#^Cannot access offset 0 on mixed\.$#'
