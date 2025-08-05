@@ -9715,6 +9715,24 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
+			message: '#^Cannot access offset ''status'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 3
+			path: app/cdash/app/Model/Build.php
+
+		-
+			message: '#^Cannot access property \$measurements on mixed\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/cdash/app/Model/Build.php
+
+		-
+			message: '#^Cannot access property \$time on mixed\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/cdash/app/Model/Build.php
+
+		-
 			message: '#^Class CDash\\Model\\Build has an uninitialized property \$BeginningOfDay\. Give it default value or assign it in the constructor\.$#'
 			identifier: property.uninitialized
 			count: 1
@@ -9961,8 +9979,8 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: '#^Method CDash\\Model\\Build\:\:GetTestCollection\(\) has invalid return type CDash\\Model\\TestCollection\.$#'
-			identifier: class.notFound
+			message: '#^Method CDash\\Model\\Build\:\:GetTestCollection\(\) return type with generic class Illuminate\\Support\\Collection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -10183,8 +10201,8 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			message: '#^Property CDash\\Model\\Build\:\:\$TestCollection has no type specified\.$#'
-			identifier: missingType.property
+			message: '#^Property CDash\\Model\\Build\:\:\$TestCollection with generic class Illuminate\\Support\\Collection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -10209,6 +10227,18 @@ parameters:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			'''
 			identifier: method.deprecated
+			count: 1
+			path: app/cdash/app/Model/BuildConfigure.php
+
+		-
+			message: '#^Cannot access property \$BuildId on mixed\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/cdash/app/Model/BuildConfigure.php
+
+		-
+			message: '#^Cannot call method Insert\(\) on mixed\.$#'
+			identifier: method.nonObject
 			count: 1
 			path: app/cdash/app/Model/BuildConfigure.php
 
@@ -10291,8 +10321,8 @@ parameters:
 			path: app/cdash/app/Model/BuildConfigure.php
 
 		-
-			message: '#^Property CDash\\Model\\BuildConfigure\:\:\$LabelCollection has no type specified\.$#'
-			identifier: missingType.property
+			message: '#^Property CDash\\Model\\BuildConfigure\:\:\$LabelCollection with generic class Illuminate\\Support\\Collection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
 			count: 1
 			path: app/cdash/app/Model/BuildConfigure.php
 
@@ -14251,43 +14281,19 @@ parameters:
 			path: app/cdash/include/Messaging/Topic/LabeledTopic.php
 
 		-
-			message: '#^Call to method count\(\) on an unknown class CDash\\Messaging\\Topic\\Illuminate\\Support\\Collection\.$#'
-			identifier: class.notFound
+			message: '#^Method CDash\\Messaging\\Topic\\MissingTestTopic\:\:getTopicCollection\(\) return type with generic class Illuminate\\Support\\Collection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
 			count: 1
 			path: app/cdash/include/Messaging/Topic/MissingTestTopic.php
 
 		-
-			message: '#^Call to method put\(\) on an unknown class CDash\\Messaging\\Topic\\Illuminate\\Support\\Collection\.$#'
-			identifier: class.notFound
+			message: '#^Property CDash\\Messaging\\Topic\\MissingTestTopic\:\:\$collection with generic class Illuminate\\Support\\Collection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
 			count: 1
 			path: app/cdash/include/Messaging/Topic/MissingTestTopic.php
 
 		-
-			message: '#^Method CDash\\Messaging\\Topic\\MissingTestTopic\:\:getTopicCollection\(\) has invalid return type CDash\\Messaging\\Topic\\Illuminate\\Support\\Collection\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/cdash/include/Messaging/Topic/MissingTestTopic.php
-
-		-
-			message: '#^Method CDash\\Messaging\\Topic\\MissingTestTopic\:\:getTopicCollection\(\) should return CDash\\Messaging\\Topic\\Illuminate\\Support\\Collection but returns CDash\\Messaging\\Topic\\Illuminate\\Support\\Collection\|Illuminate\\Support\\Collection\<\(int\|string\), mixed\>\.$#'
-			identifier: return.type
-			count: 1
-			path: app/cdash/include/Messaging/Topic/MissingTestTopic.php
-
-		-
-			message: '#^Property CDash\\Messaging\\Topic\\MissingTestTopic\:\:\$collection \(CDash\\Messaging\\Topic\\Illuminate\\Support\\Collection\) does not accept Illuminate\\Support\\Collection\<\(int\|string\), mixed\>\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: app/cdash/include/Messaging/Topic/MissingTestTopic.php
-
-		-
-			message: '#^Property CDash\\Messaging\\Topic\\MissingTestTopic\:\:\$collection has unknown class CDash\\Messaging\\Topic\\Illuminate\\Support\\Collection as its type\.$#'
-			identifier: class.notFound
-			count: 1
-			path: app/cdash/include/Messaging/Topic/MissingTestTopic.php
-
-		-
-			message: '#^Return type \(CDash\\Messaging\\Topic\\Illuminate\\Support\\Collection\) of method CDash\\Messaging\\Topic\\MissingTestTopic\:\:getTopicCollection\(\) should be covariant with return type \(CDash\\Collection\\Collection\) of method CDash\\Messaging\\Topic\\Topic\:\:getTopicCollection\(\)$#'
+			message: '#^Return type \(Illuminate\\Support\\Collection\) of method CDash\\Messaging\\Topic\\MissingTestTopic\:\:getTopicCollection\(\) should be compatible with return type \(CDash\\Collection\\Collection\) of method CDash\\Messaging\\Topic\\Topic\:\:getTopicCollection\(\)$#'
 			identifier: method.childReturnType
 			count: 1
 			path: app/cdash/include/Messaging/Topic/MissingTestTopic.php
@@ -14326,9 +14332,9 @@ parameters:
 			path: app/cdash/include/Messaging/Topic/TestFailureTopic.php
 
 		-
-			message: '#^Iterating over an object of an unknown class CDash\\Model\\TestCollection\.$#'
-			identifier: class.notFound
-			count: 3
+			message: '#^Cannot call method getLabels\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
 			path: app/cdash/include/Messaging/Topic/TestFailureTopic.php
 
 		-
@@ -14395,6 +14401,12 @@ parameters:
 			message: '#^Parameter \#2 \$item \(App\\Models\\Test\) of method CDash\\Messaging\\Topic\\TestFailureTopic\:\:itemHasTopicSubject\(\) should be contravariant with parameter \$item \(mixed\) of method CDash\\Messaging\\Topic\\TopicInterface\:\:itemHasTopicSubject\(\)$#'
 			identifier: method.childParameterType
 			count: 1
+			path: app/cdash/include/Messaging/Topic/TestFailureTopic.php
+
+		-
+			message: '#^Parameter \#2 \$item of method CDash\\Messaging\\Topic\\TestFailureTopic\:\:itemHasTopicSubject\(\) expects App\\Models\\Test, mixed given\.$#'
+			identifier: argument.type
+			count: 2
 			path: app/cdash/include/Messaging/Topic/TestFailureTopic.php
 
 		-
@@ -18859,14 +18871,20 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Topic/FixedTopicTest.php
 
 		-
-			message: '#^Call to method get\(\) on an unknown class CDash\\Messaging\\Topic\\Illuminate\\Support\\Collection\.$#'
-			identifier: class.notFound
+			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertInstanceOf\(\) with ''Illuminate\\\\Support\\\\Collection'' and Illuminate\\Support\\Collection will always evaluate to true\.$#'
+			identifier: method.alreadyNarrowedType
+			count: 1
+			path: app/cdash/tests/case/CDash/Messaging/Topic/MissingTestTopicTest.php
+
+		-
+			message: '#^Cannot access property \$buildid on mixed\.$#'
+			identifier: property.nonObject
 			count: 2
 			path: app/cdash/tests/case/CDash/Messaging/Topic/MissingTestTopicTest.php
 
 		-
-			message: '#^Call to method has\(\) on an unknown class CDash\\Messaging\\Topic\\Illuminate\\Support\\Collection\.$#'
-			identifier: class.notFound
+			message: '#^Cannot access property \$testname on mixed\.$#'
+			identifier: property.nonObject
 			count: 2
 			path: app/cdash/tests/case/CDash/Messaging/Topic/MissingTestTopicTest.php
 
@@ -19885,18 +19903,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/ServiceContainerTest.php
 
 		-
-			message: '#^Access to property \$details on an unknown class Test\.$#'
-			identifier: class.notFound
-			count: 4
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			message: '#^Access to property \$status on an unknown class Test\.$#'
-			identifier: class.notFound
-			count: 5
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
 			message: '#^Call to an undefined method App\\Http\\Submission\\Handlers\\AbstractXmlHandler\:\:GetBuildCollection\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -19933,15 +19939,9 @@ parameters:
 			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
 
 		-
-			message: '#^Call to method get\(\) on an unknown class CDash\\Model\\TestCollection\.$#'
-			identifier: class.notFound
-			count: 2
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			message: '#^Call to method has\(\) on an unknown class CDash\\Model\\TestCollection\.$#'
-			identifier: class.notFound
-			count: 2
+			message: '#^Cannot access property \$status on mixed\.$#'
+			identifier: property.nonObject
+			count: 1
 			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
 
 		-
@@ -20059,21 +20059,9 @@ parameters:
 			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
 
 		-
-			message: '#^PHPDoc tag @var for variable \$test contains unknown class Test\.$#'
-			identifier: class.notFound
-			count: 5
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
 			message: '#^PHPDoc tag @var for variable \$tests contains generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
 			identifier: missingType.generics
-			count: 4
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			message: '#^PHPDoc tag @var with type Illuminate\\Support\\Collection is not subtype of type CDash\\Model\\TestCollection\.$#'
-			identifier: varTag.type
-			count: 4
+			count: 3
 			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
 
 		-
@@ -20083,15 +20071,9 @@ parameters:
 			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
 
 		-
-			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, CDash\\Model\\TestCollection given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
 			message: '#^You should use assertSame\(\) instead of assertEquals\(\), because both values are scalars of the same type$#'
 			identifier: phpunit.assertEquals
-			count: 4
+			count: 13
 			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
 
 		-

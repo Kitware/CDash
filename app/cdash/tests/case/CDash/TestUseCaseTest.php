@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Submission\Handlers\TestingHandler;
+use App\Models\Test;
 use CDash\Collection\BuildCollection;
 use CDash\Model\Build;
 use CDash\Test\CDashUseCaseTestCase;
@@ -173,11 +174,9 @@ class TestUseCaseTest extends CDashUseCaseTestCase
 
         /** @var TestingHandler $handler */
         $handler = $sut->build();
-        /** @var BuildCollection $builds */
         $builds = $handler->GetBuildCollection();
         /** @var Build $build */
         $build = $builds->current();
-        /** @var Collection $tests */
         $tests = $build->GetTestCollection();
         /** @var Test $test */
         $test = $tests->get('some.test.name');

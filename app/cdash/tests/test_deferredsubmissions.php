@@ -10,6 +10,8 @@ require_once 'tests/test_branchcoverage.php';
 use App\Models\AuthToken;
 use App\Utils\DatabaseCleanupUtils;
 use CDash\Model\Project;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class DeferredSubmissionsTestCase extends BranchCoverageTestCase
 {

@@ -95,7 +95,7 @@ class Build
     public string $BeginningOfDay;
     public string $EndOfDay;
 
-    private $TestCollection;
+    private Collection $TestCollection;
     private $PDO;
     private $Site;
     private $BuildUpdate;
@@ -2192,10 +2192,8 @@ class Build
 
     /**
      * Return the current Build's TestCollection.
-     *
-     * @return TestCollection
      */
-    public function GetTestCollection()
+    public function GetTestCollection(): Collection
     {
         return $this->TestCollection;
     }

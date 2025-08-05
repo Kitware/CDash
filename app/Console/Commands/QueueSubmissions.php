@@ -6,7 +6,7 @@ use App\Jobs\ProcessSubmission;
 use App\Utils\AuthTokenUtil;
 use CDash\Model\Project;
 use Illuminate\Console\Command;
-use Storage;
+use Illuminate\Support\Facades\Storage;
 
 class QueueSubmissions extends Command
 {
