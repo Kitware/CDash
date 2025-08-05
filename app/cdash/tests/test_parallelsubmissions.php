@@ -10,6 +10,7 @@ require_once 'tests/trilinos_submission_test.php';
 
 use App\Utils\DatabaseCleanupUtils;
 use CDash\Model\Project;
+use Illuminate\Support\Facades\DB;
 
 class ParallelSubmissionsTestCase extends TrilinosSubmissionTestCase
 {

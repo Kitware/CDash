@@ -19,13 +19,20 @@ namespace CDash\Messaging\Topic;
 
 use App\Models\Test;
 use CDash\Model\Build;
+use Illuminate\Support\Collection;
 
 class MissingTestTopic extends Topic
 {
     use IssueTemplateTrait;
 
-    /** @var Illuminate\Support\Collection */
-    private $collection;
+    private Collection $collection;
+
+    public function __construct(?TopicInterface $topic = null)
+    {
+        parent::__construct($topic);
+
+        $this->collection = collect();
+    }
 
     /**
      * This method queries the build to check for missing tests
@@ -53,14 +60,8 @@ class MissingTestTopic extends Topic
         }
     }
 
-    /**
-     * @return Illuminate\Support\Collection
-     */
-    public function getTopicCollection()
+    public function getTopicCollection(): Collection
     {
-        if (!$this->collection) {
-            $this->collection = collect();
-        }
         return $this->collection;
     }
 

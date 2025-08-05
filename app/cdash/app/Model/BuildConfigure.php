@@ -38,7 +38,7 @@ class BuildConfigure
     public $BuildId;
     public $NumberOfWarnings;
     public $NumberOfErrors;
-    public $LabelCollection;
+    public Collection $LabelCollection;
     private $Crc32;
 
     private $PDO;

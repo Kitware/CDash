@@ -8,6 +8,7 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 require_once 'tests/test_branchcoverage.php';
 
 use App\Utils\DatabaseCleanupUtils;
+use Illuminate\Support\Facades\DB;
 
 class UnparsedSubmissionsHonorBuildIdTestCase extends BranchCoverageTestCase
 {

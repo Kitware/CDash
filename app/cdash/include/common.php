@@ -27,6 +27,7 @@ use CDash\ServiceContainer;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use League\Flysystem\UnableToReadFile;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 
