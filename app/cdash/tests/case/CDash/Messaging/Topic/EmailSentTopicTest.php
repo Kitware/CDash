@@ -27,7 +27,7 @@ use CDash\Test\CDashTestCase;
 
 class EmailSentTopicTest extends CDashTestCase
 {
-    public function testSubscribesToBuild()
+    public function testSubscribesToBuild(): void
     {
         $mock_topic = $this->getMockBuilder(Topic::class)
             ->onlyMethods(['subscribesToBuild', 'getTopicName'])

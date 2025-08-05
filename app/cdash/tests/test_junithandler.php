@@ -25,7 +25,7 @@ class JUnitHandlerTestCase extends KWWebTestCase
         }
     }
 
-    public function testJUnitHandler()
+    public function testJUnitHandler(): void
     {
         // Login as admin.
         $this->login();

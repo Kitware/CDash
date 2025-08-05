@@ -36,13 +36,13 @@ class RepositoryServiceTest extends CDashTestCase
             ->getMock();
     }
 
-    public function testConstruct()
+    public function testConstruct(): void
     {
         $sut = new RepositoryService($this->repository);
         $this->assertInstanceOf(RepositoryService::class, $sut);
     }
 
-    public function testSetStatusOnStart()
+    public function testSetStatusOnStart(): void
     {
         $sut = new RepositoryService($this->repository);
 

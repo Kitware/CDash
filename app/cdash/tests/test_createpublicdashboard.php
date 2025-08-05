@@ -13,7 +13,7 @@ class CreatePublicDashboardTestCase extends KWWebTestCase
         parent::__construct();
     }
 
-    public function testCreatePublicDashboard()
+    public function testCreatePublicDashboard(): void
     {
         $settings = [
             'Name' => 'PublicDashboard',

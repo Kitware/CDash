@@ -89,12 +89,12 @@ class KWWebTestCase extends WebTestCase
         return new CDashControllerBrowser($this);
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->removeParsedFiles();
     }
 
-    public function removeParsedFiles()
+    public function removeParsedFiles(): void
     {
         $files = Storage::allFiles('parsed');
         try {
@@ -104,7 +104,7 @@ class KWWebTestCase extends WebTestCase
         }
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($_SERVER['Authorization']);
         foreach (array_keys($_SERVER) as $key) {
@@ -147,7 +147,7 @@ class KWWebTestCase extends WebTestCase
     }
 
     /** Delete the log file */
-    public function deleteLog($filename)
+    public function deleteLog($filename): void
     {
         if (file_exists($filename)) {
             // Delete file:
@@ -256,12 +256,12 @@ class KWWebTestCase extends WebTestCase
         return !empty($this->actingAs);
     }
 
-    public function login($user = 'simpletest@localhost', $passwd = 'simpletest')
+    public function login($user = 'simpletest@localhost', $passwd = 'simpletest'): void
     {
         $this->actingAs(['email' => $user, 'password' => $passwd]);
     }
 
-    public function loginActingAs()
+    public function loginActingAs(): void
     {
         $user = $this->getUser($this->actingAs['email']);
         Auth::shouldReceive('check')->andReturn(true);
@@ -272,7 +272,7 @@ class KWWebTestCase extends WebTestCase
         Auth::shouldReceive('shouldUse')->andReturn('web');
     }
 
-    public function logout()
+    public function logout(): void
     {
         Auth::shouldReceive('check')->andReturn(false);
         Auth::shouldReceive('user')->andReturn(new User());
@@ -357,7 +357,7 @@ class KWWebTestCase extends WebTestCase
     ) {
         $this->ctest_submission = $filename;
         $qstr = '';
-        array_walk($query, function ($v, $k) use (&$qstr) {
+        array_walk($query, function ($v, $k) use (&$qstr): void {
             $qstr .= "{$k}={$v}&";
         });
 
@@ -625,7 +625,7 @@ class CDashControllerBrowser extends SimpleBrowser
         return parent::fetch($url, $encoding, $depth);
     }
 
-    private function setFileParameters($encoding)
+    private function setFileParameters($encoding): void
     {
         if (is_a($encoding, SimpleMultipartEncoding::class)) {
             /** @var SimpleAttachment $part */
@@ -654,17 +654,15 @@ class CDashControllerBrowser extends SimpleBrowser
         }
     }
 
-    private function setServerParameters()
+    private function setServerParameters(): void
     {
         $_SERVER = array_merge($_SERVER, $this->headers);
     }
 
     /**
      * @param SimpleEncoding $encoding
-     *
-     * @return void
      */
-    private function setRequestParameters($encoding)
+    private function setRequestParameters($encoding): void
     {
         // reset our magic request vars
         $parameters = $_REQUEST = $_GET = $_POST = [];
@@ -686,7 +684,7 @@ class CDashControllerBrowser extends SimpleBrowser
     /**
      * @param SimpleUrl $url
      */
-    private function setQueryParameters($url)
+    private function setQueryParameters($url): void
     {
         $query = $url->getEncodedRequest();
         $query = str_replace('?', '', $query);
@@ -710,7 +708,7 @@ class CDashControllerBrowser extends SimpleBrowser
      * @param array &$parameters
      * @param string $key
      */
-    private function setRequestKeyValuePair(&$parameters, $key, $value)
+    private function setRequestKeyValuePair(&$parameters, $key, $value): void
     {
         $value = urldecode($value);
         $key = urldecode($key);
@@ -865,7 +863,7 @@ class CDashControllerUserAgent extends SimpleUserAgent
                 return true;
             }
 
-            public function isError()
+            public function isError(): void
             {
                 $this->response->isServerError() ?:
                     $this->response->isClientError() ?:

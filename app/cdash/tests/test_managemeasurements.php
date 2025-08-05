@@ -45,7 +45,7 @@ class ManageMeasurementsTestCase extends KWWebTestCase
     }
 
     // function to validate test results returned by the API.
-    private function validate_test($test_name, $num_procs, $proc_time, $page)
+    private function validate_test($test_name, $num_procs, $proc_time, $page): void
     {
         // For those special moments when 4.2 does not equal 4.2
         $proc_time = sprintf('%.1f', $proc_time);
@@ -73,7 +73,7 @@ class ManageMeasurementsTestCase extends KWWebTestCase
     }
 
     // Perform similar checks for the subproject case.
-    private function validate_subproject_test($test_name, $num_procs, $proc_time, $io_wait_time, $page)
+    private function validate_subproject_test($test_name, $num_procs, $proc_time, $io_wait_time, $page): void
     {
         // For those special moments when 6.6 does not equal 6.6
         $proc_time = sprintf('%.1f', $proc_time);

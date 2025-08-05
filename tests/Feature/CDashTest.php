@@ -19,7 +19,7 @@ class CDashTest extends TestCase
 {
     use CreatesUsers;
 
-    public function testCDashFilesystemConfigExists()
+    public function testCDashFilesystemConfigExists(): void
     {
         $expected = [
             'driver' => 'local',
@@ -31,7 +31,7 @@ class CDashTest extends TestCase
         $this::assertEquals($expected, $actual);
     }
 
-    public function testFilesystemAdapterConfiguredForCDash()
+    public function testFilesystemAdapterConfiguredForCDash(): void
     {
         $cdashfs = Storage::disk('cdash');
         $this::assertInstanceOf(FilesystemAdapter::class, $cdashfs);
@@ -59,20 +59,20 @@ class CDashTest extends TestCase
     // reason for using the `exit` language construct in CDash so avoid testing scripts
     // (URIs) that want to redirect.
 
-    public function testCDashBasicRequest()
+    public function testCDashBasicRequest(): void
     {
         URL::forceRootUrl('http://localhost');
         $this->get('/login')->assertStatus(200);
     }
 
-    public function testCDashReturnsNotFoundGivenPathDoesNotExist()
+    public function testCDashReturnsNotFoundGivenPathDoesNotExist(): void
     {
         URL::forceRootUrl('http://localhost');
         $this->get('/nope-not-a-uri')
             ->assertStatus(404);
     }
 
-    public function testRedirects()
+    public function testRedirects(): void
     {
         URL::forceRootUrl('http://localhost');
 
@@ -83,7 +83,7 @@ class CDashTest extends TestCase
         $response->assertRedirect('/builds/5/configure');
     }
 
-    public function testOverrideLoginField()
+    public function testOverrideLoginField(): void
     {
         URL::forceRootUrl('http://localhost');
         Config::set('cdash.login_field', 'User');

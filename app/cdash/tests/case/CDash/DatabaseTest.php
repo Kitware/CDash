@@ -23,7 +23,7 @@ class DatabaseTest extends CDashTestCase
         parent::tearDown();
     }
 
-    public function testInstance()
+    public function testInstance(): void
     {
         $db1 = Database::getInstance();
         $this->assertInstanceOf(Database::class, $db1);
@@ -39,7 +39,7 @@ class DatabaseTest extends CDashTestCase
         $this->assertSame($db1, $db2);
     }
 
-    public function testGetPdo()
+    public function testGetPdo(): void
     {
         $db = Database::getInstance();
         $pdo = $db->getPdo();
@@ -47,14 +47,14 @@ class DatabaseTest extends CDashTestCase
         $this->assertInstanceOf(PDO::class, $pdo);
     }
 
-    public function testGetPdoReturnsInstanceOfPDO()
+    public function testGetPdoReturnsInstanceOfPDO(): void
     {
         $db = Database::getInstance();
         $pdo = $db->getPdo();
         $this->assertInstanceOf('PDO', $pdo);
     }
 
-    public function testExecute()
+    public function testExecute(): void
     {
         $input_params = ['param1', 'param2'];
         /** @var PDOStatement|MockObject $stmt */

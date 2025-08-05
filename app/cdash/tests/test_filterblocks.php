@@ -9,7 +9,7 @@ class FilterBlocksTestCase extends KWWebTestCase
         parent::__construct();
     }
 
-    public function testFilterBlocks()
+    public function testFilterBlocks(): void
     {
         // Verify that a set of filters containing a sub-block returns
         // the two builds that we expect.
@@ -17,7 +17,7 @@ class FilterBlocksTestCase extends KWWebTestCase
         $this->verifyTwoHutBuilds();
     }
 
-    public function testSubProjectFilterWorksWithOr()
+    public function testSubProjectFilterWorksWithOr(): void
     {
         // Verify that the server-side filtering logic for SubProjects works
         // with filters combined by the 'or' operator.
@@ -25,7 +25,7 @@ class FilterBlocksTestCase extends KWWebTestCase
         $this->verifyTwoHutBuilds();
     }
 
-    public function testSubProjectFilterWorksWithBlocks()
+    public function testSubProjectFilterWorksWithBlocks(): void
     {
         // Verify that the SubProject filter can peacefully coexist with
         // a filter sub-block.
@@ -33,7 +33,7 @@ class FilterBlocksTestCase extends KWWebTestCase
         $this->verifyTwoHutBuilds();
     }
 
-    public function testFilterBlocksRemoveDefaultDateField()
+    public function testFilterBlocksRemoveDefaultDateField(): void
     {
         // Verify that filters which modify the default date search range
         // (such as 'Build Start Time') can be used within a block.
@@ -41,7 +41,7 @@ class FilterBlocksTestCase extends KWWebTestCase
         $this->verifyTwoHutBuilds();
     }
 
-    public function testFiltersAreDisplayedEvenWhenTheirSQLIsPruned()
+    public function testFiltersAreDisplayedEvenWhenTheirSQLIsPruned(): void
     {
         // Verify that fields that are affected by the SubProject filters are
         // displayed in sub-blocks when we are also filtering on SubProjects.
@@ -54,7 +54,7 @@ class FilterBlocksTestCase extends KWWebTestCase
         $this->assertTrue($filters === $expected);
     }
 
-    public function testFilterBlocksAreRemovedWhenNoSubFiltersRemain()
+    public function testFilterBlocksAreRemovedWhenNoSubFiltersRemain(): void
     {
         // Filter out some SubProjects and add a filter block containing
         // elements that aren't preserved in the child build hyperlink.
@@ -75,7 +75,7 @@ class FilterBlocksTestCase extends KWWebTestCase
         $this->assertTrue(str_contains($build['multiplebuildshyperlink'], $expected));
     }
 
-    private function verifyTwoHutBuilds()
+    private function verifyTwoHutBuilds(): void
     {
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);

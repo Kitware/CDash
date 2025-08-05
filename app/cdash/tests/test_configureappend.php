@@ -26,7 +26,7 @@ class ConfigureAppendTestCase extends KWWebTestCase
         }
     }
 
-    public function testConfigureAppend()
+    public function testConfigureAppend(): void
     {
         // Create test project.
         $this->login();

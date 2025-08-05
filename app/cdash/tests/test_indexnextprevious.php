@@ -13,7 +13,7 @@ class IndexNextPreviousTestCase extends KWWebTestCase
         parent::__construct();
     }
 
-    public function testIndexNextPrevious()
+    public function testIndexNextPrevious(): void
     {
         $projectname = 'NextPreviousProject';
         // Cleanup from previous runs.

@@ -18,7 +18,7 @@ final class ImageController extends AbstractController
             abort(404);
         }
 
-        return response()->stream(function () use ($image) {
+        return response()->stream(function () use ($image): void {
             echo $image->Data;
         }, 200, ['Content-type' => $image->Extension]);
     }

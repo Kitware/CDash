@@ -18,7 +18,7 @@ class IndexFiltersTestCase extends KWWebTestCase
         $this->EmailUrl = $this->url . '/api/v1/index.php?project=EmailProjectExample&date=2009-02-23';
     }
 
-    public function testIndexFilters()
+    public function testIndexFilters(): void
     {
         $this->filter('buildduration', 43, 293, 'Win32');
         $this->filter('buildduration', 43, '4m 53s', 'Win32');

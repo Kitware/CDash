@@ -28,7 +28,7 @@ use CDash\Test\CDashTestCase;
 
 class UpdateHandlerTest extends CDashTestCase
 {
-    public function testUpdateHandlerIsACommitAuthorHandler()
+    public function testUpdateHandlerIsACommitAuthorHandler(): void
     {
         $project = new Project();
         $project->Id = 0;
@@ -36,7 +36,7 @@ class UpdateHandlerTest extends CDashTestCase
         $this->assertInstanceOf(CommitAuthorHandlerInterface::class, $sut);
     }
 
-    public function testGetBuildTopic()
+    public function testGetBuildTopic(): void
     {
         $project = new Project();
         $project->Id = 1;
@@ -57,7 +57,7 @@ class UpdateHandlerTest extends CDashTestCase
         $this->assertTrue($collection->has(Topic::UPDATE_ERROR));
     }
 
-    public function testGetSubscriptionBuilderCollection()
+    public function testGetSubscriptionBuilderCollection(): void
     {
         $project = new Project();
         $project->Id = 0;

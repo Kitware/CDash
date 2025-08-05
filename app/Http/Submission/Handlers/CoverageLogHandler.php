@@ -159,7 +159,7 @@ class CoverageLogHandler extends AbstractXmlHandler
     }
 
     /** Text */
-    public function text($parser, $data)
+    public function text($parser, $data): void
     {
         $element = $this->getElement();
         switch ($element) {

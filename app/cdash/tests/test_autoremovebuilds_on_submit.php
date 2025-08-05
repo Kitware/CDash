@@ -29,13 +29,13 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
         rename("{$this->config_file}.bak", $this->config_file);
     }
 
-    public function enableAutoRemoveConfigSetting()
+    public function enableAutoRemoveConfigSetting(): void
     {
         copy($this->config_file, "{$this->config_file}.bak");
         file_put_contents($this->config_file, 'AUTOREMOVE_BUILDS=true', FILE_APPEND);
     }
 
-    public function setAutoRemoveTimeFrame()
+    public function setAutoRemoveTimeFrame(): void
     {
         // set project autoremovetimeframe
         $db = Database::getInstance();

@@ -217,7 +217,7 @@ class BuildModelTestCase extends KWWebTestCase
         return 0;
     }
 
-    public function testBuildModelGetsFailures()
+    public function testBuildModelGetsFailures(): void
     {
         $build = $this->getBuildModel(0);
 
@@ -233,7 +233,7 @@ class BuildModelTestCase extends KWWebTestCase
         $this->assertTrue(count($buildFailures) === 1);
     }
 
-    public function testBuildModelGetsBuildFailuresAcrossChildBuilds()
+    public function testBuildModelGetsBuildFailuresAcrossChildBuilds(): void
     {
         $build = $this->getBuildModel(0, $this->parentBuilds);
 
@@ -243,7 +243,7 @@ class BuildModelTestCase extends KWWebTestCase
         $this->assertTrue($buildFailures[0]['subprojectname'] == 'some-test-subproject');
     }
 
-    public function testBuildModelGetsResolvedBuildFailures()
+    public function testBuildModelGetsResolvedBuildFailures(): void
     {
         // Make sure the first build returns no resolved build failures since it can't have any
         $build = $this->getBuildModel(0);
@@ -260,7 +260,7 @@ class BuildModelTestCase extends KWWebTestCase
         $this->assertTrue(count($build->GetResolvedBuildFailures(1)->fetchAll()) === 1);
     }
 
-    public function testBuildModelGetErrors()
+    public function testBuildModelGetErrors(): void
     {
         $errorFilter = ['type' => Build::TYPE_ERROR];
         $warnFilter = ['type' => Build::TYPE_WARN];
@@ -281,7 +281,7 @@ class BuildModelTestCase extends KWWebTestCase
         $this->assertTrue(count($build->GetErrors($warnFilter)) === 0);
     }
 
-    public function testBuildModelGetsBuildErrorsAcrossChildBuilds()
+    public function testBuildModelGetsBuildErrorsAcrossChildBuilds(): void
     {
         $build = $this->getBuildModel(0, $this->parentBuilds);
 
@@ -291,7 +291,7 @@ class BuildModelTestCase extends KWWebTestCase
         $this->assertTrue($buildErrors[0]['subprojectname'] == 'some-test-subproject');
     }
 
-    public function testBuildModelGetsResolvedBuildErrors()
+    public function testBuildModelGetsResolvedBuildErrors(): void
     {
         // Make sure the first build returns no resolved build errors since it can't have any
         $build = $this->getBuildModel(0);
@@ -304,7 +304,7 @@ class BuildModelTestCase extends KWWebTestCase
         $this->assertTrue(count($build->GetResolvedBuildErrors(1)->fetchAll()) === 0);
     }
 
-    public function testBuildModelGetsConfigures()
+    public function testBuildModelGetsConfigures(): void
     {
         $build = $this->getBuildModel(0);
         $this->assertTrue(count($build->GetConfigures()->fetchAll()) === 1);
@@ -312,7 +312,7 @@ class BuildModelTestCase extends KWWebTestCase
         // Test configures work across child builds
     }
 
-    public function testBuildModelAddBuild()
+    public function testBuildModelAddBuild(): void
     {
         $build = new Build();
         $build->ProjectId = 1;

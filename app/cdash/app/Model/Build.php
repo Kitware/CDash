@@ -299,7 +299,7 @@ class Build
      **/
     private function UpdateBuildTestTime(float $test_exec_time): void
     {
-        DB::transaction(function () use ($test_exec_time) {
+        DB::transaction(function () use ($test_exec_time): void {
             $buildtesttime_row =
             DB::table('buildtesttime')
                 ->where('buildid', $this->Id)
@@ -1215,7 +1215,7 @@ class Build
         $nwarnings = EloquentBuild::findOrFail((int) $this->Id)->configurewarnings;
         $npreviouswarnings = EloquentBuild::findOrFail($previousbuildid)->configurewarnings;
 
-        DB::transaction(function () use ($nwarnings, $npreviouswarnings) {
+        DB::transaction(function () use ($nwarnings, $npreviouswarnings): void {
             // Check if a diff already exists for this build.
             $existing_diff_row = DB::table('configureerrordiff')
                 ->where('buildid', $this->Id)
@@ -1396,7 +1396,7 @@ class Build
             $buildtest->timemean = $timemean;
             $buildtest->timestd = $timestd;
 
-            DB::transaction(function () use ($buildtest) {
+            DB::transaction(function () use ($buildtest): void {
                 $buildtest->save();
             });
 
@@ -1677,7 +1677,7 @@ class Build
 
         $buildid = (int) $buildid;
 
-        DB::transaction(function () use ($buildid, $newErrors, $newWarnings) {
+        DB::transaction(function () use ($buildid, $newErrors, $newWarnings): void {
             $build = EloquentBuild::find($buildid);
 
             if ($build === null) {
@@ -1792,7 +1792,7 @@ class Build
             return;
         }
 
-        DB::transaction(function () use ($newFailed, $newNotRun, $newPassed) {
+        DB::transaction(function () use ($newFailed, $newNotRun, $newPassed): void {
             $parent = EloquentBuild::findOrFail($this->ParentId);
 
             // Don't let the -1 default value screw up our math.
@@ -1875,7 +1875,7 @@ class Build
             return;
         }
 
-        DB::transaction(function () use ($newWarnings, $newErrors) {
+        DB::transaction(function () use ($newWarnings, $newErrors): void {
             $parent = EloquentBuild::findOrFail($this->ParentId);
 
             // Don't let the -1 default value screw up our math.
@@ -1934,7 +1934,7 @@ class Build
             return;
         }
 
-        DB::transaction(function () use ($field, $duration, $update_parent) {
+        DB::transaction(function () use ($field, $duration, $update_parent): void {
             // Update duration of specified step for this build.
             EloquentBuild::where('id', $this->Id)
                 ->increment("{$field}duration", $duration);
@@ -2248,7 +2248,7 @@ class Build
         // Build doesn't exist yet, create it here.
         $build_created = false;
         try {
-            DB::transaction(function () use ($nbuilderrors, $nbuildwarnings, &$build_created) {
+            DB::transaction(function () use ($nbuilderrors, $nbuildwarnings, &$build_created): void {
                 $this->Id = EloquentBuild::create([
                     'siteid' => $this->SiteId,
                     'projectid' => $this->ProjectId,

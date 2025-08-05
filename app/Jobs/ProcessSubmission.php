@@ -562,7 +562,7 @@ class ProcessSubmission implements ShouldQueue
          * @var EmailMessage $notification
          */
         foreach ($notifications as $notification) {
-            Mail::raw($notification->getBody(), function ($message) use ($notification) {
+            Mail::raw($notification->getBody(), function ($message) use ($notification): void {
                 $message->subject($notification->getSubject())
                     ->to($notification->getRecipient());
             });
@@ -650,7 +650,7 @@ class ProcessSubmission implements ShouldQueue
                 $body .= "*Update Errors*\n";
                 $body .= 'Status: ' . $eloquentBuild->updates()->firstOrFail()->status . ' (' . url('/build/' . $buildid . '/update') . ")\n";
 
-                Mail::raw($body, function ($message) use ($subject, $recipients) {
+                Mail::raw($body, function ($message) use ($subject, $recipients): void {
                     $message->subject($subject)
                         ->to($recipients);
                 });

@@ -32,7 +32,7 @@ class PasswordTest extends TestCase
     public const SYMBOLS = '+!#';
     public const UNDERSCORE = '_';
 
-    public function testGetComplexityConfigurationGivenDefault()
+    public function testGetComplexityConfigurationGivenDefault(): void
     {
         $sut = new PasswordValidator();
         Config::set('cdash.password', []);
@@ -45,7 +45,7 @@ class PasswordTest extends TestCase
         $this::assertEquals($expected, $actual);
     }
 
-    public function testGetComplexityConfigurationFavorsConfigurationOverDefault()
+    public function testGetComplexityConfigurationFavorsConfigurationOverDefault(): void
     {
         $sut = new PasswordValidator();
         $expected = config('cdash.password');
@@ -68,7 +68,7 @@ class PasswordTest extends TestCase
         $this::assertEquals($expected, $actual);
     }
 
-    public function testGetComplexityFavorsArgumentsOverConfiguration()
+    public function testGetComplexityFavorsArgumentsOverConfiguration(): void
     {
         $sut = new PasswordValidator();
         Config::set(
@@ -93,7 +93,7 @@ class PasswordTest extends TestCase
         $this::assertEquals($arguments, $actual);
     }
 
-    public function testComplexityFailsGivenEmptyPassword()
+    public function testComplexityFailsGivenEmptyPassword(): void
     {
         $sut = new PasswordValidator();
         $attribute = 'email';
@@ -120,7 +120,7 @@ class PasswordTest extends TestCase
         $this::assertTrue($sut->complexity($attribute, $value, $parameters, $validator));
     }
 
-    public function testComplexityGivenGivenCountOfZeroOrComplexityOfZero()
+    public function testComplexityGivenGivenCountOfZeroOrComplexityOfZero(): void
     {
         $validator = $this->getMockValidator();
 
@@ -146,7 +146,7 @@ class PasswordTest extends TestCase
         $this::assertTrue($sut->complexity($attribute, $password, $parameters, $validator));
     }
 
-    public function testComplexityGivenComplexityOfValue1()
+    public function testComplexityGivenComplexityOfValue1(): void
     {
         $sut = new PasswordValidator();
         $attribute = 'email';
@@ -203,7 +203,7 @@ class PasswordTest extends TestCase
         $this::assertFalse($sut->complexity($attribute, $password, $parameters, $validator));
     }
 
-    public function testComplexityGivenComplexityOfValue2()
+    public function testComplexityGivenComplexityOfValue2(): void
     {
         $sut = new PasswordValidator();
         $attribute = 'email';
@@ -252,7 +252,7 @@ class PasswordTest extends TestCase
         $this::assertTrue($sut->complexity($attribute, $password, $parameters, $validator));
     }
 
-    public function testComplexityGivenComplexityOfValue3()
+    public function testComplexityGivenComplexityOfValue3(): void
     {
         $sut = new PasswordValidator();
         $attribute = 'email';
@@ -299,7 +299,7 @@ class PasswordTest extends TestCase
         $this::assertTrue($sut->complexity($attribute, $password, $parameters, $validator));
     }
 
-    public function testComplexityOfValue4()
+    public function testComplexityOfValue4(): void
     {
         $sut = new PasswordValidator();
         $attribute = 'email';
@@ -349,7 +349,7 @@ class PasswordTest extends TestCase
         $this::assertTrue($sut->complexity($attribute, $password, $parameters, $validator));
     }
 
-    public function testSetErrorOutput()
+    public function testSetErrorOutput(): void
     {
         $sut = new PasswordValidator();
         $attribute = 'email';

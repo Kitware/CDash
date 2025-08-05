@@ -28,7 +28,7 @@ class UpdateErrorTopicTest extends TestCase
 {
     use BuildDiffForTesting;
 
-    public function testGetTopicName()
+    public function testGetTopicName(): void
     {
         $sut = new UpdateErrorTopic();
         $expected = Topic::UPDATE_ERROR;
@@ -36,7 +36,7 @@ class UpdateErrorTopicTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function testSubscribesToBuild()
+    public function testSubscribesToBuild(): void
     {
         $sut = new UpdateErrorTopic();
         $build = new Build();
@@ -51,7 +51,7 @@ class UpdateErrorTopicTest extends TestCase
         $this->assertTrue($sut->subscribesToBuild($build));
     }
 
-    public function testGetTopicDescription()
+    public function testGetTopicDescription(): void
     {
         $sut = new UpdateErrorTopic();
         $expected = 'Update Errors';
@@ -59,7 +59,7 @@ class UpdateErrorTopicTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function testAddBuild()
+    public function testAddBuild(): void
     {
         $sut = new UpdateErrorTopic();
         $build = new Build();
@@ -70,7 +70,7 @@ class UpdateErrorTopicTest extends TestCase
         $this->assertSame($build, $collection->current());
     }
 
-    public function testGetTemplate()
+    public function testGetTemplate(): void
     {
         $sut = new UpdateErrorTopic();
         $expected = 'issue';
@@ -78,7 +78,7 @@ class UpdateErrorTopicTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function testIsSubscribedToBy()
+    public function testIsSubscribedToBy(): void
     {
         $sut = new UpdateErrorTopic();
 
@@ -100,7 +100,7 @@ class UpdateErrorTopicTest extends TestCase
         $this->assertTrue($sut->isSubscribedToBy($subscriber));
     }
 
-    public function testHasFixes()
+    public function testHasFixes(): void
     {
         $sut = new UpdateErrorTopic();
 
@@ -127,7 +127,7 @@ class UpdateErrorTopicTest extends TestCase
         $this->assertTrue($sut->hasFixes());
     }
 
-    public function testGetFixes()
+    public function testGetFixes(): void
     {
         $sut = new UpdateErrorTopic();
 

@@ -86,7 +86,7 @@ class TestDiffUtil
 
         // Insert/update the testdiff row inside a transaction to (hopefully) gracefully
         // handle race conditions & such.
-        DB::transaction(function () use ($build, $type, $num_positive, $num_negative) {
+        DB::transaction(function () use ($build, $type, $num_positive, $num_negative): void {
             // Check if a testdiff record already exists for this build and type.
             $existing_testdiff = DB::table('testdiff')
                 ->where('buildid', $build->Id)

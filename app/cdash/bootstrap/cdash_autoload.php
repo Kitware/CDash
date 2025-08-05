@@ -1,6 +1,6 @@
 <?php
 
-function cdash_autoload($className)
+function cdash_autoload($className): void
 {
     $cdash_root = realpath(dirname(__FILE__) . '/..');
     $inc_dir = "{$cdash_root}/include";

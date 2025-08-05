@@ -5,7 +5,7 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 class QueryTestsFilterLabelsTestCase extends KWWebTestCase
 {
     // Note: this test reuses existing data from 'EmailProjectExample'.
-    public function testQueryTestsFilterLabels()
+    public function testQueryTestsFilterLabels(): void
     {
         // Baseline (no filters).
         $this->get("{$this->url}/api/v1/queryTests.php?project=EmailProjectExample&date=2009-02-23");

@@ -24,13 +24,13 @@ use CDash\Test\UseCase\UseCase;
 
 class DynamicAnalysisUseCaseTest extends CDashUseCaseTestCase
 {
-    public function testUseCaseBuildsDynamicAnalysisUseCase()
+    public function testUseCaseBuildsDynamicAnalysisUseCase(): void
     {
         $sut = UseCase::createBuilder($this, UseCase::DYNAMIC_ANALYSIS);
         $this->assertInstanceOf(DynamicAnalysisUseCase::class, $sut);
     }
 
-    public function testDynamicAnalysisUseCase()
+    public function testDynamicAnalysisUseCase(): void
     {
         $sut = UseCase::createBuilder($this, UseCase::DYNAMIC_ANALYSIS)
             ->createSite([

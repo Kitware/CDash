@@ -58,7 +58,7 @@ final class ViewTestController extends AbstractBuildController
             $headers = [
                 'Content-Type' => 'text/csv',
             ];
-            return response()->streamDownload(function () use ($response) {
+            return response()->streamDownload(function () use ($response): void {
                 echo $response;
             }, 'test-export.csv', $headers);
         }

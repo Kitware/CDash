@@ -25,7 +25,7 @@ class LongBuildNameTestCase extends KWWebTestCase
         }
     }
 
-    public function testLongBuildName()
+    public function testLongBuildName(): void
     {
         // Create test project.
         $this->login();

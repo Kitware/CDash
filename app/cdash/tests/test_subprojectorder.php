@@ -24,7 +24,7 @@ class SubProjectOrderTestCase extends KWWebTestCase
         }
     }
 
-    public function testSubProjectOrder()
+    public function testSubProjectOrder(): void
     {
         // Create test project.
         $this->login();

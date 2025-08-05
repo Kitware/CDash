@@ -15,7 +15,7 @@ class TestOverviewTestCase extends KWWebTestCase
         parent::__construct();
     }
 
-    public function testTestOverview()
+    public function testTestOverview(): void
     {
         $this->login();
 

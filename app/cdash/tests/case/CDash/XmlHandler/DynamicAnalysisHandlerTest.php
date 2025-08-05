@@ -25,7 +25,7 @@ use Tests\TestCase;
  */
 class DynamicAnalysisHandlerTest extends TestCase
 {
-    public function testGetBuildTopic()
+    public function testGetBuildTopic(): void
     {
         $project = new Project();
         $project->Id = 1;
@@ -45,7 +45,7 @@ class DynamicAnalysisHandlerTest extends TestCase
         $this->assertTrue($collection->has(Topic::DYNAMIC_ANALYSIS));
     }
 
-    public function testGetSubscriptionBuilderCollection()
+    public function testGetSubscriptionBuilderCollection(): void
     {
         $project = new Project();
         $project->Id = 0;

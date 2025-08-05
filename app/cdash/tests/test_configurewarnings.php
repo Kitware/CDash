@@ -18,7 +18,7 @@ class ConfigureWarningTestCase extends KWWebTestCase
         parent::__construct();
     }
 
-    public function testConfigureWarning()
+    public function testConfigureWarning(): void
     {
         $warning_lines = [
             'CMake Warning (dev) at some/file/path:1234 (MESSAGE):',
@@ -45,7 +45,7 @@ class ConfigureWarningTestCase extends KWWebTestCase
         }
     }
 
-    public function testConfigureWarningDiff()
+    public function testConfigureWarningDiff(): void
     {
         // Create a project for this test.
         $settings = [

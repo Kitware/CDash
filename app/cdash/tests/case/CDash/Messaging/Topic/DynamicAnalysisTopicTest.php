@@ -26,7 +26,7 @@ use Tests\TestCase;
 
 class DynamicAnalysisTopicTest extends TestCase
 {
-    public function testSubscribesToBuild()
+    public function testSubscribesToBuild(): void
     {
         $sut = new DynamicAnalysisTopic();
         $build = new Build();
@@ -47,7 +47,7 @@ class DynamicAnalysisTopicTest extends TestCase
         $this->assertTrue($sut->subscribesToBuild($build));
     }
 
-    public function testItemHasTopicSubject()
+    public function testItemHasTopicSubject(): void
     {
         $sut = new DynamicAnalysisTopic();
         $build = new Build();
@@ -65,14 +65,14 @@ class DynamicAnalysisTopicTest extends TestCase
         $this->assertTrue($sut->itemHasTopicSubject($build, $analysis));
     }
 
-    public function testGetTopicCollection()
+    public function testGetTopicCollection(): void
     {
         $sut = new DynamicAnalysisTopic();
         $collection = $sut->getTopicCollection();
         $this->assertInstanceOf(DynamicAnalysisCollection::class, $collection);
     }
 
-    public function testSetTopicData()
+    public function testSetTopicData(): void
     {
         $sut = new DynamicAnalysisTopic();
         $build = new Build();
@@ -103,7 +103,7 @@ class DynamicAnalysisTopicTest extends TestCase
         $this->assertNull($collection->get('B'));
     }
 
-    public function testGetTopicName()
+    public function testGetTopicName(): void
     {
         $sut = new DynamicAnalysisTopic();
         $expected = Topic::DYNAMIC_ANALYSIS;
@@ -111,7 +111,7 @@ class DynamicAnalysisTopicTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function testGetTopicDescription()
+    public function testGetTopicDescription(): void
     {
         $sut = new DynamicAnalysisTopic();
         $expected = 'Dynamic analysis tests failing or not run';
@@ -119,7 +119,7 @@ class DynamicAnalysisTopicTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function testIsSubscribedToBy()
+    public function testIsSubscribedToBy(): void
     {
         $sut = new DynamicAnalysisTopic();
 

@@ -32,7 +32,7 @@ class TruncateOutputTestCase extends KWWebTestCase
         $this->removeBuild();
     }
 
-    public function testTruncateOutput()
+    public function testTruncateOutput(): void
     {
         // Verify that some previously submitted data was truncated as expected.
         $buildtests = DB::select(
@@ -99,7 +99,7 @@ class TruncateOutputTestCase extends KWWebTestCase
         $this->assertEqual($expected, $actual);
     }
 
-    private function removeBuild()
+    private function removeBuild(): void
     {
         if ($this->BuildId > 0) {
             DatabaseCleanupUtils::removeBuild($this->BuildId);

@@ -29,7 +29,7 @@ class NightlyTimeTest extends TestCase
         $this->Project->Filled = true;
     }
 
-    public function testBuildDateWithConsistentTimeZones()
+    public function testBuildDateWithConsistentTimeZones(): void
     {
         // "Nightly" time in the morning.
         $this->Project->SetNightlyTime('11:59:59 UTC');
@@ -54,7 +54,7 @@ class NightlyTimeTest extends TestCase
         $this->validateTestingDay('2019-05-17 12:00:01', '2019-05-18');
     }
 
-    public function testBuildDateWithDifferentTimeZones()
+    public function testBuildDateWithDifferentTimeZones(): void
     {
         // "Nightly" time in the morning according to the project's time zone.
         $this->Project->SetNightlyTime('11:59:59 America/New_York');
@@ -79,7 +79,7 @@ class NightlyTimeTest extends TestCase
         $this->validateTestingDay('2019-05-17 16:00:02', '2019-05-18');
     }
 
-    public function testBuildDateAcrossDST()
+    public function testBuildDateAcrossDST(): void
     {
         $this->Project->SetNightlyTime('01:00:00 America/New_York');
         $utc_time = new DateTimeZone('UTC');
@@ -103,7 +103,7 @@ class NightlyTimeTest extends TestCase
         $this->validateTestingDay($datetime->format('Y-m-d H:i:s'), '2018-11-04');
     }
 
-    public function testUTCInput()
+    public function testUTCInput(): void
     {
         $this->Project->SetNightlyTime('04:01:00 UTC');
         $this->validateTestingDay('2019-09-26 04:00:59', '2019-09-25');
@@ -111,7 +111,7 @@ class NightlyTimeTest extends TestCase
         $this->validateTestingDay('2020-03-09 04:00:59', '2020-03-08');
     }
 
-    public function testInvalidTimezone()
+    public function testInvalidTimezone(): void
     {
         $this->Project->SetNightlyTime('04:01:00 XYZ');
         $this->validateTestingDay('2019-09-26 04:00:59', '2019-09-25');

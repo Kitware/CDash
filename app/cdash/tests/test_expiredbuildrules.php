@@ -7,7 +7,7 @@ use CDash\Model\BuildGroup;
 
 class ExpiredBuildRulesTestCase extends KWWebTestCase
 {
-    public function testExpiredBuildRules()
+    public function testExpiredBuildRules(): void
     {
         $projectid = get_project_id('InsightExample');
 
@@ -45,7 +45,7 @@ class ExpiredBuildRulesTestCase extends KWWebTestCase
         $buildGroup->Delete();
     }
 
-    private function checkForGroup($date, $expected)
+    private function checkForGroup($date, $expected): void
     {
         $this->get($this->url . "/api/v1/index.php?project=InsightExample&date=$date");
         $content = $this->getBrowser()->getContent();

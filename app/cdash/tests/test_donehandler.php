@@ -22,12 +22,12 @@ class DoneHandlerTestCase extends KWWebTestCase
         $this->PDO = Database::getInstance()->getPdo();
     }
 
-    public function testDoneHandlerLocal()
+    public function testDoneHandlerLocal(): void
     {
         $this->performTest();
     }
 
-    public function testDoneHandlerRemote()
+    public function testDoneHandlerRemote(): void
     {
         if (config('filesystems.default') !== 'local') {
             // Skip this test case if we're already testing remote storage.
@@ -51,7 +51,7 @@ class DoneHandlerTestCase extends KWWebTestCase
         file_put_contents($this->ConfigFile, $this->Original);
     }
 
-    private function performTest($remote = false)
+    private function performTest($remote = false): void
     {
         // Make a build.
         $build = new Build();

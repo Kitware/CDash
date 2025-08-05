@@ -19,10 +19,8 @@ class PurgeUnusedProjectsCommand extends TestCase
 
     /**
      * Feature test for the build:remove artisan command.
-     *
-     * @return void
      */
-    public function testAutoRemoveBuildsCommand()
+    public function testAutoRemoveBuildsCommand(): void
     {
         // Make a project.
         $this->project1 = $this->makePublicProject('DontRemoveProject');

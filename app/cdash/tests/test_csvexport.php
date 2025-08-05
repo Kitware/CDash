@@ -15,7 +15,7 @@ class ExportToCSVTestCase extends KWWebTestCase
         parent::__construct();
     }
 
-    public function testExportToCSV()
+    public function testExportToCSV(): void
     {
         // Get the ID of a build that has tests.
         $pdo = Database::getInstance();

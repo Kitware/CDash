@@ -343,7 +343,7 @@ final class TestController extends AbstractProjectController
                 $filecontent .= "\n";
             }
 
-            return response()->streamDownload(function () use ($filecontent) {
+            return response()->streamDownload(function () use ($filecontent): void {
                 echo $filecontent;
             }, 'test-export.csv', ['Content-type' => 'text/csv']);
         }

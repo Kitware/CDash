@@ -27,7 +27,7 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
         $this->dataDir = dirname(__FILE__) . '/data/MultipleSubprojects';
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         if (!$this->tearDown) {
@@ -40,7 +40,7 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
         $this->projectId = $stmt->fetchColumn();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         if ($this->tearDown) {
             $this->restoreState();
@@ -146,7 +146,7 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
         }
     }
 
-    private function restoreEmailPreference()
+    private function restoreEmailPreference(): void
     {
         $pdo = Database::getInstance()->getPdo();
 
@@ -183,7 +183,7 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
         }
     }
 
-    private function verifyBuild($expected, $actual, $name)
+    private function verifyBuild($expected, $actual, $name): void
     {
         foreach ($expected as $key => $value) {
             if (!array_key_exists($key, $actual)) {
@@ -198,7 +198,7 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
         }
     }
 
-    public function testMultipleSubprojects()
+    public function testMultipleSubprojects(): void
     {
         // Get the buildids that we just created so we can delete it later.
         $this->submitBuild();

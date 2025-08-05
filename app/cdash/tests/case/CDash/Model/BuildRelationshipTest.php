@@ -51,7 +51,7 @@ class BuildRelationshipTest extends CDashTestCase
         $container->set(Project::class, $this->mock_project);
     }
 
-    public function testSaveChecksForMissingParams()
+    public function testSaveChecksForMissingParams(): void
     {
         $error_msg = '';
         $this->relationship->Save($error_msg);
@@ -70,7 +70,7 @@ class BuildRelationshipTest extends CDashTestCase
         $this->assertEquals('Relationship not set', $error_msg);
     }
 
-    public function testSaveCheckForNonexistentBuild()
+    public function testSaveCheckForNonexistentBuild(): void
     {
         $this->relationship->Build = $this->mock_build1;
         $this->relationship->RelatedBuild = $this->mock_build2;
@@ -83,7 +83,7 @@ class BuildRelationshipTest extends CDashTestCase
         $this->assertEquals('Build #1 does not exist', $error_msg);
     }
 
-    public function testSaveCheckForNonexistentRelatedBuild()
+    public function testSaveCheckForNonexistentRelatedBuild(): void
     {
         $this->relationship->Build = $this->mock_build1;
         $this->relationship->RelatedBuild = $this->mock_build2;
@@ -97,7 +97,7 @@ class BuildRelationshipTest extends CDashTestCase
         $this->assertEquals('Build #2 does not exist', $error_msg);
     }
 
-    public function testSaveCheckForSelfReferentialRelationship()
+    public function testSaveCheckForSelfReferentialRelationship(): void
     {
         $this->mock_build2->Id = $this->mock_build1->Id;
         $this->relationship->Build = $this->mock_build1;
@@ -112,7 +112,7 @@ class BuildRelationshipTest extends CDashTestCase
         $this->assertEquals('A build cannot be related to itself', $error_msg);
     }
 
-    public function testSaveSuccess()
+    public function testSaveSuccess(): void
     {
         $this->relationship->Build = $this->mock_build1;
         $this->relationship->RelatedBuild = $this->mock_build2;
@@ -126,7 +126,7 @@ class BuildRelationshipTest extends CDashTestCase
         $this->assertEquals('', $error_msg);
     }
 
-    public function testDeleteChecksForMissingParams()
+    public function testDeleteChecksForMissingParams(): void
     {
         $this->relationship->Build = null;
         $this->relationship->RelatedBuild = null;
@@ -139,7 +139,7 @@ class BuildRelationshipTest extends CDashTestCase
         $this->assertEquals('RelatedBuild not set', $error_msg);
     }
 
-    public function testMarshal()
+    public function testMarshal(): void
     {
         $this->relationship->Build = $this->mock_build1;
         $this->relationship->RelatedBuild = $this->mock_build2;

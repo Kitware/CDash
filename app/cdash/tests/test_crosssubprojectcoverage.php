@@ -30,7 +30,7 @@ class CoverageAcrossSubProjectsTestCase extends KWWebTestCase
         $this->DataDir = dirname(__FILE__) . '/data/CoverageAcrossSubProjects';
     }
 
-    public function testCreateProjectTest()
+    public function testCreateProjectTest(): void
     {
         // Create a new project for this test.
         $settings = [
@@ -39,7 +39,7 @@ class CoverageAcrossSubProjectsTestCase extends KWWebTestCase
         $this->createProject($settings);
     }
 
-    public function testCreateSubProjects()
+    public function testCreateSubProjects(): void
     {
         $file = "$this->DataDir/Project.xml";
         if (!$this->submission('CrossSubProjectExample', $file)) {
@@ -49,7 +49,7 @@ class CoverageAcrossSubProjectsTestCase extends KWWebTestCase
         $this->pass('Test passed');
     }
 
-    public function testSubmitGcovTarCoverage()
+    public function testSubmitGcovTarCoverage(): void
     {
         $this->deleteLog($this->logfilename);
         $success = true;

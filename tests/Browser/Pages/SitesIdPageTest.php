@@ -75,14 +75,14 @@ class SitesIdPageTest extends BrowserTestCase
             'siteid' => $this->sites['site1']->id,
         ]);
 
-        $this->browse(function (Browser $browser) {
+        $this->browse(function (Browser $browser): void {
             $browser->visit("/sites/{$this->sites['site1']->id}")
-                ->whenAvailable('@site-details @site-details-table', function (Browser $browser) {
+                ->whenAvailable('@site-details @site-details-table', function (Browser $browser): void {
                     // Just spot check a couple fields
                     self::assertEquals('4', $browser->elements('@site-details-table-cell')[7]->getText());
                     self::assertEquals('8.56 GiB', $browser->elements('@site-details-table-cell')[9]->getText());
                 })
-                ->whenAvailable('@site-details @site-description', function (Browser $browser) {
+                ->whenAvailable('@site-details @site-description', function (Browser $browser): void {
                     $browser->assertSee('No description provided...');
                 });
         });
@@ -90,9 +90,9 @@ class SitesIdPageTest extends BrowserTestCase
         $this->sites['site1']->mostRecentInformation->description = 'abc';
         $this->sites['site1']->mostRecentInformation?->save();
 
-        $this->browse(function (Browser $browser) {
+        $this->browse(function (Browser $browser): void {
             $browser->visit("/sites/{$this->sites['site1']->id}")
-                ->whenAvailable('@site-details @site-description', function (Browser $browser) {
+                ->whenAvailable('@site-details @site-description', function (Browser $browser): void {
                     $browser->assertSee('abc');
                 });
         });
@@ -120,9 +120,9 @@ class SitesIdPageTest extends BrowserTestCase
             'siteid' => $this->sites['site1']->id,
         ]);
 
-        $this->browse(function (Browser $browser) {
+        $this->browse(function (Browser $browser): void {
             $browser->visit("/sites/{$this->sites['site1']->id}")
-                ->whenAvailable('@site-projects-table', function (Browser $browser) {
+                ->whenAvailable('@site-projects-table', function (Browser $browser): void {
                     $browser->assertSee($this->projects['public1']->name);
                     $browser->assertSee($this->projects['public2']->name);
                     $browser->assertSee($this->projects['public1']->description);
@@ -163,9 +163,9 @@ class SitesIdPageTest extends BrowserTestCase
             'description' => 'description2',
         ]);
 
-        $this->browse(function (Browser $browser) {
+        $this->browse(function (Browser $browser): void {
             $browser->visit("/sites/{$this->sites['site1']->id}")
-                ->whenAvailable('@site-history', function (Browser $browser) {
+                ->whenAvailable('@site-history', function (Browser $browser): void {
                     $browser->waitFor('@site-history-item');
                     // Can't use nth child with @ selector unfortunately
                     $browser->assertSeeIn('[data-test="site-history-item"]:nth-child(1)', 'System Update');
@@ -218,23 +218,23 @@ class SitesIdPageTest extends BrowserTestCase
             'numberphysicalcpus' => 6,
         ]);
 
-        $this->browse(function (Browser $browser) {
+        $this->browse(function (Browser $browser): void {
             $browser->visit("/sites/{$this->sites['site1']->id}")
-                ->whenAvailable('@site-history', function (Browser $browser) {
+                ->whenAvailable('@site-history', function (Browser $browser): void {
                     // Can't use nth child with @ selector unfortunately
-                    $browser->whenAvailable('[data-test="site-history-item"]:nth-child(1)', function (Browser $browser) {
+                    $browser->whenAvailable('[data-test="site-history-item"]:nth-child(1)', function (Browser $browser): void {
                         $browser->assertSee('System Update');
                         $browser->assertSee('8.56 GiB');
                         $browser->assertSee('6');
                     });
 
-                    $browser->whenAvailable('[data-test="site-history-item"]:nth-child(2)', function (Browser $browser) {
+                    $browser->whenAvailable('[data-test="site-history-item"]:nth-child(2)', function (Browser $browser): void {
                         $browser->assertSee('System Update');
                         $browser->assertSee('8.56 GiB');
                         $browser->assertSee('4');
                     });
 
-                    $browser->whenAvailable('[data-test="site-history-item"]:nth-child(3)', function (Browser $browser) {
+                    $browser->whenAvailable('[data-test="site-history-item"]:nth-child(3)', function (Browser $browser): void {
                         $browser->assertSee('Site Created');
                         $browser->assertSee('5.54 GiB');
                         $browser->assertSee('2');
@@ -247,9 +247,9 @@ class SitesIdPageTest extends BrowserTestCase
     {
         $this->sites['site1'] = $this->makeSite();
 
-        $this->browse(function (Browser $browser) {
+        $this->browse(function (Browser $browser): void {
             $browser->visit("/sites/{$this->sites['site1']->id}")
-                ->whenAvailable('@site-details', function (Browser $browser) {
+                ->whenAvailable('@site-details', function (Browser $browser): void {
                     $browser->waitForText('No information available for this site.')
                         ->assertSee('No information available for this site.');
                 });
@@ -261,12 +261,12 @@ class SitesIdPageTest extends BrowserTestCase
         $this->sites['site1'] = $this->makeSite();
         $this->users['user'] = $this->makeNormalUser();
 
-        $this->browse(function (Browser $browser) {
+        $this->browse(function (Browser $browser): void {
             // We shouldn't see the claim/unclaim site button when we're logged out
             $browser->visit("/sites/{$this->sites['site1']->id}")
                 ->assertMissing('@claim-site-button')
                 ->assertMissing('@unclaim-site-button')
-                ->whenAvailable('@site-maintainers-table', function (Browser $browser) {
+                ->whenAvailable('@site-maintainers-table', function (Browser $browser): void {
                     $browser->assertDontSee($this->users['user']->firstname);
                 });
 
@@ -276,7 +276,7 @@ class SitesIdPageTest extends BrowserTestCase
                 ->waitFor('@claim-site-button')
                 ->assertVisible('@claim-site-button')
                 ->assertMissing('@unclaim-site-button')
-                ->whenAvailable('@site-maintainers-table', function (Browser $browser) {
+                ->whenAvailable('@site-maintainers-table', function (Browser $browser): void {
                     $browser->assertDontSee($this->users['user']->firstname);
                 })
                 // Claim the site and ensure that it shows up as expected
@@ -300,10 +300,10 @@ class SitesIdPageTest extends BrowserTestCase
         $this->sites['site1']->information()->create();
         $this->users['user'] = $this->makeNormalUser();
 
-        $this->browse(function (Browser $browser) {
+        $this->browse(function (Browser $browser): void {
             // We shouldn't see buttons to edit the description if we are logged out
             $browser->visit("/sites/{$this->sites['site1']->id}")
-                ->whenAvailable('@site-description', function (Browser $browser) {
+                ->whenAvailable('@site-description', function (Browser $browser): void {
                     $browser->assertMissing('@cancel-edit-description-button');
                     $browser->assertMissing('@save-description-button');
                     $browser->assertMissing('@edit-description-button');

@@ -32,7 +32,7 @@ class GitHubWebhook extends TestCase
             ->assertJson(['error' => "Hash algorithm 'zzz' is not supported."], true);
     }
 
-    public function testWebhookWithWrongSignature()
+    public function testWebhookWithWrongSignature(): void
     {
         $_SERVER['HTTP_X_HUB_SIGNATURE'] = 'sha1=wrong secret';
         $this->post($this->endpoint)
@@ -40,7 +40,7 @@ class GitHubWebhook extends TestCase
             ->assertJson(['error' => 'Hook secret does not match.'], true);
     }
 
-    public function testWebhookWithCorrectSignature()
+    public function testWebhookWithCorrectSignature(): void
     {
         $hash = hash_hmac('sha1', '', 'mock secret');
         $_SERVER['HTTP_X_HUB_SIGNATURE'] = "sha1=$hash";

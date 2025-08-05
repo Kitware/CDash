@@ -44,7 +44,7 @@ class ProjectModelTestCase extends KWWebTestCase
         return 0;
     }
 
-    public function testConvertToJsonHasNoPrivateMembers()
+    public function testConvertToJsonHasNoPrivateMembers(): void
     {
         $project = new Project();
         $project->Id = 0;

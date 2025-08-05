@@ -245,7 +245,7 @@ class CoverageSummary
         if ($build_row) {
             $parentid = $build_row->parentid;
             if ($parentid > 0) {
-                DB::transaction(function () use ($parentid, $delta_tested, $delta_untested) {
+                DB::transaction(function () use ($parentid, $delta_tested, $delta_untested): void {
                     $parent_summary = DB::table('coveragesummary')
                         ->where('buildid', $parentid)
                         ->lockForUpdate()

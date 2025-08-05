@@ -27,7 +27,7 @@ $factory->define(User::class, fn (Faker $faker) => [
 
 $factory->state(User::class, 'admin', ['admin' => 1]);
 
-$factory->afterCreating(User::class, function ($user, $faker) {
+$factory->afterCreating(User::class, function ($user, $faker): void {
     $user->passwords()->insert([
         'userid' => $user->id,
         'date' => now(),

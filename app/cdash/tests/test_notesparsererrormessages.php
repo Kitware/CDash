@@ -23,7 +23,7 @@ class NotesParserErrorMessagesTestCase extends KWWebTestCase
         }
     }
 
-    public function testNotesParserErrorMessages()
+    public function testNotesParserErrorMessages(): void
     {
         // Create test project.
         $this->login();

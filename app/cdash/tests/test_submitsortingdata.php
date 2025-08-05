@@ -23,7 +23,7 @@ class SubmitSortingDataTestCase extends KWWebTestCase
         $this->assertTrue(true, "Submission of $file has succeeded");
     }
 
-    public function testSubmitSortingData()
+    public function testSubmitSortingData(): void
     {
         $builds = ['short', 'medium', 'long'];
         $types = ['Build', 'Configure', 'Test', 'Update', 'Notes'];

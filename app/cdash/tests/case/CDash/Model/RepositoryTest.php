@@ -41,7 +41,7 @@ class RepositoryTest extends TestCase
             ->willReturnCallback(fn () => $this->repo);
     }
 
-    public function testGetRepositoryInterfaceReturnsGitHubService()
+    public function testGetRepositoryInterfaceReturnsGitHubService(): void
     {
         $installationId = 12345;
         $this->repo[] = [

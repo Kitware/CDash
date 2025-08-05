@@ -23,7 +23,7 @@ class NumericUpdateTestCase extends KWWebTestCase
         }
     }
 
-    public function testNumericUpdate()
+    public function testNumericUpdate(): void
     {
         // Create test project.
         $this->login();

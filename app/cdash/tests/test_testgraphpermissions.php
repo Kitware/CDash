@@ -37,7 +37,7 @@ class TestGraphPermissionsTestCase extends KWWebTestCase
         $stmt->execute([$this->project]);
     }
 
-    public function testTestGraphPermissions()
+    public function testTestGraphPermissions(): void
     {
         $db = Database::getInstance();
 

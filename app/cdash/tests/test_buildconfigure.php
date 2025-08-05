@@ -21,7 +21,7 @@ class BuildConfigureTestCase extends KWWebTestCase
         parent::__construct();
     }
 
-    public function testBuildConfigure()
+    public function testBuildConfigure(): void
     {
         $configure = new BuildConfigure();
         $configure->BuildId = 'foo';
@@ -81,7 +81,7 @@ class BuildConfigureTestCase extends KWWebTestCase
         $this->deleteLog($this->logfilename);
     }
 
-    public function testBuildConfigureDiff()
+    public function testBuildConfigureDiff(): void
     {
         $this->PDO = Database::getInstance();
         // Clean up any previous runs of this test.

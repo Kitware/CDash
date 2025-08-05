@@ -118,7 +118,7 @@ class OpenCoverTarHandler extends AbstractXmlHandler
     }
 
     /** Text function */
-    public function text($parser, $data)
+    public function text($parser, $data): void
     {
         $element = $this->getElement();
         $data = trim($data);

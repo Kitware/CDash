@@ -29,7 +29,7 @@ class PasswordComplexityTestCase extends KWWebTestCase
         $this->validator = new Password();
     }
 
-    public function testPasswordComplexity()
+    public function testPasswordComplexity(): void
     {
         $this->complexityTest('a', 1, 1);
         $this->complexityTest('aA', 2, 1);
@@ -47,7 +47,7 @@ class PasswordComplexityTestCase extends KWWebTestCase
         $this->complexityTest('abAB12_%', 4, 2);
     }
 
-    public function complexityTest($password, $expected, $count)
+    public function complexityTest($password, $expected, $count): void
     {
         $found = $this->validator->computeComplexity($password, $count);
         if ($found != $expected) {

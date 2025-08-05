@@ -25,7 +25,7 @@ class QueryTestsFilterLabelsTestCase extends KWWebTestCase
         }
     }
 
-    public function testQueryTestsFilterLabels()
+    public function testQueryTestsFilterLabels(): void
     {
         // Create test project.
         $this->login();

@@ -13,7 +13,7 @@ class SecondsFromIntervalTestCase extends KWWebTestCase
         parent::__construct();
     }
 
-    public function testSecondsFromInterval()
+    public function testSecondsFromInterval(): void
     {
         // Switch to GMT to avoid Daylight saving time whackiness.
         date_default_timezone_set('GMT');
@@ -66,7 +66,7 @@ class SecondsFromIntervalTestCase extends KWWebTestCase
         $this->intervalTest('2 years 8 days 17h 24m 43s', 63825883 + $leapYearSeconds);
     }
 
-    public function intervalTest($input, $expected)
+    public function intervalTest($input, $expected): void
     {
         $received = get_seconds_from_interval($input);
         if ($received !== $expected) {

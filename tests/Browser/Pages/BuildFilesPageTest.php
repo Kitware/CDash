@@ -87,7 +87,7 @@ class BuildFilesPageTest extends BrowserTestCase
 
     public function testShowsMessageIfNoUrlsOrFiles(): void
     {
-        $this->browse(function (Browser $browser) {
+        $this->browse(function (Browser $browser): void {
             $browser->visit("/build/{$this->build->id}/files")
                 ->waitFor('@no-urls-or-files-message')
                 ->assertMissing('@urls-table')
@@ -100,7 +100,7 @@ class BuildFilesPageTest extends BrowserTestCase
     {
         $file = $this->addUploadedFile(true);
 
-        $this->browse(function (Browser $browser) use ($file) {
+        $this->browse(function (Browser $browser) use ($file): void {
             $browser->visit("/build/{$this->build->id}/files")
                 ->waitFor('@urls-table')
                 ->assertMissing('@no-urls-or-files-message')
@@ -114,7 +114,7 @@ class BuildFilesPageTest extends BrowserTestCase
     {
         $file = $this->addUploadedFile();
 
-        $this->browse(function (Browser $browser) use ($file) {
+        $this->browse(function (Browser $browser) use ($file): void {
             $browser->visit("/build/{$this->build->id}/files")
                 ->waitFor('@files-table')
                 ->assertMissing('@no-urls-or-files-message')
@@ -138,7 +138,7 @@ class BuildFilesPageTest extends BrowserTestCase
         }
         self::assertCount(120, $urls);
 
-        $this->browse(function (Browser $browser) use ($urls) {
+        $this->browse(function (Browser $browser) use ($urls): void {
             $browser->visit("/build/{$this->build->id}/files")
                 ->waitFor('@urls-table')
                 ->waitForTextIn('@urls-table', max($urls)) // Wait for max and min to ensure multiple pages have loaded properly...
@@ -160,7 +160,7 @@ class BuildFilesPageTest extends BrowserTestCase
         }
         self::assertCount(120, $files);
 
-        $this->browse(function (Browser $browser) use ($files) {
+        $this->browse(function (Browser $browser) use ($files): void {
             $browser->visit("/build/{$this->build->id}/files")
                 ->waitFor('@files-table')
                 ->waitForTextIn('@files-table', max($files)) // Wait for max and min to ensure multiple pages have loaded properly...

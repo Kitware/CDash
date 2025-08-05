@@ -36,7 +36,7 @@ class BuildFailureTest extends CDashTestCase
         $container->set(Project::class, $this->mock_project);
     }
 
-    public function testMarshalBuildFailure()
+    public function testMarshalBuildFailure(): void
     {
         $this->mock_buildfailure
             ->expects($this->once())

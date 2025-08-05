@@ -18,14 +18,14 @@ class ViewDynamicAnalysisFileTestCase extends KWWebTestCase
         parent::__construct();
     }
 
-    public function testViewDynamicAnalysisFile()
+    public function testViewDynamicAnalysisFile(): void
     {
         $response = $this->get($this->url . '/api/v1/viewDynamicAnalysisFile.php?id=1');
         $response = json_decode($response);
         $this->assertTrue(property_exists($response, 'dynamicanalysis'));
     }
 
-    public function testNextPrevious()
+    public function testNextPrevious(): void
     {
         // Get id of existing build.
         $pdo = Database::getInstance()->getPdo();

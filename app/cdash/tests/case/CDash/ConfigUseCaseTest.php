@@ -16,7 +16,7 @@ class ConfigUseCaseTest extends CDashUseCaseTestCase
     private $errors = 2;
     private $warnings = 1;
 
-    public function testUseCaseCreateBuilderReturnsInstanceOfConfigUseCase()
+    public function testUseCaseCreateBuilderReturnsInstanceOfConfigUseCase(): void
     {
         $sut = UseCase::createBuilder($this, UseCase::CONFIG);
         $this->assertInstanceOf(ConfigUseCase::class, $sut);
@@ -30,7 +30,7 @@ class ConfigUseCaseTest extends CDashUseCaseTestCase
         $this->assertEquals($this->cmd, $configure->Command);
     }
 
-    public function testConfigUseCaseBuild()
+    public function testConfigUseCaseBuild(): void
     {
         $sut = UseCase::createBuilder($this, UseCase::CONFIG)
             ->createSite(['Name' => 'Site.name'])

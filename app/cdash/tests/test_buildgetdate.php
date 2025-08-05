@@ -15,7 +15,7 @@ class BuildGetDateTestCase extends KWWebTestCase
         parent::__construct();
     }
 
-    public function testBuildGetDate()
+    public function testBuildGetDate(): void
     {
         // For easy comparison, use Eastern Time inputs to generate some UTC values.
         date_default_timezone_set('America/New_York');

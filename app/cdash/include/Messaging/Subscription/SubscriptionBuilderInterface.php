@@ -26,8 +26,5 @@ interface SubscriptionBuilderInterface
      */
     public function __construct(ActionableBuildInterface $submission);
 
-    /**
-     * @return void
-     */
-    public function build(SubscriptionCollection $subscriptions);
+    public function build(SubscriptionCollection $subscriptions): void;
 }

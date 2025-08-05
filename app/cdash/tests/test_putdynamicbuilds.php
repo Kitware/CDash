@@ -24,7 +24,7 @@ class PutDynamicBuildsTestCase extends KWWebTestCase
         $this->PDO->getPdo();
     }
 
-    public function testPutDynamicBuildsDiff()
+    public function testPutDynamicBuildsDiff(): void
     {
         // Create a project for this test.
         $settings = [
@@ -103,7 +103,7 @@ class PutDynamicBuildsTestCase extends KWWebTestCase
         $this->deleteProject($this->ProjectId);
     }
 
-    protected function verifyListGetsCreated($client, $stmt, $build_rules)
+    protected function verifyListGetsCreated($client, $stmt, $build_rules): void
     {
         $payload = [
             'project' => 'PutDynamicBuildsProject',

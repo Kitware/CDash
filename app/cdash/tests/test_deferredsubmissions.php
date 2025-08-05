@@ -51,7 +51,7 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         file_put_contents($this->ConfigFile, $this->Original);
     }
 
-    public function testDeferredSubmissions()
+    public function testDeferredSubmissions(): void
     {
         $this->prepareForNormalSubmission();
 
@@ -78,7 +78,7 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         $this->verifyNormalSubmission();
     }
 
-    private function prepareForNormalSubmission()
+    private function prepareForNormalSubmission(): void
     {
         $this->deleteLog($this->logfilename);
 
@@ -102,7 +102,7 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         Storage::delete($files);
     }
 
-    private function verifyNormalSubmission()
+    private function verifyNormalSubmission(): void
     {
         $build_row = DB::table('build')
             ->where('projectid', '=', $this->project->Id)
@@ -124,7 +124,7 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
      *
      * @param string $scope a string value matching one of the constants defined in AuthToken.php
      */
-    private function getToken(string $scope)
+    private function getToken(string $scope): void
     {
         if ($this->token !== '') {
             return;
@@ -144,7 +144,7 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         $this->logout();
     }
 
-    public function testNormalSubmitWithValidToken()
+    public function testNormalSubmitWithValidToken(): void
     {
         // Reconfigure project to require authenticated submissions.
         $this->project->AuthenticateSubmissions = true;
@@ -184,7 +184,7 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         $this->project->Save();
     }
 
-    public function testNormalSubmitWithInvalidToken()
+    public function testNormalSubmitWithInvalidToken(): void
     {
         // Reconfigure project to require authenticated submissions.
         $this->project->AuthenticateSubmissions = true;
@@ -219,7 +219,7 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         $this->project->Save();
     }
 
-    public function testNormalSubmitWithMissingToken()
+    public function testNormalSubmitWithMissingToken(): void
     {
         // Reconfigure project to require authenticated submissions.
         $this->project->AuthenticateSubmissions = true;
@@ -254,7 +254,7 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         $this->project->Save();
     }
 
-    public function testDeferredUnparsedSubmission()
+    public function testDeferredUnparsedSubmission(): void
     {
         // Delete existing results (if any).
         $this->clearPriorBranchCoverageResults();
@@ -295,7 +295,7 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         $this->verifyResults();
     }
 
-    public function testDeferredSubmitWithValidToken()
+    public function testDeferredSubmitWithValidToken(): void
     {
         // Reconfigure project to require authenticated submissions.
         $this->project->AuthenticateSubmissions = true;
@@ -348,7 +348,7 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         $this->project->Save();
     }
 
-    public function testDeferredSubmitWithInvalidToken()
+    public function testDeferredSubmitWithInvalidToken(): void
     {
         // Reconfigure project to require authenticated submissions.
         $this->project->AuthenticateSubmissions = true;
@@ -391,7 +391,7 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         $this->project->Save();
     }
 
-    public function testDeferredSubmitWithMissingToken()
+    public function testDeferredSubmitWithMissingToken(): void
     {
         // Reconfigure project to require authenticated submissions.
         $this->project->AuthenticateSubmissions = true;
@@ -434,7 +434,7 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         $this->project->Save();
     }
 
-    public function testDeferredSubmitWithProjectToken()
+    public function testDeferredSubmitWithProjectToken(): void
     {
         // Reconfigure project to require authenticated submissions.
         $this->project->AuthenticateSubmissions = true;
@@ -487,7 +487,7 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         $this->project->Save();
     }
 
-    public function testDeferredSubmitWithInvalidProjectToken()
+    public function testDeferredSubmitWithInvalidProjectToken(): void
     {
         // Reconfigure project to require authenticated submissions.
         $this->project->AuthenticateSubmissions = true;

@@ -25,7 +25,7 @@ class StartTimeFromNotesTestCase extends KWWebTestCase
         }
     }
 
-    public function testStartTimeFromNotes()
+    public function testStartTimeFromNotes(): void
     {
         // Create test project.
         $this->login();

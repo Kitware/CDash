@@ -268,7 +268,7 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
     }
 
     /** Text function */
-    public function text($parser, $data)
+    public function text($parser, $data): void
     {
         $parent = $this->getParent();
         $element = $this->getElement();

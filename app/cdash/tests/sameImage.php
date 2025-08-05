@@ -15,7 +15,7 @@ class EmailTestCase extends KWWebTestCase
         $this->url = 'http://localhost';
     }
 
-    public function testSimple()
+    public function testSimple(): void
     {
         $this->login();
         $content = $this->connect($this->url . '/api/v1/index.php?project=InsightExample');

@@ -33,7 +33,7 @@ class CommitAuthorSubscriptionBuilderTest extends TestCase
 {
     use BuildDiffForTesting;
 
-    public function testBuildGivenSubmissionWithBuildErrors()
+    public function testBuildGivenSubmissionWithBuildErrors(): void
     {
         $subscriptions = new SubscriptionCollection();
         $this->assertCount(0, $subscriptions);
@@ -57,7 +57,7 @@ class CommitAuthorSubscriptionBuilderTest extends TestCase
         $this->assertTrue($subscriptions->has('auth.or@company.tld'));
     }
 
-    public function testBuildGivenSubmissionWithBuildWarnings()
+    public function testBuildGivenSubmissionWithBuildWarnings(): void
     {
         $subscriptions = new SubscriptionCollection();
         $this->assertCount(0, $subscriptions);
@@ -81,7 +81,7 @@ class CommitAuthorSubscriptionBuilderTest extends TestCase
         $this->assertFalse($subscriptions->has('auth.or@compnay.tld'));
     }
 
-    public function testBuildGivenSubmissionWithTestFailures()
+    public function testBuildGivenSubmissionWithTestFailures(): void
     {
         $subscriptions = new SubscriptionCollection();
         $this->assertCount(0, $subscriptions);

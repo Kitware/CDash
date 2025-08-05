@@ -17,7 +17,7 @@ class SubscribeProjectShowLabelsTestCase extends KWWebTestCase
         $this->PDO->getPdo();
     }
 
-    public function testSubscribeProjectShowsLabels()
+    public function testSubscribeProjectShowsLabels(): void
     {
         // Get a build from today.
         $stmt = $this->PDO->query(

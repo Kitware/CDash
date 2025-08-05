@@ -7,7 +7,7 @@ use CDash\Test\UseCase\UseCase;
 
 class UpdateUseCaseTest extends CDashUseCaseTestCase
 {
-    public function testBuild()
+    public function testBuild(): void
     {
         /** @var UpdateUseCase $sut */
         $sut = UseCase::createBuilder($this, UseCase::UPDATE);
@@ -28,7 +28,7 @@ class UpdateUseCaseTest extends CDashUseCaseTestCase
         $this->assertInstanceOf(UpdateHandler::class, $handler);
     }
 
-    public function testCreateRevisionHash()
+    public function testCreateRevisionHash(): void
     {
         /** @var UpdateUseCase $sut */
         $sut = UseCase::createBuilder($this, UseCase::UPDATE);
@@ -38,7 +38,7 @@ class UpdateUseCaseTest extends CDashUseCaseTestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function testRandomizeCheckinDate()
+    public function testRandomizeCheckinDate(): void
     {
         /** @var UpdateUseCase $sut */
         $sut = UseCase::createBuilder($this, UseCase::UPDATE);

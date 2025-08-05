@@ -29,7 +29,7 @@ class ActualTrilinosSubmissionTestCase extends TrilinosSubmissionTestCase
         return $this->createProject($settings);
     }
 
-    public function setEmailCommitters($projectname, $email)
+    public function setEmailCommitters($projectname, $email): void
     {
         // The "Email committers" checkbox is on the manageBuildGroup.php
         // page, but we set it here directly through database manipulation:
@@ -51,7 +51,7 @@ class ActualTrilinosSubmissionTestCase extends TrilinosSubmissionTestCase
             && $this->createProjectWithName('Trilinos');
     }
 
-    public function testActualTrilinosSubmission()
+    public function testActualTrilinosSubmission(): void
     {
         if ($this->createProjects()) {
             $this->setEmailCommitters('Trilinos', 1);
@@ -63,7 +63,7 @@ class ActualTrilinosSubmissionTestCase extends TrilinosSubmissionTestCase
         }
     }
 
-    public function testSubProjectBuildErrors()
+    public function testSubProjectBuildErrors(): void
     {
         // Get the parent build that we just created.
         $query = $this->db->query(

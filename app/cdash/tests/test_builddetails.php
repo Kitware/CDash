@@ -48,7 +48,7 @@ class BuildDetailsTestCase extends KWWebTestCase
         }
     }
 
-    public function testViewBuildErrorReturnsErrorForNonexistentBuild()
+    public function testViewBuildErrorReturnsErrorForNonexistentBuild(): void
     {
         $response = $this->get($this->url . '/api/v1/viewBuildError.php?buildid=80000001');
         $response = json_decode($response);
@@ -56,7 +56,7 @@ class BuildDetailsTestCase extends KWWebTestCase
         $this->assertTrue(strlen($response->error) > 0);
     }
 
-    public function testViewBuildErrorReturnsErrorForInvalidBuildId()
+    public function testViewBuildErrorReturnsErrorForInvalidBuildId(): void
     {
         $response = $this->get($this->url . '/api/v1/viewBuildError.php?buildid=im-non-numeric');
         $response = json_decode($response);
@@ -64,7 +64,7 @@ class BuildDetailsTestCase extends KWWebTestCase
         $this->assertTrue(strlen($response->error) > 0);
     }
 
-    public function testViewBuildErrorReturnsArrayOfErrorsOnChildBuilds()
+    public function testViewBuildErrorReturnsArrayOfErrorsOnChildBuilds(): void
     {
         foreach ($this->builds as $build) {
             if ($build['parentid'] != -1) {
@@ -76,7 +76,7 @@ class BuildDetailsTestCase extends KWWebTestCase
         }
     }
 
-    public function testViewBuildErrorReturnsProperFormat()
+    public function testViewBuildErrorReturnsProperFormat(): void
     {
         // This test is specific to Subbuild3.xml
         $build = $this->builds[3];
@@ -92,7 +92,7 @@ class BuildDetailsTestCase extends KWWebTestCase
         }
     }
 
-    public function testViewBuildErrorReturnsProperFormatForParentBuilds()
+    public function testViewBuildErrorReturnsProperFormatForParentBuilds(): void
     {
         $build = $this->builds[0];
         $build_response = json_decode($this->get(

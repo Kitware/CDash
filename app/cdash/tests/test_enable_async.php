@@ -13,7 +13,7 @@ class EnableAsynchronousTestCase extends KWWebTestCase
         parent::__construct();
     }
 
-    public function testEnableAsynchronous()
+    public function testEnableAsynchronous(): void
     {
         $filename = dirname(__FILE__) . '/../../../.env';
         // Using .env, we no longer have to worry about being inside the closing PHP bracket.

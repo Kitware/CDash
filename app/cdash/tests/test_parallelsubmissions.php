@@ -29,7 +29,7 @@ class ParallelSubmissionsTestCase extends TrilinosSubmissionTestCase
         file_put_contents($this->ConfigFile, $this->Original);
     }
 
-    public function testParallelSubmissions()
+    public function testParallelSubmissions(): void
     {
         $this->deleteLog($this->logfilename);
         DB::table('successful_jobs')->delete();

@@ -64,7 +64,7 @@ class DynamicAnalysisSummaryTestCase extends KWWebTestCase
         $this->pass('Test passed');
     }
 
-    public function testDynamicAnalysisSummaryGetsDeleted()
+    public function testDynamicAnalysisSummaryGetsDeleted(): void
     {
         // Remove the builds we just created.
         DatabaseCleanupUtils::removeBuild($this->ParentId);
@@ -81,7 +81,7 @@ class DynamicAnalysisSummaryTestCase extends KWWebTestCase
         $this->pass('Test passed');
     }
 
-    public function VerifyStandaloneBuild()
+    public function VerifyStandaloneBuild(): void
     {
         // Verify the expected number of defects.
         // Get the ID of this build.
@@ -96,7 +96,7 @@ class DynamicAnalysisSummaryTestCase extends KWWebTestCase
         }
     }
 
-    public function VerifySubProjectBuild()
+    public function VerifySubProjectBuild(): void
     {
         $result = DB::select("
                 SELECT b.id, b.parentid, das.numdefects FROM build AS b

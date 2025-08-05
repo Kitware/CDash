@@ -15,7 +15,7 @@ class SequenceIndependenceTestCase extends KWWebTestCase
         parent::__construct();
     }
 
-    public function testOriginalOrder()
+    public function testOriginalOrder(): void
     {
         $file_order = [
             'Build',
@@ -33,7 +33,7 @@ class SequenceIndependenceTestCase extends KWWebTestCase
         }
     }
 
-    public function testReverseOrder()
+    public function testReverseOrder(): void
     {
         $file_order = [
             'Upload',
@@ -50,7 +50,7 @@ class SequenceIndependenceTestCase extends KWWebTestCase
         }
     }
 
-    public function testConfigureFirst()
+    public function testConfigureFirst(): void
     {
         $file_order = [
             'Configure',
@@ -67,7 +67,7 @@ class SequenceIndependenceTestCase extends KWWebTestCase
         }
     }
 
-    public function testCoverageFirst()
+    public function testCoverageFirst(): void
     {
         $file_order = [
             'Coverage',
@@ -84,7 +84,7 @@ class SequenceIndependenceTestCase extends KWWebTestCase
         }
     }
 
-    public function testCoverageLogFirst()
+    public function testCoverageLogFirst(): void
     {
         $file_order = [
             'CoverageLog',
@@ -101,7 +101,7 @@ class SequenceIndependenceTestCase extends KWWebTestCase
         }
     }
 
-    public function testDynamicAnalysisFirst()
+    public function testDynamicAnalysisFirst(): void
     {
         $file_order = [
             'DynamicAnalysis',
@@ -118,7 +118,7 @@ class SequenceIndependenceTestCase extends KWWebTestCase
         }
     }
 
-    public function testNotesFirst()
+    public function testNotesFirst(): void
     {
         $file_order = [
             'Notes',
@@ -135,7 +135,7 @@ class SequenceIndependenceTestCase extends KWWebTestCase
         }
     }
 
-    public function testTestFirst()
+    public function testTestFirst(): void
     {
         $file_order = [
             'Test',
@@ -152,7 +152,7 @@ class SequenceIndependenceTestCase extends KWWebTestCase
         }
     }
 
-    public function testUpdateFirst()
+    public function testUpdateFirst(): void
     {
         $file_order = [
             'Update',

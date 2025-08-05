@@ -24,7 +24,7 @@ class NamedMeasurementsTestCase extends KWWebTestCase
         }
     }
 
-    public function testNamedMeasurements()
+    public function testNamedMeasurements(): void
     {
         // Create test project.
         $this->login();

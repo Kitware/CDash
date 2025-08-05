@@ -237,7 +237,7 @@ class ExcludeSubProjectsTestCase extends KWWebTestCase
         return 0;
     }
 
-    public function testExcludeHonorsOtherFilters()
+    public function testExcludeHonorsOtherFilters(): void
     {
         $baseurl = "$this->url/api/v1/index.php?project=Trilinos&date=2011-07-22&filtercombine=and&field1=site&compare1=61&value1=hut11.kitware&showfilters=1";
 

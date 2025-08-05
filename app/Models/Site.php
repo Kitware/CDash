@@ -59,7 +59,7 @@ class Site extends Model
     {
         return $this->information()
             ->one()
-            ->ofMany(['timestamp' => 'max'], function (Builder $query) use ($date) {
+            ->ofMany(['timestamp' => 'max'], function (Builder $query) use ($date): void {
                 if ($date !== null) {
                     $query->where('timestamp', '<=', $date);
                 }

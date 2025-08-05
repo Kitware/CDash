@@ -43,6 +43,8 @@ class ConfigureTopic extends Topic implements Decoratable, Labelable
         $configure = $build->GetBuildConfigure();
         $key = Topic::CONFIGURE; // no need to set multiple configures, they're all the same
         $collection->addItem($configure, $key);
+
+        return $this;
     }
 
     public function getTopicName(): string

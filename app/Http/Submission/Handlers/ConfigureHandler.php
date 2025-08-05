@@ -259,7 +259,7 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
         parent::endElement($parser, $name);
     }
 
-    public function text($parser, $data)
+    public function text($parser, $data): void
     {
         $parent = $this->getParent();
         $element = $this->getElement();

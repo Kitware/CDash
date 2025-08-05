@@ -86,7 +86,7 @@ final class DynamicAnalysisController extends AbstractBuildController
         DB::table('dynamicanalysis')
             ->where('buildid', '=', $this->build->Id)
             ->orderBy('status', 'desc')
-            ->chunk(50, function ($rows) use (&$dynamic_analyses, &$defect_types, $defect_nice_names) {
+            ->chunk(50, function ($rows) use (&$dynamic_analyses, &$defect_types, $defect_nice_names): void {
                 foreach ($rows as $DA_row) {
                     $dynamic_analysis = [];
                     $dynamic_analysis['status'] = ucfirst($DA_row->status);

@@ -12,7 +12,7 @@ class SummaryEmailTestCase extends KWWebTestCase
         parent::__construct();
     }
 
-    public function testSummaryEmail()
+    public function testSummaryEmail(): void
     {
         // Cleanup from previous runs.
         $project = new Project();

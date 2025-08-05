@@ -13,7 +13,7 @@ class CommitterInfoTestCase extends KWWebTestCase
         parent::__construct();
     }
 
-    public function testCommitterInfo()
+    public function testCommitterInfo(): void
     {
         $file = dirname(__FILE__) . '/data/git-Update2.xml';
         if (!$this->submission('TestCompressionExample', $file)) {

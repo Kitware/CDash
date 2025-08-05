@@ -64,10 +64,10 @@ class UsersPageTest extends BrowserTestCase
     {
         $this->users['admin'] = $this->makeAdminUser();
 
-        $this->browse(function (Browser $browser) {
+        $this->browse(function (Browser $browser): void {
             $browser->loginAs($this->users['admin'])
                 ->visit('/users')
-                ->whenAvailable('@users-page', function (Browser $browser) {
+                ->whenAvailable('@users-page', function (Browser $browser): void {
                     $browser->assertVisible('@invite-users-button');
                 });
         });
@@ -76,10 +76,10 @@ class UsersPageTest extends BrowserTestCase
     public function testInviteUsersButtonNotVisibleToRegularUsers(): void
     {
         $this->users['normal'] = $this->makeNormalUser();
-        $this->browse(function (Browser $browser) {
+        $this->browse(function (Browser $browser): void {
             $browser->loginAs($this->users['normal'])
                 ->visit('/users')
-                ->whenAvailable('@users-page', function (Browser $browser) {
+                ->whenAvailable('@users-page', function (Browser $browser): void {
                     $browser->assertMissing('@invite-users-button');
                 });
         });
@@ -87,9 +87,9 @@ class UsersPageTest extends BrowserTestCase
 
     public function testInviteUsersButtonNotVisibleWhenSignedOut(): void
     {
-        $this->browse(function (Browser $browser) {
+        $this->browse(function (Browser $browser): void {
             $browser->visit('/users')
-                ->whenAvailable('@users-page', function (Browser $browser) {
+                ->whenAvailable('@users-page', function (Browser $browser): void {
                     $browser->assertMissing('@invite-users-button');
                 });
         });
@@ -99,10 +99,10 @@ class UsersPageTest extends BrowserTestCase
     {
         $this->users['admin'] = $this->makeAdminUser();
 
-        $this->browse(function (Browser $browser) {
+        $this->browse(function (Browser $browser): void {
             $browser->loginAs($this->users['admin'])
                 ->visit('/users')
-                ->whenAvailable('@users-page', function (Browser $browser) {
+                ->whenAvailable('@users-page', function (Browser $browser): void {
                     $browser->waitFor('@invitations-table')
                         ->assertVisible('@invitations-table');
                 });
@@ -113,10 +113,10 @@ class UsersPageTest extends BrowserTestCase
     {
         $this->users['normal'] = $this->makeNormalUser();
 
-        $this->browse(function (Browser $browser) {
+        $this->browse(function (Browser $browser): void {
             $browser->loginAs($this->users['normal'])
                 ->visit('/users')
-                ->whenAvailable('@users-page', function (Browser $browser) {
+                ->whenAvailable('@users-page', function (Browser $browser): void {
                     $browser->assertMissing('@invitations-table');
                 });
         });
@@ -124,9 +124,9 @@ class UsersPageTest extends BrowserTestCase
 
     public function testAnonymousUsersCannotSeeInvitationsTable(): void
     {
-        $this->browse(function (Browser $browser) {
+        $this->browse(function (Browser $browser): void {
             $browser->visit('/users')
-                ->whenAvailable('@users-page', function (Browser $browser) {
+                ->whenAvailable('@users-page', function (Browser $browser): void {
                     $browser->assertMissing('@invitations-table');
                 });
         });
@@ -138,7 +138,7 @@ class UsersPageTest extends BrowserTestCase
 
         $fakeEmail = fake()->unique()->email();
 
-        $this->browse(function (Browser $browser) use ($fakeEmail) {
+        $this->browse(function (Browser $browser) use ($fakeEmail): void {
             $browser->loginAs($this->users['admin'])
                 ->visit('/users')
                 ->waitFor('@users-page')
@@ -172,10 +172,10 @@ class UsersPageTest extends BrowserTestCase
             $this->createInvitation();
         }
 
-        $this->browse(function (Browser $browser) {
+        $this->browse(function (Browser $browser): void {
             $browser->loginAs($this->users['admin'])
                 ->visit('/users')
-                ->whenAvailable('@invitations-table', function (Browser $browser) {
+                ->whenAvailable('@invitations-table', function (Browser $browser): void {
                     foreach ($this->invitations as $invitation) {
                         $browser->waitForText($invitation->email);
                     }
@@ -192,10 +192,10 @@ class UsersPageTest extends BrowserTestCase
             $this->users[] = $this->makeNormalUser();
         }
 
-        $this->browse(function (Browser $browser) {
+        $this->browse(function (Browser $browser): void {
             $browser->loginAs($this->users['admin'])
                 ->visit('/users')
-                ->whenAvailable('@users-table', function (Browser $browser) {
+                ->whenAvailable('@users-table', function (Browser $browser): void {
                     foreach ($this->users as $user) {
                         $browser->waitForText($user->email);
                     }
@@ -208,7 +208,7 @@ class UsersPageTest extends BrowserTestCase
     {
         $this->users['admin'] = $this->makeAdminUser();
 
-        $this->browse(function (Browser $browser) {
+        $this->browse(function (Browser $browser): void {
             $browser->loginAs($this->users['admin'])
                 ->visit('/users')
                 ->waitFor('@role-text-' . $this->users['admin']->id)
@@ -222,7 +222,7 @@ class UsersPageTest extends BrowserTestCase
         $this->users['admin'] = $this->makeAdminUser();
         $this->users['normal'] = $this->makeNormalUser();
 
-        $this->browse(function (Browser $browser) {
+        $this->browse(function (Browser $browser): void {
             $browser->loginAs($this->users['admin'])
                 ->visit('/users')
                 ->waitFor('@role-select-' . $this->users['normal']->id)
@@ -242,7 +242,7 @@ class UsersPageTest extends BrowserTestCase
         $this->users['normal1'] = $this->makeNormalUser();
         $this->users['normal2'] = $this->makeNormalUser();
 
-        $this->browse(function (Browser $browser) {
+        $this->browse(function (Browser $browser): void {
             $browser->loginAs($this->users['normal1'])
                 ->visit('/users')
                 ->waitFor('@role-text-' . $this->users['normal2']->id)
@@ -255,7 +255,7 @@ class UsersPageTest extends BrowserTestCase
     {
         $this->users['normal'] = $this->makeNormalUser();
 
-        $this->browse(function (Browser $browser) {
+        $this->browse(function (Browser $browser): void {
             $browser
                 ->visit('/users')
                 ->waitFor('@role-text-' . $this->users['normal']->id)
@@ -269,10 +269,10 @@ class UsersPageTest extends BrowserTestCase
         $this->users['admin1'] = $this->makeAdminUser();
         $this->users['admin2'] = $this->makeAdminUser();
 
-        $this->browse(function (Browser $browser) {
+        $this->browse(function (Browser $browser): void {
             $browser->loginAs($this->users['admin1'])
                 ->visit('/users')
-                ->whenAvailable('@users-table', function (Browser $browser) {
+                ->whenAvailable('@users-table', function (Browser $browser): void {
                     $browser->assertVisible('@remove-user-button-' . $this->users['admin2']->id);
                 });
         });
@@ -283,10 +283,10 @@ class UsersPageTest extends BrowserTestCase
         $this->users['admin'] = $this->makeAdminUser();
         $this->users['normal'] = $this->makeNormalUser();
 
-        $this->browse(function (Browser $browser) {
+        $this->browse(function (Browser $browser): void {
             $browser->loginAs($this->users['normal'])
                 ->visit('/users')
-                ->whenAvailable('@users-table', function (Browser $browser) {
+                ->whenAvailable('@users-table', function (Browser $browser): void {
                     $browser->assertMissing('@remove-user-button-' . $this->users['admin']->id);
                 });
         });
@@ -296,9 +296,9 @@ class UsersPageTest extends BrowserTestCase
     {
         $this->users['admin'] = $this->makeAdminUser();
 
-        $this->browse(function (Browser $browser) {
+        $this->browse(function (Browser $browser): void {
             $browser->visit('/users')
-                ->whenAvailable('@users-table', function (Browser $browser) {
+                ->whenAvailable('@users-table', function (Browser $browser): void {
                     $browser->assertMissing('@remove-user-button-' . $this->users['admin']->id);
                 });
         });
@@ -308,10 +308,10 @@ class UsersPageTest extends BrowserTestCase
     {
         $this->users['admin'] = $this->makeAdminUser();
 
-        $this->browse(function (Browser $browser) {
+        $this->browse(function (Browser $browser): void {
             $browser->loginAs($this->users['admin'])
                 ->visit('/users')
-                ->whenAvailable('@users-table', function (Browser $browser) {
+                ->whenAvailable('@users-table', function (Browser $browser): void {
                     $browser->assertMissing('@remove-user-button-' . $this->users['admin']->id);
                 });
         });
@@ -324,7 +324,7 @@ class UsersPageTest extends BrowserTestCase
 
         self::assertContains($this->users['normal']->id, User::pluck('id'));
 
-        $this->browse(function (Browser $browser) {
+        $this->browse(function (Browser $browser): void {
             $browser->loginAs($this->users['admin'])
                 ->visit('/users')
                 ->waitFor('@remove-user-button-' . $this->users['normal']->id)

@@ -60,10 +60,8 @@ class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
 
     /**
      * This method sets a build's failed tests in a Collection
-     *
-     * @return void
      */
-    public function setTopicData(Build $build)
+    public function setTopicData(Build $build): void
     {
         $collection = $this->getTopicCollection();
         $buildtests = $build->GetTestCollection();

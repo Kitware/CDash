@@ -26,7 +26,7 @@ class FixedTopicTest extends CDashTestCase
 {
     use BuildDiffForTesting;
 
-    public function testSubscribesToBuildGivenNoFixes()
+    public function testSubscribesToBuildGivenNoFixes(): void
     {
         // BuildErrorTopic implements Fixable
         $buildTopic = new BuildErrorTopic();
@@ -46,7 +46,7 @@ class FixedTopicTest extends CDashTestCase
         $this->assertFalse($sut->subscribesToBuild($build));
     }
 
-    public function testSubscribesToBuildGivenBuildErrorFix()
+    public function testSubscribesToBuildGivenBuildErrorFix(): void
     {
         $buildTopic = new BuildErrorTopic();
         $sut = new FixedTopic($buildTopic);
@@ -57,7 +57,7 @@ class FixedTopicTest extends CDashTestCase
         $this->assertTrue($sut->subscribesToBuild($build));
     }
 
-    public function testSubscribesToBuildGivenBuildWarningFix()
+    public function testSubscribesToBuildGivenBuildWarningFix(): void
     {
         $buildTopic = new BuildErrorTopic();
         $buildTopic->setType(Build::TYPE_WARN);
@@ -70,7 +70,7 @@ class FixedTopicTest extends CDashTestCase
         $this->assertTrue($sut->subscribesToBuild($build));
     }
 
-    public function testSubscribesToBuildGivenTestFailureFix()
+    public function testSubscribesToBuildGivenTestFailureFix(): void
     {
         $testTopic = new TestFailureTopic();
         $sut = new FixedTopic($testTopic);
@@ -81,7 +81,7 @@ class FixedTopicTest extends CDashTestCase
         $this->assertTrue($sut->subscribesToBuild($build));
     }
 
-    public function testSubscribesToBuildGivenTestNotRunFix()
+    public function testSubscribesToBuildGivenTestNotRunFix(): void
     {
         $testTopic = new TestFailureTopic();
         $sut = new FixedTopic($testTopic);

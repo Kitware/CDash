@@ -9,7 +9,7 @@ class SubProjectTestFiltersTestCase extends KWWebTestCase
         parent::__construct();
     }
 
-    public function testSubProjectTestFilters()
+    public function testSubProjectTestFilters(): void
     {
         // Exclude two SubProjects (TrilinosFramework and AztecOO) from our hut11 build.
         $this->get($this->url . '/api/v1/index.php?project=Trilinos&date=2011-07-22&filtercount=3&showfilters=1&filtercombine=and&field1=subprojects&compare1=92&value1=AztecOO&field2=subprojects&compare2=92&value2=TrilinosFramework&field3=site&compare3=61&value3=hut11.kitware');

@@ -26,7 +26,7 @@ use Tests\TestCase;
 
 class ConfigureHandlerTest extends TestCase
 {
-    public function testGetBuildTopic()
+    public function testGetBuildTopic(): void
     {
         $project = new Project();
         $project->Id = 1;
@@ -47,7 +47,7 @@ class ConfigureHandlerTest extends TestCase
         $this->assertTrue($collection->has(Topic::CONFIGURE));
     }
 
-    public function testGetSubscriptionBuilderCollection()
+    public function testGetSubscriptionBuilderCollection(): void
     {
         $project = new Project();
         $project->Id = 0;

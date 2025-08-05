@@ -22,19 +22,19 @@ class ExpectedAndMissingTestCase extends KWWebTestCase
         $this->PDO->getPdo();
     }
 
-    public function testParentExpected()
+    public function testParentExpected(): void
     {
-        return $this->expectedTest('Windows_NT-MSVC10-SERIAL_DEBUG_DEV',
+        $this->expectedTest('Windows_NT-MSVC10-SERIAL_DEBUG_DEV',
             'Trilinos');
     }
 
-    public function testNormalExpected()
+    public function testNormalExpected(): void
     {
-        return $this->expectedTest('Linux-g++-4.1-LesionSizingSandbox_Debug',
+        $this->expectedTest('Linux-g++-4.1-LesionSizingSandbox_Debug',
             'InsightExample');
     }
 
-    private function expectedTest($buildname, $projectname)
+    private function expectedTest($buildname, $projectname): void
     {
         // Find the id of an old build.
         $query = 'SELECT id FROM build WHERE name = :buildname';

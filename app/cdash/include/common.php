@@ -880,7 +880,7 @@ function extract_tar(string $stored_filepath): string
 
     try {
         $tar = new Archive_Tar(Storage::disk('local')->path($stored_filepath));
-        $tar->setErrorHandling(PEAR_ERROR_CALLBACK, function ($pear_error) {
+        $tar->setErrorHandling(PEAR_ERROR_CALLBACK, function ($pear_error): void {
             throw new PEAR_Exception($pear_error->getMessage());
         });
         $tar_extract_result = $tar->extract($dirName);

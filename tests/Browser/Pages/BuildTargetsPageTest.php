@@ -63,7 +63,7 @@ class BuildTargetsPageTest extends BrowserTestCase
 
     public function testShowsBuildName(): void
     {
-        $this->browse(function (Browser $browser) {
+        $this->browse(function (Browser $browser): void {
             $browser->visit("/builds/{$this->build->id}/targets")
                 ->waitForText($this->build->name)
                 ->assertSee($this->build->name)
@@ -75,7 +75,7 @@ class BuildTargetsPageTest extends BrowserTestCase
     {
         $target = $this->addTarget();
 
-        $this->browse(function (Browser $browser) use ($target) {
+        $this->browse(function (Browser $browser) use ($target): void {
             $browser->visit("/builds/{$this->build->id}/targets")
                 ->waitForText($target->name)
                 ->assertSee($target->name)
@@ -90,7 +90,7 @@ class BuildTargetsPageTest extends BrowserTestCase
     {
         $this->addTarget(TargetType::SHARED_LIBRARY);
 
-        $this->browse(function (Browser $browser) {
+        $this->browse(function (Browser $browser): void {
             $browser->visit("/builds/{$this->build->id}/targets")
                 ->waitFor('@targets-table')
                 ->assertSee('Shared Library')
@@ -103,7 +103,7 @@ class BuildTargetsPageTest extends BrowserTestCase
         $this->addTarget(TargetType::STATIC_LIBRARY);
         $this->addTarget(TargetType::SHARED_LIBRARY);
 
-        $this->browse(function (Browser $browser) {
+        $this->browse(function (Browser $browser): void {
             $browser->visit("/builds/{$this->build->id}/targets")
                 ->waitFor('@targets-table')
                 ->assertSee('Shared Library')
@@ -137,7 +137,7 @@ class BuildTargetsPageTest extends BrowserTestCase
 
         self::assertCount(120, $targets);
 
-        $this->browse(function (Browser $browser) use ($targets) {
+        $this->browse(function (Browser $browser) use ($targets): void {
             $browser->visit("/builds/{$this->build->id}/targets")
                 ->waitFor('@targets-table')
                 // Wait for min and max names to ensure multiple pages of data have loaded properly.

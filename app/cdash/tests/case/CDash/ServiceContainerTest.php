@@ -26,13 +26,13 @@ class ServiceContainerTest extends CDashTestCase
         ServiceContainer::setInstance(ServiceContainer::class, self::$di);
     }
 
-    public function testGetInstance()
+    public function testGetInstance(): void
     {
         $instance = ServiceContainer::getInstance();
         $this->assertInstanceOf(ServiceContainer::class, $instance);
     }
 
-    public function testSetInstance()
+    public function testSetInstance(): void
     {
         $mock_container = $this->getMockBuilder(ServiceContainer::class)
             ->disableOriginalConstructor()
@@ -42,7 +42,7 @@ class ServiceContainerTest extends CDashTestCase
         $this->assertSame($mock_container, ServiceContainer::getInstance());
     }
 
-    public function testCreate()
+    public function testCreate(): void
     {
         $mock_di = $this->getMockBuilder(Container::class)
             ->disableOriginalConstructor()
@@ -59,7 +59,7 @@ class ServiceContainerTest extends CDashTestCase
         $container->create('SomeClassName');
     }
 
-    public function testGet()
+    public function testGet(): void
     {
         $mock_di = $this->getMockBuilder(Container::class)
             ->disableOriginalConstructor()

@@ -16,7 +16,7 @@ class OutputColorTestCase extends KWWebTestCase
         parent::__construct();
     }
 
-    public function testOutputColor()
+    public function testOutputColor(): void
     {
         $project = new Project();
         $project->Id = get_project_id('OutputColor');
