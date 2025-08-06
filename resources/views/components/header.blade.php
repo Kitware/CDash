@@ -1,4 +1,6 @@
 @php
+use Illuminate\Support\Str;
+
 if (isset($project)) {
     $logoid = $project->ImageId;
 }
@@ -22,7 +24,7 @@ $userInProject = isset($project) && auth()->user() !== null && \App\Models\Proje
 
             @if(config('cdash.global_banner') !== null && strlen(config('cdash.global_banner')) > 0)
                 <span id="global-banner" style="color: #2ee84a;">
-                    {{ config('cdash.global_banner') }}
+                    {{ Str::limit(config('cdash.global_banner'), 40) }}
                 </span>
             @endif
 

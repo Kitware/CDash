@@ -17,4 +17,13 @@ class GlobalBannerTest extends TestCase
 
         $this->get('/login')->assertSee($bannerText);
     }
+
+    public function testLongGlobalBannerGetsTruncated(): void
+    {
+        $bannerText = 'AAAABBBBCCCCDDDDEEEEFFFFGGGGHHHHIIIIJJJJKKKKLLLLMMMMM';
+
+        config(['cdash.global_banner' => $bannerText]);
+
+        $this->get('/login')->assertSee('AAAABBBBCCCCDDDDEEEEFFFFGGGGHHHHIIIIJJJJ...');
+    }
 }
