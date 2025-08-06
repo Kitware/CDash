@@ -28,7 +28,7 @@ class TimeoutsAndMissingTestsTestCase extends KWWebTestCase
         return $query->id;
     }
 
-    public function testMissingTestsSummarizedInEmail()
+    public function testMissingTestsSummarizedInEmail(): void
     {
         $this->deleteLog($this->logfilename);
         $rep = dirname(__FILE__) . '/data/TimeoutsAndMissingTests';
@@ -66,7 +66,7 @@ class TimeoutsAndMissingTestsTestCase extends KWWebTestCase
         }
     }
 
-    public function testMissingTestsSummarizedInViewTestAPI()
+    public function testMissingTestsSummarizedInViewTestAPI(): void
     {
         $id = $this->getLastBuildId();
 
@@ -93,7 +93,7 @@ class TimeoutsAndMissingTestsTestCase extends KWWebTestCase
         $this->assertNotEqual($tests['MathActionsTest']['status'], 'Missing');
     }
 
-    public function testTimeoutFailuresDifferentiatedInEmail()
+    public function testTimeoutFailuresDifferentiatedInEmail(): void
     {
         $this->deleteLog($this->logfilename);
         $rep = dirname(__FILE__) . '/data/TimeoutsAndMissingTests';

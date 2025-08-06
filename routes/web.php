@@ -226,7 +226,7 @@ Route::get('/invitations/{invitationId}', GlobalInvitationController::class)
 
 // The user must be logged in to access routes in this section.
 // Requests from users who are not logged in will be redirected to /login.
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth'])->group(function (): void {
     Route::get('/user', 'UserController@userPage');
     Route::permanentRedirect('/user.php', url('/user'));
 
@@ -264,7 +264,7 @@ Route::middleware(['auth'])->group(function () {
         ->whereNumber('projectId')
         ->whereNumber('invitationId');
 
-    Route::middleware(['admin'])->group(function () {
+    Route::middleware(['admin'])->group(function (): void {
         Route::get('/authtokens/manage', 'AuthTokenController@manage');
 
         Route::get('/removeBuilds.php', 'AdminController@removeBuilds');

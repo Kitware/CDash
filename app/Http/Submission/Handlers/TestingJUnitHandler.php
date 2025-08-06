@@ -243,7 +243,7 @@ class TestingJUnitHandler extends AbstractXmlHandler
     }
 
     /** Text function */
-    public function text($parser, $data)
+    public function text($parser, $data): void
     {
         $element = $this->getElement();
         if ($element == 'FAILURE') {

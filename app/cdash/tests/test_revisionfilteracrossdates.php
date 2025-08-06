@@ -13,7 +13,7 @@ class RevisionFilterIgnoresDateTestCase extends KWWebTestCase
         parent::__construct();
     }
 
-    public function testRevisionFilterIgnoresDate()
+    public function testRevisionFilterIgnoresDate(): void
     {
         // Verify that the revision filter can find builds that did not occur
         // during the current testing day.

@@ -20,7 +20,7 @@ class TimelineTestCase extends KWWebTestCase
         $this->PDO = Database::getInstance()->getPdo();
     }
 
-    private function toggle_expected($client, $build, $expected)
+    private function toggle_expected($client, $build, $expected): void
     {
         // Mark this build as expected.
         $payload = [
@@ -45,7 +45,7 @@ class TimelineTestCase extends KWWebTestCase
         }
     }
 
-    public function testTimeline()
+    public function testTimeline(): void
     {
         // Get a known build.
         $this->get($this->url . '/api/v1/index.php?project=InsightExample&date=2009-02-23');
@@ -104,7 +104,7 @@ class TimelineTestCase extends KWWebTestCase
         $this->toggle_expected($client, $build, 0);
     }
 
-    private function validateExtent($start, $end, $jsonobj)
+    private function validateExtent($start, $end, $jsonobj): void
     {
         if ($jsonobj['extentstart'] != $start) {
             $this->fail("Expected $start but found " . $jsonobj['extentstart'] . ' for extentstart');
@@ -114,7 +114,7 @@ class TimelineTestCase extends KWWebTestCase
         }
     }
 
-    private function validatePage($answer_key, $page, $timestamp_to_check, $jsonobj)
+    private function validatePage($answer_key, $page, $timestamp_to_check, $jsonobj): void
     {
         foreach ($answer_key[$page] as $measurement => $expected) {
             $validated = false;

@@ -70,7 +70,7 @@ Route::post('/v1/store_upload', 'SubmissionController@storeUploadedFile');
 
 Route::match(['get', 'post', 'delete'], '/v1/expectedbuild.php', 'ExpectedBuildController@apiResponse');
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth'])->group(function (): void {
     Route::post('/authtokens/create', 'AuthTokenController@createToken');
     Route::delete('/authtokens/delete/{token_hash}', 'AuthTokenController@deleteToken');
 
@@ -86,14 +86,14 @@ Route::middleware(['auth'])->group(function () {
 
     Route::match(['get', 'post'], '/v1/manageOverview.php', 'ProjectOverviewController@apiManageOverview');
 
-    Route::middleware(['admin'])->group(function () {
+    Route::middleware(['admin'])->group(function (): void {
         Route::get('/authtokens/all', 'AuthTokenController@fetchAll');
 
         Route::get('/monitor', 'MonitorController@get');
     });
 });
 
-Route::middleware(['internal'])->group(function () {
+Route::middleware(['internal'])->group(function (): void {
     Route::get('/internal/getSubmissionFile', 'RemoteProcessingController@getSubmissionFile');
     Route::post('/internal/requeueSubmissionFile', 'RemoteProcessingController@requeueSubmissionFile');
     Route::delete('/internal/deleteSubmissionFile', 'RemoteProcessingController@deleteSubmissionFile');

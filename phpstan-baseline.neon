@@ -3631,12 +3631,6 @@ parameters:
 			path: app/Http/Submission/Handlers/BuildHandler.php
 
 		-
-			message: '#^Method App\\Http\\Submission\\Handlers\\BuildHandler\:\:text\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Http/Submission/Handlers/BuildHandler.php
-
-		-
 			message: '#^Method App\\Http\\Submission\\Handlers\\BuildHandler\:\:text\(\) has parameter \$data with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -3859,12 +3853,6 @@ parameters:
 			path: app/Http/Submission/Handlers/ConfigureHandler.php
 
 		-
-			message: '#^Method App\\Http\\Submission\\Handlers\\ConfigureHandler\:\:text\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Http/Submission/Handlers/ConfigureHandler.php
-
-		-
 			message: '#^Method App\\Http\\Submission\\Handlers\\ConfigureHandler\:\:text\(\) has parameter \$data with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -4003,12 +3991,6 @@ parameters:
 			path: app/Http/Submission/Handlers/CoverageHandler.php
 
 		-
-			message: '#^Method App\\Http\\Submission\\Handlers\\CoverageHandler\:\:text\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Http/Submission/Handlers/CoverageHandler.php
-
-		-
 			message: '#^Method App\\Http\\Submission\\Handlers\\CoverageHandler\:\:text\(\) has parameter \$data with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -4101,12 +4083,6 @@ parameters:
 		-
 			message: '#^Method App\\Http\\Submission\\Handlers\\CoverageJUnitHandler\:\:startElement\(\) has parameter \$parser with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/Http/Submission/Handlers/CoverageJUnitHandler.php
-
-		-
-			message: '#^Method App\\Http\\Submission\\Handlers\\CoverageJUnitHandler\:\:text\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/Http/Submission/Handlers/CoverageJUnitHandler.php
 
@@ -4213,12 +4189,6 @@ parameters:
 			path: app/Http/Submission/Handlers/CoverageLogHandler.php
 
 		-
-			message: '#^Method App\\Http\\Submission\\Handlers\\CoverageLogHandler\:\:text\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Http/Submission/Handlers/CoverageLogHandler.php
-
-		-
 			message: '#^Method App\\Http\\Submission\\Handlers\\CoverageLogHandler\:\:text\(\) has parameter \$data with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -4311,12 +4281,6 @@ parameters:
 		-
 			message: '#^Method App\\Http\\Submission\\Handlers\\DoneHandler\:\:startElement\(\) has parameter \$parser with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/Http/Submission/Handlers/DoneHandler.php
-
-		-
-			message: '#^Method App\\Http\\Submission\\Handlers\\DoneHandler\:\:text\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/Http/Submission/Handlers/DoneHandler.php
 
@@ -4461,12 +4425,6 @@ parameters:
 		-
 			message: '#^Method App\\Http\\Submission\\Handlers\\DynamicAnalysisHandler\:\:startElement\(\) has parameter \$parser with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/Http/Submission/Handlers/DynamicAnalysisHandler.php
-
-		-
-			message: '#^Method App\\Http\\Submission\\Handlers\\DynamicAnalysisHandler\:\:text\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/Http/Submission/Handlers/DynamicAnalysisHandler.php
 
@@ -4975,12 +4933,6 @@ parameters:
 			path: app/Http/Submission/Handlers/NoteHandler.php
 
 		-
-			message: '#^Method App\\Http\\Submission\\Handlers\\NoteHandler\:\:text\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Http/Submission/Handlers/NoteHandler.php
-
-		-
 			message: '#^Method App\\Http\\Submission\\Handlers\\NoteHandler\:\:text\(\) has parameter \$data with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -5215,12 +5167,6 @@ parameters:
 			path: app/Http/Submission/Handlers/OpenCoverTarHandler.php
 
 		-
-			message: '#^Method App\\Http\\Submission\\Handlers\\OpenCoverTarHandler\:\:text\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Http/Submission/Handlers/OpenCoverTarHandler.php
-
-		-
 			message: '#^Method App\\Http\\Submission\\Handlers\\OpenCoverTarHandler\:\:text\(\) has parameter \$data with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -5331,12 +5277,6 @@ parameters:
 		-
 			message: '#^Method App\\Http\\Submission\\Handlers\\ProjectHandler\:\:startElement\(\) has parameter \$parser with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/Http/Submission/Handlers/ProjectHandler.php
-
-		-
-			message: '#^Method App\\Http\\Submission\\Handlers\\ProjectHandler\:\:text\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/Http/Submission/Handlers/ProjectHandler.php
 
@@ -5527,12 +5467,6 @@ parameters:
 			path: app/Http/Submission/Handlers/TestingHandler.php
 
 		-
-			message: '#^Method App\\Http\\Submission\\Handlers\\TestingHandler\:\:text\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Http/Submission/Handlers/TestingHandler.php
-
-		-
 			message: '#^Method App\\Http\\Submission\\Handlers\\TestingHandler\:\:text\(\) has parameter \$data with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -5691,12 +5625,6 @@ parameters:
 		-
 			message: '#^Method App\\Http\\Submission\\Handlers\\TestingJUnitHandler\:\:startElement\(\) has parameter \$parser with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/Http/Submission/Handlers/TestingJUnitHandler.php
-
-		-
-			message: '#^Method App\\Http\\Submission\\Handlers\\TestingJUnitHandler\:\:text\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/Http/Submission/Handlers/TestingJUnitHandler.php
 
@@ -5881,12 +5809,6 @@ parameters:
 			path: app/Http/Submission/Handlers/UpdateHandler.php
 
 		-
-			message: '#^Method App\\Http\\Submission\\Handlers\\UpdateHandler\:\:text\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Http/Submission/Handlers/UpdateHandler.php
-
-		-
 			message: '#^Method App\\Http\\Submission\\Handlers\\UpdateHandler\:\:text\(\) has parameter \$data with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -5979,12 +5901,6 @@ parameters:
 		-
 			message: '#^Method App\\Http\\Submission\\Handlers\\UploadHandler\:\:startElement\(\) has parameter \$parser with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/Http/Submission/Handlers/UploadHandler.php
-
-		-
-			message: '#^Method App\\Http\\Submission\\Handlers\\UploadHandler\:\:text\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/Http/Submission/Handlers/UploadHandler.php
 
@@ -6542,12 +6458,6 @@ parameters:
 			identifier: property.phpDocType
 			count: 1
 			path: app/Providers/RouteServiceProvider.php
-
-		-
-			message: '#^Method App\\Providers\\ViewServiceProvider\:\:boot\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Providers/ViewServiceProvider.php
 
 		-
 			message: '#^Cannot cast mixed to int\.$#'
@@ -8011,12 +7921,6 @@ parameters:
 			path: app/Validators/Password.php
 
 		-
-			message: '#^Method App\\Validators\\Password\:\:setCustomMessages\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/Validators/Password.php
-
-		-
 			message: '#^Method App\\Validators\\Password\:\:setCustomMessages\(\) has parameter \$config with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -8602,12 +8506,6 @@ parameters:
 			path: app/cdash/app/Controller/Api/ResultsApi.php
 
 		-
-			message: '#^Method CDash\\Controller\\Api\\ResultsApi\:\:determineDateRange\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Controller/Api/ResultsApi.php
-
-		-
 			message: '#^Method CDash\\Controller\\Api\\ResultsApi\:\:determineDateRange\(\) has parameter \$response with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -8656,20 +8554,8 @@ parameters:
 			path: app/cdash/app/Controller/Api/ResultsApi.php
 
 		-
-			message: '#^Method CDash\\Controller\\Api\\ResultsApi\:\:setDate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Controller/Api/ResultsApi.php
-
-		-
 			message: '#^Method CDash\\Controller\\Api\\ResultsApi\:\:setDate\(\) has parameter \$date with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Controller/Api/ResultsApi.php
-
-		-
-			message: '#^Method CDash\\Controller\\Api\\ResultsApi\:\:setFilterData\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/app/Controller/Api/ResultsApi.php
 
@@ -13393,12 +13279,6 @@ parameters:
 			path: app/cdash/app/Service/RepositoryService.php
 
 		-
-			message: '#^Function cdash_autoload\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/bootstrap/cdash_autoload.php
-
-		-
 			message: '#^Function cdash_autoload\(\) has parameter \$className with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -13685,12 +13565,6 @@ parameters:
 			identifier: property.uninitialized
 			count: 1
 			path: app/cdash/include/Messaging/Notification/Email/EmailMessage.php
-
-		-
-			message: '#^Method CDash\\Messaging\\Notification\\NotificationCollection\:\:add\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/include/Messaging/Notification/NotificationCollection.php
 
 		-
 			message: '#^Cannot call method getTopicTemplates\(\) on mixed\.$#'
@@ -14097,12 +13971,6 @@ parameters:
 		-
 			message: '#^Method CDash\\Messaging\\Topic\\ConfigureTopic\:\:itemHasTopicSubject\(\) has parameter \$item with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/include/Messaging/Topic/ConfigureTopic.php
-
-		-
-			message: '#^Method CDash\\Messaging\\Topic\\ConfigureTopic\:\:setTopicData\(\) should return \$this\(CDash\\Messaging\\Topic\\ConfigureTopic\) but return statement is missing\.$#'
-			identifier: return.missing
 			count: 1
 			path: app/cdash/include/Messaging/Topic/ConfigureTopic.php
 
@@ -17905,18 +17773,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/BuildUseCaseTest.php
 
 		-
-			message: '#^Method BuildUseCaseTest\:\:testBuildUseCase\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/BuildUseCaseTest.php
-
-		-
-			message: '#^Method BuildUseCaseTest\:\:testUseCaseCreateBuilderReturnsInstanceOfBuildUseCase\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/BuildUseCaseTest.php
-
-		-
 			message: '#^Cannot call method GetBuildConfigure\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 4
@@ -17938,18 +17794,6 @@ parameters:
 			message: '#^Dynamic call to static method PHPUnit\\Framework\\Assert\:\:assertInstanceOf\(\)\.$#'
 			identifier: staticMethod.dynamicCall
 			count: 2
-			path: app/cdash/tests/case/CDash/ConfigUseCaseTest.php
-
-		-
-			message: '#^Method ConfigUseCaseTest\:\:testConfigUseCaseBuild\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/ConfigUseCaseTest.php
-
-		-
-			message: '#^Method ConfigUseCaseTest\:\:testUseCaseCreateBuilderReturnsInstanceOfConfigUseCase\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
 			path: app/cdash/tests/case/CDash/ConfigUseCaseTest.php
 
 		-
@@ -18031,30 +17875,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/DatabaseTest.php
 
 		-
-			message: '#^Method DatabaseTest\:\:testExecute\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/DatabaseTest.php
-
-		-
-			message: '#^Method DatabaseTest\:\:testGetPdo\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/DatabaseTest.php
-
-		-
-			message: '#^Method DatabaseTest\:\:testGetPdoReturnsInstanceOfPDO\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/DatabaseTest.php
-
-		-
-			message: '#^Method DatabaseTest\:\:testInstance\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/DatabaseTest.php
-
-		-
 			message: '#^Call to an undefined method CDash\\Test\\UseCase\\UseCase\:\:setChecker\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -18079,24 +17899,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/DynamicAnalysisUseCaseTest.php
 
 		-
-			message: '#^Method DynamicAnalysisUseCaseTest\:\:testDynamicAnalysisUseCase\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/DynamicAnalysisUseCaseTest.php
-
-		-
-			message: '#^Method DynamicAnalysisUseCaseTest\:\:testUseCaseBuildsDynamicAnalysisUseCase\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/DynamicAnalysisUseCaseTest.php
-
-		-
-			message: '#^Method GitHubTest\:\:testDisablePullRequestComments\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Lib/Repository/GitHubTest.php
-
-		-
 			message: '#^Property GitHubTest\:\:\$baseUrl \(string\) does not accept mixed\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -18105,12 +17907,6 @@ parameters:
 		-
 			message: '#^Dynamic call to static method PHPUnit\\Framework\\Assert\:\:assertEquals\(\)\.$#'
 			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/CDash/LinkifyCompilerOutputTest.php
-
-		-
-			message: '#^Method LinkifyCompilerOutputTest\:\:testLinkifyCompilerOutput\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/case/CDash/LinkifyCompilerOutputTest.php
 
@@ -18217,12 +18013,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
 
 		-
-			message: '#^Method CommitAuthorSubscriptionBuilderTest\:\:testBuildGivenSubmissionWithBuildErrors\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
-
-		-
 			message: '#^Method CommitAuthorSubscriptionBuilderTest\:\:testBuildGivenSubmissionWithBuildErrors\(\) throws checked exception DI\\DependencyException but it''s missing from the PHPDoc @throws tag\.$#'
 			identifier: missingType.checkedException
 			count: 1
@@ -18235,12 +18025,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
 
 		-
-			message: '#^Method CommitAuthorSubscriptionBuilderTest\:\:testBuildGivenSubmissionWithBuildWarnings\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
-
-		-
 			message: '#^Method CommitAuthorSubscriptionBuilderTest\:\:testBuildGivenSubmissionWithBuildWarnings\(\) throws checked exception DI\\DependencyException but it''s missing from the PHPDoc @throws tag\.$#'
 			identifier: missingType.checkedException
 			count: 1
@@ -18249,12 +18033,6 @@ parameters:
 		-
 			message: '#^Method CommitAuthorSubscriptionBuilderTest\:\:testBuildGivenSubmissionWithBuildWarnings\(\) throws checked exception DI\\NotFoundException but it''s missing from the PHPDoc @throws tag\.$#'
 			identifier: missingType.checkedException
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
-
-		-
-			message: '#^Method CommitAuthorSubscriptionBuilderTest\:\:testBuildGivenSubmissionWithTestFailures\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
 
@@ -18379,12 +18157,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Subscription/UserSubscriptionBuilderTest.php
 
 		-
-			message: '#^Method UserSubscriptionBuilderTest\:\:testBuildGivenBuildSubmission\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/UserSubscriptionBuilderTest.php
-
-		-
 			message: '#^Property UserSubscriptionBuilderTest\:\:\$diff has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
@@ -18405,12 +18177,6 @@ parameters:
 		-
 			message: '#^Dynamic call to static method PHPUnit\\Framework\\Assert\:\:assertTrue\(\)\.$#'
 			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/AuthoredTopicTest.php
-
-		-
-			message: '#^Method AuthoredTopicTest\:\:testSubscribesToBuild\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/Topic/AuthoredTopicTest.php
 
@@ -18505,78 +18271,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
 
 		-
-			message: '#^Method BuildErrorTopicTest\:\:testGetTemplate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
-
-		-
-			message: '#^Method BuildErrorTopicTest\:\:testGetTopicCollection\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
-
-		-
-			message: '#^Method BuildErrorTopicTest\:\:testGetTopicCount\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
-
-		-
-			message: '#^Method BuildErrorTopicTest\:\:testGetTopicDescription\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
-
-		-
-			message: '#^Method BuildErrorTopicTest\:\:testGetTopicName\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
-
-		-
-			message: '#^Method BuildErrorTopicTest\:\:testHasFixes\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
-
-		-
-			message: '#^Method BuildErrorTopicTest\:\:testIsSubscribedToBy\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
-
-		-
-			message: '#^Method BuildErrorTopicTest\:\:testItemHasTopicSubject\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
-
-		-
-			message: '#^Method BuildErrorTopicTest\:\:testSetTopicData\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
-
-		-
-			message: '#^Method BuildErrorTopicTest\:\:testSubscribesToBuildWithErrorDiff\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
-
-		-
-			message: '#^Method BuildErrorTopicTest\:\:testSubscribesToBuildWithWarningDiff\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
-
-		-
-			message: '#^Method BuildErrorTopicTest\:\:testSubscribesToRedundantBuild\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
-
-		-
 			message: '#^Parameter \#1 \$build of method CDash\\Messaging\\Topic\\BuildErrorTopic\:\:subscribesToBuild\(\) expects CDash\\Model\\Build, PHPUnit\\Framework\\MockObject\\MockObject given\.$#'
 			identifier: argument.type
 			count: 6
@@ -18649,66 +18343,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Topic/ConfigureTopicTest.php
 
 		-
-			message: '#^Method ConfigureTopicTest\:\:testGetLabelsFromBuild\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/ConfigureTopicTest.php
-
-		-
-			message: '#^Method ConfigureTopicTest\:\:testGetTemplate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/ConfigureTopicTest.php
-
-		-
-			message: '#^Method ConfigureTopicTest\:\:testGetTopicCollection\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/ConfigureTopicTest.php
-
-		-
-			message: '#^Method ConfigureTopicTest\:\:testGetTopicCount\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/ConfigureTopicTest.php
-
-		-
-			message: '#^Method ConfigureTopicTest\:\:testGetTopicDescription\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/ConfigureTopicTest.php
-
-		-
-			message: '#^Method ConfigureTopicTest\:\:testGetTopicName\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/ConfigureTopicTest.php
-
-		-
-			message: '#^Method ConfigureTopicTest\:\:testIsSubscribedToBy\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/ConfigureTopicTest.php
-
-		-
-			message: '#^Method ConfigureTopicTest\:\:testSetTopicData\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/ConfigureTopicTest.php
-
-		-
-			message: '#^Method ConfigureTopicTest\:\:testSetTopicDataWithLabels\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/ConfigureTopicTest.php
-
-		-
-			message: '#^Method ConfigureTopicTest\:\:testSubscribesToBuild\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/ConfigureTopicTest.php
-
-		-
 			message: '#^You should use assertSame\(\) instead of assertEquals\(\), because both values are scalars of the same type$#'
 			identifier: phpunit.assertEquals
 			count: 6
@@ -18757,48 +18391,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Topic/DynamicAnalysisTopicTest.php
 
 		-
-			message: '#^Method DynamicAnalysisTopicTest\:\:testGetTopicCollection\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/DynamicAnalysisTopicTest.php
-
-		-
-			message: '#^Method DynamicAnalysisTopicTest\:\:testGetTopicDescription\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/DynamicAnalysisTopicTest.php
-
-		-
-			message: '#^Method DynamicAnalysisTopicTest\:\:testGetTopicName\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/DynamicAnalysisTopicTest.php
-
-		-
-			message: '#^Method DynamicAnalysisTopicTest\:\:testIsSubscribedToBy\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/DynamicAnalysisTopicTest.php
-
-		-
-			message: '#^Method DynamicAnalysisTopicTest\:\:testItemHasTopicSubject\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/DynamicAnalysisTopicTest.php
-
-		-
-			message: '#^Method DynamicAnalysisTopicTest\:\:testSetTopicData\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/DynamicAnalysisTopicTest.php
-
-		-
-			message: '#^Method DynamicAnalysisTopicTest\:\:testSubscribesToBuild\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/DynamicAnalysisTopicTest.php
-
-		-
 			message: '#^You should use assertSame\(\) instead of assertEquals\(\), because both values are scalars of the same type$#'
 			identifier: phpunit.assertEquals
 			count: 3
@@ -18813,12 +18405,6 @@ parameters:
 		-
 			message: '#^Dynamic call to static method PHPUnit\\Framework\\Assert\:\:assertTrue\(\)\.$#'
 			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/EmailSentTopicTest.php
-
-		-
-			message: '#^Method EmailSentTopicTest\:\:testSubscribesToBuild\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/Topic/EmailSentTopicTest.php
 
@@ -18889,36 +18475,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Topic/FixedTopicTest.php
 
 		-
-			message: '#^Method FixedTopicTest\:\:testSubscribesToBuildGivenBuildErrorFix\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/FixedTopicTest.php
-
-		-
-			message: '#^Method FixedTopicTest\:\:testSubscribesToBuildGivenBuildWarningFix\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/FixedTopicTest.php
-
-		-
-			message: '#^Method FixedTopicTest\:\:testSubscribesToBuildGivenNoFixes\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/FixedTopicTest.php
-
-		-
-			message: '#^Method FixedTopicTest\:\:testSubscribesToBuildGivenTestFailureFix\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/FixedTopicTest.php
-
-		-
-			message: '#^Method FixedTopicTest\:\:testSubscribesToBuildGivenTestNotRunFix\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/FixedTopicTest.php
-
-		-
 			message: '#^Property FixedTopicTest\:\:\$diff has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
@@ -18970,36 +18526,6 @@ parameters:
 			message: '#^Dynamic call to static method PHPUnit\\Framework\\Assert\:\:assertTrue\(\)\.$#'
 			identifier: staticMethod.dynamicCall
 			count: 4
-			path: app/cdash/tests/case/CDash/Messaging/Topic/MissingTestTopicTest.php
-
-		-
-			message: '#^Method MissingTestTopicTest\:\:testGetTopicCollection\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/MissingTestTopicTest.php
-
-		-
-			message: '#^Method MissingTestTopicTest\:\:testGetTopicDescription\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/MissingTestTopicTest.php
-
-		-
-			message: '#^Method MissingTestTopicTest\:\:testGetTopicName\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/MissingTestTopicTest.php
-
-		-
-			message: '#^Method MissingTestTopicTest\:\:testSetTopicData\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/MissingTestTopicTest.php
-
-		-
-			message: '#^Method MissingTestTopicTest\:\:testSubscribesToBuild\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/Topic/MissingTestTopicTest.php
 
 		-
@@ -19102,72 +18628,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
 
 		-
-			message: '#^Method TestFailureTopicTest\:\:testGetFixes\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
-
-		-
-			message: '#^Method TestFailureTopicTest\:\:testGetLabelsFromBuild\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
-
-		-
-			message: '#^Method TestFailureTopicTest\:\:testGetTopicDescription\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
-
-		-
-			message: '#^Method TestFailureTopicTest\:\:testGetTopicName\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
-
-		-
-			message: '#^Method TestFailureTopicTest\:\:testHasFixes\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
-
-		-
-			message: '#^Method TestFailureTopicTest\:\:testIsSubscribedToBy\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
-
-		-
-			message: '#^Method TestFailureTopicTest\:\:testItemHasTopicSubject\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
-
-		-
-			message: '#^Method TestFailureTopicTest\:\:testSetTopicData\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
-
-		-
-			message: '#^Method TestFailureTopicTest\:\:testSetTopicDataWithLabels\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
-
-		-
-			message: '#^Method TestFailureTopicTest\:\:testSubscribesToBuild\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
-
-		-
-			message: '#^Method TestFailureTopicTest\:\:testSubscribesToRedundantBuild\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
-
-		-
 			message: '#^Property TestFailureTopicTest\:\:\$diff has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
@@ -19230,36 +18690,6 @@ parameters:
 		-
 			message: '#^Method TopicDecoratorTest\:\:getMockTopicLabelable\(\) has parameter \$named with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TopicDecoratorTest.php
-
-		-
-			message: '#^Method TopicDecoratorTest\:\:testDecorateGivenAuthoredEmailPreference\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TopicDecoratorTest.php
-
-		-
-			message: '#^Method TopicDecoratorTest\:\:testDecorateGivenEmailRedundantPreference\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TopicDecoratorTest.php
-
-		-
-			message: '#^Method TopicDecoratorTest\:\:testDecorateGivenFixesEmailPreference\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TopicDecoratorTest.php
-
-		-
-			message: '#^Method TopicDecoratorTest\:\:testDecorateGivenGroupFilterableEmailPreference\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TopicDecoratorTest.php
-
-		-
-			message: '#^Method TopicDecoratorTest\:\:testDecorateGivenLabelsEmailPreference\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/Topic/TopicDecoratorTest.php
 
@@ -19342,54 +18772,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Topic/UpdateErrorTopicTest.php
 
 		-
-			message: '#^Method UpdateErrorTopicTest\:\:testAddBuild\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/UpdateErrorTopicTest.php
-
-		-
-			message: '#^Method UpdateErrorTopicTest\:\:testGetFixes\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/UpdateErrorTopicTest.php
-
-		-
-			message: '#^Method UpdateErrorTopicTest\:\:testGetTemplate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/UpdateErrorTopicTest.php
-
-		-
-			message: '#^Method UpdateErrorTopicTest\:\:testGetTopicDescription\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/UpdateErrorTopicTest.php
-
-		-
-			message: '#^Method UpdateErrorTopicTest\:\:testGetTopicName\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/UpdateErrorTopicTest.php
-
-		-
-			message: '#^Method UpdateErrorTopicTest\:\:testHasFixes\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/UpdateErrorTopicTest.php
-
-		-
-			message: '#^Method UpdateErrorTopicTest\:\:testIsSubscribedToBy\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/UpdateErrorTopicTest.php
-
-		-
-			message: '#^Method UpdateErrorTopicTest\:\:testSubscribesToBuild\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/UpdateErrorTopicTest.php
-
-		-
 			message: '#^Property UpdateErrorTopicTest\:\:\$diff has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
@@ -19450,30 +18832,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Model/BuildErrorFilterTest.php
 
 		-
-			message: '#^Method BuildErrorFilterTest\:\:testAddFilter\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Model/BuildErrorFilterTest.php
-
-		-
-			message: '#^Method BuildErrorFilterTest\:\:testExists\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Model/BuildErrorFilterTest.php
-
-		-
-			message: '#^Method BuildErrorFilterTest\:\:testFilterError\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Model/BuildErrorFilterTest.php
-
-		-
-			message: '#^Method BuildErrorFilterTest\:\:testFilterWarning\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Model/BuildErrorFilterTest.php
-
-		-
 			message: '#^Missing call to parent\:\:setUp\(\) method\.$#'
 			identifier: phpunit.callParent
 			count: 1
@@ -19488,12 +18846,6 @@ parameters:
 		-
 			message: '#^Dynamic call to static method PHPUnit\\Framework\\Assert\:\:assertEquals\(\)\.$#'
 			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/CDash/Model/BuildErrorTest.php
-
-		-
-			message: '#^Method BuildErrorTest\:\:testMarshalBuildError\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/case/CDash/Model/BuildErrorTest.php
 
@@ -19518,12 +18870,6 @@ parameters:
 		-
 			message: '#^Dynamic call to static method PHPUnit\\Framework\\Assert\:\:assertEquals\(\)\.$#'
 			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/CDash/Model/BuildFailureTest.php
-
-		-
-			message: '#^Method BuildFailureTest\:\:testMarshalBuildFailure\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/case/CDash/Model/BuildFailureTest.php
 
@@ -19567,48 +18913,6 @@ parameters:
 			message: '#^Dynamic call to static method PHPUnit\\Framework\\Assert\:\:assertEquals\(\)\.$#'
 			identifier: staticMethod.dynamicCall
 			count: 11
-			path: app/cdash/tests/case/CDash/Model/BuildRelationshipTest.php
-
-		-
-			message: '#^Method BuildRelationshipTest\:\:testDeleteChecksForMissingParams\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Model/BuildRelationshipTest.php
-
-		-
-			message: '#^Method BuildRelationshipTest\:\:testMarshal\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Model/BuildRelationshipTest.php
-
-		-
-			message: '#^Method BuildRelationshipTest\:\:testSaveCheckForNonexistentBuild\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Model/BuildRelationshipTest.php
-
-		-
-			message: '#^Method BuildRelationshipTest\:\:testSaveCheckForNonexistentRelatedBuild\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Model/BuildRelationshipTest.php
-
-		-
-			message: '#^Method BuildRelationshipTest\:\:testSaveCheckForSelfReferentialRelationship\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Model/BuildRelationshipTest.php
-
-		-
-			message: '#^Method BuildRelationshipTest\:\:testSaveChecksForMissingParams\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Model/BuildRelationshipTest.php
-
-		-
-			message: '#^Method BuildRelationshipTest\:\:testSaveSuccess\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
 			path: app/cdash/tests/case/CDash/Model/BuildRelationshipTest.php
 
 		-
@@ -19660,18 +18964,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Model/BuildTest.php
 
 		-
-			message: '#^Method BuildTest\:\:testGetBuildEmailCollection\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Model/BuildTest.php
-
-		-
-			message: '#^Method BuildTest\:\:testGetDiffWithPreviousBuild\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Model/BuildTest.php
-
-		-
 			message: '#^Missing call to parent\:\:setUp\(\) method\.$#'
 			identifier: phpunit.callParent
 			count: 1
@@ -19686,12 +18978,6 @@ parameters:
 		-
 			message: '#^Dynamic call to static method PHPUnit\\Framework\\Assert\:\:assertInstanceOf\(\)\.$#'
 			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/CDash/Model/RepositoryTest.php
-
-		-
-			message: '#^Method RepositoryTest\:\:testGetRepositoryInterfaceReturnsGitHubService\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/case/CDash/Model/RepositoryTest.php
 
@@ -19777,30 +19063,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
 
 		-
-			message: '#^Method MultipleSubprojectsEmailTest\:\:testBuildUseCase\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
-
-		-
-			message: '#^Method MultipleSubprojectsEmailTest\:\:testDyanamicAnalysisUseCaseBuild\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
-
-		-
-			message: '#^Method MultipleSubprojectsEmailTest\:\:testMultipleSubprojectsConfigureSubmission\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
-
-		-
-			message: '#^Method MultipleSubprojectsEmailTest\:\:testMultipleSubprojectsTestSubmission\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
-
-		-
 			message: '#^Parameter \#1 \$submission of class CDash\\Messaging\\Subscription\\UserSubscriptionBuilder constructor expects App\\Http\\Submission\\Handlers\\ActionableBuildInterface, App\\Http\\Submission\\Handlers\\AbstractXmlHandler given\.$#'
 			identifier: argument.type
 			count: 1
@@ -19843,36 +19105,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/NightlyTimeTest.php
 
 		-
-			message: '#^Method NightlyTimeTest\:\:testBuildDateAcrossDST\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/NightlyTimeTest.php
-
-		-
-			message: '#^Method NightlyTimeTest\:\:testBuildDateWithConsistentTimeZones\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/NightlyTimeTest.php
-
-		-
-			message: '#^Method NightlyTimeTest\:\:testBuildDateWithDifferentTimeZones\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/NightlyTimeTest.php
-
-		-
-			message: '#^Method NightlyTimeTest\:\:testInvalidTimezone\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/NightlyTimeTest.php
-
-		-
-			message: '#^Method NightlyTimeTest\:\:testUTCInput\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/NightlyTimeTest.php
-
-		-
 			message: '#^Method NightlyTimeTest\:\:validateTestingDay\(\) has parameter \$expected with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -19893,18 +19125,6 @@ parameters:
 		-
 			message: '#^Dynamic call to static method PHPUnit\\Framework\\Assert\:\:assertInstanceOf\(\)\.$#'
 			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/CDash/Service/RepositoryServiceTest.php
-
-		-
-			message: '#^Method RepositoryServiceTest\:\:testConstruct\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Service/RepositoryServiceTest.php
-
-		-
-			message: '#^Method RepositoryServiceTest\:\:testSetStatusOnStart\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/case/CDash/Service/RepositoryServiceTest.php
 
@@ -19930,30 +19150,6 @@ parameters:
 			message: '#^Dynamic call to static method PHPUnit\\Framework\\Assert\:\:equalTo\(\)\.$#'
 			identifier: staticMethod.dynamicCall
 			count: 2
-			path: app/cdash/tests/case/CDash/ServiceContainerTest.php
-
-		-
-			message: '#^Method ServiceContainerTest\:\:testCreate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/ServiceContainerTest.php
-
-		-
-			message: '#^Method ServiceContainerTest\:\:testGet\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/ServiceContainerTest.php
-
-		-
-			message: '#^Method ServiceContainerTest\:\:testGetInstance\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/ServiceContainerTest.php
-
-		-
-			message: '#^Method ServiceContainerTest\:\:testSetInstance\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
 			path: app/cdash/tests/case/CDash/ServiceContainerTest.php
 
 		-
@@ -20047,78 +19243,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
 
 		-
-			message: '#^Method TestUseCaseTest\:\:testBuildThrowsExceptionIfNameNotSet\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			message: '#^Method TestUseCaseTest\:\:testTestUseCaseCreatesBuildAndSiteInformation\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			message: '#^Method TestUseCaseTest\:\:testTestUseCaseCreatesMultisubprojectTestXMLFile\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			message: '#^Method TestUseCaseTest\:\:testTestUseCaseCreatesSubproject\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			message: '#^Method TestUseCaseTest\:\:testTestUseCaseCreatesTestFailed\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			message: '#^Method TestUseCaseTest\:\:testTestUseCaseCreatesTestNotRun\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			message: '#^Method TestUseCaseTest\:\:testTestUseCaseCreatesTestPassed\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			message: '#^Method TestUseCaseTest\:\:testTestUseCaseCreatesTestTimeout\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			message: '#^Method TestUseCaseTest\:\:testTestUseCaseReturnsTestingHandler\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			message: '#^Method TestUseCaseTest\:\:testTestUseCaseSetsSiteProperty\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			message: '#^Method TestUseCaseTest\:\:testUseCaseBuildsTestUseCase\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			message: '#^Method TestUseCaseTest\:\:testUseCaseSetsPropertiesByTestName\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
 			message: '#^PHPDoc tag @var for variable \$tests contains generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
 			identifier: missingType.generics
 			count: 3
@@ -20155,24 +19279,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/UpdateUseCaseTest.php
 
 		-
-			message: '#^Method UpdateUseCaseTest\:\:testBuild\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/UpdateUseCaseTest.php
-
-		-
-			message: '#^Method UpdateUseCaseTest\:\:testCreateRevisionHash\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/UpdateUseCaseTest.php
-
-		-
-			message: '#^Method UpdateUseCaseTest\:\:testRandomizeCheckinDate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/UpdateUseCaseTest.php
-
-		-
 			message: '#^You should use assertSame\(\) instead of assertEquals\(\), because both values are scalars of the same type$#'
 			identifier: phpunit.assertEquals
 			count: 1
@@ -20203,57 +19309,15 @@ parameters:
 			path: app/cdash/tests/case/CDash/XmlHandler/BuildHandlerTest.php
 
 		-
-			message: '#^Method BuildHandlerTest\:\:testBuildHandlerIsACommitAuthorHandler\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/XmlHandler/BuildHandlerTest.php
-
-		-
-			message: '#^Method BuildHandlerTest\:\:testGetSubscriptionBuilderCollection\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/XmlHandler/BuildHandlerTest.php
-
-		-
-			message: '#^Method BuildHandlerTest\:\:testGetTopicCollectionForSubscriber\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/XmlHandler/BuildHandlerTest.php
-
-		-
 			message: '#^Dynamic call to static method PHPUnit\\Framework\\Assert\:\:assertTrue\(\)\.$#'
 			identifier: staticMethod.dynamicCall
 			count: 2
 			path: app/cdash/tests/case/CDash/XmlHandler/ConfigureHandlerTest.php
 
 		-
-			message: '#^Method ConfigureHandlerTest\:\:testGetBuildTopic\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/XmlHandler/ConfigureHandlerTest.php
-
-		-
-			message: '#^Method ConfigureHandlerTest\:\:testGetSubscriptionBuilderCollection\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/XmlHandler/ConfigureHandlerTest.php
-
-		-
 			message: '#^Dynamic call to static method PHPUnit\\Framework\\Assert\:\:assertTrue\(\)\.$#'
 			identifier: staticMethod.dynamicCall
 			count: 2
-			path: app/cdash/tests/case/CDash/XmlHandler/DynamicAnalysisHandlerTest.php
-
-		-
-			message: '#^Method DynamicAnalysisHandlerTest\:\:testGetBuildTopic\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/XmlHandler/DynamicAnalysisHandlerTest.php
-
-		-
-			message: '#^Method DynamicAnalysisHandlerTest\:\:testGetSubscriptionBuilderCollection\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
 			path: app/cdash/tests/case/CDash/XmlHandler/DynamicAnalysisHandlerTest.php
 
 		-
@@ -20275,24 +19339,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/XmlHandler/TestingHandlerTest.php
 
 		-
-			message: '#^Method TestingHandlerTest\:\:testGetBuildTopic\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/XmlHandler/TestingHandlerTest.php
-
-		-
-			message: '#^Method TestingHandlerTest\:\:testGetSubscriptionBuilderCollection\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/XmlHandler/TestingHandlerTest.php
-
-		-
-			message: '#^Method TestingHandlerTest\:\:testTestingHandlerIsACommitAuthorHandler\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/XmlHandler/TestingHandlerTest.php
-
-		-
 			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertInstanceOf\(\) with ''CDash\\\\Submission\\\\CommitAuthorHandlerInterface'' and App\\Http\\Submission\\Handlers\\UpdateHandler will always evaluate to true\.$#'
 			identifier: method.alreadyNarrowedType
 			count: 1
@@ -20311,24 +19357,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/XmlHandler/UpdateHandlerTest.php
 
 		-
-			message: '#^Method UpdateHandlerTest\:\:testGetBuildTopic\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/XmlHandler/UpdateHandlerTest.php
-
-		-
-			message: '#^Method UpdateHandlerTest\:\:testGetSubscriptionBuilderCollection\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/XmlHandler/UpdateHandlerTest.php
-
-		-
-			message: '#^Method UpdateHandlerTest\:\:testUpdateHandlerIsACommitAuthorHandler\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/XmlHandler/UpdateHandlerTest.php
-
-		-
 			message: '#^Dynamic call to static method PHPUnit\\Framework\\Assert\:\:assertFalse\(\)\.$#'
 			identifier: staticMethod.dynamicCall
 			count: 1
@@ -20337,12 +19365,6 @@ parameters:
 		-
 			message: '#^Dynamic call to static method PHPUnit\\Framework\\Assert\:\:assertTrue\(\)\.$#'
 			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/PHPUnitTestTest.php
-
-		-
-			message: '#^Method PHPUnitTestTest\:\:testAutoloaderAutoloadsModel\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/case/PHPUnitTestTest.php
 
@@ -20437,20 +19459,8 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_db.php
 
 		-
-			message: '#^Method database\:\:setConnection\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/kwtest/kw_db.php
-
-		-
 			message: '#^Method database\:\:setConnection\(\) has parameter \$connection with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/kwtest/kw_db.php
-
-		-
-			message: '#^Method database\:\:setDb\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/kwtest/kw_db.php
 
@@ -20461,20 +19471,8 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_db.php
 
 		-
-			message: '#^Method database\:\:setHost\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/kwtest/kw_db.php
-
-		-
 			message: '#^Method database\:\:setHost\(\) has parameter \$host with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/kwtest/kw_db.php
-
-		-
-			message: '#^Method database\:\:setPassword\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/kwtest/kw_db.php
 
@@ -20485,20 +19483,8 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_db.php
 
 		-
-			message: '#^Method database\:\:setPort\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/kwtest/kw_db.php
-
-		-
 			message: '#^Method database\:\:setPort\(\) has parameter \$port with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/kwtest/kw_db.php
-
-		-
-			message: '#^Method database\:\:setUser\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/kwtest/kw_db.php
 
@@ -20515,20 +19501,8 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_db.php
 
 		-
-			message: '#^Method dbo\:\:setConnection\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/kwtest/kw_db.php
-
-		-
 			message: '#^Method dbo\:\:setConnection\(\) has parameter \$connection with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/kwtest/kw_db.php
-
-		-
-			message: '#^Method dbo\:\:setDb\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/kwtest/kw_db.php
 
@@ -20539,20 +19513,8 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_db.php
 
 		-
-			message: '#^Method dbo\:\:setHost\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/kwtest/kw_db.php
-
-		-
 			message: '#^Method dbo\:\:setHost\(\) has parameter \$host with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/kwtest/kw_db.php
-
-		-
-			message: '#^Method dbo\:\:setPassword\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/kwtest/kw_db.php
 
@@ -20563,20 +19525,8 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_db.php
 
 		-
-			message: '#^Method dbo\:\:setPort\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/kwtest/kw_db.php
-
-		-
 			message: '#^Method dbo\:\:setPort\(\) has parameter \$port with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/kwtest/kw_db.php
-
-		-
-			message: '#^Method dbo\:\:setUser\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/kwtest/kw_db.php
 
@@ -20595,12 +19545,6 @@ parameters:
 		-
 			message: '#^Method dbo_pgsql\:\:create\(\) has parameter \$db with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/kwtest/kw_db.php
-
-		-
-			message: '#^Method dbo_pgsql\:\:disconnect\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/kwtest/kw_db.php
 
@@ -20884,26 +19828,8 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: '#^Method CDashControllerBrowser\:\:setFileParameters\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
 			message: '#^Method CDashControllerBrowser\:\:setFileParameters\(\) has parameter \$encoding with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
-			message: '#^Method CDashControllerBrowser\:\:setQueryParameters\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
-			message: '#^Method CDashControllerBrowser\:\:setRequestKeyValuePair\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
@@ -20916,12 +19842,6 @@ parameters:
 		-
 			message: '#^Method CDashControllerBrowser\:\:setRequestKeyValuePair\(\) has parameter \$value with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
-			message: '#^Method CDashControllerBrowser\:\:setServerParameters\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
@@ -21064,12 +19984,6 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: '#^Method KWWebTestCase\:\:deleteLog\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
 			message: '#^Method KWWebTestCase\:\:deleteLog\(\) has parameter \$filename with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -21148,12 +20062,6 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: '#^Method KWWebTestCase\:\:login\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
 			message: '#^Method KWWebTestCase\:\:login\(\) has parameter \$passwd with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -21162,18 +20070,6 @@ parameters:
 		-
 			message: '#^Method KWWebTestCase\:\:login\(\) has parameter \$user with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
-			message: '#^Method KWWebTestCase\:\:loginActingAs\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
-			message: '#^Method KWWebTestCase\:\:logout\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
@@ -21204,18 +20100,6 @@ parameters:
 		-
 			message: '#^Method KWWebTestCase\:\:putCtestFile\(\) has parameter \$query with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
-			message: '#^Method KWWebTestCase\:\:removeParsedFiles\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
-			message: '#^Method KWWebTestCase\:\:setUp\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
@@ -21298,12 +20182,6 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: '#^Method KWWebTestCase\:\:tearDown\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
 			message: '#^Method KWWebTestCase\:\:uploadfile\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -21328,25 +20206,19 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: '#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\.php\:834\:\:__construct\(\) has parameter \$response with no type specified\.$#'
+			message: '#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\.php\:832\:\:__construct\(\) has parameter \$response with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: '#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\.php\:834\:\:getSent\(\) has no return type specified\.$#'
+			message: '#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\.php\:832\:\:getSent\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: '#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\.php\:834\:\:isError\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
-			message: '#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\.php\:834\:\:read\(\) has no return type specified\.$#'
+			message: '#^Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester\.php\:832\:\:read\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
@@ -21574,7 +20446,7 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: '#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\.php\:834\:\:\$read has no type specified\.$#'
+			message: '#^Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester\.php\:832\:\:\$read has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
@@ -21604,34 +20476,10 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: '#^Method EmailTestCase\:\:testSimple\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/sameImage.php
-
-		-
-			message: '#^Method EmailTestCase\:\:testSimple\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/simple.php
-
-		-
-			message: '#^Method EmailTestCase\:\:testSimple\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/simple2.php
-
-		-
 			message: '#^Parameter \#1 \$haystack of function str_contains expects string, string\|false given\.$#'
 			identifier: argument.type
 			count: 1
 			path: app/cdash/tests/singletest.php
-
-		-
-			message: '#^Method ActualBranchCoverageTestCase\:\:testBranchCoverage\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_actualbranchcoverage.php
 
 		-
 			message: '#^Property ActualBranchCoverageTestCase\:\:\$projectname has no type specified\.$#'
@@ -21697,12 +20545,6 @@ parameters:
 			path: app/cdash/tests/test_actualtrilinossubmission.php
 
 		-
-			message: '#^Method ActualTrilinosSubmissionTestCase\:\:setEmailCommitters\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_actualtrilinossubmission.php
-
-		-
 			message: '#^Method ActualTrilinosSubmissionTestCase\:\:setEmailCommitters\(\) has parameter \$email with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -21711,18 +20553,6 @@ parameters:
 		-
 			message: '#^Method ActualTrilinosSubmissionTestCase\:\:setEmailCommitters\(\) has parameter \$projectname with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/test_actualtrilinossubmission.php
-
-		-
-			message: '#^Method ActualTrilinosSubmissionTestCase\:\:testActualTrilinosSubmission\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_actualtrilinossubmission.php
-
-		-
-			message: '#^Method ActualTrilinosSubmissionTestCase\:\:testSubProjectBuildErrors\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/test_actualtrilinossubmission.php
 
@@ -22009,12 +20839,6 @@ parameters:
 			path: app/cdash/tests/test_aggregatesubprojectcoverage.php
 
 		-
-			message: '#^Method AggregateSubProjectCoverageTestCase\:\:compareCoverageCheck\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_aggregatesubprojectcoverage.php
-
-		-
 			message: '#^Method AggregateSubProjectCoverageTestCase\:\:compareCoverageCheck\(\) has parameter \$answers with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -22023,18 +20847,6 @@ parameters:
 		-
 			message: '#^Method AggregateSubProjectCoverageTestCase\:\:compareCoverageCheck\(\) has parameter \$extra_url with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/test_aggregatesubprojectcoverage.php
-
-		-
-			message: '#^Method AggregateSubProjectCoverageTestCase\:\:testCompareCoverage\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_aggregatesubprojectcoverage.php
-
-		-
-			message: '#^Method AggregateSubProjectCoverageTestCase\:\:testCompareCoverageWithFilters\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/test_aggregatesubprojectcoverage.php
 
@@ -22140,12 +20952,6 @@ parameters:
 		-
 			message: '#^Cannot call method fetchColumn\(\) on PDOStatement\|false\.$#'
 			identifier: method.nonObject
-			count: 1
-			path: app/cdash/tests/test_attachedfiles.php
-
-		-
-			message: '#^Method AttachedFilesTestCase\:\:testAttachedFiles\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/test_attachedfiles.php
 
@@ -22265,48 +21071,6 @@ parameters:
 
 		-
 			message: '#^Method AuthTokenTestCase\:\:testApiAccess\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_authtoken.php
-
-		-
-			message: '#^Method AuthTokenTestCase\:\:testEnableAuthenticatedSubmissions\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_authtoken.php
-
-		-
-			message: '#^Method AuthTokenTestCase\:\:testGenerateToken\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_authtoken.php
-
-		-
-			message: '#^Method AuthTokenTestCase\:\:testRemoveExpiredToken\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_authtoken.php
-
-		-
-			message: '#^Method AuthTokenTestCase\:\:testRevokeToken\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_authtoken.php
-
-		-
-			message: '#^Method AuthTokenTestCase\:\:testSubmissionFailsWithInvalidToken\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_authtoken.php
-
-		-
-			message: '#^Method AuthTokenTestCase\:\:testSubmissionFailsWithoutToken\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_authtoken.php
-
-		-
-			message: '#^Method AuthTokenTestCase\:\:testSubmissionWorksWithToken\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/test_authtoken.php
@@ -22485,18 +21249,6 @@ parameters:
 		-
 			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
 			identifier: notEqual.notAllowed
-			count: 1
-			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
-
-		-
-			message: '#^Method AutoRemoveBuildsOnSubmitTestCase\:\:enableAutoRemoveConfigSetting\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
-
-		-
-			message: '#^Method AutoRemoveBuildsOnSubmitTestCase\:\:setAutoRemoveTimeFrame\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
 
@@ -22816,12 +21568,6 @@ parameters:
 			path: app/cdash/tests/test_branchcoverage.php
 
 		-
-			message: '#^Method BranchCoverageTestCase\:\:clearPriorBranchCoverageResults\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_branchcoverage.php
-
-		-
 			message: '#^Method BranchCoverageTestCase\:\:postSubmit\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -22944,18 +21690,6 @@ parameters:
 		-
 			message: '#^Cannot call method fetchColumn\(\) on PDOStatement\|false\.$#'
 			identifier: method.nonObject
-			count: 1
-			path: app/cdash/tests/test_buildconfigure.php
-
-		-
-			message: '#^Method BuildConfigureTestCase\:\:testBuildConfigure\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_buildconfigure.php
-
-		-
-			message: '#^Method BuildConfigureTestCase\:\:testBuildConfigureDiff\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/test_buildconfigure.php
 
@@ -23101,36 +21835,6 @@ parameters:
 			path: app/cdash/tests/test_builddetails.php
 
 		-
-			message: '#^Method BuildDetailsTestCase\:\:testViewBuildErrorReturnsArrayOfErrorsOnChildBuilds\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_builddetails.php
-
-		-
-			message: '#^Method BuildDetailsTestCase\:\:testViewBuildErrorReturnsErrorForInvalidBuildId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_builddetails.php
-
-		-
-			message: '#^Method BuildDetailsTestCase\:\:testViewBuildErrorReturnsErrorForNonexistentBuild\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_builddetails.php
-
-		-
-			message: '#^Method BuildDetailsTestCase\:\:testViewBuildErrorReturnsProperFormat\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_builddetails.php
-
-		-
-			message: '#^Method BuildDetailsTestCase\:\:testViewBuildErrorReturnsProperFormatForParentBuilds\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_builddetails.php
-
-		-
 			message: '#^Method BuildDetailsTestCase\:\:testViewTestReturnsProperFormat\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -23230,12 +21934,6 @@ parameters:
 			path: app/cdash/tests/test_buildfailuredetails.php
 
 		-
-			message: '#^Method BuildGetDateTestCase\:\:testBuildGetDate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_buildgetdate.php
-
-		-
 			message: '''
 				#^Call to deprecated function pdo_execute\(\)\:
 				v2\.5\.0 01/22/2018$#
@@ -23273,18 +21971,6 @@ parameters:
 
 		-
 			message: '#^Method BuildGroupRuleTestCase\:\:testBuildGroupRule\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_buildgrouprule.php
-
-		-
-			message: '#^Method BuildGroupRuleTestCase\:\:testMatchLongestRule\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_buildgrouprule.php
-
-		-
-			message: '#^Method BuildGroupRuleTestCase\:\:testOnlyExpireRulesFromSameProject\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/test_buildgrouprule.php
@@ -23360,54 +22046,6 @@ parameters:
 
 		-
 			message: '#^Method BuildModelTestCase\:\:testBuildModel\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_buildmodel.php
-
-		-
-			message: '#^Method BuildModelTestCase\:\:testBuildModelAddBuild\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_buildmodel.php
-
-		-
-			message: '#^Method BuildModelTestCase\:\:testBuildModelGetErrors\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_buildmodel.php
-
-		-
-			message: '#^Method BuildModelTestCase\:\:testBuildModelGetsBuildErrorsAcrossChildBuilds\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_buildmodel.php
-
-		-
-			message: '#^Method BuildModelTestCase\:\:testBuildModelGetsBuildFailuresAcrossChildBuilds\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_buildmodel.php
-
-		-
-			message: '#^Method BuildModelTestCase\:\:testBuildModelGetsConfigures\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_buildmodel.php
-
-		-
-			message: '#^Method BuildModelTestCase\:\:testBuildModelGetsFailures\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_buildmodel.php
-
-		-
-			message: '#^Method BuildModelTestCase\:\:testBuildModelGetsResolvedBuildErrors\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_buildmodel.php
-
-		-
-			message: '#^Method BuildModelTestCase\:\:testBuildModelGetsResolvedBuildFailures\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/test_buildmodel.php
@@ -23533,20 +22171,8 @@ parameters:
 			path: app/cdash/tests/test_buildproperties.php
 
 		-
-			message: '#^Empty array passed to foreach\.$#'
-			identifier: foreach.emptyArray
-			count: 1
-			path: app/cdash/tests/test_buildproperties.php
-
-		-
 			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
 			identifier: notEqual.notAllowed
-			count: 1
-			path: app/cdash/tests/test_buildproperties.php
-
-		-
-			message: '#^Method BuildPropertiesTestCase\:\:create_build\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/test_buildproperties.php
 
@@ -23572,78 +22198,6 @@ parameters:
 			message: '#^Method BuildPropertiesTestCase\:\:create_build\(\) has parameter \$md5 with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
-			path: app/cdash/tests/test_buildproperties.php
-
-		-
-			message: '#^Method BuildPropertiesTestCase\:\:testComputeClassifiers\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_buildproperties.php
-
-		-
-			message: '#^Method BuildPropertiesTestCase\:\:testListDefects\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_buildproperties.php
-
-		-
-			message: '#^Method BuildPropertiesTestCase\:\:testUploadBuildProperties\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_buildproperties.php
-
-		-
-			message: '#^Offset ''clean'' does not exist on array\{\}\.$#'
-			identifier: offsetAccess.notFound
-			count: 1
-			path: app/cdash/tests/test_buildproperties.php
-
-		-
-			message: '#^Offset ''error1'' does not exist on array\{\}\.$#'
-			identifier: offsetAccess.notFound
-			count: 2
-			path: app/cdash/tests/test_buildproperties.php
-
-		-
-			message: '#^Offset ''error2'' does not exist on array\{\}\.$#'
-			identifier: offsetAccess.notFound
-			count: 2
-			path: app/cdash/tests/test_buildproperties.php
-
-		-
-			message: '#^Offset ''failedtest1'' does not exist on array\{\}\.$#'
-			identifier: offsetAccess.notFound
-			count: 1
-			path: app/cdash/tests/test_buildproperties.php
-
-		-
-			message: '#^Offset ''failedtest2'' does not exist on array\{\}\.$#'
-			identifier: offsetAccess.notFound
-			count: 1
-			path: app/cdash/tests/test_buildproperties.php
-
-		-
-			message: '#^Offset ''failedtest3'' does not exist on array\{\}\.$#'
-			identifier: offsetAccess.notFound
-			count: 1
-			path: app/cdash/tests/test_buildproperties.php
-
-		-
-			message: '#^Offset ''failedtest4'' does not exist on array\{\}\.$#'
-			identifier: offsetAccess.notFound
-			count: 1
-			path: app/cdash/tests/test_buildproperties.php
-
-		-
-			message: '#^Offset ''fixed'' does not exist on array\{\}\.$#'
-			identifier: offsetAccess.notFound
-			count: 1
-			path: app/cdash/tests/test_buildproperties.php
-
-		-
-			message: '#^Offset ''warning'' does not exist on array\{\}\.$#'
-			identifier: offsetAccess.notFound
-			count: 2
 			path: app/cdash/tests/test_buildproperties.php
 
 		-
@@ -23767,12 +22321,6 @@ parameters:
 			path: app/cdash/tests/test_buildrelationship.php
 
 		-
-			message: '#^Method BuildRelationshipTestCase\:\:testBuildRelationships\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_buildrelationship.php
-
-		-
 			message: '#^Parameter \#1 \$object_or_class of function property_exists expects object\|string, mixed given\.$#'
 			identifier: argument.type
 			count: 10
@@ -23818,12 +22366,6 @@ parameters:
 			path: app/cdash/tests/test_changeid.php
 
 		-
-			message: '#^Method ChangeIdTestCase\:\:testChangeId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_changeid.php
-
-		-
 			message: '#^Parameter \#1 \$stmt of method CDash\\Database\:\:execute\(\) expects PDOStatement, PDOStatement\|false given\.$#'
 			identifier: argument.type
 			count: 1
@@ -23845,32 +22387,8 @@ parameters:
 			path: app/cdash/tests/test_commitauthornotification.php
 
 		-
-			message: '#^Method CommitAuthorNotificationTestCase\:\:submitFile\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_commitauthornotification.php
-
-		-
 			message: '#^Method CommitAuthorNotificationTestCase\:\:submitFile\(\) has parameter \$file with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/test_commitauthornotification.php
-
-		-
-			message: '#^Method CommitAuthorNotificationTestCase\:\:testCommitAuthorsDoNotRecieveBuildWarningsNotifications\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_commitauthornotification.php
-
-		-
-			message: '#^Method CommitAuthorNotificationTestCase\:\:testCommitAuthorsReceiveBuildFailureNotifications\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_commitauthornotification.php
-
-		-
-			message: '#^Method CommitAuthorNotificationTestCase\:\:testCommitAuthorsReceiveTestFailureNotifications\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/test_commitauthornotification.php
 
@@ -23917,12 +22435,6 @@ parameters:
 			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
 			identifier: notEqual.notAllowed
 			count: 2
-			path: app/cdash/tests/test_committerinfo.php
-
-		-
-			message: '#^Method CommitterInfoTestCase\:\:testCommitterInfo\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
 			path: app/cdash/tests/test_committerinfo.php
 
 		-
@@ -24013,18 +22525,6 @@ parameters:
 			path: app/cdash/tests/test_compressedtest.php
 
 		-
-			message: '#^Method CompressedTestCase\:\:testGITUpdate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_compressedtest.php
-
-		-
-			message: '#^Method CompressedTestCase\:\:testSubmissionCompressedTest\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_compressedtest.php
-
-		-
 			message: '#^Parameter \#1 \$haystack of function str_contains expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 2
@@ -24048,12 +22548,6 @@ parameters:
 				12/09/2024  Use \\Test\\Traits\\CreatesSubmissions instead$#
 			'''
 			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/test_configureappend.php
-
-		-
-			message: '#^Method ConfigureAppendTestCase\:\:testConfigureAppend\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/test_configureappend.php
 
@@ -24099,18 +22593,6 @@ parameters:
 		-
 			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
 			identifier: notEqual.notAllowed
-			count: 1
-			path: app/cdash/tests/test_configurewarnings.php
-
-		-
-			message: '#^Method ConfigureWarningTestCase\:\:testConfigureWarning\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_configurewarnings.php
-
-		-
-			message: '#^Method ConfigureWarningTestCase\:\:testConfigureWarningDiff\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/test_configurewarnings.php
 
@@ -24190,12 +22672,6 @@ parameters:
 			path: app/cdash/tests/test_consistenttestingday.php
 
 		-
-			message: '#^Method ConsistentTestingDayTestCase\:\:testConsistentTestingDay\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_consistenttestingday.php
-
-		-
 			message: '#^Parameter \#1 \$array of function array_pop expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 4
@@ -24271,12 +22747,6 @@ parameters:
 			path: app/cdash/tests/test_coveragedirectories.php
 
 		-
-			message: '#^Method CoverageDirectoriesTestCase\:\:testCoverageDirectories\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_coveragedirectories.php
-
-		-
 			message: '#^Parameter \#1 \$haystack of function str_contains expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 2
@@ -24334,12 +22804,6 @@ parameters:
 			path: app/cdash/tests/test_createprojectpermissions.php
 
 		-
-			message: '#^Method CreateProjectPermissionsTestCase\:\:testCreateProjectPermissions\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_createprojectpermissions.php
-
-		-
 			message: '#^Parameter \#1 \$object_or_class of function property_exists expects object\|string, mixed given\.$#'
 			identifier: argument.type
 			count: 15
@@ -24356,12 +22820,6 @@ parameters:
 			identifier: missingType.property
 			count: 1
 			path: app/cdash/tests/test_createprojectpermissions.php
-
-		-
-			message: '#^Method CreatePublicDashboardTestCase\:\:testCreatePublicDashboard\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_createpublicdashboard.php
 
 		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
@@ -24550,24 +23008,6 @@ parameters:
 			path: app/cdash/tests/test_crosssubprojectcoverage.php
 
 		-
-			message: '#^Method CoverageAcrossSubProjectsTestCase\:\:testCreateProjectTest\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_crosssubprojectcoverage.php
-
-		-
-			message: '#^Method CoverageAcrossSubProjectsTestCase\:\:testCreateSubProjects\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_crosssubprojectcoverage.php
-
-		-
-			message: '#^Method CoverageAcrossSubProjectsTestCase\:\:testSubmitGcovTarCoverage\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_crosssubprojectcoverage.php
-
-		-
 			message: '#^Method CoverageAcrossSubProjectsTestCase\:\:verifyAggregate\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -24661,12 +23101,6 @@ parameters:
 			path: app/cdash/tests/test_csvexport.php
 
 		-
-			message: '#^Method ExportToCSVTestCase\:\:testExportToCSV\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_csvexport.php
-
-		-
 			message: '#^Part \$buildid \(mixed\) of encapsed string cannot be cast to string\.$#'
 			identifier: encapsedStringPart.nonString
 			count: 1
@@ -24720,84 +23154,6 @@ parameters:
 		-
 			message: '#^Cannot access property \$testpassed on object\|null\.$#'
 			identifier: property.nonObject
-			count: 1
-			path: app/cdash/tests/test_deferredsubmissions.php
-
-		-
-			message: '#^Method DeferredSubmissionsTestCase\:\:getToken\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_deferredsubmissions.php
-
-		-
-			message: '#^Method DeferredSubmissionsTestCase\:\:prepareForNormalSubmission\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_deferredsubmissions.php
-
-		-
-			message: '#^Method DeferredSubmissionsTestCase\:\:testDeferredSubmissions\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_deferredsubmissions.php
-
-		-
-			message: '#^Method DeferredSubmissionsTestCase\:\:testDeferredSubmitWithInvalidProjectToken\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_deferredsubmissions.php
-
-		-
-			message: '#^Method DeferredSubmissionsTestCase\:\:testDeferredSubmitWithInvalidToken\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_deferredsubmissions.php
-
-		-
-			message: '#^Method DeferredSubmissionsTestCase\:\:testDeferredSubmitWithMissingToken\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_deferredsubmissions.php
-
-		-
-			message: '#^Method DeferredSubmissionsTestCase\:\:testDeferredSubmitWithProjectToken\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_deferredsubmissions.php
-
-		-
-			message: '#^Method DeferredSubmissionsTestCase\:\:testDeferredSubmitWithValidToken\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_deferredsubmissions.php
-
-		-
-			message: '#^Method DeferredSubmissionsTestCase\:\:testDeferredUnparsedSubmission\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_deferredsubmissions.php
-
-		-
-			message: '#^Method DeferredSubmissionsTestCase\:\:testNormalSubmitWithInvalidToken\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_deferredsubmissions.php
-
-		-
-			message: '#^Method DeferredSubmissionsTestCase\:\:testNormalSubmitWithMissingToken\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_deferredsubmissions.php
-
-		-
-			message: '#^Method DeferredSubmissionsTestCase\:\:testNormalSubmitWithValidToken\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_deferredsubmissions.php
-
-		-
-			message: '#^Method DeferredSubmissionsTestCase\:\:verifyNormalSubmission\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/test_deferredsubmissions.php
 
@@ -24931,12 +23287,6 @@ parameters:
 			path: app/cdash/tests/test_disabledtests.php
 
 		-
-			message: '#^Method DisabledTestsTestCase\:\:testDisabledTests\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_disabledtests.php
-
-		-
 			message: '#^Parameter \#1 \$buildid of static method App\\Utils\\DatabaseCleanupUtils\:\:removeBuild\(\) expects array\<int\>\|int, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -24988,26 +23338,8 @@ parameters:
 			path: app/cdash/tests/test_donehandler.php
 
 		-
-			message: '#^Method DoneHandlerTestCase\:\:performTest\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_donehandler.php
-
-		-
 			message: '#^Method DoneHandlerTestCase\:\:performTest\(\) has parameter \$remote with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/test_donehandler.php
-
-		-
-			message: '#^Method DoneHandlerTestCase\:\:testDoneHandlerLocal\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_donehandler.php
-
-		-
-			message: '#^Method DoneHandlerTestCase\:\:testDoneHandlerRemote\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/test_donehandler.php
 
@@ -25069,12 +23401,6 @@ parameters:
 			path: app/cdash/tests/test_dynamicanalysisdefectlongtype.php
 
 		-
-			message: '#^Method DynamicAnalysisDefectLongTypeTestCase\:\:testDynamicAnalysisDefectLongType\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_dynamicanalysisdefectlongtype.php
-
-		-
 			message: '#^Property DynamicAnalysisDefectLongTypeTestCase\:\:\$project has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
@@ -25086,12 +23412,6 @@ parameters:
 				12/09/2024  Use \\Test\\Traits\\CreatesSubmissions instead$#
 			'''
 			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/test_dynamicanalysislogs.php
-
-		-
-			message: '#^Method DynamicAnalysisLogsTestCase\:\:testDynamicAnalysisLogs\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/test_dynamicanalysislogs.php
 
@@ -25123,25 +23443,7 @@ parameters:
 			path: app/cdash/tests/test_dynamicanalysissummary.php
 
 		-
-			message: '#^Method DynamicAnalysisSummaryTestCase\:\:VerifyStandaloneBuild\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_dynamicanalysissummary.php
-
-		-
-			message: '#^Method DynamicAnalysisSummaryTestCase\:\:VerifySubProjectBuild\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_dynamicanalysissummary.php
-
-		-
 			message: '#^Method DynamicAnalysisSummaryTestCase\:\:testDynamicAnalysisSummary\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_dynamicanalysissummary.php
-
-		-
-			message: '#^Method DynamicAnalysisSummaryTestCase\:\:testDynamicAnalysisSummaryGetsDeleted\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/test_dynamicanalysissummary.php
@@ -25210,54 +23512,6 @@ parameters:
 			path: app/cdash/tests/test_email.php
 
 		-
-			message: '#^Method EmailTestCase\:\:testCreateProjectTest\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_email.php
-
-		-
-			message: '#^Method EmailTestCase\:\:testEmailSentToGitCommitter\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_email.php
-
-		-
-			message: '#^Method EmailTestCase\:\:testRegisterNoEmailUser\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_email.php
-
-		-
-			message: '#^Method EmailTestCase\:\:testRegisterUser\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_email.php
-
-		-
-			message: '#^Method EmailTestCase\:\:testSubmissionEmailBuild\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_email.php
-
-		-
-			message: '#^Method EmailTestCase\:\:testSubmissionEmailDynamicAnalysis\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_email.php
-
-		-
-			message: '#^Method EmailTestCase\:\:testSubmissionEmailTest\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_email.php
-
-		-
-			message: '#^Method EmailTestCase\:\:testSubmissionFirstBuild\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_email.php
-
-		-
 			message: '#^Only booleans are allowed in a negated boolean, int given\.$#'
 			identifier: booleanNot.exprNotBoolean
 			count: 1
@@ -25272,12 +23526,6 @@ parameters:
 		-
 			message: '#^Call to deprecated method pass\(\) of class SimpleTestCase\.$#'
 			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/test_enable_async.php
-
-		-
-			message: '#^Method EnableAsynchronousTestCase\:\:testEnableAsynchronous\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/test_enable_async.php
 
@@ -25534,12 +23782,6 @@ parameters:
 			path: app/cdash/tests/test_excludesubprojects.php
 
 		-
-			message: '#^Method ExcludeSubProjectsTestCase\:\:testExcludeHonorsOtherFilters\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_excludesubprojects.php
-
-		-
 			message: '#^Method ExcludeSubProjectsTestCase\:\:testExcludeSubProjects\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -25621,12 +23863,6 @@ parameters:
 			path: app/cdash/tests/test_expectedandmissing.php
 
 		-
-			message: '#^Method ExpectedAndMissingTestCase\:\:expectedTest\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_expectedandmissing.php
-
-		-
 			message: '#^Method ExpectedAndMissingTestCase\:\:expectedTest\(\) has parameter \$buildname with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -25635,18 +23871,6 @@ parameters:
 		-
 			message: '#^Method ExpectedAndMissingTestCase\:\:expectedTest\(\) has parameter \$projectname with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/test_expectedandmissing.php
-
-		-
-			message: '#^Method ExpectedAndMissingTestCase\:\:testNormalExpected\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_expectedandmissing.php
-
-		-
-			message: '#^Method ExpectedAndMissingTestCase\:\:testParentExpected\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/test_expectedandmissing.php
 
@@ -25717,12 +23941,6 @@ parameters:
 			path: app/cdash/tests/test_expiredbuildrules.php
 
 		-
-			message: '#^Method ExpiredBuildRulesTestCase\:\:checkForGroup\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_expiredbuildrules.php
-
-		-
 			message: '#^Method ExpiredBuildRulesTestCase\:\:checkForGroup\(\) has parameter \$date with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -25731,12 +23949,6 @@ parameters:
 		-
 			message: '#^Method ExpiredBuildRulesTestCase\:\:checkForGroup\(\) has parameter \$expected with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/test_expiredbuildrules.php
-
-		-
-			message: '#^Method ExpiredBuildRulesTestCase\:\:testExpiredBuildRules\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/test_expiredbuildrules.php
 
@@ -25822,12 +24034,6 @@ parameters:
 			path: app/cdash/tests/test_externallinksfromtests.php
 
 		-
-			message: '#^Method ExtractTarTestCase\:\:testExtractTarArchiveTarWithInvalidFile\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_extracttar.php
-
-		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
 			count: 1
@@ -25873,48 +24079,6 @@ parameters:
 			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
 			identifier: notEqual.notAllowed
 			count: 2
-			path: app/cdash/tests/test_filterblocks.php
-
-		-
-			message: '#^Method FilterBlocksTestCase\:\:testFilterBlocks\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_filterblocks.php
-
-		-
-			message: '#^Method FilterBlocksTestCase\:\:testFilterBlocksAreRemovedWhenNoSubFiltersRemain\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_filterblocks.php
-
-		-
-			message: '#^Method FilterBlocksTestCase\:\:testFilterBlocksRemoveDefaultDateField\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_filterblocks.php
-
-		-
-			message: '#^Method FilterBlocksTestCase\:\:testFiltersAreDisplayedEvenWhenTheirSQLIsPruned\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_filterblocks.php
-
-		-
-			message: '#^Method FilterBlocksTestCase\:\:testSubProjectFilterWorksWithBlocks\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_filterblocks.php
-
-		-
-			message: '#^Method FilterBlocksTestCase\:\:testSubProjectFilterWorksWithOr\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_filterblocks.php
-
-		-
-			message: '#^Method FilterBlocksTestCase\:\:verifyTwoHutBuilds\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
 			path: app/cdash/tests/test_filterblocks.php
 
 		-
@@ -26320,12 +24484,6 @@ parameters:
 			path: app/cdash/tests/test_indexfilters.php
 
 		-
-			message: '#^Method IndexFiltersTestCase\:\:testIndexFilters\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_indexfilters.php
-
-		-
 			message: '#^Parameter \#1 \$array of function array_pop expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -26398,12 +24556,6 @@ parameters:
 			path: app/cdash/tests/test_indexnextprevious.php
 
 		-
-			message: '#^Method IndexNextPreviousTestCase\:\:testIndexNextPrevious\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_indexnextprevious.php
-
-		-
 			message: '#^Parameter \#1 \$result of method WebTestCase\:\:assertFalse\(\) expects bool, mixed given\.$#'
 			identifier: argument.type
 			count: 3
@@ -26469,12 +24621,6 @@ parameters:
 		-
 			message: '#^Cannot access offset ''newissueurl'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_issuecreation.php
-
-		-
-			message: '#^Method IssueCreationTestCase\:\:testIssueCreation\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/test_issuecreation.php
 
@@ -26665,12 +24811,6 @@ parameters:
 			path: app/cdash/tests/test_junithandler.php
 
 		-
-			message: '#^Method JUnitHandlerTestCase\:\:testJUnitHandler\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_junithandler.php
-
-		-
 			message: '#^Parameter \#1 \$string of function trim expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -26698,12 +24838,6 @@ parameters:
 			path: app/cdash/tests/test_limitedbuilds.php
 
 		-
-			message: '#^Method LimitedBuildsTestCase\:\:submitBuild\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_limitedbuilds.php
-
-		-
 			message: '#^Method LimitedBuildsTestCase\:\:submitBuild\(\) has parameter \$num with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -26712,24 +24846,6 @@ parameters:
 		-
 			message: '#^Method LimitedBuildsTestCase\:\:submitBuild\(\) has parameter \$project_name with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/test_limitedbuilds.php
-
-		-
-			message: '#^Method LimitedBuildsTestCase\:\:testLimitedBuilds\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_limitedbuilds.php
-
-		-
-			message: '#^Method LimitedBuildsTestCase\:\:testSetup\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_limitedbuilds.php
-
-		-
-			message: '#^Method LimitedBuildsTestCase\:\:testUnlimitedBuilds\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/test_limitedbuilds.php
 
@@ -26773,12 +24889,6 @@ parameters:
 			path: app/cdash/tests/test_longbuildname.php
 
 		-
-			message: '#^Method LongBuildNameTestCase\:\:testLongBuildName\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_longbuildname.php
-
-		-
 			message: '#^Property LongBuildNameTestCase\:\:\$project has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
@@ -26790,12 +24900,6 @@ parameters:
 				12/09/2024  Use \\Test\\Traits\\CreatesSubmissions instead$#
 			'''
 			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/test_lotsofsubprojects.php
-
-		-
-			message: '#^Method LotsOfSubProjectsTestCase\:\:testLotsOfSubProjects\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/test_lotsofsubprojects.php
 
@@ -27004,12 +25108,6 @@ parameters:
 			path: app/cdash/tests/test_managemeasurements.php
 
 		-
-			message: '#^Method ManageMeasurementsTestCase\:\:validate_subproject_test\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_managemeasurements.php
-
-		-
 			message: '#^Method ManageMeasurementsTestCase\:\:validate_subproject_test\(\) has parameter \$io_wait_time with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -27036,12 +25134,6 @@ parameters:
 		-
 			message: '#^Method ManageMeasurementsTestCase\:\:validate_subproject_test\(\) has parameter \$test_name with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/test_managemeasurements.php
-
-		-
-			message: '#^Method ManageMeasurementsTestCase\:\:validate_test\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/test_managemeasurements.php
 
@@ -27370,12 +25462,6 @@ parameters:
 			path: app/cdash/tests/test_multiplelabelsfortests.php
 
 		-
-			message: '#^Method MultipleLabelsForTestsTestCase\:\:testMultipleLabelsForTests\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_multiplelabelsfortests.php
-
-		-
 			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -27688,43 +25774,13 @@ parameters:
 			path: app/cdash/tests/test_multiplesubprojects.php
 
 		-
-			message: '#^Method MultipleSubprojectsTestCase\:\:restoreEmailPreference\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_multiplesubprojects.php
-
-		-
 			message: '#^Method MultipleSubprojectsTestCase\:\:restoreState\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/test_multiplesubprojects.php
 
 		-
-			message: '#^Method MultipleSubprojectsTestCase\:\:setUp\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_multiplesubprojects.php
-
-		-
 			message: '#^Method MultipleSubprojectsTestCase\:\:submitBuild\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_multiplesubprojects.php
-
-		-
-			message: '#^Method MultipleSubprojectsTestCase\:\:tearDown\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_multiplesubprojects.php
-
-		-
-			message: '#^Method MultipleSubprojectsTestCase\:\:testMultipleSubprojects\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_multiplesubprojects.php
-
-		-
-			message: '#^Method MultipleSubprojectsTestCase\:\:verifyBuild\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/test_multiplesubprojects.php
@@ -28057,12 +26113,6 @@ parameters:
 			path: app/cdash/tests/test_namedmeasurements.php
 
 		-
-			message: '#^Method NamedMeasurementsTestCase\:\:testNamedMeasurements\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_namedmeasurements.php
-
-		-
 			message: '#^Property NamedMeasurementsTestCase\:\:\$project has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
@@ -28243,12 +26293,6 @@ parameters:
 			path: app/cdash/tests/test_notesparsererrormessages.php
 
 		-
-			message: '#^Method NotesParserErrorMessagesTestCase\:\:testNotesParserErrorMessages\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_notesparsererrormessages.php
-
-		-
 			message: '#^Property NotesParserErrorMessagesTestCase\:\:\$project has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
@@ -28312,12 +26356,6 @@ parameters:
 			path: app/cdash/tests/test_numericupdate.php
 
 		-
-			message: '#^Method NumericUpdateTestCase\:\:testNumericUpdate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_numericupdate.php
-
-		-
 			message: '#^Parameter \#1 \$array of function array_pop expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -28378,12 +26416,6 @@ parameters:
 			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
 			identifier: notEqual.notAllowed
 			count: 2
-			path: app/cdash/tests/test_opencovercoverage.php
-
-		-
-			message: '#^Method OpenCoverCoverageTestCase\:\:tearDown\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
 			path: app/cdash/tests/test_opencovercoverage.php
 
 		-
@@ -28468,12 +26500,6 @@ parameters:
 			path: app/cdash/tests/test_outputcolor.php
 
 		-
-			message: '#^Method OutputColorTestCase\:\:testOutputColor\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_outputcolor.php
-
-		-
 			message: '#^Parameter \#1 \$haystack of function str_contains expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 3
@@ -28488,12 +26514,6 @@ parameters:
 		-
 			message: '#^Access to an undefined property object\:\:\$id\.$#'
 			identifier: property.notFound
-			count: 1
-			path: app/cdash/tests/test_parallelsubmissions.php
-
-		-
-			message: '#^Method ParallelSubmissionsTestCase\:\:testParallelSubmissions\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/test_parallelsubmissions.php
 
@@ -28522,12 +26542,6 @@ parameters:
 			path: app/cdash/tests/test_passwordcomplexity.php
 
 		-
-			message: '#^Method PasswordComplexityTestCase\:\:complexityTest\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_passwordcomplexity.php
-
-		-
 			message: '#^Method PasswordComplexityTestCase\:\:complexityTest\(\) has parameter \$count with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -28542,12 +26556,6 @@ parameters:
 		-
 			message: '#^Method PasswordComplexityTestCase\:\:complexityTest\(\) has parameter \$password with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/test_passwordcomplexity.php
-
-		-
-			message: '#^Method PasswordComplexityTestCase\:\:testPasswordComplexity\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/test_passwordcomplexity.php
 
@@ -28594,36 +26602,6 @@ parameters:
 			path: app/cdash/tests/test_pdoexecutelogserrors.php
 
 		-
-			message: '#^Method ProjectInDbTestCase\:\:createProjectTest4Db\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_projectindb.php
-
-		-
-			message: '#^Method ProjectInDbTestCase\:\:testProjectInBuildGroup\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_projectindb.php
-
-		-
-			message: '#^Method ProjectInDbTestCase\:\:testProjectInBuildGroupPosition\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_projectindb.php
-
-		-
-			message: '#^Method ProjectInDbTestCase\:\:testProjectTest4DbInDatabase\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_projectindb.php
-
-		-
-			message: '#^Method ProjectInDbTestCase\:\:testUser2Project\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_projectindb.php
-
-		-
 			message: '#^Property ProjectInDbTestCase\:\:\$projecttestid has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
@@ -28632,12 +26610,6 @@ parameters:
 		-
 			message: '#^Call to function in_array\(\) requires parameter \#3 to be set\.$#'
 			identifier: function.strict
-			count: 1
-			path: app/cdash/tests/test_projectmodel.php
-
-		-
-			message: '#^Method ProjectModelTestCase\:\:testConvertToJsonHasNoPrivateMembers\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/test_projectmodel.php
 
@@ -28711,96 +26683,6 @@ parameters:
 			path: app/cdash/tests/test_projectwebpage.php
 
 		-
-			message: '#^Method ProjectWebPageTestCase\:\:testAccessToWebPageProjectTest\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_projectwebpage.php
-
-		-
-			message: '#^Method ProjectWebPageTestCase\:\:testProjectExperimentalLinkBuildSummary\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_projectwebpage.php
-
-		-
-			message: '#^Method ProjectWebPageTestCase\:\:testSubmissionBatchmakeBuild\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_projectwebpage.php
-
-		-
-			message: '#^Method ProjectWebPageTestCase\:\:testSubmissionBatchmakeConfigure\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_projectwebpage.php
-
-		-
-			message: '#^Method ProjectWebPageTestCase\:\:testSubmissionBatchmakeNotes\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_projectwebpage.php
-
-		-
-			message: '#^Method ProjectWebPageTestCase\:\:testSubmissionBatchmakeTest\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_projectwebpage.php
-
-		-
-			message: '#^Method ProjectWebPageTestCase\:\:testSubmissionBatchmakeUpdate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_projectwebpage.php
-
-		-
-			message: '#^Method ProjectWebPageTestCase\:\:testSubmissionInDb\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_projectwebpage.php
-
-		-
-			message: '#^Method ProjectWebPageTestCase\:\:testSubmissionInsightBuild\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_projectwebpage.php
-
-		-
-			message: '#^Method ProjectWebPageTestCase\:\:testSubmissionInsightConfigure\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_projectwebpage.php
-
-		-
-			message: '#^Method ProjectWebPageTestCase\:\:testSubmissionInsightCoverage\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_projectwebpage.php
-
-		-
-			message: '#^Method ProjectWebPageTestCase\:\:testSubmissionInsightCoverageLog\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_projectwebpage.php
-
-		-
-			message: '#^Method ProjectWebPageTestCase\:\:testSubmissionInsightDynamicAnalysis\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_projectwebpage.php
-
-		-
-			message: '#^Method ProjectWebPageTestCase\:\:testSubmissionInsightNotes\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_projectwebpage.php
-
-		-
-			message: '#^Method ProjectWebPageTestCase\:\:testSubmissionInsightTest\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_projectwebpage.php
-
-		-
 			message: '#^Parameter \#1 \$array of function array_pop expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -28858,12 +26740,6 @@ parameters:
 			path: app/cdash/tests/test_projectxmlsequence.php
 
 		-
-			message: '#^Method ProjectXmlSequenceTestCase\:\:testProjectXmlSequence\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_projectxmlsequence.php
-
-		-
 			message: '''
 				#^Call to deprecated method getPdo\(\) of class CDash\\Database\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
@@ -28911,18 +26787,6 @@ parameters:
 		-
 			message: '#^Cannot access property \$name on App\\Models\\Site\|null\.$#'
 			identifier: property.nonObject
-			count: 1
-			path: app/cdash/tests/test_putdynamicbuilds.php
-
-		-
-			message: '#^Method PutDynamicBuildsTestCase\:\:testPutDynamicBuildsDiff\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_putdynamicbuilds.php
-
-		-
-			message: '#^Method PutDynamicBuildsTestCase\:\:verifyListGetsCreated\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/test_putdynamicbuilds.php
 
@@ -29080,12 +26944,6 @@ parameters:
 			path: app/cdash/tests/test_querytestsfilterlabels.php
 
 		-
-			message: '#^Method QueryTestsFilterLabelsTestCase\:\:testQueryTestsFilterLabels\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_querytestsfilterlabels.php
-
-		-
 			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -29101,12 +26959,6 @@ parameters:
 			message: '#^Cannot access offset ''builds'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 3
-			path: app/cdash/tests/test_querytestsrevisionfilter.php
-
-		-
-			message: '#^Method QueryTestsFilterLabelsTestCase\:\:testQueryTestsFilterLabels\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
 			path: app/cdash/tests/test_querytestsrevisionfilter.php
 
 		-
@@ -29269,12 +27121,6 @@ parameters:
 			path: app/cdash/tests/test_revisionfilteracrossdates.php
 
 		-
-			message: '#^Method RevisionFilterIgnoresDateTestCase\:\:testRevisionFilterIgnoresDate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_revisionfilteracrossdates.php
-
-		-
 			message: '#^Parameter \#1 \$array of function array_pop expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -29287,12 +27133,6 @@ parameters:
 			path: app/cdash/tests/test_revisionfilteracrossdates.php
 
 		-
-			message: '#^Method SecondsFromIntervalTestCase\:\:intervalTest\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_seconds_from_interval.php
-
-		-
 			message: '#^Method SecondsFromIntervalTestCase\:\:intervalTest\(\) has parameter \$expected with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -29301,12 +27141,6 @@ parameters:
 		-
 			message: '#^Method SecondsFromIntervalTestCase\:\:intervalTest\(\) has parameter \$input with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/test_seconds_from_interval.php
-
-		-
-			message: '#^Method SecondsFromIntervalTestCase\:\:testSecondsFromInterval\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/test_seconds_from_interval.php
 
@@ -29392,60 +27226,6 @@ parameters:
 			path: app/cdash/tests/test_sequenceindependence.php
 
 		-
-			message: '#^Method SequenceIndependenceTestCase\:\:testConfigureFirst\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_sequenceindependence.php
-
-		-
-			message: '#^Method SequenceIndependenceTestCase\:\:testCoverageFirst\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_sequenceindependence.php
-
-		-
-			message: '#^Method SequenceIndependenceTestCase\:\:testCoverageLogFirst\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_sequenceindependence.php
-
-		-
-			message: '#^Method SequenceIndependenceTestCase\:\:testDynamicAnalysisFirst\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_sequenceindependence.php
-
-		-
-			message: '#^Method SequenceIndependenceTestCase\:\:testNotesFirst\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_sequenceindependence.php
-
-		-
-			message: '#^Method SequenceIndependenceTestCase\:\:testOriginalOrder\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_sequenceindependence.php
-
-		-
-			message: '#^Method SequenceIndependenceTestCase\:\:testReverseOrder\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_sequenceindependence.php
-
-		-
-			message: '#^Method SequenceIndependenceTestCase\:\:testTestFirst\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_sequenceindependence.php
-
-		-
-			message: '#^Method SequenceIndependenceTestCase\:\:testUpdateFirst\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_sequenceindependence.php
-
-		-
 			message: '#^Only booleans are allowed in a negated boolean, PDOStatement\|false given\.$#'
 			identifier: booleanNot.exprNotBoolean
 			count: 3
@@ -29458,23 +27238,11 @@ parameters:
 			path: app/cdash/tests/test_sitestatistics.php
 
 		-
-			message: '#^Method SiteStatisticsTestCase\:\:testSiteStatistics\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_sitestatistics.php
-
-		-
 			message: '''
 				#^Call to deprecated method submission\(\) of class KWWebTestCase\:
 				12/09/2024  Use \\Test\\Traits\\CreatesSubmissions instead$#
 			'''
 			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/test_starttimefromnotes.php
-
-		-
-			message: '#^Method StartTimeFromNotesTestCase\:\:testStartTimeFromNotes\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/test_starttimefromnotes.php
 
@@ -29492,12 +27260,6 @@ parameters:
 			identifier: method.deprecated
 			count: 1
 			path: app/cdash/tests/test_starttimefromupload.php
-
-		-
-			message: '#^Method SubmissionAssignBuildIdTestCase\:\:testSubmissionAssignBuildId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_submission_assign_buildid.php
 
 		-
 			message: '''
@@ -29527,12 +27289,6 @@ parameters:
 			path: app/cdash/tests/test_submitsortingdata.php
 
 		-
-			message: '#^Method SubmitSortingDataTestCase\:\:testSubmitSortingData\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_submitsortingdata.php
-
-		-
 			message: '#^Call to deprecated method pass\(\) of class SimpleTestCase\.$#'
 			identifier: method.deprecated
 			count: 3
@@ -29545,30 +27301,6 @@ parameters:
 			'''
 			identifier: method.deprecated
 			count: 3
-			path: app/cdash/tests/test_subproject.php
-
-		-
-			message: '#^Method SubProjectTestCase\:\:testAccessToWebPageProjectTest\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_subproject.php
-
-		-
-			message: '#^Method SubProjectTestCase\:\:testSubmissionProjectDependencies\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_subproject.php
-
-		-
-			message: '#^Method SubProjectTestCase\:\:testSubmissionSubProjectBuild\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_subproject.php
-
-		-
-			message: '#^Method SubProjectTestCase\:\:testSubmissionSubProjectTest\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
 			path: app/cdash/tests/test_subproject.php
 
 		-
@@ -29830,12 +27562,6 @@ parameters:
 			path: app/cdash/tests/test_subprojectorder.php
 
 		-
-			message: '#^Method SubProjectOrderTestCase\:\:testSubProjectOrder\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_subprojectorder.php
-
-		-
 			message: '#^Parameter \#1 \$array of function array_pop expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -29950,12 +27676,6 @@ parameters:
 			path: app/cdash/tests/test_subprojecttestfilters.php
 
 		-
-			message: '#^Method SubProjectTestFiltersTestCase\:\:testSubProjectTestFilters\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_subprojecttestfilters.php
-
-		-
 			message: '#^Parameter \#1 \$array of function array_pop expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 2
@@ -29995,12 +27715,6 @@ parameters:
 			path: app/cdash/tests/test_subscribeprojectshowlabels.php
 
 		-
-			message: '#^Method SubscribeProjectShowLabelsTestCase\:\:testSubscribeProjectShowsLabels\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_subscribeprojectshowlabels.php
-
-		-
 			message: '#^Property SubscribeProjectShowLabelsTestCase\:\:\$PDO has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
@@ -30012,12 +27726,6 @@ parameters:
 				12/09/2024  Use \\Test\\Traits\\CreatesSubmissions instead$#
 			'''
 			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/test_summaryemail.php
-
-		-
-			message: '#^Method SummaryEmailTestCase\:\:testSummaryEmail\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/test_summaryemail.php
 
@@ -30073,12 +27781,6 @@ parameters:
 			message: '#^Cannot call method fetch\(\) on PDOStatement\|false\.$#'
 			identifier: method.nonObject
 			count: 2
-			path: app/cdash/tests/test_testgraphpermissions.php
-
-		-
-			message: '#^Method TestGraphPermissionsTestCase\:\:testTestGraphPermissions\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
 			path: app/cdash/tests/test_testgraphpermissions.php
 
 		-
@@ -30271,12 +27973,6 @@ parameters:
 			path: app/cdash/tests/test_testhistory.php
 
 		-
-			message: '#^Method TestHistoryTestCase\:\:testTestHistory\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_testhistory.php
-
-		-
 			message: '#^Only booleans are allowed in &&, string given on the left side\.$#'
 			identifier: booleanAnd.leftNotBoolean
 			count: 2
@@ -30352,12 +28048,6 @@ parameters:
 			path: app/cdash/tests/test_testimages.php
 
 		-
-			message: '#^Method TestImagesTestCase\:\:testTestImages\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_testimages.php
-
-		-
 			message: '#^Property TestImagesTestCase\:\:\$project has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
@@ -30393,12 +28083,6 @@ parameters:
 		-
 			message: '#^Cannot call method fetchColumn\(\) on PDOStatement\|false\.$#'
 			identifier: method.nonObject
-			count: 1
-			path: app/cdash/tests/test_testoverview.php
-
-		-
-			message: '#^Method TestOverviewTestCase\:\:testTestOverview\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/test_testoverview.php
 
@@ -30478,18 +28162,6 @@ parameters:
 			path: app/cdash/tests/test_timeline.php
 
 		-
-			message: '#^Method TimelineTestCase\:\:testTimeline\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_timeline.php
-
-		-
-			message: '#^Method TimelineTestCase\:\:toggle_expected\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_timeline.php
-
-		-
 			message: '#^Method TimelineTestCase\:\:toggle_expected\(\) has parameter \$build with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -30508,12 +28180,6 @@ parameters:
 			path: app/cdash/tests/test_timeline.php
 
 		-
-			message: '#^Method TimelineTestCase\:\:validateExtent\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_timeline.php
-
-		-
 			message: '#^Method TimelineTestCase\:\:validateExtent\(\) has parameter \$end with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -30528,12 +28194,6 @@ parameters:
 		-
 			message: '#^Method TimelineTestCase\:\:validateExtent\(\) has parameter \$start with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/test_timeline.php
-
-		-
-			message: '#^Method TimelineTestCase\:\:validatePage\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/test_timeline.php
 
@@ -30613,24 +28273,6 @@ parameters:
 			path: app/cdash/tests/test_timeoutsandmissingtests.php
 
 		-
-			message: '#^Method TimeoutsAndMissingTestsTestCase\:\:testMissingTestsSummarizedInEmail\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_timeoutsandmissingtests.php
-
-		-
-			message: '#^Method TimeoutsAndMissingTestsTestCase\:\:testMissingTestsSummarizedInViewTestAPI\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_timeoutsandmissingtests.php
-
-		-
-			message: '#^Method TimeoutsAndMissingTestsTestCase\:\:testTimeoutFailuresDifferentiatedInEmail\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_timeoutsandmissingtests.php
-
-		-
 			message: '#^Property TimeoutsAndMissingTestsTestCase\:\:\$buildName has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
@@ -30685,18 +28327,6 @@ parameters:
 			path: app/cdash/tests/test_timestatus.php
 
 		-
-			message: '#^Method TimeStatusTestCase\:\:testTimeStatus\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_timestatus.php
-
-		-
-			message: '#^Method TimeStatusTestCase\:\:verify_field\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_timestatus.php
-
-		-
 			message: '#^Method TimeStatusTestCase\:\:verify_field\(\) has parameter \$expected with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -30717,12 +28347,6 @@ parameters:
 		-
 			message: '#^Method TimeStatusTestCase\:\:verify_field\(\) has parameter \$id with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/test_timestatus.php
-
-		-
-			message: '#^Method TimeStatusTestCase\:\:verify_row\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/test_timestatus.php
 
@@ -30916,18 +28540,6 @@ parameters:
 			path: app/cdash/tests/test_truncateoutput.php
 
 		-
-			message: '#^Method TruncateOutputTestCase\:\:removeBuild\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_truncateoutput.php
-
-		-
-			message: '#^Method TruncateOutputTestCase\:\:testTruncateOutput\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_truncateoutput.php
-
-		-
 			message: '#^Parameter \#1 \$haystack of function str_contains expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -30979,20 +28591,8 @@ parameters:
 			path: app/cdash/tests/test_uniquediffs.php
 
 		-
-			message: '#^Method UniqueDiffsTestCase\:\:checkIntegrityViolation\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_uniquediffs.php
-
-		-
 			message: '#^Method UniqueDiffsTestCase\:\:checkIntegrityViolation\(\) has parameter \$stmt with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/test_uniquediffs.php
-
-		-
-			message: '#^Method UniqueDiffsTestCase\:\:checkRowCount\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/test_uniquediffs.php
 
@@ -31011,12 +28611,6 @@ parameters:
 		-
 			message: '#^Method UniqueDiffsTestCase\:\:checkRowCount\(\) has parameter \$table with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/test_uniquediffs.php
-
-		-
-			message: '#^Method UniqueDiffsTestCase\:\:testUniqueDiffs\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/test_uniquediffs.php
 
@@ -31141,24 +28735,6 @@ parameters:
 			path: app/cdash/tests/test_uploadfile.php
 
 		-
-			message: '#^Method UploadFileTestCase\:\:testSubmitUploadXML\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_uploadfile.php
-
-		-
-			message: '#^Method UploadFileTestCase\:\:testVerifyFileSubmission\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_uploadfile.php
-
-		-
-			message: '#^Method UploadFileTestCase\:\:testVerifyLabel\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_uploadfile.php
-
-		-
 			message: '#^Parameter \#1 \$array of function array_pop expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 2
@@ -31267,18 +28843,6 @@ parameters:
 			message: '#^Cannot call method fetch\(\) on PDOStatement\|false\.$#'
 			identifier: method.nonObject
 			count: 3
-			path: app/cdash/tests/test_viewdynamicanalysisfile.php
-
-		-
-			message: '#^Method ViewDynamicAnalysisFileTestCase\:\:testNextPrevious\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_viewdynamicanalysisfile.php
-
-		-
-			message: '#^Method ViewDynamicAnalysisFileTestCase\:\:testViewDynamicAnalysisFile\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
 			path: app/cdash/tests/test_viewdynamicanalysisfile.php
 
 		-
@@ -31455,12 +29019,6 @@ parameters:
 		-
 			message: '#^Method TrilinosSubmissionTestCase\:\:submitFiles\(\) has parameter \$trilinosOnly with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/trilinos_submission_test.php
-
-		-
-			message: '#^Method TrilinosSubmissionTestCase\:\:verifyBuild\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/trilinos_submission_test.php
 
@@ -31772,54 +29330,6 @@ parameters:
 			identifier: staticMethod.deprecated
 			count: 5
 			path: tests/Feature/CDashTest.php
-
-		-
-			message: '#^Method Tests\\Feature\\CDashTest\:\:testCDashBasicRequest\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Feature/CDashTest.php
-
-		-
-			message: '#^Method Tests\\Feature\\CDashTest\:\:testCDashFilesystemConfigExists\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Feature/CDashTest.php
-
-		-
-			message: '#^Method Tests\\Feature\\CDashTest\:\:testCDashReturnsNotFoundGivenPathDoesNotExist\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Feature/CDashTest.php
-
-		-
-			message: '#^Method Tests\\Feature\\CDashTest\:\:testFilesystemAdapterConfiguredForCDash\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Feature/CDashTest.php
-
-		-
-			message: '#^Method Tests\\Feature\\CDashTest\:\:testOverrideLoginField\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Feature/CDashTest.php
-
-		-
-			message: '#^Method Tests\\Feature\\CDashTest\:\:testRedirects\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Feature/CDashTest.php
-
-		-
-			message: '#^Method Tests\\Feature\\GitHubWebhook\:\:testWebhookWithCorrectSignature\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Feature/GitHubWebhook.php
-
-		-
-			message: '#^Method Tests\\Feature\\GitHubWebhook\:\:testWebhookWithWrongSignature\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Feature/GitHubWebhook.php
 
 		-
 			message: '#^Method Tests\\Feature\\GlobalInvitationAcceptanceTest\:\:createInvitation\(\) throws checked exception OverflowException but it''s missing from the PHPDoc @throws tag\.$#'
@@ -32297,63 +29807,3 @@ parameters:
 			identifier: phpunit.assertEquals
 			count: 1
 			path: tests/Unit/app/Middleware/InternalTest.php
-
-		-
-			message: '#^Method App\\Validators\\PasswordTest\:\:testComplexityFailsGivenEmptyPassword\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Unit/app/Validators/PasswordTest.php
-
-		-
-			message: '#^Method App\\Validators\\PasswordTest\:\:testComplexityGivenComplexityOfValue1\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Unit/app/Validators/PasswordTest.php
-
-		-
-			message: '#^Method App\\Validators\\PasswordTest\:\:testComplexityGivenComplexityOfValue2\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Unit/app/Validators/PasswordTest.php
-
-		-
-			message: '#^Method App\\Validators\\PasswordTest\:\:testComplexityGivenComplexityOfValue3\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Unit/app/Validators/PasswordTest.php
-
-		-
-			message: '#^Method App\\Validators\\PasswordTest\:\:testComplexityGivenGivenCountOfZeroOrComplexityOfZero\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Unit/app/Validators/PasswordTest.php
-
-		-
-			message: '#^Method App\\Validators\\PasswordTest\:\:testComplexityOfValue4\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Unit/app/Validators/PasswordTest.php
-
-		-
-			message: '#^Method App\\Validators\\PasswordTest\:\:testGetComplexityConfigurationFavorsConfigurationOverDefault\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Unit/app/Validators/PasswordTest.php
-
-		-
-			message: '#^Method App\\Validators\\PasswordTest\:\:testGetComplexityConfigurationGivenDefault\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Unit/app/Validators/PasswordTest.php
-
-		-
-			message: '#^Method App\\Validators\\PasswordTest\:\:testGetComplexityFavorsArgumentsOverConfiguration\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Unit/app/Validators/PasswordTest.php
-
-		-
-			message: '#^Method App\\Validators\\PasswordTest\:\:testSetErrorOutput\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Unit/app/Validators/PasswordTest.php

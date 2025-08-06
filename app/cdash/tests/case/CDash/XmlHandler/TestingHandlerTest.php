@@ -28,7 +28,7 @@ use Tests\TestCase;
 
 class TestingHandlerTest extends TestCase
 {
-    public function testTestingHandlerIsACommitAuthorHandler()
+    public function testTestingHandlerIsACommitAuthorHandler(): void
     {
         $project = new Project();
         $project->Id = 0;
@@ -36,7 +36,7 @@ class TestingHandlerTest extends TestCase
         $this->assertInstanceOf(CommitAuthorHandlerInterface::class, $sut);
     }
 
-    public function testGetBuildTopic()
+    public function testGetBuildTopic(): void
     {
         $project = new Project();
         $project->Id = 1;
@@ -58,7 +58,7 @@ class TestingHandlerTest extends TestCase
         $this->assertTrue($collection->has(Topic::TEST_MISSING));
     }
 
-    public function testGetSubscriptionBuilderCollection()
+    public function testGetSubscriptionBuilderCollection(): void
     {
         $project = new Project();
         $project->Id = 0;

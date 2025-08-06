@@ -37,24 +37,24 @@ class BuildErrorFilterTest extends CDashTestCase
             ['project' => $this->mock_project]);
     }
 
-    public function testExists()
+    public function testExists(): void
     {
         $this->assertFalse($this->sut->Exists());
     }
 
-    public function testAddFilter()
+    public function testAddFilter(): void
     {
         $this->assertFalse($this->sut->AddOrUpdateFilters('', ''));
     }
 
-    public function testFilterWarning()
+    public function testFilterWarning(): void
     {
         $this->sut->SetWarningsFilter('false warning');
         $this->assertTrue($this->sut->FilterWarning('this is a false warning'));
         $this->assertFalse($this->sut->FilterWarning('this is a real warning'));
     }
 
-    public function testFilterError()
+    public function testFilterError(): void
     {
         $this->sut->SetErrorsFilter('false error');
         $this->assertTrue($this->sut->FilterError('this is a false error'));

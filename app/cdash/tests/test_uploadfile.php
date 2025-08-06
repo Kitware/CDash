@@ -21,7 +21,7 @@ class UploadFileTestCase extends KWWebTestCase
     }
 
     // Submit an upload XML
-    public function testSubmitUploadXML()
+    public function testSubmitUploadXML(): void
     {
         $this->deleteLog($this->logfilename);
         $rep = dirname(__FILE__) . '/data/EmailProjectExample';
@@ -37,7 +37,7 @@ class UploadFileTestCase extends KWWebTestCase
     }
 
     // Make sure the uploaded files are present
-    public function testVerifyFileSubmission()
+    public function testVerifyFileSubmission(): void
     {
         $this->deleteLog($this->logfilename);
         // Verify file exists in the database
@@ -84,7 +84,7 @@ class UploadFileTestCase extends KWWebTestCase
     }
 
     // Make sure the build label has been set
-    public function testVerifyLabel()
+    public function testVerifyLabel(): void
     {
         $this->get($this->url . '/api/v1/index.php?project=EmailProjectExample&date=2009-02-23&filtercount=1&showfilters=1&field1=label&compare1=63&value1=UploadBuild');
         $content = $this->getBrowser()->getContent();

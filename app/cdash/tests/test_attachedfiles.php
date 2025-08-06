@@ -24,7 +24,7 @@ class AttachedFilesTestCase extends KWWebTestCase
         }
     }
 
-    public function testAttachedFiles()
+    public function testAttachedFiles(): void
     {
         // Create test project.
         $this->login();

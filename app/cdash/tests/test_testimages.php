@@ -25,7 +25,7 @@ class TestImagesTestCase extends KWWebTestCase
         }
     }
 
-    public function testTestImages()
+    public function testTestImages(): void
     {
         // Create test project.
         $this->login();

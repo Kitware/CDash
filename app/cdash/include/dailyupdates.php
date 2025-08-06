@@ -129,7 +129,7 @@ function sendEmailExpectedBuilds($projectid, $currentstarttime): void
             $missingSummary .= "\n" . url('/index.php') . '?project=' . urlencode($projectname) . "\n";
             $missingSummary .= "\n-CDash\n";
 
-            Mail::raw($missingSummary, function ($message) use ($missingTitle, $recipients) {
+            Mail::raw($missingSummary, function ($message) use ($missingTitle, $recipients): void {
                 $message->subject($missingTitle)
                     ->to($recipients);
             });
@@ -167,7 +167,7 @@ function sendEmailExpectedBuilds($projectid, $currentstarttime): void
 
         // Send the email
         if (!empty($recipients)) {
-            Mail::raw($summary, function ($message) use ($title, $recipients) {
+            Mail::raw($summary, function ($message) use ($title, $recipients): void {
                 $message->subject($title)
                     ->to($recipients);
             });

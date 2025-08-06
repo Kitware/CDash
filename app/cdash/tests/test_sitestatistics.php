@@ -13,7 +13,7 @@ class SiteStatisticsTestCase extends KWWebTestCase
         parent::__construct();
     }
 
-    public function testSiteStatistics()
+    public function testSiteStatistics(): void
     {
         $this->login();
         $content = $this->get($this->url . '/sites');

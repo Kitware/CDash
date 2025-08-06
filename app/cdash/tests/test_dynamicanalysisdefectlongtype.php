@@ -24,7 +24,7 @@ class DynamicAnalysisDefectLongTypeTestCase extends KWWebTestCase
         }
     }
 
-    public function testDynamicAnalysisDefectLongType()
+    public function testDynamicAnalysisDefectLongType(): void
     {
         // Create test project.
         $this->login();

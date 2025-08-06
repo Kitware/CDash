@@ -7,7 +7,7 @@ use CDash\Messaging\Notification\Email\EmailMessage;
 
 class NotificationCollection extends Collection
 {
-    public function add(EmailMessage $notification)
+    public function add(EmailMessage $notification): void
     {
         parent::addItem($notification, $notification->getRecipient());
     }

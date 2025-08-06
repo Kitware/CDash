@@ -63,27 +63,27 @@ class database
         return $this->dbo;
     }
 
-    public function setHost($host)
+    public function setHost($host): void
     {
         $this->dbo->setHost($host);
     }
 
-    public function setPort($port)
+    public function setPort($port): void
     {
         $this->dbo->setPort($port);
     }
 
-    public function setDb($db)
+    public function setDb($db): void
     {
         $this->dbo->setDb($db);
     }
 
-    public function setPassword($password)
+    public function setPassword($password): void
     {
         $this->dbo->setPassword($password);
     }
 
-    public function setUser($user)
+    public function setUser($user): void
     {
         $this->dbo->setUser($user);
     }
@@ -103,7 +103,7 @@ class database
         return $this->dbo->query($query);
     }
 
-    public function setConnection($connection)
+    public function setConnection($connection): void
     {
         $this->dbo->setConnection($connection);
     }
@@ -124,32 +124,32 @@ class dbo
         return $this->dbconnect;
     }
 
-    public function setHost($host)
+    public function setHost($host): void
     {
         $this->host = $host;
     }
 
-    public function setPort($port)
+    public function setPort($port): void
     {
         $this->port = $port;
     }
 
-    public function setDb($db)
+    public function setDb($db): void
     {
         $this->db = $db;
     }
 
-    public function setUser($user)
+    public function setUser($user): void
     {
         $this->user = $user;
     }
 
-    public function setPassword($pasword)
+    public function setPassword($pasword): void
     {
         $this->password = $pasword;
     }
 
-    public function setConnection($connection)
+    public function setConnection($connection): void
     {
         $this->connection = $connection;
     }
@@ -157,7 +157,7 @@ class dbo
 
 class dbo_pgsql extends dbo
 {
-    public function disconnect()
+    public function disconnect(): void
     {
         $this->dbconnect = null;
     }

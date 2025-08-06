@@ -15,7 +15,7 @@ class CoverageDirectoriesTestCase extends KWWebTestCase
         parent::__construct();
     }
 
-    public function testCoverageDirectories()
+    public function testCoverageDirectories(): void
     {
         $project = new Project();
         $project->Id = get_project_id('CoverageDirectories');

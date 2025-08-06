@@ -25,7 +25,7 @@ class DynamicAnalysisLogsTestCase extends KWWebTestCase
         }
     }
 
-    public function testDynamicAnalysisLogs()
+    public function testDynamicAnalysisLogs(): void
     {
         // Create test project.
         $this->login();

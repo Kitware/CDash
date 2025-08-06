@@ -26,7 +26,7 @@ class ConsistentTestingDayTestCase extends KWWebTestCase
         }
     }
 
-    public function testConsistentTestingDay()
+    public function testConsistentTestingDay(): void
     {
         // Create test project.
         $this->login();

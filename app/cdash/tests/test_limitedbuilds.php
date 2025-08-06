@@ -30,7 +30,7 @@ class LimitedBuildsTestCase extends KWWebTestCase
         $this->deleteLog($this->logfilename);
     }
 
-    public function testSetup()
+    public function testSetup(): void
     {
         // Create testing projects.
         $limited = new Project();
@@ -42,14 +42,14 @@ class LimitedBuildsTestCase extends KWWebTestCase
         $this->Projects[] = $unlimited;
     }
 
-    private function submitBuild($num, $project_name)
+    private function submitBuild($num, $project_name): void
     {
         $proj_param = ['project' => $project_name];
         $this->putCtestFile("{$this->testDataDir}/build{$num}.xml", $proj_param);
         $this->putCtestFile("{$this->testDataDir}/configure{$num}.xml", $proj_param);
     }
 
-    public function testLimitedBuilds()
+    public function testLimitedBuilds(): void
     {
         config([
             'cdash.builds_per_project' => 1,
@@ -81,7 +81,7 @@ class LimitedBuildsTestCase extends KWWebTestCase
         $this->assertTrue($build->Exists());
     }
 
-    public function testUnlimitedBuilds()
+    public function testUnlimitedBuilds(): void
     {
         config([
             'cdash.builds_per_project' => 1,

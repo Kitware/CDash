@@ -158,8 +158,8 @@ class Project extends Model
         if ($user === null) {
             $query->where('public', self::ACCESS_PUBLIC);
         } elseif (!$user->admin) {
-            $query->where(function ($subquery) use ($user) {
-                $subquery->whereHas('users', function ($subquery2) use ($user) {
+            $query->where(function ($subquery) use ($user): void {
+                $subquery->whereHas('users', function ($subquery2) use ($user): void {
                     $subquery2->where('users.id', $user->id);
                 })
                     ->orWhere('public', self::ACCESS_PUBLIC)
@@ -182,7 +182,7 @@ class Project extends Model
 
         return $this->hasMany(SubProject::class, 'projectid', 'id')
             ->where('starttime', '<=', Carbon::now()->setTimezone('UTC'))
-            ->where(function ($query) use ($date) {
+            ->where(function ($query) use ($date): void {
                 $query->where('endtime', '>', $date)
                     ->orWhere('endtime', '=', Carbon::create(1980));
             });
@@ -210,7 +210,7 @@ class Project extends Model
     public function builds(): HasMany
     {
         return $this->hasMany(Build::class, 'projectid', 'id')
-            ->where(function ($query) {
+            ->where(function ($query): void {
                 $query->where('parentid', 0)
                     ->orWhere('parentid', -1);
             });
@@ -225,7 +225,7 @@ class Project extends Model
     public function mostRecentBuild(): HasOne
     {
         return $this->hasOne(Build::class, 'projectid', 'id')
-            ->ofMany(['submittime' => 'max'], function (Builder $query) {
+            ->ofMany(['submittime' => 'max'], function (Builder $query): void {
                 $query->where('parentid', 0)
                     ->orWhere('parentid', -1);
             });

@@ -30,7 +30,7 @@ class BuildErrorTopicTest extends CDashTestCase
 {
     use BuildDiffForTesting;
 
-    public function testSubscribesToBuildWithErrorDiff()
+    public function testSubscribesToBuildWithErrorDiff(): void
     {
         $build = new Build();
 
@@ -51,7 +51,7 @@ class BuildErrorTopicTest extends CDashTestCase
         $this->assertFalse($sut->subscribesToBuild($build));
     }
 
-    public function testSubscribesToBuildWithWarningDiff()
+    public function testSubscribesToBuildWithWarningDiff(): void
     {
         $build = new Build();
 
@@ -72,14 +72,14 @@ class BuildErrorTopicTest extends CDashTestCase
         $this->assertFalse($sut->subscribesToBuild($build));
     }
 
-    public function testGetTopicCollection()
+    public function testGetTopicCollection(): void
     {
         $sut = new BuildErrorTopic();
         $collection = $sut->getTopicCollection();
         $this->assertInstanceOf(BuildErrorCollection::class, $collection);
     }
 
-    public function testSetTopicData()
+    public function testSetTopicData(): void
     {
         $sut = new BuildErrorTopic();
         $sut->setType(Build::TYPE_ERROR);
@@ -107,7 +107,7 @@ class BuildErrorTopicTest extends CDashTestCase
         $this->assertSame($buildErrorWarning, $collection->current());
     }
 
-    public function testItemHasTopicSubject()
+    public function testItemHasTopicSubject(): void
     {
         $sut = new BuildErrorTopic();
         $sut->setType(Build::TYPE_ERROR);
@@ -128,7 +128,7 @@ class BuildErrorTopicTest extends CDashTestCase
         $this->assertTrue($sut->itemHasTopicSubject($build, $error));
     }
 
-    public function testGetTopicCount()
+    public function testGetTopicCount(): void
     {
         $sut = new BuildErrorTopic();
         $sut->setType(Build::TYPE_ERROR);
@@ -149,7 +149,7 @@ class BuildErrorTopicTest extends CDashTestCase
         $this->assertEquals(2, $sut->getTopicCount());
     }
 
-    public function testGetTopicName()
+    public function testGetTopicName(): void
     {
         $sut = new BuildErrorTopic();
         $sut->setType(Build::TYPE_ERROR);
@@ -159,7 +159,7 @@ class BuildErrorTopicTest extends CDashTestCase
         $this->assertEquals('BuildWarning', $sut->getTopicName());
     }
 
-    public function testGetTopicDescription()
+    public function testGetTopicDescription(): void
     {
         $sut = new BuildErrorTopic();
         $sut->setType(Build::TYPE_ERROR);
@@ -169,7 +169,7 @@ class BuildErrorTopicTest extends CDashTestCase
         $this->assertEquals('Warnings', $sut->getTopicDescription());
     }
 
-    public function testHasFixes()
+    public function testHasFixes(): void
     {
         $sut = new BuildErrorTopic();
         $sut->setType(Build::TYPE_ERROR);
@@ -205,7 +205,7 @@ class BuildErrorTopicTest extends CDashTestCase
         $this->assertTrue($sut->hasFixes());
     }
 
-    public function testGetTemplate()
+    public function testGetTemplate(): void
     {
         $sut = new BuildErrorTopic();
         $exptected = 'issue';
@@ -213,7 +213,7 @@ class BuildErrorTopicTest extends CDashTestCase
         $this->assertEquals($exptected, $actual);
     }
 
-    public function testIsSubscribedToBy()
+    public function testIsSubscribedToBy(): void
     {
         $sut = new BuildErrorTopic();
 
@@ -242,7 +242,7 @@ class BuildErrorTopicTest extends CDashTestCase
         $this->assertTrue($sut->isSubscribedToBy($subscriber));
     }
 
-    public function testSubscribesToRedundantBuild()
+    public function testSubscribesToRedundantBuild(): void
     {
         // Create a build with a redundant warning.
         $build = $this->getMockBuild();

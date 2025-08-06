@@ -180,7 +180,7 @@ class TestHistoryTestCase extends KWWebTestCase
         return $retval;
     }
 
-    public function testTestHistory()
+    public function testTestHistory(): void
     {
         // Make sure we start from scratch each time the test is run.
         $this->project = new Project();

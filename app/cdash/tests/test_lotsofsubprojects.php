@@ -31,7 +31,7 @@ class LotsOfSubProjectsTestCase extends KWWebTestCase
         unlink('LotsOfSubProjects_Configure.xml');
     }
 
-    public function testLotsOfSubProjects()
+    public function testLotsOfSubProjects(): void
     {
         // Create test project.
         $this->login();

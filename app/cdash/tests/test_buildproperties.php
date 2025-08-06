@@ -34,7 +34,7 @@ class BuildPropertiesTestCase extends KWWebTestCase
         $this->Project->delete();
     }
 
-    public function testUploadBuildProperties()
+    public function testUploadBuildProperties(): void
     {
         // Create a series of builds.
         $this->Builds = [];
@@ -116,7 +116,7 @@ class BuildPropertiesTestCase extends KWWebTestCase
         $warning->Insert();
     }
 
-    public function testListDefects()
+    public function testListDefects(): void
     {
         $buildids = [];
         foreach ($this->Builds as $name => $build) {
@@ -133,7 +133,7 @@ class BuildPropertiesTestCase extends KWWebTestCase
         }
     }
 
-    public function testComputeClassifiers()
+    public function testComputeClassifiers(): void
     {
         $this->get($this->url . '/api/v1/buildProperties.php?project=' . $this->Project->name . '&begin=2017-05-26&end=2017-05-29');
         $content = $this->getBrowser()->getContent();
@@ -180,7 +180,7 @@ class BuildPropertiesTestCase extends KWWebTestCase
         }
     }
 
-    private function create_build($buildname, $filename, $date, $md5)
+    private function create_build($buildname, $filename, $date, $md5): void
     {
         $timestamp = strtotime($date);
         // Do the POST step of the submission.

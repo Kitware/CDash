@@ -37,7 +37,7 @@ class ConfigureTopicTest extends CDashTestCase
         $this->parent = $this->getMockBuilder(Topic::class)->getMock();
     }
 
-    public function testSubscribesToBuild()
+    public function testSubscribesToBuild(): void
     {
         $sut = new ConfigureTopic();
         $build = new Build();
@@ -82,7 +82,7 @@ class ConfigureTopicTest extends CDashTestCase
         $this->assertFalse($sut->subscribesToBuild($build));
     }
 
-    public function testSetTopicData()
+    public function testSetTopicData(): void
     {
         $sut = new ConfigureTopic();
         $build = new Build();
@@ -94,7 +94,7 @@ class ConfigureTopicTest extends CDashTestCase
         $this->assertSame($buildConfigure, $collection->get(Topic::CONFIGURE));
     }
 
-    public function testGetTopicCount()
+    public function testGetTopicCount(): void
     {
         $sut = new ConfigureTopic();
         $build = new Build();
@@ -111,26 +111,26 @@ class ConfigureTopicTest extends CDashTestCase
         $this->assertEquals(127, $sut->getTopicCount());
     }
 
-    public function testGetTopicDescription()
+    public function testGetTopicDescription(): void
     {
         $sut = new ConfigureTopic();
         $this->assertEquals('Configure Errors', $sut->getTopicDescription());
     }
 
-    public function testGetTopicName()
+    public function testGetTopicName(): void
     {
         $sut = new ConfigureTopic();
         $this->assertEquals(Topic::CONFIGURE, $sut->getTopicName());
     }
 
-    public function testGetTopicCollection()
+    public function testGetTopicCollection(): void
     {
         $sut = new ConfigureTopic();
         $collection = $sut->getTopicCollection();
         $this->assertInstanceOf(ConfigureCollection::class, $collection);
     }
 
-    public function testGetTemplate()
+    public function testGetTemplate(): void
     {
         $sut = new ConfigureTopic();
         $expected = 'issue';
@@ -138,7 +138,7 @@ class ConfigureTopicTest extends CDashTestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function testGetLabelsFromBuild()
+    public function testGetLabelsFromBuild(): void
     {
         $sut = new ConfigureTopic();
         $build = new Build();
@@ -163,7 +163,7 @@ class ConfigureTopicTest extends CDashTestCase
         $this->assertTrue($collection->has('two'));
     }
 
-    public function testSetTopicDataWithLabels()
+    public function testSetTopicDataWithLabels(): void
     {
         $sut = new ConfigureTopic();
         $build = new Build();
@@ -179,7 +179,7 @@ class ConfigureTopicTest extends CDashTestCase
         $this->assertCount(1, $collection);
     }
 
-    public function testIsSubscribedToBy()
+    public function testIsSubscribedToBy(): void
     {
         $sut = new ConfigureTopic();
 

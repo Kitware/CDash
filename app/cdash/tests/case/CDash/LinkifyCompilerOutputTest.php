@@ -5,7 +5,7 @@ use CDash\Test\CDashTestCase;
 
 class LinkifyCompilerOutputTest extends CDashTestCase
 {
-    public function testLinkifyCompilerOutput()
+    public function testLinkifyCompilerOutput(): void
     {
         $compiler_output =
             '/.../file.cxx:1:22: error: <fakefile.h>: No such file';

@@ -27,7 +27,7 @@ class BuildTest extends CDashTestCase
         $this->setDatabaseMocked();
     }
 
-    public function testGetDiffWithPreviousBuild()
+    public function testGetDiffWithPreviousBuild(): void
     {
         $sut = new Build();
 
@@ -37,7 +37,7 @@ class BuildTest extends CDashTestCase
         $this->assertInstanceOf(BuildEmailCollection::class, $collection);
     }
 
-    public function testGetBuildEmailCollection()
+    public function testGetBuildEmailCollection(): void
     {
         // This is a bad idea, don't do this
         // TODO: refactor asap

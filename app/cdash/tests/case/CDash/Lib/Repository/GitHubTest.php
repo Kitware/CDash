@@ -358,7 +358,7 @@ class GitHubTest extends TestCase
         $sut->createCheck(str_replace('-', '', Uuid::uuid4()->toString()));
     }
 
-    public function testDisablePullRequestComments()
+    public function testDisablePullRequestComments(): void
     {
         Log::shouldReceive('info')
             ->with('pull request commenting is disabled');

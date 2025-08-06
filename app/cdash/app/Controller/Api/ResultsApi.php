@@ -92,7 +92,7 @@ abstract class ResultsApi extends ProjectApi
         return false;
     }
 
-    public function setDate($date)
+    public function setDate($date): void
     {
         $this->project->Fill();
         [$previousdate, $beginning_timestamp, $nextdate, $d] =
@@ -112,7 +112,7 @@ abstract class ResultsApi extends ProjectApi
         $this->endDate = gmdate(FMT_DATETIME, $end_timestamp);
     }
 
-    public function determineDateRange(&$response)
+    public function determineDateRange(&$response): void
     {
         $date_set = false;
 
@@ -187,7 +187,7 @@ abstract class ResultsApi extends ProjectApi
         return $this->filterdata;
     }
 
-    public function setFilterData(array $filterdata)
+    public function setFilterData(array $filterdata): void
     {
         $this->filterdata = $filterdata;
         $this->filterSQL = $this->filterdata['sql'];

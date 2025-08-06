@@ -23,7 +23,7 @@ class SubProjectTestCase extends KWWebTestCase
         $this->deleteLog($this->logfilename);
     }
 
-    public function testAccessToWebPageProjectTest()
+    public function testAccessToWebPageProjectTest(): void
     {
         $settings = [
             'Name' => 'SubProjectExample',
@@ -33,7 +33,7 @@ class SubProjectTestCase extends KWWebTestCase
         $this->createProject($settings);
     }
 
-    public function testSubmissionProjectDependencies()
+    public function testSubmissionProjectDependencies(): void
     {
         $this->deleteLog($this->logfilename);
         $rep = dirname(__FILE__) . '/data/SubProjectExample';
@@ -47,7 +47,7 @@ class SubProjectTestCase extends KWWebTestCase
         $this->pass('Test passed');
     }
 
-    public function testSubmissionSubProjectBuild()
+    public function testSubmissionSubProjectBuild(): void
     {
         $this->deleteLog($this->logfilename);
         $rep = dirname(__FILE__) . '/data/SubProjectExample';
@@ -89,7 +89,7 @@ class SubProjectTestCase extends KWWebTestCase
         }
     }
 
-    public function testSubmissionSubProjectTest()
+    public function testSubmissionSubProjectTest(): void
     {
         $this->deleteLog($this->logfilename);
         $rep = dirname(__FILE__) . '/data/SubProjectExample';

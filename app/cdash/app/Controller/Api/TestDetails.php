@@ -45,7 +45,7 @@ class TestDetails extends BuildTestApi
             ", [$this->buildtest->id])[$_GET['fileid'] - 1];
 
             return response()->streamDownload(
-                function () use ($query) {
+                function () use ($query): void {
                     echo base64_decode($query->value);
                 },
                 $query->name . '.tgz',

@@ -34,9 +34,9 @@ class ProjectPageTest extends BrowserTestCase
         $this->project->banner = $banner_text;
         $this->project->save();
 
-        $this->browse(function (Browser $browser) use ($banner_text) {
+        $this->browse(function (Browser $browser) use ($banner_text): void {
             $browser->visit("/index.php?project={$this->project->name}")
-                ->whenAvailable('#index_top', function (Browser $browser) use ($banner_text) {
+                ->whenAvailable('#index_top', function (Browser $browser) use ($banner_text): void {
                     $browser->assertSeeIn('@banner', $banner_text);
                 });
 
@@ -44,7 +44,7 @@ class ProjectPageTest extends BrowserTestCase
             $this->project->save();
 
             $browser->visit("/index.php?project={$this->project->name}")
-                ->whenAvailable('#index_top', function (Browser $browser) use ($banner_text) {
+                ->whenAvailable('#index_top', function (Browser $browser) use ($banner_text): void {
                     $browser->assertDontSee($banner_text);
                 });
         });

@@ -429,7 +429,7 @@ class BuildGroup
             ->where('build2grouprule.siteid', '=', $build->SiteId)
             ->where('build2grouprule.buildname', '=', $build->Name)
             ->where('build2grouprule.starttime', '<', $build->StartTime)
-            ->where(function ($query) use ($starttime) {
+            ->where(function ($query) use ($starttime): void {
                 $query->where('build2grouprule.endtime', '=', '1980-01-01 00:00:00')
                       ->orWhere('build2grouprule.endtime', '>', $starttime);
             })->first();
@@ -445,7 +445,7 @@ class BuildGroup
             ->where('build2grouprule.siteid', '=', -1)
             ->whereRaw("'{$build->Name}' LIKE build2grouprule.buildname")
             ->where('build2grouprule.starttime', '<', $build->StartTime)
-            ->where(function ($query) use ($starttime) {
+            ->where(function ($query) use ($starttime): void {
                 $query->where('build2grouprule.endtime', '=', '1980-01-01 00:00:00')
                       ->orWhere('build2grouprule.endtime', '>', $starttime);
             })

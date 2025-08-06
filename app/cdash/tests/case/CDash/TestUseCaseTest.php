@@ -46,13 +46,13 @@ class TestUseCaseTest extends CDashUseCaseTestCase
         parent::tearDown();
     }
 
-    public function testUseCaseBuildsTestUseCase()
+    public function testUseCaseBuildsTestUseCase(): void
     {
         $sut = UseCase::createBuilder($this, UseCase::TEST);
         $this->assertInstanceOf(TestUseCase::class, $sut);
     }
 
-    public function testBuildThrowsExceptionIfNameNotSet()
+    public function testBuildThrowsExceptionIfNameNotSet(): void
     {
         $sut = UseCase::createBuilder($this, UseCase::TEST);
         $this->expectException(Exception::class);
@@ -60,7 +60,7 @@ class TestUseCaseTest extends CDashUseCaseTestCase
         $sut->build();
     }
 
-    public function testTestUseCaseReturnsTestingHandler()
+    public function testTestUseCaseReturnsTestingHandler(): void
     {
         /** @var TestUseCase $sut */
         $sut = UseCase::createBuilder($this, UseCase::TEST);
@@ -69,7 +69,7 @@ class TestUseCaseTest extends CDashUseCaseTestCase
         $this->assertInstanceOf(TestingHandler::class, $handler);
     }
 
-    public function testTestUseCaseCreatesBuildAndSiteInformation()
+    public function testTestUseCaseCreatesBuildAndSiteInformation(): void
     {
         $siteInformation = [
             'BuildName' => 'CTestTest-Linux-c++-Subprojects',
@@ -124,7 +124,7 @@ class TestUseCaseTest extends CDashUseCaseTestCase
         $this->assertEquals($siteInformation['ProcessorClockFrequency'], $information?->processorclockfrequency);
     }
 
-    public function testTestUseCaseSetsSiteProperty()
+    public function testTestUseCaseSetsSiteProperty(): void
     {
         $sut = UseCase::createBuilder($this, UseCase::TEST);
         $useCaseReflection = new ReflectionClass(TestUseCase::class);
@@ -141,7 +141,7 @@ class TestUseCaseTest extends CDashUseCaseTestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function testTestUseCaseCreatesSubproject()
+    public function testTestUseCaseCreatesSubproject(): void
     {
         /** @var TestUseCase $sut */
         $sut = UseCase::createBuilder($this, UseCase::TEST);
@@ -162,7 +162,7 @@ class TestUseCaseTest extends CDashUseCaseTestCase
         $this->assertInstanceOf(Build::class, $builds->get('Teuchos'));
     }
 
-    public function testTestUseCaseCreatesTestPassed()
+    public function testTestUseCaseCreatesTestPassed(): void
     {
         /** @var TestUseCase $sut */
         $sut = UseCase::createBuilder($this, UseCase::TEST);
@@ -185,7 +185,7 @@ class TestUseCaseTest extends CDashUseCaseTestCase
         $this->assertEquals('Completed', $test->details);
     }
 
-    public function testTestUseCaseCreatesTestFailed()
+    public function testTestUseCaseCreatesTestFailed(): void
     {
         /** @var TestUseCase $sut */
         $sut = UseCase::createBuilder($this, UseCase::TEST);
@@ -210,7 +210,7 @@ class TestUseCaseTest extends CDashUseCaseTestCase
         $this->assertEquals('Completed (Failed)', $test->details);
     }
 
-    public function testTestUseCaseCreatesTestTimeout()
+    public function testTestUseCaseCreatesTestTimeout(): void
     {
         /** @var TestUseCase $sut */
         $sut = UseCase::createBuilder($this, UseCase::TEST);
@@ -235,7 +235,7 @@ class TestUseCaseTest extends CDashUseCaseTestCase
         $this->assertEquals('Completed (Timeout)', $test->details);
     }
 
-    public function testTestUseCaseCreatesTestNotRun()
+    public function testTestUseCaseCreatesTestNotRun(): void
     {
         /** @var TestUseCase $sut */
         $sut = UseCase::createBuilder($this, UseCase::TEST);
@@ -260,7 +260,7 @@ class TestUseCaseTest extends CDashUseCaseTestCase
         $this->assertEquals('', $test->details);
     }
 
-    public function testTestUseCaseCreatesMultisubprojectTestXMLFile()
+    public function testTestUseCaseCreatesMultisubprojectTestXMLFile(): void
     {
         /** @var TestUseCase $sut */
         $sut = UseCase::createBuilder($this, UseCase::TEST);
@@ -318,7 +318,7 @@ class TestUseCaseTest extends CDashUseCaseTestCase
         $this->assertEquals(TestUseCase::NOTRUN, $test->status);
     }
 
-    public function testUseCaseSetsPropertiesByTestName()
+    public function testUseCaseSetsPropertiesByTestName(): void
     {
         /** @var TestUseCase $sut */
         $sut = UseCase::createBuilder($this, UseCase::TEST);

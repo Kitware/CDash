@@ -64,10 +64,10 @@ class ProjectMembersPageTest extends BrowserTestCase
     {
         $this->users['admin'] = $this->makeAdminUser();
 
-        $this->browse(function (Browser $browser) {
+        $this->browse(function (Browser $browser): void {
             $browser->loginAs($this->users['admin'])
                 ->visit("/projects/{$this->project->id}/members")
-                ->whenAvailable('@project-members-page', function (Browser $browser) {
+                ->whenAvailable('@project-members-page', function (Browser $browser): void {
                     $browser->assertVisible('@invite-members-button');
                 });
         });
@@ -87,10 +87,10 @@ class ProjectMembersPageTest extends BrowserTestCase
                 'role' => Project::PROJECT_ADMIN,
             ]);
 
-        $this->browse(function (Browser $browser) {
+        $this->browse(function (Browser $browser): void {
             $browser->loginAs($this->users['normal'])
                 ->visit("/projects/{$this->project->id}/members")
-                ->whenAvailable('@project-members-page', function (Browser $browser) {
+                ->whenAvailable('@project-members-page', function (Browser $browser): void {
                     $browser->assertVisible('@invite-members-button');
                 });
         });
@@ -110,10 +110,10 @@ class ProjectMembersPageTest extends BrowserTestCase
                 'role' => Project::PROJECT_USER,
             ]);
 
-        $this->browse(function (Browser $browser) {
+        $this->browse(function (Browser $browser): void {
             $browser->loginAs($this->users['normal'])
                 ->visit("/projects/{$this->project->id}/members")
-                ->whenAvailable('@project-members-page', function (Browser $browser) {
+                ->whenAvailable('@project-members-page', function (Browser $browser): void {
                     $browser->assertMissing('@invite-members-button');
                 });
         });
@@ -121,9 +121,9 @@ class ProjectMembersPageTest extends BrowserTestCase
 
     public function testInviteMembersButtonDoesNotAppearWhenSignedOut(): void
     {
-        $this->browse(function (Browser $browser) {
+        $this->browse(function (Browser $browser): void {
             $browser->visit("/projects/{$this->project->id}/members")
-                ->whenAvailable('@project-members-page', function (Browser $browser) {
+                ->whenAvailable('@project-members-page', function (Browser $browser): void {
                     $browser->assertMissing('@invite-members-button');
                 });
         });
@@ -133,10 +133,10 @@ class ProjectMembersPageTest extends BrowserTestCase
     {
         $this->users['admin'] = $this->makeAdminUser();
 
-        $this->browse(function (Browser $browser) {
+        $this->browse(function (Browser $browser): void {
             $browser->loginAs($this->users['admin'])
                 ->visit("/projects/{$this->project->id}/members")
-                ->whenAvailable('@project-members-page', function (Browser $browser) {
+                ->whenAvailable('@project-members-page', function (Browser $browser): void {
                     $browser->waitFor('@invitations-table')
                         ->assertVisible('@invitations-table');
                 });
@@ -157,10 +157,10 @@ class ProjectMembersPageTest extends BrowserTestCase
                 'role' => Project::PROJECT_ADMIN,
             ]);
 
-        $this->browse(function (Browser $browser) {
+        $this->browse(function (Browser $browser): void {
             $browser->loginAs($this->users['normal'])
                 ->visit("/projects/{$this->project->id}/members")
-                ->whenAvailable('@project-members-page', function (Browser $browser) {
+                ->whenAvailable('@project-members-page', function (Browser $browser): void {
                     $browser->waitFor('@invitations-table')
                         ->assertVisible('@invitations-table');
                 });
@@ -181,10 +181,10 @@ class ProjectMembersPageTest extends BrowserTestCase
                 'role' => Project::PROJECT_USER,
             ]);
 
-        $this->browse(function (Browser $browser) {
+        $this->browse(function (Browser $browser): void {
             $browser->loginAs($this->users['normal'])
                 ->visit("/projects/{$this->project->id}/members")
-                ->whenAvailable('@project-members-page', function (Browser $browser) {
+                ->whenAvailable('@project-members-page', function (Browser $browser): void {
                     $browser->assertMissing('@invitations-table');
                 });
         });
@@ -192,9 +192,9 @@ class ProjectMembersPageTest extends BrowserTestCase
 
     public function testInvitationsTableDoesNotAppearWhenSignedOut(): void
     {
-        $this->browse(function (Browser $browser) {
+        $this->browse(function (Browser $browser): void {
             $browser->visit("/projects/{$this->project->id}/members")
-                ->whenAvailable('@project-members-page', function (Browser $browser) {
+                ->whenAvailable('@project-members-page', function (Browser $browser): void {
                     $browser->assertMissing('@invitations-table');
                 });
         });
@@ -206,7 +206,7 @@ class ProjectMembersPageTest extends BrowserTestCase
 
         $fakeEmail = fake()->unique()->email();
 
-        $this->browse(function (Browser $browser) use ($fakeEmail) {
+        $this->browse(function (Browser $browser) use ($fakeEmail): void {
             $browser->loginAs($this->users['admin'])
                 ->visit("/projects/{$this->project->id}/members")
                 ->waitFor('@project-members-page')
@@ -257,10 +257,10 @@ class ProjectMembersPageTest extends BrowserTestCase
             ]);
         }
 
-        $this->browse(function (Browser $browser) use ($email) {
+        $this->browse(function (Browser $browser) use ($email): void {
             $browser->loginAs($this->users['admin'])
                 ->visit("/projects/{$this->project->id}/members")
-                ->whenAvailable('@invitations-table', function (Browser $browser) use ($email) {
+                ->whenAvailable('@invitations-table', function (Browser $browser) use ($email): void {
                     $browser->waitForText($email)
                         ->assertCount('@invitations-table-row', 120);
                 });
@@ -281,10 +281,10 @@ class ProjectMembersPageTest extends BrowserTestCase
                 'role' => Project::PROJECT_ADMIN,
             ]);
 
-        $this->browse(function (Browser $browser) {
+        $this->browse(function (Browser $browser): void {
             $browser->loginAs($this->users['normal'])
                 ->visit("/projects/{$this->project->id}/members")
-                ->whenAvailable('@members-table-row', function (Browser $browser) {
+                ->whenAvailable('@members-table-row', function (Browser $browser): void {
                     $browser->assertVisible('@role-text')
                         ->assertMissing('@role-select');
                 });
@@ -308,10 +308,10 @@ class ProjectMembersPageTest extends BrowserTestCase
 
         self::assertNotContains($this->users['normal']->id, $this->project->administrators()->pluck('id'));
 
-        $this->browse(function (Browser $browser) {
+        $this->browse(function (Browser $browser): void {
             $browser->loginAs($this->users['admin'])
                 ->visit("/projects/{$this->project->id}/members")
-                ->whenAvailable('@members-table-row', function (Browser $browser) {
+                ->whenAvailable('@members-table-row', function (Browser $browser): void {
                     $browser->assertVisible('@role-select')
                         ->assertMissing('@role-text')
                         ->assertSelected('@role-select', 'USER')
@@ -352,10 +352,10 @@ class ProjectMembersPageTest extends BrowserTestCase
                 'role' => Project::PROJECT_USER,
             ]);
 
-        $this->browse(function (Browser $browser) {
+        $this->browse(function (Browser $browser): void {
             $browser->loginAs($this->users['normal1'])
                 ->visit("/projects/{$this->project->id}/members")
-                ->whenAvailable('@members-table-row', function (Browser $browser) {
+                ->whenAvailable('@members-table-row', function (Browser $browser): void {
                     $browser->assertMissing('@role-select')
                         ->assertVisible('@role-text');
                 });
@@ -377,10 +377,10 @@ class ProjectMembersPageTest extends BrowserTestCase
                 'role' => Project::PROJECT_USER,
             ]);
 
-        $this->browse(function (Browser $browser) {
+        $this->browse(function (Browser $browser): void {
             $browser->loginAs($this->users['normal1'])
                 ->visit("/projects/{$this->project->id}/members")
-                ->whenAvailable('@members-table-row', function (Browser $browser) {
+                ->whenAvailable('@members-table-row', function (Browser $browser): void {
                     $browser->assertMissing('@role-select')
                         ->assertVisible('@role-text');
                 });
@@ -402,9 +402,9 @@ class ProjectMembersPageTest extends BrowserTestCase
                 ]);
         }
 
-        $this->browse(function (Browser $browser) {
+        $this->browse(function (Browser $browser): void {
             $browser->visit("/projects/{$this->project->id}/members")
-                ->whenAvailable('@members-table', function (Browser $browser) {
+                ->whenAvailable('@members-table', function (Browser $browser): void {
                     // Make sure the pagination has completed before making assertions about the count
                     $browser->waitForText($this->users[119]->firstname . ' ' . $this->users[119]->lastname)
                         ->waitForText($this->users[50]->firstname . ' ' . $this->users[50]->lastname)
@@ -420,7 +420,7 @@ class ProjectMembersPageTest extends BrowserTestCase
 
         $fakeEmail = fake()->unique()->email();
 
-        $this->browse(function (Browser $browser) use ($fakeEmail) {
+        $this->browse(function (Browser $browser) use ($fakeEmail): void {
             $browser->loginAs($this->users['admin'])
                 ->visit("/projects/{$this->project->id}/members")
                 ->waitFor('@project-members-page')
@@ -448,10 +448,10 @@ class ProjectMembersPageTest extends BrowserTestCase
         $this->users['admin'] = $this->makeAdminUser();
         $userToDelete = $this->addUserToProject();
 
-        $this->browse(function (Browser $browser) {
+        $this->browse(function (Browser $browser): void {
             $browser->loginAs($this->users['admin'])
                 ->visit("/projects/{$this->project->id}/members")
-                ->whenAvailable('@members-table-row', function (Browser $browser) {
+                ->whenAvailable('@members-table-row', function (Browser $browser): void {
                     $browser->assertVisible('@remove-user-button')
                         ->click('@remove-user-button')
                         ->waitUntilMissing('@remove-user-button');
@@ -466,10 +466,10 @@ class ProjectMembersPageTest extends BrowserTestCase
         $this->users['admin'] = $this->makeAdminUser();
         $userToDelete = $this->addUserToProject(true);
 
-        $this->browse(function (Browser $browser) {
+        $this->browse(function (Browser $browser): void {
             $browser->loginAs($this->users['admin'])
                 ->visit("/projects/{$this->project->id}/members")
-                ->whenAvailable('@members-table-row', function (Browser $browser) {
+                ->whenAvailable('@members-table-row', function (Browser $browser): void {
                     $browser->assertVisible('@remove-user-button')
                         ->click('@remove-user-button')
                         ->waitUntilMissing('@remove-user-button');
@@ -483,10 +483,10 @@ class ProjectMembersPageTest extends BrowserTestCase
     {
         $user = $this->addUserToProject();
 
-        $this->browse(function (Browser $browser) use ($user) {
+        $this->browse(function (Browser $browser) use ($user): void {
             $browser->loginAs($user)
                 ->visit("/projects/{$this->project->id}/members")
-                ->whenAvailable('@members-table-row', function (Browser $browser) {
+                ->whenAvailable('@members-table-row', function (Browser $browser): void {
                     $browser->assertMissing('@remove-user-button');
                 });
         });
@@ -496,10 +496,10 @@ class ProjectMembersPageTest extends BrowserTestCase
     {
         $user = $this->addUserToProject(true);
 
-        $this->browse(function (Browser $browser) use ($user) {
+        $this->browse(function (Browser $browser) use ($user): void {
             $browser->loginAs($user)
                 ->visit("/projects/{$this->project->id}/members")
-                ->whenAvailable('@members-table-row', function (Browser $browser) {
+                ->whenAvailable('@members-table-row', function (Browser $browser): void {
                     $browser->assertMissing('@remove-user-button');
                 });
         });
@@ -512,7 +512,7 @@ class ProjectMembersPageTest extends BrowserTestCase
 
         self::assertEmpty($this->project->users()->get());
 
-        $this->browse(function (Browser $browser) use ($user) {
+        $this->browse(function (Browser $browser) use ($user): void {
             $browser->loginAs($user)
                 ->visit("/projects/{$this->project->id}/members")
                 ->waitFor('@join-project-button')
@@ -525,7 +525,7 @@ class ProjectMembersPageTest extends BrowserTestCase
         self::assertContains($user->id, $this->project->users()->pluck('id'));
         self::assertCount(1, $this->project->users()->get());
 
-        $this->browse(function (Browser $browser) use ($user) {
+        $this->browse(function (Browser $browser) use ($user): void {
             $browser->loginAs($user)
                 ->visit("/projects/{$this->project->id}/members")
                 ->waitFor('@leave-project-button')
@@ -547,7 +547,7 @@ class ProjectMembersPageTest extends BrowserTestCase
 
     public function testAnonymousUserCannotSeeJoinButton(): void
     {
-        $this->browse(function (Browser $browser) {
+        $this->browse(function (Browser $browser): void {
             $browser->visit("/projects/{$this->project->id}/members")
                 ->assertMissing('@join-project-button')
                 ->assertMissing('@leave-project-button')

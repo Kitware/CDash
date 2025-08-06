@@ -287,7 +287,7 @@ class UploadHandler extends AbstractXmlHandler
     }
 
     /** Function Text */
-    public function text($parser, $data)
+    public function text($parser, $data): void
     {
         if ($this->UploadError) {
             return;

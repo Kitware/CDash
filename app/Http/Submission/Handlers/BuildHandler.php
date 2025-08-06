@@ -554,7 +554,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
         parent::endElement($parser, $name);
     }
 
-    public function text($parser, $data)
+    public function text($parser, $data): void
     {
         $element = $this->getElement();
         if ($this->getParent() === 'BUILD') {

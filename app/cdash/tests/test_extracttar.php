@@ -10,7 +10,7 @@ class ExtractTarTestCase extends KWWebTestCase
         parent::__construct();
     }
 
-    public function testExtractTarArchiveTarWithInvalidFile()
+    public function testExtractTarArchiveTarWithInvalidFile(): void
     {
         $exception_thrown = false;
         try {

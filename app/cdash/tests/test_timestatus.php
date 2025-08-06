@@ -20,7 +20,7 @@ class TimeStatusTestCase extends KWWebTestCase
         $this->PDO = Database::getInstance()->getPdo();
     }
 
-    public function testTimeStatus()
+    public function testTimeStatus(): void
     {
         // Create project.
         $project = new Project();
@@ -123,14 +123,14 @@ class TimeStatusTestCase extends KWWebTestCase
         $this->assertTrue(str_contains($menu['current'], '?graph=time'));
     }
 
-    private function verify_field($expected, $found, $field, $id)
+    private function verify_field($expected, $found, $field, $id): void
     {
         if ($expected != $found) {
             $this->fail("Expected $expected but found $found for $field on build #$id");
         }
     }
 
-    private function verify_row($row, $time, $timemean, $timestd, $timestatus)
+    private function verify_row($row, $time, $timemean, $timestd, $timestatus): void
     {
         $this->verify_field($row['time'], $time, 'time', $row['buildid']);
         $this->verify_field($row['timemean'], $timemean, 'timemean', $row['buildid']);

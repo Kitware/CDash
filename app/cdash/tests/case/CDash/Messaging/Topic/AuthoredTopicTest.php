@@ -25,7 +25,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 
 class AuthoredTopicTest extends CDashTestCase
 {
-    public function testSubscribesToBuild()
+    public function testSubscribesToBuild(): void
     {
         $mock_topic = $this->getMockBuilder(Topic::class)
             ->onlyMethods(['subscribesToBuild'])

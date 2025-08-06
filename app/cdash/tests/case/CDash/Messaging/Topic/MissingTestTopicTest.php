@@ -24,7 +24,7 @@ use Tests\TestCase;
 
 class MissingTestTopicTest extends TestCase
 {
-    public function testSubscribesToBuild()
+    public function testSubscribesToBuild(): void
     {
         $sut = new MissingTestTopic();
 
@@ -53,7 +53,7 @@ class MissingTestTopicTest extends TestCase
         $this->assertTrue($sut->subscribesToBuild($build2));
     }
 
-    public function testGetTopicCollection()
+    public function testGetTopicCollection(): void
     {
         $sut = new MissingTestTopic();
 
@@ -61,7 +61,7 @@ class MissingTestTopicTest extends TestCase
         $this->assertInstanceOf(Collection::class, $collection);
     }
 
-    public function testGetTopicDescription()
+    public function testGetTopicDescription(): void
     {
         $sut = new MissingTestTopic();
 
@@ -71,7 +71,7 @@ class MissingTestTopicTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function testGetTopicName()
+    public function testGetTopicName(): void
     {
         $sut = new MissingTestTopic();
 
@@ -81,7 +81,7 @@ class MissingTestTopicTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function testSetTopicData()
+    public function testSetTopicData(): void
     {
         $sut = new MissingTestTopic();
 

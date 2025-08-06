@@ -44,7 +44,7 @@ abstract class MockTopicLabelable extends MockTopic implements Labelable
 
 class TopicDecoratorTest extends TestCase
 {
-    public function testDecorateGivenFixesEmailPreference()
+    public function testDecorateGivenFixesEmailPreference(): void
     {
         /** @var TopicInterface|MockObject $mock_topic */
         $mock_topic = $this->getMockTopic('MockTopic');
@@ -69,7 +69,7 @@ class TopicDecoratorTest extends TestCase
         $this->assertInstanceOf(FixedTopic::class, $collection->get('MockTopic'));
     }
 
-    public function testDecorateGivenEmailRedundantPreference()
+    public function testDecorateGivenEmailRedundantPreference(): void
     {
         /** @var TopicInterface|MockObject $mock_topic */
         $mock_topic = $this->getMockTopic('MockTopic');
@@ -82,7 +82,7 @@ class TopicDecoratorTest extends TestCase
         $this->assertInstanceOf(EmailSentTopic::class, $collection->get('MockTopic'));
     }
 
-    public function testDecorateGivenGroupFilterableEmailPreference()
+    public function testDecorateGivenGroupFilterableEmailPreference(): void
     {
         /** @var TopicInterface|MockObject $mock_topic */
         $mock_topic = $this->getMockTopic('MockTopic');
@@ -100,7 +100,7 @@ class TopicDecoratorTest extends TestCase
         $this->assertInstanceOf(GroupMembershipTopic::class, $collection->get('MockTopic'));
     }
 
-    public function testDecorateGivenLabelsEmailPreference()
+    public function testDecorateGivenLabelsEmailPreference(): void
     {
         /** @var TopicInterface|MockObject $mock_topic */
         $mock_topic = $this->getMockTopic('MockTopic');
@@ -126,7 +126,7 @@ class TopicDecoratorTest extends TestCase
         $this->assertInstanceOf(LabeledTopic::class, $collection->get('MockTopic'));
     }
 
-    public function testDecorateGivenAuthoredEmailPreference()
+    public function testDecorateGivenAuthoredEmailPreference(): void
     {
         /** @var TopicInterface|MockObject $mock_topic */
         $mock_topic = $this->getMockTopic('MockTopic');

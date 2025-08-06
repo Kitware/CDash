@@ -54,7 +54,7 @@ class BuildGroupRuleTestCase extends KWWebTestCase
         return 0;
     }
 
-    public function testMatchLongestRule()
+    public function testMatchLongestRule(): void
     {
         // Make some buildgroups.
         $group1 = new BuildGroup();
@@ -103,7 +103,7 @@ class BuildGroupRuleTestCase extends KWWebTestCase
         $group2->Delete();
     }
 
-    public function testOnlyExpireRulesFromSameProject()
+    public function testOnlyExpireRulesFromSameProject(): void
     {
         // Clean up any previous runs of this test case.
         $stmt = $this->PDO->prepare(

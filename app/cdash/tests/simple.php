@@ -13,7 +13,7 @@ class EmailTestCase extends KWWebTestCase
         parent::__construct();
     }
 
-    public function testSimple()
+    public function testSimple(): void
     {
         $this->login();
         $content = $this->connect($this->url . '/api/v1/index.php?project=InsightExample');

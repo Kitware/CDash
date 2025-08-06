@@ -175,7 +175,7 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
         return $director->build($builder);
     }
 
-    public function testMultipleSubprojectsTestSubmission()
+    public function testMultipleSubprojectsTestSubmission(): void
     {
         $this->useCase = UseCase::createBuilder($this, UseCase::TEST)
             ->setProjectId(self::$projectid)
@@ -235,7 +235,7 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
         $this->assertTrue($notifications->has('optika-noemail@noemail'));
     }
 
-    public function testMultipleSubprojectsConfigureSubmission()
+    public function testMultipleSubprojectsConfigureSubmission(): void
     {
         $this->useCase = UseCase::createBuilder($this, UseCase::CONFIG)
             ->createSite([
@@ -310,7 +310,7 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
         $this->assertTrue($notifications->has('optika-noemail@noemail'));
     }
 
-    public function testBuildUseCase()
+    public function testBuildUseCase(): void
     {
         $this->useCase = UseCase::createBuilder($this, UseCase::BUILD)
             ->createSite([
@@ -370,7 +370,7 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
         $this->assertTrue($notifications->has('optika-noemail@noemail'));
     }
 
-    public function testDyanamicAnalysisUseCaseBuild()
+    public function testDyanamicAnalysisUseCaseBuild(): void
     {
         // TODO: figure out why the time in use case is being set with UTC
         date_default_timezone_set('UTC');

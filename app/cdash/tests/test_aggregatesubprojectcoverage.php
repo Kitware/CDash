@@ -190,7 +190,7 @@ class AggregateSubProjectCoverageTestCase extends KWWebTestCase
         return $success;
     }
 
-    public function testCompareCoverage()
+    public function testCompareCoverage(): void
     {
         $answers = [
             'Total' => [
@@ -212,7 +212,7 @@ class AggregateSubProjectCoverageTestCase extends KWWebTestCase
         $this->compareCoverageCheck('', $answers);
     }
 
-    public function testCompareCoverageWithFilters()
+    public function testCompareCoverageWithFilters(): void
     {
         $extra_url = '&filtercount=1&showfilters=1&field1=subproject&compare1=62&value1=MyReleaseOnlyFeature';
         $answers = [
@@ -235,7 +235,7 @@ class AggregateSubProjectCoverageTestCase extends KWWebTestCase
         $this->compareCoverageCheck($extra_url, $answers);
     }
 
-    public function compareCoverageCheck($extra_url, $answers)
+    public function compareCoverageCheck($extra_url, $answers): void
     {
         // Load test data from API.
         $this->get($this->url . "/api/v1/compareCoverage.php?project=CrossSubProjectExample&date=2016-02-16$extra_url");

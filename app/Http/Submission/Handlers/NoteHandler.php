@@ -143,7 +143,7 @@ class NoteHandler extends AbstractXmlHandler
     }
 
     /** text function */
-    public function text($parser, $data)
+    public function text($parser, $data): void
     {
         $parent = $this->getParent();
         $element = $this->getElement();

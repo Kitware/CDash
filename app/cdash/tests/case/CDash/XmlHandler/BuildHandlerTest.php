@@ -28,7 +28,7 @@ use Tests\TestCase;
 
 class BuildHandlerTest extends TestCase
 {
-    public function testBuildHandlerIsACommitAuthorHandler()
+    public function testBuildHandlerIsACommitAuthorHandler(): void
     {
         $project = new Project();
         $project->Id = 1;
@@ -36,7 +36,7 @@ class BuildHandlerTest extends TestCase
         $this->assertInstanceOf(CommitAuthorHandlerInterface::class, $sut);
     }
 
-    public function testGetTopicCollectionForSubscriber()
+    public function testGetTopicCollectionForSubscriber(): void
     {
         $project = new Project();
         $project->Id = 1;
@@ -73,7 +73,7 @@ class BuildHandlerTest extends TestCase
         $this->assertTrue($collection->has(Topic::BUILD_WARNING));
     }
 
-    public function testGetSubscriptionBuilderCollection()
+    public function testGetSubscriptionBuilderCollection(): void
     {
         $project = new Project();
         $project->Id = 0;

@@ -802,7 +802,7 @@ final class BuildController extends AbstractBuildController
             'Content-Type' => 'text/plain',
             'Content-Disposition' => "inline/attachment; filename={$filename}",
         ];
-        return response()->streamDownload(function () use ($fp) {
+        return response()->streamDownload(function () use ($fp): void {
             while (!feof($fp)) {
                 echo fread($fp, 1024);
             }

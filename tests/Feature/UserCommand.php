@@ -12,10 +12,8 @@ class UserCommand extends TestCase
 
     /**
      * Feature test for the build:remove artisan command.
-     *
-     * @return void
      */
-    public function testUserCommand()
+    public function testUserCommand(): void
     {
         // Make sure the user we're about to create doesn't already exist.
         $email = 'test-user-command@localtest.com';

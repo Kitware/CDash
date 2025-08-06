@@ -62,9 +62,9 @@ class ProjectSitesPageTest extends BrowserTestCase
             'siteid' => $site->id,
         ]);
 
-        $this->browse(function (Browser $browser) use ($project) {
+        $this->browse(function (Browser $browser) use ($project): void {
             $browser->visit("/projects/{$project->id}/sites")
-                ->whenAvailable('@all-sites-table > @data-table', function (Browser $browser) {
+                ->whenAvailable('@all-sites-table > @data-table', function (Browser $browser): void {
                     self::assertEquals('4', $browser->elements('@data-table-cell')[1]->getText());
                     self::assertEquals('8.56 GiB', $browser->elements('@data-table-cell')[2]->getText());
                 });
@@ -82,9 +82,9 @@ class ProjectSitesPageTest extends BrowserTestCase
         $this->sites = $sites;
 
         // No submissions to the project yet, so we shouldn't see any sites
-        $this->browse(function (Browser $browser) use ($project) {
+        $this->browse(function (Browser $browser) use ($project): void {
             $browser->visit("/projects/{$project->id}/sites")
-                ->whenAvailable('@all-sites-table > @data-table', function (Browser $browser) {
+                ->whenAvailable('@all-sites-table > @data-table', function (Browser $browser): void {
                     self::assertCount(0, collect($browser->elements('@data-table-row')));
                 });
         });
@@ -107,9 +107,9 @@ class ProjectSitesPageTest extends BrowserTestCase
             ]);
         }
 
-        $this->browse(function (Browser $browser) use ($sites, $project) {
+        $this->browse(function (Browser $browser) use ($sites, $project): void {
             $browser->visit("/projects/{$project->id}/sites")
-                ->whenAvailable('@all-sites-table > @data-table', function (Browser $browser) use ($sites) {
+                ->whenAvailable('@all-sites-table > @data-table', function (Browser $browser) use ($sites): void {
                     // We have to add a brief pause to let Vue render both parts of the table
                     // This should be replaced with a more robust solution in the future.
                     $browser->pause(500);

@@ -13,7 +13,7 @@ class ChangeIdTestCase extends KWWebTestCase
         $this->ProjectId = -1;
     }
 
-    public function testChangeId()
+    public function testChangeId(): void
     {
         $this->login();
 

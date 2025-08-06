@@ -17,7 +17,7 @@ class OpenCoverCoverageTestCase extends KWWebTestCase
         parent::__construct();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         DatabaseCleanupUtils::removeBuild($this->buildId);
     }

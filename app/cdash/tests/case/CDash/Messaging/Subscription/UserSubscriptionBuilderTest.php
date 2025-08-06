@@ -35,7 +35,7 @@ class UserSubscriptionBuilderTest extends TestCase
 {
     use BuildDiffForTesting;
 
-    public function testBuildGivenBuildSubmission()
+    public function testBuildGivenBuildSubmission(): void
     {
         $buildA = $this->createMockBuildWithDiff($this->createNew('builderrorspositive'));
         $buildB = $this->createMockBuildWithDiff($this->createNew('buildwarningspositive'));

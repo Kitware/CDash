@@ -29,7 +29,7 @@ class BranchCoverageTestCase extends KWWebTestCase
         $this->client = $this->getGuzzleClient();
     }
 
-    protected function clearPriorBranchCoverageResults()
+    protected function clearPriorBranchCoverageResults(): void
     {
         // Remove the build created by this test if it ran previously.
         $pdo = Database::getInstance()->getPdo();

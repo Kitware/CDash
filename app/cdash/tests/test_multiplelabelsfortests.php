@@ -25,7 +25,7 @@ class MultipleLabelsForTestsTestCase extends KWWebTestCase
         }
     }
 
-    public function testMultipleLabelsForTests()
+    public function testMultipleLabelsForTests(): void
     {
         // Create test project.
         $this->login();

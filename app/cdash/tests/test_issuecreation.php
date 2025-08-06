@@ -35,7 +35,7 @@ class IssueCreationTestCase extends KWWebTestCase
         $this->user->delete();
     }
 
-    public function testIssueCreation()
+    public function testIssueCreation(): void
     {
         // Login as admin.
         $this->login();

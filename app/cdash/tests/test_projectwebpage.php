@@ -14,7 +14,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
         parent::__construct();
     }
 
-    public function testAccessToWebPageProjectTest()
+    public function testAccessToWebPageProjectTest(): void
     {
         $settings = [
             'Name' => 'BatchmakeExample',
@@ -27,63 +27,63 @@ class ProjectWebPageTestCase extends KWWebTestCase
         $this->createProject($settings);
     }
 
-    public function testSubmissionBatchmakeBuild()
+    public function testSubmissionBatchmakeBuild(): void
     {
         $rep = dirname(__FILE__) . '/data/BatchmakeNightlyExample';
         $file = "$rep/BatchMake_Nightly_Build.xml";
         $this->assertTrue($this->submission('BatchmakeExample', $file), "Submission of $file failed");
     }
 
-    public function testSubmissionBatchmakeConfigure()
+    public function testSubmissionBatchmakeConfigure(): void
     {
         $rep = dirname(__FILE__) . '/data/BatchmakeNightlyExample';
         $file = "$rep/BatchMake_Nightly_Configure.xml";
         $this->assertTrue($this->submission('BatchmakeExample', $file), "Submission of $file failed");
     }
 
-    public function testSubmissionBatchmakeNotes()
+    public function testSubmissionBatchmakeNotes(): void
     {
         $rep = dirname(__FILE__) . '/data/BatchmakeNightlyExample';
         $file = "$rep/BatchMake_Nightly_Notes.xml";
         $this->assertTrue($this->submission('BatchmakeExample', $file), "Submission of $file failed");
     }
 
-    public function testSubmissionBatchmakeTest()
+    public function testSubmissionBatchmakeTest(): void
     {
         $rep = dirname(__FILE__) . '/data/BatchmakeNightlyExample';
         $file = "$rep/BatchMake_Nightly_Test.xml";
         $this->assertTrue($this->submission('BatchmakeExample', $file), "Submission of $file failed");
     }
 
-    public function testSubmissionBatchmakeUpdate()
+    public function testSubmissionBatchmakeUpdate(): void
     {
         $rep = dirname(__FILE__) . '/data/BatchmakeNightlyExample';
         $file = "$rep/BatchMake_Nightly_Update.xml";
         $this->assertTrue($this->submission('BatchmakeExample', $file), "Submission of $file failed");
     }
 
-    public function testSubmissionInsightBuild()
+    public function testSubmissionInsightBuild(): void
     {
         $rep = dirname(__FILE__) . '/data/InsightExperimentalExample';
         $file = "$rep/Insight_Experimental_Build.xml";
         $this->assertTrue($this->submission('InsightExample', $file), "Submission of $file failed");
     }
 
-    public function testSubmissionInsightConfigure()
+    public function testSubmissionInsightConfigure(): void
     {
         $rep = dirname(__FILE__) . '/data/InsightExperimentalExample';
         $file = "$rep/Insight_Experimental_Configure.xml";
         $this->assertTrue($this->submission('InsightExample', $file), "Submission of $file failed");
     }
 
-    public function testSubmissionInsightCoverage()
+    public function testSubmissionInsightCoverage(): void
     {
         $rep = dirname(__FILE__) . '/data/InsightExperimentalExample';
         $file = "$rep/Insight_Experimental_Coverage.xml";
         $this->assertTrue($this->submission('InsightExample', $file), "Submission of $file failed");
     }
 
-    public function testSubmissionInsightCoverageLog()
+    public function testSubmissionInsightCoverageLog(): void
     {
         $rep = dirname(__FILE__) . '/data/InsightExperimentalExample';
         $file = "$rep/Insight_Experimental_CoverageLog.xml";
@@ -128,7 +128,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
         $this->assertTrue(true, "Submission of $file has succeeded");
     }
 
-    public function testSubmissionInsightDynamicAnalysis()
+    public function testSubmissionInsightDynamicAnalysis(): void
     {
         $rep = dirname(__FILE__) . '/data/InsightExperimentalExample';
         $file = "$rep/Insight_Experimental_DynamicAnalysis.xml";
@@ -138,7 +138,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
         $this->assertTrue(true, "Submission of $file has succeeded");
     }
 
-    public function testSubmissionInsightNotes()
+    public function testSubmissionInsightNotes(): void
     {
         $rep = dirname(__FILE__) . '/data/InsightExperimentalExample';
         $file = "$rep/Insight_Experimental_Notes.xml";
@@ -148,7 +148,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
         $this->assertTrue(true, "Submission of $file has succeeded");
     }
 
-    public function testSubmissionInsightTest()
+    public function testSubmissionInsightTest(): void
     {
         $rep = dirname(__FILE__) . '/data/InsightExperimentalExample';
         $file = "$rep/Insight_Experimental_Test.xml";
@@ -158,7 +158,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
         $this->assertTrue(true, "Submission of $file has succeeded");
     }
 
-    public function testSubmissionInDb()
+    public function testSubmissionInDb(): void
     {
         // TODO: (williamjallen) This is a terrible test with hardcoded values.  The ID should be determined dynamically.
         $query = 'SELECT id, stamp, name, type, generator, command FROM build WHERE id=7';
@@ -173,7 +173,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
         $this->assertEqual($result[0], $expected);
     }
 
-    public function testProjectExperimentalLinkBuildSummary()
+    public function testProjectExperimentalLinkBuildSummary(): void
     {
         $content = $this->connect($this->url . '/api/v1/index.php?project=BatchmakeExample');
         $jsonobj = json_decode($content, true);

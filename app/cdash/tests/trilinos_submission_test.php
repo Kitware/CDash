@@ -603,7 +603,7 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
         }
     }
 
-    public function verifyBuild($build, $answer, $name)
+    public function verifyBuild($build, $answer, $name): void
     {
         // Flatten the build array so its indices match the answer key.
         // We also check here to make sure that this build doesn't have

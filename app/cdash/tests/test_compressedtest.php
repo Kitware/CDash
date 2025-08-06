@@ -13,7 +13,7 @@ class CompressedTestCase extends KWWebTestCase
         parent::__construct();
     }
 
-    public function testSubmissionCompressedTest()
+    public function testSubmissionCompressedTest(): void
     {
         echo "1. testSubmissionCompressedTest\n";
 
@@ -31,7 +31,7 @@ class CompressedTestCase extends KWWebTestCase
         $this->submission('TestCompressionExample', $file);
     }
 
-    public function testGITUpdate()
+    public function testGITUpdate(): void
     {
         echo "4. testGITUpdate\n";
         $file = dirname(__FILE__) . '/data/git-Update.xml';

@@ -25,10 +25,8 @@ class PasswordRotation extends TestCase
 
     /**
      * Feature test for our password rotation functionality.
-     *
-     * @return void
      */
-    public function testPasswordRotation()
+    public function testPasswordRotation(): void
     {
         URL::forceRootUrl('http://localhost');
 

@@ -20,7 +20,7 @@ class UniqueDiffsTestCase extends KWWebTestCase
         $this->BuildId = null;
     }
 
-    public function testUniqueDiffs()
+    public function testUniqueDiffs(): void
     {
         $pdo = Database::getInstance();
 
@@ -81,7 +81,7 @@ class UniqueDiffsTestCase extends KWWebTestCase
         DB::delete('DELETE FROM build WHERE id = ?', [$build->Id]);
     }
 
-    private function checkRowCount($pdo, $table, $expected)
+    private function checkRowCount($pdo, $table, $expected): void
     {
         $stmt = $pdo->prepare(
             "SELECT COUNT(*) c FROM $table WHERE buildid=? AND type=0");
@@ -93,7 +93,7 @@ class UniqueDiffsTestCase extends KWWebTestCase
         }
     }
 
-    private function checkIntegrityViolation($stmt)
+    private function checkIntegrityViolation($stmt): void
     {
         // Make sure our INSERT statement failed the way we expect it to.
         // MySQL returns 23000 for an integrity constraint violation,

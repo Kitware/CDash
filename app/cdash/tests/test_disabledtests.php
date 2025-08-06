@@ -16,7 +16,7 @@ class DisabledTestsTestCase extends KWWebTestCase
         parent::__construct();
     }
 
-    public function testDisabledTests()
+    public function testDisabledTests(): void
     {
         $this->deleteLog($this->logfilename);
 

@@ -72,7 +72,7 @@ class CoverageFileLog
             return false;
         }
 
-        DB::transaction(function () use ($append) {
+        DB::transaction(function () use ($append): void {
             $update = false;
             if ($append) {
                 // Load any previously existing results for this file & build.

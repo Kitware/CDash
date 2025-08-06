@@ -131,42 +131,42 @@ class DatabaseCleanupUtils
         // used by builds that are about to be deleted.
 
         // buildfailuredetails
-        RichBuildAlertDetails::whereHas('builds', function (Builder $query) use ($buildids) {
+        RichBuildAlertDetails::whereHas('builds', function (Builder $query) use ($buildids): void {
             $query->whereIn('build.id', $buildids);
         })
-        ->whereDoesntHave('builds', function (Builder $query) use ($buildids) {
+        ->whereDoesntHave('builds', function (Builder $query) use ($buildids): void {
             $query->whereNotIn('build.id', $buildids);
         })->delete();
 
         // configure
-        Configure::whereHas('builds', function (Builder $query) use ($buildids) {
+        Configure::whereHas('builds', function (Builder $query) use ($buildids): void {
             $query->whereIn('id', $buildids);
         })
-        ->whereDoesntHave('builds', function (Builder $query) use ($buildids) {
+        ->whereDoesntHave('builds', function (Builder $query) use ($buildids): void {
             $query->whereNotIn('id', $buildids);
         })->delete();
 
         // coveragefile
-        CoverageFile::whereHas('builds', function (Builder $query) use ($buildids) {
+        CoverageFile::whereHas('builds', function (Builder $query) use ($buildids): void {
             $query->whereIn('build.id', $buildids);
         })
-        ->whereDoesntHave('builds', function (Builder $query) use ($buildids) {
+        ->whereDoesntHave('builds', function (Builder $query) use ($buildids): void {
             $query->whereNotIn('build.id', $buildids);
         })->delete();
 
         // note
-        Note::whereHas('builds', function (Builder $query) use ($buildids) {
+        Note::whereHas('builds', function (Builder $query) use ($buildids): void {
             $query->whereIn('id', $buildids);
         })
-        ->whereDoesntHave('builds', function (Builder $query) use ($buildids) {
+        ->whereDoesntHave('builds', function (Builder $query) use ($buildids): void {
             $query->whereNotIn('id', $buildids);
         })->delete();
 
         // buildupdate
-        BuildUpdate::whereHas('builds', function (Builder $query) use ($buildids) {
+        BuildUpdate::whereHas('builds', function (Builder $query) use ($buildids): void {
             $query->whereIn('build.id', $buildids);
         })
-        ->whereDoesntHave('builds', function (Builder $query) use ($buildids) {
+        ->whereDoesntHave('builds', function (Builder $query) use ($buildids): void {
             $query->whereNotIn('build.id', $buildids);
         })->delete();
 

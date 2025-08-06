@@ -22,7 +22,7 @@ class BuildRelationshipTestCase extends KWWebTestCase
         $this->PDO = Database::getInstance()->getPdo();
     }
 
-    public function testBuildRelationships()
+    public function testBuildRelationships(): void
     {
         // Clean up any previous runs of this test.
         $stmt = $this->PDO->prepare(

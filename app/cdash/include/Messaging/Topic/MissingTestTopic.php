@@ -44,10 +44,8 @@ class MissingTestTopic extends Topic
 
     /**
      * This method sets a build's missing tests in a TestCollection
-     *
-     * @return void
      */
-    public function setTopicData(Build $build)
+    public function setTopicData(Build $build): void
     {
         $collection = $this->getTopicCollection();
         // GetMissingTests currently returns array

@@ -9,13 +9,13 @@ use CDash\Test\UseCase\UseCase;
 
 class BuildUseCaseTest extends CDashUseCaseTestCase
 {
-    public function testUseCaseCreateBuilderReturnsInstanceOfBuildUseCase()
+    public function testUseCaseCreateBuilderReturnsInstanceOfBuildUseCase(): void
     {
         $sut = UseCase::createBuilder($this, UseCase::BUILD);
         $this->assertInstanceOf(BuildUseCase::class, $sut);
     }
 
-    public function testBuildUseCase()
+    public function testBuildUseCase(): void
     {
         $now = time();
         $hour_ago = $now - 60 * 60;

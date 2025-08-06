@@ -16,7 +16,7 @@ class EmailTestCase extends KWWebTestCase
         parent::__construct();
     }
 
-    public function testCreateProjectTest()
+    public function testCreateProjectTest(): void
     {
         $settings = [
             'Name' => 'EmailProjectExample',
@@ -26,7 +26,7 @@ class EmailTestCase extends KWWebTestCase
         $this->project = $this->createProject($settings);
     }
 
-    public function testRegisterUser()
+    public function testRegisterUser(): void
     {
         $this->deleteLog($this->logfilename);
 
@@ -56,7 +56,7 @@ class EmailTestCase extends KWWebTestCase
         }
     }
 
-    public function testRegisterNoEmailUser()
+    public function testRegisterNoEmailUser(): void
     {
         $user = new User();
         $user->email = 'user2@kw';
@@ -80,7 +80,7 @@ class EmailTestCase extends KWWebTestCase
         ', [$user->id, $this->project, 0, 0]);
     }
 
-    public function testSubmissionFirstBuild()
+    public function testSubmissionFirstBuild(): void
     {
         $this->deleteLog($this->logfilename);
         $rep = dirname(__FILE__) . '/data/EmailProjectExample';
@@ -102,7 +102,7 @@ class EmailTestCase extends KWWebTestCase
         $this->pass("Submission of $file has succeeded");
     }
 
-    public function testSubmissionEmailBuild()
+    public function testSubmissionEmailBuild(): void
     {
         $this->deleteLog($this->logfilename);
         $rep = dirname(__FILE__) . '/data/EmailProjectExample';
@@ -134,7 +134,7 @@ class EmailTestCase extends KWWebTestCase
         }
     }
 
-    public function testSubmissionEmailTest()
+    public function testSubmissionEmailTest(): void
     {
         $this->deleteLog($this->logfilename);
         $rep = dirname(__FILE__) . '/data/EmailProjectExample';
@@ -161,7 +161,7 @@ class EmailTestCase extends KWWebTestCase
         }
     }
 
-    public function testSubmissionEmailDynamicAnalysis()
+    public function testSubmissionEmailDynamicAnalysis(): void
     {
         $this->deleteLog($this->logfilename);
         $rep = dirname(__FILE__) . '/data/EmailProjectExample';
@@ -213,7 +213,7 @@ class EmailTestCase extends KWWebTestCase
         }
     }
 
-    public function testEmailSentToGitCommitter()
+    public function testEmailSentToGitCommitter(): void
     {
         $rep = dirname(__FILE__) . '/data/EmailProjectExample';
         $file = "$rep/3_update.xml";

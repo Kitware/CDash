@@ -37,7 +37,7 @@ class AuthTokenTestCase extends KWWebTestCase
         }
     }
 
-    public function testEnableAuthenticatedSubmissions()
+    public function testEnableAuthenticatedSubmissions(): void
     {
         // Login as admin.
         $this->login();
@@ -66,7 +66,7 @@ class AuthTokenTestCase extends KWWebTestCase
             ]);
     }
 
-    public function testGenerateToken()
+    public function testGenerateToken(): void
     {
         // Log in as non-admin user.
         $this->login('user1@kw', 'user1');
@@ -133,7 +133,7 @@ class AuthTokenTestCase extends KWWebTestCase
         $this->assertEqual('AuthTokenProject', $response_array['title']);
     }
 
-    public function testSubmissionWorksWithToken()
+    public function testSubmissionWorksWithToken(): void
     {
         // Make sure various submission paths are successful when we present
         // our authentication token.
@@ -205,7 +205,7 @@ class AuthTokenTestCase extends KWWebTestCase
         return true;
     }
 
-    public function testSubmissionFailsWithInvalidToken()
+    public function testSubmissionFailsWithInvalidToken(): void
     {
         // Revoke user's access to this project.
         DB::delete("DELETE FROM user2project WHERE projectid = {$this->Project->Id}");
@@ -223,7 +223,7 @@ class AuthTokenTestCase extends KWWebTestCase
         }
     }
 
-    public function testSubmissionFailsWithoutToken()
+    public function testSubmissionFailsWithoutToken(): void
     {
         // Make sure submission fails when no token is presented.
         if ($this->normalSubmit([])) {
@@ -237,7 +237,7 @@ class AuthTokenTestCase extends KWWebTestCase
         }
     }
 
-    public function testRevokeToken()
+    public function testRevokeToken(): void
     {
         // Log in as non-admin user.
         $this->login('user1@kw', 'user1');
@@ -251,7 +251,7 @@ class AuthTokenTestCase extends KWWebTestCase
         }
     }
 
-    public function testRemoveExpiredToken()
+    public function testRemoveExpiredToken(): void
     {
         // Put an expired token in the database.
         $result = AuthTokenUtil::generateToken(1, -1, AuthToken::SCOPE_FULL_ACCESS, 'Test Token 1');

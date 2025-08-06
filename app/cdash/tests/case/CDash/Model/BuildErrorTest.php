@@ -32,7 +32,7 @@ class BuildErrorTest extends CDashTestCase
         $container->set(Project::class, $this->mock_project);
     }
 
-    public function testMarshalBuildError()
+    public function testMarshalBuildError(): void
     {
         $input_data = [
             'logline' => 16,

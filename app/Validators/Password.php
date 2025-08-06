@@ -102,7 +102,7 @@ class Password
      * @param array $config
      * @param Validator $validator
      */
-    protected function setCustomMessages($config, $validator)
+    protected function setCustomMessages($config, $validator): void
     {
         // TODO: consider changing this output
         // explanation: if $complexity = 1 but the message has failed due to

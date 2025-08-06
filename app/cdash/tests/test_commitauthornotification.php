@@ -31,7 +31,7 @@ class CommitAuthorNotificationTestCase extends KWWebTestCase
         $this->deleteProject($this->projectId);
     }
 
-    private function submitFile($file)
+    private function submitFile($file): void
     {
         $submission_file = "{$this->dataDir}/$file";
         if (!$this->submission($this->projectName, $submission_file)) {
@@ -40,7 +40,7 @@ class CommitAuthorNotificationTestCase extends KWWebTestCase
         }
     }
 
-    public function testCommitAuthorsDoNotRecieveBuildWarningsNotifications()
+    public function testCommitAuthorsDoNotRecieveBuildWarningsNotifications(): void
     {
         $this->deleteLog($this->logfilename);
 
@@ -54,7 +54,7 @@ class CommitAuthorNotificationTestCase extends KWWebTestCase
         $this->assertFalse(Str::contains($log, 'john.doe@domain.tld'));
     }
 
-    public function testCommitAuthorsReceiveBuildFailureNotifications()
+    public function testCommitAuthorsReceiveBuildFailureNotifications(): void
     {
         $this->deleteLog($this->logfilename);
 
@@ -68,7 +68,7 @@ class CommitAuthorNotificationTestCase extends KWWebTestCase
         $this->assertTrue(Str::contains($log, 'john.doe@domain.tld'));
     }
 
-    public function testCommitAuthorsReceiveTestFailureNotifications()
+    public function testCommitAuthorsReceiveTestFailureNotifications(): void
     {
         $this->deleteLog($this->logfilename);
 

@@ -19,7 +19,7 @@ trait CreatesSubmissions
     {
         $num_failed_submissions = 0;
         foreach (array_chunk($files_to_submit, $batch_size) as $filenames_chunk) {
-            $responses = Http::pool(function (Pool $pool) use ($project_name, $filenames_chunk, $auth_token) {
+            $responses = Http::pool(function (Pool $pool) use ($project_name, $filenames_chunk, $auth_token): void {
                 foreach ($filenames_chunk as $fixture) {
                     $file_contents = file_get_contents($fixture);
                     if ($file_contents === false) {

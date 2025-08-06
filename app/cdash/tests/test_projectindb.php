@@ -15,7 +15,7 @@ class ProjectInDbTestCase extends KWWebTestCase
         parent::__construct();
     }
 
-    public function testProjectTest4DbInDatabase()
+    public function testProjectTest4DbInDatabase(): void
     {
         $this->createProjectTest4Db();
         $query = "SELECT name,description,public FROM project WHERE name = 'ProjectTest4Db'";
@@ -28,7 +28,7 @@ class ProjectInDbTestCase extends KWWebTestCase
         $this->assertEqual($result[0], $expected);
     }
 
-    public function testProjectInBuildGroup()
+    public function testProjectInBuildGroup(): void
     {
         $query = "SELECT id FROM project WHERE name = 'ProjectTest4Db'";
         $result = $this->db->query($query);
@@ -50,7 +50,7 @@ class ProjectInDbTestCase extends KWWebTestCase
         $this->assertEqual($result, $expected);
     }
 
-    public function testProjectInBuildGroupPosition()
+    public function testProjectInBuildGroupPosition(): void
     {
         $query = 'SELECT COUNT(*) FROM buildgroupposition WHERE buildgroupid IN (SELECT id FROM buildgroup WHERE projectid=';
         $query .= $this->projecttestid . ')';
@@ -58,7 +58,7 @@ class ProjectInDbTestCase extends KWWebTestCase
         $this->assertEqual($result[0]['count'], 3);
     }
 
-    public function testUser2Project()
+    public function testUser2Project(): void
     {
         $query = 'SELECT userid, role, emailtype, emailcategory FROM user2project WHERE projectid=' . $this->projecttestid;
         $result = $this->db->query($query);
@@ -69,7 +69,7 @@ class ProjectInDbTestCase extends KWWebTestCase
         $this->assertEqual($result[0], $expected);
     }
 
-    public function createProjectTest4Db()
+    public function createProjectTest4Db(): void
     {
         $settings = [
             'Name' => 'ProjectTest4Db',

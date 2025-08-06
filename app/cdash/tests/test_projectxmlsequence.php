@@ -26,7 +26,7 @@ class ProjectXmlSequenceTestCase extends KWWebTestCase
         $this->assertTrue(true, "Submission of $file has succeeded");
     }
 
-    public function testProjectXmlSequence()
+    public function testProjectXmlSequence(): void
     {
         $filenames = [
             'Trilinos_129273760744.57_Project.xml',

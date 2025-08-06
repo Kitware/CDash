@@ -19,7 +19,7 @@ class CreateProjectPermissionsTestCase extends KWWebTestCase
         $this->BuildId = null;
     }
 
-    public function testCreateProjectPermissions()
+    public function testCreateProjectPermissions(): void
     {
         // Test the unauthenticated case.
         $response = $this->get($this->url . '/api/v1/createProject.php');

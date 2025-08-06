@@ -30,7 +30,7 @@ class TestFailureTopicTest extends CDashTestCase
 {
     use BuildDiffForTesting;
 
-    public function testSubscribesToBuild()
+    public function testSubscribesToBuild(): void
     {
         $sut = new TestFailureTopic();
         $build = $this->createMockBuildWithDiff($this->getDiff());
@@ -47,7 +47,7 @@ class TestFailureTopicTest extends CDashTestCase
         $this->assertFalse($sut->subscribesToBuild($build));
     }
 
-    public function testItemHasTopicSubject()
+    public function testItemHasTopicSubject(): void
     {
         $sut = new TestFailureTopic();
         $build = new Build();
@@ -74,7 +74,7 @@ class TestFailureTopicTest extends CDashTestCase
         $this->assertTrue($sut->itemHasTopicSubject($build, $buildTest));
     }
 
-    public function testSetTopicData()
+    public function testSetTopicData(): void
     {
         $sut = new TestFailureTopic();
         $build = new Build();
@@ -114,7 +114,7 @@ class TestFailureTopicTest extends CDashTestCase
         $this->assertFalse($collection->has('Passed'));
     }
 
-    public function testGetTopicName()
+    public function testGetTopicName(): void
     {
         $sut = new TestFailureTopic();
         $expected = Topic::TEST_FAILURE;
@@ -122,7 +122,7 @@ class TestFailureTopicTest extends CDashTestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function testGetTopicDescription()
+    public function testGetTopicDescription(): void
     {
         $sut = new TestFailureTopic();
         $expected = 'Failing Tests';
@@ -130,7 +130,7 @@ class TestFailureTopicTest extends CDashTestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function testHasFixes()
+    public function testHasFixes(): void
     {
         $sut = new TestFailureTopic();
 
@@ -147,7 +147,7 @@ class TestFailureTopicTest extends CDashTestCase
         $this->assertTrue($sut->hasFixes());
     }
 
-    public function testGetFixes()
+    public function testGetFixes(): void
     {
         $sut = new TestFailureTopic();
 
@@ -171,7 +171,7 @@ class TestFailureTopicTest extends CDashTestCase
         $this->assertArrayHasKey('fixed', $diff['notrun']);
     }
 
-    public function testSetTopicDataWithLabels()
+    public function testSetTopicDataWithLabels(): void
     {
         $sut = new TestFailureTopic();
         $build = new Build();
@@ -227,7 +227,7 @@ class TestFailureTopicTest extends CDashTestCase
         $this->assertTrue($collection->has($buildTestThree->testname));
     }
 
-    public function testGetLabelsFromBuild()
+    public function testGetLabelsFromBuild(): void
     {
         $sut = new TestFailureTopic();
         $build = new Build();
@@ -270,7 +270,7 @@ class TestFailureTopicTest extends CDashTestCase
         $this->assertFalse($collection->contains($labelForThree));
     }
 
-    public function testIsSubscribedToBy()
+    public function testIsSubscribedToBy(): void
     {
         $sut = new TestFailureTopic();
 
@@ -292,7 +292,7 @@ class TestFailureTopicTest extends CDashTestCase
         $this->assertTrue($sut->isSubscribedToBy($subscriber));
     }
 
-    public function testSubscribesToRedundantBuild()
+    public function testSubscribesToRedundantBuild(): void
     {
         // Make a build with a redundant (not new) test failure.
         $diff = $this->createNew('testfailedpositive');

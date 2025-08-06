@@ -7,7 +7,7 @@ use CDash\Model\Build;
 
 class SubmissionAssignBuildIdTestCase extends KWWebTestCase
 {
-    public function testSubmissionAssignBuildId()
+    public function testSubmissionAssignBuildId(): void
     {
         $begin_test_time = time();
         $file_to_submit = dirname(__FILE__) . '/data/AssignBuildId/Configure.xml';
