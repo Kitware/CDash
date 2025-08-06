@@ -149,14 +149,15 @@
               </span>
               <span ng-if="::build.lastSubmission != -1">
                 This build has not submitted since
-                  <b>
-                    <a class="cdash-link" ng-href="index.php?project={{::cdash.projectname}}&date={{::build.lastSubmissionDate}}">
-                      {{::build.lastSubmission}}
-                    </a>
-                (<ng-pluralize count="::build.daysSinceLastBuild"
-                              when="{'1':     '{} day',
-                                     'other': '{} days'}">
-                </ng-pluralize>)
+                <b>
+                  <a class="cdash-link" ng-href="index.php?project={{::cdash.projectname}}&date={{::build.lastSubmissionDate}}">
+                    {{::build.lastSubmission}}
+                  </a>
+                  (<ng-pluralize count="::build.daysSinceLastBuild"
+                                when="{'1':     '{} day',
+                                       'other': '{} days'}">
+                  </ng-pluralize>)
+                </b>
               </span>
             </font>
           </td>
