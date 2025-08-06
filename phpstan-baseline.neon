@@ -2401,12 +2401,6 @@ parameters:
 			path: app/Http/Controllers/SubProjectController.php
 
 		-
-			message: '#^Parameter \#1 \$string of function strlen expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/SubProjectController.php
-
-		-
 			message: '#^Parameter \#1 \$string of function strlen expects string, string\|false given\.$#'
 			identifier: argument.type
 			count: 2
@@ -17293,12 +17287,6 @@ parameters:
 			message: '#^Only numeric types are allowed in \-, int\|false given on the right side\.$#'
 			identifier: minus.rightNonNumeric
 			count: 6
-			path: app/cdash/public/api/v1/index.php
-
-		-
-			message: '#^Parameter \#1 \$string of function strlen expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
 			path: app/cdash/public/api/v1/index.php
 
 		-

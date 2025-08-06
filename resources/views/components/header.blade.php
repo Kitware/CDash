@@ -12,13 +12,21 @@ $userInProject = isset($project) && auth()->user() !== null && \App\Models\Proje
 
 <div id="header">
     <div id="headertop">
-        <div id="topmenu">
-            <a class="cdash-link" href="{{ url('/projects') }}">All Dashboards</a>
-            @if(Auth::check())
-                <a class="cdash-link" href="{{ url('/user') }}">My CDash</a>
+        <div id="topmenu" style="display: flex; justify-content: space-between;">
+            <span>
+                <a class="cdash-link" href="{{ url('/projects') }}">All Dashboards</a>
+                @if(Auth::check())
+                    <a class="cdash-link" href="{{ url('/user') }}">My CDash</a>
+                @endif
+            </span>
+
+            @if(config('cdash.global_banner') !== null && strlen(config('cdash.global_banner')) > 0)
+                <span id="global-banner" style="color: #2ee84a;">
+                    {{ config('cdash.global_banner') }}
+                </span>
             @endif
 
-            <span style="float: right;">
+            <span>
                 @if(Auth::check())
                     <a class="cdash-link" href="{{ url('/logout') }}">Logout</a>
                 @else

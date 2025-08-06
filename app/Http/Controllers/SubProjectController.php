@@ -141,9 +141,6 @@ final class SubProjectController extends AbstractProjectController
         $response['showcalendar'] = 1;
 
         $banners = [];
-        if (config('cdash.global_banner') !== null && strlen(config('cdash.global_banner')) > 0) {
-            $banners[] = config('cdash.global_banner');
-        }
         if ($this->project->Banner !== null && strlen($this->project->Banner) > 0) {
             $banners[] = $this->project->Banner;
         }

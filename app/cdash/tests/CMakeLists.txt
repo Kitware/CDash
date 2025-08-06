@@ -156,6 +156,8 @@ add_feature_test(/Feature/SlowPageTest)
 
 add_feature_test(/Feature/GitHubWebhook)
 
+add_feature_test(/Feature/GlobalBannerTest)
+
 add_legacy_unit_test(/CDash/Lib/Repository/GitHub)
 set_tests_properties(/CDash/Lib/Repository/GitHub PROPERTIES
     DEPENDS /CDash/XmlHandler/UpdateHandler
