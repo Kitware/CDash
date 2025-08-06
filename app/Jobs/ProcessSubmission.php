@@ -35,6 +35,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use League\Flysystem\UnableToMoveFile;
 use Throwable;
 
 class ProcessSubmission implements ShouldQueue
@@ -199,7 +200,11 @@ class ProcessSubmission implements ShouldQueue
     public function failed(Throwable $exception): void
     {
         Log::warning("Failed to process {$this->filename} with message: {$exception}");
-        $this->renameSubmissionFile("inprogress/{$this->filename}", "failed/{$this->filename}");
+        try {
+            $this->renameSubmissionFile("inprogress/{$this->filename}", "failed/{$this->filename}");
+        } catch (UnableToMoveFile $e) {
+            report($e);
+        }
 
         if ((bool) config('cdash.remote_workers') && $this->localFilename !== '') {
             unlink($this->localFilename);
