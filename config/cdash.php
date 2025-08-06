@@ -86,6 +86,7 @@ return [
     'require_full_email_when_adding_user' => env('REQUIRE_FULL_EMAIL_WHEN_ADDING_USER', false),
     // Whether or not project administrators can invite users
     'project_admin_registration_form_enabled' => env('PROJECT_ADMIN_REGISTRATION_FORM_ENABLED', true),
+    // Text displayed at the top of all pages.  Limited to 40 characters.
     'global_banner' => env('GLOBAL_BANNER'),
     // Whether or not "normal" username+password authentication is enabled
     'username_password_authentication_enabled' => env('USERNAME_PASSWORD_AUTHENTICATION_ENABLED', true),

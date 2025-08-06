@@ -51,9 +51,6 @@ $response['title'] = $Project->Name;
 $response['showcalendar'] = 1;
 
 $banners = [];
-if (config('cdash.global_banner') !== null && strlen(config('cdash.global_banner')) > 0) {
-    $banners[] = config('cdash.global_banner');
-}
 if ($Project->Banner !== null && strlen($Project->Banner) > 0) {
     $banners[] = $Project->Banner;
 }
