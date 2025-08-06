@@ -337,7 +337,7 @@ class SimpleBrowser
     protected function load($url, $parameters)
     {
         $frame = $url->getTarget();
-        if (!$frame || !$this->page->hasFrames() || (strtolower($frame) == '_top')) {
+        if (!$frame || !$this->page->hasFrames() || (strtolower($frame) === '_top')) {
             return $this->loadPage($url, $parameters);
         }
         return $this->loadFrame([$frame], $url, $parameters);

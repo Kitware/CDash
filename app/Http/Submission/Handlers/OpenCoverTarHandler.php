@@ -58,7 +58,7 @@ class OpenCoverTarHandler extends AbstractXmlHandler
          *  VC -> Visit Count
          *  EL -> Line offset, reduced by one to start the file at line 0
          */
-        if (($name == 'SEQUENCEPOINT') && $this->coverageFileLog) {
+        if (($name === 'SEQUENCEPOINT') && $this->coverageFileLog) {
             $this->coverageFileLog->AddLine($attributes['EL'] - 1, $attributes['VC']);
         }
     }
@@ -123,7 +123,7 @@ class OpenCoverTarHandler extends AbstractXmlHandler
         $element = $this->getElement();
         $data = trim($data);
         // FULLNAME refers to the "namespace" of the individual file
-        if ($element == 'FULLNAME' && strlen($data)) {
+        if ($element === 'FULLNAME' && strlen($data)) {
             $path = $this->parseFullName($data);
             // Lookup our models & create them if they don't exist yet.
             if ($path) {
@@ -134,7 +134,7 @@ class OpenCoverTarHandler extends AbstractXmlHandler
             }
         }
         // MODULENAME gives the folder structure that the .cs file belongs in
-        if ($element == 'MODULENAME' && strlen($data)) {
+        if ($element === 'MODULENAME' && strlen($data)) {
             $this->currentModule = [$data, strtolower($data)];
         }
     }
@@ -156,7 +156,7 @@ class OpenCoverTarHandler extends AbstractXmlHandler
             new RecursiveDirectoryIterator($this->tarDir),
             RecursiveIteratorIterator::CHILD_FIRST);
         foreach ($iterator as $fileinfo) {
-            if ($fileinfo->getFilename() == 'data.json') {
+            if ($fileinfo->getFilename() === 'data.json') {
                 $jsonContents = file_get_contents($fileinfo->getPath() . DIRECTORY_SEPARATOR . $fileinfo->getFilename());
                 $jsonDecoded = json_decode($jsonContents, true);
                 if (array_key_exists('parseCSFiles', $jsonDecoded)) {

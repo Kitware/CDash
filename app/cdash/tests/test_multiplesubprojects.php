@@ -390,13 +390,13 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
         if ($jsonobj['updateduration'] !== false) {
             $this->fail("Expected updateduration to be false, found {$jsonobj['updateduration']}");
         }
-        if ($jsonobj['configureduration'] != '1s') {
+        if ($jsonobj['configureduration'] !== '1s') {
             $this->fail("Expected configureduration to be 1s, found {$jsonobj['configureduration']}");
         }
-        if ($jsonobj['buildduration'] != '5s') {
+        if ($jsonobj['buildduration'] !== '5s') {
             $this->fail("Expected buildduration to be 5s, found {$jsonobj['buildduration']}");
         }
-        if ($jsonobj['testduration'] != '4s') {
+        if ($jsonobj['testduration'] !== '4s') {
             $this->fail("Expected testduration to be 4s, found {$jsonobj['testduration']}");
         }
 

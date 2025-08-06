@@ -146,7 +146,7 @@ foreach ($buildgroups as $buildgroup) {
 
     $buildgroups_response[] = $buildgroup_response;
 
-    if ($buildgroup->GetType() != 'Daily') {
+    if ($buildgroup->GetType() !== 'Daily') {
         // Get the rules associated with this dynamic group.
         $dynamic_response = $buildgroup_response;
         $rules = $buildgroup->GetRules();

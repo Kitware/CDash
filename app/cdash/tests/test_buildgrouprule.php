@@ -177,7 +177,7 @@ class BuildGroupRuleTestCase extends KWWebTestCase
                       buildtype = 'Experimental'");
         pdo_execute($stmt);
         while ($row = $stmt->fetch()) {
-            if ($row['endtime'] == '1980-01-01 00:00:00') {
+            if ($row['endtime'] === '1980-01-01 00:00:00') {
                 $num_active++;
             } else {
                 $num_finished++;

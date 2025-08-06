@@ -129,7 +129,7 @@ function time_difference($duration, bool $compact = false, string $suffix = '', 
 
     // If it's "in the future" -- probably indicates server time syncing is not
     // working well...
-    if (($duration < 0) || ($duration < 30 && $compact == false && $suffix == 'ago')) {
+    if (($duration < 0) || ($duration < 30 && $compact == false && $suffix === 'ago')) {
         if ($duration > -300) {
             // For "close" (less than 5 minutes diff)
             return 'just now';

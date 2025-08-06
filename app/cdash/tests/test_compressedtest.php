@@ -44,7 +44,7 @@ class CompressedTestCase extends KWWebTestCase
         $response = json_decode($this->getBrowser()->getContentAsText(), true);
         $buildid = -1;
         foreach ($response['buildgroups'] as $buildgroup) {
-            if ($buildgroup['name'] != 'Experimental') {
+            if ($buildgroup['name'] !== 'Experimental') {
                 continue;
             }
             foreach ($buildgroup['builds'] as $build) {

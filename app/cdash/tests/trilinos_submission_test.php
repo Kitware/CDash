@@ -118,7 +118,7 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
         $buildgroup = array_pop($jsonobj['buildgroups']);
         $builds = $buildgroup['builds'];
 
-        if ($jsonobj['site'] != 'hut11.kitware') {
+        if ($jsonobj['site'] !== 'hut11.kitware') {
             $this->fail('Expected hut11.kitware, found ' . $jsonobj['site']);
         }
 

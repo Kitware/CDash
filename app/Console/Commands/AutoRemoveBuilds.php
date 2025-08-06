@@ -46,14 +46,14 @@ class AutoRemoveBuilds extends Command
         $sql = 'SELECT id, autoremovetimeframe, autoremovemaxbuilds
                 FROM project';
         $args = [];
-        if ($projectname != 'all') {
+        if ($projectname !== 'all') {
             $sql .= ' WHERE name = ?';
             $args = [$projectname];
         }
         $stmt = $db->prepare($sql);
 
         if ($this->option('all-builds')) {
-            if ($projectname == 'all') {
+            if ($projectname === 'all') {
                 echo "Removing all builds for all projects is not supported.\n";
                 return;
             }

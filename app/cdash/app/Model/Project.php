@@ -865,7 +865,7 @@ class Project
         // Set up overview page to initially contain just the "Nightly" group.
         $groups = $this->GetBuildGroups();
         foreach ($groups as $group) {
-            if ($group->GetName() == 'Nightly') {
+            if ($group->GetName() === 'Nightly') {
                 $buildgroupid = (int) $group->GetId();
                 DB::table('overview_components')->insert([
                     'projectid' => $this->Id,

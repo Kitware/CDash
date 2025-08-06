@@ -250,27 +250,27 @@ class TestHistoryTestCase extends KWWebTestCase
             $history = $test['history'];
             switch ($test['name']) {
                 case 'fails':
-                    if ($history != 'Broken') {
+                    if ($history !== 'Broken') {
                         $this->fail("Expected history for test 'fails' to be 'Broken', instead found '$history'");
                     }
                     break;
                 case 'notrun':
-                    if ($history != 'Inactive') {
+                    if ($history !== 'Inactive') {
                         $this->fail("Expected history for test 'notrun' to be 'Inactive', instead found '$history'");
                     }
                     break;
                 case 'flaky':
-                    if ($history != 'Unstable') {
+                    if ($history !== 'Unstable') {
                         $this->fail("Expected history for test 'flaky' to be 'Unstable', instead found '$history'");
                     }
                     break;
                 case 'passes':
-                    if ('passes' && $history != 'Stable') {
+                    if ('passes' && $history !== 'Stable') {
                         $this->fail("Expected history for test 'passes' to be 'Stable', instead found '$history'");
                     }
                     break;
                 case 'sporadic':
-                    if ('sporadic' && $history != 'Stable') {
+                    if ('sporadic' && $history !== 'Stable') {
                         $this->fail("Expected history for test 'sporadic' to be 'Stable', instead found '$history'");
                     }
                     break;

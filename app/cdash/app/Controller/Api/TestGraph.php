@@ -114,7 +114,7 @@ class TestGraph extends BuildTestApi
                     if ($status != 'passed' && $status != 'failed') {
                         break;
                     }
-                    if ($status == 'passed') {
+                    if ($status === 'passed') {
                         $data_point['y'] = 1;
                         $chart_data[0]['data'][] = $data_point;
                     } else {

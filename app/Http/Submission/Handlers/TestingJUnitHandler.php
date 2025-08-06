@@ -114,9 +114,9 @@ class TestingJUnitHandler extends AbstractXmlHandler
 
             $this->Build->SetStamp($attributes['BUILDSTAMP']);
             $this->Build->Generator = $attributes['GENERATOR'];
-        } elseif ($name == 'FAILURE' || $name == 'ERROR') {
+        } elseif ($name === 'FAILURE' || $name === 'ERROR') {
             $this->TestCreator->testDetails = $attributes['TYPE'];
-        } elseif ($name == 'PROPERTY' && $parent == 'PROPERTIES') {
+        } elseif ($name === 'PROPERTY' && $parent === 'PROPERTIES') {
             $this->TestProperties .= $attributes['NAME'] . '=' . $attributes['VALUE'] . "\n";
             if ($this->HasSiteTag == false) {
                 switch ($attributes['NAME']) {
@@ -144,7 +144,7 @@ class TestingJUnitHandler extends AbstractXmlHandler
                         break;
                 }
             }
-        } elseif ($name == 'TESTCASE' && count($attributes) > 0) {
+        } elseif ($name === 'TESTCASE' && count($attributes) > 0) {
             $this->TestCreator = new TestCreator();
             $this->TestCreator->testCommand = $this->TestProperties;
             $this->TestCreator->projectid = $this->GetProject()->Id;
@@ -167,7 +167,7 @@ class TestingJUnitHandler extends AbstractXmlHandler
 
             $this->TestCreator->testName = $attributes['NAME'];
             $this->TestCreator->testPath = $attributes['CLASSNAME'];
-        } elseif ($name == 'TESTSUITE') {
+        } elseif ($name === 'TESTSUITE') {
             // If the XML file doesn't have a <Site> tag then we use the information
             // provided by the testsuite.
             // buildname is 'name'
@@ -207,26 +207,26 @@ class TestingJUnitHandler extends AbstractXmlHandler
     public function endElement($parser, $name): void
     {
         parent::endElement($parser, $name);
-        if ($name == 'FAILURE' || $name == 'ERROR') {
+        if ($name === 'FAILURE' || $name === 'ERROR') {
             // Mark this test as failed if it has a <failure> or <error> tag.
             $this->TestCreator->testStatus = 'failed';
-        } elseif ($name == 'TESTCASE') {
+        } elseif ($name === 'TESTCASE') {
             // At this point we should have enough information
             // to create a build if we haven't done so already.
             $this->createBuild();
 
             // Update our tally of passing/failing/notrun tests.
-            if ($this->TestCreator->testStatus == 'passed') {
+            if ($this->TestCreator->testStatus === 'passed') {
                 $this->NumberTestsPassed++;
-            } elseif ($this->TestCreator->testStatus == 'failed') {
+            } elseif ($this->TestCreator->testStatus === 'failed') {
                 $this->NumberTestsFailed++;
-            } elseif ($this->TestCreator->testStatus == 'notrun') {
+            } elseif ($this->TestCreator->testStatus === 'notrun') {
                 $this->NumberTestsNotRun++;
             }
 
             // Record this test in the database.
             $this->TestCreator->create($this->Build);
-        } elseif ($name == 'SITE' || ($this->HasSiteTag == false && $name == 'TESTSUITE')) {
+        } elseif ($name === 'SITE' || ($this->HasSiteTag == false && $name === 'TESTSUITE')) {
             if (strlen($this->EndTimeStamp) > 0 && $this->UpdateEndTime) {
                 $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp); // The EndTimeStamp
                 $this->Build->UpdateEndTime($end_time);
@@ -246,7 +246,7 @@ class TestingJUnitHandler extends AbstractXmlHandler
     public function text($parser, $data): void
     {
         $element = $this->getElement();
-        if ($element == 'FAILURE') {
+        if ($element === 'FAILURE') {
             $this->TestCreator->testOutput .= $data;
         }
     }

@@ -68,7 +68,7 @@ class SubProjectTestFiltersTestCase extends KWWebTestCase
         $this->assertEqual(11, $jsonobj['numFailed']);
         $this->assertEqual(0, $jsonobj['numNotRun']);
         foreach ($jsonobj['tests'] as $test) {
-            if ($test['subprojectname'] != 'TrilinosFramework' && $test['subprojectname'] != 'Sacado') {
+            if ($test['subprojectname'] !== 'TrilinosFramework' && $test['subprojectname'] !== 'Sacado') {
                 $this->fail("Unexpected subprojectname on viewTest.php for include case: {$test['subprojectname']}");
             }
         }

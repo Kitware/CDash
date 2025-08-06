@@ -53,7 +53,7 @@ class ProjectHandler extends AbstractXmlHandler
         parent::startElement($parser, $name, $attributes);
 
         // Check that the project name matches
-        if ($name == 'PROJECT') {
+        if ($name === 'PROJECT') {
             if (get_project_id($attributes['NAME']) != $this->GetProject()->Id) {
                 Log::error('Wrong project name: ' . $attributes['NAME'], [
                     'function' => 'ProjectHandler::startElement',
@@ -67,10 +67,10 @@ class ProjectHandler extends AbstractXmlHandler
             return;
         }
 
-        if ($name == 'PROJECT') {
+        if ($name === 'PROJECT') {
             $this->SubProjects = [];
             $this->Dependencies = [];
-        } elseif ($name == 'SUBPROJECT') {
+        } elseif ($name === 'SUBPROJECT') {
             $this->CurrentDependencies = [];
             $this->SubProject = new SubProject();
             $this->SubProject->SetProjectId($this->GetProject()->Id);
@@ -78,7 +78,7 @@ class ProjectHandler extends AbstractXmlHandler
             if (array_key_exists('GROUP', $attributes)) {
                 $this->SubProject->SetGroup($attributes['GROUP']);
             }
-        } elseif ($name == 'DEPENDENCY') {
+        } elseif ($name === 'DEPENDENCY') {
             // A DEPENDENCY is expected to be:
             //
             //  - another subproject that already exists
@@ -102,7 +102,7 @@ class ProjectHandler extends AbstractXmlHandler
             return;
         }
 
-        if ($name == 'PROJECT') {
+        if ($name === 'PROJECT') {
             foreach ($this->SubProjects as $subproject) {
                 if (config('cdash.delete_old_subprojects')) {
                     // Remove dependencies that do not exist anymore,
@@ -164,7 +164,7 @@ class ProjectHandler extends AbstractXmlHandler
                     }
                 }
             }
-        } elseif ($name == 'SUBPROJECT') {
+        } elseif ($name === 'SUBPROJECT') {
             // Insert the SubProject.
             $this->SubProject->SetPosition($this->SubProjectPosition);
             $this->SubProject->Save();
@@ -203,7 +203,7 @@ class ProjectHandler extends AbstractXmlHandler
     public function text($parser, $data): void
     {
         $element = $this->getElement();
-        if ($element == 'PATH') {
+        if ($element === 'PATH') {
             $this->SubProject->SetPath($data);
         }
     }

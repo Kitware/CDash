@@ -66,10 +66,10 @@ class TruncateOutputTestCase extends KWWebTestCase
 
             // Verify that the output was properly truncated.
             $fields = [];
-            if ($file == 'Build_stdout.xml' || $file == 'Build_both.xml') {
+            if ($file === 'Build_stdout.xml' || $file === 'Build_both.xml') {
                 $fields[] = 'stdoutput';
             }
-            if ($file == 'Build_stderr.xml' || $file == 'Build_both.xml') {
+            if ($file === 'Build_stderr.xml' || $file === 'Build_both.xml') {
                 $fields[] = 'stderror';
             }
 

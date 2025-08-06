@@ -49,18 +49,18 @@ class ManageMeasurementsTestCase extends KWWebTestCase
     {
         // For those special moments when 4.2 does not equal 4.2
         $proc_time = sprintf('%.1f', $proc_time);
-        if ($test_name == 'TestNoProcs') {
+        if ($test_name === 'TestNoProcs') {
             if ($proc_time != 1.4) {
                 $this->fail("Expected 1.4 proc time on $page, found $proc_time");
             }
-        } elseif ($test_name == 'Test3Procs') {
+        } elseif ($test_name === 'Test3Procs') {
             if ($num_procs != 3) {
                 $this->fail("Expected 3 processors on $page, found $num_procs");
             }
             if ($proc_time != 4.2) {
                 $this->fail("Expected 4.2 proc time on $page, found $proc_time");
             }
-        } elseif ($test_name == 'Test5Procs') {
+        } elseif ($test_name === 'Test5Procs') {
             if ($num_procs != 5) {
                 $this->fail("Expected 5 processors on $page, found $num_procs");
             }
@@ -78,7 +78,7 @@ class ManageMeasurementsTestCase extends KWWebTestCase
         // For those special moments when 6.6 does not equal 6.6
         $proc_time = sprintf('%.1f', $proc_time);
         $io_wait_time = sprintf('%.1f', $io_wait_time);
-        if ($test_name == 'experimentalFail1') {
+        if ($test_name === 'experimentalFail1') {
             if ($num_procs != 2) {
                 $this->fail("Expected 2 processors on $page, found $num_procs");
             }
@@ -88,7 +88,7 @@ class ManageMeasurementsTestCase extends KWWebTestCase
             if ($io_wait_time != 4.2) {
                 $this->fail("Expected 4.2 io_wait time on $page, found $io_wait_time");
             }
-        } elseif ($test_name == 'experimentalFail2') {
+        } elseif ($test_name === 'experimentalFail2') {
             if ($num_procs != 3) {
                 $this->fail("Expected 3 processors on $page, found $num_procs");
             }
@@ -98,7 +98,7 @@ class ManageMeasurementsTestCase extends KWWebTestCase
             if ($io_wait_time != 5.3) {
                 $this->fail("Expected 5.3 io_wait time on $page, found $io_wait_time");
             }
-        } elseif ($test_name == 'production') {
+        } elseif ($test_name === 'production') {
             if ($num_procs != 4) {
                 $this->fail("Expected 4 processors on $page, found $num_procs");
             }
@@ -229,7 +229,7 @@ class ManageMeasurementsTestCase extends KWWebTestCase
             $this->fail("Expected 1 extra column on testSummary.php, found $found");
         }
         $found = $jsonobj['columns'][0];
-        if ($found != 'Processors') {
+        if ($found !== 'Processors') {
             $this->fail("Expected extra column to be called 'Processors', found $found");
         }
         $found = count($jsonobj['builds']);
@@ -301,9 +301,9 @@ class ManageMeasurementsTestCase extends KWWebTestCase
             $label = $build['label'];
             $found = $build['test']['procTimeFull'];
             $expected = null;
-            if ($label == 'MyExperimentalFeature') {
+            if ($label === 'MyExperimentalFeature') {
                 $expected = 8.8;
-            } elseif ($label == 'MyProductionCode') {
+            } elseif ($label === 'MyProductionCode') {
                 $expected = 13.2;
             } else {
                 $this->fail("Unexpected build label $label");

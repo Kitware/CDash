@@ -74,7 +74,7 @@ class GcovTarHandler extends AbstractSubmissionHandler
             new RecursiveDirectoryIterator($dirName),
             RecursiveIteratorIterator::CHILD_FIRST);
         foreach ($iterator as $fileinfo) {
-            if ($fileinfo->getFilename() == 'data.json') {
+            if ($fileinfo->getFilename() === 'data.json') {
                 $jsonContents = file_get_contents($fileinfo->getPath() . DIRECTORY_SEPARATOR . $fileinfo->getFilename());
                 $jsonDecoded = json_decode($jsonContents, true);
                 if (is_null($jsonDecoded) || !array_key_exists('Source', $jsonDecoded)
@@ -97,7 +97,7 @@ class GcovTarHandler extends AbstractSubmissionHandler
         // Check if any Labels.json files were included
         $iterator->rewind();
         foreach ($iterator as $fileinfo) {
-            if ($fileinfo->getFilename() == 'Labels.json') {
+            if ($fileinfo->getFilename() === 'Labels.json') {
                 $this->ParseLabelsFile($fileinfo);
             }
         }
@@ -120,7 +120,7 @@ class GcovTarHandler extends AbstractSubmissionHandler
         // Recursively search for .gcov files and parse them.
         $iterator->rewind();
         foreach ($iterator as $fileinfo) {
-            if (pathinfo($fileinfo->getFilename(), PATHINFO_EXTENSION) == 'gcov') {
+            if (pathinfo($fileinfo->getFilename(), PATHINFO_EXTENSION) === 'gcov') {
                 $this->ParseGcovFile($fileinfo);
             }
         }

@@ -148,7 +148,7 @@ abstract class AbstractXmlHandler extends AbstractSubmissionHandler
     {
         $this->stack->push($name);
 
-        if ($name == 'SUBPROJECT') {
+        if ($name === 'SUBPROJECT') {
             $this->SubProjectName = $attributes['NAME'];
         }
 

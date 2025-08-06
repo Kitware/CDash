@@ -76,7 +76,7 @@ foreach ($builds as $build) {
 // Compute information gain for each value of each property.
 $classifiers = [];
 foreach ($allProperties as $propertyName => $propertyData) {
-    if ($propertyData['type'] == 'number') {
+    if ($propertyData['type'] === 'number') {
         // Numerical property.
         [$classifierName, $score] =
             find_numerical_classifier($propertyName, $propertyData, $builds);
