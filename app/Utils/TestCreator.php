@@ -121,11 +121,6 @@ class TestCreator
         $crc32_input .= $this->testCommand;
         $crc32_input .= $this->testOutput;
         $crc32_input .= $this->testDetails;
-        foreach ($this->measurements as $measurement) {
-            $crc32_input .= '_' . $measurement->type;
-            $crc32_input .= '_' . $measurement->name;
-            $crc32_input .= '_' . $measurement->value;
-        }
 
         foreach ($this->images as $image) {
             $this->loadImage($image);
