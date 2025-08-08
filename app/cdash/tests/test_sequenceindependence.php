@@ -283,7 +283,7 @@ class SequenceIndependenceTestCase extends KWWebTestCase
             $this->fail("Expected note time to be '2009-02-23 12:32:00', found " . $note_row->time);
             return false;
         }
-        if ($note_row->name != '/home/ibanez/src/Work/Luis/DashboardScripts/camelot_itk_lesion_sizing_sandbox_debug_gcc41.cmake') {
+        if ($note_row->name !== '/home/ibanez/src/Work/Luis/DashboardScripts/camelot_itk_lesion_sizing_sandbox_debug_gcc41.cmake') {
             $this->fail("Expected note name to be '/home/ibanez/src/Work/Luis/DashboardScripts/camelot_itk_lesion_sizing_sandbox_debug_gcc41.cmake', found " . $note_row->name);
             return false;
         }

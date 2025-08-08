@@ -118,12 +118,12 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
                 $this->BuildName = '(empty)';
             }
             $this->updateSiteInfoIfChanged($this->Site, $siteInformation);
-        } elseif ($name == 'SUBPROJECT') {
+        } elseif ($name === 'SUBPROJECT') {
             $this->SubProjectName = $attributes['NAME'];
             if (!array_key_exists($this->SubProjectName, $this->SubProjects)) {
                 $this->SubProjects[$this->SubProjectName] = [];
             }
-        } elseif ($name == 'DYNAMICANALYSIS') {
+        } elseif ($name === 'DYNAMICANALYSIS') {
             $this->Checker = $attributes['CHECKER'];
             if (empty($this->DynamicAnalysisSummaries)) {
                 $summary = $factory->create(DynamicAnalysisSummary::class);
@@ -135,17 +135,17 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
                     $summary->Checker = $this->Checker;
                 }
             }
-        } elseif ($name == 'TEST' && isset($attributes['STATUS'])) {
+        } elseif ($name === 'TEST' && isset($attributes['STATUS'])) {
             $this->DynamicAnalysis = $factory->create(DynamicAnalysis::class);
             $this->DynamicAnalysis->Checker = $this->Checker;
             $this->DynamicAnalysis->Status = $attributes['STATUS'];
             $this->TestSubProjectName = '';
-        } elseif ($name == 'DEFECT') {
+        } elseif ($name === 'DEFECT') {
             $this->DynamicAnalysisDefect = $factory->create(DynamicAnalysisDefect::class);
             $this->DynamicAnalysisDefect->Type = $attributes['TYPE'];
-        } elseif ($name == 'LABEL') {
+        } elseif ($name === 'LABEL') {
             $this->Label = $factory->create(Label::class);
-        } elseif ($name == 'LOG') {
+        } elseif ($name === 'LOG') {
             $this->DynamicAnalysis->LogCompression = $attributes['COMPRESSION'] ?? '';
             $this->DynamicAnalysis->LogEncoding = $attributes['ENCODING'] ?? '';
         }
@@ -165,7 +165,7 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
                     $this->createBuild($subproject);
                 }
             }
-        } elseif ($name === 'TEST' && $this->getParent() == 'DYNAMICANALYSIS') {
+        } elseif ($name === 'TEST' && $this->getParent() === 'DYNAMICANALYSIS') {
             /** @var Build $build */
             $build = $this->Builds[$this->SubProjectName];
             $GLOBALS['PHP_ERROR_BUILD_ID'] = $build->Id;
@@ -178,16 +178,16 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
             $this->DynamicAnalysis->Insert();
             $analysis = clone $this->DynamicAnalysis;
             $build->AddDynamicAnalysis($analysis);
-        } elseif ($name == 'DEFECT') {
+        } elseif ($name === 'DEFECT') {
             $this->DynamicAnalysis->AddDefect($this->DynamicAnalysisDefect);
             unset($this->DynamicAnalysisDefect);
-        } elseif ($name == 'LABEL') {
+        } elseif ($name === 'LABEL') {
             if (!empty($this->TestSubProjectName)) {
                 $this->SubProjectName = $this->TestSubProjectName;
             } elseif (isset($this->DynamicAnalysis)) {
                 $this->DynamicAnalysis->AddLabel($this->Label);
             }
-        } elseif ($name == 'DYNAMICANALYSIS') {
+        } elseif ($name === 'DYNAMICANALYSIS') {
             foreach ($this->Builds as $subprojectName => $build) {
                 // Update this build's end time if necessary.
                 $build->EndTime = gmdate(FMT_DATETIME, $this->EndTimeStamp);
@@ -223,7 +223,7 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
         $parent = $this->getParent();
         $element = $this->getElement();
 
-        if ($parent == 'DYNAMICANALYSIS') {
+        if ($parent === 'DYNAMICANALYSIS') {
             switch ($element) {
                 case 'STARTTESTTIME':
                     $this->StartTimeStamp = $data;
@@ -232,7 +232,7 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
                     $this->EndTimeStamp = $data;
                     break;
             }
-        } elseif ($parent == 'TEST') {
+        } elseif ($parent === 'TEST') {
             switch ($element) {
                 case 'NAME':
                     $this->DynamicAnalysis->Name .= $data;
@@ -247,13 +247,13 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
                     $this->DynamicAnalysis->Log .= $data;
                     break;
             }
-        } elseif ($parent == 'RESULTS') {
-            if ($element == 'DEFECT') {
+        } elseif ($parent === 'RESULTS') {
+            if ($element === 'DEFECT') {
                 $this->DynamicAnalysisDefect->Value .= $data;
             }
-        } elseif ($parent == 'SUBPROJECT' && $element == 'LABEL') {
+        } elseif ($parent === 'SUBPROJECT' && $element === 'LABEL') {
             $this->SubProjects[$this->SubProjectName][] = $data;
-        } elseif ($element == 'LABEL') {
+        } elseif ($element === 'LABEL') {
             // Check if this label belongs to a SubProject.
             foreach ($this->SubProjects as $subproject => $labels) {
                 if (in_array($data, $labels)) {

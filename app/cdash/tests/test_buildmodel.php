@@ -240,7 +240,7 @@ class BuildModelTestCase extends KWWebTestCase
         $buildFailures = $build->GetFailures(['type' => Build::TYPE_WARN]);
         $this->assertTrue(count($buildFailures) === 1);
 
-        $this->assertTrue($buildFailures[0]['subprojectname'] == 'some-test-subproject');
+        $this->assertTrue($buildFailures[0]['subprojectname'] === 'some-test-subproject');
     }
 
     public function testBuildModelGetsResolvedBuildFailures(): void
@@ -288,7 +288,7 @@ class BuildModelTestCase extends KWWebTestCase
         $buildErrors = $build->GetErrors(['type' => Build::TYPE_ERROR]);
         $this->assertTrue(count($buildErrors) === 1);
 
-        $this->assertTrue($buildErrors[0]['subprojectname'] == 'some-test-subproject');
+        $this->assertTrue($buildErrors[0]['subprojectname'] === 'some-test-subproject');
     }
 
     public function testBuildModelGetsResolvedBuildErrors(): void

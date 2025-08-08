@@ -205,7 +205,7 @@ class Timeline extends Index
         ];
 
         $group_type = $buildgroup->GetType();
-        if ($group_type == 'Daily') {
+        if ($group_type === 'Daily') {
             // Query for defects on builds from this group.
             $stmt = $this->db->prepare('
                     SELECT b.configureerrors, b.builderrors, b.testfailed,
@@ -243,7 +243,7 @@ class Timeline extends Index
             $response = $this->getTimelineChartData($builds);
             $response['colors'] = $colors;
             return $response;
-        } elseif ($group_type == 'Latest') {
+        } elseif ($group_type === 'Latest') {
             $this->filterOnBuildGroup($groupname);
 
             // Save endDate before changing it.

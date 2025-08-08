@@ -319,7 +319,7 @@ class ViewTest extends BuildApi
             $this->db->execute($etestquery, $params);
         }
 
-        if (@$_GET['export'] == 'csv') {
+        if (@$_GET['export'] === 'csv') {
             $this->JSONEncodeResponse = false;
             return $this->exportAsCsv($etestquery, null, $stmt, $this->project->ShowTestTime, $this->project->TestTimeMaxStatus);
         }
@@ -362,11 +362,11 @@ class ViewTest extends BuildApi
         while ($row = $stmt->fetch()) {
             $marshaledTest = self::marshal($row, $row['buildid'], $this->build->ProjectId, $this->project->ShowTestTime, $this->project->TestTimeMaxStatus, $testdate);
 
-            if ($marshaledTest['status'] == 'Passed') {
+            if ($marshaledTest['status'] === 'Passed') {
                 $numPassed++;
-            } elseif ($marshaledTest['status'] == 'Failed') {
+            } elseif ($marshaledTest['status'] === 'Failed') {
                 $numFailed++;
-            } elseif ($marshaledTest['status'] == 'Not Run') {
+            } elseif ($marshaledTest['status'] === 'Not Run') {
                 $numNotRun++;
             }
 

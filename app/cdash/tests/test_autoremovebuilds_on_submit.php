@@ -83,7 +83,7 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
         }
         $query_array = pdo_fetch_array($stmt);
 
-        if ($query_array[0] != 'Win32-MSVC2009') {
+        if ($query_array[0] !== 'Win32-MSVC2009') {
             echo $query_array[0];
             $this->fail('First build not inserted correctly');
             return 1;

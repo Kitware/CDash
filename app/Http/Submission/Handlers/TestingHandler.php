@@ -130,29 +130,29 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
                 $this->BuildName = '(empty)';
             }
             $this->updateSiteInfoIfChanged($this->Site, $siteInformation);
-        } elseif ($name == 'SUBPROJECT') {
+        } elseif ($name === 'SUBPROJECT') {
             $this->SubProjectName = $attributes['NAME'];
             if (!array_key_exists($this->SubProjectName, $this->SubProjects)) {
                 $this->SubProjects[$this->SubProjectName] = [];
                 $this->createBuild();
             }
-        } elseif ($name == 'TEST' && count($attributes) > 0) {
+        } elseif ($name === 'TEST' && count($attributes) > 0) {
             $this->TestCreator = new TestCreator();
             $this->TestCreator->projectid = $this->GetProject()->Id;
             $this->TestCreator->testStatus = $attributes['STATUS'];
             $this->TestSubProjectName = '';
             $this->Labels = [];
-        } elseif ($name == 'NAMEDMEASUREMENT' && array_key_exists('TYPE', $attributes)) {
+        } elseif ($name === 'NAMEDMEASUREMENT' && array_key_exists('TYPE', $attributes)) {
             $this->TestMeasurement = $factory->create(TestMeasurement::class);
 
-            if ($attributes['TYPE'] == 'file') {
+            if ($attributes['TYPE'] === 'file') {
                 $this->TestMeasurement->name = $attributes['FILENAME'];
             } else {
                 $this->TestMeasurement->name = $attributes['NAME'];
             }
             $this->TestMeasurement->type = $attributes['TYPE'];
         } elseif ($name === 'VALUE' && $this->getParent() === 'MEASUREMENT') {
-            if (isset($attributes['COMPRESSION']) && $attributes['COMPRESSION'] == 'gzip') {
+            if (isset($attributes['COMPRESSION']) && $attributes['COMPRESSION'] === 'gzip') {
                 $this->TestCreator->alreadyCompressed = true;
             }
         } elseif ($name === 'LABEL' && $this->getParent() === 'LABELS') {
@@ -177,11 +177,11 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
 
             $GLOBALS['PHP_ERROR_BUILD_ID'] = $build->Id;
 
-            if ($this->TestCreator->testStatus == 'passed') {
+            if ($this->TestCreator->testStatus === 'passed') {
                 $this->NumberTestsPassed[$this->SubProjectName]++;
-            } elseif ($this->TestCreator->testStatus == 'failed') {
+            } elseif ($this->TestCreator->testStatus === 'failed') {
                 $this->NumberTestsFailed[$this->SubProjectName]++;
-            } elseif ($this->TestCreator->testStatus == 'notrun') {
+            } elseif ($this->TestCreator->testStatus === 'notrun') {
                 $this->NumberTestsNotRun[$this->SubProjectName]++;
             }
             if ($this->Labels) {
@@ -189,26 +189,26 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
             }
             $this->TestCreator->projectid = $this->GetProject()->Id;
             $this->TestCreator->create($build);
-        } elseif ($name === 'LABEL' && $this->getParent() == 'LABELS') {
+        } elseif ($name === 'LABEL' && $this->getParent() === 'LABELS') {
             if (!empty($this->TestSubProjectName)) {
                 $this->SubProjectName = $this->TestSubProjectName;
             }
-        } elseif ($name == 'NAMEDMEASUREMENT') {
-            if ($this->TestMeasurement->name == 'Execution Time') {
+        } elseif ($name === 'NAMEDMEASUREMENT') {
+            if ($this->TestMeasurement->name === 'Execution Time') {
                 $this->TestCreator->buildTestTime = $this->TestMeasurement->value;
-            } elseif ($this->TestMeasurement->name == 'Exit Code') {
+            } elseif ($this->TestMeasurement->name === 'Exit Code') {
                 if (strlen($this->TestCreator->testDetails) > 0 && $this->TestMeasurement->value) {
                     $this->TestCreator->testDetails .= ' (' . $this->TestMeasurement->value . ')';
                 } elseif ($this->TestMeasurement->value) {
                     $this->TestCreator->testDetails = $this->TestMeasurement->value;
                 }
-            } elseif ($this->TestMeasurement->name == 'Completion Status') {
+            } elseif ($this->TestMeasurement->name === 'Completion Status') {
                 if (strlen($this->TestCreator->testDetails) > 0) {
                     $this->TestCreator->testDetails = $this->TestMeasurement->value . ' (' . $this->TestCreator->testDetails . ')';
                 } else {
                     $this->TestCreator->testDetails = $this->TestMeasurement->value;
                 }
-            } elseif ($this->TestMeasurement->name == 'Command Line') {
+            } elseif ($this->TestMeasurement->name === 'Command Line') {
                 // don't do anything since it should already be in the FullCommandLine
             } else {
                 // explicit measurement
@@ -273,7 +273,7 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
         $parent = $this->getParent();
         $element = $this->getElement();
 
-        if ($parent == 'TESTING') {
+        if ($parent === 'TESTING') {
             switch ($element) {
                 case 'STARTTESTTIME':
                     $this->StartTimeStamp = $data;
@@ -282,7 +282,7 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
                     $this->EndTimeStamp = $data;
                     break;
             }
-        } elseif ($parent == 'TEST') {
+        } elseif ($parent === 'TEST') {
             switch ($element) {
                 case 'NAME':
                     $this->TestCreator->testName .= $data;
@@ -294,17 +294,17 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
                     $this->TestCreator->testCommand .= $data;
                     break;
             }
-        } elseif ($parent == 'NAMEDMEASUREMENT' && $element == 'VALUE') {
+        } elseif ($parent === 'NAMEDMEASUREMENT' && $element === 'VALUE') {
             if (!isset($this->TestMeasurement->value)) {
                 $this->TestMeasurement->value = $data;
             } else {
                 $this->TestMeasurement->value .= $data;
             }
-        } elseif ($parent == 'MEASUREMENT' && $element == 'VALUE') {
+        } elseif ($parent === 'MEASUREMENT' && $element === 'VALUE') {
             $this->TestCreator->testOutput .= $data;
-        } elseif ($parent == 'SUBPROJECT' && $element == 'LABEL') {
+        } elseif ($parent === 'SUBPROJECT' && $element === 'LABEL') {
             $this->SubProjects[$this->SubProjectName][] = $data;
-        } elseif ($parent == 'LABELS' && $element == 'LABEL') {
+        } elseif ($parent === 'LABELS' && $element === 'LABEL') {
             // Check if this label belongs to a SubProject.
             foreach ($this->SubProjects as $subproject => $labels) {
                 if (in_array($data, $labels)) {

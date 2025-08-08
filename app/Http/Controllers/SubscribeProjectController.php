@@ -184,42 +184,42 @@ final class SubscribeProjectController extends AbstractProjectController
     private static function check_email_category(string $name, int $emailcategory): bool
     {
         if ($emailcategory >= 64) {
-            if ($name == 'dynamicanalysis') {
+            if ($name === 'dynamicanalysis') {
                 return true;
             }
             $emailcategory -= 64;
         }
 
         if ($emailcategory >= 32) {
-            if ($name == 'test') {
+            if ($name === 'test') {
                 return true;
             }
             $emailcategory -= 32;
         }
 
         if ($emailcategory >= 16) {
-            if ($name == 'error') {
+            if ($name === 'error') {
                 return true;
             }
             $emailcategory -= 16;
         }
 
         if ($emailcategory >= 8) {
-            if ($name == 'warning') {
+            if ($name === 'warning') {
                 return true;
             }
             $emailcategory -= 8;
         }
 
         if ($emailcategory >= 4) {
-            if ($name == 'configure') {
+            if ($name === 'configure') {
                 return true;
             }
             $emailcategory -= 4;
         }
 
         if ($emailcategory >= 2) {
-            if ($name == 'update') {
+            if ($name === 'update') {
                 return true;
             }
         }

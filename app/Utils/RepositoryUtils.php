@@ -181,7 +181,7 @@ class RepositoryUtils
 
         // remove base dir from other (binary) paths
         $base_dir = dirname($source_dir) . '/';
-        if ($base_dir != '//') {
+        if ($base_dir !== '//') {
             return str_replace($base_dir, '', $compiler_output);
         }
         return $compiler_output;
@@ -404,13 +404,13 @@ class RepositoryUtils
 
         $i = 0;
         foreach ($emailtext['category'] as $key => $value) {
-            if ($key != 'update_errors'
-                && $key != 'configure_errors'
-                && $key != 'build_warnings'
-                && $key != 'build_errors'
-                && $key != 'test_errors'
-                && $key != 'dynamicanalysis_errors'
-                && $key != 'missing_tests'
+            if ($key !== 'update_errors'
+                && $key !== 'configure_errors'
+                && $key !== 'build_warnings'
+                && $key !== 'build_errors'
+                && $key !== 'test_errors'
+                && $key !== 'dynamicanalysis_errors'
+                && $key !== 'missing_tests'
             ) {
                 continue;
             }
@@ -562,7 +562,7 @@ class RepositoryUtils
             $information .= 'Command: ';
             $information .= substr($update->command, 0, $maxchars);
             $information .= "\n";
-        } elseif ($errorkey == 'configure_errors') {
+        } elseif ($errorkey === 'configure_errors') {
             // Configure information
 
             $information = "\n\n*Configure*\n";

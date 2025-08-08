@@ -92,19 +92,19 @@ class CoverageJUnitHandler extends AbstractXmlHandler
             }
             $this->Build->SetStamp($attributes['BUILDSTAMP']);
             $this->Build->Generator = $attributes['GENERATOR'];
-        } elseif ($name == 'SOURCEFILE') {
+        } elseif ($name === 'SOURCEFILE') {
             $this->CoverageFile = new CoverageFile();
             $this->Coverage = new Coverage();
             $this->CoverageFile->FullPath = trim($attributes['NAME']);
             $this->Coverage->Covered = 1;
             $this->Coverage->CoverageFile = $this->CoverageFile;
-        } elseif ($name == 'LABEL') {
+        } elseif ($name === 'LABEL') {
             $this->Label = new Label();
-        } elseif ($parent == 'REPORT' && $name == 'SESSIONINFO') {
+        } elseif ($parent === 'REPORT' && $name === 'SESSIONINFO') {
             // timestamp are in miliseconds
             $this->StartTimeStamp = substr($attributes['START'], 0, -3);
             $this->EndTimeStamp = substr($attributes['DUMP'], 0, -3);
-        } elseif ($parent == 'REPORT' && $name == 'COUNTER') {
+        } elseif ($parent === 'REPORT' && $name === 'COUNTER') {
             switch ($attributes['TYPE']) {
                 case 'COMPLEXITY':
                     $this->CoverageSummary->BranchesTested = intval($attributes['COVERED']);
@@ -115,7 +115,7 @@ class CoverageJUnitHandler extends AbstractXmlHandler
                     $this->CoverageSummary->FunctionsUntested = intval($attributes['MISSED']);
                     break;
             }
-        } elseif ($parent == 'SOURCEFILE' && $name == 'COUNTER') {
+        } elseif ($parent === 'SOURCEFILE' && $name === 'COUNTER') {
             switch ($attributes['TYPE']) {
                 case 'LINE':
                     $this->Coverage->LocTested = intval($attributes['COVERED']);
@@ -167,9 +167,9 @@ class CoverageJUnitHandler extends AbstractXmlHandler
             // Insert coverage summary
             $this->CoverageSummary->Insert();
             $this->CoverageSummary->ComputeDifference();
-        } elseif ($name == 'SOURCEFILE') {
+        } elseif ($name === 'SOURCEFILE') {
             $this->CoverageSummary->AddCoverage($this->Coverage);
-        } elseif ($name == 'LABEL') {
+        } elseif ($name === 'LABEL') {
             if (isset($this->Coverage)) {
                 $this->Coverage->AddLabel($this->Label);
             }
@@ -182,7 +182,7 @@ class CoverageJUnitHandler extends AbstractXmlHandler
     public function text($parser, $data): void
     {
         $element = $this->getElement();
-        if ($element == 'LABEL') {
+        if ($element === 'LABEL') {
             $this->Label->SetText($data);
         }
     }

@@ -259,7 +259,7 @@ class TestDetails extends BuildTestApi
             if ($row['name'] === 'Environment' && $row['type'] === 'text/string') {
                 $test_response['environment'] = $row['value'];
                 continue;
-            } elseif ($row['type'] == 'text/preformatted') {
+            } elseif ($row['type'] === 'text/preformatted') {
                 $preformatted_measurement = ['name' => $row['name'], 'value' => $row['value']];
                 $preformatted_measurements[] = $preformatted_measurement;
                 continue;
@@ -271,20 +271,20 @@ class TestDetails extends BuildTestApi
 
             // CTest base64-encodes the type text/plain...
             $value = $row['value'];
-            if ($row['type'] == 'text/plain') {
-                if (substr($value, strlen($value) - 2) == '==') {
+            if ($row['type'] === 'text/plain') {
+                if (substr($value, strlen($value) - 2) === '==') {
                     $value = base64_decode($value);
                 }
-            } elseif ($row['type'] == 'file') {
+            } elseif ($row['type'] === 'file') {
                 $measurement_response['fileid'] = $fileid++;
             }
             // Add nl2br for type text/plain and text/string
-            if ($row['type'] == 'text/plain' || $row['type'] == 'text/string') {
+            if ($row['type'] === 'text/plain' || $row['type'] === 'text/string') {
                 $value = nl2br($value);
             }
 
             // If the type is a file we just don't pass the text (too big) to the output
-            if ($row['type'] == 'file') {
+            if ($row['type'] === 'file') {
                 $value = '';
             }
 

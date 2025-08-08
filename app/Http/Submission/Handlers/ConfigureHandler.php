@@ -123,7 +123,7 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
             }
 
             $this->updateSiteInfoIfChanged($this->Site, $siteInformation);
-        } elseif ($name == 'SUBPROJECT') {
+        } elseif ($name === 'SUBPROJECT') {
             $this->SubProjectName = $attributes['NAME'];
             if (!array_key_exists($this->SubProjectName, $this->SubProjects)) {
                 $this->SubProjects[$this->SubProjectName] = [];
@@ -139,7 +139,7 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
                 // No subprojects
                 $this->Builds[] = $this->CreateBuild();
             }
-        } elseif ($name == 'LABEL') {
+        } elseif ($name === 'LABEL') {
             $this->Label = $this->getModelFactory()->create(Label::class);
         }
     }
@@ -294,13 +294,13 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
                     $this->Configure->NumberOfErrors = $data;
                     break;
             }
-        } elseif ($parent == 'SUBPROJECT' && $element == 'LABEL') {
+        } elseif ($parent === 'SUBPROJECT' && $element === 'LABEL') {
             $this->SubProjects[$this->SubProjectName][] = $data;
             $build = $this->Builds[$this->SubProjectName];
             $label = $this->getModelFactory()->create(Label::class);
             $label->Text = $data;
             $build->AddLabel($label);
-        } elseif ($parent == 'LABELS' && $element == 'LABEL') {
+        } elseif ($parent === 'LABELS' && $element === 'LABEL') {
             // First, check if this label belongs to a SubProject
             $subproject_name = '';
             foreach ($this->SubProjects as $subproject => $labels) {

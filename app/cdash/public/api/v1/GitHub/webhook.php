@@ -55,8 +55,8 @@ $event = array_key_exists('HTTP_X_GITHUB_EVENT', $_SERVER) ? $_SERVER['HTTP_X_GI
 switch ($event) {
     case 'check_run':
         // Avoid an infinite loop of reacting to our own activity.
-        if ($_REQUEST['check_run']['name'] != 'CDash' ||
-                $_REQUEST['action'] == 'rerequested') {
+        if ($_REQUEST['check_run']['name'] !== 'CDash' ||
+                $_REQUEST['action'] === 'rerequested') {
             $sha = $_REQUEST['check_run']['head_sha'];
             Repository::createOrUpdateCheck($sha);
         }

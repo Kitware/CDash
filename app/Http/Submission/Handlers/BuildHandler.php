@@ -183,7 +183,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
             }
 
             $this->updateSiteInfoIfChanged($this->Site, $siteInformation);
-        } elseif ($name == 'SUBPROJECT') {
+        } elseif ($name === 'SUBPROJECT') {
             $this->SubProjectName = $attributes['NAME'];
             if (!array_key_exists($this->SubProjectName, $this->SubProjects)) {
                 $this->SubProjects[$this->SubProjectName] = [];
@@ -205,7 +205,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
                 $build->CompilerVersion = $this->BuildInformation['compilerversion'] ?? null;
                 $this->Builds[$this->SubProjectName] = $build;
             }
-        } elseif ($name == 'BUILD') {
+        } elseif ($name === 'BUILD') {
             if (empty($this->Builds)) {
                 // No subprojects
                 $build = $factory->create(Build::class);
@@ -224,20 +224,20 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
                 $build->CompilerVersion = $this->BuildInformation['compilerversion'] ?? null;
                 $this->Builds[''] = $build;
             }
-        } elseif ($name == 'WARNING') {
+        } elseif ($name === 'WARNING') {
             $this->Error = $factory->create(BuildError::class);
             $this->Error->Type = 1;
             $this->ErrorSubProjectName = '';
-        } elseif ($name == 'ERROR') {
+        } elseif ($name === 'ERROR') {
             $this->Error = $factory->create(BuildError::class);
             $this->Error->Type = 0;
             $this->ErrorSubProjectName = '';
-        } elseif ($name == 'FAILURE') {
+        } elseif ($name === 'FAILURE') {
             $this->Error = $factory->create(BuildFailure::class);
             $this->Error->Type = 0;
-            if ($attributes['TYPE'] == 'Error') {
+            if ($attributes['TYPE'] === 'Error') {
                 $this->Error->Type = 0;
-            } elseif ($attributes['TYPE'] == 'Warning') {
+            } elseif ($attributes['TYPE'] === 'Warning') {
                 $this->Error->Type = 1;
             }
             $this->ErrorSubProjectName = '';
@@ -333,7 +333,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
     {
         $factory = $this->getModelFactory();
 
-        if ($name == 'BUILD') {
+        if ($name === 'BUILD') {
             $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
             $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp);
             $submit_time = gmdate(FMT_DATETIME);
@@ -431,7 +431,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
                     }
                 }
             }
-        } elseif ($name == 'WARNING' || $name == 'ERROR' || $name == 'FAILURE') {
+        } elseif ($name === 'WARNING' || $name === 'ERROR' || $name === 'FAILURE') {
             $skip_error = false;
             foreach (['StdOutput', 'StdError', 'Text'] as $field) {
                 if (isset($this->Error->$field)) {
@@ -610,19 +610,19 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
                     $this->Error->ExitCondition .= $data;
                     break;
             }
-        } elseif ($element == 'BUILDLOGLINE') {
+        } elseif ($element === 'BUILDLOGLINE') {
             $this->Error->LogLine .= $data;
-        } elseif ($element == 'TEXT') {
+        } elseif ($element === 'TEXT') {
             $this->Error->Text .= $data;
-        } elseif ($element == 'SOURCEFILE') {
+        } elseif ($element === 'SOURCEFILE') {
             $this->Error->SourceFile .= $data;
-        } elseif ($element == 'SOURCELINENUMBER') {
+        } elseif ($element === 'SOURCELINENUMBER') {
             $this->Error->SourceLine .= $data;
-        } elseif ($element == 'PRECONTEXT') {
+        } elseif ($element === 'PRECONTEXT') {
             $this->Error->PreContext .= $data;
-        } elseif ($element == 'POSTCONTEXT') {
+        } elseif ($element === 'POSTCONTEXT') {
             $this->Error->PostContext .= $data;
-        } elseif ($this->getParent() === 'SUBPROJECT' && $element == 'LABEL') {
+        } elseif ($this->getParent() === 'SUBPROJECT' && $element === 'LABEL') {
             $this->SubProjects[$this->SubProjectName][] = $data;
         } elseif ($this->currentPathMatches('site.build.targets.target.labels.label')) {
             if ($this->MostRecentCommand === null || !array_key_exists('targetname', $this->MostRecentCommand)) {

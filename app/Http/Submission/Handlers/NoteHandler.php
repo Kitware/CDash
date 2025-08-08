@@ -87,7 +87,7 @@ class NoteHandler extends AbstractXmlHandler
             }
             $this->Build->SetStamp($attributes['BUILDSTAMP']);
             $this->Build->Generator = $attributes['GENERATOR'];
-        } elseif ($name == 'NOTE') {
+        } elseif ($name === 'NOTE') {
             $this->NoteCreator = new NoteCreator();
             $this->NoteCreator->name =
                 $attributes['NAME'] ?? '';
@@ -99,7 +99,7 @@ class NoteHandler extends AbstractXmlHandler
     public function endElement($parser, $name): void
     {
         parent::endElement($parser, $name);
-        if ($name == 'NOTE') {
+        if ($name === 'NOTE') {
             $this->Build->ProjectId = $this->GetProject()->Id;
             $this->Build->GetIdFromName($this->SubProjectName);
             $this->Build->RemoveIfDone();
@@ -147,7 +147,7 @@ class NoteHandler extends AbstractXmlHandler
     {
         $parent = $this->getParent();
         $element = $this->getElement();
-        if ($parent == 'NOTE') {
+        if ($parent === 'NOTE') {
             switch ($element) {
                 case 'DATETIME':
                     // Only use the <DateTime> element when <Time> is unsuitable.

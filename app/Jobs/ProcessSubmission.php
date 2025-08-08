@@ -344,7 +344,7 @@ class ProcessSubmission implements ShouldQueue
         $file = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
 
         $filename = $projectname_escaped . '_';
-        if ($file != 'Project') {
+        if ($file !== 'Project') {
             // Project.xml files aren't associated with a particular build, so we
             // only record the site and buildname for other types of submissions.
             $filename .= $subprojectname_escaped . '_' . $sitename_escaped . '_' . $buildname_escaped . '_' . $stamp . '_';
@@ -490,7 +490,7 @@ class ProcessSubmission implements ShouldQueue
         $buildname = '';
         $subprojectname = '';
         $stamp = '';
-        if ($file != 'Project') {
+        if ($file !== 'Project') {
             // projects don't have some of these fields.
 
             $sitename = $handler->getSiteName();

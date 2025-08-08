@@ -712,13 +712,13 @@ final class BuildController extends AbstractBuildController
             // This field is redundant because of the way our data is organized.
             unset($file['status']);
 
-            if ($status == 'UPDATED') {
+            if ($status === 'UPDATED') {
                 $diff_url = RepositoryUtils::get_diff_url($this->project->Id, $this->project->CvsUrl, $directory, $filename, $revision);
                 $diff_url = XMLStrFormat($diff_url);
                 $file['diffurl'] = $diff_url;
                 $this->add_file($file, $directory, $updated_files);
                 $num_updated_files++;
-            } elseif ($status == 'MODIFIED') {
+            } elseif ($status === 'MODIFIED') {
                 $diff_url = RepositoryUtils::get_diff_url($this->project->Id, $this->project->CvsUrl, $directory, $filename);
                 $diff_url = XMLStrFormat($diff_url);
                 $file['diffurl'] = $diff_url;

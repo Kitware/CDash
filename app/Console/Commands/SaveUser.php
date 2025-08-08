@@ -58,7 +58,7 @@ class SaveUser extends Command
         foreach ($options as $option_name) {
             $option_value = $this->option($option_name);
             if (!is_null($option_value)) {
-                if ($option_name == 'password') {
+                if ($option_name === 'password') {
                     $option_value = password_hash($option_value, PASSWORD_DEFAULT);
                 }
                 $user->$option_name = $option_value;

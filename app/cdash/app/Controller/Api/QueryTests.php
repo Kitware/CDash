@@ -52,11 +52,11 @@ class QueryTests extends ResultsApi
     {
         $filters = $this->flattenFilters();
         foreach ($filters as $filter) {
-            if ($filter['field'] == 'groupname') {
+            if ($filter['field'] === 'groupname') {
                 $this->filterOnBuildGroup = true;
-            } elseif ($filter['field'] == 'revision') {
+            } elseif ($filter['field'] === 'revision') {
                 $this->filterOnRevision = true;
-            } elseif ($filter['field'] == 'testoutput') {
+            } elseif ($filter['field'] === 'testoutput') {
                 $this->filterOnTestOutput = true;
                 if ($filter['compare'] == 94) {
                     $this->testOutputExclude[] = $filter['value'];

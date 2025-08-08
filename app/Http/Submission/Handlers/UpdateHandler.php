@@ -57,7 +57,7 @@ class UpdateHandler extends AbstractXmlHandler implements ActionableBuildInterfa
     {
         parent::startElement($parser, $name, $attributes);
         $factory = $this->getModelFactory();
-        if ($name == 'UPDATE') {
+        if ($name === 'UPDATE') {
             $this->Build = new Build();
             $this->Update = $factory->create(BuildUpdate::class);
 
@@ -65,10 +65,10 @@ class UpdateHandler extends AbstractXmlHandler implements ActionableBuildInterfa
                 $this->Build->Generator = $attributes['GENERATOR'];
             }
             $this->Update->Append = $this->Append;
-        } elseif ($name == 'UPDATED' || $name == 'CONFLICTING' || $name == 'MODIFIED') {
+        } elseif ($name === 'UPDATED' || $name === 'CONFLICTING' || $name === 'MODIFIED') {
             $this->UpdateFile = $factory->create(BuildUpdateFile::class);
             $this->UpdateFile->Status = $name;
-        } elseif ($name == 'UPDATERETURNSTATUS') {
+        } elseif ($name === 'UPDATERETURNSTATUS') {
             $this->Update->Status = '';
         }
     }
@@ -82,7 +82,7 @@ class UpdateHandler extends AbstractXmlHandler implements ActionableBuildInterfa
             } else {
                 $this->Site->save();
             }
-        } elseif ($name == 'UPDATE') {
+        } elseif ($name === 'UPDATE') {
             $this->Build->SiteId = $this->Site->id;
 
             $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
@@ -140,7 +140,7 @@ class UpdateHandler extends AbstractXmlHandler implements ActionableBuildInterfa
 
             // Compute the update statistics
             $this->Build->ComputeUpdateStatistics();
-        } elseif ($name == 'UPDATED' || $name == 'CONFLICTING' || $name == 'MODIFIED') {
+        } elseif ($name === 'UPDATED' || $name === 'CONFLICTING' || $name === 'MODIFIED') {
             $this->Update->AddFile($this->UpdateFile);
             unset($this->UpdateFile);
         }
@@ -153,7 +153,7 @@ class UpdateHandler extends AbstractXmlHandler implements ActionableBuildInterfa
     {
         $parent = $this->getParent();
         $element = $this->getElement();
-        if ($parent == 'UPDATE') {
+        if ($parent === 'UPDATE') {
             switch ($element) {
                 case 'BUILDNAME':
                     $this->Build->Name = $data;
@@ -196,27 +196,27 @@ class UpdateHandler extends AbstractXmlHandler implements ActionableBuildInterfa
                     $this->Update->Type = $data;
                     break;
             }
-        } elseif ($parent != 'REVISIONS' && $element == 'FULLNAME') {
+        } elseif ($parent !== 'REVISIONS' && $element === 'FULLNAME') {
             $this->UpdateFile->Filename = $data;
-        } elseif ($parent != 'REVISIONS' && $element == 'CHECKINDATE') {
+        } elseif ($parent !== 'REVISIONS' && $element === 'CHECKINDATE') {
             $this->UpdateFile->CheckinDate = $data;
-        } elseif ($parent != 'REVISIONS' && $element == 'AUTHOR') {
+        } elseif ($parent !== 'REVISIONS' && $element === 'AUTHOR') {
             $this->UpdateFile->Author .= $data;
-        } elseif ($parent != 'REVISIONS' && $element == 'EMAIL') {
+        } elseif ($parent !== 'REVISIONS' && $element === 'EMAIL') {
             $this->UpdateFile->Email .= $data;
-        } elseif ($parent != 'REVISIONS' && $element == 'COMMITTER') {
+        } elseif ($parent !== 'REVISIONS' && $element === 'COMMITTER') {
             $this->UpdateFile->Committer .= $data;
-        } elseif ($parent != 'REVISIONS' && $element == 'COMMITTEREMAIL') {
+        } elseif ($parent !== 'REVISIONS' && $element === 'COMMITTEREMAIL') {
             $this->UpdateFile->CommitterEmail .= $data;
-        } elseif ($parent != 'REVISIONS' && $element == 'LOG') {
+        } elseif ($parent !== 'REVISIONS' && $element === 'LOG') {
             $this->UpdateFile->Log .= $data;
-        } elseif ($parent != 'REVISIONS' && $element == 'REVISION') {
-            if ($data == 'Unknown') {
+        } elseif ($parent !== 'REVISIONS' && $element === 'REVISION') {
+            if ($data === 'Unknown') {
                 $data = -1;
             }
             $this->UpdateFile->Revision = $data;
-        } elseif ($parent != 'REVISIONS' && $element == 'PRIORREVISION') {
-            if ($data == 'Unknown') {
+        } elseif ($parent !== 'REVISIONS' && $element === 'PRIORREVISION') {
+            if ($data === 'Unknown') {
                 $data = -1;
             }
             $this->UpdateFile->PriorRevision = $data;

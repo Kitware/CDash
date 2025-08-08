@@ -96,7 +96,7 @@ class CoverageHandler extends AbstractXmlHandler
             }
             $this->Build->SetStamp($attributes['BUILDSTAMP']);
             $this->Build->Generator = $attributes['GENERATOR'];
-        } elseif ($name == 'FILE') {
+        } elseif ($name === 'FILE') {
             $this->CoverageFile = new CoverageFile();
             $this->Coverage = new Coverage();
             $this->CoverageFile->FullPath = trim($attributes['FULLPATH']);
@@ -106,7 +106,7 @@ class CoverageHandler extends AbstractXmlHandler
                 $this->Coverage->Covered = 0;
             }
             $this->Coverage->CoverageFile = $this->CoverageFile;
-        } elseif ($name == 'LABEL') {
+        } elseif ($name === 'LABEL') {
             $this->Label = new Label();
         }
     } // start element
@@ -180,11 +180,11 @@ class CoverageHandler extends AbstractXmlHandler
                 $coverageSummary->Insert(true);
                 $coverageSummary->ComputeDifference();
             }
-        } elseif ($name == 'FILE') {
+        } elseif ($name === 'FILE') {
             // Store this data.
             // We will insert it once we're done parsing the whole file.
             $this->Coverages[] = [$this->Coverage, $this->CoverageFile];
-        } elseif ($name == 'LABEL') {
+        } elseif ($name === 'LABEL') {
             if (isset($this->Coverage)) {
                 $this->Coverage->AddLabel($this->Label);
             }
@@ -198,7 +198,7 @@ class CoverageHandler extends AbstractXmlHandler
         $parent = $this->getParent();
         $element = $this->getElement();
 
-        if ($parent == 'COVERAGE') {
+        if ($parent === 'COVERAGE') {
             switch ($element) {
                 case 'STARTTIME':
                     $this->StartTimeStamp = $data;
@@ -207,7 +207,7 @@ class CoverageHandler extends AbstractXmlHandler
                     $this->EndTimeStamp = $data;
                     break;
             }
-        } elseif ($parent == 'FILE') {
+        } elseif ($parent === 'FILE') {
             switch ($element) {
                 case 'LOCTESTED':
                     $this->Coverage->LocTested .= $data;
@@ -228,7 +228,7 @@ class CoverageHandler extends AbstractXmlHandler
                     $this->Coverage->FunctionsUntested .= $data;
                     break;
             }
-        } elseif ($element == 'LABEL') {
+        } elseif ($element === 'LABEL') {
             $this->Label->SetText($data);
         }
     }

@@ -49,18 +49,6 @@ parameters:
 			path: app/Console/Commands/AutoRemoveBuilds.php
 
 		-
-			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
-			identifier: notEqual.notAllowed
-			count: 1
-			path: app/Console/Commands/AutoRemoveBuilds.php
-
-		-
-			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
-			identifier: equal.notAllowed
-			count: 1
-			path: app/Console/Commands/AutoRemoveBuilds.php
-
-		-
 			message: '#^Only booleans are allowed in a while condition, mixed given\.$#'
 			identifier: while.condNotBoolean
 			count: 1
@@ -131,12 +119,6 @@ parameters:
 			identifier: booleanNot.exprNotBoolean
 			count: 1
 			path: app/Console/Commands/RemoveUser.php
-
-		-
-			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
-			identifier: equal.notAllowed
-			count: 1
-			path: app/Console/Commands/SaveUser.php
 
 		-
 			message: '#^Only booleans are allowed in an if condition, string\|null given\.$#'
@@ -693,7 +675,7 @@ parameters:
 		-
 			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
 			identifier: equal.notAllowed
-			count: 3
+			count: 1
 			path: app/Http/Controllers/BuildController.php
 
 		-
@@ -1317,7 +1299,7 @@ parameters:
 		-
 			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
 			identifier: equal.notAllowed
-			count: 55
+			count: 53
 			path: app/Http/Controllers/CoverageController.php
 
 		-
@@ -2518,12 +2500,6 @@ parameters:
 			path: app/Http/Controllers/SubscribeProjectController.php
 
 		-
-			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
-			identifier: equal.notAllowed
-			count: 6
-			path: app/Http/Controllers/SubscribeProjectController.php
-
-		-
 			message: '#^Only booleans are allowed in an if condition, mixed given\.$#'
 			identifier: if.condNotBoolean
 			count: 1
@@ -3027,7 +3003,7 @@ parameters:
 		-
 			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
 			identifier: equal.notAllowed
-			count: 2
+			count: 1
 			path: app/Http/Submission/Handlers/AbstractXmlHandler.php
 
 		-
@@ -3565,12 +3541,6 @@ parameters:
 			path: app/Http/Submission/Handlers/BuildHandler.php
 
 		-
-			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
-			identifier: equal.notAllowed
-			count: 18
-			path: app/Http/Submission/Handlers/BuildHandler.php
-
-		-
 			message: '#^Method App\\Http\\Submission\\Handlers\\BuildHandler\:\:GetCommitAuthors\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -3801,7 +3771,7 @@ parameters:
 		-
 			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
 			identifier: equal.notAllowed
-			count: 7
+			count: 1
 			path: app/Http/Submission/Handlers/ConfigureHandler.php
 
 		-
@@ -3951,7 +3921,7 @@ parameters:
 		-
 			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
 			identifier: equal.notAllowed
-			count: 10
+			count: 3
 			path: app/Http/Submission/Handlers/CoverageHandler.php
 
 		-
@@ -4047,7 +4017,7 @@ parameters:
 		-
 			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
 			identifier: equal.notAllowed
-			count: 12
+			count: 1
 			path: app/Http/Submission/Handlers/CoverageJUnitHandler.php
 
 		-
@@ -4149,7 +4119,7 @@ parameters:
 		-
 			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
 			identifier: equal.notAllowed
-			count: 6
+			count: 1
 			path: app/Http/Submission/Handlers/CoverageLogHandler.php
 
 		-
@@ -4234,12 +4204,6 @@ parameters:
 			message: '#^Cannot access property \$name on App\\Models\\Site\|null\.$#'
 			identifier: property.nonObject
 			count: 1
-			path: app/Http/Submission/Handlers/DoneHandler.php
-
-		-
-			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
-			identifier: equal.notAllowed
-			count: 3
 			path: app/Http/Submission/Handlers/DoneHandler.php
 
 		-
@@ -4377,7 +4341,7 @@ parameters:
 		-
 			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
 			identifier: equal.notAllowed
-			count: 18
+			count: 1
 			path: app/Http/Submission/Handlers/DynamicAnalysisHandler.php
 
 		-
@@ -4528,12 +4492,6 @@ parameters:
 			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
 			identifier: empty.notAllowed
 			count: 5
-			path: app/Http/Submission/Handlers/GcovTarHandler.php
-
-		-
-			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
-			identifier: equal.notAllowed
-			count: 3
 			path: app/Http/Submission/Handlers/GcovTarHandler.php
 
 		-
@@ -4803,7 +4761,7 @@ parameters:
 		-
 			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
 			identifier: equal.notAllowed
-			count: 2
+			count: 1
 			path: app/Http/Submission/Handlers/JavaJSONTarHandler.php
 
 		-
@@ -4875,7 +4833,7 @@ parameters:
 		-
 			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
 			identifier: equal.notAllowed
-			count: 4
+			count: 1
 			path: app/Http/Submission/Handlers/NoteHandler.php
 
 		-
@@ -5079,7 +5037,7 @@ parameters:
 		-
 			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
 			identifier: equal.notAllowed
-			count: 6
+			count: 2
 			path: app/Http/Submission/Handlers/OpenCoverTarHandler.php
 
 		-
@@ -5241,7 +5199,7 @@ parameters:
 		-
 			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
 			identifier: equal.notAllowed
-			count: 8
+			count: 1
 			path: app/Http/Submission/Handlers/ProjectHandler.php
 
 		-
@@ -5415,7 +5373,7 @@ parameters:
 		-
 			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
 			identifier: equal.notAllowed
-			count: 25
+			count: 1
 			path: app/Http/Submission/Handlers/TestingHandler.php
 
 		-
@@ -5589,7 +5547,7 @@ parameters:
 		-
 			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
 			identifier: equal.notAllowed
-			count: 20
+			count: 5
 			path: app/Http/Submission/Handlers/TestingJUnitHandler.php
 
 		-
@@ -5755,15 +5713,9 @@ parameters:
 			path: app/Http/Submission/Handlers/UpdateHandler.php
 
 		-
-			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
-			identifier: notEqual.notAllowed
-			count: 9
-			path: app/Http/Submission/Handlers/UpdateHandler.php
-
-		-
 			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
 			identifier: equal.notAllowed
-			count: 22
+			count: 1
 			path: app/Http/Submission/Handlers/UpdateHandler.php
 
 		-
@@ -6094,12 +6046,6 @@ parameters:
 			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
 			identifier: empty.notAllowed
 			count: 5
-			path: app/Jobs/ProcessSubmission.php
-
-		-
-			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
-			identifier: notEqual.notAllowed
-			count: 2
 			path: app/Jobs/ProcessSubmission.php
 
 		-
@@ -6700,15 +6646,9 @@ parameters:
 			path: app/Utils/RepositoryUtils.php
 
 		-
-			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
-			identifier: notEqual.notAllowed
-			count: 8
-			path: app/Utils/RepositoryUtils.php
-
-		-
 			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
 			identifier: equal.notAllowed
-			count: 9
+			count: 8
 			path: app/Utils/RepositoryUtils.php
 
 		-
@@ -8418,7 +8358,7 @@ parameters:
 		-
 			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
 			identifier: equal.notAllowed
-			count: 8
+			count: 5
 			path: app/cdash/app/Controller/Api/QueryTests.php
 
 		-
@@ -8676,7 +8616,7 @@ parameters:
 		-
 			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
 			identifier: equal.notAllowed
-			count: 8
+			count: 1
 			path: app/cdash/app/Controller/Api/TestDetails.php
 
 		-
@@ -8731,12 +8671,6 @@ parameters:
 			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
 			identifier: notEqual.notAllowed
 			count: 2
-			path: app/cdash/app/Controller/Api/TestGraph.php
-
-		-
-			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
-			identifier: equal.notAllowed
-			count: 1
 			path: app/cdash/app/Controller/Api/TestGraph.php
 
 		-
@@ -8866,12 +8800,6 @@ parameters:
 			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
 			identifier: notEqual.notAllowed
 			count: 1
-			path: app/cdash/app/Controller/Api/Timeline.php
-
-		-
-			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
-			identifier: equal.notAllowed
-			count: 2
 			path: app/cdash/app/Controller/Api/Timeline.php
 
 		-
@@ -9054,7 +8982,7 @@ parameters:
 		-
 			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
 			identifier: equal.notAllowed
-			count: 10
+			count: 6
 			path: app/cdash/app/Controller/Api/ViewTest.php
 
 		-
@@ -11778,7 +11706,7 @@ parameters:
 		-
 			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
 			identifier: equal.notAllowed
-			count: 5
+			count: 3
 			path: app/cdash/app/Model/DynamicAnalysis.php
 
 		-
@@ -12409,12 +12337,6 @@ parameters:
 			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
 			identifier: notEqual.notAllowed
 			count: 2
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
-			identifier: equal.notAllowed
-			count: 1
 			path: app/cdash/app/Model/Project.php
 
 		-
@@ -15831,7 +15753,7 @@ parameters:
 		-
 			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
 			identifier: equal.notAllowed
-			count: 5
+			count: 4
 			path: app/cdash/include/common.php
 
 		-
@@ -16422,7 +16344,7 @@ parameters:
 		-
 			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
 			identifier: equal.notAllowed
-			count: 16
+			count: 7
 			path: app/cdash/include/filterdataFunctions.php
 
 		-
@@ -16656,18 +16578,6 @@ parameters:
 		-
 			message: '#^Function handle_error\(\) has parameter \$msg with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/public/api/v1/GitHub/webhook.php
-
-		-
-			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
-			identifier: notEqual.notAllowed
-			count: 1
-			path: app/cdash/public/api/v1/GitHub/webhook.php
-
-		-
-			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
-			identifier: equal.notAllowed
 			count: 1
 			path: app/cdash/public/api/v1/GitHub/webhook.php
 
@@ -16975,12 +16885,6 @@ parameters:
 			path: app/cdash/public/api/v1/computeClassifier.php
 
 		-
-			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
-			identifier: equal.notAllowed
-			count: 1
-			path: app/cdash/public/api/v1/computeClassifier.php
-
-		-
 			message: '#^Only numeric types are allowed in /, \(array\|float\|int\) given on the left side\.$#'
 			identifier: div.leftNonNumeric
 			count: 1
@@ -17265,12 +17169,6 @@ parameters:
 		-
 			message: '#^Foreach overwrites \$buildgroup with its value variable\.$#'
 			identifier: foreach.valueOverwrite
-			count: 1
-			path: app/cdash/public/api/v1/manageBuildGroup.php
-
-		-
-			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
-			identifier: notEqual.notAllowed
 			count: 1
 			path: app/cdash/public/api/v1/manageBuildGroup.php
 
@@ -21225,19 +21123,13 @@ parameters:
 		-
 			message: '#^Cannot access offset 0 on array\|false\|null\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
+			count: 1
 			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
 
 		-
 			message: '#^Cannot call method fetchColumn\(\) on PDOStatement\|false\.$#'
 			identifier: method.nonObject
 			count: 4
-			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
-
-		-
-			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
-			identifier: notEqual.notAllowed
-			count: 1
 			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
 
 		-
@@ -21813,7 +21705,7 @@ parameters:
 		-
 			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
 			identifier: equal.notAllowed
-			count: 3
+			count: 1
 			path: app/cdash/tests/test_builddetails.php
 
 		-
@@ -21952,12 +21844,6 @@ parameters:
 			path: app/cdash/tests/test_buildgrouprule.php
 
 		-
-			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
-			identifier: equal.notAllowed
-			count: 1
-			path: app/cdash/tests/test_buildgrouprule.php
-
-		-
 			message: '#^Method BuildGroupRuleTestCase\:\:testBuildGroupRule\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -22005,7 +21891,7 @@ parameters:
 		-
 			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
 			identifier: equal.notAllowed
-			count: 4
+			count: 2
 			path: app/cdash/tests/test_buildmodel.php
 
 		-
@@ -22420,12 +22306,6 @@ parameters:
 			path: app/cdash/tests/test_committerinfo.php
 
 		-
-			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
-			identifier: notEqual.notAllowed
-			count: 2
-			path: app/cdash/tests/test_committerinfo.php
-
-		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
 			count: 2
@@ -22497,12 +22377,6 @@ parameters:
 		-
 			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
 			identifier: empty.notAllowed
-			count: 1
-			path: app/cdash/tests/test_compressedtest.php
-
-		-
-			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
-			identifier: notEqual.notAllowed
 			count: 1
 			path: app/cdash/tests/test_compressedtest.php
 
@@ -25080,13 +24954,13 @@ parameters:
 		-
 			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
 			identifier: notEqual.notAllowed
-			count: 21
+			count: 20
 			path: app/cdash/tests/test_managemeasurements.php
 
 		-
 			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
 			identifier: equal.notAllowed
-			count: 9
+			count: 1
 			path: app/cdash/tests/test_managemeasurements.php
 
 		-
@@ -25506,7 +25380,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''buildduration'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
+			count: 2
 			path: app/cdash/tests/test_multiplesubprojects.php
 
 		-
@@ -25524,7 +25398,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''configureduration'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
+			count: 2
 			path: app/cdash/tests/test_multiplesubprojects.php
 
 		-
@@ -25680,7 +25554,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''testduration'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
+			count: 1
 			path: app/cdash/tests/test_multiplesubprojects.php
 
 		-
@@ -25752,7 +25626,7 @@ parameters:
 		-
 			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
 			identifier: notEqual.notAllowed
-			count: 32
+			count: 29
 			path: app/cdash/tests/test_multiplesubprojects.php
 
 		-
@@ -26092,12 +25966,6 @@ parameters:
 			'''
 			identifier: method.deprecated
 			count: 1
-			path: app/cdash/tests/test_namedmeasurements.php
-
-		-
-			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
-			identifier: equal.notAllowed
-			count: 2
 			path: app/cdash/tests/test_namedmeasurements.php
 
 		-
@@ -26985,7 +26853,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''output'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
+			count: 1
 			path: app/cdash/tests/test_redundanttests.php
 
 		-
@@ -27004,12 +26872,6 @@ parameters:
 			message: '#^Cannot access offset 0 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: app/cdash/tests/test_redundanttests.php
-
-		-
-			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
-			identifier: equal.notAllowed
-			count: 2
 			path: app/cdash/tests/test_redundanttests.php
 
 		-
@@ -27180,7 +27042,7 @@ parameters:
 		-
 			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
 			identifier: notEqual.notAllowed
-			count: 7
+			count: 6
 			path: app/cdash/tests/test_sequenceindependence.php
 
 		-
@@ -27630,7 +27492,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''subprojectname'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 5
+			count: 3
 			path: app/cdash/tests/test_subprojecttestfilters.php
 
 		-
@@ -27654,12 +27516,6 @@ parameters:
 		-
 			message: '#^Cannot access offset 0 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/cdash/tests/test_subprojecttestfilters.php
-
-		-
-			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
-			identifier: notEqual.notAllowed
 			count: 2
 			path: app/cdash/tests/test_subprojecttestfilters.php
 
@@ -27925,12 +27781,6 @@ parameters:
 			path: app/cdash/tests/test_testhistory.php
 
 		-
-			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
-			identifier: notEqual.notAllowed
-			count: 5
-			path: app/cdash/tests/test_testhistory.php
-
-		-
 			message: '#^Method TestHistoryTestCase\:\:generateXML\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -28146,7 +27996,7 @@ parameters:
 		-
 			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
 			identifier: equal.notAllowed
-			count: 2
+			count: 1
 			path: app/cdash/tests/test_timeline.php
 
 		-
@@ -28522,12 +28372,6 @@ parameters:
 			path: app/cdash/tests/test_truncateoutput.php
 
 		-
-			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
-			identifier: equal.notAllowed
-			count: 4
-			path: app/cdash/tests/test_truncateoutput.php
-
-		-
 			message: '#^Parameter \#1 \$haystack of function str_contains expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -28662,7 +28506,7 @@ parameters:
 		-
 			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
 			identifier: notEqual.notAllowed
-			count: 11
+			count: 6
 			path: app/cdash/tests/test_updateappend.php
 
 		-
@@ -28971,7 +28815,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''site'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
+			count: 2
 			path: app/cdash/tests/trilinos_submission_test.php
 
 		-
@@ -28983,7 +28827,7 @@ parameters:
 		-
 			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
 			identifier: notEqual.notAllowed
-			count: 4
+			count: 3
 			path: app/cdash/tests/trilinos_submission_test.php
 
 		-

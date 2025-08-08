@@ -74,20 +74,20 @@ class UppdateAppendTestCase extends KWWebTestCase
             }
 
             // Note: UpdateType is only read from the first Update
-            if ($buildupdate_array['type'] != 'GIT') {
+            if ($buildupdate_array['type'] !== 'GIT') {
                 throw new Exception('Expected type=GIT, found type= ' . $buildupdate_array['type']);
             }
 
             // Note: Commands from all Updates are concatenated together
-            if ($buildupdate_array['command'] != 'Command 1Command 2Command 3') {
+            if ($buildupdate_array['command'] !== 'Command 1Command 2Command 3') {
                 throw new Exception('Expected command=Command 1Command 2Command 3, found command= ' . $buildupdate_array['command']);
             }
 
             // Note: MDT = GMT - 6
-            if ($buildupdate_array['starttime'] != '2015-08-24 04:04:14') {
+            if ($buildupdate_array['starttime'] !== '2015-08-24 04:04:14') {
                 throw new Exception('Expected starttime=GIT, found starttime= ' . $buildupdate_array['starttime']);
             }
-            if ($buildupdate_array['endtime'] != '2015-08-24 04:20:30') {
+            if ($buildupdate_array['endtime'] !== '2015-08-24 04:20:30') {
                 throw new Exception('Expected endtime=2015-08-24 04:20:30, found endtime= ' . $buildupdate_array['endtime']);
             }
 
@@ -106,7 +106,7 @@ class UppdateAppendTestCase extends KWWebTestCase
             }
 
             // Note: Path is only read from the first Update
-            if ($buildupdate_array['path'] != 'mypath') {
+            if ($buildupdate_array['path'] !== 'mypath') {
                 throw new Exception('Expected path=mypath, found path= ' . $buildupdate_array['path']);
             }
         } catch (Exception $e) {

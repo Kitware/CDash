@@ -972,14 +972,14 @@ function parse_filter_from_request($field_var, $compare_var, $value_var,
     // The following filter types are considered 'date clauses' so that the
     // default date clause of "builds from today only" is not used...
     //
-    if ($field == 'buildstarttime' || $field == 'buildstamp') {
+    if ($field === 'buildstarttime' || $field === 'buildstamp') {
         $filterdata['hasdateclause'] = 1;
     }
 
     // Revision filter is trickier. It should be considered a 'date clause' in the
     // positive case, ie "revision is X", or "revision starts with X", but not in the
     // negative case (when we're trying to filter OUT builds of specific revisions).
-    if ($field == 'revision'
+    if ($field === 'revision'
         && ($compare == 61 || $compare == 63 || $compare == 65)) {
         $filterdata['hasdateclause'] = 1;
     }
@@ -1029,7 +1029,7 @@ function get_filterdata_from_request($page_id = ''): array
     $limit = intval($_GET['limit'] ?? 0);
 
     $clear = $_GET['clear'] ?? '';
-    if ($clear == 'Clear') {
+    if ($clear === 'Clear') {
         $filtercount = 0;
     }
 
@@ -1151,7 +1151,7 @@ function generate_filterdata_sql($filterdata): string
         return '';
     }
 
-    if (strtolower($filterdata['filtercombine']) == 'or') {
+    if (strtolower($filterdata['filtercombine']) === 'or') {
         $sql_combine = 'OR';
         $sql_other_combine = 'AND';
     } else {
@@ -1202,7 +1202,7 @@ function get_label_ids_from_filterdata($filterdata): array
     $sql_combine = $filterdata['filtercombine'];
 
     foreach ($filterdata['filters'] as $filter) {
-        if ($filter['field'] == 'label') {
+        if ($filter['field'] === 'label') {
             $cv = get_sql_compare_and_value($filter['compare'],
                 $filter['value']);
             $sql_compare = $cv[0];
@@ -1251,10 +1251,10 @@ function build_survives_filters($build_response, $filters, $filtercombine): bool
             // Check this sub-block of filters.
             $othercombine = get_othercombine($filtercombine);
             $retval = build_survives_filters($build_response, $filter['filters'], $othercombine);
-            if ($filtercombine == 'and' && !$retval) {
+            if ($filtercombine === 'and' && !$retval) {
                 return false;
             }
-            if ($filtercombine == 'or' && $retval) {
+            if ($filtercombine === 'or' && $retval) {
                 return true;
             }
             continue;
@@ -1426,7 +1426,7 @@ function build_survives_filters($build_response, $filters, $filtercombine): bool
 
 function get_othercombine($filtercombine): string
 {
-    if (strtolower($filtercombine) == 'or') {
+    if (strtolower($filtercombine) === 'or') {
         return 'and';
     } else {
         return 'or';

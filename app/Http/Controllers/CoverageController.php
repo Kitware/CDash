@@ -897,7 +897,7 @@ final class CoverageController extends AbstractBuildController
             }
 
             // For display branch purposes
-            if ($coveragetype == 'gcov') {
+            if ($coveragetype === 'gcov') {
                 $roundedpercentage2 = round($covfile['branchpercentcoverage']);
                 if ($roundedpercentage2 > 98) {
                     $roundedpercentage2 = 98;
@@ -1000,7 +1000,7 @@ final class CoverageController extends AbstractBuildController
 
             // Fourth column (Line not covered)
             $fourthcolumn = '';
-            if ($coveragetype == 'gcov') {
+            if ($coveragetype === 'gcov') {
                 $fourthcolumn = '<span';
                 if ($covfile['covered'] == 0) {
                     $fourthcolumn .= ' class="error">' . $covfile['locuntested'] . '</span>';

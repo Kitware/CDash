@@ -57,10 +57,10 @@ class NamedMeasurementsTestCase extends KWWebTestCase
         $found_link1 = false;
         $found_link2 = false;
         foreach ($results as $result) {
-            if ($result->value == 'https://example.com/link1.txt') {
+            if ($result->value === 'https://example.com/link1.txt') {
                 $found_link1 = true;
             }
-            if ($result->value == 'https://example.com/link2.txt') {
+            if ($result->value === 'https://example.com/link2.txt') {
                 $found_link2 = true;
             }
         }

@@ -62,7 +62,7 @@ class JavaJSONTarHandler extends AbstractSubmissionHandler
             new RecursiveDirectoryIterator($dirName),
             RecursiveIteratorIterator::CHILD_FIRST);
         foreach ($iterator as $fileinfo) {
-            if ($fileinfo->getFilename() == 'package_map.json') {
+            if ($fileinfo->getFilename() === 'package_map.json') {
                 $this->ParsePackageMap($fileinfo);
             }
         }

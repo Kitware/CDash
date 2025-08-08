@@ -102,7 +102,7 @@ class BuildDetailsTestCase extends KWWebTestCase
         $this->assertTrue(count($build_response->errors) == 3);
 
         foreach ($build_response->errors as $error) {
-            $this->assertTrue($error->subprojectname == 'my_subproject');
+            $this->assertTrue($error->subprojectname === 'my_subproject');
         }
     }
 
@@ -147,7 +147,7 @@ class BuildDetailsTestCase extends KWWebTestCase
 
         foreach ($response->tests as $test) {
             $this->assertTrue(property_exists($test, 'subprojectid'));
-            $this->assertTrue($test->subprojectname == 'some-subproject');
+            $this->assertTrue($test->subprojectname === 'some-subproject');
         }
 
         DatabaseCleanupUtils::removeBuild($buildId->id);

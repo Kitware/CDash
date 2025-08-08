@@ -78,10 +78,10 @@ class RedundantTestsTestCase extends KWWebTestCase
             $this->get("{$this->url}/api/v1/testDetails.php?buildtestid={$row->id}");
             $content = $this->getBrowser()->getContent();
             $jsonobj = json_decode($content, true);
-            if ($jsonobj['test']['output'] == "this is a test\n") {
+            if ($jsonobj['test']['output'] === "this is a test\n") {
                 $test1found = true;
             }
-            if ($jsonobj['test']['output'] == "this is the same test but with different output\n") {
+            if ($jsonobj['test']['output'] === "this is the same test but with different output\n") {
                 $test2found = true;
             }
         }

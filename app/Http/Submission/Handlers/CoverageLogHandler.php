@@ -62,11 +62,11 @@ class CoverageLogHandler extends AbstractXmlHandler
             }
             $this->Build->SetStamp($attributes['BUILDSTAMP']);
             $this->Build->Generator = $attributes['GENERATOR'];
-        } elseif ($name == 'FILE') {
+        } elseif ($name === 'FILE') {
             $this->CurrentCoverageFile = new CoverageFile();
             $this->CurrentCoverageFileLog = new CoverageFileLog();
             $this->CurrentCoverageFile->FullPath = trim($attributes['FULLPATH']);
-        } elseif ($name == 'LINE') {
+        } elseif ($name === 'LINE') {
             if ($attributes['COUNT'] >= 0) {
                 $this->CurrentCoverageFileLog->AddLine($attributes['NUMBER'], $attributes['COUNT']);
             }
@@ -140,14 +140,14 @@ class CoverageLogHandler extends AbstractXmlHandler
                 $coverageFileLog->FileId = $coverageFile->Id;
                 $coverageFileLog->Insert(true);
             }
-        } elseif ($name == 'LINE') {
+        } elseif ($name === 'LINE') {
             $this->CurrentCoverageFile->File .= $this->CurrentLine . PHP_EOL;
-        } elseif ($name == 'FILE') {
+        } elseif ($name === 'FILE') {
             // Store these objects to be inserted after we're guaranteed
             // to have a valid buildid.
             $this->CoverageFiles[] = [$this->CurrentCoverageFile,
                 $this->CurrentCoverageFileLog];
-        } elseif ($name == 'COVERAGELOG') {
+        } elseif ($name === 'COVERAGELOG') {
             if (empty($this->CoverageFiles)) {
                 // Store these objects to be inserted after we're guaranteed
                 // to have a valid buildid.
