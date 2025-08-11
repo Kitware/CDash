@@ -69,16 +69,10 @@ class AuthServiceProvider extends ServiceProvider
             }
 
             // Make sure the current user has access to a test result with this image
-            foreach (\App\Models\Image::findOrFail((int) $image->Id)->testOutputs as $output) {
-                $buildtests = $output->tests;
-                if ($buildtests === null) {
-                    continue;
-                }
-                foreach ($buildtests as $buildtest) {
-                    $project = $buildtest->build?->project;
-                    if ($project !== null && Gate::allows('view', $project)) {
-                        return true;
-                    }
+            foreach (\App\Models\Image::findOrFail((int) $image->Id)->tests as $test) {
+                $project = $test->build?->project;
+                if ($project !== null && Gate::allows('view', $project)) {
+                    return true;
                 }
             }
 

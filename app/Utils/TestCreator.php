@@ -104,12 +104,12 @@ class TestCreator
         $image->Checksum = crc32($imageVariable);
     }
 
-    public function saveImage(Image $image, $outputid): void
+    private function saveImage(Image $image, int $testid): void
     {
         $image->Save();
         $testImage = new TestImage();
         $testImage->imgid = $image->Id;
-        $testImage->outputid = $outputid;
+        $testImage->testid = $testid;
         $testImage->role = $image->Name;
         $testImage->save();
     }
@@ -122,9 +122,9 @@ class TestCreator
         $crc32_input .= $this->testOutput;
         $crc32_input .= $this->testDetails;
 
+        // TODO: Clean this up.  This implicitly loads images for use in other places.
         foreach ($this->images as $image) {
             $this->loadImage($image);
-            $crc32_input .= "_{$image->Checksum}";
         }
 
         return crc32($crc32_input);
@@ -181,11 +181,6 @@ class TestCreator
                     ':output' => $this->testOutput,
                     ':crc32' => $crc32]);
             $outputid = DB::getPdo()->lastInsertId();
-
-            // test2image
-            foreach ($this->images as $image) {
-                $this->saveImage($image, $outputid);
-            }
         }
 
         // build2test
@@ -216,6 +211,11 @@ class TestCreator
             $label->Test = $buildtest;
             $label->Insert();
             $buildtest->addLabel($label);
+        }
+
+        // test2image
+        foreach ($this->images as $image) {
+            $this->saveImage($image, $buildtest->id);
         }
     }
 }

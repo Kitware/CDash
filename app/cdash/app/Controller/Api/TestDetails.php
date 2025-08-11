@@ -18,7 +18,7 @@
 namespace CDash\Controller\Api;
 
 use App\Models\Project as EloquentProject;
-use App\Models\TestOutput;
+use App\Models\Test;
 use App\Utils\RepositoryUtils;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
@@ -208,7 +208,7 @@ class TestDetails extends BuildTestApi
 
         // Get any images associated with this test.
         $compareimages_response = [];
-        $test_images = TestOutput::findOrFail((int) $outputid)
+        $test_images = Test::findOrFail((int) $testid)
             ->testImages()
             ->whereIn('role', [
                 'TestImage',
@@ -227,7 +227,7 @@ class TestDetails extends BuildTestApi
         }
 
         $images_response = [];
-        $test_images = TestOutput::findOrFail((int) $outputid)
+        $test_images = Test::findOrFail((int) $testid)
             ->testImages()
             ->whereNotIn('role', [
                 'ValidImage',
