@@ -32,10 +32,10 @@ class Image extends Model
     ];
 
     /**
-     * @return HasManyThrough<TestOutput, TestImage, $this>
+     * @return HasManyThrough<Test, TestImage, $this>
      */
-    public function testOutputs(): HasManyThrough
+    public function tests(): HasManyThrough
     {
-        return $this->hasManyThrough(TestOutput::class, TestImage::class, 'imgid', 'id', 'id', 'outputid');
+        return $this->hasManyThrough(Test::class, TestImage::class, 'imgid', 'id', 'id', 'testid');
     }
 }

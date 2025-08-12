@@ -33,7 +33,7 @@ class ImageComparisonTestCase extends KWWebTestCase
         $stmt = $pdo->query(
             "SELECT b.id AS buildid, i.id AS imgid FROM build b
             JOIN build2test b2t ON (b2t.buildid=b.id)
-            JOIN test2image t2i ON (b2t.outputid=t2i.outputid)
+            JOIN test2image t2i ON (b2t.id=t2i.testid)
             JOIN image i ON (i.id=t2i.imgid)
             WHERE b.name='image_comparison'");
         $imgids = [];

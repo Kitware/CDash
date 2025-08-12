@@ -7381,12 +7381,6 @@ parameters:
 			path: app/Utils/TestCreator.php
 
 		-
-			message: '#^Method App\\Utils\\TestCreator\:\:saveImage\(\) has parameter \$outputid with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Utils/TestCreator.php
-
-		-
 			message: '#^Parameter \#1 \$image of function imagegif expects GdImage, GdImage\|false given\.$#'
 			identifier: argument.type
 			count: 1

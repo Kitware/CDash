@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * @property int $id
  * @property int $imgid
- * @property int $outputid
+ * @property int $testid
  * @property string $role
  *
  * @mixin Builder<TestImage>
@@ -22,22 +22,22 @@ class TestImage extends Model
 
     protected $fillable = [
         'imgid',
-        'outputid',
+        'testid',
         'role',
     ];
 
     protected $casts = [
         'id' => 'integer',
         'imgid' => 'integer',
-        'outputid' => 'integer',
+        'testid' => 'integer',
     ];
 
     /**
-     * @return BelongsTo<TestOutput, $this>
+     * @return BelongsTo<Test, $this>
      */
-    public function testOutput(): BelongsTo
+    public function test(): BelongsTo
     {
-        return $this->belongsTo(TestOutput::class, 'outputid');
+        return $this->belongsTo(Test::class, 'testid');
     }
 
     /**

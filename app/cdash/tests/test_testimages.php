@@ -43,21 +43,21 @@ class TestImagesTestCase extends KWWebTestCase
             }
         }
 
-        // Verify two separate testoutput rows.
+        // Verify two separate test rows.
         $results = DB::select('
-            SELECT outputid
+            SELECT build2test.id
             FROM build2test
             JOIN build on (build2test.buildid = build.id)
             WHERE build.projectid = ?
         ', [(int) $this->project->Id]);
 
         $this->assertTrue(2 === count($results));
-        $outputid1 = $results[0]->outputid;
-        $outputid2 = $results[1]->outputid;
-        $this->assertTrue($outputid1 != $outputid2);
+        $testid1 = $results[0]->id;
+        $testid2 = $results[1]->id;
+        $this->assertTrue($testid1 != $testid2);
 
         // Verify that these testoutputs have separate images.
-        $image_results = TestImage::whereIn('outputid', [$outputid1, $outputid2])->get();
+        $image_results = TestImage::whereIn('testid', [$testid1, $testid2])->get();
         $this->assertTrue(2 === count($image_results));
         $image_id1 = $image_results[0]?->id;
         $image_id2 = $image_results[1]?->id;
