@@ -16,9 +16,9 @@ final class EditProjectController extends AbstractProjectController
     }
 
     // Render the edit project form.
-    public function edit($project_id): View
+    public function edit(int $project_id): View
     {
-        $this->setProjectById((int) $project_id);
+        $this->setProjectById($project_id);
         Gate::authorize('edit-project', $this->project);
 
         return $this->vue('edit-project', 'Edit Project', ['projectid' => $this->project->Id], false);

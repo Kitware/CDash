@@ -60,36 +60,42 @@ Route::get('/', 'IndexController@showIndexPage');
 
 Route::any('/submit.php', 'SubmissionController@submit');
 
-Route::get('/image/{image}', 'ImageController@image');
+Route::get('/image/{image}', 'ImageController@image')
+    ->whereNumber('image');
 Route::get('/displayImage.php', function (Request $request) {
     $imgid = $request->query('imgid');
     return redirect("/image/{$imgid}", 301);
 });
 
-Route::get('/builds/{id}', 'BuildController@summary');
+Route::get('/builds/{id}', 'BuildController@summary')
+    ->whereNumber('id');
 Route::permanentRedirect('/build/{id}', url('/builds/{id}'));
 Route::get('/buildSummary.php', function (Request $request) {
     $buildid = $request->query('buildid');
     return redirect("/builds/{$buildid}", 301);
 });
 
-Route::get('/builds/{id}/configure', 'BuildController@configure');
+Route::get('/builds/{id}/configure', 'BuildController@configure')
+    ->whereNumber('id');
 Route::permanentRedirect('/build/{id}/configure', url('/builds/{id}/configure'));
 Route::get('/viewConfigure.php', function (Request $request) {
     $buildid = $request->query('buildid');
     return redirect("/builds/{$buildid}/configure", 301);
 });
 
-Route::get('/builds/{build_id}/tests', 'BuildController@tests');
+Route::get('/builds/{build_id}/tests', 'BuildController@tests')
+    ->whereNumber('build_id');
 
-Route::get('/builds/{id}/update', 'BuildController@update');
+Route::get('/builds/{id}/update', 'BuildController@update')
+    ->whereNumber('id');
 Route::permanentRedirect('/build/{id}/update', url('/builds/{id}/update'));
 Route::get('/viewUpdate.php', function (Request $request) {
     $buildid = $request->query('buildid');
     return redirect("/builds/{$buildid}/update", 301);
 });
 
-Route::get('/builds/{id}/notes', 'BuildController@notes');
+Route::get('/builds/{id}/notes', 'BuildController@notes')
+    ->whereNumber('id');
 Route::permanentRedirect('/build/{id}/notes', url('/builds/{id}/notes'));
 Route::get('/viewNotes.php', function (Request $request) {
     $buildid = $request->query('buildid');
@@ -104,23 +110,29 @@ Route::get('/viewDynamicAnalysis.php', function (Request $request) {
     return redirect("/builds/{$buildid}/dynamic_analysis", 301);
 });
 
-Route::get('/builds/{build_id}/targets', 'BuildController@targets')->whereNumber('build_id');
+Route::get('/builds/{build_id}/targets', 'BuildController@targets')
+    ->whereNumber('build_id');
 
-Route::get('/build/{build_id}/files', 'BuildController@files')->whereNumber('build_id');
+Route::get('/build/{build_id}/files', 'BuildController@files')
+    ->whereNumber('build_id');
 Route::get('/viewFiles.php', function (Request $request) {
     $buildid = $request->query('buildid');
     return redirect("/build/{$buildid}/files", 301);
 });
 
-Route::get('/build/{build_id}/file/{file_id}', 'BuildController@build_file')->whereNumber('build_id')->whereNumber('file_id');
+Route::get('/build/{build_id}/file/{file_id}', 'BuildController@build_file')
+    ->whereNumber('build_id')
+    ->whereNumber('file_id');
 
-Route::get('/projects/{id}/edit', 'EditProjectController@edit');
+Route::get('/projects/{id}/edit', 'EditProjectController@edit')
+    ->whereNumber('id');
 Route::permanentRedirect('/project/{id}/edit', url('/projects/{id}/edit'));
 
 Route::get('/projects/new', 'EditProjectController@create');
 Route::permanentRedirect('/project/new', url('/projects/new'));
 
-Route::get('/projects/{id}/testmeasurements', 'ManageMeasurementsController@show');
+Route::get('/projects/{id}/testmeasurements', 'ManageMeasurementsController@show')
+    ->whereNumber('id');
 Route::permanentRedirect('/project/{id}/testmeasurements', url('/projects/{id}/testmeasurements'));
 
 Route::get('/projects/{id}/ctest_configuration', 'CTestConfigurationController@get')
@@ -134,7 +146,8 @@ Route::get('/generateCTestConfig.php', function (Request $request) {
     return redirect("/projects/{$projectid}/ctest_configuration", 301);
 });
 
-Route::get('/projects/{project_id}/sites', 'ProjectController@sites')->whereNumber('project_id');
+Route::get('/projects/{project_id}/sites', 'ProjectController@sites')
+    ->whereNumber('project_id');
 Route::get('/viewMap.php', function (Request $request) {
     $project = Project::where('name', $request->query('project'))->first();
     if ($project === null || Gate::denies('view', $project)) {
@@ -143,7 +156,8 @@ Route::get('/viewMap.php', function (Request $request) {
     return redirect("/projects/{$project->id}/sites", 301);
 });
 
-Route::get('/tests/{id}', 'TestController@details');
+Route::get('/tests/{id}', 'TestController@details')
+    ->whereNumber('id');
 Route::permanentRedirect('/test/{id}', url('/tests/{id}'));
 Route::get('/testDetails.php', function (Request $request) {
     $buildid = $request->query('build');
@@ -217,7 +231,8 @@ Route::get('/manageBuildGroup.php', 'BuildController@manageBuildGroup');
 
 Route::get('/users', 'UsersController@users');
 
-Route::get('/projects/{project_id}/members', 'ProjectMembersController@members')->whereNumber('project_id');
+Route::get('/projects/{project_id}/members', 'ProjectMembersController@members')
+    ->whereNumber('project_id');
 
 Route::get('/invitations/{invitationId}', GlobalInvitationController::class)
     ->whereNumber('invitationId')

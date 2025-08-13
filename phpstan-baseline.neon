@@ -697,24 +697,6 @@ parameters:
 			path: app/Http/Controllers/BuildController.php
 
 		-
-			message: '#^Method App\\Http\\Controllers\\BuildController\:\:configure\(\) has parameter \$build_id with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Http/Controllers/BuildController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\BuildController\:\:notes\(\) has parameter \$build_id with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Http/Controllers/BuildController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\BuildController\:\:summary\(\) has parameter \$build_id with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Http/Controllers/BuildController.php
-
-		-
 			message: '#^Only booleans are allowed in &&, array\|false given on the left side\.$#'
 			identifier: booleanAnd.leftNotBoolean
 			count: 1
@@ -1645,12 +1627,6 @@ parameters:
 			path: app/Http/Controllers/DynamicAnalysisController.php
 
 		-
-			message: '#^Method App\\Http\\Controllers\\EditProjectController\:\:edit\(\) has parameter \$project_id with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Http/Controllers/EditProjectController.php
-
-		-
 			message: '#^Cannot cast mixed to int\.$#'
 			identifier: cast.int
 			count: 3
@@ -1768,12 +1744,6 @@ parameters:
 			message: '#^Cannot cast mixed to int\.$#'
 			identifier: cast.int
 			count: 4
-			path: app/Http/Controllers/ManageMeasurementsController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\ManageMeasurementsController\:\:show\(\) has parameter \$project_id with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
 			path: app/Http/Controllers/ManageMeasurementsController.php
 
 		-
@@ -2578,12 +2548,6 @@ parameters:
 			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
 			identifier: notEqual.notAllowed
 			count: 2
-			path: app/Http/Controllers/TestController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\TestController\:\:details\(\) has parameter \$buildtest_id with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
 			path: app/Http/Controllers/TestController.php
 
 		-

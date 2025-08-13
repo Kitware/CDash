@@ -12,9 +12,9 @@ use Illuminate\View\View;
 final class ManageMeasurementsController extends AbstractProjectController
 {
     // Render the 'manage measurements' page.
-    public function show($project_id): View
+    public function show(int $project_id): View
     {
-        $this->setProjectById((int) $project_id);
+        $this->setProjectById($project_id);
         Gate::authorize('edit-project', $this->project);
 
         return $this->vue('manage-measurements', 'Test Measurements', ['projectid' => $this->project->Id ?? 0], false);

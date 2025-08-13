@@ -47,13 +47,13 @@ final class BuildController extends AbstractBuildController
     }
 
     // Render the build configure page.
-    public function configure($build_id = null): View
+    public function configure(int $build_id): View
     {
         return $this->renderBuildPage($build_id, 'configure');
     }
 
     // Render the build notes page.
-    public function notes($build_id = null): View
+    public function notes(int $build_id): View
     {
         $this->setBuildById($build_id);
 
@@ -63,7 +63,7 @@ final class BuildController extends AbstractBuildController
     }
 
     // Render the build summary page.
-    public function summary($build_id = null): View
+    public function summary(int $build_id): View
     {
         return $this->renderBuildPage($build_id, 'summary', 'Build Summary');
     }
