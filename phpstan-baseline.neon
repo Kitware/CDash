@@ -6497,15 +6497,6 @@ parameters:
 
 		-
 			message: '''
-				#^Call to deprecated function pdo_execute\(\)\:
-				v2\.5\.0 01/22/2018$#
-			'''
-			identifier: function.deprecated
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
-			message: '''
 				#^Call to deprecated method executePrepared\(\) of class CDash\\Database\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			'''
@@ -6516,15 +6507,6 @@ parameters:
 		-
 			message: '''
 				#^Call to deprecated method executePreparedSingleRow\(\) of class CDash\\Database\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
-			message: '''
-				#^Call to deprecated method getPdo\(\) of class CDash\\Database\:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			'''
 			identifier: method.deprecated
@@ -6580,12 +6562,6 @@ parameters:
 			path: app/Utils/RepositoryUtils.php
 
 		-
-			message: '#^Cannot access offset ''email'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
 			message: '#^Cannot access offset ''testfailednegative'' on array\{builderrorspositive\: int, builderrorsnegative\: int, buildwarningspositive\: int, buildwarningsnegative\: int, configureerrors\: int, configurewarnings\: int, testpassedpositive\: int, testpassednegative\: int, \.\.\.\}\|false\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -6598,15 +6574,9 @@ parameters:
 			path: app/Utils/RepositoryUtils.php
 
 		-
-			message: '#^Cannot call method fetch\(\) on PDOStatement\|false\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
 			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
 			identifier: empty.notAllowed
-			count: 11
+			count: 8
 			path: app/Utils/RepositoryUtils.php
 
 		-
@@ -6640,12 +6610,6 @@ parameters:
 			path: app/Utils/RepositoryUtils.php
 
 		-
-			message: '#^Method App\\Utils\\RepositoryUtils\:\:generate_Buganizer_new_issue_link\(\) has parameter \$users with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
 			message: '#^Method App\\Utils\\RepositoryUtils\:\:generate_GitHub_new_issue_link\(\) has parameter \$baseurl with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -6664,12 +6628,6 @@ parameters:
 			path: app/Utils/RepositoryUtils.php
 
 		-
-			message: '#^Method App\\Utils\\RepositoryUtils\:\:generate_GitHub_new_issue_link\(\) has parameter \$users with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
 			message: '#^Method App\\Utils\\RepositoryUtils\:\:generate_JIRA_new_issue_link\(\) has parameter \$baseurl with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -6683,12 +6641,6 @@ parameters:
 
 		-
 			message: '#^Method App\\Utils\\RepositoryUtils\:\:generate_JIRA_new_issue_link\(\) has parameter \$title with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
-			message: '#^Method App\\Utils\\RepositoryUtils\:\:generate_JIRA_new_issue_link\(\) has parameter \$users with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: app/Utils/RepositoryUtils.php
@@ -7024,12 +6976,6 @@ parameters:
 			path: app/Utils/RepositoryUtils.php
 
 		-
-			message: '#^Only booleans are allowed in a while condition, mixed given\.$#'
-			identifier: while.condNotBoolean
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
 			message: '#^Only booleans are allowed in an elseif condition, mixed given\.$#'
 			identifier: elseif.condNotBoolean
 			count: 1
@@ -7087,12 +7033,6 @@ parameters:
 			message: '#^Parameter \#1 \$handle of function curl_setopt expects CurlHandle, \(CurlHandle\|false\) given\.$#'
 			identifier: argument.type
 			count: 7
-			path: app/Utils/RepositoryUtils.php
-
-		-
-			message: '#^Parameter \#1 \$stmt of function pdo_execute expects PDOStatement, \(PDOStatement\|false\) given\.$#'
-			identifier: argument.type
-			count: 1
 			path: app/Utils/RepositoryUtils.php
 
 		-
