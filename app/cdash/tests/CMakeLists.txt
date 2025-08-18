@@ -101,8 +101,6 @@ add_legacy_unit_test(/CDash/Model/BuildErrorFilter)
 
 add_legacy_unit_test(/CDash/Model/BuildFailure)
 
-add_legacy_unit_test(/CDash/Model/BuildRelationship)
-
 add_legacy_unit_test(/CDash/Model/Repository)
 
 ###################################################################################################
@@ -110,8 +108,11 @@ add_legacy_unit_test(/CDash/Model/Repository)
 add_laravel_test(/Feature/CDashTest)
 set_tests_properties(/Feature/CDashTest PROPERTIES DEPENDS install_1)
 
+add_legacy_unit_test(/CDash/Model/BuildRelationship)
+set_tests_properties(/CDash/Model/BuildRelationship PROPERTIES DEPENDS /Feature/CDashTest)
+
 add_legacy_unit_test(/CDash/MultipleSubprojectsEmail)
-set_tests_properties(/CDash/MultipleSubprojectsEmail PROPERTIES DEPENDS /Feature/CDashTest)
+set_tests_properties(/CDash/MultipleSubprojectsEmail PROPERTIES DEPENDS /CDash/Model/BuildRelationship)
 
 add_legacy_unit_test(/CDash/NightlyTime)
 set_tests_properties(/CDash/NightlyTime PROPERTIES DEPENDS /CDash/MultipleSubprojectsEmail)
