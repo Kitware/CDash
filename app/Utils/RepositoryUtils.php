@@ -323,77 +323,27 @@ class RepositoryUtils
         $title = $msg_parts['title'];
         $body = $msg_parts['body'];
 
-        $users = [];
-        $subproject_name = $build->GetSubProjectName();
-        if ($subproject_name) {
-            // Get users to notify for this SubProject.
-            $pdo = Database::getInstance()->getPdo();
-            $stmt = $pdo->prepare(
-                'SELECT email FROM users
-            JOIN labelemail ON labelemail.userid = users.id
-            JOIN label ON label.id = labelemail.labelid
-            WHERE label.text = ?  AND labelemail.projectid = ?');
-            pdo_execute($stmt, [$subproject_name, $project->Id]);
-            while ($row = $stmt->fetch()) {
-                $users[] = $row['email'];
-            }
-            // Sort alphabetically.
-            sort($users);
-        }
-
         // Escape text fields that will be passed in the query string.
         $title = urlencode($title);
         $body = urlencode($body);
 
         // Call the implementation specific to this bug tracker.
-        return self::$function_name($project->BugTrackerNewIssueUrl, $title, $body, $users);
+        return self::$function_name($project->BugTrackerNewIssueUrl, $title, $body);
     }
 
-    public static function generate_Buganizer_new_issue_link($baseurl, $title, $body, $users): string
+    public static function generate_Buganizer_new_issue_link($baseurl, $title, $body): string
     {
-        $url = "$baseurl&type=BUG&priority=P0&severity=S0&title=$title&description=$body";
-        if (!empty($users)) {
-            $cc = '&cc=';
-            $cc .= implode(',', $users);
-            $url .= $cc;
-        }
-        return $url;
+        return "$baseurl&type=BUG&priority=P0&severity=S0&title=$title&description=$body";
     }
 
-    public static function generate_JIRA_new_issue_link($baseurl, $title, $body, $users): string
+    public static function generate_JIRA_new_issue_link($baseurl, $title, $body): string
     {
-        $url = "$baseurl&summary=$title";
-        if (!empty($users)) {
-            /* By default, JIRA doesn't have a "CC" field. So we will add mentions
-             * to the description field instead.
-             * It also only supports mentions by user name, not email.
-             * So for first.last@domain.com, we will add [~first.last] to the body.
-             **/
-            foreach ($users as $user) {
-                $parts = explode('@', $user, 2);
-                $user_name = $parts[0];
-                $body .= urlencode("[~$user_name] ");
-            }
-        }
-        $url .= "&description=$body";
-        return $url;
+        return "$baseurl&summary=$title&description=$body";
     }
 
-    public static function generate_GitHub_new_issue_link($baseurl, $title, $body, $users): string
+    public static function generate_GitHub_new_issue_link($baseurl, $title, $body): string
     {
-        $url = "{$baseurl}title=$title";
-        if (!empty($users)) {
-            /* Similar to JIRA (above), we need to put any mentioned users
-             * in the body of the issue.
-             **/
-            foreach ($users as $user) {
-                $parts = explode('@', $user, 2);
-                $user_name = $parts[0];
-                $body .= urlencode("@$user_name ");
-            }
-        }
-        $url .= "&body=$body";
-        return $url;
+        return "{$baseurl}title=$title&body=$body";
     }
 
     /** Generate the title and body for a broken build. */
