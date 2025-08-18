@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 
@@ -105,6 +106,22 @@ class Test extends Model
     public function labels(): BelongsToMany
     {
         return $this->belongsToMany(\App\Models\Label::class, 'label2test', 'testid', 'labelid');
+    }
+
+    /**
+     * @return HasManyThrough<Image, TestImage, $this>
+     */
+    public function images(): HasManyThrough
+    {
+        return $this->hasManyThrough(Image::class, TestImage::class, 'testid', 'id', 'id', 'imgid');
+    }
+
+    /**
+     * @return HasMany<TestImage, $this>
+     */
+    public function testImages(): HasMany
+    {
+        return $this->hasMany(TestImage::class, 'testid');
     }
 
     /**

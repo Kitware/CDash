@@ -9,8 +9,10 @@ use App\Models\BuildGroup;
 use App\Models\BuildUpdate;
 use App\Models\Configure;
 use App\Models\CoverageFile;
+use App\Models\Image;
 use App\Models\Note;
 use App\Models\RichBuildAlertDetails;
+use App\Models\Test;
 use CDash\Database;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
@@ -170,21 +172,23 @@ class DatabaseCleanupUtils
             $query->whereNotIn('build.id', $buildids);
         })->delete();
 
+        // image.
+        Image::whereHas('tests.build', function (Builder $query) use ($buildids): void {
+            $query->whereIn('build.id', $buildids);
+        })->whereDoesntHave('tests.build', function (Builder $query) use ($buildids): void {
+            $query->whereNotIn('build.id', $buildids);
+        })->delete();
+
         $db = Database::getInstance();
         $buildid_prepare_array = $db->createPreparedArray(count($buildids));
 
         // Delete tests and testoutputs that are not shared.
         // First find all the tests and testoutputs from builds that are about to be deleted.
-        $b2t_result = DB::select("
-                          SELECT DISTINCT outputid
-                          FROM build2test
-                          WHERE buildid IN $buildid_prepare_array
-                      ", $buildids);
+        $tests = Test::whereHas('build', function (Builder $query) use ($buildids): void {
+            $query->whereIn('build.id', $buildids);
+        })->get();
 
-        $all_outputids = [];
-        foreach ($b2t_result as $b2t_row) {
-            $all_outputids[] = intval($b2t_row->outputid);
-        }
+        $all_outputids = $tests->pluck('outputid')->unique()->toArray();
 
         // Delete un-shared testoutput rows.
         if (!empty($all_outputids)) {
@@ -206,30 +210,6 @@ class DatabaseCleanupUtils
             // Use array_diff to get the list of tests that should be deleted.
             $testoutputs_to_delete = array_diff($all_outputids, $testoutputs_to_save);
             if (!empty($testoutputs_to_delete)) {
-                $testoutputs_to_delete_prepare_array = $db->createPreparedArray(count($testoutputs_to_delete));
-                // Check if the images for the test are not shared
-                $test2image = DB::select("
-                                  SELECT a.imgid
-                                  FROM test2image AS a
-                                  LEFT JOIN test2image AS b ON (
-                                      a.imgid=b.imgid
-                                      AND b.outputid NOT IN $testoutputs_to_delete_prepare_array
-                                  )
-                                  WHERE a.outputid IN $testoutputs_to_delete_prepare_array
-                                  GROUP BY a.imgid
-                                  HAVING count(b.imgid)=0
-                              ", array_merge($testoutputs_to_delete, $testoutputs_to_delete));
-
-                $imgids = [];
-                foreach ($test2image as $test2image_array) {
-                    $imgids[] = intval($test2image_array->imgid);
-                }
-
-                if (count($imgids) > 0) {
-                    $imgids_prepare_array = $db->createPreparedArray(count($imgids));
-                    DB::delete("DELETE FROM image WHERE id IN $imgids_prepare_array", $imgids);
-                }
-
                 self::deleteRowsChunked('DELETE FROM testoutput WHERE id IN ', $testoutputs_to_delete);
             }
         }

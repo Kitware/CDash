@@ -475,9 +475,8 @@ class RemoveBuildsTestCase extends KWWebTestCase
             $this->verify_get_rows('dynamicanalysis', 'id', 'buildid', '=', $build->Id, 1);
         $this->verify('dynamicanalysisdefect', 'dynamicanalysisid', '=', $dynamicanalysisid, 1);
 
-        $outputids =
-            $this->verify_get_rows('build2test', 'outputid', 'buildid', '=', $build->Id, 2);
-        $imgids = $this->verify_get_rows('test2image', 'imgid', 'outputid', 'IN', $outputids, 2);
+        $testids = $this->verify_get_rows('build2test', 'id', 'buildid', '=', $build->Id, 2);
+        $imgids = $this->verify_get_rows('test2image', 'imgid', 'testid', 'IN', $testids, 2);
         $this->verify('image', 'id', 'IN', $imgids, 2);
 
         $updateid =
@@ -537,7 +536,7 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $this->verify('note', 'id', 'IN', $noteids, 1, $extra_msg);
         $this->verify('summaryemail', 'buildid', '=', $build->Id, 0, $extra_msg);
         $this->verify('subproject2build', 'buildid', '=', $build->Id, 0, $extra_msg);
-        $this->verify('test2image', 'outputid', 'IN', $outputids, 1, $extra_msg);
+        $this->verify('test2image', 'testid', 'IN', $testids, 0, $extra_msg);
         $this->verify('testdiff', 'buildid', '=', $build->Id, 0, $extra_msg);
         $this->verify('updatefile', 'updateid', '=', $updateid, 1, $extra_msg);
         $this->verify('uploadfile', 'id', 'IN', $uploadfileids, 1, $extra_msg);
@@ -580,7 +579,7 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $this->verify('note', 'id', 'IN', $noteids, 0, $extra_msg);
         $this->verify('summaryemail', 'buildid', '=', $existing_build->Id, 0, $extra_msg);
         $this->verify('subproject2build', 'buildid', '=', $existing_build->Id, 0, $extra_msg);
-        $this->verify('test2image', 'outputid', 'IN', $outputids, 0, $extra_msg);
+        $this->verify('test2image', 'testid', 'IN', $testids, 0, $extra_msg);
         $this->verify('testdiff', 'buildid', '=', $existing_build->Id, 0, $extra_msg);
         $this->verify('updatefile', 'updateid', '=', $updateid, 0, $extra_msg);
         $this->verify('uploadfile', 'id', 'IN', $uploadfileids, 0, $extra_msg);
