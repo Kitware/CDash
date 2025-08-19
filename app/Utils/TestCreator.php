@@ -64,49 +64,45 @@ class TestCreator
         $this->testStatus = '';
     }
 
-    public function loadImage(Image $image): void
-    {
-        if ($image->Checksum) {
-            return;
-        }
-
-        // Decode the data
-        $imgStr = base64_decode($image->Data);
-        try {
-            $img = imagecreatefromstring($imgStr);
-        } catch (ErrorException) {
-            // Unable to create a valid image, substitute the broken image from CDash
-            Log::error("Unable to create image object from data in #{$this->testName}");
-            $image->Extension = 'image/png';
-            $img = imagecreatefrompng(public_path('/img/image_missing.png'));
-        }
-
-        ob_start();
-        switch ($image->Extension) {
-            case 'image/jpeg':
-            case 'image/jpg':
-                imagejpeg($img);
-                break;
-            case 'image/gif':
-                imagegif($img);
-                break;
-            case 'image/png':
-                imagepng($img);
-                break;
-            default:
-                echo "Unknown image type: {$image->Extension}";
-                return;
-        }
-        $imageVariable = ob_get_contents();
-        ob_end_clean();
-
-        $image->Data = $imageVariable;
-        $image->Checksum = crc32($imageVariable);
-    }
-
     private function saveImage(Image $image, int $testid): void
     {
+        if (!$image->Checksum) {
+            // Decode the data
+            $imgStr = base64_decode($image->Data);
+            try {
+                $img = imagecreatefromstring($imgStr);
+            } catch (ErrorException) {
+                // Unable to create a valid image, substitute the broken image from CDash
+                Log::error("Unable to create image object from data in #{$this->testName}");
+                $image->Extension = 'image/png';
+                $img = imagecreatefrompng(public_path('/img/image_missing.png'));
+            }
+
+            ob_start();
+            switch ($image->Extension) {
+                case 'image/jpeg':
+                case 'image/jpg':
+                    imagejpeg($img);
+                    break;
+                case 'image/gif':
+                    imagegif($img);
+                    break;
+                case 'image/png':
+                    imagepng($img);
+                    break;
+                default:
+                    echo "Unknown image type: {$image->Extension}";
+                    return;
+            }
+            $imageVariable = ob_get_contents();
+            ob_end_clean();
+
+            $image->Data = $imageVariable;
+            $image->Checksum = crc32($imageVariable);
+        }
+
         $image->Save();
+
         $testImage = new TestImage();
         $testImage->imgid = $image->Id;
         $testImage->testid = $testid;
@@ -121,11 +117,6 @@ class TestCreator
         $crc32_input .= $this->testCommand;
         $crc32_input .= $this->testOutput;
         $crc32_input .= $this->testDetails;
-
-        // TODO: Clean this up.  This implicitly loads images for use in other places.
-        foreach ($this->images as $image) {
-            $this->loadImage($image);
-        }
 
         return crc32($crc32_input);
     }
