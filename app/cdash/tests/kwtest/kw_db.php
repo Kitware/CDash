@@ -174,7 +174,7 @@ class dbo_pgsql extends dbo
 
     public function drop($db)
     {
-        $sql = "DROP DATABASE IF EXISTS $db";
+        $sql = "DROP DATABASE IF EXISTS $db (FORCE)";
         $dsn = "pgsql:{$this->connection}={$this->host}";
         $pdo = new PDO($dsn, $this->user, $this->password);
         $pdo->exec($sql);
