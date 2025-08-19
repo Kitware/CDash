@@ -1,9 +1,12 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\Models\AuthToken;
 use App\Models\Project;
 use App\Models\User;
 use App\Utils\AuthTokenUtil;
+use Exception;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Http;
@@ -20,6 +23,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        User::factory(1000)->normalUser()->create();
         $this->admin_auth_token = $this->createAdminUser();
 
         $this->createPublicProject();

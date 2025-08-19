@@ -28867,34 +28867,22 @@ parameters:
 			path: config/session.php
 
 		-
-			message: '#^Class App\\Password not found\.$#'
-			identifier: class.notFound
+			message: '#^Method Database\\Factories\\UserFactory\:\:definition\(\) throws checked exception OverflowException but it''s missing from the PHPDoc @throws tag\.$#'
+			identifier: missingType.checkedException
 			count: 1
-			path: database/factories/PasswordFactory.php
-
-		-
-			message: '#^Variable \$factory might not be defined\.$#'
-			identifier: variable.undefined
-			count: 2
-			path: database/factories/PasswordFactory.php
-
-		-
-			message: '#^Variable \$factory might not be defined\.$#'
-			identifier: variable.undefined
-			count: 3
 			path: database/factories/UserFactory.php
 
 		-
 			message: '#^Cannot access offset ''Id'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: database/seeds/DatabaseSeeder.php
+			path: database/seeders/DatabaseSeeder.php
 
 		-
 			message: '#^Cannot cast mixed to int\.$#'
 			identifier: cast.int
 			count: 1
-			path: database/seeds/DatabaseSeeder.php
+			path: database/seeders/DatabaseSeeder.php
 
 		-
 			message: '#^Method SocialiteProviders\\PingIdentity\\Provider\:\:getAuthEndpoint\(\) should return string but returns mixed\.$#'

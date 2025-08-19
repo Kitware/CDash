@@ -83,12 +83,10 @@
   "autoload": {
     "psr-4": {
       "App\\": "app/",
+      "Database\\Factories\\": "database/factories/",
+      "Database\\Seeders\\": "database/seeders/",
       "CDash\\": "app/cdash/include/CDash/"
-    },
-    "classmap": [
-      "database/seeds",
-      "database/factories"
-    ]
+    }
   },
   "autoload-dev": {
     "psr-4": {

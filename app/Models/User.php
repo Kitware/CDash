@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -28,6 +30,8 @@ use LdapRecord\Laravel\Auth\LdapAuthenticatable;
  */
 class User extends Authenticatable implements MustVerifyEmail, LdapAuthenticatable
 {
+    /** @use HasFactory<UserFactory> */
+    use HasFactory;
     use Notifiable;
     use AuthenticatesWithLdap;
 
