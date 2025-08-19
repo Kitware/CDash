@@ -25,7 +25,7 @@
         Header set Cache-Control "max-age=31536000"
     </FilesMatch>
 
-    Header set Content-Security-Policy "default-src 'self' 'unsafe-inline' 'unsafe-eval'; font-src 'self' data:"
+    Header set Content-Security-Policy "default-src 'self' 'unsafe-inline' 'unsafe-eval'; font-src 'self' data:; img-src 'self' data:"
 </IfModule>
 
 <IfModule mod_deflate.c>
