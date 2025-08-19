@@ -19,10 +19,10 @@ namespace App\Utils;
 
 use App\Models\Test;
 use App\Models\TestImage;
+use App\Models\TestOutput;
 use CDash\Model\Build;
 use CDash\Model\Image;
 use ErrorException;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -110,17 +110,6 @@ class TestCreator
         $testImage->save();
     }
 
-    public function computeCrc32(): int
-    {
-        $crc32_input = $this->testName;
-        $crc32_input .= $this->testPath;
-        $crc32_input .= $this->testCommand;
-        $crc32_input .= $this->testOutput;
-        $crc32_input .= $this->testDetails;
-
-        return crc32($crc32_input);
-    }
-
     /**
      * Record this test in the database.
      **/
@@ -129,50 +118,26 @@ class TestCreator
         // Truncate testName to 255 characters.
         $this->testName = substr($this->testName, 0, 255);
 
-        $crc32 = $this->computeCrc32();
-
-        // TODO: Convert this to Eloquent
-        $outputid = DB::select('
-            SELECT testoutput.id AS id
-            FROM build
-            INNER JOIN build2test ON build2test.buildid = build.id
-            INNER JOIN testoutput ON testoutput.id = build2test.outputid
-            WHERE
-                build.projectid = ?
-                AND testoutput.crc32 = ?
-            LIMIT 1 -- There should theoretically only be at most one unique ID...
-        ', [
-            $this->projectid,
-            $crc32,
-        ]);
-
-        // testoutput
-        if (count($outputid) > 0) {
-            $outputid = $outputid[0]->id;
-        } else {
-            // Decompress before database insertion if the data was compressed by CTest
-            if ($this->alreadyCompressed) {
-                $this->testOutput = base64_decode($this->testOutput);
-                $this->testOutput = gzuncompress($this->testOutput);
-            }
-
-            if (mb_detect_encoding($this->testOutput, 'UTF-8', true) === false) {
-                $this->testOutput = mb_convert_encoding($this->testOutput, 'UTF-8', 'UTF-8');
-                if ($this->testOutput === false) {
-                    Log::error("Unable to encode {$this->testName} output as UTF-8");
-                    $this->testOutput = '';
-                }
-            }
-
-            DB::insert(
-                'INSERT INTO testoutput (path, command, output, crc32)
-                VALUES (:path, :command, :output, :crc32)',
-                [':path' => $this->testPath,
-                    ':command' => $this->testCommand,
-                    ':output' => $this->testOutput,
-                    ':crc32' => $crc32]);
-            $outputid = DB::getPdo()->lastInsertId();
+        // Decompress before database insertion if the data was compressed by CTest
+        if ($this->alreadyCompressed) {
+            $this->testOutput = base64_decode($this->testOutput);
+            $this->testOutput = gzuncompress($this->testOutput);
         }
+
+        // Store nothing if we can't convert to UTF-8
+        if (mb_detect_encoding($this->testOutput, 'UTF-8', true) === false) {
+            $this->testOutput = mb_convert_encoding($this->testOutput, 'UTF-8', 'UTF-8');
+            if ($this->testOutput === false) {
+                Log::error("Unable to encode {$this->testName} output as UTF-8");
+                $this->testOutput = '';
+            }
+        }
+
+        $outputid = TestOutput::firstOrCreate([
+            'path' => $this->testPath,
+            'command' => $this->testCommand,
+            'output' => $this->testOutput,
+        ])->id;
 
         // build2test
         $buildtest = new Test();
