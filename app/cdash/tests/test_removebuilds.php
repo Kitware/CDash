@@ -415,7 +415,6 @@ class RemoveBuildsTestCase extends KWWebTestCase
             'output' => 'testoutput for test_removebuildds',
             'command' => 'php test_removebuilds.php',
             'path' => '/cdash/tests/test_removebuilds.php',
-            'crc32' => $crc32,
         ]);
         $uploadfile_id = DB::table('uploadfile')->insertGetId([
             'filename' => 'test_removebuilds.php',

@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int $id
- * @property int $crc32
  * @property string $path
  * @property string $command
  * @property string $output
@@ -25,12 +24,10 @@ class TestOutput extends Model
         'path',
         'command',
         'output',
-        'crc32',
     ];
 
     protected $casts = [
         'id' => 'integer',
-        'crc32' => 'integer',
     ];
 
     /**

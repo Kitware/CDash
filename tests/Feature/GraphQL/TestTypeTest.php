@@ -30,7 +30,6 @@ class TestTypeTest extends TestCase
 
         // A common test output to share among all of our tests
         $this->test_output = TestOutput::create([
-            'crc32' => random_int(0, 100000),
             'path' => 'a',
             'command' => 'b',
             'output' => 'c',
