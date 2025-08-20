@@ -699,78 +699,6 @@ class Project
     }
 
     /**
-     * Get the labels ids for a given project
-     *
-     * @return array<int>|false
-     */
-    public function GetLabels($days): array|false
-    {
-        $todaytime = time();
-        $todaytime -= 3600 * 24 * $days;
-        $today = date(FMT_DATETIMESTD, $todaytime);
-
-        $labels = DB::select('
-                      (
-                          SELECT labelid AS id
-                          FROM label2build, build
-                          WHERE
-                             label2build.buildid=build.id
-                             AND build.projectid=?
-                             AND build.starttime>?
-                      ) UNION (
-                          SELECT labelid AS id
-                          FROM label2test, build, build2test
-                          WHERE
-                              build2test.buildid=build.id
-                              AND build2test.id=label2test.testid
-                              AND build.projectid=?
-                              AND build.starttime>?
-                      ) UNION (
-                          SELECT labelid AS id
-                          FROM build, label2coverage, coverage
-                          WHERE
-                              label2coverage.coverageid=coverage.id
-                              AND coverage.buildid=build.id
-                              AND build.projectid=?
-                              AND build.starttime>?
-                      ) UNION (
-                          SELECT labelid AS id
-                          FROM build, buildfailure, label2buildfailure
-                          WHERE
-                              label2buildfailure.buildfailureid=buildfailure.id
-                              AND buildfailure.buildid=build.id
-                              AND build.projectid=?
-                              AND build.starttime>?
-                      ) UNION (
-                          SELECT labelid AS id
-                          FROM build, dynamicanalysis, label2dynamicanalysis
-                          WHERE
-                              label2dynamicanalysis.dynamicanalysisid=dynamicanalysis.id
-                              AND dynamicanalysis.buildid=build.id
-                              AND build.projectid=?
-                              AND build.starttime>?
-                      )
-                  ', [
-            intval($this->Id),
-            $today,
-            intval($this->Id),
-            $today,
-            intval($this->Id),
-            $today,
-            intval($this->Id),
-            $today,
-            intval($this->Id),
-            $today,
-        ]);
-
-        $labelids = [];
-        foreach ($labels as $label_array) {
-            $labelids[] = (int) $label_array->id;
-        }
-        return array_unique($labelids);
-    }
-
-    /**
      * Return the list of subproject groups that belong to this project.
      *
      * @return array<SubProjectGroup>
@@ -965,11 +893,9 @@ class Project
         $sql = '
             SELECT
                u2p.*,
-               u.email email,
-               labelid haslabels
+               u.email email
             FROM user2project u2p
               JOIN users u ON u.id = u2p.userid
-              LEFT JOIN labelemail ON labelemail.userid = u2p.userid
             WHERE u2p.projectid = :id
             ORDER BY u.email;
         ';
@@ -991,7 +917,6 @@ class Project
             $preferences->set(NotifyOn::FIXED, $row->emailsuccess);
             $preferences->set(NotifyOn::SITE_MISSING, $row->emailmissingsites);
             $preferences->set(NotifyOn::REDUNDANT, $this->EmailRedundantFailures);
-            $preferences->set(NotifyOn::LABELED, (bool) $row->haslabels);
 
             /** @var Subscriber $subscriber */
             $subscriber = $service->make(Subscriber::class, ['preferences' => $preferences]);

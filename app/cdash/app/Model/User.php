@@ -19,7 +19,6 @@ namespace CDash\Model;
 
 use CDash\Database;
 use Illuminate\Support\Collection;
-use PDO;
 
 /**
  * @deprecated 04/22/2025  Used only in the legacy notification system.  Use Eloquent for new work.
@@ -28,24 +27,12 @@ class User
 {
     public $Id;
     public $Email;
-    public $Password;
-    public $FirstName;
-    public $LastName;
-    public $Institution;
-    public $Admin;
-    private $PDO;
     private Collection $LabelCollection;
 
     public function __construct()
     {
         $this->Id = null;
         $this->Email = '';
-        $this->Password = '';
-        $this->FirstName = '';
-        $this->LastName = '';
-        $this->Institution = '';
-        $this->Admin = 0;
-        $this->PDO = Database::getInstance();
         $this->LabelCollection = collect();
     }
 
@@ -56,24 +43,6 @@ class User
      */
     public function GetLabelCollection(): Collection
     {
-        if ($this->LabelCollection->isEmpty()) {
-            $sql = '
-              SELECT label.id, label.text
-              FROM labelemail
-              JOIN label ON label.id = labelemail.labelid
-              WHERE userid=:user';
-
-            $stmt = $this->PDO->prepare($sql);
-            $stmt->bindParam(':user', $this->Id);
-            if ($this->PDO->execute($stmt)) {
-                foreach ($stmt->fetchAll(PDO::FETCH_OBJ) as $row) {
-                    $label = new Label();
-                    $label->Id = $row->id;
-                    $label->Text = $row->text;
-                    $this->AddLabel($label);
-                }
-            }
-        }
         return $this->LabelCollection;
     }
 

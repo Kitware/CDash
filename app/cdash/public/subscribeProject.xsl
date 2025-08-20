@@ -51,8 +51,6 @@
             <a class="cdash-link" href="#fragment-3"><span>Email Notifications</span></a></li>
           <li>
             <a class="cdash-link" href="#fragment-4"><span>Email Category</span></a></li>
-          <li>
-            <a class="cdash-link" href="#fragment-5"><span>Email Labels</span></a></li>
       </ul>
     <div id="fragment-3" class="tab_content" >
       <div class="tab_help"></div>
@@ -198,54 +196,6 @@
              <xsl:attribute name="checked"></xsl:attribute>
              </xsl:if>
              </input> Dynamic Analysis
-           </td>
-          </tr>
-        </table>
-    </div>
-    <div id="fragment-5" class="tab_content">
-      <div class="tab_help"></div>
-        <table width="800">
-        <xsl:if test="/cdash/project/emailbrokensubmission=0">
-          <tr>
-            <td colspan="2"><font color="#900000">*This project has not been configured to send emails.
-             <xsl:choose>
-               <xsl:when test="/cdash/role>1"><a>
-               <xsl:attribute name="href">project/<xsl:value-of select="/cdash/project/id"/>/edit#Email</xsl:attribute>Change the project settings.
-               </a></xsl:when>
-               <xsl:otherwise> Contact the project administrator.</xsl:otherwise>
-             </xsl:choose>
-            </font></td>
-          </tr>
-          </xsl:if>
-          <tr>
-          <td colspan="2">Select the labels you want to subscribe to. You will receive only emails corresponding to these labels.</td>
-          </tr>
-          <tr>
-            <td align="right">
-             Available Labels (last 7 days)<br/>
-             <select name="movelabels[]" size="15" multiple="multiple" id="movelabels" ondblclick="rightTransfer()">
-                <xsl:for-each select="/cdash/project/label">
-                <option>
-                  <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
-                  <xsl:value-of select="text"/>
-                </option>
-                </xsl:for-each>
-             </select>
-            </td>
-            <td align="center">
-            <input name="addlabel" onclick="rightTransfer()" type="button" value="&gt;&gt;" /><br/><br/>
-            <input name="removelabel" onclick="leftTransfer()" type="button" value="&lt;&lt;" />
-            </td>
-            <td align="left">
-             Email Labels <br/>
-            <select name="emaillabels[]" size="15" multiple="multiple" id="emaillabels" ondblclick="leftTransfer()">
-                <xsl:for-each select="/cdash/project/labelemail">
-                <option>
-                  <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
-                  <xsl:value-of select="text"/>
-                </option>
-                </xsl:for-each>
-             </select>
            </td>
           </tr>
         </table>

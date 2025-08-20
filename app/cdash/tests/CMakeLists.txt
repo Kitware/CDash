@@ -647,11 +647,8 @@ set_tests_properties(putdynamicbuilds PROPERTIES DEPENDS indexnextprevious)
 add_php_test(commitauthornotification)
 set_tests_properties(commitauthornotification PROPERTIES DEPENDS putdynamicbuilds)
 
-add_php_test(subscribeprojectshowlabels)
-set_tests_properties(subscribeprojectshowlabels PROPERTIES DEPENDS putdynamicbuilds)
-
 add_php_test(testimages)
-set_tests_properties(testimages PROPERTIES DEPENDS "subscribeprojectshowlabels;commitauthornotification")
+set_tests_properties(testimages PROPERTIES DEPENDS commitauthornotification)
 
 add_php_test(namedmeasurements)
 set_tests_properties(namedmeasurements PROPERTIES DEPENDS testimages)
