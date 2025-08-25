@@ -68,7 +68,6 @@
             </font></td>
           </tr>
           </xsl:if>
-          <xsl:if test="/cdash/edit=1">
            <tr>
             <td></td>
             <td><b>Email me:</b></td>
@@ -82,11 +81,10 @@
              </input> never (this is not recommended)
            </td>
           </tr>
-            </xsl:if>
            <tr>
             <td></td>
             <td ><input type="radio" onchange="saveChanges();" name="emailtype" value="1">
-             <xsl:if test="/cdash/emailtype=1 or /cdash/edit=0">
+             <xsl:if test="/cdash/emailtype=1">
              <xsl:attribute name="checked"></xsl:attribute>
              </xsl:if>
              </input> when <b>my checkins</b> are causing problems in <b>any sections</b> of the dashboard
@@ -202,7 +200,6 @@
     </div>
  </div>
 
- <xsl:if test="/cdash/edit=1">
   <br/>
   <div style="width:900px;margin-left:auto;margin-right:auto;text-align:right;">
   <table width="100%" border="0">
@@ -212,7 +209,6 @@
    </tr>
   </table>
   </div>
-  </xsl:if>
 
 </form>
 </td>
