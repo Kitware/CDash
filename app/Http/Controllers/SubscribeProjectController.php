@@ -4,11 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use CDash\Database;
-use CDash\Model\Label;
-use CDash\Model\LabelEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 final class SubscribeProjectController extends AbstractProjectController
@@ -81,12 +78,6 @@ final class SubscribeProjectController extends AbstractProjectController
             $EmailSuccess = $_POST['emailsuccess'];
         }
 
-        // Deals with label email
-        $LabelEmail = new LabelEmail();
-        $Label = new Label();
-        $LabelEmail->ProjectId = $this->project->Id;
-        $LabelEmail->UserId = $user->id;
-
         if ($UpdateSubscription) {
             $emailcategory_update = intval($_POST['emailcategory_update'] ?? 0);
             $emailcategory_configure = intval($_POST['emailcategory_configure'] ?? 0);
@@ -117,11 +108,6 @@ final class SubscribeProjectController extends AbstractProjectController
                 ]);
             }
 
-            if (isset($_POST['emaillabels'])) {
-                $LabelEmail->UpdateLabels($_POST['emaillabels']);
-            } else {
-                $LabelEmail->UpdateLabels(null);
-            }
             // Redirect
             return redirect('/user');
         }
@@ -130,27 +116,6 @@ final class SubscribeProjectController extends AbstractProjectController
         $xml .= add_XML_value('id', $this->project->Id);
         $xml .= add_XML_value('name', $this->project->Name);
         $xml .= add_XML_value('emailbrokensubmission', $this->project->EmailBrokenSubmission);
-
-        $labelavailableids = $this->project->GetLabels(7); // Get the labels for the last 7 days
-        $labelids = $LabelEmail->GetLabels();
-
-        $labelavailableids = array_diff($labelavailableids, $labelids);
-
-        foreach ($labelavailableids as $labelid) {
-            $xml .= '<label>';
-            $xml .= add_XML_value('id', $labelid);
-            $Label->Id = $labelid;
-            $xml .= add_XML_value('text', $Label->GetText());
-            $xml .= '</label>';
-        }
-
-        foreach ($labelids as $labelid) {
-            $xml .= '<labelemail>';
-            $xml .= add_XML_value('id', $labelid);
-            $Label->Id = $labelid;
-            $xml .= add_XML_value('text', $Label->GetText());
-            $xml .= '</labelemail>';
-        }
 
         $xml .= '</project>';
 

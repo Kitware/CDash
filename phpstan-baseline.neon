@@ -2434,12 +2434,6 @@ parameters:
 			path: app/Http/Controllers/SubmissionController.php
 
 		-
-			message: '#^Argument of an invalid type array\<int\>\|false supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: app/Http/Controllers/SubscribeProjectController.php
-
-		-
 			message: '#^Argument of an invalid type array\|false supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
 			count: 1
@@ -2476,27 +2470,9 @@ parameters:
 			path: app/Http/Controllers/SubscribeProjectController.php
 
 		-
-			message: '#^Parameter \#1 \$array of function array_diff expects array, array\<int\>\|false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/SubscribeProjectController.php
-
-		-
-			message: '#^Parameter \#1 \$labels of method CDash\\Model\\LabelEmail\:\:UpdateLabels\(\) expects array\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/SubscribeProjectController.php
-
-		-
 			message: '#^Parameter \#1 \$value of function intval expects array\|bool\|float\|int\|resource\|string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 6
-			path: app/Http/Controllers/SubscribeProjectController.php
-
-		-
-			message: '#^Parameter \#2 \.\.\.\$arrays of function array_diff expects array, array\<int\>\|false given\.$#'
-			identifier: argument.type
-			count: 1
 			path: app/Http/Controllers/SubscribeProjectController.php
 
 		-
@@ -11974,87 +11950,6 @@ parameters:
 			path: app/cdash/app/Model/Label.php
 
 		-
-			message: '#^Call to an undefined method CDash\\Model\\LabelEmail\:\:Remove\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: app/cdash/app/Model/LabelEmail.php
-
-		-
-			message: '''
-				#^Call to deprecated function add_last_sql_error\(\)\:
-				04/22/2023$#
-			'''
-			identifier: function.deprecated
-			count: 1
-			path: app/cdash/app/Model/LabelEmail.php
-
-		-
-			message: '''
-				#^Call to deprecated method executePrepared\(\) of class CDash\\Database\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			'''
-			identifier: method.deprecated
-			count: 2
-			path: app/cdash/app/Model/LabelEmail.php
-
-		-
-			message: '''
-				#^Call to deprecated method executePreparedSingleRow\(\) of class CDash\\Database\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/app/Model/LabelEmail.php
-
-		-
-			message: '#^Cannot access offset ''c'' on array\|false\|null\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/app/Model/LabelEmail.php
-
-		-
-			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
-			identifier: empty.notAllowed
-			count: 2
-			path: app/cdash/app/Model/LabelEmail.php
-
-		-
-			message: '#^Method CDash\\Model\\LabelEmail\:\:UpdateLabels\(\) has parameter \$labels with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/app/Model/LabelEmail.php
-
-		-
-			message: '#^Parameter \#1 \$array of function array_diff expects array, array\<int\>\|false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/app/Model/LabelEmail.php
-
-		-
-			message: '#^Parameter \#2 \.\.\.\$arrays of function array_diff expects array, array\<int\>\|false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/app/Model/LabelEmail.php
-
-		-
-			message: '#^Property CDash\\Model\\LabelEmail\:\:\$LabelId has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/LabelEmail.php
-
-		-
-			message: '#^Property CDash\\Model\\LabelEmail\:\:\$ProjectId has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/LabelEmail.php
-
-		-
-			message: '#^Property CDash\\Model\\LabelEmail\:\:\$UserId has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/LabelEmail.php
-
-		-
 			message: '''
 				#^Call to deprecated function pdo_execute\(\)\:
 				v2\.5\.0 01/22/2018$#
@@ -12286,12 +12181,6 @@ parameters:
 			path: app/cdash/app/Model/Project.php
 
 		-
-			message: '#^Method CDash\\Model\\Project\:\:GetLabels\(\) has parameter \$days with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
 			message: '#^Method CDash\\Model\\Project\:\:GetNumberOfSubProjects\(\) has parameter \$date with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -12353,12 +12242,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#2 \$haystack of function in_array expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: '#^Parameter \#2 \$timestamp of function date expects int\|null, \(float\|int\) given\.$#'
 			identifier: argument.type
 			count: 1
 			path: app/cdash/app/Model/Project.php
@@ -12991,19 +12874,7 @@ parameters:
 			path: app/cdash/app/Model/User.php
 
 		-
-			message: '#^Property CDash\\Model\\User\:\:\$Admin has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/User.php
-
-		-
 			message: '#^Property CDash\\Model\\User\:\:\$Email has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/User.php
-
-		-
-			message: '#^Property CDash\\Model\\User\:\:\$FirstName has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
 			path: app/cdash/app/Model/User.php
@@ -13015,32 +12886,8 @@ parameters:
 			path: app/cdash/app/Model/User.php
 
 		-
-			message: '#^Property CDash\\Model\\User\:\:\$Institution has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/User.php
-
-		-
 			message: '#^Property CDash\\Model\\User\:\:\$LabelCollection with generic class Illuminate\\Support\\Collection does not specify its types\: TKey, TValue$#'
 			identifier: missingType.generics
-			count: 1
-			path: app/cdash/app/Model/User.php
-
-		-
-			message: '#^Property CDash\\Model\\User\:\:\$LastName has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/User.php
-
-		-
-			message: '#^Property CDash\\Model\\User\:\:\$PDO has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/User.php
-
-		-
-			message: '#^Property CDash\\Model\\User\:\:\$Password has no type specified\.$#'
-			identifier: missingType.property
 			count: 1
 			path: app/cdash/app/Model/User.php
 
@@ -27446,21 +27293,6 @@ parameters:
 			identifier: encapsedStringPart.nonString
 			count: 2
 			path: app/cdash/tests/test_subprojecttestfilters.php
-
-		-
-			message: '''
-				#^Call to deprecated method getPdo\(\) of class CDash\\Database\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/test_subscribeprojectshowlabels.php
-
-		-
-			message: '#^Property SubscribeProjectShowLabelsTestCase\:\:\$PDO has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/test_subscribeprojectshowlabels.php
 
 		-
 			message: '''
