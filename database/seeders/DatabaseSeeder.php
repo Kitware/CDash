@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
 
         $this->createPublicProject();
         $this->createTrilinosProject();
+        $this->createInstrumentationProject();
     }
 
     /**
@@ -86,5 +87,18 @@ class DatabaseSeeder extends Seeder
         $files_to_submit = array_map(fn ($filename) => app_path("/cdash/tests/data/ActualTrilinosSubmission/$filename"), $files_to_submit);
 
         $this->submitFiles($project->name, $files_to_submit, 1);
+    }
+
+    private function createInstrumentationProject(): void
+    {
+        $project = $this->createProject([
+            'Name' => 'Instrumentation',
+            'Description' => 'Submissions containing build instrumentation data.',
+            'Public' => 1,
+        ]);
+
+        $this->submitFiles($project->name, [
+            base_path('tests/Feature/Submission/Instrumentation/data/Build.xml'),
+        ], 1);
     }
 }
