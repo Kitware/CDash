@@ -124,3 +124,4 @@ Relevant `.env` variables for CDash SAML2 authentication:
 | SAML2_ENABLED | Whether or not to use SAML2 authentication. | false |
 | SAML2_LOGIN_TEXT | What text to display in the SAML2 login button. | SAML2 |
 | SAML2_AUTO_REGISTER_NEW_USERS | Whether or not to automatically register new users upon first login. | false |
+| SAML2_PROXY_VARS | Whether or not to trust the X-Forwarded-Proto HTTP header | false |
