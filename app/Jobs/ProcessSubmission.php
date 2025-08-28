@@ -35,6 +35,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use InvalidArgumentException;
 use League\Flysystem\UnableToMoveFile;
 use Throwable;
 
@@ -461,24 +462,32 @@ class ProcessSubmission implements ShouldQueue
             $ip = $_SERVER['REMOTE_ADDR'];
         }
 
-        $Project = new Project();
-        $Project->Id = $projectid;
         // Figure out what type of XML file this is.
         $xml_info = SubmissionUtils::get_xml_type($filehandle, $filename);
 
         $handler_ref = $xml_info['xml_handler'];
         $file = $xml_info['xml_type'];
-        $handler = isset($handler_ref) ? new $handler_ref($Project) : null;
 
-        rewind($filehandle);
-        $content = fread($filehandle, 8192);
+        if ($handler_ref === DoneHandler::class) {
+            if ($buildid === null) {
+                throw new InvalidArgumentException('Null buildid found while initializing DoneHandler');
+            }
 
-        if ($handler == null) {
+            $build = new Build();
+            $build->Id = $buildid;
+            $handler = new $handler_ref($build);
+        } elseif ($handler_ref !== null) {
+            $project = new Project();
+            $project->Id = $projectid;
+            $handler = new $handler_ref($project);
+        } else {
             // TODO: Add as much context as possible to this message
             Log::error('error: could not create handler based on xml content');
             abort(400, 'Could not create handler based on xml content');
         }
 
+        rewind($filehandle);
+        $content = fread($filehandle, 8192);
         $parser = xml_parser_create();
         xml_set_element_handler($parser, [$handler, 'startElement'], [$handler, 'endElement']);
         xml_set_character_data_handler($parser, [$handler, 'text']);

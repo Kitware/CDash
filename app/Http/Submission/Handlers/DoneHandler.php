@@ -17,9 +17,9 @@ namespace App\Http\Submission\Handlers;
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use CDash\Model\Build;
 use CDash\Model\BuildUpdate;
 use CDash\Model\PendingSubmissions;
-use CDash\Model\Project;
 use CDash\Model\Repository;
 
 class DoneHandler extends AbstractXmlHandler
@@ -30,9 +30,9 @@ class DoneHandler extends AbstractXmlHandler
     public $backupFileName;
     protected static ?string $schema_file = '/app/Validators/Schemas/Done.xsd';
 
-    public function __construct(Project $project)
+    public function __construct(Build $build)
     {
-        parent::__construct($project);
+        parent::__construct($build);
         $this->FinalAttempt = false;
         $this->PendingSubmissions = new PendingSubmissions();
         $this->Requeue = false;
