@@ -26,11 +26,9 @@ add_test(
   COMMAND ${CMAKE_SOURCE_DIR}/vendor/bin/phpstan analyse --memory-limit=8G
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
-set_tests_properties(php_static_analysis PROPERTIES
-  DISABLED "$<STREQUAL:${CDASH_IMAGE},ubi>" # Disable PHPStan on the UBI image since lcobucci/jwt gets removed
-  ENVIRONMENT PHPSTAN_CPU=2
-  PROCESSORS 2 # We could eventually do something more intelligent to give PHPStan more CPU based on the current load...
-)
+set_property(TEST php_static_analysis APPEND PROPERTY DISABLED "$<STREQUAL:${CDASH_IMAGE},ubi>") # Disable PHPStan on the UBI image since lcobucci/jwt gets removed
+set_property(TEST php_static_analysis APPEND PROPERTY ENVIRONMENT PHPSTAN_CPU=2)
+set_property(TEST php_static_analysis APPEND PROPERTY PROCESSORS 2) # We could eventually do something more intelligent to give PHPStan more CPU based on the current load...
 
 # Run the JS linter
 add_test(
@@ -46,9 +44,7 @@ add_test(
   COMMAND npm run eslint
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
-set_tests_properties(eslint PROPERTIES
-  FAIL_REGULAR_EXPRESSION " \+[0-9]\+:[0-9]\+ \+warning"
-)
+set_property(TEST eslint APPEND PROPERTY FAIL_REGULAR_EXPRESSION " \+[0-9]\+:[0-9]\+ \+warning")
 
 add_subdirectory(cypress/e2e)
 add_subdirectory(cypress/component)
