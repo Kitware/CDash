@@ -13,7 +13,9 @@
     "php": "^8.3",
     "ext-bcmath": "*",
     "ext-curl": "*",
+    "ext-dom": "*",
     "ext-fileinfo": "*",
+    "ext-gd": "*",
     "ext-libxml": "*",
     "ext-mbstring": "*",
     "ext-pdo": "*",
@@ -44,8 +46,6 @@
     "socialiteproviders/pingidentity": "1.0.0"
   },
   "require-dev": {
-    "ext-dom": "*",
-    "ext-gd": "*",
     "ext-xdebug": "*",
     "ext-zip": "*",
     "fakerphp/faker": "1.24.1",
