@@ -16,7 +16,7 @@ services:
 
   # Used for testing LDAP authentication
   ldap:
-    image: bitnami/openldap
+    image: bitnamilegacy/openldap
     ports:
       - 389:389
       - 636:636
