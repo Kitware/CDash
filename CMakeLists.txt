@@ -58,6 +58,8 @@ find_program(NPX_EXE NAMES npx PATHS c:/usr/bin/npx /usr/bin/npx REQUIRED)
 
 set(PHPUNIT "${CDash_SOURCE_DIR}/vendor/bin/phpunit")
 
+set_property(GLOBAL PROPERTY ATTACHED_FILES "${CDash_SOURCE_DIR}/storage/logs/cdash.log")
+
 set_property(GLOBAL PROPERTY INSTALL_CDASH_COUNT "0")
 function(cdash_install TestName)
   add_test(
