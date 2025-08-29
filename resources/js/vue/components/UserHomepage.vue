@@ -102,7 +102,7 @@
             >
               <a
                 title="Edit subscription"
-                :href="$baseURL + '/subscribeProject.php?projectid=' + project.id + '&edit=1'"
+                :href="$baseURL + '/subscribeProject.php?projectid=' + project.id"
               >
                 <font-awesome-icon :icon="FA.faBell" />
               </a>
