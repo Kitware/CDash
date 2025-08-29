@@ -6532,12 +6532,6 @@ parameters:
 			path: app/Utils/RepositoryUtils.php
 
 		-
-			message: '#^Cannot access offset ''cvsviewertype'' on array\|false\|null\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
 			message: '#^Cannot access offset ''testfailednegative'' on array\{builderrorspositive\: int, builderrorsnegative\: int, buildwarningspositive\: int, buildwarningsnegative\: int, configureerrors\: int, configurewarnings\: int, testpassedpositive\: int, testpassednegative\: int, \.\.\.\}\|false\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1

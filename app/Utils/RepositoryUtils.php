@@ -141,12 +141,13 @@ class RepositoryUtils
         $db = Database::getInstance();
         $project = $db->executePreparedSingleRow('SELECT cvsviewertype, cvsurl FROM project WHERE id=?', [intval($projectid)]);
         $projecturl = $project['cvsurl'];
+        $cvsviewertype = strtolower($project['cvsviewertype'] ?? '');
+        $cvsviewerurl = $project['cvsurl'] ?? '';
 
-        if (strlen($projecturl) === 0) {
+        if ($cvsviewertype === '' || $cvsviewerurl === '') {
             return '';
         }
 
-        $cvsviewertype = strtolower($project['cvsviewertype']);
         $revisionfunction = 'get_' . $cvsviewertype . '_revision_url';
 
         if (method_exists(self::class, $revisionfunction)) {
