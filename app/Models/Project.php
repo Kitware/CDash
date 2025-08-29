@@ -48,7 +48,8 @@ use Illuminate\Support\Facades\Auth;
  * @property ?string $ldapfilter
  * @property ?string $banner
  *
- * @method Builder<Project> forUser(?User $user = null)
+ * @method Builder<Project> forUser()
+ * @method Builder<Project> administeredByUser()
  *
  * @mixin Builder<Project>
  */
@@ -167,6 +168,24 @@ class Project extends Model
             });
         }
         // Else, this is an admin user, so we shouldn't apply any filters...
+    }
+
+    /**
+     * Get the projects the current user has admin access to.
+     *
+     * @param Builder<self> $query
+     */
+    public function scopeAdministeredByUser(Builder $query): void
+    {
+        $user = Auth::user();
+
+        if ($user !== null && $user->admin) {
+            return;
+        } else {
+            $query->whereHas('administrators', function ($subquery) use ($user): void {
+                $subquery->where('users.id', $user?->id);
+            });
+        }
     }
 
     /**

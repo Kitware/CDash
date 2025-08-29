@@ -1777,23 +1777,8 @@ parameters:
 			path: app/Http/Controllers/OAuthController.php
 
 		-
-			message: '''
-				#^Call to deprecated method getPdo\(\) of class CDash\\Database\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/Http/Controllers/ProjectController.php
-
-		-
 			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
 			identifier: equal.notAllowed
-			count: 1
-			path: app/Http/Controllers/ProjectController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\ProjectController\:\:GetProjectsForUser\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
 			count: 1
 			path: app/Http/Controllers/ProjectController.php
 
