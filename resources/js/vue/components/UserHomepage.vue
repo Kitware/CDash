@@ -392,9 +392,9 @@
             <td>
               <a
                 class="cdash-link"
-                :href="$baseURL + '/subscribeProject.php?projectid=' + project.id"
+                :href="$baseURL + '/projects/' + project.id + '/members'"
               >
-                Subscribe to this project
+                Join Project
               </a>
             </td>
           </tr>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Project;
 use App\Models\User;
 use CDash\Database;
 use Illuminate\Http\RedirectResponse;
@@ -119,18 +120,11 @@ final class SubscribeProjectController extends AbstractProjectController
 
         $xml .= '</project>';
 
-        $sql = 'SELECT id, name FROM project';
-        $params = [];
-        if (!$user->admin) {
-            $sql .= ' WHERE public=1 OR id IN (SELECT projectid AS id FROM user2project WHERE userid=? AND role>0)';
-            $params[] = $user->id;
-        }
-        $projects = $db->executePrepared($sql, $params);
-        foreach ($projects as $project_array) {
+        foreach (Project::whereRelation('users', 'id', $user->id)->orderBy('name')->get() as $project) {
             $xml .= '<availableproject>';
-            $xml .= add_XML_value('id', $project_array['id']);
-            $xml .= add_XML_value('name', $project_array['name']);
-            if (intval($project_array['id']) === $this->project->Id) {
+            $xml .= add_XML_value('id', $project->id);
+            $xml .= add_XML_value('name', $project->name);
+            if (intval($project->id) === $this->project->Id) {
                 $xml .= add_XML_value('selected', '1');
             }
             $xml .= '</availableproject>';
