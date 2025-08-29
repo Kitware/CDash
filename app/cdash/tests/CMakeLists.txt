@@ -38,6 +38,7 @@ function(add_laravel_test TestName)
       -c ${CDash_SOURCE_DIR}/phpunit.xml
       ${laravel_testing_dir}/${TestName}.php
   )
+  set_property(TEST ${TestName} APPEND PROPERTY ATTACHED_FILES "${CDash_SOURCE_DIR}/storage/logs/cdash.log")
 endfunction()
 
 # Tests with no dependencies whatsoever
