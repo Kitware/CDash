@@ -1,7 +1,7 @@
 # These tests should go last so the removal of builds doesn't clobber other tests
 # TODO: Some of these dependencies may not be necessary.
 add_php_test(autoremovebuilds_on_submit)
-set_property(TEST autoremovebuilds_on_submit PROPERTY DEPENDS
+set_property(TEST autoremovebuilds_on_submit APPEND PROPERTY DEPENDS
   cypress/e2e/manage-overview
   cypress/e2e/sub-project-dependencies
   cypress/e2e/manage-build-group
@@ -28,13 +28,11 @@ set_property(TEST autoremovebuilds_on_submit PROPERTY DEPENDS
 )
 
 add_php_test(deletesubproject)
-set_tests_properties(deletesubproject PROPERTIES DEPENDS autoremovebuilds_on_submit)
+set_property(TEST deletesubproject APPEND PROPERTY DEPENDS autoremovebuilds_on_submit)
 
 add_test(
   NAME removebuilds
   COMMAND ${PHP_EXE} ${testing_dir}/singletest.php ${testing_dir}/test_removebuilds.php
 )
-set_tests_properties(removebuilds PROPERTIES
-  FAIL_REGULAR_EXPRESSION ".*Failures: [1-9]+.*;.*Exceptions: [1-9]+.*"
-  DEPENDS deletesubproject
-)
+set_property(TEST removebuilds APPEND PROPERTY FAIL_REGULAR_EXPRESSION ".*Failures: [1-9]+.*;.*Exceptions: [1-9]+.*")
+set_property(TEST removebuilds APPEND PROPERTY DEPENDS deletesubproject)

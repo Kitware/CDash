@@ -8,11 +8,8 @@ function(add_php_test TestName)
     NAME ${TestName}
     COMMAND ${PHP_EXE} ${testing_dir}/singletest.php ${testing_dir}/test_${TestName}.php
   )
-  set_tests_properties(
-    ${TestName} PROPERTIES
-    FAIL_REGULAR_EXPRESSION ".*Failures: [1-9]+.*;.*Exceptions: [1-9]+.*"
-    PASS_REGULAR_EXPRESSION ".*OK.*"
-  )
+  set_property(TEST ${TestName} PROPERTY FAIL_REGULAR_EXPRESSION ".*Failures: [1-9]+.*;.*Exceptions: [1-9]+.*")
+  set_property(TEST ${TestName} PROPERTY PASS_REGULAR_EXPRESSION ".*OK.*")
 endfunction()
 
 function(add_legacy_unit_test TestName)
@@ -106,43 +103,43 @@ add_legacy_unit_test(/CDash/Model/Repository)
 ###################################################################################################
 
 add_laravel_test(/Feature/CDashTest)
-set_tests_properties(/Feature/CDashTest PROPERTIES DEPENDS install_1)
+set_property(TEST /Feature/CDashTest APPEND PROPERTY DEPENDS install_1)
 
 add_legacy_unit_test(/CDash/Model/BuildRelationship)
-set_tests_properties(/CDash/Model/BuildRelationship PROPERTIES DEPENDS /Feature/CDashTest)
+set_property(TEST /CDash/Model/BuildRelationship APPEND PROPERTY DEPENDS /Feature/CDashTest)
 
 add_legacy_unit_test(/CDash/MultipleSubprojectsEmail)
-set_tests_properties(/CDash/MultipleSubprojectsEmail PROPERTIES DEPENDS /CDash/Model/BuildRelationship)
+set_property(TEST /CDash/MultipleSubprojectsEmail APPEND PROPERTY DEPENDS /CDash/Model/BuildRelationship)
 
 add_legacy_unit_test(/CDash/NightlyTime)
-set_tests_properties(/CDash/NightlyTime PROPERTIES DEPENDS /CDash/MultipleSubprojectsEmail)
+set_property(TEST /CDash/NightlyTime APPEND PROPERTY DEPENDS /CDash/MultipleSubprojectsEmail)
 
 add_legacy_unit_test(/CDash/TestUseCase)
-set_tests_properties(/CDash/TestUseCase PROPERTIES DEPENDS /CDash/NightlyTime)
+set_property(TEST /CDash/TestUseCase APPEND PROPERTY DEPENDS /CDash/NightlyTime)
 
 add_legacy_unit_test(/CDash/BuildUseCase)
-set_tests_properties(/CDash/BuildUseCase PROPERTIES DEPENDS /CDash/TestUseCase)
+set_property(TEST /CDash/BuildUseCase APPEND PROPERTY DEPENDS /CDash/TestUseCase)
 
 add_legacy_unit_test(/CDash/ConfigUseCase)
-set_tests_properties(/CDash/ConfigUseCase PROPERTIES DEPENDS /CDash/BuildUseCase)
+set_property(TEST /CDash/ConfigUseCase APPEND PROPERTY DEPENDS /CDash/BuildUseCase)
 
 add_legacy_unit_test(/CDash/UpdateUseCase)
-set_tests_properties(/CDash/UpdateUseCase PROPERTIES DEPENDS /CDash/ConfigUseCase)
+set_property(TEST /CDash/UpdateUseCase APPEND PROPERTY DEPENDS /CDash/ConfigUseCase)
 
 add_legacy_unit_test(/CDash/XmlHandler/BuildHandler)
-set_tests_properties(/CDash/XmlHandler/BuildHandler PROPERTIES DEPENDS /CDash/UpdateUseCase)
+set_property(TEST /CDash/XmlHandler/BuildHandler APPEND PROPERTY DEPENDS /CDash/UpdateUseCase)
 
 add_legacy_unit_test(/CDash/XmlHandler/ConfigureHandler)
-set_tests_properties(/CDash/XmlHandler/ConfigureHandler PROPERTIES DEPENDS /CDash/XmlHandler/BuildHandler)
+set_property(TEST /CDash/XmlHandler/ConfigureHandler APPEND PROPERTY DEPENDS /CDash/XmlHandler/BuildHandler)
 
 add_legacy_unit_test(/CDash/XmlHandler/DynamicAnalysisHandler)
-set_tests_properties(/CDash/XmlHandler/DynamicAnalysisHandler PROPERTIES DEPENDS /CDash/XmlHandler/ConfigureHandler)
+set_property(TEST /CDash/XmlHandler/DynamicAnalysisHandler APPEND PROPERTY DEPENDS /CDash/XmlHandler/ConfigureHandler)
 
 add_legacy_unit_test(/CDash/XmlHandler/TestingHandler)
-set_tests_properties(/CDash/XmlHandler/TestingHandler PROPERTIES DEPENDS /CDash/XmlHandler/DynamicAnalysisHandler)
+set_property(TEST /CDash/XmlHandler/TestingHandler APPEND PROPERTY DEPENDS /CDash/XmlHandler/DynamicAnalysisHandler)
 
 add_legacy_unit_test(/CDash/XmlHandler/UpdateHandler)
-set_tests_properties(/CDash/XmlHandler/UpdateHandler PROPERTIES DEPENDS /CDash/XmlHandler/TestingHandler)
+set_property(TEST /CDash/XmlHandler/UpdateHandler APPEND PROPERTY DEPENDS /CDash/XmlHandler/TestingHandler)
 
 ###################################################################################################
 # Tests from this point to the next cdash_install() are expected to be completely independent.
@@ -160,22 +157,20 @@ add_feature_test(/Feature/GitHubWebhook)
 add_feature_test(/Feature/GlobalBannerTest)
 
 add_legacy_unit_test(/CDash/Lib/Repository/GitHub)
-set_tests_properties(/CDash/Lib/Repository/GitHub PROPERTIES
-    DEPENDS /CDash/XmlHandler/UpdateHandler
-    DISABLED "$<STREQUAL:${CDASH_IMAGE},ubi>"
-)
+set_property(TEST /CDash/Lib/Repository/GitHub APPEND PROPERTY DEPENDS /CDash/XmlHandler/UpdateHandler)
+set_property(TEST /CDash/Lib/Repository/GitHub APPEND PROPERTY DISABLED "$<STREQUAL:${CDASH_IMAGE},ubi>")
 
 add_legacy_unit_test(/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilder)
-set_tests_properties(/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilder PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+set_property(TEST /CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilder APPEND PROPERTY DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_legacy_unit_test(/CDash/Messaging/Subscription/UserSubscriptionBuilder)
-set_tests_properties(/CDash/Messaging/Subscription/UserSubscriptionBuilder PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+set_property(TEST /CDash/Messaging/Subscription/UserSubscriptionBuilder APPEND PROPERTY DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_legacy_unit_test(/CDash/Messaging/Topic/UpdateErrorTopic)
-set_tests_properties(/CDash/Messaging/Topic/UpdateErrorTopic PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+set_property(TEST /CDash/Messaging/Topic/UpdateErrorTopic APPEND PROPERTY DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_legacy_unit_test(/CDash/Service/RepositoryService)
-set_tests_properties(/CDash/Service/RepositoryService PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+set_property(TEST /CDash/Service/RepositoryService APPEND PROPERTY DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 # Set this to RUN_SERIAL as we are changing the config and don't want to clobber other tests.
 # Only requires exclusive .env access.
@@ -251,34 +246,34 @@ set_property(TEST /Feature/Jobs/PruneAuthTokensTest APPEND PROPERTY RUN_SERIAL T
 add_feature_test(/Feature/UserCommand)
 
 add_legacy_unit_test(/CDash/Database)
-set_tests_properties(/CDash/Database PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+set_property(TEST /CDash/Database APPEND PROPERTY DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_legacy_unit_test(/CDash/Messaging/Topic/AuthoredTopic)
-set_tests_properties(/CDash/Messaging/Topic/AuthoredTopic PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+set_property(TEST /CDash/Messaging/Topic/AuthoredTopic APPEND PROPERTY DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_legacy_unit_test(/CDash/Messaging/Topic/BuildErrorTopic)
-set_tests_properties(/CDash/Messaging/Topic/BuildErrorTopic PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+set_property(TEST /CDash/Messaging/Topic/BuildErrorTopic APPEND PROPERTY DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_legacy_unit_test(/CDash/Messaging/Topic/ConfigureTopic)
-set_tests_properties(/CDash/Messaging/Topic/ConfigureTopic PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+set_property(TEST /CDash/Messaging/Topic/ConfigureTopic APPEND PROPERTY DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_legacy_unit_test(/CDash/Messaging/Topic/DynamicAnalysisTopic)
-set_tests_properties(/CDash/Messaging/Topic/DynamicAnalysisTopic PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+set_property(TEST /CDash/Messaging/Topic/DynamicAnalysisTopic APPEND PROPERTY DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_legacy_unit_test(/CDash/Messaging/Topic/EmailSentTopic)
-set_tests_properties(/CDash/Messaging/Topic/EmailSentTopic PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+set_property(TEST /CDash/Messaging/Topic/EmailSentTopic APPEND PROPERTY DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_legacy_unit_test(/CDash/Messaging/Topic/FixedTopic)
-set_tests_properties(/CDash/Messaging/Topic/FixedTopic PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+set_property(TEST /CDash/Messaging/Topic/FixedTopic APPEND PROPERTY DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_legacy_unit_test(/CDash/Messaging/Topic/MissingTestTopic)
-set_tests_properties(/CDash/Messaging/Topic/MissingTestTopic PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+set_property(TEST /CDash/Messaging/Topic/MissingTestTopic APPEND PROPERTY DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_legacy_unit_test(/CDash/Messaging/Topic/TestFailureTopic)
-set_tests_properties(/CDash/Messaging/Topic/TestFailureTopic PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+set_property(TEST /CDash/Messaging/Topic/TestFailureTopic APPEND PROPERTY DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_legacy_unit_test(/CDash/Messaging/Topic/TopicDecorator)
-set_tests_properties(/CDash/Messaging/Topic/TopicDecorator PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+set_property(TEST /CDash/Messaging/Topic/TopicDecorator APPEND PROPERTY DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_feature_test(/Feature/RemoteWorkers)
 set_property(TEST /Feature/RemoteWorkers APPEND PROPERTY
@@ -335,46 +330,46 @@ add_browser_test(/Browser/Pages/BuildNotesPageTest)
 add_browser_test(/Browser/Pages/BuildTargetsPageTest)
 
 add_php_test(image)
-set_tests_properties(image PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+set_property(TEST image APPEND PROPERTY DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_php_test(changeid)
-set_tests_properties(changeid PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+set_property(TEST changeid APPEND PROPERTY DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_php_test(consistenttestingday)
-set_tests_properties(consistenttestingday PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+set_property(TEST consistenttestingday APPEND PROPERTY DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_php_test(numericupdate)
-set_tests_properties(numericupdate PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+set_property(TEST numericupdate APPEND PROPERTY DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_php_test(attachedfiles)
-set_tests_properties(attachedfiles PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+set_property(TEST attachedfiles APPEND PROPERTY DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_php_test(subprojectorder)
-set_tests_properties(subprojectorder PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+set_property(TEST subprojectorder APPEND PROPERTY DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_php_test(dynamicanalysislogs)
-set_tests_properties(dynamicanalysislogs PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+set_property(TEST dynamicanalysislogs APPEND PROPERTY DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_php_test(dynamicanalysisdefectlongtype)
-set_tests_properties(dynamicanalysisdefectlongtype PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+set_property(TEST dynamicanalysisdefectlongtype APPEND PROPERTY DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_php_test(configureappend)
-set_tests_properties(configureappend PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+set_property(TEST configureappend APPEND PROPERTY DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_php_test(filterbuilderrors)
-set_tests_properties(filterbuilderrors PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+set_property(TEST filterbuilderrors APPEND PROPERTY DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_php_test(buildproperties)
-set_tests_properties(buildproperties PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+set_property(TEST buildproperties APPEND PROPERTY DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_php_test(issuecreation)
-set_tests_properties(issuecreation PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+set_property(TEST issuecreation APPEND PROPERTY DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_php_test(junithandler)
-set_tests_properties(junithandler PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+set_property(TEST junithandler APPEND PROPERTY DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_php_test(configurewarnings)
-set_tests_properties(configurewarnings PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+set_property(TEST configurewarnings APPEND PROPERTY DEPENDS /CDash/XmlHandler/UpdateHandler)
 
 add_feature_test(/Feature/AutoRemoveBuildsCommand)
 
@@ -417,277 +412,275 @@ set_property(TEST install_2 APPEND PROPERTY DEPENDS
 
 
 add_php_test(compressedtest)
-set_tests_properties(compressedtest PROPERTIES DEPENDS install_2)
+set_property(TEST compressedtest APPEND PROPERTY DEPENDS install_2)
 
 add_php_test(createpublicdashboard)
-set_tests_properties(createpublicdashboard PROPERTIES DEPENDS compressedtest)
+set_property(TEST createpublicdashboard APPEND PROPERTY DEPENDS compressedtest)
 
 add_php_test(email)
-set_tests_properties(email PROPERTIES DEPENDS createpublicdashboard)
+set_property(TEST email APPEND PROPERTY DEPENDS createpublicdashboard)
 
 add_php_test(projectwebpage)
-set_tests_properties(projectwebpage PROPERTIES DEPENDS email)
+set_property(TEST projectwebpage APPEND PROPERTY DEPENDS email)
 
 add_php_test(subproject)
-set_tests_properties(subproject PROPERTIES DEPENDS projectwebpage)
+set_property(TEST subproject APPEND PROPERTY DEPENDS projectwebpage)
 
 add_php_test(actualtrilinossubmission)
-set_tests_properties(actualtrilinossubmission PROPERTIES
-    TIMEOUT 1800 # Slow tests that need more time in CI.
-    DEPENDS subproject
-)
+set_property(TEST actualtrilinossubmission APPEND PROPERTY TIMEOUT 1800) # Slow tests that need more time in CI.
+set_property(TEST actualtrilinossubmission APPEND PROPERTY DEPENDS subproject)
 
 add_php_test(summaryemail)
-set_tests_properties(summaryemail PROPERTIES DEPENDS actualtrilinossubmission)
+set_property(TEST summaryemail APPEND PROPERTY DEPENDS actualtrilinossubmission)
 
 add_php_test(aggregatecoverage)
-set_tests_properties(aggregatecoverage PROPERTIES DEPENDS summaryemail)
+set_property(TEST aggregatecoverage APPEND PROPERTY DEPENDS summaryemail)
 
 add_php_test(buildconfigure)
-set_tests_properties(buildconfigure PROPERTIES DEPENDS aggregatecoverage)
+set_property(TEST buildconfigure APPEND PROPERTY DEPENDS aggregatecoverage)
 
 add_php_test(buildgrouprule)
-set_tests_properties(buildgrouprule PROPERTIES DEPENDS buildconfigure)
+set_property(TEST buildgrouprule APPEND PROPERTY DEPENDS buildconfigure)
 
 add_php_test(buildoverview)
-set_tests_properties(buildoverview PROPERTIES DEPENDS buildgrouprule)
+set_property(TEST buildoverview APPEND PROPERTY DEPENDS buildgrouprule)
 
 add_php_test(committerinfo)
-set_tests_properties(committerinfo PROPERTIES DEPENDS buildoverview)
+set_property(TEST committerinfo APPEND PROPERTY DEPENDS buildoverview)
 
 add_php_test(displayimage)
-set_tests_properties(displayimage PROPERTIES DEPENDS committerinfo)
+set_property(TEST displayimage APPEND PROPERTY DEPENDS committerinfo)
 
 add_php_test(projectindb)
-set_tests_properties(projectindb PROPERTIES DEPENDS displayimage)
+set_property(TEST projectindb APPEND PROPERTY DEPENDS displayimage)
 
 add_php_test(projectmodel)
-set_tests_properties(projectmodel PROPERTIES DEPENDS projectindb)
+set_property(TEST projectmodel APPEND PROPERTY DEPENDS projectindb)
 
 add_php_test(querytests)
-set_tests_properties(querytests PROPERTIES DEPENDS projectmodel)
+set_property(TEST querytests APPEND PROPERTY DEPENDS projectmodel)
 
 add_php_test(sitestatistics)
-set_tests_properties(sitestatistics PROPERTIES DEPENDS querytests)
+set_property(TEST sitestatistics APPEND PROPERTY DEPENDS querytests)
 
 add_php_test(testoverview)
-set_tests_properties(testoverview PROPERTIES DEPENDS sitestatistics)
+set_property(TEST testoverview APPEND PROPERTY DEPENDS sitestatistics)
 
 add_php_test(viewconfigure)
-set_tests_properties(viewconfigure PROPERTIES DEPENDS testoverview)
+set_property(TEST viewconfigure APPEND PROPERTY DEPENDS testoverview)
 
 add_php_test(viewdynamicanalysis)
-set_tests_properties(viewdynamicanalysis PROPERTIES DEPENDS viewconfigure)
+set_property(TEST viewdynamicanalysis APPEND PROPERTY DEPENDS viewconfigure)
 
 add_php_test(viewdynamicanalysisfile)
-set_tests_properties(viewdynamicanalysisfile PROPERTIES DEPENDS viewdynamicanalysis)
+set_property(TEST viewdynamicanalysisfile APPEND PROPERTY DEPENDS viewdynamicanalysis)
 
 add_php_test(buildmodel)
-set_tests_properties(buildmodel PROPERTIES DEPENDS viewdynamicanalysisfile)
+set_property(TEST buildmodel APPEND PROPERTY DEPENDS viewdynamicanalysisfile)
 
 add_php_test(projectxmlsequence)
-set_tests_properties(projectxmlsequence PROPERTIES DEPENDS buildmodel)
+set_property(TEST projectxmlsequence APPEND PROPERTY DEPENDS buildmodel)
 
 add_php_test(uploadfile)
-set_tests_properties(uploadfile PROPERTIES DEPENDS projectxmlsequence)
+set_property(TEST uploadfile APPEND PROPERTY DEPENDS projectxmlsequence)
 
 add_php_test(actualbranchcoverage)
-set_tests_properties(actualbranchcoverage PROPERTIES DEPENDS uploadfile)
+set_property(TEST actualbranchcoverage APPEND PROPERTY DEPENDS uploadfile)
 
 add_php_test(unparsedsubmissionshonorbuildid)
-set_tests_properties(unparsedsubmissionshonorbuildid PROPERTIES DEPENDS actualbranchcoverage)
+set_property(TEST unparsedsubmissionshonorbuildid APPEND PROPERTY DEPENDS actualbranchcoverage)
 
 add_php_test(multicoverage)
-set_tests_properties(multicoverage PROPERTIES DEPENDS unparsedsubmissionshonorbuildid)
+set_property(TEST multicoverage APPEND PROPERTY DEPENDS unparsedsubmissionshonorbuildid)
 
 add_php_test(javajsoncoverage)
-set_tests_properties(javajsoncoverage PROPERTIES DEPENDS multicoverage)
+set_property(TEST javajsoncoverage APPEND PROPERTY DEPENDS multicoverage)
 
 add_php_test(jscovercoverage)
-set_tests_properties(jscovercoverage PROPERTIES DEPENDS javajsoncoverage)
+set_property(TEST jscovercoverage APPEND PROPERTY DEPENDS javajsoncoverage)
 
 add_php_test(opencovercoverage)
-set_tests_properties(opencovercoverage PROPERTIES DEPENDS jscovercoverage)
+set_property(TEST opencovercoverage APPEND PROPERTY DEPENDS jscovercoverage)
 
 add_php_test(buildfailuredetails)
-set_tests_properties(buildfailuredetails PROPERTIES DEPENDS opencovercoverage)
+set_property(TEST buildfailuredetails APPEND PROPERTY DEPENDS opencovercoverage)
 
 add_php_test(builddetails)
-set_tests_properties(builddetails PROPERTIES DEPENDS buildfailuredetails)
+set_property(TEST builddetails APPEND PROPERTY DEPENDS buildfailuredetails)
 
 add_php_test(updateappend)
-set_tests_properties(updateappend PROPERTIES DEPENDS builddetails)
+set_property(TEST updateappend APPEND PROPERTY DEPENDS builddetails)
 
 add_php_test(notesapi)
-set_tests_properties(notesapi PROPERTIES DEPENDS updateappend)
+set_property(TEST notesapi APPEND PROPERTY DEPENDS updateappend)
 
 add_php_test(usernotes)
-set_tests_properties(usernotes PROPERTIES DEPENDS notesapi)
+set_property(TEST usernotes APPEND PROPERTY DEPENDS notesapi)
 
 add_php_test(hidecolumns)
-set_tests_properties(hidecolumns PROPERTIES DEPENDS usernotes)
+set_property(TEST hidecolumns APPEND PROPERTY DEPENDS usernotes)
 
 add_php_test(subprojectnextprevious)
-set_tests_properties(subprojectnextprevious PROPERTIES DEPENDS hidecolumns)
+set_property(TEST subprojectnextprevious APPEND PROPERTY DEPENDS hidecolumns)
 
 add_php_test(excludesubprojects)
-set_tests_properties(excludesubprojects PROPERTIES DEPENDS subprojectnextprevious)
+set_property(TEST excludesubprojects APPEND PROPERTY DEPENDS subprojectnextprevious)
 
 add_php_test(testhistory)
-set_tests_properties(testhistory PROPERTIES DEPENDS subprojectnextprevious)
+set_property(TEST testhistory APPEND PROPERTY DEPENDS subprojectnextprevious)
 
 add_php_test(expectedandmissing)
-set_tests_properties(expectedandmissing PROPERTIES DEPENDS testhistory)
+set_property(TEST expectedandmissing APPEND PROPERTY DEPENDS testhistory)
 
 add_php_test(externallinksfromtests)
-set_tests_properties(externallinksfromtests PROPERTIES DEPENDS expectedandmissing)
+set_property(TEST externallinksfromtests APPEND PROPERTY DEPENDS expectedandmissing)
 
 add_php_test(timesummary)
-set_tests_properties(timesummary PROPERTIES DEPENDS externallinksfromtests)
+set_property(TEST timesummary APPEND PROPERTY DEPENDS externallinksfromtests)
 
 add_php_test(buildgetdate)
-set_tests_properties(buildgetdate PROPERTIES DEPENDS timesummary)
+set_property(TEST buildgetdate APPEND PROPERTY DEPENDS timesummary)
 
 add_php_test(replacebuild)
-set_tests_properties(replacebuild PROPERTIES DEPENDS buildgetdate)
+set_property(TEST replacebuild APPEND PROPERTY DEPENDS buildgetdate)
 
 add_php_test(sequenceindependence)
-set_tests_properties(sequenceindependence PROPERTIES DEPENDS replacebuild)
+set_property(TEST sequenceindependence APPEND PROPERTY DEPENDS replacebuild)
 
 add_php_test(crosssubprojectcoverage)
-set_tests_properties(crosssubprojectcoverage PROPERTIES DEPENDS sequenceindependence)
+set_property(TEST crosssubprojectcoverage APPEND PROPERTY DEPENDS sequenceindependence)
 
 add_php_test(aggregatesubprojectcoverage)
-set_tests_properties(aggregatesubprojectcoverage PROPERTIES DEPENDS crosssubprojectcoverage)
+set_property(TEST aggregatesubprojectcoverage APPEND PROPERTY DEPENDS crosssubprojectcoverage)
 
 add_php_test(filtertestlabels)
-set_tests_properties(filtertestlabels PROPERTIES DEPENDS aggregatesubprojectcoverage)
+set_property(TEST filtertestlabels APPEND PROPERTY DEPENDS aggregatesubprojectcoverage)
 
 add_php_test(dynamicanalysissummary)
-set_tests_properties(dynamicanalysissummary PROPERTIES DEPENDS filtertestlabels)
+set_property(TEST dynamicanalysissummary APPEND PROPERTY DEPENDS filtertestlabels)
 
 add_php_test(viewsubprojects)
-set_tests_properties(viewsubprojects PROPERTIES DEPENDS dynamicanalysissummary)
+set_property(TEST viewsubprojects APPEND PROPERTY DEPENDS dynamicanalysissummary)
 
 add_php_test(truncateoutput)
-set_tests_properties(truncateoutput PROPERTIES DEPENDS viewsubprojects)
+set_property(TEST truncateoutput APPEND PROPERTY DEPENDS viewsubprojects)
 
 add_php_test(csvexport)
-set_tests_properties(csvexport PROPERTIES DEPENDS truncateoutput)
+set_property(TEST csvexport APPEND PROPERTY DEPENDS truncateoutput)
 
 add_php_test(uniquediffs)
-set_tests_properties(uniquediffs PROPERTIES DEPENDS csvexport)
+set_property(TEST uniquediffs APPEND PROPERTY DEPENDS csvexport)
 
 add_php_test(imagecomparison)
-set_tests_properties(imagecomparison PROPERTIES DEPENDS uniquediffs)
+set_property(TEST imagecomparison APPEND PROPERTY DEPENDS uniquediffs)
 
 add_php_test(createprojectpermissions)
-set_tests_properties(createprojectpermissions PROPERTIES DEPENDS imagecomparison)
+set_property(TEST createprojectpermissions APPEND PROPERTY DEPENDS imagecomparison)
 
 add_php_test(testgraphpermissions)
-set_tests_properties(testgraphpermissions PROPERTIES DEPENDS createprojectpermissions)
+set_property(TEST testgraphpermissions APPEND PROPERTY DEPENDS createprojectpermissions)
 
 add_php_test(pdoexecutelogserrors)
-set_tests_properties(pdoexecutelogserrors PROPERTIES DEPENDS testgraphpermissions)
+set_property(TEST pdoexecutelogserrors APPEND PROPERTY DEPENDS testgraphpermissions)
 
 add_php_test(revisionfilteracrossdates)
-set_tests_properties(revisionfilteracrossdates PROPERTIES DEPENDS actualtrilinossubmission)
+set_property(TEST revisionfilteracrossdates APPEND PROPERTY DEPENDS actualtrilinossubmission)
 
 add_php_test(timeoutsandmissingtests)
-set_tests_properties(timeoutsandmissingtests PROPERTIES DEPENDS pdoexecutelogserrors)
+set_property(TEST timeoutsandmissingtests APPEND PROPERTY DEPENDS pdoexecutelogserrors)
 
 add_php_test(disabledtests)
-set_tests_properties(disabledtests PROPERTIES DEPENDS timeoutsandmissingtests)
+set_property(TEST disabledtests APPEND PROPERTY DEPENDS timeoutsandmissingtests)
 
 add_php_test(multiplesubprojects)
-set_tests_properties(multiplesubprojects PROPERTIES DEPENDS disabledtests)
+set_property(TEST multiplesubprojects APPEND PROPERTY DEPENDS disabledtests)
 
 add_php_test(authtoken)
-set_tests_properties(authtoken PROPERTIES DEPENDS multiplesubprojects)
+set_property(TEST authtoken APPEND PROPERTY DEPENDS multiplesubprojects)
 
 add_php_test(limitedbuilds)
-set_tests_properties(limitedbuilds PROPERTIES DEPENDS authtoken)
+set_property(TEST limitedbuilds APPEND PROPERTY DEPENDS authtoken)
 
 add_php_test(managemeasurements)
-set_tests_properties(managemeasurements PROPERTIES DEPENDS limitedbuilds)
+set_property(TEST managemeasurements APPEND PROPERTY DEPENDS limitedbuilds)
 
 add_php_test(coveragedirectories)
-set_tests_properties(coveragedirectories PROPERTIES DEPENDS managemeasurements)
+set_property(TEST coveragedirectories APPEND PROPERTY DEPENDS managemeasurements)
 
 add_php_test(outputcolor)
-set_tests_properties(outputcolor PROPERTIES DEPENDS coveragedirectories)
+set_property(TEST outputcolor APPEND PROPERTY DEPENDS coveragedirectories)
 
 add_php_test(timestatus)
-set_tests_properties(timestatus PROPERTIES DEPENDS outputcolor)
+set_property(TEST timestatus APPEND PROPERTY DEPENDS outputcolor)
 
 add_php_test(bazeljson)
-set_tests_properties(bazeljson PROPERTIES DEPENDS timestatus)
+set_property(TEST bazeljson APPEND PROPERTY DEPENDS timestatus)
 
 add_php_test(buildrelationship)
-set_tests_properties(buildrelationship PROPERTIES DEPENDS bazeljson)
+set_property(TEST buildrelationship APPEND PROPERTY DEPENDS bazeljson)
 
 add_php_test(submission_assign_buildid)
-set_tests_properties(submission_assign_buildid PROPERTIES DEPENDS buildrelationship)
+set_property(TEST submission_assign_buildid APPEND PROPERTY DEPENDS buildrelationship)
 
 add_php_test(donehandler)
-set_tests_properties(donehandler PROPERTIES DEPENDS submission_assign_buildid)
+set_property(TEST donehandler APPEND PROPERTY DEPENDS submission_assign_buildid)
 
 add_php_test(expiredbuildrules)
-set_tests_properties(expiredbuildrules PROPERTIES DEPENDS donehandler)
+set_property(TEST expiredbuildrules APPEND PROPERTY DEPENDS donehandler)
 
 add_php_test(filterblocks)
-set_tests_properties(filterblocks PROPERTIES DEPENDS expiredbuildrules)
+set_property(TEST filterblocks APPEND PROPERTY DEPENDS expiredbuildrules)
 
 add_php_test(indexnextprevious)
-set_tests_properties(indexnextprevious PROPERTIES DEPENDS filterblocks)
+set_property(TEST indexnextprevious APPEND PROPERTY DEPENDS filterblocks)
 
 add_php_test(putdynamicbuilds)
-set_tests_properties(putdynamicbuilds PROPERTIES DEPENDS indexnextprevious)
+set_property(TEST putdynamicbuilds APPEND PROPERTY DEPENDS indexnextprevious)
 
 add_php_test(commitauthornotification)
-set_tests_properties(commitauthornotification PROPERTIES DEPENDS putdynamicbuilds)
+set_property(TEST commitauthornotification APPEND PROPERTY DEPENDS putdynamicbuilds)
 
 add_php_test(testimages)
-set_tests_properties(testimages PROPERTIES DEPENDS commitauthornotification)
+set_property(TEST testimages APPEND PROPERTY DEPENDS commitauthornotification)
 
 add_php_test(namedmeasurements)
-set_tests_properties(namedmeasurements PROPERTIES DEPENDS testimages)
+set_property(TEST namedmeasurements APPEND PROPERTY DEPENDS testimages)
 
 add_php_test(longbuildname)
-set_tests_properties(longbuildname PROPERTIES DEPENDS namedmeasurements)
+set_property(TEST longbuildname APPEND PROPERTY DEPENDS namedmeasurements)
 
 add_php_test(multiplelabelsfortests)
-set_tests_properties(multiplelabelsfortests PROPERTIES DEPENDS longbuildname)
+set_property(TEST multiplelabelsfortests APPEND PROPERTY DEPENDS longbuildname)
 
 add_php_test(subprojecttestfilters)
-set_tests_properties(subprojecttestfilters PROPERTIES DEPENDS multiplelabelsfortests)
+set_property(TEST subprojecttestfilters APPEND PROPERTY DEPENDS multiplelabelsfortests)
 
 add_php_test(starttimefromnotes)
-set_tests_properties(starttimefromnotes PROPERTIES DEPENDS subprojecttestfilters)
+set_property(TEST starttimefromnotes APPEND PROPERTY DEPENDS subprojecttestfilters)
 
 add_php_test(starttimefromupload)
-set_tests_properties(starttimefromupload PROPERTIES DEPENDS starttimefromnotes)
+set_property(TEST starttimefromupload APPEND PROPERTY DEPENDS starttimefromnotes)
 
 add_php_test(querytestsfilterlabels)
-set_tests_properties(querytestsfilterlabels PROPERTIES DEPENDS starttimefromupload)
+set_property(TEST querytestsfilterlabels APPEND PROPERTY DEPENDS starttimefromupload)
 
 add_php_test(lotsofsubprojects)
-set_tests_properties(lotsofsubprojects PROPERTIES DEPENDS querytestsfilterlabels)
+set_property(TEST lotsofsubprojects APPEND PROPERTY DEPENDS querytestsfilterlabels)
 
 add_php_test(querytestsrevisionfilter)
-set_tests_properties(querytestsrevisionfilter PROPERTIES DEPENDS lotsofsubprojects)
+set_property(TEST querytestsrevisionfilter APPEND PROPERTY DEPENDS lotsofsubprojects)
 
 add_php_test(redundanttests)
-set_tests_properties(redundanttests PROPERTIES DEPENDS querytestsrevisionfilter)
+set_property(TEST redundanttests APPEND PROPERTY DEPENDS querytestsrevisionfilter)
 
 add_php_test(notesparsererrormessages)
-set_tests_properties(notesparsererrormessages PROPERTIES DEPENDS redundanttests)
+set_property(TEST notesparsererrormessages APPEND PROPERTY DEPENDS redundanttests)
 
 add_laravel_test(/Feature/SubProjectDependencies)
-set_tests_properties(/Feature/SubProjectDependencies PROPERTIES DEPENDS notesparsererrormessages)
+set_property(TEST /Feature/SubProjectDependencies APPEND PROPERTY DEPENDS notesparsererrormessages)
 
 add_php_test(misassignedconfigure)
-set_tests_properties(misassignedconfigure PROPERTIES DEPENDS /Feature/SubProjectDependencies)
+set_property(TEST misassignedconfigure APPEND PROPERTY DEPENDS /Feature/SubProjectDependencies)
 
 add_subdirectory(ctest)
 add_subdirectory(autoremovebuilds)
