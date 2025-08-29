@@ -205,7 +205,7 @@
   <table width="100%" border="0">
   <tr>
     <td><span id="changesmade" style="color:red;display:none;">*Changes need to be updated </span>
-    <input type="submit" onclick="SubmitForm()" name="updatesubscription" value="Update Subscription"/></td>
+    <input type="submit" name="updatesubscription" value="Update Subscription"/></td>
    </tr>
   </table>
   </div>
