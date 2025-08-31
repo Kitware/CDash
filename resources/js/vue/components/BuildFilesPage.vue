@@ -180,7 +180,7 @@ export default {
           name: {
             value: edge.node.name,
             text: edge.node.name,
-            href: `${this.$baseURL}/build/${this.buildId}/file/${edge.node.id}`,
+            href: `${this.$baseURL}/builds/${this.buildId}/files/${edge.node.id}`,
           },
           size: {
             value: edge.node.size,

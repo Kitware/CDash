@@ -121,7 +121,7 @@ test('BuildSummary handles API response', async () => {
   expect(site_link.text()).toBe('mysite');
 
   const configure_link = component.find('#configure_link');
-  expect(configure_link.attributes('href')).toMatch('/build/1/configure');
+  expect(configure_link.attributes('href')).toMatch('/builds/1/configure');
   expect(configure_link.text()).toBe('View Configure Summary');
 
   // test the current build table
@@ -139,7 +139,7 @@ test('BuildSummary handles API response', async () => {
   const next_build_table = component.findAll('table').at(1).findAll('table').at(1);
   const next_build_rows = next_build_table.findAll('tr');
   expect(next_build_rows.at(0).text()).toBe('Next Build');
-  expect(next_build_rows.at(0).find('a').attributes('href')).toMatch('/build/2');
+  expect(next_build_rows.at(0).find('a').attributes('href')).toMatch('/builds/2');
   expect(next_build_rows.at(1).findAll('th').at(0).text()).toBe('Stage');
   expect(next_build_rows.at(1).findAll('th').at(1).text()).toBe('Errors');
   expect(next_build_rows.at(1).findAll('th').at(2).text()).toBe('Warnings');

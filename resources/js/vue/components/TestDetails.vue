@@ -33,7 +33,7 @@
       <b>Build: </b>
       <a
         id="build_link"
-        :href="$baseURL + '/build/' + cdash.test.buildid"
+        :href="$baseURL + '/builds/' + cdash.test.buildid"
       >
         {{ cdash.test.build }}
       </a>

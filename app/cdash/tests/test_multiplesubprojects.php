@@ -568,7 +568,7 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
         $this->verifyBuild($expected_builds['MyThirdPartyDependency'], $build, 'MyThirdPartyDependency');
 
         // viewConfigure
-        $this->get("{$this->url}/build/{$parentid}/configure");
+        $this->get("{$this->url}/builds/{$parentid}/configure");
 
         $content = $this->getBrowser()->getContent();
         if ($content == false) {

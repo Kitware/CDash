@@ -71,9 +71,9 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
         $pages_with_preview_tables = ['buildSummary'];
         foreach (array_merge($pages, $vue_pages) as $page) {
             if (in_array($page, $vue_pages, true)) {
-                $path_to_first = "build/{$first_buildid}";
-                $path_to_second = "build/{$second_buildid}";
-                $path_to_third = "build/{$third_buildid}";
+                $path_to_first = "builds/{$first_buildid}";
+                $path_to_second = "builds/{$second_buildid}";
+                $path_to_third = "builds/{$third_buildid}";
             } else {
                 $path_to_first = "buildid={$first_buildid}";
                 $path_to_second = "buildid={$second_buildid}";

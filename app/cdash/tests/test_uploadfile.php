@@ -65,7 +65,7 @@ class UploadFileTestCase extends KWWebTestCase
 
         // Make sure we can download the file and its contents don't change
         // during the download.
-        $url = "{$this->url}/build/{$this->BuildId}/file/{$this->FileId}";
+        $url = "{$this->url}/builds/{$this->BuildId}/files/{$this->FileId}";
         $tmp_file = sys_get_temp_dir() . '/CMakeCache.txt';
 
         $client = $this->getGuzzleClient();

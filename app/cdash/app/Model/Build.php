@@ -1849,7 +1849,7 @@ class Build
         // Should we post configure errors to a pull request?
         if (!empty($this->PullRequest) && $numErrors > 0) {
             $message = "$this->Name failed to configure";
-            $url = url("/build/{$this->Id}/configure");
+            $url = url("/builds/{$this->Id}/configure");
             $this->NotifyPullRequest($message, $url);
         }
     }
@@ -2341,7 +2341,7 @@ class Build
 
     public function GetBuildSummaryUrl(): string
     {
-        return url("/build/{$this->Id}");
+        return url("/builds/{$this->Id}");
     }
 
     public function GetBuildErrorUrl(): string

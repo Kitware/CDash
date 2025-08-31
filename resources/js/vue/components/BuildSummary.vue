@@ -54,7 +54,7 @@
               <span v-if="cdash.build.note">
                 (<a
                   class="cdash-link"
-                  :href="$baseURL + '/build/' + cdash.build.id + '/notes'"
+                  :href="$baseURL + '/builds/' + cdash.build.id + '/notes'"
                 >view notes</a>)
               </span>
             </td>
@@ -156,7 +156,7 @@
             <td>
               <a
                 class="cdash-link"
-                :href="$baseURL + '/build/' + cdash.build.lastsubmitbuild"
+                :href="$baseURL + '/builds/' + cdash.build.lastsubmitbuild"
               >
                 {{ cdash.build.lastsubmitdate }}
               </a>
@@ -184,7 +184,7 @@
                     >
                       <a
                         class="cdash-link"
-                        :href="$baseURL + '/build/' + cdash.previousbuild.buildid"
+                        :href="$baseURL + '/builds/' + cdash.previousbuild.buildid"
                       >
                         <b>Previous Build</b>
                       </a>
@@ -208,7 +208,7 @@
                       <b>
                         <a
                           class="cdash-link"
-                          :href="$baseURL + '/build/' + cdash.previousbuild.buildid + '/update'"
+                          :href="$baseURL + '/builds/' + cdash.previousbuild.buildid + '/update'"
                         >
                           {{ cdash.previousbuild.nupdateerrors }}
                         </a>
@@ -221,7 +221,7 @@
                       <b>
                         <a
                           class="cdash-link"
-                          :href="$baseURL + '/build/' + cdash.previousbuild.buildid + '/update'"
+                          :href="$baseURL + '/builds/' + cdash.previousbuild.buildid + '/update'"
                         >
                           {{ cdash.previousbuild.nupdatewarnings }}
                         </a>
@@ -240,7 +240,7 @@
                       <b>
                         <a
                           class="cdash-link"
-                          :href="$baseURL + '/build/' + cdash.previousbuild.buildid + '/configure'"
+                          :href="$baseURL + '/builds/' + cdash.previousbuild.buildid + '/configure'"
                         >
                           {{ cdash.previousbuild.nconfigureerrors }}
                         </a>
@@ -253,7 +253,7 @@
                       <b>
                         <a
                           class="cdash-link"
-                          :href="$baseURL + '/build/' + cdash.previousbuild.buildid + '/configure'"
+                          :href="$baseURL + '/builds/' + cdash.previousbuild.buildid + '/configure'"
                         >
                           {{ cdash.previousbuild.nconfigurewarnings }}
                         </a>
@@ -370,7 +370,7 @@
                       <b>
                         <a
                           class="cdash-link"
-                          :href="$baseURL + '/build/' + cdash.build.id + '/update'"
+                          :href="$baseURL + '/builds/' + cdash.build.id + '/update'"
                         >
                           {{ cdash.update.nerrors }}
                         </a>
@@ -383,7 +383,7 @@
                       <b>
                         <a
                           class="cdash-link"
-                          :href="$baseURL + '/build/' + cdash.build.id + '/update'"
+                          :href="$baseURL + '/builds/' + cdash.build.id + '/update'"
                         >
                           {{ cdash.update.nwarnings }}
                         </a>
@@ -406,7 +406,7 @@
                       <b>
                         <a
                           class="cdash-link"
-                          :href="$baseURL + '/build/' + cdash.build.id + '/configure'"
+                          :href="$baseURL + '/builds/' + cdash.build.id + '/configure'"
                         >
                           {{ cdash.configure.nerrors }}
                         </a>
@@ -419,7 +419,7 @@
                       <b>
                         <a
                           class="cdash-link"
-                          :href="$baseURL + '/build/' + cdash.build.id + '/configure'"
+                          :href="$baseURL + '/builds/' + cdash.build.id + '/configure'"
                         >
                           {{ cdash.configure.nwarnings }}
                         </a>
@@ -518,7 +518,7 @@
                     >
                       <a
                         class="cdash-link"
-                        :href="$baseURL + '/build/' + cdash.nextbuild.buildid"
+                        :href="$baseURL + '/builds/' + cdash.nextbuild.buildid"
                       >
                         <b>Next Build</b>
                       </a>
@@ -542,7 +542,7 @@
                       <b>
                         <a
                           class="cdash-link"
-                          :href="$baseURL + '/build/' + cdash.nextbuild.buildid + '/update'"
+                          :href="$baseURL + '/builds/' + cdash.nextbuild.buildid + '/update'"
                         >
                           {{ cdash.nextbuild.nupdateerrors }}
                         </a>
@@ -555,7 +555,7 @@
                       <b>
                         <a
                           class="cdash-link"
-                          :href="$baseURL + '/build/' + cdash.nextbuild.buildid + '/update'"
+                          :href="$baseURL + '/builds/' + cdash.nextbuild.buildid + '/update'"
                         >
                           {{ cdash.nextbuild.nupdatewarnings }}
                         </a>
@@ -574,7 +574,7 @@
                       <b>
                         <a
                           class="cdash-link"
-                          :href="$baseURL + '/build/' + cdash.nextbuild.buildid + '/configure'"
+                          :href="$baseURL + '/builds/' + cdash.nextbuild.buildid + '/configure'"
                         >
                           {{ cdash.nextbuild.nconfigureerrors }}
                         </a>
@@ -587,7 +587,7 @@
                       <b>
                         <a
                           class="cdash-link"
-                          :href="$baseURL + '/build/' + cdash.nextbuild.buildid + '/configure'"
+                          :href="$baseURL + '/builds/' + cdash.nextbuild.buildid + '/configure'"
                         >
                           {{ cdash.nextbuild.nconfigurewarnings }}
                         </a>
@@ -732,7 +732,7 @@
               <td>
                 <a
                   class="cdash-link"
-                  :href="$baseURL + '/build/' + build.id"
+                  :href="$baseURL + '/builds/' + build.id"
                 >
                   {{ build.starttime }}
                 </a>
@@ -949,7 +949,7 @@
         >
           This build {{ from.relationship }} <a
             class="cdash-link"
-            :href="$baseURL + '/build/' + from.relatedid"
+            :href="$baseURL + '/builds/' + from.relatedid"
           >{{ from.name }}</a>.
         </div>
         <div
@@ -958,7 +958,7 @@
         >
           <a
             class="cdash-link"
-            :href="$baseURL + '/build/' + to.buildid"
+            :href="$baseURL + '/builds/' + to.buildid"
           >{{ to.name }}</a> {{ to.relationship }} this build.
         </div>
       </div>
@@ -988,7 +988,7 @@
         <b>Number of Updates: </b>
         <a
           id="update_link"
-          :href="$baseURL + '/build/' + cdash.build.id + '/update'"
+          :href="$baseURL + '/builds/' + cdash.build.id + '/update'"
         >
           {{ cdash.update.nupdates }}
         </a>
@@ -1028,7 +1028,7 @@
 
         <a
           id="configure_link"
-          :href="$baseURL + '/build/' + cdash.build.id + '/configure'"
+          :href="$baseURL + '/builds/' + cdash.build.id + '/configure'"
         >
           View Configure Summary
         </a>
@@ -1338,7 +1338,7 @@ export default {
         if (item) {
           plot.highlight(item.series, item.datapoint);
           const buildid = vm.cdash.buildids[item.datapoint[0]];
-          window.location = `${vm.$baseURL}/build/${buildid}`;
+          window.location = `${vm.$baseURL}/builds/${buildid}`;
         }
       });
 

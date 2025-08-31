@@ -29,7 +29,7 @@
               <b>Build: </b>
               <a
                 class="cdash-link"
-                :href="$baseURL + '/build/' + buildid"
+                :href="$baseURL + '/builds/' + buildid"
               >
                 {{ cdash.build.buildname }}
               </a>

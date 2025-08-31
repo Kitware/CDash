@@ -113,16 +113,18 @@ Route::get('/viewDynamicAnalysis.php', function (Request $request) {
 Route::get('/builds/{build_id}/targets', 'BuildController@targets')
     ->whereNumber('build_id');
 
-Route::get('/build/{build_id}/files', 'BuildController@files')
+Route::get('/builds/{build_id}/files', 'BuildController@files')
     ->whereNumber('build_id');
+Route::permanentRedirect('/build/{build_id}/files', url('/builds/{build_id}/files'));
 Route::get('/viewFiles.php', function (Request $request) {
     $buildid = $request->query('buildid');
-    return redirect("/build/{$buildid}/files", 301);
+    return redirect("/builds/{$buildid}/files", 301);
 });
 
-Route::get('/build/{build_id}/file/{file_id}', 'BuildController@build_file')
+Route::get('/builds/{build_id}/files/{file_id}', 'BuildController@build_file')
     ->whereNumber('build_id')
     ->whereNumber('file_id');
+Route::permanentRedirect('/build/{build_id}/file/{file_id}', url('/builds/{build_id}/files/{file_id}'));
 
 Route::get('/projects/{id}/edit', 'EditProjectController@edit')
     ->whereNumber('id');

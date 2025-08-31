@@ -868,7 +868,7 @@ type UploadedUrl @model(class: "App\\Models\\UploadFile") {
 
 
 type UploadedFile @model(class: "App\\Models\\UploadFile") {
-  "Unique primary key.  Use /build/<id>/file/<id> to download the file by ID."
+  "Unique primary key.  Use /builds/<id>/files/<id> to download the file by ID."
   id: ID!
 
   name: String! @rename(attribute: "filename")
