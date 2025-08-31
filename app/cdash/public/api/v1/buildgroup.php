@@ -17,8 +17,6 @@
 
 namespace CDash\Api\v1\BuildGroup;
 
-require_once 'include/api_common.php';
-
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildGroup;

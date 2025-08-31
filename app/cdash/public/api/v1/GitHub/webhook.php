@@ -15,8 +15,6 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once 'include/api_common.php';
-
 use CDash\Model\Repository;
 use Illuminate\Support\Facades\Log;
 

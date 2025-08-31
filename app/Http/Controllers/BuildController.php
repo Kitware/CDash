@@ -30,8 +30,6 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
-require_once 'include/api_common.php';
-
 final class BuildController extends AbstractBuildController
 {
     public function targets(int $build_id): View

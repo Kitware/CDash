@@ -14857,69 +14857,6 @@ parameters:
 			path: app/cdash/include/Test/UseCase/UseCase.php
 
 		-
-			message: '''
-				#^Call to deprecated function pdo_real_escape_string\(\)\:
-				04/01/2023$#
-			'''
-			identifier: function.deprecated
-			count: 1
-			path: app/cdash/include/api_common.php
-
-		-
-			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
-			identifier: empty.notAllowed
-			count: 2
-			path: app/cdash/include/api_common.php
-
-		-
-			message: '#^Function can_access_project\(\) has parameter \$projectid with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/include/api_common.php
-
-		-
-			message: '#^Function can_access_project\(\) throws checked exception Illuminate\\Auth\\AuthenticationException but it''s missing from the PHPDoc @throws tag\.$#'
-			identifier: missingType.checkedException
-			count: 1
-			path: app/cdash/include/api_common.php
-
-		-
-			message: '#^Function can_administrate_project\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/include/api_common.php
-
-		-
-			message: '#^Function can_administrate_project\(\) has parameter \$projectid with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/include/api_common.php
-
-		-
-			message: '#^Function can_administrate_project\(\) throws checked exception Illuminate\\Auth\\AuthenticationException but it''s missing from the PHPDoc @throws tag\.$#'
-			identifier: missingType.checkedException
-			count: 1
-			path: app/cdash/include/api_common.php
-
-		-
-			message: '#^Function get_param\(\) has parameter \$name with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/include/api_common.php
-
-		-
-			message: '#^Only booleans are allowed in a negated boolean, mixed given\.$#'
-			identifier: booleanNot.exprNotBoolean
-			count: 1
-			path: app/cdash/include/api_common.php
-
-		-
-			message: '#^Parameter \#3 \.\.\.\$arrays of function array_merge expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/include/api_common.php
-
-		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Relations\\Pivot\:\:\$role\.$#'
 			identifier: property.notFound
 			count: 1
@@ -14938,6 +14875,15 @@ parameters:
 			'''
 			identifier: function.deprecated
 			count: 2
+			path: app/cdash/include/common.php
+
+		-
+			message: '''
+				#^Call to deprecated function pdo_real_escape_string\(\)\:
+				04/01/2023$#
+			'''
+			identifier: function.deprecated
+			count: 1
 			path: app/cdash/include/common.php
 
 		-
@@ -15054,7 +15000,7 @@ parameters:
 		-
 			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
 			identifier: empty.notAllowed
-			count: 2
+			count: 4
 			path: app/cdash/include/common.php
 
 		-
@@ -15096,6 +15042,36 @@ parameters:
 		-
 			message: '#^Function begin_JSON_response\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
+			count: 1
+			path: app/cdash/include/common.php
+
+		-
+			message: '#^Function can_access_project\(\) has parameter \$projectid with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: app/cdash/include/common.php
+
+		-
+			message: '#^Function can_access_project\(\) throws checked exception Illuminate\\Auth\\AuthenticationException but it''s missing from the PHPDoc @throws tag\.$#'
+			identifier: missingType.checkedException
+			count: 1
+			path: app/cdash/include/common.php
+
+		-
+			message: '#^Function can_administrate_project\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/cdash/include/common.php
+
+		-
+			message: '#^Function can_administrate_project\(\) has parameter \$projectid with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: app/cdash/include/common.php
+
+		-
+			message: '#^Function can_administrate_project\(\) throws checked exception Illuminate\\Auth\\AuthenticationException but it''s missing from the PHPDoc @throws tag\.$#'
+			identifier: missingType.checkedException
 			count: 1
 			path: app/cdash/include/common.php
 
@@ -15216,6 +15192,12 @@ parameters:
 		-
 			message: '#^Function get_labels_JSON_from_query_results\(\) has parameter \$response with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
+			count: 1
+			path: app/cdash/include/common.php
+
+		-
+			message: '#^Function get_param\(\) has parameter \$name with no type specified\.$#'
+			identifier: missingType.parameter
 			count: 1
 			path: app/cdash/include/common.php
 
@@ -15354,7 +15336,7 @@ parameters:
 		-
 			message: '#^Only booleans are allowed in a negated boolean, mixed given\.$#'
 			identifier: booleanNot.exprNotBoolean
-			count: 1
+			count: 2
 			path: app/cdash/include/common.php
 
 		-
@@ -15515,6 +15497,12 @@ parameters:
 
 		-
 			message: '#^Parameter \#3 \$subject of function preg_replace expects array\<float\|int\|string\>\|string, list\<string\>\|string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/cdash/include/common.php
+
+		-
+			message: '#^Parameter \#3 \.\.\.\$arrays of function array_merge expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: app/cdash/include/common.php

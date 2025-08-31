@@ -29,7 +29,6 @@ use DateInterval;
 use DatePeriod;
 use DateTime;
 
-require_once 'include/api_common.php';
 require_once 'include/filterdataFunctions.php';
 
 class Timeline extends Index
