@@ -15,9 +15,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-use CDash\Model\Build;
 use CDash\Model\Project;
-use CDash\ServiceContainer;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -100,82 +98,4 @@ function get_param($name, $required = true): string
         abort(400, "Valid $name required");
     }
     return pdo_real_escape_string($value);
-}
-
-function get_int_param($name, $required = true): ?int
-{
-    $value = get_param($name, $required);
-    if (is_null($value)) {
-        return null;
-    }
-
-    if ($required && !is_numeric($value)) {
-        abort(400, "Valid $name required");
-    }
-    return (int) $value;
-}
-
-/**
- * Pulls the buildid from the request
- *
- * @param bool $required
- */
-function get_request_build_id($required = true): ?int
-{
-    $buildid = get_int_param('buildid', $required);
-    return $buildid;
-}
-
-/**
- * Pull projectname from request and lookup its ID.
- */
-function get_project_from_request(): ?Project
-{
-    $Project = just_get_project_from_request();
-    return ($Project && can_access_project($Project->Id)) ? $Project : null;
-}
-
-/**
- * Get project given request parameter, 'project'
- */
-function just_get_project_from_request(): Project
-{
-    if (!isset($_REQUEST['project'])) {
-        abort(400, 'Valid project required');
-    }
-    $projectname = $_REQUEST['project'];
-    $projectid = get_project_id($projectname);
-    $service = ServiceContainer::getInstance();
-    $Project = $service->get(Project::class);
-    $Project->Id = $projectid;
-    if (!$Project->Exists()) {
-        abort(404, 'Project does not exist');
-    }
-    return $Project;
-}
-
-/**
- * Returns a build based on the id extracted from the request and returns it if the user has
- * necessary access to the project
- *
- * @param bool $required
- */
-function get_request_build($required = true): ?Build
-{
-    $id = get_request_build_id($required);
-    if (is_null($id)) {
-        return null;
-    }
-    $build = new Build();
-    $build->Id = $id;
-
-    if ($required && !$build->Exists()) {
-        abort(400, 'This build does not exist. Maybe it has been deleted.');
-    }
-
-    if ($id) {
-        $build->FillFromId($id);
-    }
-
-    return can_access_project($build->ProjectId) ? $build : null;
 }

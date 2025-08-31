@@ -24,7 +24,37 @@ use CDash\Model\Build;
 use CDash\Model\BuildGroup;
 use CDash\Model\BuildGroupRule;
 use App\Models\Site;
+use CDash\Model\Project;
+use CDash\ServiceContainer;
 use Symfony\Component\HttpFoundation\Response;
+
+/**
+ * Pull projectname from request and lookup its ID.
+ */
+function get_project_from_request(): ?Project
+{
+    $Project = just_get_project_from_request();
+    return ($Project && can_access_project($Project->Id)) ? $Project : null;
+}
+
+/**
+ * Get project given request parameter, 'project'
+ */
+function just_get_project_from_request(): Project
+{
+    if (!isset($_REQUEST['project'])) {
+        abort(400, 'Valid project required');
+    }
+    $projectname = $_REQUEST['project'];
+    $projectid = get_project_id($projectname);
+    $service = ServiceContainer::getInstance();
+    $Project = $service->get(Project::class);
+    $Project->Id = $projectid;
+    if (!$Project->Exists()) {
+        abort(404, 'Project does not exist');
+    }
+    return $Project;
+}
 
 // Require administrative access to view this page.
 init_api_request();
