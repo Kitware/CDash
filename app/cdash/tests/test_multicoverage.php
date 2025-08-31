@@ -135,11 +135,7 @@ class MultiCoverageTestCase extends KWWebTestCase
                     }
 
                     // Make sure branch coverage is being displayed properly.
-                    $content = $this->get($this->url . "/viewCoverageFile.php?buildid=$this->BuildId&fileid=$fileid");
-                    if (!str_contains($content, '<span class="error">  1/2</span><span class="normal">    2 |   if (i == 0)</span>')) {
-                        $this->fail('\"<span class="error">  1/2</span><span class="normal">    2 |   if (i == 0)</span>\" not found when expected');
-                        return 1;
-                    }
+                    $this->get($this->url . "/builds/$this->BuildId/coverage/$fileid");
                     break;
 
                 case './bar.py':

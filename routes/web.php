@@ -11,6 +11,7 @@
 |
 */
 
+use App\Http\Controllers\CoverageFileController;
 use App\Http\Controllers\GlobalInvitationController;
 use App\Http\Controllers\ProjectInvitationController;
 use App\Models\Project;
@@ -126,6 +127,15 @@ Route::get('/builds/{build_id}/files/{file_id}', 'BuildController@build_file')
     ->whereNumber('file_id');
 Route::permanentRedirect('/build/{build_id}/file/{file_id}', url('/builds/{build_id}/files/{file_id}'));
 
+Route::get('/builds/{build_id}/coverage/{file_id}', CoverageFileController::class)
+    ->whereNumber('build_id')
+    ->whereNumber('file_id');
+Route::get('/viewCoverageFile.php', function (Request $request) {
+    $buildid = $request->integer('buildid');
+    $fileid = $request->integer('fileid');
+    return redirect("/builds/{$buildid}/coverage/{$fileid}", 301);
+});
+
 Route::get('/projects/{id}/edit', 'EditProjectController@edit')
     ->whereNumber('id');
 Route::permanentRedirect('/project/{id}/edit', url('/projects/{id}/edit'));
@@ -193,8 +203,6 @@ Route::get('/testSummary.php', 'TestController@testSummary');
 Route::match(['get', 'post'], '/viewCoverage.php', 'CoverageController@viewCoverage');
 
 Route::get('/compareCoverage.php', 'CoverageController@compareCoverage');
-
-Route::get('/viewCoverageFile.php', 'CoverageController@viewCoverageFile');
 
 Route::any('/ajax/getviewcoverage.php', 'CoverageController@ajaxGetViewCoverage');
 

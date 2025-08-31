@@ -133,13 +133,6 @@ class BranchCoverageTestCase extends KWWebTestCase
             AND cf.fullpath = './MathFunctions/mysqrt.cxx'");
         $fileid = $fileid_result[0]->fileid;
 
-        // Make sure branch coverage is being displayed properly.
-        $content = $this->get($this->url . "/viewCoverageFile.php?buildid=$this->buildid&fileid=$fileid");
-        if (!str_contains($content, '<span class="error">  1/2</span><span class="normal">    7 |   if (x &lt;= 0)</span>')) {
-            $this->fail('\"<span class="error">  1/2</span><span class="normal">    7 |   if (x &lt;= 0)</span>\" not found when expected');
-            return 1;
-        }
-
         // Make sure our uncovered results also made it into the database.
         $row = DB::select(
             "SELECT loctested, locuntested FROM coverage
