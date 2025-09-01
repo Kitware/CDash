@@ -15,7 +15,7 @@ final class ProjectInvitationController extends AbstractController
     public function __invoke(Request $request, int $projectId, int $invitationId): RedirectResponse
     {
         /** @var User $user */
-        $user = auth()->user();
+        $user = $request->user();
         if ($user === null) {
             // This case should not be possible because this route is protected by the auth middleware.
             throw new Exception('Attempt to join project without account.');
