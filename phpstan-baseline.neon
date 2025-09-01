@@ -73,7 +73,7 @@ parameters:
 			path: app/Console/Commands/AutoRemoveBuilds.php
 
 		-
-			message: '#^Parameter \#1 \$string of function trim expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$string of function trim expects string, bool\|string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: app/Console/Commands/CheckKey.php
@@ -385,12 +385,6 @@ parameters:
 			path: app/Http/Controllers/AbstractController.php
 
 		-
-			message: '#^Part \$controller_path \(mixed\) of encapsed string cannot be cast to string\.$#'
-			identifier: encapsedStringPart.nonString
-			count: 1
-			path: app/Http/Controllers/AbstractController.php
-
-		-
 			message: '#^Class App\\Http\\Controllers\\AbstractProjectController has an uninitialized property \$project\. Give it default value or assign it in the constructor\.$#'
 			identifier: property.uninitialized
 			count: 1
@@ -489,12 +483,6 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$user of method Illuminate\\Contracts\\Auth\\StatefulGuard\:\:login\(\) expects Illuminate\\Contracts\\Auth\\Authenticatable, App\\Models\\User\|null given\.$#'
 			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/Auth/RegisterController.php
-
-		-
-			message: '#^Part \$password_min \(mixed\) of encapsed string cannot be cast to string\.$#'
-			identifier: encapsedStringPart.nonString
 			count: 1
 			path: app/Http/Controllers/Auth/RegisterController.php
 
@@ -1669,7 +1657,7 @@ parameters:
 			path: app/Http/Controllers/FilterController.php
 
 		-
-			message: '#^Only booleans are allowed in a ternary operator condition, mixed given\.$#'
+			message: '#^Only booleans are allowed in a ternary operator condition, bool\|string\|null given\.$#'
 			identifier: ternary.condNotBoolean
 			count: 1
 			path: app/Http/Controllers/IndexController.php
@@ -1677,12 +1665,6 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$project_name of method App\\Http\\Controllers\\AbstractProjectController\:\:setProjectByName\(\) expects string, mixed given\.$#'
 			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/IndexController.php
-
-		-
-			message: '#^Part \$default_project \(mixed\) of encapsed string cannot be cast to string\.$#'
-			identifier: encapsedStringPart.nonString
 			count: 1
 			path: app/Http/Controllers/IndexController.php
 
@@ -2239,12 +2221,6 @@ parameters:
 			path: app/Http/Controllers/ProjectOverviewController.php
 
 		-
-			message: '#^Cannot cast mixed to int\.$#'
-			identifier: cast.int
-			count: 1
-			path: app/Http/Controllers/RemoteProcessingController.php
-
-		-
 			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
 			identifier: equal.notAllowed
 			count: 1
@@ -2326,7 +2302,7 @@ parameters:
 			path: app/Http/Controllers/SubProjectController.php
 
 		-
-			message: '#^Only booleans are allowed in an if condition, mixed given\.$#'
+			message: '#^Only booleans are allowed in an if condition, bool\|string given\.$#'
 			identifier: if.condNotBoolean
 			count: 1
 			path: app/Http/Controllers/SubProjectController.php
@@ -2722,24 +2698,6 @@ parameters:
 			path: app/Http/Controllers/UserController.php
 
 		-
-			message: '#^Part \$complexity_count \(mixed\) of encapsed string cannot be cast to string\.$#'
-			identifier: encapsedStringPart.nonString
-			count: 1
-			path: app/Http/Controllers/UserController.php
-
-		-
-			message: '#^Part \$minimum_complexity \(mixed\) of encapsed string cannot be cast to string\.$#'
-			identifier: encapsedStringPart.nonString
-			count: 2
-			path: app/Http/Controllers/UserController.php
-
-		-
-			message: '#^Part \$minimum_length \(mixed\) of encapsed string cannot be cast to string\.$#'
-			identifier: encapsedStringPart.nonString
-			count: 1
-			path: app/Http/Controllers/UserController.php
-
-		-
 			message: '#^Strict comparison using \=\=\= between mixed~''subscribedtoproject'' and ''subscribedtoproject'' will always evaluate to false\.$#'
 			identifier: identical.alwaysFalse
 			count: 1
@@ -2848,12 +2806,6 @@ parameters:
 			path: app/Http/Middleware/JsonOnly.php
 
 		-
-			message: '#^Cannot cast mixed to int\.$#'
-			identifier: cast.int
-			count: 1
-			path: app/Http/Middleware/PasswordExpired.php
-
-		-
 			message: '#^Method App\\Http\\Middleware\\PasswordExpired\:\:handle\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -2864,12 +2816,6 @@ parameters:
 			identifier: missingType.return
 			count: 1
 			path: app/Http/Middleware/RedirectIfAuthenticated.php
-
-		-
-			message: '#^Cannot cast mixed to int\.$#'
-			identifier: cast.int
-			count: 1
-			path: app/Http/Middleware/Timer.php
 
 		-
 			message: '#^Method App\\Http\\Middleware\\Timer\:\:handle\(\) has no return type specified\.$#'
@@ -3424,7 +3370,7 @@ parameters:
 			path: app/Http/Submission/Handlers/BazelJSONHandler.php
 
 		-
-			message: '#^Binary operation "/" between mixed and 2 results in an error\.$#'
+			message: '#^Binary operation "/" between string\|true and 2 results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1
 			path: app/Http/Submission/Handlers/BuildHandler.php
@@ -3526,20 +3472,8 @@ parameters:
 			path: app/Http/Submission/Handlers/BuildHandler.php
 
 		-
-			message: '#^Parameter \#2 \$offset of function substr expects int, \(float\|int\) given\.$#'
+			message: '#^Parameter \#2 \$offset of function substr expects int, float\|int given\.$#'
 			identifier: argument.type
-			count: 1
-			path: app/Http/Submission/Handlers/BuildHandler.php
-
-		-
-			message: '#^Parameter \#3 \$length of function substr expects int\|null, \(float\|int\) given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Submission/Handlers/BuildHandler.php
-
-		-
-			message: '#^Part \$threshold \(mixed\) of encapsed string cannot be cast to string\.$#'
-			identifier: encapsedStringPart.nonString
 			count: 1
 			path: app/Http/Submission/Handlers/BuildHandler.php
 
@@ -5164,7 +5098,7 @@ parameters:
 			path: app/Http/Submission/Handlers/ProjectHandler.php
 
 		-
-			message: '#^Only booleans are allowed in an if condition, mixed given\.$#'
+			message: '#^Only booleans are allowed in an if condition, bool\|string given\.$#'
 			identifier: if.condNotBoolean
 			count: 2
 			path: app/Http/Submission/Handlers/ProjectHandler.php
@@ -5956,12 +5890,6 @@ parameters:
 			path: app/Jobs/ProcessSubmission.php
 
 		-
-			message: '#^Cannot cast mixed to int\.$#'
-			identifier: cast.int
-			count: 2
-			path: app/Jobs/ProcessSubmission.php
-
-		-
 			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
 			identifier: empty.notAllowed
 			count: 5
@@ -5994,6 +5922,12 @@ parameters:
 		-
 			message: '#^Method App\\Jobs\\ProcessSubmission\:\:__construct\(\) has parameter \$projectid with no type specified\.$#'
 			identifier: missingType.parameter
+			count: 1
+			path: app/Jobs/ProcessSubmission.php
+
+		-
+			message: '#^Method App\\Jobs\\ProcessSubmission\:\:__construct\(\) throws checked exception TypeError but it''s missing from the PHPDoc @throws tag\.$#'
+			identifier: missingType.checkedException
 			count: 1
 			path: app/Jobs/ProcessSubmission.php
 
@@ -6136,7 +6070,7 @@ parameters:
 			path: app/Jobs/ProcessSubmission.php
 
 		-
-			message: '#^Only booleans are allowed in an if condition, mixed given\.$#'
+			message: '#^Only booleans are allowed in an if condition, bool\|string given\.$#'
 			identifier: if.condNotBoolean
 			count: 3
 			path: app/Jobs/ProcessSubmission.php
@@ -6178,20 +6112,14 @@ parameters:
 			path: app/Jobs/ProcessSubmission.php
 
 		-
-			message: '#^Property App\\Jobs\\ProcessSubmission\:\:\$timeout \(int\) does not accept mixed\.$#'
+			message: '#^Property App\\Jobs\\ProcessSubmission\:\:\$timeout \(int\) does not accept bool\|int\|string\.$#'
 			identifier: assign.propertyType
 			count: 1
 			path: app/Jobs/ProcessSubmission.php
 
 		-
-			message: '#^Parameter \#1 \$value of method Carbon\\Carbon\:\:subHours\(\) expects float\|int, mixed given\.$#'
+			message: '#^Parameter \#1 \$value of method Carbon\\Carbon\:\:subHours\(\) expects float\|int, bool\|int\|string given\.$#'
 			identifier: argument.type
-			count: 1
-			path: app/Jobs/PruneJobs.php
-
-		-
-			message: '#^Part \$lifetime \(mixed\) of encapsed string cannot be cast to string\.$#'
-			identifier: encapsedStringPart.nonString
 			count: 1
 			path: app/Jobs/PruneJobs.php
 
@@ -6208,7 +6136,7 @@ parameters:
 			path: app/Ldap/Rules/FilterRules.php
 
 		-
-			message: '#^Only booleans are allowed in an if condition, mixed given\.$#'
+			message: '#^Only booleans are allowed in an if condition, bool\|string given\.$#'
 			identifier: if.condNotBoolean
 			count: 1
 			path: app/Listeners/ConfiguredSendEmailVerificationNotification.php
@@ -6220,7 +6148,7 @@ parameters:
 			path: app/Listeners/ConfiguredSendEmailVerificationNotification.php
 
 		-
-			message: '#^Only booleans are allowed in an if condition, mixed given\.$#'
+			message: '#^Only booleans are allowed in an if condition, bool\|string given\.$#'
 			identifier: if.condNotBoolean
 			count: 1
 			path: app/Listeners/EmailSentListener.php
@@ -6277,7 +6205,7 @@ parameters:
 			path: app/Providers/AppServiceProvider.php
 
 		-
-			message: '#^Parameter \#1 \$haystack of function str_starts_with expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$haystack of function str_starts_with expects string, bool\|string given\.$#'
 			identifier: argument.type
 			count: 1
 			path: app/Providers/AppServiceProvider.php
@@ -6325,7 +6253,7 @@ parameters:
 			path: app/Rules/ProjectVisibilityAllowed.php
 
 		-
-			message: '#^Parameter \#1 \$value of static method Illuminate\\Support\\Str\:\:upper\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$value of static method Illuminate\\Support\\Str\:\:upper\(\) expects string, bool\|string given\.$#'
 			identifier: argument.type
 			count: 1
 			path: app/Rules/ProjectVisibilityAllowed.php
@@ -6391,12 +6319,6 @@ parameters:
 			message: '#^Called ''env'' outside of the config directory which returns null when the config is cached, use ''config''\.$#'
 			identifier: larastan.noEnvCallsOutsideOfConfig
 			count: 2
-			path: app/Utils/LdapUtils.php
-
-		-
-			message: '#^Cannot cast mixed to string\.$#'
-			identifier: cast.string
-			count: 1
 			path: app/Utils/LdapUtils.php
 
 		-
@@ -6919,19 +6841,19 @@ parameters:
 			path: app/Utils/RepositoryUtils.php
 
 		-
-			message: '#^Only booleans are allowed in a negated boolean, mixed given\.$#'
+			message: '#^Only booleans are allowed in a negated boolean, bool\|string given\.$#'
 			identifier: booleanNot.exprNotBoolean
 			count: 2
 			path: app/Utils/RepositoryUtils.php
 
 		-
-			message: '#^Only booleans are allowed in an elseif condition, mixed given\.$#'
+			message: '#^Only booleans are allowed in an elseif condition, bool\|string given\.$#'
 			identifier: elseif.condNotBoolean
 			count: 1
 			path: app/Utils/RepositoryUtils.php
 
 		-
-			message: '#^Only booleans are allowed in an if condition, mixed given\.$#'
+			message: '#^Only booleans are allowed in an if condition, bool\|string given\.$#'
 			identifier: if.condNotBoolean
 			count: 1
 			path: app/Utils/RepositoryUtils.php
@@ -7710,12 +7632,6 @@ parameters:
 		-
 			message: '#^Only numeric types are allowed in \+, int\<0, max\>\|false given on the left side\.$#'
 			identifier: plus.leftNonNumeric
-			count: 1
-			path: app/Validators/Password.php
-
-		-
-			message: '#^Parameter \#2 \.\.\.\$arrays of function array_merge expects array, mixed given\.$#'
-			identifier: argument.type
 			count: 1
 			path: app/Validators/Password.php
 
@@ -9121,12 +9037,6 @@ parameters:
 			path: app/cdash/app/Lib/Repository/GitHub.php
 
 		-
-			message: '#^Binary operation "\." between ''file\://'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
 			message: '#^Cannot access offset ''author'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 3
@@ -9205,6 +9115,12 @@ parameters:
 			path: app/cdash/app/Lib/Repository/GitHub.php
 
 		-
+			message: '#^Method CDash\\Lib\\Repository\\GitHub\:\:__construct\(\) throws checked exception TypeError but it''s missing from the PHPDoc @throws tag\.$#'
+			identifier: missingType.checkedException
+			count: 1
+			path: app/cdash/app/Lib/Repository/GitHub.php
+
+		-
 			message: '#^Method CDash\\Lib\\Repository\\GitHub\:\:authenticate\(\) throws checked exception Lcobucci\\JWT\\Encoding\\CannotEncodeContent but it''s missing from the PHPDoc @throws tag\.$#'
 			identifier: missingType.checkedException
 			count: 1
@@ -9235,7 +9151,7 @@ parameters:
 			path: app/cdash/app/Lib/Repository/GitHub.php
 
 		-
-			message: '#^Only booleans are allowed in a negated boolean, mixed given\.$#'
+			message: '#^Only booleans are allowed in a negated boolean, bool\|string given\.$#'
 			identifier: booleanNot.exprNotBoolean
 			count: 2
 			path: app/cdash/app/Lib/Repository/GitHub.php
@@ -9253,7 +9169,7 @@ parameters:
 			path: app/cdash/app/Lib/Repository/GitHub.php
 
 		-
-			message: '#^Parameter \#1 \$filename of function file_exists expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$filename of function file_exists expects string, bool\|string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: app/cdash/app/Lib/Repository/GitHub.php
@@ -9265,7 +9181,7 @@ parameters:
 			path: app/cdash/app/Lib/Repository/GitHub.php
 
 		-
-			message: '#^Parameter \#1 \$issuer of method Lcobucci\\JWT\\Builder\:\:issuedBy\(\) expects non\-empty\-string, mixed given\.$#'
+			message: '#^Parameter \#1 \$issuer of method Lcobucci\\JWT\\Builder\:\:issuedBy\(\) expects non\-empty\-string, bool\|string given\.$#'
 			identifier: argument.type
 			count: 1
 			path: app/cdash/app/Lib/Repository/GitHub.php
@@ -9295,7 +9211,7 @@ parameters:
 			path: app/cdash/app/Lib/Repository/GitHub.php
 
 		-
-			message: '#^Property CDash\\Lib\\Repository\\GitHub\:\:\$baseUrl \(string\) does not accept mixed\.$#'
+			message: '#^Property CDash\\Lib\\Repository\\GitHub\:\:\$baseUrl \(string\) does not accept bool\|string\.$#'
 			identifier: assign.propertyType
 			count: 1
 			path: app/cdash/app/Lib/Repository/GitHub.php
@@ -12082,12 +11998,6 @@ parameters:
 			path: app/cdash/app/Model/Project.php
 
 		-
-			message: '#^Cannot cast mixed to int\.$#'
-			identifier: cast.int
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
 			message: '#^Casting to int something that''s already int\.$#'
 			identifier: cast.useless
 			count: 1
@@ -12178,7 +12088,7 @@ parameters:
 			path: app/cdash/app/Model/Project.php
 
 		-
-			message: '#^Only booleans are allowed in a negated boolean, mixed given\.$#'
+			message: '#^Only booleans are allowed in a negated boolean, bool\|string given\.$#'
 			identifier: booleanNot.exprNotBoolean
 			count: 1
 			path: app/cdash/app/Model/Project.php
@@ -12211,12 +12121,6 @@ parameters:
 			message: '#^Parameter \#1 \$handle of function curl_setopt expects CurlHandle, \(CurlHandle\|false\) given\.$#'
 			identifier: argument.type
 			count: 6
-			path: app/cdash/app/Model/Project.php
-
-		-
-			message: '#^Parameter \#2 \$haystack of function in_array expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
 			path: app/cdash/app/Model/Project.php
 
 		-
@@ -12616,7 +12520,7 @@ parameters:
 			path: app/cdash/app/Model/SubProject.php
 
 		-
-			message: '#^Only booleans are allowed in a negated boolean, mixed given\.$#'
+			message: '#^Only booleans are allowed in a negated boolean, bool\|string given\.$#'
 			identifier: booleanNot.exprNotBoolean
 			count: 1
 			path: app/cdash/app/Model/SubProject.php
@@ -15499,15 +15403,15 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
-			message: '#^Only booleans are allowed in an if condition, int\|string\|null given\.$#'
+			message: '#^Only booleans are allowed in an if condition, bool\|string given\.$#'
 			identifier: if.condNotBoolean
-			count: 2
+			count: 1
 			path: app/cdash/include/common.php
 
 		-
-			message: '#^Only booleans are allowed in an if condition, mixed given\.$#'
+			message: '#^Only booleans are allowed in an if condition, int\|string\|null given\.$#'
 			identifier: if.condNotBoolean
-			count: 1
+			count: 2
 			path: app/cdash/include/common.php
 
 		-
@@ -15723,12 +15627,6 @@ parameters:
 		-
 			message: '#^Cannot call method fetch\(\) on PDOStatement\|false\.$#'
 			identifier: method.nonObject
-			count: 1
-			path: app/cdash/include/dailyupdates.php
-
-		-
-			message: '#^Cannot cast mixed to int\.$#'
-			identifier: cast.int
 			count: 1
 			path: app/cdash/include/dailyupdates.php
 
@@ -16312,7 +16210,7 @@ parameters:
 			path: app/cdash/public/api/v1/GitHub/webhook.php
 
 		-
-			message: '#^Parameter \#3 \$key of function hash_hmac expects string, mixed given\.$#'
+			message: '#^Parameter \#3 \$key of function hash_hmac expects string, bool\|string given\.$#'
 			identifier: argument.type
 			count: 1
 			path: app/cdash/public/api/v1/GitHub/webhook.php
@@ -16921,7 +16819,7 @@ parameters:
 			path: app/cdash/public/api/v1/project.php
 
 		-
-			message: '#^Binary operation "\*" between mixed and 1024 results in an error\.$#'
+			message: '#^Binary operation "\*" between bool\|float\|int\<1, max\>\|string and 1024 results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1
 			path: app/cdash/public/api/v1/project.php
@@ -17503,7 +17401,13 @@ parameters:
 			path: app/cdash/tests/case/CDash/DynamicAnalysisUseCaseTest.php
 
 		-
-			message: '#^Property GitHubTest\:\:\$baseUrl \(string\) does not accept mixed\.$#'
+			message: '#^Method GitHubTest\:\:setUp\(\) throws checked exception TypeError but it''s missing from the PHPDoc @throws tag\.$#'
+			identifier: missingType.checkedException
+			count: 1
+			path: app/cdash/tests/case/CDash/Lib/Repository/GitHubTest.php
+
+		-
+			message: '#^Property GitHubTest\:\:\$baseUrl \(string\) does not accept bool\|string\.$#'
 			identifier: assign.propertyType
 			count: 1
 			path: app/cdash/tests/case/CDash/Lib/Repository/GitHubTest.php
@@ -19372,31 +19276,7 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: '#^Cannot access offset ''database'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
-			message: '#^Cannot access offset ''host'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
-			message: '#^Cannot access offset ''password'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
 			message: '#^Cannot access offset ''project'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
-			message: '#^Cannot access offset ''username'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
@@ -19918,7 +19798,7 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			message: '#^Parameter \#1 \$search of function str_replace expects array\<string\>\|string, mixed given\.$#'
+			message: '#^Parameter \#1 \$search of function str_replace expects array\<string\>\|string, bool\|string given\.$#'
 			identifier: argument.type
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
@@ -19986,12 +19866,6 @@ parameters:
 		-
 			message: '#^Parameter \#7 \$content of static method Symfony\\Component\\HttpFoundation\\Request\:\:create\(\) expects resource\|string\|null, string\|false\|null given\.$#'
 			identifier: argument.type
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
-			message: '#^Part \$db_type \(mixed\) of encapsed string cannot be cast to string\.$#'
-			identifier: encapsedStringPart.nonString
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
@@ -21694,12 +21568,6 @@ parameters:
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
 			count: 2
-			path: app/cdash/tests/test_buildproperties.php
-
-		-
-			message: '#^Binary operation "\." between mixed and ''/submit\.php'' results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
 			path: app/cdash/tests/test_buildproperties.php
 
 		-
@@ -24148,8 +24016,8 @@ parameters:
 			path: app/cdash/tests/test_install.php
 
 		-
-			message: '#^Cannot access offset ''database'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
+			message: '#^Method InstallTestCase\:\:__construct\(\) throws checked exception TypeError but it''s missing from the PHPDoc @throws tag\.$#'
+			identifier: missingType.checkedException
 			count: 1
 			path: app/cdash/tests/test_install.php
 
@@ -24160,13 +24028,7 @@ parameters:
 			path: app/cdash/tests/test_install.php
 
 		-
-			message: '#^Part \$db_type \(mixed\) of encapsed string cannot be cast to string\.$#'
-			identifier: encapsedStringPart.nonString
-			count: 1
-			path: app/cdash/tests/test_install.php
-
-		-
-			message: '#^Property InstallTestCase\:\:\$databaseName \(string\) does not accept mixed\.$#'
+			message: '#^Property InstallTestCase\:\:\$databaseName \(string\) does not accept bool\|string\.$#'
 			identifier: assign.propertyType
 			count: 1
 			path: app/cdash/tests/test_install.php
@@ -24211,7 +24073,7 @@ parameters:
 			path: app/cdash/tests/test_issuecreation.php
 
 		-
-			message: '#^Parameter \#1 \$string of function urlencode expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$string of function urlencode expects string, bool\|string given\.$#'
 			identifier: argument.type
 			count: 1
 			path: app/cdash/tests/test_issuecreation.php

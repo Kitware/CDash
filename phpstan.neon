@@ -57,6 +57,7 @@ parameters:
 
     # Larastan config options
     checkAuthCallsWhenInRequestScope: true
+    checkConfigTypes: true
 
     parallel:
         maximumNumberOfProcesses: int(%env.PHPSTAN_CPU%)
