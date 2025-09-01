@@ -4,6 +4,8 @@ updates:
     directory: "/"
     schedule:
       interval: "monthly"
+      time: "02:00"
+      timezone: "America/New_York"
     labels:
       - dependencies
       - "release notes: external dependencies"
@@ -12,6 +14,8 @@ updates:
     directory: "/"
     schedule:
       interval: "monthly"
+      time: "02:00"
+      timezone: "America/New_York"
     labels:
       - dependencies
       - "release notes: external dependencies"
@@ -20,6 +24,8 @@ updates:
     directory: "/"
     schedule:
       interval: "monthly"
+      time: "02:00"
+      timezone: "America/New_York"
     labels:
       - dependencies
       - "release notes: external dependencies"
