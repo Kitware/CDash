@@ -48,11 +48,16 @@ parameters:
     stubFiles:
         - vendor/nuwave/lighthouse/_ide_helper.php
 
+    # Regular PHPStan config options
     treatPhpDocTypesAsCertain: false
     checkUninitializedProperties: true
     checkTooWideReturnTypesInProtectedAndPublicMethods: true
     checkBenevolentUnionTypes: true
     reportAnyTypeWideningInVarTag: true
+
+    # Larastan config options
+    checkAuthCallsWhenInRequestScope: true
+    checkConfigTypes: true
 
     parallel:
         maximumNumberOfProcesses: int(%env.PHPSTAN_CPU%)
