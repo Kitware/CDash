@@ -111,7 +111,7 @@ class GitHub implements RepositoryInterface
 
         if ($this->installationId === '') {
             if ($required) {
-                throw new Exception('Unable to find installation ID for repository');
+                throw new Exception("Unable to find installation ID for repository {$this->repo}, project {$this->project->Name}");
             }
             return false;
         }
