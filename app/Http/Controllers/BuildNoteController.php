@@ -40,15 +40,15 @@ final class BuildNoteController extends AbstractBuildController
         $next_buildid = $this->build->GetNextBuildId();
 
         if ($previous_buildid > 0) {
-            $menu['previous'] = "/build/$previous_buildid/notes";
+            $menu['previous'] = "/builds/$previous_buildid/notes";
         } else {
             $menu['previous'] = false;
         }
 
-        $menu['current'] = "/build/$current_buildid/notes";
+        $menu['current'] = "/builds/$current_buildid/notes";
 
         if ($next_buildid > 0) {
-            $menu['next'] = "/build/$next_buildid/notes";
+            $menu['next'] = "/builds/$next_buildid/notes";
         } else {
             $menu['next'] = false;
         }

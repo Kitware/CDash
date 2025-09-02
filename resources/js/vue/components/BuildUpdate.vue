@@ -235,7 +235,7 @@ export default {
       $('#graph_holder').bind('plotclick', (e, pos, item) => {
         if (item) {
           plot.highlight(item.series, item.datapoint);
-          window.location = `${baseURL}/build/${data.buildids[item.datapoint[0]]}`;
+          window.location = `${baseURL}/builds/${data.buildids[item.datapoint[0]]}`;
         }
       });
     },

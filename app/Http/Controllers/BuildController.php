@@ -117,7 +117,7 @@ final class BuildController extends AbstractBuildController
         }
 
         if ($previous_buildid > 0) {
-            $menu['previous'] = "/build/$previous_buildid";
+            $menu['previous'] = "/builds/$previous_buildid";
 
             // Find the last submit date.
             $previous_build = new Build();
@@ -129,10 +129,10 @@ final class BuildController extends AbstractBuildController
             $lastsubmitdate = 0;
         }
 
-        $menu['current'] = "/build/$current_buildid";
+        $menu['current'] = "/builds/$current_buildid";
 
         if ($next_buildid > 0) {
-            $menu['next'] = "/build/$next_buildid";
+            $menu['next'] = "/builds/$next_buildid";
         } else {
             $menu['next'] = false;
         }
@@ -587,19 +587,19 @@ final class BuildController extends AbstractBuildController
         $next_buildid = $this->build->GetNextBuildId();
 
         if ($previous_buildid > 0) {
-            $menu_response['previous'] = "/build/$previous_buildid/update";
+            $menu_response['previous'] = "/builds/$previous_buildid/update";
         } else {
             $menu_response['previous'] = false;
         }
 
         if ($current_buildid > 0) {
-            $menu_response['current'] = "/build/$current_buildid/update";
+            $menu_response['current'] = "/builds/$current_buildid/update";
         } else {
             $menu_response['current'] = false;
         }
 
         if ($next_buildid > 0) {
-            $menu_response['next'] = "/build/$next_buildid/update";
+            $menu_response['next'] = "/builds/$next_buildid/update";
         } else {
             $menu_response['next'] = false;
         }
@@ -1038,9 +1038,9 @@ final class BuildController extends AbstractBuildController
         $next_buildid = $this->build->GetNextBuildId();
         $current_buildid = $this->build->GetCurrentBuildId();
 
-        $menu_response['previous'] = $previous_buildid > 0 ? "/build/$previous_buildid/configure" : false;
-        $menu_response['current'] = "/build/$current_buildid/configure";
-        $menu_response['next'] = $next_buildid > 0 ? "/build/$next_buildid/configure" : false;
+        $menu_response['previous'] = $previous_buildid > 0 ? "/builds/$previous_buildid/configure" : false;
+        $menu_response['current'] = "/builds/$current_buildid/configure";
+        $menu_response['next'] = $next_buildid > 0 ? "/builds/$next_buildid/configure" : false;
 
         $response['menu'] = $menu_response;
 

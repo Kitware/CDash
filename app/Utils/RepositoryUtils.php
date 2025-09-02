@@ -438,7 +438,7 @@ class RepositoryUtils
 
         $body = 'Details on the submission can be found at ';
 
-        $body .= url("/build/{$Build->Id}");
+        $body .= url("/builds/{$Build->Id}");
         $body .= "\n\n";
 
         $body .= 'Project: ' . $Project->Name . "\n";
@@ -509,7 +509,7 @@ class RepositoryUtils
             $information = "\n\n*Update*\n";
 
             $update = $eloquentBuild->updates()->firstOrFail();
-            $information .= "Status: {$update->status} ({$serverURI}/build/{$buildid}/update)\n";
+            $information .= "Status: {$update->status} ({$serverURI}/builds/{$buildid}/update)\n";
             $information .= 'Command: ';
             $information .= substr($update->command, 0, $maxchars);
             $information .= "\n";
@@ -524,7 +524,7 @@ class RepositoryUtils
             // If this is false pdo_execute called in BuildConfigure will
             // have already logged the error.
             if ($configure !== null) {
-                $information .= "Status: {$configure->status} ({$serverURI}/build/{$buildid})\n/configure";
+                $information .= "Status: {$configure->status} ({$serverURI}/builds/{$buildid})\n/configure";
                 $information .= 'Output: ';
                 $information .= substr($configure->log, 0, $maxchars);
                 $information .= "\n";

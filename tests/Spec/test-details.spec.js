@@ -143,7 +143,7 @@ lines</pre>`);
 
   const build_link = component.find('#build_link');
   expect(build_link.text()).toBe('my build');
-  expect(build_link.attributes('href')).toMatch('/build/1');
+  expect(build_link.attributes('href')).toMatch('/builds/1');
 
   const site_link = component.find('#site_link');
   expect(site_link.text()).toBe('(my site)');

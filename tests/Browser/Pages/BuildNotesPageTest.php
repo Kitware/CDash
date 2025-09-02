@@ -81,7 +81,7 @@ class BuildNotesPageTest extends BrowserTestCase
     public function testShowsBuildName(): void
     {
         $this->browse(function (Browser $browser): void {
-            $browser->visit("/build/{$this->build->id}/notes")
+            $browser->visit("/builds/{$this->build->id}/notes")
                 ->waitForText($this->build->name)
                 ->assertSee($this->build->name)
             ;
@@ -91,7 +91,7 @@ class BuildNotesPageTest extends BrowserTestCase
     public function testShowsMessageIfNoNotes(): void
     {
         $this->browse(function (Browser $browser): void {
-            $browser->visit("/build/{$this->build->id}/notes")
+            $browser->visit("/builds/{$this->build->id}/notes")
                 ->waitFor('@no-notes-message')
                 ->assertMissing('@notes-content')
             ;
@@ -109,7 +109,7 @@ class BuildNotesPageTest extends BrowserTestCase
         self::assertCount(120, $this->notes);
 
         $this->browse(function (Browser $browser): void {
-            $browser->visit("/build/{$this->build->id}/notes")
+            $browser->visit("/builds/{$this->build->id}/notes")
                 ->waitFor('@notes-menu')
                 // Wait for min and max IDs to ensure multiple pages of data have loaded properly...
                 ->waitForTextIn('@notes-menu', $this->notes->first()->name ?? '')
@@ -130,7 +130,7 @@ class BuildNotesPageTest extends BrowserTestCase
         self::assertCount(120, $this->notes);
 
         $this->browse(function (Browser $browser): void {
-            $browser->visit("/build/{$this->build->id}/notes")
+            $browser->visit("/builds/{$this->build->id}/notes")
                 ->waitFor('@notes-content')
                 // Wait for min and max IDs to ensure multiple pages of data have loaded properly...
                 ->waitForTextIn('@notes-content', $this->notes->first()->name ?? '')

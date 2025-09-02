@@ -405,7 +405,7 @@ class GitHub implements RepositoryInterface
         }
 
         $build_name = $row['name'];
-        $build_url = "$this->baseUrl/build/{$row['id']}";
+        $build_url = "$this->baseUrl/builds/{$row['id']}";
         $details_url = $build_url;
         if ($row['configureerrors'] > 0) {
             // Build with configure errors.
@@ -414,7 +414,7 @@ class GitHub implements RepositoryInterface
                 // Pluralize.
                 $msg .= 's';
             }
-            $details_url = "$this->baseUrl/build/{$row['id']}/configure";
+            $details_url = "$this->baseUrl/builds/{$row['id']}/configure";
             $icon = ':x:';
             $this->numFailed++;
             $this->foundConfigureErrors = true;

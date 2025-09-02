@@ -50,7 +50,7 @@ class GitHubTest extends TestCase
             'context' => 'CDash by Kitware',
             'description' => 'Build suchnsuch from site sonso',
             'state' => 'pending',
-            'target_url' => "{$this->baseUrl}/build/1010",
+            'target_url' => "{$this->baseUrl}/builds/1010",
         ];
         $sut->setStatus($options);
     }
@@ -90,12 +90,12 @@ class GitHubTest extends TestCase
             'properties' => '',
             'configureerrors' => 1,
         ];
-        $summary_url = "$this->baseUrl/build/99999";
+        $summary_url = "$this->baseUrl/builds/99999";
         $common = "[my build]($summary_url) | ";
 
         // Single configure error.
         $actual = $sut->getCheckSummaryForBuildRow($build_row);
-        $link = "$this->baseUrl/build/99999/configure";
+        $link = "$this->baseUrl/builds/99999/configure";
         $expected = $common . ":x: | [1 configure error]($link)";
         $this::assertEquals($expected, $actual);
 
@@ -192,7 +192,7 @@ class GitHubTest extends TestCase
         $table_header .= ':-: | :-: | :-:';
         $expected['output']['title'] = 'Pending';
         $expected['output']['summary'] = "[Some builds have not yet finished submitting their results to CDash.]($index_url)";
-        $expected['output']['text'] = "$table_header\n[a]($this->baseUrl/build/99995) | :hourglass_flowing_sand: | [pending]($this->baseUrl/build/99995)";
+        $expected['output']['text'] = "$table_header\n[a]($this->baseUrl/builds/99995) | :hourglass_flowing_sand: | [pending]($this->baseUrl/builds/99995)";
 
         $build_row = [
             'name' => 'a',
@@ -212,7 +212,7 @@ class GitHubTest extends TestCase
         $expected['conclusion'] = 'success';
         $expected['output']['title'] = 'Success';
         $expected['output']['summary'] = "[All builds completed successfully :shipit:]($index_url)";
-        $expected['output']['text'] = "$table_header\n[a]($this->baseUrl/build/99995) | :white_check_mark: | [success]($this->baseUrl/build/99995)";
+        $expected['output']['text'] = "$table_header\n[a]($this->baseUrl/builds/99995) | :white_check_mark: | [success]($this->baseUrl/builds/99995)";
         $build_rows[0]['done'] = 1;
         $actual = $sut->generateCheckPayloadFromBuildRows($build_rows, 'zzz');
         $this->validateCheckPayload($expected, $actual);
@@ -222,10 +222,10 @@ class GitHubTest extends TestCase
         $expected['output']['title'] = 'Failure';
         $expected['output']['summary'] = "[CDash detected configure errors, build errors and failed tests.]($index_url)";
         $expected['output']['text'] = "$table_header\n";
-        $expected['output']['text'] .= "[a]($this->baseUrl/build/99995) | :white_check_mark: | [success]($this->baseUrl/build/99995)\n";
-        $expected['output']['text'] .= "[b]($this->baseUrl/build/99996) | :x: | [5 configure errors]($this->baseUrl/build/99996/configure)\n";
-        $expected['output']['text'] .= "[c]($this->baseUrl/build/99997) | :x: | [1 build error]($this->baseUrl/viewBuildError.php?buildid=99997)\n";
-        $expected['output']['text'] .= "[d]($this->baseUrl/build/99998) | :x: | [7 failed tests]($this->baseUrl/viewTest.php?buildid=99998)";
+        $expected['output']['text'] .= "[a]($this->baseUrl/builds/99995) | :white_check_mark: | [success]($this->baseUrl/builds/99995)\n";
+        $expected['output']['text'] .= "[b]($this->baseUrl/builds/99996) | :x: | [5 configure errors]($this->baseUrl/builds/99996/configure)\n";
+        $expected['output']['text'] .= "[c]($this->baseUrl/builds/99997) | :x: | [1 build error]($this->baseUrl/viewBuildError.php?buildid=99997)\n";
+        $expected['output']['text'] .= "[d]($this->baseUrl/builds/99998) | :x: | [7 failed tests]($this->baseUrl/viewTest.php?buildid=99998)";
         $build_rows[] = [
             'name' => 'b',
             'id' => 99996,

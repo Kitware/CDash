@@ -54,17 +54,17 @@ final class DynamicAnalysisController extends AbstractBuildController
 
         $previousbuildid = self::get_previous_buildid_dynamicanalysis($this->build->ProjectId, $this->build->SiteId, $this->build->Type, $this->build->Name, $this->build->StartTime);
         if ($previousbuildid > 0) {
-            $menu['previous'] = "/build/$previousbuildid/dynamic_analysis";
+            $menu['previous'] = "/builds/$previousbuildid/dynamic_analysis";
         } else {
             $menu['previous'] = false;
         }
 
         $currentbuildid = self::get_last_buildid_dynamicanalysis($this->build->ProjectId, $this->build->SiteId, $this->build->Type, $this->build->Name);
-        $menu['current'] = "/build/$currentbuildid/dynamic_analysis";
+        $menu['current'] = "/builds/$currentbuildid/dynamic_analysis";
 
         $nextbuildid = self::get_next_buildid_dynamicanalysis($this->build->ProjectId, $this->build->SiteId, $this->build->Type, $this->build->Name, $this->build->StartTime);
         if ($nextbuildid > 0) {
-            $menu['next'] = "/build/$nextbuildid/dynamic_analysis";
+            $menu['next'] = "/builds/$nextbuildid/dynamic_analysis";
         } else {
             $menu['next'] = false;
         }
@@ -200,7 +200,7 @@ final class DynamicAnalysisController extends AbstractBuildController
 
         // Menu
         $menu_response = [];
-        $menu_response['back'] = "/build/{$this->build->Id}/dynamic_analysis";
+        $menu_response['back'] = "/builds/{$this->build->Id}/dynamic_analysis";
         $previous_id = $DA->GetPreviousId($this->build);
         if ($previous_id > 0) {
             $menu_response['previous'] = "viewDynamicAnalysisFile.php?id=$previous_id";

@@ -662,7 +662,7 @@ class ProcessSubmission implements ShouldQueue
 
                 $body = "$sitename has encountered errors during the Update step and you have been identified as the maintainer of this site.\n\n";
                 $body .= "*Update Errors*\n";
-                $body .= 'Status: ' . $eloquentBuild->updates()->firstOrFail()->status . ' (' . url('/build/' . $buildid . '/update') . ")\n";
+                $body .= 'Status: ' . $eloquentBuild->updates()->firstOrFail()->status . ' (' . url('/builds/' . $buildid . '/update') . ")\n";
 
                 Mail::raw($body, function ($message) use ($subject, $recipients): void {
                     $message->subject($subject)
