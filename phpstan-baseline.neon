@@ -1092,7 +1092,7 @@ parameters:
 				04/22/2023  Use Laravel query builder or Eloquent instead$#
 			'''
 			identifier: method.deprecated
-			count: 10
+			count: 9
 			path: app/Http/Controllers/CoverageController.php
 
 		-
@@ -1245,7 +1245,7 @@ parameters:
 		-
 			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
 			identifier: empty.notAllowed
-			count: 10
+			count: 8
 			path: app/Http/Controllers/CoverageController.php
 
 		-
@@ -1263,13 +1263,13 @@ parameters:
 		-
 			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
 			identifier: notEqual.notAllowed
-			count: 10
+			count: 9
 			path: app/Http/Controllers/CoverageController.php
 
 		-
 			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
 			identifier: equal.notAllowed
-			count: 53
+			count: 52
 			path: app/Http/Controllers/CoverageController.php
 
 		-
@@ -1527,7 +1527,7 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$value of function intval expects array\|bool\|float\|int\|resource\|string\|null, mixed given\.$#'
 			identifier: argument.type
-			count: 9
+			count: 7
 			path: app/Http/Controllers/CoverageController.php
 
 		-
@@ -26056,12 +26056,6 @@ parameters:
 			path: app/cdash/tests/test_projectmodel.php
 
 		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: app/cdash/tests/test_projectwebpage.php
-
-		-
 			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1
@@ -26074,12 +26068,6 @@ parameters:
 			'''
 			identifier: method.deprecated
 			count: 12
-			path: app/cdash/tests/test_projectwebpage.php
-
-		-
-			message: '#^Cannot access offset ''aaData'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
 			path: app/cdash/tests/test_projectwebpage.php
 
 		-
@@ -26115,7 +26103,7 @@ parameters:
 		-
 			message: '#^Cannot access offset 0 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 4
+			count: 2
 			path: app/cdash/tests/test_projectwebpage.php
 
 		-
@@ -26125,27 +26113,9 @@ parameters:
 			path: app/cdash/tests/test_projectwebpage.php
 
 		-
-			message: '#^Parameter \#1 \$haystack of function str_contains expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/tests/test_projectwebpage.php
-
-		-
-			message: '#^Parameter \#1 \$string of function substr expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/tests/test_projectwebpage.php
-
-		-
 			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
 			identifier: argument.type
 			count: 2
-			path: app/cdash/tests/test_projectwebpage.php
-
-		-
-			message: '#^Parameter \#3 \$subject of function str_replace expects array\<string\>\|string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
 			path: app/cdash/tests/test_projectwebpage.php
 
 		-

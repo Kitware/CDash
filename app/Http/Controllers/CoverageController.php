@@ -8,10 +8,7 @@ use App\Utils\PageTimer;
 use App\Utils\TestingDay;
 use CDash\Database;
 use CDash\Model\Build;
-use CDash\Model\CoverageFile;
-use CDash\Model\CoverageFileLog;
 use CDash\Model\Project;
-use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -455,98 +452,6 @@ final class CoverageController extends AbstractBuildController
             ->with('xsl_content', generate_XSLT($xml, 'viewCoverage', true));
     }
 
-    public function viewCoverageFile(): View
-    {
-        $this->setBuildById(intval($_GET['buildid'] ?? 0));
-
-        $fileid = intval($_GET['fileid'] ?? 0);
-
-        $db = Database::getInstance();
-
-        $role = 0;
-        $user2project = $db->executePreparedSingleRow('
-            SELECT role
-            FROM user2project
-            WHERE
-                userid=?
-                AND projectid=?
-        ', [intval(Auth::id() ?? 0), $this->project->Id]);
-        if (!empty($user2project)) {
-            $role = $user2project['role'];
-        }
-        if (!$this->project->ShowCoverageCode && $role < 2) {
-            abort(403, "This project doesn't allow display of coverage code. Contact the administrator of the project.");
-        }
-
-        // Load coverage file.
-        $coverageFile = new CoverageFile();
-        $coverageFile->Id = $fileid;
-        $coverageFile->Load();
-
-        // Split on all forms of line breaks
-        $file_array = preg_split('/\R/', rtrim($coverageFile->File));
-        if ($file_array === false) {
-            throw new Exception('Error parsing coverage file.');
-        }
-        $i = 0;
-
-        // Load the coverage info.
-        $log = new CoverageFileLog();
-        $log->BuildId = $this->build->Id;
-        $log->FileId = $fileid;
-        $log->Load();
-
-        // Detect if we have branch coverage or not.
-        $hasBranchCoverage = false;
-        if (!empty($log->Branches)) {
-            $hasBranchCoverage = true;
-        }
-
-        foreach ($file_array as $line) {
-            $linenumber = $i + 1;
-            $line = htmlentities($line);
-
-            $file_array[$i] = '<span class="warning">' . str_pad(strval($linenumber), 5, ' ', STR_PAD_LEFT) . '</span>';
-
-            if ($hasBranchCoverage) {
-                if (array_key_exists("$i", $log->Branches)) {
-                    $code = $log->Branches["$i"];
-
-                    // Branch coverage data is stored as <# covered> / <total branches>.
-                    $branchCoverageData = explode('/', $code);
-                    if ($branchCoverageData[0] != $branchCoverageData[1]) {
-                        $file_array[$i] .= '<span class="error">';
-                    } else {
-                        $file_array[$i] .= '<span class="normal">';
-                    }
-                    $file_array[$i] .= str_pad($code, 5, ' ', STR_PAD_LEFT) . '</span>';
-                } else {
-                    $file_array[$i] .= str_pad('', 5, ' ', STR_PAD_LEFT);
-                }
-            }
-
-            if (array_key_exists($i, $log->Lines)) {
-                $code = $log->Lines[$i];
-                if ($code == 0) {
-                    $file_array[$i] .= '<span class="error">';
-                } else {
-                    $file_array[$i] .= '<span class="normal">';
-                }
-                $file_array[$i] .= str_pad($code, 5, ' ', STR_PAD_LEFT) . ' | ' . $line;
-                $file_array[$i] .= '</span>';
-            } else {
-                $file_array[$i] .= str_pad('', 5, ' ', STR_PAD_LEFT) . ' | ' . $line;
-            }
-            $i++;
-        }
-
-        $file = implode('<br>', $file_array);
-
-        return $this->view('coverage.coverage-file', 'Coverage')
-            ->with('coverage_file', $coverageFile)
-            ->with('log', $file);
-    }
-
     public function ajaxGetViewCoverage(): JsonResponse
     {
         @set_time_limit(0);
@@ -663,7 +568,7 @@ final class CoverageController extends AbstractBuildController
         $coveragefile = $db->executePrepared("
                             SELECT
                                 cf.fullpath,
-                                c.fileid,
+                                c.id AS fileid,
                                 c.locuntested,
                                 c.loctested,
                                 c.branchestested,
@@ -914,7 +819,7 @@ final class CoverageController extends AbstractBuildController
             } elseif (!$covfile['covered'] || !($this->project->ShowCoverageCode || $role >= EloquentProject::PROJECT_ADMIN)) {
                 $row[] = $covfile['fullpath'];
             } else {
-                $row[] = '<a class="cdash-link" href="viewCoverageFile.php?buildid=' . $this->build->Id . '&#38;fileid=' . $covfile['fileid'] . '">' . $covfile['fullpath'] . '</a>';
+                $row[] = '<a class="cdash-link" href="' . url('/builds/' . $this->build->Id . '/coverage/' . $covfile['fileid']) . '">' . $covfile['fullpath'] . '</a>';
             }
 
             // Second column (Status)

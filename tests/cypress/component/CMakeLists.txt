@@ -17,3 +17,4 @@ endfunction()
 
 add_cypress_component_test(data-table)
 add_cypress_component_test(loading-indicator)
+add_cypress_component_test(coverage-viewer)
