@@ -568,7 +568,7 @@ final class CoverageController extends AbstractBuildController
         $coveragefile = $db->executePrepared("
                             SELECT
                                 cf.fullpath,
-                                c.fileid,
+                                c.id AS fileid,
                                 c.locuntested,
                                 c.loctested,
                                 c.branchestested,
