@@ -7,6 +7,7 @@ services:
     volumes:
       - "${SSL_CERTIFICATE_FILE}:/var/www/cdash.pem"
       - "${SSL_CERTIFICATE_KEY_FILE}:/var/www/cdash.key"
+    restart: unless-stopped
   worker:
     env_file:
       - ../.env

@@ -20,5 +20,6 @@ services:
       test: "pg_isready -U postgres"
       interval: 1s
       retries: 120
+    restart: unless-stopped
 volumes:
   postgresqldata:
