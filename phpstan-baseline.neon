@@ -8749,18 +8749,6 @@ parameters:
 			path: app/cdash/app/Controller/Api/ViewTest.php
 
 		-
-			message: '#^Method CDash\\Controller\\Api\\ViewTest\:\:exportAsCsv\(\) has parameter \$etest with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			message: '#^Method CDash\\Controller\\Api\\ViewTest\:\:exportAsCsv\(\) has parameter \$etestquery with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
 			message: '#^Method CDash\\Controller\\Api\\ViewTest\:\:exportAsCsv\(\) has parameter \$projectshowtesttime with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
