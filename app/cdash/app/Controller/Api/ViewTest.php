@@ -321,7 +321,7 @@ class ViewTest extends BuildApi
 
         if (@$_GET['export'] === 'csv') {
             $this->JSONEncodeResponse = false;
-            return $this->exportAsCsv($etestquery, null, $stmt, $this->project->ShowTestTime, $this->project->TestTimeMaxStatus);
+            return $this->exportAsCsv($stmt, $this->project->ShowTestTime, $this->project->TestTimeMaxStatus);
         }
 
         // Keep track of extra measurements for each test.
@@ -589,15 +589,8 @@ class ViewTest extends BuildApi
     }
 
     // Export test results as CSV file.
-    private function exportAsCsv($etestquery, $etest, $stmt, $projectshowtesttime, $testtimemaxstatus): string
+    private function exportAsCsv($stmt, $projectshowtesttime, $testtimemaxstatus): string
     {
-        // Store named measurements in an array
-        if (!is_null($etestquery)) {
-            while ($row = $etestquery->fetch()) {
-                $etest[$row['id']][$row['testname']] = $row['value'];
-            }
-        }
-
         $csv_contents = [];
         // Standard columns.
         $csv_headers = ['Name', 'Time', 'Details', 'Status'];
@@ -605,10 +598,6 @@ class ViewTest extends BuildApi
             $csv_headers[] = 'Time Status';
         }
 
-        for ($c = 0; $c < $this->numExtraMeasurements; $c++) {
-            // Add extra coluns.
-            $csv_headers[] = $this->extraMeasurements[$c];
-        }
         $csv_contents[] = $csv_headers;
 
         while ($row = $stmt->fetch()) {
@@ -638,10 +627,6 @@ class ViewTest extends BuildApi
                 }
             }
 
-            // Extra columns.
-            for ($t = 0; $t < $this->numExtraMeasurements; $t++) {
-                $csv_row[] = $etest[$row['id']][$this->extraMeasurements[$t]];
-            }
             $csv_contents[] = $csv_row;
         }
 
