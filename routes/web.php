@@ -226,7 +226,8 @@ Route::get('/viewSubProjectDependenciesGraph.php', function (Request $request) {
     return redirect("/projects/{$project}/subprojects/dependencies", 301);
 });
 
-Route::match(['get', 'post'], '/sites/{site}', 'SiteController@viewSite');
+Route::match(['get', 'post'], '/sites/{site}', 'SiteController@viewSite')
+    ->whereNumber('site');
 Route::get('/viewSite.php', function (Request $request) {
     $siteid = $request->query('siteid');
     return redirect("/sites/$siteid", 301);
