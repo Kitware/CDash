@@ -15,6 +15,7 @@ function(add_cypress_e2e_test TestName)
     DISABLED "$<STREQUAL:${CDASH_IMAGE},ubi>"
     RESOURCE_LOCK "cypress;APP_URL" # Cypress can only run one at a time due to xvfb issues and needs a consistent APP_URL
     PROCESSORS 2
+    ATTACHED_FILES_ON_FAIL "${CDash_SOURCE_DIR}/storage/logs/cdash.log"
   )
 endfunction()
 

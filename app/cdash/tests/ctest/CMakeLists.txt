@@ -10,6 +10,10 @@ function(add_ctest_test TestName ProjectName Directory CDashVerifyScript)
     NAME ${TestName}
     COMMAND ${CMAKE_CTEST_COMMAND} -S "${DriverScript}" -V
   )
+  set_tests_properties(
+    ${TestName} PROPERTIES
+    ATTACHED_FILES_ON_FAIL "${CDash_SOURCE_DIR}/storage/logs/cdash.log"
+  )
 endfunction()
 
 # function to add a new ctest based coverage test to CDash
@@ -23,6 +27,10 @@ function(add_coverage_test TestName ProjectName Directory CDashVerifyScript)
   add_test(
     NAME ${TestName}
     COMMAND ${CMAKE_CTEST_COMMAND} -S "${DriverScript}" -V
+  )
+  set_tests_properties(
+    ${TestName} PROPERTIES
+    ATTACHED_FILES_ON_FAIL "${CDash_SOURCE_DIR}/storage/logs/cdash.log"
   )
 endfunction()
 
@@ -53,6 +61,7 @@ add_test(
 set_tests_properties(recoverpassword PROPERTIES
   FAIL_REGULAR_EXPRESSION ".*Failures: [1-9]+.*;.*Exceptions: [1-9]+.*"
   DEPENDS gitUpdates
+  ATTACHED_FILES_ON_FAIL "${CDash_SOURCE_DIR}/storage/logs/cdash.log"
 )
 
 add_php_test(submitsortingdata)
