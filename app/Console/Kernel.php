@@ -5,6 +5,7 @@ namespace App\Console;
 use App\Jobs\NotifyExpiringAuthTokens;
 use App\Jobs\PruneAuthTokens;
 use App\Jobs\PruneJobs;
+use App\Jobs\PruneSubmissionFiles;
 use App\Jobs\PruneUploads;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -25,6 +26,10 @@ class Kernel extends ConsoleKernel
             ->withoutOverlapping();
 
         $schedule->job(new PruneUploads())
+            ->hourly()
+            ->withoutOverlapping();
+
+        $schedule->job(new PruneSubmissionFiles())
             ->hourly()
             ->withoutOverlapping();
 

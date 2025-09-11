@@ -27,9 +27,6 @@ use CDash\Model\BuildGroupRule;
 use CDash\Model\Project;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Storage;
-use League\Flysystem\UnableToDeleteFile;
-use League\Flysystem\UnableToRetrieveMetadata;
 
 @set_time_limit(0);
 
@@ -298,27 +295,6 @@ function addDailyChanges(int $projectid): void
                 projectid=?
                 AND date=?
         ', [$projectid, $date]);
-
-        // Clean the backup directories.
-        $deletion_time_threshold = time() - (int) config('cdash.backup_timeframe') * 3600;
-        $dirs_to_clean = ['parsed', 'failed', 'inprogress'];
-        foreach ($dirs_to_clean as $dir_to_clean) {
-            $files = Storage::allFiles($dir_to_clean);
-            foreach ($files as $file) {
-                try {
-                    $last_modified = Storage::lastModified($file);
-                } catch (UnableToRetrieveMetadata $e) {
-                    continue;
-                }
-                if ($last_modified < $deletion_time_threshold) {
-                    try {
-                        Storage::delete($file);
-                    } catch (UnableToDeleteFile $e) {
-                        continue;
-                    }
-                }
-            }
-        }
 
         // Delete expired buildgroups and rules.
         $current_date = gmdate(FMT_DATETIME);
