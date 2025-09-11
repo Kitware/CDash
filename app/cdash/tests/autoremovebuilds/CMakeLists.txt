@@ -37,4 +37,5 @@ add_test(
 set_tests_properties(removebuilds PROPERTIES
   FAIL_REGULAR_EXPRESSION ".*Failures: [1-9]+.*;.*Exceptions: [1-9]+.*"
   DEPENDS deletesubproject
+  ATTACHED_FILES_ON_FAIL "${CDash_SOURCE_DIR}/storage/logs/cdash.log"
 )

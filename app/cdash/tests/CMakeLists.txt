@@ -12,6 +12,7 @@ function(add_php_test TestName)
     ${TestName} PROPERTIES
     FAIL_REGULAR_EXPRESSION ".*Failures: [1-9]+.*;.*Exceptions: [1-9]+.*"
     PASS_REGULAR_EXPRESSION ".*OK.*"
+    ATTACHED_FILES_ON_FAIL "${CDash_SOURCE_DIR}/storage/logs/cdash.log"
   )
 endfunction()
 
@@ -26,6 +27,10 @@ function(add_legacy_unit_test TestName)
       --bootstrap ${testing_dir}/bootstrap.php
       ${testing_dir}/case/${TestName}Test.php
   )
+  set_tests_properties(
+    ${TestName} PROPERTIES
+    ATTACHED_FILES_ON_FAIL "${CDash_SOURCE_DIR}/storage/logs/cdash.log"
+  )
 endfunction()
 
 function(add_laravel_test TestName)
@@ -37,6 +42,10 @@ function(add_laravel_test TestName)
       ${PHPUNIT}
       -c ${CDash_SOURCE_DIR}/phpunit.xml
       ${laravel_testing_dir}/${TestName}.php
+  )
+  set_tests_properties(
+    ${TestName} PROPERTIES
+    ATTACHED_FILES_ON_FAIL "${CDash_SOURCE_DIR}/storage/logs/cdash.log"
   )
 endfunction()
 
@@ -50,6 +59,10 @@ function(add_feature_test TestName)
   add_laravel_test(${TestName})
   set_property(TEST ${TestName} APPEND PROPERTY DEPENDS /CDash/XmlHandler/UpdateHandler)
   set_property(TEST install_2 APPEND PROPERTY DEPENDS ${TestName})
+  set_tests_properties(
+    ${TestName} PROPERTIES
+    ATTACHED_FILES_ON_FAIL "${CDash_SOURCE_DIR}/storage/logs/cdash.log"
+  )
 endfunction()
 
 function(add_browser_test TestName)

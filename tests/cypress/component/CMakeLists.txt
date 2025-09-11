@@ -12,6 +12,7 @@ function(add_cypress_component_test TestName)
     DISABLED "$<STREQUAL:${CDASH_IMAGE},ubi>"
     RESOURCE_LOCK "cypress"
     PROCESSORS 2
+    ATTACHED_FILES_ON_FAIL "${CDash_SOURCE_DIR}/storage/logs/cdash.log"
   )
 endfunction()
 
