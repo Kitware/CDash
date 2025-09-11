@@ -226,71 +226,6 @@ function addDailyChanges(int $projectid): void
         cleanBuildEmail();
         cleanUserTemp();
 
-        // If the status of daily update is set to 2 that means we should send an email
-        $dailyupdate_array = $db->executePreparedSingleRow('
-                                 SELECT status
-                                 FROM dailyupdate
-                                 WHERE
-                                     projectid=?
-                                     AND date=?
-                             ', [$projectid, $date]);
-        $dailyupdate_status = intval($dailyupdate_array['status']);
-        if ($dailyupdate_status === 2) {
-            // Find the groupid
-            $group_query = $db->executePrepared('
-                               SELECT buildid, groupid
-                               FROM summaryemail
-                               WHERE date=?
-                           ', [$date]);
-            foreach ($group_query as $group_array) {
-                $groupid = intval($group_array['groupid']);
-                $buildid = intval($group_array['buildid']);
-
-                // Find if the build has any errors
-                $builderror = $db->executePreparedSingleRow('
-                                  SELECT count(buildid) AS c
-                                  FROM builderror
-                                  WHERE
-                                      buildid=?
-                                      AND type=0
-                              ', [$buildid]);
-                $nbuilderrors = intval($builderror['c']);
-
-                // Find if the build has any warnings
-                $buildwarning = $db->executePreparedSingleRow('
-                                    SELECT count(buildid) AS c
-                                    FROM builderror
-                                    WHERE
-                                        buildid=?
-                                        AND type=1
-                                ', [$buildid]);
-                $nbuildwarnings = intval($buildwarning['c']);
-
-                // Find if the build has any test failings
-                if ($project->EmailTestTimingChanged) {
-                    $sql = "SELECT count(1) AS c
-                            FROM build2test
-                            WHERE
-                                buildid=?
-                                AND (
-                                    status='failed'
-                                    OR timestatus>?
-                                )";
-                    $params = [$buildid, intval($project->TestTimeMaxStatus)];
-                } else {
-                    $sql = "SELECT count(1) AS c
-                            FROM build2test
-                            WHERE
-                                buildid=?
-                                AND status='failed'";
-                    $params = [$buildid];
-                }
-
-                $nfail_array = $db->executePreparedSingleRow($sql, $params);
-                $nfailingtests = intval($nfail_array['c']);
-            }
-        }
-
         $db->executePrepared('
             UPDATE dailyupdate
             SET status=1
@@ -321,7 +256,6 @@ function addDailyChanges(int $projectid): void
         }
 
         // Delete expired buildgroups and rules.
-        $current_date = gmdate(FMT_DATETIME);
         $datetime = new DateTime();
         $datetime->sub(new DateInterval("P{$project->AutoremoveTimeframe}D"));
         $cutoff_date = gmdate(FMT_DATETIME, $datetime->getTimestamp());
