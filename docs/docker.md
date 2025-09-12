@@ -70,6 +70,7 @@ To set up a CDash production instance using docker compose, follow these steps:
   - `SSL_CERTIFICATE_FILE=</path/to/certs/cdash.pem>`
   - `SSL_CERTIFICATE_KEY_FILE=</path/to/certs/cdash.key>`
   - `NUM_WORKERS=<desired number of queue worker replicas, defaults to 1>`
+  - `WORKER_MEMORY_LIMIT`: restart worker after parsing a job if it consumed more than this amount of memory (in MB). Default: 256.
 * For postgres only, edit `docker/docker-compose.postgres.yml` and uncomment the `worker` section.
 * Run this command to start your CDash containers:
 ```bash
