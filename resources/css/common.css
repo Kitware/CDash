@@ -20,6 +20,16 @@ body {
   flex-direction: column;
 }
 
+#global-banner {
+  color: #2ee84a;
+}
+
+#global-banner > a {
+  color: #2ee84a;
+  text-decoration: underline;
+  font-weight: bold;
+}
+
 .argument {
  background-color: #eeeeee;
  font-family: Courier;
@@ -352,20 +362,24 @@ div#datetime {
 }
 
 div#topmenu {
+  display: flex;
+  justify-content: space-between;
   width: 100%;
   line-height: 25px;
 }
 
-div#topmenu a {
+div#topmenu .cdash-link {
   padding: 5px;
-  color: #CCCCCC !important;
+  color: #CCCCCC;
   cursor: pointer;
-  text-decoration: none !important;
+  text-decoration: none;
+  font-size: 12px;
 }
 
-div#topmenu a:hover {
+div#topmenu .cdash-link:hover {
   background-color: #5A5A5A;
-  text-decoration: none !important;
+  text-decoration: none;
+  font-size: 12px;
 }
 
 div#banner {
@@ -652,10 +666,6 @@ div#headertop {
   min-height:25px;
   padding:0 2em;
   width:100%;
-}
-
-#headertop #topmenu a {
-  font-size:12px !important;
 }
 
 #headerbottom {
