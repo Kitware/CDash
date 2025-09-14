@@ -14,7 +14,7 @@ $userInProject = isset($project) && auth()->user() !== null && \App\Models\Proje
 
 <div id="header">
     <div id="headertop">
-        <div id="topmenu" style="display: flex; justify-content: space-between;">
+        <div id="topmenu">
             <span>
                 <a class="cdash-link" href="{{ url('/projects') }}">All Dashboards</a>
                 @if(Auth::check())
@@ -23,8 +23,8 @@ $userInProject = isset($project) && auth()->user() !== null && \App\Models\Proje
             </span>
 
             @if(config('cdash.global_banner') !== null && strlen(config('cdash.global_banner')) > 0)
-                <span id="global-banner" style="color: #2ee84a;">
-                    {{ Str::limit(config('cdash.global_banner'), 40) }}
+                <span id="global-banner">
+                    {!! Str::inlineMarkdown(config('cdash.global_banner'), ['allow_unsafe_links' => false, 'html_input' => 'escape']) !!}
                 </span>
             @endif
 
