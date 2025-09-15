@@ -2353,20 +2353,8 @@ parameters:
 			path: app/Http/Controllers/SubmissionController.php
 
 		-
-			message: '#^Loose comparison via "\!\=" is not allowed\.$#'
-			identifier: notEqual.notAllowed
-			count: 1
-			path: app/Http/Controllers/SubmissionController.php
-
-		-
 			message: '#^Only booleans are allowed in a negated boolean, int\|false given\.$#'
 			identifier: booleanNot.exprNotBoolean
-			count: 1
-			path: app/Http/Controllers/SubmissionController.php
-
-		-
-			message: '#^Parameter \#1 \$projectname of static method CDash\\Model\\Project\:\:validateProjectName\(\) expects string, mixed given\.$#'
-			identifier: argument.type
 			count: 1
 			path: app/Http/Controllers/SubmissionController.php
 
@@ -2377,21 +2365,9 @@ parameters:
 			path: app/Http/Controllers/SubmissionController.php
 
 		-
-			message: '#^Parameter \#1 \$string of function strlen expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/SubmissionController.php
-
-		-
 			message: '#^Parameter \#1 \$value of function decrypt expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
-			path: app/Http/Controllers/SubmissionController.php
-
-		-
-			message: '#^Part \$projectname \(mixed\) of encapsed string cannot be cast to string\.$#'
-			identifier: encapsedStringPart.nonString
-			count: 3
 			path: app/Http/Controllers/SubmissionController.php
 
 		-
