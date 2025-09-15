@@ -95,7 +95,7 @@
         </li>
         <li>Other types of test measurements (eg. <span class="text-monospace">image/png</span>) are not supported for display on these pages, and they may not be rendered correctly if added here.</li>
         <li>You can drag and drop measurements to change the order in which they are displayed.</li>
-        <li>Note that all test measurements are shown on the "Test Details" page (<span class="text-monospace">/test/{id}</span>), regardless of whether they have been added here.</li>
+        <li>Note that all test measurements are shown on the "Test Details" page (<span class="text-monospace">/tests/{id}</span>), regardless of whether they have been added here.</li>
       </ul>
 
       <!-- confirm delete measurement modal dialog -->

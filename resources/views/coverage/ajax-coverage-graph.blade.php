@@ -68,7 +68,7 @@
             if (item) {
                 plot.highlight(item.series, item.datapoint);
                 buildid = buildids[item.datapoint[0]];
-                window.location = "build/" + buildid;
+                window.location = "builds/" + buildid;
             }
         });
 

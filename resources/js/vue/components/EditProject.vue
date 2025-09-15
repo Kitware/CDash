@@ -19,13 +19,13 @@
       Click here to
       <a
         class="cdash-link"
-        :href="$baseURL + '/project/' + cdash.project.Id + '/edit'"
+        :href="$baseURL + '/projects/' + cdash.project.Id + '/edit'"
       >edit the project</a>
       <br>
       Click here to
       <a
         class="cdash-link"
-        :href="$baseURL + '/project/' + cdash.project.Id + '/ctest_configuration'"
+        :href="$baseURL + '/projects/' + cdash.project.Id + '/ctest_configuration'"
       >download the CTest configuration file</a>
       <br>
     </div>
@@ -1619,7 +1619,7 @@
                     <td>
                       <a
                         class="cdash-link"
-                        :href="$baseURL + '/project/' + cdash.project.Id + '/ctest_configuration'"
+                        :href="$baseURL + '/projects/' + cdash.project.Id + '/ctest_configuration'"
                       >
                         CTestConfig.cmake
                       </a>
@@ -2468,7 +2468,7 @@ export default {
     switchProject: function() {
       // eslint-disable-next-line eqeqeq
       if (this.selectedProject != this.projectid) {
-        window.location = `${this.$baseURL}/project/${this.selectedProject}/edit#Info`;
+        window.location = `${this.$baseURL}/projects/${this.selectedProject}/edit#Info`;
       }
     },
 

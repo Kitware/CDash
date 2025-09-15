@@ -116,7 +116,7 @@
               <a
                 v-if="project.role > 1"
                 title="Edit project"
-                :href="$baseURL + '/project/' + project.id + '/edit'"
+                :href="$baseURL + '/projects/' + project.id + '/edit'"
               >
                 <font-awesome-icon :icon="FA.faPencil" />
               </a>
@@ -590,7 +590,7 @@
             <td id="nob">
               <a
                 class="cdash-link"
-                href="project/new"
+                href="projects/new"
               >Start a new project</a>
             </td>
           </tr>
@@ -620,7 +620,7 @@
             <td>
               <a
                 class="cdash-link"
-                :href="$baseURL + '/project/new'"
+                :href="$baseURL + '/projects/new'"
               >Create new project</a>
             </td>
           </tr>

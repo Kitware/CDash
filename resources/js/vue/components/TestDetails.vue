@@ -450,7 +450,7 @@ export default {
       $('#graph_holder').bind('plotclick', (e, pos, item) => {
         if (item) {
           const buildtestid = buildtestids[item.datapoint[0]];
-          window.location = `${vm.$baseURL}/test/${buildtestid}?graph=${vm.graphSelection}`;
+          window.location = `${vm.$baseURL}/tests/${buildtestid}?graph=${vm.graphSelection}`;
         }
       });
 
