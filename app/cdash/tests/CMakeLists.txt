@@ -389,6 +389,9 @@ set_tests_properties(junithandler PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHan
 add_php_test(configurewarnings)
 set_tests_properties(configurewarnings PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
+add_php_test(lotsofsubprojects)
+set_tests_properties(lotsofsubprojects PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+
 add_feature_test(/Feature/AutoRemoveBuildsCommand)
 
 # Must run serially since it can delete builds other than the ones it creates.
@@ -430,6 +433,7 @@ set_property(TEST install_2 APPEND PROPERTY DEPENDS
   issuecreation
   junithandler
   configurewarnings
+  lotsofsubprojects
 )
 
 
@@ -688,11 +692,8 @@ set_tests_properties(starttimefromupload PROPERTIES DEPENDS starttimefromnotes)
 add_php_test(querytestsfilterlabels)
 set_tests_properties(querytestsfilterlabels PROPERTIES DEPENDS starttimefromupload)
 
-add_php_test(lotsofsubprojects)
-set_tests_properties(lotsofsubprojects PROPERTIES DEPENDS querytestsfilterlabels)
-
 add_php_test(querytestsrevisionfilter)
-set_tests_properties(querytestsrevisionfilter PROPERTIES DEPENDS lotsofsubprojects)
+set_tests_properties(querytestsrevisionfilter PROPERTIES DEPENDS querytestsfilterlabels)
 
 add_php_test(redundanttests)
 set_tests_properties(redundanttests PROPERTIES DEPENDS querytestsrevisionfilter)
