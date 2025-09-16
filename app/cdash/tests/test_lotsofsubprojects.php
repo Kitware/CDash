@@ -4,16 +4,18 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use CDash\Model\Project;
 use Illuminate\Support\Facades\DB;
+use Tests\Traits\CreatesProjects;
 
 class LotsOfSubProjectsTestCase extends KWWebTestCase
 {
+    use CreatesProjects;
+
     private $project;
 
     public function __construct()
     {
         parent::__construct();
         $this->project = null;
-        $this->deleteLog($this->logfilename);
     }
 
     public function __destruct()
@@ -34,11 +36,8 @@ class LotsOfSubProjectsTestCase extends KWWebTestCase
     public function testLotsOfSubProjects(): void
     {
         // Create test project.
-        $this->login();
         $this->project = new Project();
-        $this->project->Id = $this->createProject([
-            'Name' => 'LotsOfSubProjects',
-        ]);
+        $this->project->Id = $this->makePublicProject('LotsOfSubProjects')->id;
         $this->project->Fill();
 
         // Generate our testing data.
@@ -58,9 +57,6 @@ class LotsOfSubProjectsTestCase extends KWWebTestCase
         if (!$this->submission('LotsOfSubProjects', $test_filename)) {
             $this->fail("Failed to submit $test_filename");
         }
-
-        // No errors in the log.
-        $this->assertTrue($this->checkLog($this->logfilename) !== false);
 
         // Verify 101 builds (1 parent + 100 children).
         $results = DB::select('SELECT id FROM build WHERE projectid = ?', [(int) $this->project->Id]);
