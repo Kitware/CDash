@@ -6289,15 +6289,6 @@ parameters:
 			path: app/Utils/AuthTokenUtil.php
 
 		-
-			message: '''
-				#^Call to deprecated function add_last_sql_error\(\)\:
-				04/22/2023$#
-			'''
-			identifier: function.deprecated
-			count: 1
-			path: app/Utils/DatabaseCleanupUtils.php
-
-		-
 			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
 			identifier: empty.notAllowed
 			count: 3
@@ -20648,99 +20639,6 @@ parameters:
 			identifier: ternary.alwaysTrue
 			count: 1
 			path: app/cdash/tests/test_authtoken.php
-
-		-
-			message: '''
-				#^Call to deprecated function pdo_fetch_array\(\)\:
-				04/01/2023$#
-			'''
-			identifier: function.deprecated
-			count: 1
-			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
-
-		-
-			message: '''
-				#^Call to deprecated method execute\(\) of class CDash\\Database\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			'''
-			identifier: method.deprecated
-			count: 4
-			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
-
-		-
-			message: '#^Call to deprecated method pass\(\) of class SimpleTestCase\.$#'
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
-
-		-
-			message: '''
-				#^Call to deprecated method prepare\(\) of class CDash\\Database\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			'''
-			identifier: method.deprecated
-			count: 6
-			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
-
-		-
-			message: '''
-				#^Call to deprecated method query\(\) of class CDash\\Database\:
-				04/22/2023  Use Laravel query builder or Eloquent instead$#
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
-
-		-
-			message: '''
-				#^Call to deprecated method submission\(\) of class KWWebTestCase\:
-				12/09/2024  Use \\Test\\Traits\\CreatesSubmissions instead$#
-			'''
-			identifier: method.deprecated
-			count: 2
-			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
-
-		-
-			message: '#^Cannot access offset 0 on array\|false\|null\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
-
-		-
-			message: '#^Cannot call method fetchColumn\(\) on PDOStatement\|false\.$#'
-			identifier: method.nonObject
-			count: 4
-			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
-
-		-
-			message: '#^Method AutoRemoveBuildsOnSubmitTestCase\:\:testBuildsRemovedOnSubmission\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
-
-		-
-			message: '#^Only booleans are allowed in an if condition, int\|string\|false\|null given\.$#'
-			identifier: if.condNotBoolean
-			count: 2
-			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
-
-		-
-			message: '#^Parameter \#1 \$stmt of method CDash\\Database\:\:execute\(\) expects PDOStatement, PDOStatement\|false given\.$#'
-			identifier: argument.type
-			count: 4
-			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
-
-		-
-			message: '#^Parameter \#1 \$time of method CDash\\Model\\BuildGroup\:\:SetEndTime\(\) expects Illuminate\\Support\\Carbon, Illuminate\\Support\\Carbon\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
-
-		-
-			message: '#^Property AutoRemoveBuildsOnSubmitTestCase\:\:\$config_file has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/test_autoremovebuilds_on_submit.php
 
 		-
 			message: '#^Binary operation "\." between ''Expected error at…'' and mixed results in an error\.$#'

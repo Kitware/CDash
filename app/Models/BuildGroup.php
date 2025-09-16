@@ -67,7 +67,7 @@ class BuildGroup extends Model
      */
     public function builds(): BelongsToMany
     {
-        return $this->belongsToMany(Build::class, 'build2group', 'buildid', 'groupid');
+        return $this->belongsToMany(Build::class, 'build2group', 'groupid', 'buildid');
     }
 
     /**

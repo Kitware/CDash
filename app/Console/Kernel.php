@@ -4,6 +4,7 @@ namespace App\Console;
 
 use App\Jobs\NotifyExpiringAuthTokens;
 use App\Jobs\PruneAuthTokens;
+use App\Jobs\PruneBuilds;
 use App\Jobs\PruneJobs;
 use App\Jobs\PruneSubmissionFiles;
 use App\Jobs\PruneUploads;
@@ -31,6 +32,14 @@ class Kernel extends ConsoleKernel
 
         $schedule->job(new PruneSubmissionFiles())
             ->hourly()
+            ->withoutOverlapping();
+
+        // TODO: This currently runs daily because the autoremovemaxbuilds project setting specifies
+        // the maximum number of builds to be removed per day.  In the future, we should evaluate
+        // whether this setting is meaningful.  Ideally, this job would run more frequently--perhaps
+        // hourly.
+        $schedule->job(new PruneBuilds())
+            ->daily()
             ->withoutOverlapping();
 
         $schedule->job(new NotifyExpiringAuthTokens())
