@@ -391,6 +391,10 @@ set_tests_properties(configurewarnings PROPERTIES DEPENDS /CDash/XmlHandler/Upda
 
 add_feature_test(/Feature/AutoRemoveBuildsCommand)
 
+# Must run serially since it can delete builds other than the ones it creates.
+add_feature_test(/Feature/Jobs/PruneBuildsTest)
+set_property(TEST /Feature/Jobs/PruneBuildsTest APPEND PROPERTY RUN_SERIAL TRUE)
+
 add_feature_test(/Feature/Services/ProjectServiceTest)
 
 ###################################################################################################

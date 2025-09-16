@@ -256,8 +256,6 @@ class DatabaseCleanupUtils
 
         // Only delete the buildid at the end so that no other build can get it in the meantime
         DB::delete("DELETE FROM build WHERE id IN $buildid_prepare_array", $buildids);
-
-        add_last_sql_error('remove_build');
     }
 
     /**

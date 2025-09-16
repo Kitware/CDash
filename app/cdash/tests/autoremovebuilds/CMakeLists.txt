@@ -1,7 +1,7 @@
 # These tests should go last so the removal of builds doesn't clobber other tests
 # TODO: Some of these dependencies may not be necessary.
-add_php_test(autoremovebuilds_on_submit)
-set_property(TEST autoremovebuilds_on_submit PROPERTY DEPENDS
+add_php_test(deletesubproject)
+set_property(TEST deletesubproject PROPERTY DEPENDS
   cypress/e2e/manage-overview
   cypress/e2e/sub-project-dependencies
   cypress/e2e/manage-build-group
@@ -26,9 +26,6 @@ set_property(TEST autoremovebuilds_on_submit PROPERTY DEPENDS
   cypress/e2e/tests
   cypress/e2e/build-configure
 )
-
-add_php_test(deletesubproject)
-set_tests_properties(deletesubproject PROPERTIES DEPENDS autoremovebuilds_on_submit)
 
 add_test(
   NAME removebuilds
