@@ -348,9 +348,9 @@ class TestHistoryTestCase extends KWWebTestCase
         // No previous.
         $this->assertFalse($jsonobj['menu']['previous']);
         // Next points to the sporadic #1
-        $this->assertEqual("/test/{$sporadic_ids[1]}", $jsonobj['menu']['next']);
+        $this->assertEqual("/tests/{$sporadic_ids[1]}", $jsonobj['menu']['next']);
         // Current points to sporadic #2
-        $this->assertEqual("/test/{$sporadic_ids[2]}", $jsonobj['menu']['current']);
+        $this->assertEqual("/tests/{$sporadic_ids[2]}", $jsonobj['menu']['current']);
 
         // Verify menus for sporadic #1.
         $this->get("{$this->url}/api/v1/testDetails.php?buildtestid={$sporadic_ids[1]}");
@@ -359,11 +359,11 @@ class TestHistoryTestCase extends KWWebTestCase
         // It belongs to build #2.
         $this->assertEqual($buildids[2], $jsonobj['test']['buildid']);
         // Previous points to sporadic #0.
-        $this->assertEqual("/test/{$sporadic_ids[0]}", $jsonobj['menu']['previous']);
+        $this->assertEqual("/tests/{$sporadic_ids[0]}", $jsonobj['menu']['previous']);
         // Next points to the sporadic #2
-        $this->assertEqual("/test/{$sporadic_ids[2]}", $jsonobj['menu']['next']);
+        $this->assertEqual("/tests/{$sporadic_ids[2]}", $jsonobj['menu']['next']);
         // Current points to sporadic #2
-        $this->assertEqual("/test/{$sporadic_ids[2]}", $jsonobj['menu']['current']);
+        $this->assertEqual("/tests/{$sporadic_ids[2]}", $jsonobj['menu']['current']);
 
         // Verify menus for sporadic #2.
         $this->get("{$this->url}/api/v1/testDetails.php?buildtestid={$sporadic_ids[2]}");
@@ -372,10 +372,10 @@ class TestHistoryTestCase extends KWWebTestCase
         // It belongs to build #4.
         $this->assertEqual($buildids[4], $jsonobj['test']['buildid']);
         // Previous points to sporadic #1.
-        $this->assertEqual("/test/{$sporadic_ids[1]}", $jsonobj['menu']['previous']);
+        $this->assertEqual("/tests/{$sporadic_ids[1]}", $jsonobj['menu']['previous']);
         // No next.
         $this->assertFalse($jsonobj['menu']['next']);
         // Current points to sporadic #2 (this buildtest).
-        $this->assertEqual("/test/{$sporadic_ids[2]}", $jsonobj['menu']['current']);
+        $this->assertEqual("/tests/{$sporadic_ids[2]}", $jsonobj['menu']['current']);
     }
 }

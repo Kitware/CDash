@@ -695,7 +695,7 @@ class ViewTest extends BuildApi
             'details' => $data['details'],
             'summaryLink' => "testSummary.php?project=$projectid&name=" . urlencode($data['testname']) . "&date=$testdate",
             'summary' => 'Summary', /* Default value later replaced by AJAX */
-            'detailsLink' => "test/{$data['buildtestid']}",
+            'detailsLink' => "tests/{$data['buildtestid']}",
         ];
 
         if ($data['newstatus']) {

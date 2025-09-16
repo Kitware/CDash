@@ -644,7 +644,7 @@ class RepositoryUtils
                 $information .= "\n";
 
                 foreach ($tests as $test) {
-                    $info = "{$test['name']} | {$test['details']} | ({$serverURI}/test/{$test['buildtestid']})\n";
+                    $info = "{$test['name']} | {$test['details']} | ({$serverURI}/tests/{$test['buildtestid']})\n";
                     $information .= substr($info, 0, $maxchars);
                 }
                 $information .= "\n";

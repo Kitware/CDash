@@ -421,7 +421,7 @@ final class TestController extends AbstractProjectController
             $build_response['buildid'] = $buildid;
             $build_response['buildLink'] = $buildLink;
             $buildtestid = $row->buildtestid;
-            $testLink = "test/$buildtestid";
+            $testLink = "tests/$buildtestid";
             $build_response['testLink'] = $testLink;
             switch ($row->status) {
                 case 'passed':

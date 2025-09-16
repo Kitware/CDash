@@ -84,13 +84,13 @@
           <a class="cdash-link"
              title="View notes"
              ng-if="::cdash.parenthasnotes"
-             ng-href="build/{{::cdash.parentid}}/notes">
+             ng-href="builds/{{::cdash.parentid}}/notes">
             <img src="img/document.png" alt="Notes" class="icon"/>
           </a>
 
           <a class="cdash-link"
              ng-if="::cdash.uploadfilecount > 0"
-             ng-href="build/{{::cdash.parentid}}/files"
+             ng-href="builds/{{::cdash.parentid}}/files"
              title="{{::cdash.uploadfilecount}} files uploaded with this build">
             <img src="img/package.png" alt="Files" class="icon"/>
           </a>
@@ -302,7 +302,7 @@
               </td>
 
               <td ng-if="::cdash.childview != 1" align="left" class="paddt">
-                <a class="cdash-link" ng-href="build/{{::coverage.buildid}}">
+                <a class="cdash-link" ng-href="builds/{{::coverage.buildid}}">
                   {{::coverage.buildname}}
                 </a>
               </td>
@@ -423,7 +423,7 @@
               </td>
 
               <td ng-if="::cdash.childview != 1" class="paddt" align="left">
-                <a class="cdash-link" ng-href="build/{{::da.buildid}}">
+                <a class="cdash-link" ng-href="builds/{{::da.buildid}}">
                   {{::da.buildname}}
                 </a>
               </td>
@@ -435,7 +435,7 @@
                 <a class="cdash-link" ng-if="::da.childlink" ng-href="{{::da.childlink}}">
                   {{::da.defectcount}}
                 </a>
-                <a class="cdash-link" ng-if="::!da.childlink" ng-href="build/{{::da.buildid}}/dynamic_analysis">
+                <a class="cdash-link" ng-if="::!da.childlink" ng-href="builds/{{::da.buildid}}/dynamic_analysis">
                   {{::da.defectcount}}
                 </a>
               </td>

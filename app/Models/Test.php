@@ -161,6 +161,6 @@ class Test extends Model
     public function GetUrlForSelf(): string
     {
         $host_base = Config::get('app.url');
-        return "{$host_base}/test/{$this->id}";
+        return "{$host_base}/tests/{$this->id}";
     }
 }

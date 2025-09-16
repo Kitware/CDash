@@ -29,7 +29,7 @@
                         <b>Build Name:</b>
                     </td>
                     <td>
-                        <a class="cdash-link" ng-href="build/{{::cdash.build.buildid}}"
+                        <a class="cdash-link" ng-href="builds/{{::cdash.build.buildid}}"
                            ng-click="cancelAjax()">{{::cdash.build.buildname}}</a>
                     </td>
                 </tr>

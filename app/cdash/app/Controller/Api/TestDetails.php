@@ -100,21 +100,21 @@ class TestDetails extends BuildTestApi
 
         // Navigation menu entry for 'Previous'.
         if ($previous_buildtestid) {
-            $menu['previous'] = "/test/{$previous_buildtestid}{$extra_url}";
+            $menu['previous'] = "/tests/{$previous_buildtestid}{$extra_url}";
         } else {
             $menu['previous'] = false;
         }
 
         // Current
         if ($current_buildtestid) {
-            $menu['current'] = "/test/{$current_buildtestid}{$extra_url}";
+            $menu['current'] = "/tests/{$current_buildtestid}{$extra_url}";
         } else {
             $menu['current'] = false;
         }
 
         // Next
         if ($next_buildtestid) {
-            $menu['next'] = "/test/{$next_buildtestid}{$extra_url}";
+            $menu['next'] = "/tests/{$next_buildtestid}{$extra_url}";
         } else {
             $menu['next'] = false;
         }
