@@ -10,7 +10,7 @@ ARG DEVELOPMENT_BUILD
 ###############################################################################
 # The base image for regular Debian-based images
 ###############################################################################
-FROM php:8.3-apache-bookworm AS cdash-debian-intermediate
+FROM php:8.3-apache-trixie AS cdash-debian-intermediate
 
 ARG BASE_IMAGE
 ARG DEVELOPMENT_BUILD
@@ -75,7 +75,6 @@ RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then \
         libgtk-3-0 \
         libgbm-dev \
         libnotify-dev \
-        libgconf-2-4 \
         libnss3 \
         libxss1 \
         libasound2 \
