@@ -17,9 +17,6 @@
 
 namespace CDash\Api\v1\Project;
 
-require_once 'include/api_common.php';
-
-
 use App\Rules\ProjectAuthenticateSubmissions;
 use App\Rules\ProjectVisibilityAllowed;
 use App\Utils\RepositoryUtils;

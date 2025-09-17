@@ -8,8 +8,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
-require_once 'include/api_common.php';
-
 final class AdminController extends AbstractController
 {
     public function removeBuilds(): View|RedirectResponse

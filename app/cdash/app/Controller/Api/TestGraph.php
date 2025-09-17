@@ -20,8 +20,6 @@ namespace CDash\Controller\Api;
 use App\Models\Test;
 use CDash\Database;
 
-require_once 'include/api_common.php';
-
 class TestGraph extends BuildTestApi
 {
     public $echoResponse;
