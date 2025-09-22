@@ -19,8 +19,6 @@ namespace CDash\Api\v1\ComputeClassifier;
 
 use Illuminate\Support\Facades\Log;
 
-require_once 'include/api_common.php';
-
 $builds = $_GET['builds'];
 if (count($builds) < 1) {
     abort(400, 'No builds found, cannot compute classifier');

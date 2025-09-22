@@ -2686,6 +2686,30 @@ parameters:
 			path: app/Http/Controllers/UserNoteController.php
 
 		-
+			message: '#^Call to function is_null\(\) with string will always evaluate to false\.$#'
+			identifier: function.impossibleType
+			count: 1
+			path: app/Http/Controllers/ViewTestController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ViewTestController\:\:get_int_param\(\) has parameter \$name with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: app/Http/Controllers/ViewTestController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\ViewTestController\:\:get_int_param\(\) has parameter \$required with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: app/Http/Controllers/ViewTestController.php
+
+		-
+			message: '#^Only booleans are allowed in an if condition, int given\.$#'
+			identifier: if.condNotBoolean
+			count: 1
+			path: app/Http/Controllers/ViewTestController.php
+
+		-
 			message: '#^Parameter \#2 \$build of class CDash\\Controller\\Api\\ViewTest constructor expects CDash\\Model\\Build, CDash\\Model\\Build\|null given\.$#'
 			identifier: argument.type
 			count: 1
@@ -14809,105 +14833,6 @@ parameters:
 			path: app/cdash/include/Test/UseCase/UseCase.php
 
 		-
-			message: '''
-				#^Call to deprecated function pdo_real_escape_string\(\)\:
-				04/01/2023$#
-			'''
-			identifier: function.deprecated
-			count: 1
-			path: app/cdash/include/api_common.php
-
-		-
-			message: '#^Call to function is_null\(\) with string will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 1
-			path: app/cdash/include/api_common.php
-
-		-
-			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
-			identifier: empty.notAllowed
-			count: 2
-			path: app/cdash/include/api_common.php
-
-		-
-			message: '#^Function can_access_project\(\) has parameter \$projectid with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/include/api_common.php
-
-		-
-			message: '#^Function can_access_project\(\) throws checked exception Illuminate\\Auth\\AuthenticationException but it''s missing from the PHPDoc @throws tag\.$#'
-			identifier: missingType.checkedException
-			count: 1
-			path: app/cdash/include/api_common.php
-
-		-
-			message: '#^Function can_administrate_project\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/include/api_common.php
-
-		-
-			message: '#^Function can_administrate_project\(\) has parameter \$projectid with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/include/api_common.php
-
-		-
-			message: '#^Function can_administrate_project\(\) throws checked exception Illuminate\\Auth\\AuthenticationException but it''s missing from the PHPDoc @throws tag\.$#'
-			identifier: missingType.checkedException
-			count: 1
-			path: app/cdash/include/api_common.php
-
-		-
-			message: '#^Function get_int_param\(\) has parameter \$name with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/include/api_common.php
-
-		-
-			message: '#^Function get_int_param\(\) has parameter \$required with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/include/api_common.php
-
-		-
-			message: '#^Function get_param\(\) has parameter \$name with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/include/api_common.php
-
-		-
-			message: '#^Left side of && is always true\.$#'
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: app/cdash/include/api_common.php
-
-		-
-			message: '#^Only booleans are allowed in &&, CDash\\Model\\Project given on the left side\.$#'
-			identifier: booleanAnd.leftNotBoolean
-			count: 1
-			path: app/cdash/include/api_common.php
-
-		-
-			message: '#^Only booleans are allowed in a negated boolean, mixed given\.$#'
-			identifier: booleanNot.exprNotBoolean
-			count: 1
-			path: app/cdash/include/api_common.php
-
-		-
-			message: '#^Only booleans are allowed in an if condition, int given\.$#'
-			identifier: if.condNotBoolean
-			count: 1
-			path: app/cdash/include/api_common.php
-
-		-
-			message: '#^Parameter \#3 \.\.\.\$arrays of function array_merge expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/include/api_common.php
-
-		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Relations\\Pivot\:\:\$role\.$#'
 			identifier: property.notFound
 			count: 1
@@ -14926,6 +14851,15 @@ parameters:
 			'''
 			identifier: function.deprecated
 			count: 2
+			path: app/cdash/include/common.php
+
+		-
+			message: '''
+				#^Call to deprecated function pdo_real_escape_string\(\)\:
+				04/01/2023$#
+			'''
+			identifier: function.deprecated
+			count: 1
 			path: app/cdash/include/common.php
 
 		-
@@ -15042,7 +14976,7 @@ parameters:
 		-
 			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
 			identifier: empty.notAllowed
-			count: 2
+			count: 4
 			path: app/cdash/include/common.php
 
 		-
@@ -15084,6 +15018,36 @@ parameters:
 		-
 			message: '#^Function begin_JSON_response\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
+			count: 1
+			path: app/cdash/include/common.php
+
+		-
+			message: '#^Function can_access_project\(\) has parameter \$projectid with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: app/cdash/include/common.php
+
+		-
+			message: '#^Function can_access_project\(\) throws checked exception Illuminate\\Auth\\AuthenticationException but it''s missing from the PHPDoc @throws tag\.$#'
+			identifier: missingType.checkedException
+			count: 1
+			path: app/cdash/include/common.php
+
+		-
+			message: '#^Function can_administrate_project\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/cdash/include/common.php
+
+		-
+			message: '#^Function can_administrate_project\(\) has parameter \$projectid with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: app/cdash/include/common.php
+
+		-
+			message: '#^Function can_administrate_project\(\) throws checked exception Illuminate\\Auth\\AuthenticationException but it''s missing from the PHPDoc @throws tag\.$#'
+			identifier: missingType.checkedException
 			count: 1
 			path: app/cdash/include/common.php
 
@@ -15204,6 +15168,12 @@ parameters:
 		-
 			message: '#^Function get_labels_JSON_from_query_results\(\) has parameter \$response with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
+			count: 1
+			path: app/cdash/include/common.php
+
+		-
+			message: '#^Function get_param\(\) has parameter \$name with no type specified\.$#'
+			identifier: missingType.parameter
 			count: 1
 			path: app/cdash/include/common.php
 
@@ -15342,7 +15312,7 @@ parameters:
 		-
 			message: '#^Only booleans are allowed in a negated boolean, mixed given\.$#'
 			identifier: booleanNot.exprNotBoolean
-			count: 1
+			count: 2
 			path: app/cdash/include/common.php
 
 		-
@@ -15503,6 +15473,12 @@ parameters:
 
 		-
 			message: '#^Parameter \#3 \$subject of function preg_replace expects array\<float\|int\|string\>\|string, list\<string\>\|string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/cdash/include/common.php
+
+		-
+			message: '#^Parameter \#3 \.\.\.\$arrays of function array_merge expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: app/cdash/include/common.php
@@ -16336,9 +16312,21 @@ parameters:
 			path: app/cdash/public/api/v1/buildgroup.php
 
 		-
+			message: '#^Left side of && is always true\.$#'
+			identifier: booleanAnd.leftAlwaysTrue
+			count: 1
+			path: app/cdash/public/api/v1/buildgroup.php
+
+		-
 			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
 			identifier: equal.notAllowed
 			count: 3
+			path: app/cdash/public/api/v1/buildgroup.php
+
+		-
+			message: '#^Only booleans are allowed in &&, CDash\\Model\\Project given on the left side\.$#'
+			identifier: booleanAnd.leftNotBoolean
+			count: 1
 			path: app/cdash/public/api/v1/buildgroup.php
 
 		-

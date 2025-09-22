@@ -18,8 +18,6 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
-require_once 'include/api_common.php';
-
 final class TestController extends AbstractProjectController
 {
     // Render the test details page.
