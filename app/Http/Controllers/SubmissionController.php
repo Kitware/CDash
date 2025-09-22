@@ -81,20 +81,22 @@ final class SubmissionController extends AbstractProjectController
 
         $statusarray = [];
         $responseMessage = '';
-        $projectname = $_GET['project'] ?? '';
+        $projectname = request()->string('project', '');
 
         if (strlen($projectname) === 0) {
+            Log::info('Rejected submission with no project name');
             $this->failProcessing(null, Response::HTTP_BAD_REQUEST, 'No project name provided.');
         }
 
         if (!Project::validateProjectName($projectname)) {
-            Log::error("Invalid project name: $projectname");
+            Log::info("Rejected submission with invalid project name: $projectname");
             $this->failProcessing(null, Response::HTTP_BAD_REQUEST, "Invalid project name: $projectname");
         }
 
         $expected_md5 = isset($_GET['MD5']) ? htmlspecialchars($_GET['MD5']) : '';
 
         if ($expected_md5 !== '' && !preg_match('/^[a-f0-9]{32}$/i', $expected_md5)) {
+            Log::info("Rejected submission with invalid hash: $expected_md5");
             $this->failProcessing(null, Response::HTTP_BAD_REQUEST, "Provided md5 hash '{$expected_md5}' is improperly formatted.");
         }
 
@@ -106,7 +108,8 @@ final class SubmissionController extends AbstractProjectController
         $fp = request()->getContent(true);
         if (strlen($expected_md5) > 0) {
             $md5sum = SubmissionUtils::hashFileHandle($fp, 'md5');
-            if ($md5sum != $expected_md5) {
+            if ($md5sum !== $expected_md5) {
+                Log::info("Rejected submission because hash $expected_md5 does not match the expected hash $md5sum");
                 $this->failProcessing(null, Response::HTTP_BAD_REQUEST, "md5 mismatch. expected: {$expected_md5}, received: {$md5sum}");
             }
         }
@@ -147,8 +150,10 @@ final class SubmissionController extends AbstractProjectController
         // Check for valid authentication token if this project requires one.
         if ($this->project->AuthenticateSubmissions && !AuthTokenUtil::checkToken($authtoken_hash, $this->project->Id)) {
             Storage::delete("inbox/{$filename}");
+            Log::info('Rejected submission with invalid authentication token');
             $this->failProcessing(null, Response::HTTP_FORBIDDEN, 'Invalid Token');
         } elseif (intval($this->project->Id) < 1) {
+            Log::info("Rejected submission with invalid project name: $projectname");
             $this->failProcessing($filename, Response::HTTP_NOT_FOUND, 'The requested project does not exist.');
         }
 
@@ -162,21 +167,24 @@ final class SubmissionController extends AbstractProjectController
             try {
                 $validation_errors = $xml_info['xml_handler']::validate($stored_filename);
             } catch (FileNotFoundException|UnableToReadFile $e) {
-                $message = $e->getMessage();
-                report($message);
-                $this->failProcessing($filename, 500, "Unable to read file for validation $filename:" . PHP_EOL . $message);
+                report($e);
+                $this->failProcessing($filename, 500, "Unable to read file for validation: $filename");
             }
             if (count($validation_errors) > 0) {
                 $error_string = implode(PHP_EOL, $validation_errors);
-                $message = "XML validation failed: Found issues with file $filename:";
+                $message = "XML validation failed: Found issues with file $filename:" . PHP_EOL . $error_string;
                 // We always log validation failures, but we only send messages back to the client if configured to do so
-                Log::info($message);
-                $fullMessage = $message . PHP_EOL . $error_string;
-                if (config('cdash.validate_submissions') === SubmissionValidationType::REJECT) {
-                    $this->failProcessing($filename, 400, $fullMessage);
-                }
-                if (config('cdash.validate_submissions') === SubmissionValidationType::WARN) {
-                    $responseMessage .= $fullMessage;
+                switch (config('cdash.validate_submissions')) {
+                    case SubmissionValidationType::REJECT:
+                        Log::info("XML validation failed for file $filename.  Rejected submission.");
+                        $this->failProcessing($filename, 400, $message);
+                        break;
+                    case SubmissionValidationType::WARN:
+                        Log::info("XML validation failed for file $filename.  Accepted submission and returned warning.");
+                        $responseMessage .= $message;
+                        break;
+                    default:
+                        Log::info("XML validation failed for file $filename.  Accepted submission anyway.");
                 }
             }
         }
