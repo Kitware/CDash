@@ -407,10 +407,10 @@ class QueryTests extends ResultsApi
             $siteLink = 'sites/' . $row->siteid;
             $test['siteLink'] = $siteLink;
 
-            $buildSummaryLink = "build/$buildid";
+            $buildSummaryLink = "builds/$buildid";
             $test['buildSummaryLink'] = $buildSummaryLink;
 
-            $testDetailsLink = "test/$buildtestid";
+            $testDetailsLink = "tests/$buildtestid";
             $test['testDetailsLink'] = $testDetailsLink;
 
             switch ($row->status) {

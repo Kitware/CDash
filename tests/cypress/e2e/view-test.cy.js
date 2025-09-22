@@ -18,7 +18,7 @@ describe('viewTest', () => {
     // go to the viewTest page corresponding to build with name 'Win32-MSVC2009'
     cy.visit('index.php?project=EmailProjectExample&date=2009-02-26');
     cy.get('tbody').contains('a', 'Win32-MSVC2009').invoke('attr', 'href').then(build_url => {
-      const buildid = build_url.match(/build\/([0-9]+)/)[1];
+      const buildid = build_url.match(/builds\/([0-9]+)/)[1];
       cy.visit(`viewTest.php?buildid=${buildid}`);
     });
 

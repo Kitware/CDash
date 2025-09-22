@@ -1,6 +1,6 @@
 <!-- For child view, display the label(s) as a link to the build summary -->
 <td ng-if="::cdash.childview == 1" align="left" class="paddt" colspan="2">
-  <a class="cdash-link" ng-href="build/{{::build.id}}">
+  <a class="cdash-link" ng-href="builds/{{::build.id}}">
     {{::build.label}}
   </a>
 
@@ -15,7 +15,7 @@
      title="View notes"
      name="notesLink"
      ng-if="::build.notes > 0"
-     ng-href="build/{{::build.id}}/notes">
+     ng-href="builds/{{::build.id}}/notes">
     <img src="img/document.png" alt="Notes" class="icon"/>
   </a>
 </td>
@@ -34,7 +34,7 @@
   <div ng-if="::build.id" style="float: left; margin: 0px 4px;">
     <a class="buildinfo cdash-link" alt="generator"
        ng-if="::build.numchildren == 0"
-       ng-href="build/{{::build.id}}">
+       ng-href="builds/{{::build.id}}">
       {{::build.buildname}}
     </a>
     <a class="buildinfo cdash-link" alt="generator"
@@ -51,14 +51,14 @@
        title="View notes"
        name="notesLink"
        ng-if="::build.notes > 0"
-       ng-href="build/{{::build.id}}/notes">
+       ng-href="builds/{{::build.id}}/notes">
       <img src="img/document.png" alt="Notes" class="icon"/>
     </a>
 
     <a class="cdash-link"
        href="" style="float: left;"
        ng-if="::build.uploadfilecount > 0"
-       ng-href="build/{{::build.id}}/files"
+       ng-href="builds/{{::build.id}}/files"
        title="{{::build.uploadfilecount}} files uploaded with this build">
       <img src="img/package.png" alt="Files" class="icon"/>
     </a>
@@ -225,7 +225,7 @@
                 build.update.errors == 1 ? 'error': (
                 build.update.warning == 1 ? 'warning' : 'normal'))">
   <div ng-if="::build.hasupdate">
-    <a class="cdash-link" ng-href="build/{{::build.id}}/update">
+    <a class="cdash-link" ng-href="builds/{{::build.id}}/update">
       {{::build.update.files}}
     </a>
   </div>
@@ -240,7 +240,7 @@
 
 <td ng-if="::buildgroup.hasconfiguredata" align="center" ng-class="::{'error': build.configure.error > 0, 'normal': build.configure.error == 0}">
   <div ng-if="::build.hasconfigure">
-    <a class="cdash-link" ng-href="build/{{::build.id}}/configure">
+    <a class="cdash-link" ng-href="builds/{{::build.id}}/configure">
       {{::build.configure.error}}
     </a>
   </div>
@@ -248,7 +248,7 @@
 
 <td ng-if="::buildgroup.hasconfiguredata" align="center" ng-class="::{'warning': build.configure.warning > 0, 'normal': build.configure.warning == 0}">
   <div ng-if="::build.hasconfigure">
-    <a class="cdash-link" ng-href="build/{{::build.id}}/configure">
+    <a class="cdash-link" ng-href="builds/{{::build.id}}/configure">
       {{::build.configure.warning}}
     </a>
     <sub ng-if="::build.configure.warningdiff > 0">+{{::build.configure.warningdiff}}</sub>
