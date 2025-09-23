@@ -3,10 +3,9 @@ describe('subProjectGroupOrder', () => {
   it('can change the group order', () => {
     cy.login();
     cy.visit('manageSubProject.php?projectid=15');
-    cy.wait(1000);
 
     // navigate to the 'SubProjects Groups' tab
-    cy.get('a').contains('SubProject Groups').click();
+    cy.get('[data-test="subproject-groups"]').click();
 
     // drag and drop the Production group to the top of the list
     // TODO: (sbelsk) cypress can't see the values bounded by Angular in text
