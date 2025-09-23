@@ -18,12 +18,21 @@ class GlobalBannerTest extends TestCase
         $this->get('/login')->assertSee($bannerText);
     }
 
-    public function testLongGlobalBannerGetsTruncated(): void
+    public function testMarkdownLinkGetsConvertedToHtml(): void
     {
-        $bannerText = 'AAAABBBBCCCCDDDDEEEEFFFFGGGGHHHHIIIIJJJJKKKKLLLLMMMMM';
+        $bannerText = 'link [here](https://example.com)';
 
         config(['cdash.global_banner' => $bannerText]);
 
-        $this->get('/login')->assertSee('AAAABBBBCCCCDDDDEEEEFFFFGGGGHHHHIIIIJJJJ...');
+        $this->get('/login')->assertSeeHtml('link <a href="https://example.com">here</a>');
+    }
+
+    public function testHtmlTagsAreEncoded(): void
+    {
+        $bannerText = "text here <script>alert('xss')</script>";
+
+        config(['cdash.global_banner' => $bannerText]);
+
+        $this->get('/login')->assertSeeHtml("text here &lt;script&gt;alert('xss')&lt;/script&gt;");
     }
 }
