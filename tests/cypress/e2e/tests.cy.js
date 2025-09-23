@@ -30,7 +30,12 @@ describe('the test page', () => {
 
   it('loads the right navigation links', () => {
     cy.visit('testSummary.php?project=21&name=nap&date=2018-01-25');
+
+    // Sort by build stamp deterministically.
+    cy.get('[data-cy="summary-table"]').contains('Build Stamp').click();
+
     cy.get('#testSummaryTable').find('tbody').find('tr').eq(2).find('td').eq(3).as('test_td');
+
     cy.get('@test_td').find('a').invoke('attr', 'href').then(test_url => {
       const test_id = test_url.match(/tests?\/([0-9]+)/)[1];
       // visit a test page
@@ -56,6 +61,10 @@ describe('the test page', () => {
 
   it('displays information about the test', () => {
     cy.visit('testSummary.php?project=21&name=nap&date=2018-01-25');
+
+    // Sort by build stamp deterministically.
+    cy.get('[data-cy="summary-table"]').contains('Build Stamp').click();
+
     cy.get('#testSummaryTable').find('tbody').find('tr').eq(2).find('td').eq(3).click();
 
     // verify information for the test we clicked on
@@ -96,6 +105,10 @@ describe('the test page', () => {
 
   it('loads the "Test Time" and "Failing/Passing" graphs', () => {
     cy.visit('testSummary.php?project=21&name=nap&date=2018-01-25');
+
+    // Sort by build stamp deterministically.
+    cy.get('[data-cy="summary-table"]').contains('Build Stamp').click();
+
     cy.get('#testSummaryTable').find('tbody').find('tr').eq(2).find('td').eq(3).click();
 
     cy.on('uncaught:exception', (err, runnable) => {
