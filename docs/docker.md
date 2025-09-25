@@ -44,12 +44,7 @@ ctest
 ### Why so many YAML files?
 You may have noticed that CDash's `docker compose` configuration is [split across multiple files](https://docs.docker.com/compose/extends/). The allows us to support various workflows (production vs. development, local vs MinIO storaage, etc) while minimizing code duplication.
 
-For example, to use MinIO instead of local storage, pass `-f docker/docker-compose.minioyml` to the `docker compose` commands mentioned in this document.
-
-### Changing the default configuration
-To change the default database password, modify `DB_PASSWORD` in `docker/docker-compose.postgres.yml`.
-
-Once you're happy with your changes, re-run `docker compose up` (with the appropriate`-f` flags) to build and run services for CDash and its database.
+For example, to use MinIO instead of local storage, pass `-f docker/docker-compose.minio.yml` to the `docker compose` commands mentioned in this document.
 
 ### Building from source
 If you would prefer to build your own Docker images for CDash, pass the `--build` option to your `docker compose up` command.
@@ -69,6 +64,7 @@ To set up a CDash production instance using docker compose, follow these steps:
   - `APP_URL=https://<my-cdash-url>`
   - `SSL_CERTIFICATE_FILE=</path/to/certs/cdash.pem>`
   - `SSL_CERTIFICATE_KEY_FILE=</path/to/certs/cdash.key>`
+  - `DB_PASSWORD=<your desired database password>`
   - `NUM_WORKERS=<desired number of queue worker replicas, defaults to 1>`
   - `WORKER_MEMORY_LIMIT`: restart worker after parsing a job if it consumed more than this amount of memory (in MB). Default: 256.
 * Run this command to start your CDash containers:
