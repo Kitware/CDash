@@ -42,7 +42,7 @@ ctest
 ## Configuration
 
 ### Why so many YAML files?
-You may have noticed that CDash's `docker compose` configuration is [split across multiple files](https://docs.docker.com/compose/extends/). The allows us to support various workflows (production vs. development, local vs MinIO storaage, etc) while minimizing code duplication.
+You may have noticed that CDash's `docker compose` configuration is [split across multiple files](https://docs.docker.com/compose/extends/). The allows us to support various workflows (production vs. development, local vs MinIO storage) while minimizing code duplication.
 
 For example, to use MinIO instead of local storage, pass `-f docker/docker-compose.minio.yml` to the `docker compose` commands mentioned in this document.
 
