@@ -30,6 +30,9 @@ describe('testSummary', () => {
     const stats_text = '40% passed, 3 failed out of 5.';
     cy.get('[data-cy="summary-stats"]').should('contain', stats_text);
 
+    // Sort by build stamp deterministically.
+    cy.get('[data-cy="summary-table"]').contains('Build Stamp').click();
+
     // the table in this page should be of size 6x6
     cy.get('[data-cy="summary-table"]').find('tr').should('have.length', 6);
     cy.get('[data-cy="summary-table"]').find('tr').each((row) => {
@@ -48,23 +51,23 @@ describe('testSummary', () => {
     get_cell(0, 4).should('contain', 'Time (s)');
     get_cell(0, 5).should('contain', 'Build Revision');
 
-    get_cell(1, 0).should('not.be.empty');
-    get_cell(1, 1).should('contain', 'TestHistory');
-    get_cell(1, 2).should('contain', '20151116-1904-Experimental');
-    get_cell(1, 3).should('contain', 'Failed').and('have.class', 'error');
-    get_cell(1, 4).should('contain', '0');
-
-    get_cell(2, 0).should('not.be.empty');
-    get_cell(2, 1).should('contain', 'TestHistory');
-    get_cell(2, 2).should('contain', '20151116-1906-Experimental');
-    get_cell(2, 3).should('contain', 'Failed').and('have.class', 'error');
-    get_cell(2, 4).should('contain', '0');
+    get_cell(3, 0).should('not.be.empty');
+    get_cell(3, 1).should('contain', 'TestHistory');
+    get_cell(3, 2).should('contain', '20151116-1906-Experimental');
+    get_cell(3, 3).should('contain', 'Failed').and('have.class', 'error');
+    get_cell(3, 4).should('contain', '0');
 
     get_cell(4, 0).should('not.be.empty');
     get_cell(4, 1).should('contain', 'TestHistory');
     get_cell(4, 2).should('contain', '20151116-1905-Experimental');
     get_cell(4, 3).should('contain', 'Passed').and('have.class', 'normal');
     get_cell(4, 4).should('contain', '1');
+
+    get_cell(5, 0).should('not.be.empty');
+    get_cell(5, 1).should('contain', 'TestHistory');
+    get_cell(5, 2).should('contain', '20151116-1904-Experimental');
+    get_cell(5, 3).should('contain', 'Failed').and('have.class', 'error');
+    get_cell(5, 4).should('contain', '0');
   });
 
 
