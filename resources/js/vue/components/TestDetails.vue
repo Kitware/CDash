@@ -216,10 +216,18 @@
 
       <!-- Graph -->
       <div
-        v-show="showgraph"
+        v-show="showgraph && graphSelection !== 'status'"
         id="graph_holder"
       />
       <div id="tooltip" />
+
+      <test-history-plot
+        v-if="graphSelection === 'status'"
+        :base-url="$baseURL"
+        :project-id="cdash.projectid"
+        :project-name="cdash.projectname"
+        :test-name="cdash.test.test"
+      />
 
       <br>
       <b>Test output</b>
@@ -241,8 +249,15 @@
 import ApiLoader from './shared/ApiLoader';
 import QueryParams from './shared/QueryParams';
 import TextMutator from './shared/TextMutator';
+import {DateTime} from 'luxon';
+import TestHistoryPlot from './shared/TestHistoryPlot.vue';
+
 export default {
   name: 'TestDetails',
+
+  components: {
+    TestHistoryPlot,
+  },
 
   data () {
     return {
@@ -340,6 +355,11 @@ export default {
           }
           ApiLoader.$emit('api-loaded', this.cdash);
         }
+      }
+
+      if (this.graphSelection === 'status') {
+        // The passing/failing graph is special because it loads its own data and handles rendering itself.
+        return;
       }
 
       const testname = this.cdash.test.test;
@@ -456,13 +476,12 @@ export default {
 
       const plot = $.plot(
         $('#graph_holder'), chart_data, options);
-      const date_formatter = d3.time.format('%b %d, %I:%M:%S %p');
 
       // Show tooltip on hover.
       $('#graph_holder').bind('plothover', (event, pos, item) => {
         if (item) {
-          const x = date_formatter(new Date(item.datapoint[0])),
-            y = item.datapoint[1].toFixed(2);
+          const x = DateTime.fromMillis(item.datapoint[0]).toFormat('LLL dd, hh:mm:ss a');
+          const y = item.datapoint[1].toFixed(2);
 
           $('#tooltip').html(
             `<b>${x}</b><br/>${

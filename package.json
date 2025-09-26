@@ -39,6 +39,7 @@
     "bootstrap": "^4.6.2",
     "d3": "^3.5.17",
     "daisyui": "^4.12.23",
+    "echarts": "^6.0.0",
     "eslint": "^8.57.0",
     "eslint-plugin-vue": "^10.4.0",
     "flot": "^4.2.6",
