@@ -488,11 +488,8 @@ set_tests_properties(projectmodel PROPERTIES DEPENDS projectindb)
 add_php_test(querytests)
 set_tests_properties(querytests PROPERTIES DEPENDS projectmodel)
 
-add_php_test(sitestatistics)
-set_tests_properties(sitestatistics PROPERTIES DEPENDS querytests)
-
 add_php_test(testoverview)
-set_tests_properties(testoverview PROPERTIES DEPENDS sitestatistics)
+set_tests_properties(testoverview PROPERTIES DEPENDS querytests)
 
 add_php_test(viewconfigure)
 set_tests_properties(viewconfigure PROPERTIES DEPENDS testoverview)
