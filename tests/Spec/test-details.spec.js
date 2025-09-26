@@ -19,9 +19,6 @@ global.$ = $;
 import AnsiUp from 'ansi_up';
 global.AnsiUp = AnsiUp;
 
-import d3 from 'd3';
-global.d3 = d3;
-
 let axiosMockAdapter;
 let apiResponse;
 let graphData;
