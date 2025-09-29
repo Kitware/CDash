@@ -8,6 +8,7 @@ use App\Models\Project;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Log;
+use LdapRecord\LdapRecordException;
 
 class LdapUtils
 {
@@ -47,8 +48,14 @@ class LdapUtils
                 continue;
             }
 
-            $matches_ldap_filter = $user->ldapguid !== null && $ldap_provider::rawFilter($project->ldapfilter)->findByGuid($user->ldapguid) !== null;
-            $relationship_already_exists = $project->users->contains($user);
+            try {
+                $matches_ldap_filter = $user->ldapguid !== null && $ldap_provider::rawFilter($project->ldapfilter)->findByGuid($user->ldapguid) !== null;
+                $relationship_already_exists = $project->users->contains($user);
+            } catch (LdapRecordException) {
+                // Prevent invalid filters from breaking other projects.
+                Log::warning("Invalid LDAP filter '$project->ldapfilter' for project $project->name.");
+                continue;
+            }
 
             if ($matches_ldap_filter && !$relationship_already_exists) {
                 $project->users()->attach($user->id, ['role' => Project::PROJECT_USER]);
