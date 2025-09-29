@@ -3,12 +3,14 @@
 namespace Tests\Feature;
 
 use App\Models\Project;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use LdapRecord\LdapRecordException;
 use LdapRecord\Models\ModelDoesNotExistException;
 use LdapRecord\Models\OpenLDAP\Group;
 use LdapRecord\Models\OpenLDAP\User;
+use Mockery;
 use Mockery\Exception\InvalidCountException;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
@@ -415,5 +417,22 @@ class LdapIntegration extends TestCase
 
         $this->assertCanAccessProject('group_1_only_1', 'only_group_1');
         $this->assertCanAccessProject('group_1_only_1', 'only_group_2');
+    }
+
+    public function testSyncCommandHandlesInvalidProjectFilters(): void
+    {
+        // We are testing that nothing fails...
+        self::expectNotToPerformAssertions();
+
+        Log::shouldReceive('warning')
+            ->with("Invalid LDAP filter 'brokenldapfilter))' for project " . $this->projects['only_group_1']->name . '.');
+
+        // Allow other debug messages to be logged without causing a test failure.
+        Log::shouldReceive('debug')->with(Mockery::any());
+
+        $this->projects['only_group_1']->ldapfilter = 'brokenldapfilter))';
+        $this->projects['only_group_1']->save();
+
+        $this->artisan('ldap:sync_projects');
     }
 }
