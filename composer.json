@@ -35,7 +35,7 @@
     "lcobucci/jwt": "5.5.0",
     "league/flysystem-aws-s3-v3": "^3.29",
     "mll-lab/laravel-graphiql": "4.0.2",
-    "nuwave/lighthouse": "6.62.3",
+    "nuwave/lighthouse": "6.63.1",
     "pear/archive_tar": "1.6.0",
     "php-di/php-di": "7.1.1",
     "ramsey/uuid": "4.9.0",
