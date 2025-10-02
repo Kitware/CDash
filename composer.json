@@ -25,7 +25,7 @@
     "ext-xsl": "*",
     "ext-zlib": "*",
     "24slides/laravel-saml2": "2.4.2",
-    "aws/aws-sdk-php": "3.356.8",
+    "aws/aws-sdk-php": "3.356.31",
     "directorytree/ldaprecord-laravel": "3.4.2",
     "guzzlehttp/guzzle": "7.10.0",
     "knplabs/github-api": "3.16.0",
