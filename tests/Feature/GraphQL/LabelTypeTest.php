@@ -93,20 +93,20 @@ class LabelTypeTest extends TestCase
         ]);
 
         $this->labels['label1'] = $build->labels()->create([
-            'text' => 'text1',
+            'text' => Str::uuid()->toString(),
         ]);
 
         $this->labels['label2'] = $build->labels()->create([
-            'text' => 'text2',
+            'text' => Str::uuid()->toString(),
         ]);
 
         $this->graphQL('
-            query build($id: ID) {
+            query build($id: ID, $labeltext: String!) {
                 build(id: $id) {
                     labels(
                         filters: {
                             eq: {
-                                text: "text1"
+                                text: $labeltext
                             }
                         }
                     ){
@@ -121,6 +121,7 @@ class LabelTypeTest extends TestCase
             }
         ', [
             'id' => $build->id,
+            'labeltext' => $this->labels['label1']->text,
         ])->assertExactJson([
             'data' => [
                 'build' => [
