@@ -959,20 +959,4 @@ class Project
 
         return true;
     }
-
-    private static function curlRequest(string $request): void
-    {
-        $use_https = config('app.env') === 'production';
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $request);
-        curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 1);
-        if ($use_https) {
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        }
-        curl_exec($ch);
-        curl_close($ch);
-    }
 }
