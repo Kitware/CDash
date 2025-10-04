@@ -96,7 +96,7 @@ final class SubmissionController extends AbstractProjectController
         $expected_md5 = isset($_GET['MD5']) ? htmlspecialchars($_GET['MD5']) : '';
 
         if ($expected_md5 !== '' && !preg_match('/^[a-f0-9]{32}$/i', $expected_md5)) {
-            Log::info("Rejected submission with invalid hash: $expected_md5");
+            Log::info("Rejected submission with invalid hash '$expected_md5' for project $projectname");
             $this->failProcessing(null, Response::HTTP_BAD_REQUEST, "Provided md5 hash '{$expected_md5}' is improperly formatted.");
         }
 
