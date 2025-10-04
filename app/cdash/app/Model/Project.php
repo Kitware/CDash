@@ -834,11 +834,6 @@ class Project
             throw new RuntimeException('ID not set for project');
         }
 
-        // Perform the "daily update" step asychronously here via cURL.
-        if (config('cdash.daily_updates') === true) {
-            self::curlRequest(url('/ajax/dailyupdatescurl.php') . "?projectid={$this->Id}");
-        }
-
         $max_builds = (int) config('cdash.builds_per_project');
         if ($max_builds === 0 || in_array($this->GetName(), config('cdash.unlimited_projects'))) {
             return false;

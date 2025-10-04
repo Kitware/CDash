@@ -163,13 +163,6 @@ final class ProjectController extends AbstractProjectController
         return response()->json(cast_data_for_JSON($response));
     }
 
-    public function ajaxDailyUpdatesCurl(): void
-    {
-        require_once 'include/dailyupdates.php';
-
-        addDailyChanges(intval($_GET['projectid']));
-    }
-
     public function sites(int $project_id): View
     {
         $this->setProjectById($project_id);

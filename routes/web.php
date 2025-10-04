@@ -235,9 +235,6 @@ Route::get('/viewSite.php', function (Request $request) {
 
 Route::get('/viewDynamicAnalysisFile.php', 'DynamicAnalysisController@viewDynamicAnalysisFile');
 
-// TODO: (williamjallen) This route is probably not necessary anymore, and should be removed.
-Route::get('/ajax/dailyupdatescurl.php', 'ProjectController@ajaxDailyUpdatesCurl');
-
 Route::get('/manageBuildGroup.php', 'BuildController@manageBuildGroup');
 
 Route::get('/users', 'UsersController@users');
