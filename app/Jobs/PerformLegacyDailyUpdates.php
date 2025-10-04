@@ -195,64 +195,36 @@ class PerformLegacyDailyUpdates implements ShouldQueue
         $project->Id = $projectid;
         $project->Fill();
         [$previousdate, $currentstarttime, $nextdate] = get_dates('now', $project->NightlyTime);
-        $date = gmdate(FMT_DATE, $currentstarttime);
 
         $db = Database::getInstance();
 
-        // Check if we already have it somwhere
-        $query = $db->executePreparedSingleRow('
-                 SELECT COUNT(*) AS c
-                 FROM dailyupdate
-                 WHERE
-                     projectid=?
-                     AND date=?
-             ', [$projectid, $date]);
-        if (intval($query['c']) === 0) {
-            $updateid = DB::table('dailyupdate')
-                ->insertGetId([
-                    'projectid' => $projectid,
-                    'date' => $date,
-                    'command' => 'NA',
-                    'type' => 'NA',
-                    'status' => '0',
-                ]);
+        // Send an email if some expected builds have not been submitting
+        $this->sendEmailExpectedBuilds($projectid, $currentstarttime);
 
-            // Send an email if some expected builds have not been submitting
-            $this->sendEmailExpectedBuilds($projectid, $currentstarttime);
+        // cleanBuildEmail
+        $this->cleanBuildEmail();
+        $this->cleanUserTemp();
 
-            // cleanBuildEmail
-            $this->cleanBuildEmail();
-            $this->cleanUserTemp();
+        // Delete expired buildgroups and rules.
+        $datetime = new DateTime();
+        $datetime->sub(new DateInterval("P{$project->AutoremoveTimeframe}D"));
+        $cutoff_date = gmdate(FMT_DATETIME, $datetime->getTimestamp());
+        BuildGroupRule::DeleteExpiredRulesForProject($project->Id, $cutoff_date);
 
-            $db->executePrepared('
-            UPDATE dailyupdate
-            SET status=1
-            WHERE
-                projectid=?
-                AND date=?
-        ', [$projectid, $date]);
-
-            // Delete expired buildgroups and rules.
-            $datetime = new DateTime();
-            $datetime->sub(new DateInterval("P{$project->AutoremoveTimeframe}D"));
-            $cutoff_date = gmdate(FMT_DATETIME, $datetime->getTimestamp());
-            BuildGroupRule::DeleteExpiredRulesForProject($project->Id, $cutoff_date);
-
-            $stmt = $db->prepare(
-                "SELECT id FROM buildgroup
-            WHERE projectid = :projectid AND
-                  endtime != '1980-01-01 00:00:00' AND
-                  endtime < :endtime");
-            $query_params = [
-                ':projectid' => $project->Id,
-                ':endtime' => $cutoff_date,
-            ];
-            $db->execute($stmt, $query_params);
-            while ($row = $stmt->fetch()) {
-                $buildgroup = new BuildGroup();
-                $buildgroup->SetId($row['id']);
-                $buildgroup->Delete();
-            }
+        $stmt = $db->prepare(
+            "SELECT id FROM buildgroup
+        WHERE projectid = :projectid AND
+              endtime != '1980-01-01 00:00:00' AND
+              endtime < :endtime");
+        $query_params = [
+            ':projectid' => $project->Id,
+            ':endtime' => $cutoff_date,
+        ];
+        $db->execute($stmt, $query_params);
+        while ($row = $stmt->fetch()) {
+            $buildgroup = new BuildGroup();
+            $buildgroup->SetId($row['id']);
+            $buildgroup->Delete();
         }
     }
 }
