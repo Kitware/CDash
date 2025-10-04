@@ -15280,6 +15280,24 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
+			rawMessage: 'Function pdo_execute() has parameter $input_parameters with no value type specified in iterable type array.'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/cdash/include/common.php
+
+		-
+			rawMessage: 'Function pdo_fetch_array() return type has no value type specified in iterable type array.'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/cdash/include/common.php
+
+		-
+			rawMessage: 'Function pdo_fetch_array() should return array|false|null but returns mixed.'
+			identifier: return.type
+			count: 1
+			path: app/cdash/include/common.php
+
+		-
 			rawMessage: 'Function qnum() has no return type specified.'
 			identifier: missingType.return
 			count: 1
@@ -15502,9 +15520,27 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
+			rawMessage: 'Parameter #1 $string of function strlen expects string, (string|false) given.'
+			identifier: argument.type
+			count: 1
+			path: app/cdash/include/common.php
+
+		-
+			rawMessage: 'Parameter #1 $string of function substr expects string, (string|false) given.'
+			identifier: argument.type
+			count: 1
+			path: app/cdash/include/common.php
+
+		-
 			rawMessage: 'Parameter #1 $string of function substr expects string, string|false given.'
 			identifier: argument.type
 			count: 2
+			path: app/cdash/include/common.php
+
+		-
+			rawMessage: 'Parameter #1 $string of method PDO::quote() expects string, mixed given.'
+			identifier: argument.type
+			count: 1
 			path: app/cdash/include/common.php
 
 		-
@@ -16115,42 +16151,6 @@ parameters:
 			identifier: deadCode.unreachable
 			count: 7
 			path: app/cdash/include/filterdataFunctions.php
-
-		-
-			rawMessage: 'Function pdo_execute() has parameter $input_parameters with no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/include/pdo.php
-
-		-
-			rawMessage: 'Function pdo_fetch_array() return type has no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/include/pdo.php
-
-		-
-			rawMessage: 'Function pdo_fetch_array() should return array|false|null but returns mixed.'
-			identifier: return.type
-			count: 1
-			path: app/cdash/include/pdo.php
-
-		-
-			rawMessage: 'Parameter #1 $string of function strlen expects string, (string|false) given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/include/pdo.php
-
-		-
-			rawMessage: 'Parameter #1 $string of function substr expects string, (string|false) given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/include/pdo.php
-
-		-
-			rawMessage: 'Parameter #1 $string of method PDO::quote() expects string, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/include/pdo.php
 
 		-
 			rawMessage: Cannot access offset 'head_sha' on mixed.
