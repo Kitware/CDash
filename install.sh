@@ -84,6 +84,9 @@ else
     npm run prod --stats-children
 fi
 
+echo "Generating version files..."
+php artisan generate-version
+
 echo "Bringing CDash back online..."
 php artisan up
 
