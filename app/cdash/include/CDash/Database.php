@@ -24,11 +24,6 @@ use PDO;
 use PDOException;
 use PDOStatement;
 
-/**
- * Class Database
- * This class is meant to serve as a minimal lazy database abstraction. The
- * file pdo.php will use this extensively.
- */
 class Database extends Singleton
 {
     private ?PDO $pdo = null;

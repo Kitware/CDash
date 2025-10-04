@@ -17,7 +17,6 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 
 require_once 'include/common.php';
-require_once 'include/pdo.php';
 
 class AppServiceProvider extends ServiceProvider
 {
