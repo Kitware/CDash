@@ -44,7 +44,6 @@ resources/js/angular/controllers/compareCoverage.js
 resources/js/angular/controllers/buildProperties.js
 resources/js/angular/cdash_angular.js
 resources/js/angular/cdashViewCoverage.js
-resources/js/angular/cdashUploadFilesSorter.js
 resources/js/angular/cdashSortable.js
 resources/js/angular/cdashFilters.js
 resources/js/angular/cdashCoverageGraph.js
