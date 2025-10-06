@@ -834,11 +834,6 @@ class Project
             throw new RuntimeException('ID not set for project');
         }
 
-        // Perform the "daily update" step asychronously here via cURL.
-        if (config('cdash.daily_updates') === true) {
-            self::curlRequest(url('/ajax/dailyupdatescurl.php') . "?projectid={$this->Id}");
-        }
-
         $max_builds = (int) config('cdash.builds_per_project');
         if ($max_builds === 0 || in_array($this->GetName(), config('cdash.unlimited_projects'))) {
             return false;
@@ -963,21 +958,5 @@ class Project
         }
 
         return true;
-    }
-
-    private static function curlRequest(string $request): void
-    {
-        $use_https = config('app.env') === 'production';
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $request);
-        curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 1);
-        if ($use_https) {
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        }
-        curl_exec($ch);
-        curl_close($ch);
     }
 }
