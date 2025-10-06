@@ -17,8 +17,6 @@
 
 namespace CDash\Api\v1\Index;
 
-require_once 'include/filterdataFunctions.php';
-
 use CDash\Controller\Api\Index as IndexController;
 use CDash\Database;
 use App\Models\Project as EloquentProject;

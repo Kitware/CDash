@@ -29,8 +29,6 @@ use DateInterval;
 use DatePeriod;
 use DateTime;
 
-require_once 'include/filterdataFunctions.php';
-
 class Timeline extends Index
 {
     private $defectTypes;
