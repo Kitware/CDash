@@ -10,28 +10,8 @@ mix.sourceMaps(true, 'source-map');
 // Hash the built files to create a version identifier.  Use the mix() helper in PHP to automatically append the identifier to a path.
 mix.version();
 
-// Webpack plugins.
-const webpack_plugins = [];
-
-// Write a VERSION file to be reported in the page footer
-fs = require('fs');
-let version;
-if (fs.existsSync('.git')) {
-  // If this is a git clone, we will use the `git describe` to generate a version
-  // to report in the footer.
-  const { GitRevisionPlugin } = require('git-revision-webpack-plugin');
-  webpack_plugins.push(new GitRevisionPlugin({
-    lightweightTags: true,
-  }));
-}
-else {
-  // Otherwise if this is a release download, use the version from package.json.
-  const config = require('./package.json');
-  version = config.version;
-  fs.writeFileSync('public/VERSION', `v${version}`);
-}
-
 // Write out version file for angular.js
+fs = require('fs');
 const dir = 'public/assets/js/angular';
 if (!fs.existsSync(dir)) {
   fs.mkdirSync(dir, { recursive: true });
@@ -108,7 +88,6 @@ mix.copy('resources/js/angular/jquery.dataTables.min.js', 'public/assets/js/jque
 mix.js('resources/js/vue/app.js', 'public/assets/js').vue();
 
 mix.webpackConfig({
-  plugins: webpack_plugins,
   stats: {
     children: true,
   },
