@@ -23,6 +23,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
 
 require_once 'include/common.php';
+require_once 'include/filterdataFunctions.php';
 
 class CDashTestCase extends TestCase
 {

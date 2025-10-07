@@ -23,8 +23,6 @@ use CDash\Database;
 use CDash\Model\Build;
 use Illuminate\Support\Facades\DB;
 
-require_once 'include/filterdataFunctions.php';
-
 class ViewTest extends BuildApi
 {
     public $JSONEncodeResponse;

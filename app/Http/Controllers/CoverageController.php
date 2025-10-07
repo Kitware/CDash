@@ -15,8 +15,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
-require_once 'include/filterdataFunctions.php';
-
 final class CoverageController extends AbstractBuildController
 {
     public function compareCoverage(): View|RedirectResponse

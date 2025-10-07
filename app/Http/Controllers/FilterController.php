@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
 
-require_once 'include/filterdataFunctions.php';
-
 final class FilterController extends AbstractController
 {
     public function getFilterDataArray(): JsonResponse

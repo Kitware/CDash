@@ -21,8 +21,6 @@ use CDash\Database;
 use CDash\Model\BuildGroup;
 use CDash\Model\Project;
 
-require_once 'include/filterdataFunctions.php';
-
 class TestOverview extends ResultsApi
 {
     public function __construct(Database $db, Project $project)

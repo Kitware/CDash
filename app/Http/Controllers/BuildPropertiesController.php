@@ -11,8 +11,6 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\View\View;
 use PDOStatement;
 
-require_once 'include/filterdataFunctions.php';
-
 final class BuildPropertiesController extends AbstractBuildController
 {
     public function buildProperties(): View

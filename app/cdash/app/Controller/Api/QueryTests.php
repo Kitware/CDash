@@ -25,8 +25,6 @@ use CDash\Model\Build;
 use CDash\Model\Project;
 use Illuminate\Support\Facades\DB;
 
-require_once 'include/filterdataFunctions.php';
-
 class QueryTests extends ResultsApi
 {
     public function __construct(Database $db, Project $project)
