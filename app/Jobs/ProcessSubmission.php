@@ -10,10 +10,10 @@ use App\Http\Submission\Handlers\DoneHandler;
 use App\Http\Submission\Handlers\RetryHandler;
 use App\Http\Submission\Handlers\UpdateHandler;
 use App\Models\BuildFile;
+use App\Models\Site;
 use App\Models\SuccessfulJob;
 use App\Utils\SubmissionUtils;
 use App\Utils\UnparsedSubmissionProcessor;
-use CDash\Database;
 use CDash\Messaging\Notification\Email\EmailBuilder;
 use CDash\Messaging\Notification\Email\EmailMessage;
 use CDash\Messaging\Notification\NotificationCollection;
@@ -158,8 +158,11 @@ class ProcessSubmission implements ShouldQueue
             return;
         }
 
+        // Project existence validation occurs prior to jobs being queued, so we expect this to always exist.
+        $project = \App\Models\Project::findOrFail((int) $this->projectid);
+
         // Parse file.
-        $handler = $this->doSubmit("inprogress/{$this->filename}", $this->projectid, $this->buildid, $this->expected_md5, true);
+        $handler = $this->doSubmit("inprogress/{$this->filename}", $project, $this->buildid, $this->expected_md5, true);
 
         if (!is_object($handler)) {
             return;
@@ -219,7 +222,7 @@ class ProcessSubmission implements ShouldQueue
      *
      * @throws BadSubmissionException
      **/
-    private function doSubmit($filename, $projectid, $buildid = null, $expected_md5 = ''): AbstractSubmissionHandler|UnparsedSubmissionProcessor|false
+    private function doSubmit($filename, \App\Models\Project $project, $buildid = null, $expected_md5 = ''): AbstractSubmissionHandler|UnparsedSubmissionProcessor|false
     {
         $filehandle = $this->getSubmissionFileHandle($filename);
         if ($filehandle === false) {
@@ -238,10 +241,10 @@ class ProcessSubmission implements ShouldQueue
         }
 
         // Special handling for unparsed (non-XML) submissions.
-        $handler = self::parse_put_submission($filename, $projectid, $expected_md5, $buildid);
+        $handler = self::parse_put_submission($filename, $project, $expected_md5, $buildid);
         if ($handler === false) {
             // Otherwise, parse this submission as CTest XML.
-            $handler = self::ctest_parse($filehandle, $filename, $projectid, $expected_md5, $buildid);
+            $handler = self::ctest_parse($filehandle, $filename, $project, $buildid);
         }
 
         fclose($filehandle);
@@ -269,12 +272,12 @@ class ProcessSubmission implements ShouldQueue
 
         // Send emails about update problems.
         if ($handler instanceof UpdateHandler) {
-            self::send_update_email($handler, intval($projectid));
+            self::send_update_email($handler, $project->id);
         }
 
         // Send more general build emails.
         if ($handler instanceof ActionableBuildInterface) {
-            self::sendemail($handler, intval($projectid));
+            self::sendemail($handler, $project->id);
         }
 
         return $handler;
@@ -364,10 +367,8 @@ class ProcessSubmission implements ShouldQueue
     }
 
     /** Function to handle new style submissions via HTTP PUT */
-    private static function parse_put_submission(string $filename, int $projectid, ?string $expected_md5, ?int $buildid): AbstractSubmissionHandler|false
+    private static function parse_put_submission(string $filename, \App\Models\Project $project, ?string $expected_md5, ?int $buildid): AbstractSubmissionHandler|false
     {
-        $db = Database::getInstance();
-
         if ($expected_md5 === null) {
             return false;
         }
@@ -381,26 +382,12 @@ class ProcessSubmission implements ShouldQueue
             return false;
         }
 
+        /** @var \App\Models\Build $build */
+        $build = $buildfile->build()->firstOrFail();
+        /** @var Site $site */
+        $site = $build->site()->firstOrFail();
+
         // Save a backup file for this submission.
-        $row = $db->executePreparedSingleRow('SELECT name FROM project WHERE id=? LIMIT 1', [$projectid]);
-        if (empty($row)) {
-            return false;
-        }
-        $projectname = $row['name'];
-
-        $row = $db->executePreparedSingleRow('SELECT name, stamp FROM build WHERE id=? LIMIT 1', [$buildfile->buildid]);
-        if (empty($row)) {
-            return false;
-        }
-        $buildname = $row['name'];
-        $stamp = $row['stamp'];
-
-        $row = $db->executePreparedSingleRow('SELECT name FROM site WHERE id=
-                                             (SELECT siteid FROM build WHERE id=?) LIMIT 1', [$buildfile->buildid]);
-        if (empty($row)) {
-            return false;
-        }
-        $sitename = $row['name'];
 
         // Include the handler file for this type of submission.
         $valid_types = [
@@ -413,7 +400,7 @@ class ProcessSubmission implements ShouldQueue
             'SubProjectDirectories',
         ];
         if (!in_array($buildfile->type, $valid_types, true)) {
-            Log::error("Project: $projectid.  No handler include file for {$buildfile->type}");
+            Log::error("No handler include file for {$buildfile->type}");
             $buildfile->delete();
             return false;
         }
@@ -421,14 +408,14 @@ class ProcessSubmission implements ShouldQueue
         // Instantiate the handler.
         $className = 'App\\Http\\Submission\\Handlers\\' . $buildfile->type . 'Handler';
         if (!class_exists($className)) {
-            Log::error("Project: $projectid.  No handler class for {$buildfile->type}");
+            Log::error("No handler class for {$buildfile->type}");
             $buildfile->delete();
             return false;
         }
 
-        $build = new Build();
-        $build->Id = $buildfile->buildid;
-        $handler = new $className($build);
+        $legacy_build = new Build();
+        $legacy_build->Id = $build->id;
+        $handler = new $className($legacy_build);
 
         // Make sure the file exists.
         if (!Storage::exists($filename)) {
@@ -444,7 +431,14 @@ class ProcessSubmission implements ShouldQueue
 
         $buildfile->delete();
 
-        $handler->backupFileName = self::generateBackupFileName($projectname, '', $buildname, $sitename, $stamp, $buildfile->filename);
+        $handler->backupFileName = self::generateBackupFileName(
+            $project->name,
+            '',
+            $build->name,
+            $site->name,
+            $build->stamp,
+            $buildfile->filename,
+        );
 
         return $handler;
     }
@@ -454,14 +448,8 @@ class ProcessSubmission implements ShouldQueue
      *
      * @throws BadSubmissionException
      */
-    private static function ctest_parse($filehandle, string $filename, $projectid, $expected_md5 = '', ?int $buildid = null): AbstractSubmissionHandler|false
+    private static function ctest_parse($filehandle, string $filename, \App\Models\Project $project_param, ?int $buildid = null): AbstractSubmissionHandler|false
     {
-        // Try to get the IP of the build.
-        $ip = null;
-        if (array_key_exists('REMOTE_ADDR', $_SERVER)) {
-            $ip = $_SERVER['REMOTE_ADDR'];
-        }
-
         // Figure out what type of XML file this is.
         $xml_info = SubmissionUtils::get_xml_type($filehandle, $filename);
 
@@ -478,7 +466,7 @@ class ProcessSubmission implements ShouldQueue
             $handler = new $handler_ref($build);
         } elseif ($handler_ref !== null) {
             $project = new Project();
-            $project->Id = $projectid;
+            $project->Id = $project_param->id;
             $handler = new $handler_ref($project);
         } else {
             // TODO: Add as much context as possible to this message
@@ -492,8 +480,6 @@ class ProcessSubmission implements ShouldQueue
         xml_set_element_handler($parser, [$handler, 'startElement'], [$handler, 'endElement']);
         xml_set_character_data_handler($parser, [$handler, 'text']);
         xml_parse($parser, $content, false);
-
-        $projectname = get_project_name($projectid);
 
         $sitename = '';
         $buildname = '';
@@ -509,19 +495,16 @@ class ProcessSubmission implements ShouldQueue
         }
 
         // Check if the build is in the block list
-        $db = Database::getInstance();
-        $rows = $db->executePrepared("SELECT id FROM blockbuild WHERE projectid=?
-                                      AND (buildname='' OR buildname=?)
-                                      AND (sitename='' OR sitename=?)
-                                      AND (ipaddress='' OR ipaddress=?)",
-            [$projectid, $buildname, $sitename, $ip]);
-        if (!empty($rows)) {
-            echo 'The submission is banned from this CDash server.';
+        $build_is_blocked = $project_param->blockedbuilds()->where([
+            'buildname' => $buildname,
+            'sitename' => $sitename,
+        ])->exists();
+
+        if ($build_is_blocked) {
             Log::info('Blocked prohibited submission.', [
-                'projectid' => $projectid,
+                'projectid' => $project_param->id,
                 'build' => $buildname,
                 'site' => $sitename,
-                'ip' => $ip,
             ]);
             return false;
         }
@@ -536,7 +519,7 @@ class ProcessSubmission implements ShouldQueue
 
         // Generate a pretty, "relative to storage" filepath and store it in the handler.
         $backup_filename = self::generateBackupFileName(
-            $projectname, $subprojectname, $buildname, $sitename, $stamp, $file . '.xml');
+            $project_param->name, $subprojectname, $buildname, $sitename, $stamp, $file . '.xml');
         $handler->backupFileName = $backup_filename;
 
         return $handler;
@@ -641,22 +624,10 @@ class ProcessSubmission implements ShouldQueue
         if ($update_errors['errors']) {
             // Find the site maintainer(s)
             $sitename = $handler->getSiteName();
-            $siteid = $handler->GetSite()->id;
-            $recipients = [];
 
-            $db = Database::getInstance();
-            $email_addresses = $db->executePrepared('
-                               SELECT email
-                               FROM users, site2user
-                               WHERE
-                                   users.id=site2user.userid
-                                   AND site2user.siteid=?
-                           ', [$siteid]);
-            foreach ($email_addresses as $email_addresses_array) {
-                $recipients[] = $email_addresses_array['email'];
-            }
+            $recipients = $handler->GetSite()->maintainers()->pluck('email');
 
-            if (!empty($recipients)) {
+            if ($recipients->isNotEmpty()) {
                 // Generate the email to send
                 $subject = 'CDash [' . $Project->Name . '] - Update Errors for ' . $sitename;
 
@@ -666,7 +637,7 @@ class ProcessSubmission implements ShouldQueue
 
                 Mail::raw($body, function ($message) use ($subject, $recipients): void {
                     $message->subject($subject)
-                        ->to($recipients);
+                        ->to($recipients->toArray());
                 });
             }
         }
@@ -675,17 +646,12 @@ class ProcessSubmission implements ShouldQueue
     /** Check for update errors for a given build. */
     private static function check_email_update_errors(int $buildid): array
     {
-        $errors = [];
-        $errors['errors'] = true;
-        $errors['hasfixes'] = false;
+        $num_errors = \App\Models\Build::findOrFail($buildid)->updates()->first()->errors ?? 0;
 
-        // Update errors
-        $errors['update_errors'] = \App\Models\Build::findOrFail($buildid)->updates()->first()->errors ?? 0;
-
-        // Green build we return
-        if ($errors['update_errors'] == 0) {
-            $errors['errors'] = false;
-        }
-        return $errors;
+        return [
+            'hasfixes' => false,
+            'update_errors' => $num_errors,
+            'errors' => $num_errors > 0,
+        ];
     }
 }

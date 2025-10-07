@@ -6,6 +6,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property string $type
@@ -27,4 +28,12 @@ class BuildFile extends Model
         'md5',
         'buildid',
     ];
+
+    /**
+     * @return BelongsTo<Build, $this>
+     */
+    public function build(): BelongsTo
+    {
+        return $this->belongsTo(Build::class, 'buildid');
+    }
 }
