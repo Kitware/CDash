@@ -109,7 +109,7 @@ final class SubmissionController extends AbstractProjectController
         if (strlen($expected_md5) > 0) {
             $md5sum = SubmissionUtils::hashFileHandle($fp, 'md5');
             if ($md5sum !== $expected_md5) {
-                Log::info("Rejected submission because hash $expected_md5 does not match the expected hash $md5sum");
+                Log::info("Rejected submission because hash '$md5sum' does not match the expected hash '$expected_md5' for project $projectname");
                 $this->failProcessing(null, Response::HTTP_BAD_REQUEST, "md5 mismatch. expected: {$expected_md5}, received: {$md5sum}");
             }
         }
