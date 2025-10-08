@@ -343,7 +343,11 @@ final class CoverageController extends AbstractBuildController
 
                 $covfile['coveragemetric'] = ($coveragefile_array['loctested'] + 10) / ($coveragefile_array['loctested'] + $coveragefile_array['locuntested'] + 10);
                 $coveragetype = 'gcov';
-                $covfile['percentcoverage'] = sprintf('%3.2f', $coveragefile_array['loctested'] / ($coveragefile_array['loctested'] + $coveragefile_array['locuntested']) * 100);
+                if ((int) $coveragefile_array['loctested'] + (int) $coveragefile_array['locuntested'] > 0) {
+                    $covfile['percentcoverage'] = sprintf('%3.2f', (int) $coveragefile_array['loctested'] / ((int) $coveragefile_array['loctested'] + (int) $coveragefile_array['locuntested']) * 100);
+                } else {
+                    $covfile['percentcoverage'] = '100.00';
+                }
             }
 
             // Add the number of satisfactory covered files
@@ -641,7 +645,12 @@ final class CoverageController extends AbstractBuildController
                 $covfile['branchpercentcoverage'] = sprintf('%3.2f', $metric * 100);
                 $covfile['branchcoveragemetric'] = $metric;
 
-                $covfile['percentcoverage'] = sprintf('%3.2f', $covfile['loctested'] / ($covfile['loctested'] + $covfile['locuntested']) * 100);
+                if ((int) $covfile['loctested'] + (int) $covfile['locuntested'] > 0) {
+                    $covfile['percentcoverage'] = sprintf('%3.2f', (int) $covfile['loctested'] / ((int) $covfile['loctested'] + (int) $covfile['locuntested']) * 100);
+                } else {
+                    $covfile['percentcoverage'] = '100.00';
+                }
+
                 $covfile['coveragemetric'] = ($covfile['loctested'] + 10) / ($covfile['loctested'] + $covfile['locuntested'] + 10);
                 $coveragetype = 'gcov';
             }

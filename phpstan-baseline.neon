@@ -1281,7 +1281,7 @@ parameters:
 		-
 			rawMessage: 'Method App\Http\Controllers\CoverageController::ajaxGetViewCoverage() throws checked exception DivisionByZeroError but it''s missing from the PHPDoc @throws tag.'
 			identifier: missingType.checkedException
-			count: 3
+			count: 2
 			path: app/Http/Controllers/CoverageController.php
 
 		-
@@ -1377,7 +1377,7 @@ parameters:
 		-
 			rawMessage: 'Method App\Http\Controllers\CoverageController::viewCoverage() throws checked exception DivisionByZeroError but it''s missing from the PHPDoc @throws tag.'
 			identifier: missingType.checkedException
-			count: 2
+			count: 1
 			path: app/Http/Controllers/CoverageController.php
 
 		-
@@ -1461,12 +1461,6 @@ parameters:
 		-
 			rawMessage: 'Only numeric types are allowed in +, int|false given on the left side.'
 			identifier: plus.leftNonNumeric
-			count: 2
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Only numeric types are allowed in /, (array|float|int) given on the right side.'
-			identifier: div.rightNonNumeric
 			count: 2
 			path: app/Http/Controllers/CoverageController.php
 
