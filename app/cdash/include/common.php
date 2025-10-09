@@ -434,63 +434,6 @@ function get_project_name($projectid): string
 }
 
 /**
- * Get the geolocation from IP address
- */
-function get_geolocation($ip): array
-{
-    $location = [];
-
-    $lat = '';
-    $long = '';
-
-    if (config('cdash.geolocate_ip_addresses')) {
-        // Ask hostip.info for geolocation
-        $url = 'http://api.hostip.info/get_html.php?ip=' . $ip . '&position=true';
-
-        if (function_exists('curl_init')) {
-            $curl = curl_init();
-            curl_setopt($curl, CURLOPT_URL, $url);
-            curl_setopt($curl, CURLOPT_TIMEOUT, 5); // if we cannot get the geolocation in 5 seconds we quit
-            ob_start();
-            curl_exec($curl);
-            $httpReply = ob_get_contents();
-            ob_end_clean();
-            curl_close($curl);
-        } elseif (ini_get('allow_url_fopen')) {
-            $options = ['http' => ['timeout' => 5.0]];
-            $context = stream_context_create($options);
-            $httpReply = file_get_contents($url, false, $context);
-        } else {
-            $httpReply = '';
-        }
-
-        $pos = strpos($httpReply, 'Latitude: ');
-        if ($pos !== false) {
-            $pos2 = strpos($httpReply, "\n", $pos);
-            $lat = substr($httpReply, $pos + 10, $pos2 - $pos - 10);
-        }
-
-        $pos = strpos($httpReply, 'Longitude: ');
-        if ($pos !== false) {
-            $pos2 = strpos($httpReply, "\n", $pos);
-            $long = substr($httpReply, $pos + 11, $pos2 - $pos - 11);
-        }
-    }
-
-    $location['latitude'] = '';
-    $location['longitude'] = '';
-
-    // Sanity check
-    if (strlen($lat) > 0 && strlen($long) > 0
-        && $lat[0] != ' ' && $long[0] != ' '
-    ) {
-        $location['latitude'] = $lat;
-        $location['longitude'] = $long;
-    }
-    return $location;
-}
-
-/**
  * remove all builds for a project
  */
 function remove_project_builds($projectid): void

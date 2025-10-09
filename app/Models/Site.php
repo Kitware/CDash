@@ -7,10 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\QueryException;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 /**
  * @property int $id
@@ -72,42 +69,5 @@ class Site extends Model
     public function maintainers(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'site2user', 'siteid', 'userid');
-    }
-
-    public function save(array $options = []): bool
-    {
-        if (strlen($this->ip) === 0) {
-            $this->LookupIP();
-        }
-
-        // Get the geolocation
-        if (strlen($this->latitude) === 0) {
-            $location = get_geolocation($this->ip);
-            $this->latitude = $location['latitude'];
-            $this->longitude = $location['longitude'];
-        }
-
-        try {
-            return parent::save($options);
-        } catch (QueryException) {
-            Log::warning("Failed to save Site {$this->name}");
-            return false;
-        }
-    }
-
-    private function LookupIP(): void
-    {
-        global $PHP_ERROR_SUBMISSION_ID;
-        $submission_id = $PHP_ERROR_SUBMISSION_ID;
-
-        // In the async case, look up the IP recorded when the file was
-        // originally submitted...
-        if ($submission_id) {
-            $this->ip = DB::select('SELECT ip FROM submission2ip WHERE submissionid = ?', [$submission_id])[0]->ip;
-        } elseif (!empty($_SERVER['REMOTE_ADDR'])) {
-            $this->ip = $_SERVER['REMOTE_ADDR'];
-        } else {
-            $this->ip = '';
-        }
     }
 }
