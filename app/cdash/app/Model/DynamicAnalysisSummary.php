@@ -79,7 +79,7 @@ class DynamicAnalysisSummary
             return false;
         }
 
-        $this->PDO->beginTransaction();
+        DB::beginTransaction();
 
         $stmt = $this->PDO->prepare('
                 INSERT INTO dynamicanalysissummary
@@ -95,7 +95,7 @@ class DynamicAnalysisSummary
                 pdo_execute($stmt, [$this->BuildId]);
                 $row = $stmt->fetch();
                 if (!$row) {
-                    $this->PDO->rollBack();
+                    DB::rollBack();
                     return false;
                 }
                 $this->Checker = $row['checker'];
@@ -118,10 +118,10 @@ class DynamicAnalysisSummary
         $stmt->bindParam(':checker', $this->Checker);
         $stmt->bindParam(':numdefects', $this->NumDefects);
         if (!pdo_execute($stmt)) {
-            $this->PDO->rollBack();
+            DB::rollBack();
             return false;
         }
-        $this->PDO->commit();
+        DB::commit();
         return true;
     }
 }
