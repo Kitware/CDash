@@ -19,6 +19,7 @@ namespace CDash\Model;
 
 use CDash\Database;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 /** PendingSubmission class */
@@ -66,7 +67,7 @@ class PendingSubmissions
             return false;
         }
 
-        $this->PDO->beginTransaction();
+        DB::beginTransaction();
         if ($this->Exists()) {
             $stmt = $this->PDO->prepare(
                 'UPDATE pending_submissions
@@ -84,10 +85,10 @@ class PendingSubmissions
         $stmt->bindParam(':numfiles', $this->NumFiles);
         $stmt->bindParam(':recheck', $this->Recheck);
         if (!pdo_execute($stmt)) {
-            $this->PDO->rollBack();
+            DB::rollBack();
             return false;
         }
-        $this->PDO->commit();
+        DB::commit();
         return true;
     }
 
@@ -164,9 +165,9 @@ class PendingSubmissions
             return false;
         }
 
-        $this->PDO->beginTransaction();
+        DB::beginTransaction();
         if (!$this->Exists()) {
-            $this->PDO->commit();
+            DB::commit();
             return false;
         }
 
@@ -176,7 +177,7 @@ class PendingSubmissions
             WHERE buildid = ?");
         try {
             if ($stmt->execute([$this->Build->Id])) {
-                $this->PDO->commit();
+                DB::commit();
             } else {
                 // The UPDATE statement didn't execute cleanly.
                 $error_info = $stmt->errorInfo();
@@ -184,7 +185,7 @@ class PendingSubmissions
                 throw new Exception($error);
             }
         } catch (Exception $e) {
-            $this->PDO->rollBack();
+            DB::rollBack();
             // Ignore any 'Numeric value out of range' SQL errors.
             if ($this->GetNumFiles() > 0) {
                 // Otherwise log the error and return false.

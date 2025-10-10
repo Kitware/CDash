@@ -11953,6 +11953,12 @@ parameters:
 			path: app/cdash/app/Model/PendingSubmissions.php
 
 		-
+			rawMessage: 'Method CDash\Model\PendingSubmissions::AtomicUpdate() throws checked exception Error but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
+			count: 1
+			path: app/cdash/app/Model/PendingSubmissions.php
+
+		-
 			rawMessage: 'Method CDash\Model\PendingSubmissions::Fill() has no return type specified.'
 			identifier: missingType.return
 			count: 1

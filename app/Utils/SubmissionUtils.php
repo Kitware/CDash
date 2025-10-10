@@ -21,6 +21,7 @@ use App\Http\Submission\Handlers\UploadHandler;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildUpdate;
+use Illuminate\Support\Facades\DB;
 
 class SubmissionUtils
 {
@@ -251,7 +252,7 @@ class SubmissionUtils
         }
 
         // Check if a diff already exists for this build.
-        $pdo->beginTransaction();
+        DB::beginTransaction();
         $stmt = $pdo->prepare(
             'SELECT * FROM builderrordiff WHERE buildid=:buildid AND type=:type FOR UPDATE');
         $stmt->bindParam(':buildid', $buildid);
@@ -267,7 +268,7 @@ class SubmissionUtils
 
         // Only log if there's a diff since last build or an existing diff record.
         if ($npositives == 0 && $nnegatives == 0 && $existing_npositives == 0 && $existing_nnegatives == 0) {
-            $pdo->commit();
+            DB::commit();
             return;
         }
 
@@ -289,10 +290,10 @@ class SubmissionUtils
         $stmt->bindValue(':npositives', $npositives);
         $stmt->bindValue(':nnegatives', $nnegatives);
         if (!pdo_execute($stmt)) {
-            $pdo->rollBack();
+            DB::rollBack();
             return;
         }
-        $pdo->commit();
+        DB::commit();
     }
 
     /** Return the hash of an open file handle */

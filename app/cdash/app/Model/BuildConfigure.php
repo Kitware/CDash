@@ -202,7 +202,7 @@ class BuildConfigure
             return false;
         }
 
-        $this->PDO->beginTransaction();
+        DB::beginTransaction();
         $new_configure_inserted = false;
         if (!$this->ExistsByCrc32()) {
             // No such configure exists yet, insert a new row.
@@ -226,7 +226,7 @@ class BuildConfigure
                 // This error might be due to a unique constraint violation.
                 // Query again to see if this configure was created since
                 // the last time we checked.
-                $this->PDO->rollBack();
+                DB::rollBack();
                 if ($this->ExistsByCrc32()) {
                     return true;
                 } else {
@@ -245,11 +245,11 @@ class BuildConfigure
         $stmt->bindParam(':starttime', $this->StartTime);
         $stmt->bindParam(':endtime', $this->EndTime);
         if (!pdo_execute($stmt)) {
-            $this->PDO->rollBack();
+            DB::rollBack();
             return false;
         }
 
-        $this->PDO->commit();
+        DB::commit();
         $this->InsertLabelAssociations();
         return $new_configure_inserted;
     }
