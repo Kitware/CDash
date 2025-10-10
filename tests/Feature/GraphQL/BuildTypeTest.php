@@ -5,10 +5,12 @@ namespace Tests\Feature\GraphQL;
 use App\Enums\BuildCommandType;
 use App\Models\Build;
 use App\Models\BuildCommand;
+use App\Models\CoverageFile;
 use App\Models\Project;
 use App\Models\Target;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
 use Tests\Traits\CreatesUsers;
@@ -20,6 +22,9 @@ class BuildTypeTest extends TestCase
 
     private Project $project;
     private Project $project2;
+
+    /** @var array<CoverageFile> */
+    private array $coverageFiles = [];
 
     protected function setUp(): void
     {
@@ -34,6 +39,11 @@ class BuildTypeTest extends TestCase
         // Deleting the project will delete all corresponding builds
         $this->project->delete();
         $this->project2->delete();
+
+        foreach ($this->coverageFiles as $file) {
+            $file->delete();
+        }
+        $this->coverageFiles = [];
 
         parent::tearDown();
     }
@@ -932,6 +942,86 @@ class BuildTypeTest extends TestCase
                             ],
                         ],
                     ],
+                ],
+            ],
+        ]);
+    }
+
+    /**
+     * @return array<array<string|float|null>>
+     */
+    public static function coveragePaths(): array
+    {
+        return [
+            // Basic test case
+            ['abc', 25.0],
+            // Check summing multiple rows
+            ['/', 37.5],
+            // Check prefixes get stripped
+            ['./abc', 25.0],
+            ['/abc', 25.0],
+            ['/.abc', 25.0],
+            // Check for divide-by-zero issues / missing file
+            ['xyz', null],
+        ];
+    }
+
+    #[DataProvider('coveragePaths')]
+    public function testPercentCoverageForPath(string $path, ?float $expected_percent): void
+    {
+        /** @var Build $build */
+        $build = $this->project->builds()->create([
+            'name' => 'build1',
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        $coverageFile1 = CoverageFile::create([
+            'fullpath' => './abc/' . Str::uuid()->toString(),
+            'file' => Str::uuid()->toString(),
+            'crc32' => 0,
+        ]);
+        $this->coverageFiles[] = $coverageFile1;
+
+        $coverageFile2 = CoverageFile::create([
+            'fullpath' => '/def/' . Str::uuid()->toString(),
+            'file' => Str::uuid()->toString(),
+            'crc32' => 0,
+        ]);
+        $this->coverageFiles[] = $coverageFile2;
+
+        $build->coverageResults()->create([
+            'fileid' => $coverageFile1->id,
+            'loctested' => 1,
+            'locuntested' => 3,
+            'branchestested' => 0,
+            'branchesuntested' => 0,
+            'functionstested' => 0,
+            'functionsuntested' => 0,
+        ]);
+
+        $build->coverageResults()->create([
+            'fileid' => $coverageFile2->id,
+            'loctested' => 2,
+            'locuntested' => 2,
+            'branchestested' => 0,
+            'branchesuntested' => 0,
+            'functionstested' => 0,
+            'functionsuntested' => 0,
+        ]);
+
+        $this->graphQL('
+            query build($id: ID!, $path: String!) {
+                build(id: $id) {
+                    percentCoverageForPath(path: $path)
+                }
+            }
+        ', [
+            'id' => $build->id,
+            'path' => $path,
+        ])->assertExactJson([
+            'data' => [
+                'build' => [
+                    'percentCoverageForPath' => $expected_percent,
                 ],
             ],
         ]);
