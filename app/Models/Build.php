@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 
 /**
  * @property int $id
@@ -313,5 +314,31 @@ class Build extends Model
     public function emails(): HasMany
     {
         return $this->hasMany(BuildEmail::class, 'buildid');
+    }
+
+    public function percentCoverageForPath(string $path): ?float
+    {
+        $path = Str::ltrim($path, './');
+
+        $coverage_query = $this->coverage()
+            // Nested to ensure order of operations works properly with all filtering combinations.
+            ->where(function ($query) use ($path): void {
+                // Paths can be prefixed a variety of different ways...
+                $query->where('fullpath', 'LIKE', $path . '%')
+                    ->orWhere('fullpath', 'LIKE', '/' . $path . '%')
+                    ->orWhere('fullpath', 'LIKE', './' . $path . '%');
+            });
+
+        // It's unfortunate that we have to make two separate queries for this.
+        // Laravel does not provide a safe way to sum two separate columns in the same query.
+        $loctested = $coverage_query->sum('loctested');
+        $locuntested = $coverage_query->sum('locuntested');
+        $total_lines = $loctested + $locuntested;
+
+        if ($total_lines === 0) {
+            return null;
+        }
+
+        return ($loctested / $total_lines) * 100;
     }
 }
