@@ -948,7 +948,7 @@ class BuildTypeTest extends TestCase
     }
 
     /**
-     * @return array<array<string|float>>
+     * @return array<array<string|float|null>>
      */
     public static function coveragePaths(): array
     {
@@ -961,13 +961,13 @@ class BuildTypeTest extends TestCase
             ['./abc', 25.0],
             ['/abc', 25.0],
             ['/.abc', 25.0],
-            // Check for divide-by-zero issues (defaults to 100 if no lines covered or uncovered)
-            ['xyz', 100.0],
+            // Check for divide-by-zero issues / missing file
+            ['xyz', null],
         ];
     }
 
     #[DataProvider('coveragePaths')]
-    public function testPercentCoverageForPath(string $path, float $expected_percent): void
+    public function testPercentCoverageForPath(string $path, ?float $expected_percent): void
     {
         /** @var Build $build */
         $build = $this->project->builds()->create([

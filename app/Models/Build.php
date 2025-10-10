@@ -300,7 +300,7 @@ class Build extends Model
         return $this->hasMany(DynamicAnalysis::class, 'buildid');
     }
 
-    public function percentCoverageForPath(string $path): float
+    public function percentCoverageForPath(string $path): ?float
     {
         $path = Str::ltrim($path, './');
 
@@ -320,7 +320,7 @@ class Build extends Model
         $total_lines = $loctested + $locuntested;
 
         if ($total_lines === 0) {
-            return 100;
+            return null;
         }
 
         return ($loctested / $total_lines) * 100;
