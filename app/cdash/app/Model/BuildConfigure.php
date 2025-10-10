@@ -22,7 +22,6 @@ use App\Models\Configure as EloquentConfigure;
 use CDash\Database;
 use Exception;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use PDO;
 
@@ -202,31 +201,21 @@ class BuildConfigure
             return false;
         }
 
-        DB::beginTransaction();
         $new_configure_inserted = false;
         if (!$this->ExistsByCrc32()) {
             // No such configure exists yet, insert a new row.
-            $stmt = $this->PDO->prepare('
-                INSERT INTO configure (command, log, status, crc32)
-                VALUES (:command, :log, :status, :crc32)');
-            $stmt->bindParam(':command', $this->Command);
-            $stmt->bindParam(':log', $this->Log);
-            $stmt->bindParam(':status', $this->Status);
-            $stmt->bindParam(':crc32', $this->Crc32);
             try {
-                if ($stmt->execute()) {
-                    $new_configure_inserted = true;
-                    $this->Id = DB::getPdo()->lastInsertId();
-                } else {
-                    $error_info = $stmt->errorInfo();
-                    $error = $error_info[2];
-                    throw new Exception($error);
-                }
+                $this->Id = EloquentConfigure::create([
+                    'command' => $this->Command,
+                    'log' => $this->Log,
+                    'status' => $this->Status,
+                    'crc32' => $this->Crc32,
+                ])->id;
+                $new_configure_inserted = true;
             } catch (Exception $e) {
                 // This error might be due to a unique constraint violation.
                 // Query again to see if this configure was created since
                 // the last time we checked.
-                DB::rollBack();
                 if ($this->ExistsByCrc32()) {
                     return true;
                 } else {
@@ -237,19 +226,13 @@ class BuildConfigure
         }
 
         // Insert a new build2configure row for this build.
-        $stmt = $this->PDO->prepare('
-            INSERT INTO build2configure (buildid, configureid, starttime, endtime)
-            VALUES (:buildid, :configureid, :starttime, :endtime)');
-        $stmt->bindParam(':buildid', $this->BuildId);
-        $stmt->bindParam(':configureid', $this->Id);
-        $stmt->bindParam(':starttime', $this->StartTime);
-        $stmt->bindParam(':endtime', $this->EndTime);
-        if (!pdo_execute($stmt)) {
-            DB::rollBack();
-            return false;
-        }
+        EloquentBuildConfigure::create([
+            'buildid' => $this->BuildId,
+            'configureid' => $this->Id,
+            'starttime' => $this->StartTime,
+            'endtime' => $this->EndTime,
+        ]);
 
-        DB::commit();
         $this->InsertLabelAssociations();
         return $new_configure_inserted;
     }
