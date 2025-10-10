@@ -482,6 +482,14 @@ type Build {
     filters: _ @filter
   ): [Coverage!]! @belongsToMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)
 
+  """
+  Get the percentage of lines covered in all files starting with the provided path.
+  Automatically trims leading slashes and dots.
+  """
+  percentCoverageForPath(
+    path: String!
+  ): Float! @method
+
   labels(
     filters: _ @filter
   ): [Label!]! @belongsToMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)
