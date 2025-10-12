@@ -298,4 +298,12 @@ class Build extends Model
     {
         return $this->hasMany(DynamicAnalysis::class, 'buildid');
     }
+
+    /**
+     * @return HasMany<BuildEmail, $this>
+     */
+    public function emails(): HasMany
+    {
+        return $this->hasMany(BuildEmail::class, 'buildid');
+    }
 }
