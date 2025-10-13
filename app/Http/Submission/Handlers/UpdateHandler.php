@@ -17,6 +17,7 @@ namespace App\Http\Submission\Handlers;
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use App\Models\BuildUpdateFile;
 use App\Models\Site;
 use App\Utils\SubmissionUtils;
 use CDash\Collection\BuildCollection;
@@ -29,12 +30,12 @@ use CDash\Messaging\Topic\UpdateErrorTopic;
 use CDash\Model\Build;
 use CDash\Model\BuildGroup;
 use CDash\Model\BuildUpdate;
-use CDash\Model\BuildUpdateFile;
 use CDash\Model\Project;
 use CDash\Model\Repository;
 use CDash\Model\SubscriberInterface;
 use CDash\Submission\CommitAuthorHandlerInterface;
 use Exception;
+use Illuminate\Support\Carbon;
 
 /** Write the updates in one block
  *  In case of a lot of updates this might take up some memory */
@@ -43,7 +44,7 @@ class UpdateHandler extends AbstractXmlHandler implements ActionableBuildInterfa
     private $StartTimeStamp;
     private $EndTimeStamp;
     private $Update;
-    private $UpdateFile;
+    private BuildUpdateFile $UpdateFile;
     protected static ?string $schema_file = '/app/Validators/Schemas/Update.xsd';
 
     /** Constructor */
@@ -66,8 +67,8 @@ class UpdateHandler extends AbstractXmlHandler implements ActionableBuildInterfa
             }
             $this->Update->Append = $this->Append;
         } elseif ($name === 'UPDATED' || $name === 'CONFLICTING' || $name === 'MODIFIED') {
-            $this->UpdateFile = $factory->create(BuildUpdateFile::class);
-            $this->UpdateFile->Status = $name;
+            $this->UpdateFile = new BuildUpdateFile();
+            $this->UpdateFile->status = $name;
         } elseif ($name === 'UPDATERETURNSTATUS') {
             $this->Update->Status = '';
         }
@@ -197,29 +198,33 @@ class UpdateHandler extends AbstractXmlHandler implements ActionableBuildInterfa
                     break;
             }
         } elseif ($parent !== 'REVISIONS' && $element === 'FULLNAME') {
-            $this->UpdateFile->Filename = $data;
+            $this->UpdateFile->filename = $data;
         } elseif ($parent !== 'REVISIONS' && $element === 'CHECKINDATE') {
-            $this->UpdateFile->CheckinDate = $data;
+            try {
+                $this->UpdateFile->checkindate = Carbon::parse($data);
+            } catch (Exception) {
+                $this->UpdateFile->checkindate = Carbon::now();
+            }
         } elseif ($parent !== 'REVISIONS' && $element === 'AUTHOR') {
-            $this->UpdateFile->Author .= $data;
+            $this->UpdateFile->author .= $data;
         } elseif ($parent !== 'REVISIONS' && $element === 'EMAIL') {
-            $this->UpdateFile->Email .= $data;
+            $this->UpdateFile->email .= $data;
         } elseif ($parent !== 'REVISIONS' && $element === 'COMMITTER') {
-            $this->UpdateFile->Committer .= $data;
+            $this->UpdateFile->committer .= $data;
         } elseif ($parent !== 'REVISIONS' && $element === 'COMMITTEREMAIL') {
-            $this->UpdateFile->CommitterEmail .= $data;
+            $this->UpdateFile->committeremail .= $data;
         } elseif ($parent !== 'REVISIONS' && $element === 'LOG') {
-            $this->UpdateFile->Log .= $data;
+            $this->UpdateFile->log .= $data;
         } elseif ($parent !== 'REVISIONS' && $element === 'REVISION') {
             if ($data === 'Unknown') {
                 $data = -1;
             }
-            $this->UpdateFile->Revision = $data;
+            $this->UpdateFile->revision = $data;
         } elseif ($parent !== 'REVISIONS' && $element === 'PRIORREVISION') {
             if ($data === 'Unknown') {
                 $data = -1;
             }
-            $this->UpdateFile->PriorRevision = $data;
+            $this->UpdateFile->priorrevision = $data;
         }
     }
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Build as EloquentBuild;
+use App\Models\BuildUpdateFile;
 use App\Models\Comment;
 use App\Models\UploadFile;
 use App\Models\User;
@@ -17,7 +18,6 @@ use CDash\Model\BuildError;
 use CDash\Model\BuildFailure;
 use CDash\Model\BuildGroupRule;
 use CDash\Model\BuildRelationship;
-use CDash\Model\BuildUpdate;
 use CDash\Model\Label;
 use CDash\ServiceContainer;
 use Illuminate\Http\JsonResponse;
@@ -615,39 +615,40 @@ final class BuildController extends AbstractBuildController
         $response['build'] = $build_response;
 
         // Update
-        $update = new BuildUpdate();
-        $update->BuildId = $this->build->Id;
-        $update->FillFromBuildId();
+        $update = EloquentBuild::findOrFail((int) $this->build->Id)->updates()->first();
 
         $update_response = [];
-        if (strlen($update->Status) > 0 && $update->Status != '0') {
-            $update_response['status'] = $update->Status;
-        } else {
-            $update_response['status'] = ''; // empty status
+        if ($update !== null) {
+            if (strlen($update->status) > 0 && $update->status != '0') {
+                $update_response['status'] = $update->status;
+            } else {
+                $update_response['status'] = ''; // empty status
+            }
+            $update_response['revision'] = $update->revision;
+            $update_response['priorrevision'] = $update->priorrevision;
+            $update_response['path'] = $update->path;
+            $update_response['revisionurl'] =
+                RepositoryUtils::get_revision_url($this->project->Id, $update->revision, $update->priorrevision);
+            $update_response['revisiondiff'] =
+                RepositoryUtils::get_revision_url($this->project->Id, $update->priorrevision, ''); // no prior prior revision...
         }
-        $update_response['revision'] = $update->Revision;
-        $update_response['priorrevision'] = $update->PriorRevision;
-        $update_response['path'] = $update->Path;
-        $update_response['revisionurl'] =
-            RepositoryUtils::get_revision_url($this->project->Id, $update->Revision, $update->PriorRevision);
-        $update_response['revisiondiff'] =
-            RepositoryUtils::get_revision_url($this->project->Id, $update->PriorRevision, ''); // no prior prior revision...
         $response['update'] = $update_response;
 
         $directoryarray = [];
         $updatearray1 = [];
         // Create an array so we can sort it
-        foreach ($update->GetFiles() as $update_file) {
+        /** @var BuildUpdateFile $update_file */
+        foreach ($update->updateFiles ?? [] as $update_file) {
             $file = [];
-            $file['filename'] = $update_file->Filename;
-            $file['author'] = $update_file->Author;
-            $file['status'] = $update_file->Status;
+            $file['filename'] = $update_file->filename;
+            $file['author'] = $update_file->author;
+            $file['status'] = $update_file->status;
             $file['email'] = '';
 
-            $file['log'] = $update_file->Log;
-            $file['revision'] = $update_file->Revision;
+            $file['log'] = $update_file->log;
+            $file['revision'] = $update_file->revision;
             $updatearray1[] = $file;
-            $directoryarray[] = substr($update_file->Filename, 0, strrpos($update_file->Filename, '/'));
+            $directoryarray[] = substr($update_file->filename, 0, strrpos($update_file->filename, '/'));
         }
 
         $directoryarray = array_unique($directoryarray);

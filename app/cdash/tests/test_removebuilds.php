@@ -6,6 +6,7 @@
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
+use App\Models\BuildUpdateFile;
 use App\Models\TestMeasurement;
 use App\Models\UploadFile;
 use App\Utils\DatabaseCleanupUtils;
@@ -17,7 +18,6 @@ use CDash\Model\BuildError;
 use CDash\Model\BuildFailure;
 use CDash\Model\BuildGroup;
 use CDash\Model\BuildUpdate;
-use CDash\Model\BuildUpdateFile;
 use CDash\Model\Coverage;
 use CDash\Model\CoverageFile;
 use CDash\Model\CoverageFileLog;
@@ -145,14 +145,15 @@ class RemoveBuildsTestCase extends KWWebTestCase
 
         // BuildUpdate
         $updatefile = new BuildUpdateFile();
-        $updatefile->Author = 'My Self';
-        $updatefile->Committer = 'My Self';
-        $updatefile->Email = 'my@self.com';
-        $updatefile->CommitterEmail = 'my@self.com';
-        $updatefile->Revision = 2;
-        $updatefile->PriorRevision = 1;
-        $updatefile->Filename = 'foo.cpp';
-        $updatefile->Status = 'MODIFIED';
+        $updatefile->author = 'My Self';
+        $updatefile->committer = 'My Self';
+        $updatefile->email = 'my@self.com';
+        $updatefile->committeremail = 'my@self.com';
+        $updatefile->revision = '2';
+        $updatefile->priorrevision = '1';
+        $updatefile->filename = 'foo.cpp';
+        $updatefile->log = '';
+        $updatefile->status = 'MODIFIED';
 
         $update = new BuildUpdate();
         $update->AddFile($updatefile);
