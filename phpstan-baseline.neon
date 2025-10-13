@@ -3592,12 +3592,6 @@ parameters:
 			path: app/Http/Submission/Handlers/BuildPropertiesJSONHandler.php
 
 		-
-			rawMessage: 'Property CDash\Model\BuildProperties::$Properties (array<mixed>) does not accept mixed.'
-			identifier: assign.propertyType
-			count: 1
-			path: app/Http/Submission/Handlers/BuildPropertiesJSONHandler.php
-
-		-
 			rawMessage: 'Call to an undefined method CDash\Messaging\Preferences\NotificationPreferencesInterface::get().'
 			identifier: method.notFound
 			count: 1
@@ -10733,12 +10727,6 @@ parameters:
 			identifier: missingType.property
 			count: 1
 			path: app/cdash/app/Model/BuildGroupRule.php
-
-		-
-			rawMessage: 'Property CDash\Model\BuildProperties::$Filled is never read, only written.'
-			identifier: property.onlyWritten
-			count: 1
-			path: app/cdash/app/Model/BuildProperties.php
 
 		-
 			rawMessage: '''

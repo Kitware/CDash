@@ -15,6 +15,7 @@
 
 namespace CDash\Model;
 
+use App\Models\BuildProperties;
 use CDash\Database;
 use CDash\Lib\Repository\GitHub;
 use CDash\Lib\Repository\RepositoryInterface;
@@ -42,12 +43,12 @@ class Repository
 
     public static function setStatus(Build $build, $complete = true): void
     {
-        $buildProperties = new BuildProperties($build);
-        $buildProperties->Fill();
-        if (!array_key_exists('status context', $buildProperties->Properties)) {
+        $buildProperties = BuildProperties::find((int) $build->Id);
+        if ($buildProperties === null || !array_key_exists('status context', $buildProperties->properties)) {
             return;
         }
-        $context = $buildProperties->Properties['status context'];
+
+        $context = $buildProperties->properties['status context'];
 
         $project = new Project();
         $project->Id = $build->ProjectId;

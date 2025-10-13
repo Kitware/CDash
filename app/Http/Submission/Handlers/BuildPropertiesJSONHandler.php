@@ -17,8 +17,8 @@ namespace App\Http\Submission\Handlers;
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use App\Models\BuildProperties;
 use CDash\Model\Build;
-use CDash\Model\BuildProperties;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
@@ -51,9 +51,11 @@ class BuildPropertiesJSONHandler extends AbstractSubmissionHandler
             return false;
         }
 
-        // Record the properties for this build.
-        $buildProperties = new BuildProperties($this->Build);
-        $buildProperties->Properties = $json_obj;
-        return $buildProperties->Save();
+        BuildProperties::upsert([
+            'buildid' => (int) $this->Build->Id,
+            'properties' => json_encode($json_obj),
+        ], 'buildid');
+
+        return true;
     }
 }
