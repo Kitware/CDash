@@ -17,6 +17,7 @@
 
 namespace CDash\Model;
 
+use App\Models\BasicBuildAlert;
 use App\Models\Build as EloquentBuild;
 use App\Models\Site;
 use App\Models\Test;
@@ -589,9 +590,10 @@ class Build
             if ($this->IsParentBuild()) {
                 $errors = $this->GetErrorsForChildren($fetchStyle);
             } else {
-                $buildErrors = new BuildError();
-                $buildErrors->BuildId = $this->Id;
-                $errors = $buildErrors->GetErrorsForBuild($fetchStyle);
+                $result = BasicBuildAlert::where('buildid', $this->Id)
+                    ->orderBy('logline')
+                    ->get();
+                $errors = $fetchStyle === PDO::FETCH_ASSOC ? $result->toArray() : $result->all();
             }
 
             if ($errors !== false) {
