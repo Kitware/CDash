@@ -282,6 +282,14 @@ class Build extends Model
     }
 
     /**
+     * @return HasOne<PendingSubmissions, $this>
+     */
+    public function pendingSubmissions(): HasOne
+    {
+        return $this->hasOne(PendingSubmissions::class, 'buildid');
+    }
+
+    /**
      * TODO: Perhaps rename this function in the future to make it less similar to Laravel's update()?
      *
      * @return BelongsToMany<BuildUpdate, $this>
