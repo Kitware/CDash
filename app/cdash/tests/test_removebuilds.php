@@ -7,6 +7,7 @@
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 use App\Models\BuildUpdateFile;
+use App\Models\DynamicAnalysisDefect;
 use App\Models\TestMeasurement;
 use App\Models\UploadFile;
 use App\Utils\DatabaseCleanupUtils;
@@ -23,7 +24,6 @@ use CDash\Model\CoverageFile;
 use CDash\Model\CoverageFileLog;
 use CDash\Model\CoverageSummary;
 use CDash\Model\DynamicAnalysis;
-use CDash\Model\DynamicAnalysisDefect;
 use CDash\Model\DynamicAnalysisSummary;
 use CDash\Model\Image;
 use CDash\Model\Label;
@@ -235,8 +235,8 @@ class RemoveBuildsTestCase extends KWWebTestCase
 
         // DynamicAnalysis
         $DA_defect = new DynamicAnalysisDefect();
-        $DA_defect->Type = 'Potential Memory Leak';
-        $DA_defect->Value = 5;
+        $DA_defect->type = 'Potential Memory Leak';
+        $DA_defect->value = 5;
 
         $DA = new DynamicAnalysis();
         $DA->BuildId = $build->Id;
@@ -253,7 +253,7 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $DA_summary = new DynamicAnalysisSummary();
         $DA_summary->BuildId = $build->Id;
         $DA_summary->Checker = 'Valgrind';
-        $DA_summary->AddDefects($DA_defect->Value);
+        $DA_summary->AddDefects($DA_defect->value);
         $DA_summary->Insert();
 
         // Test
