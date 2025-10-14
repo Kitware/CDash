@@ -9,7 +9,10 @@
         </div>
         <div class="tw-flex-grow" />
         <div>
-          {{ coverage.linesOfCodeTested }} / {{ totalLines }} lines covered ({{ percentLinesCovered }}%)
+          {{ coverage.linesOfCodeTested }} / {{ totalLines }} lines covered
+          <template v-if="!isNaN(percentLinesCovered)">
+            ({{ percentLinesCovered }}%)
+          </template>
         </div>
       </div>
 
