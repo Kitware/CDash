@@ -398,6 +398,11 @@ add_feature_test(/Feature/AutoRemoveBuildsCommand)
 add_feature_test(/Feature/Jobs/PruneBuildsTest)
 set_property(TEST /Feature/Jobs/PruneBuildsTest APPEND PROPERTY RUN_SERIAL TRUE)
 
+# Theoretically it's possible for this test to conflict with other tests because this test can
+# delete email history records other than the ones it creates.  The odds of such a conflict
+# occurring are too low to justify running serially.
+add_feature_test(/Feature/Jobs/PruneEmailsTest)
+
 add_feature_test(/Feature/Services/ProjectServiceTest)
 
 ###################################################################################################

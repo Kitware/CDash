@@ -17,11 +17,11 @@
 
 namespace CDash\Model;
 
+use App\Models\Build;
 use CDash\Collection\BuildEmailCollection;
-use CDash\Database;
 use CDash\Messaging\Notification\Email\EmailMessage;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
-use PDO;
 
 /**
  * Class BuildEmail
@@ -31,10 +31,8 @@ class BuildEmail
     protected $BuildId;
     protected $Category;
     protected $Email;
-    protected $Sent;
-    protected $Time;
+    protected bool $Sent = false;
     protected $UserId;
-    private $RequiredFields = ['BuildId', 'UserId', 'Category'];
 
     /**
      * Saves a EmailMessage's BuildEmailCollection to the database. The BuildEmailCollection
@@ -58,49 +56,32 @@ class BuildEmail
     public static function GetEmailSentForBuild($buildId): BuildEmailCollection
     {
         $collection = new BuildEmailCollection();
-        $sql = '
-            SELECT
-                buildemail.*,
-                u.email
-            FROM buildemail
-            JOIN users u ON u.id=buildemail.userid
-            WHERE buildemail.buildid=:b';
 
-        $db = Database::getInstance();
-        $stmt = $db->prepare($sql);
-        $stmt->bindParam(':b', $buildId);
-
-        if ($db->execute($stmt)) {
-            foreach ($stmt->fetchAll(PDO::FETCH_OBJ) as $row) {
+        $build = Build::find((int) $buildId);
+        if ($build !== null) {
+            /* @var \App\Models\BuildEmail $email */
+            foreach ($build->emails as $sent_email) {
                 $email = new BuildEmail();
                 $email
                     ->SetBuildId($buildId)
-                    ->SetCategory($row->category)
-                    ->SetEmail($row->email)
-                    ->SetUserId($row->userid)
-                    ->SetTime($row->time)
-                    ->SetSent(true);
+                    ->SetCategory($sent_email->category)
+                    ->SetEmail($sent_email->user->email)
+                    ->SetUserId($sent_email->user->id)
+                    ->SetSent();
                 $collection->add($email);
             }
         }
-        return $collection;
-    }
 
-    /**
-     * BuildEmail constructor.
-     */
-    public function __construct()
-    {
-        $this->Sent = false;
+        return $collection;
     }
 
     /**
      * Saves a record of the current BuildEmail having been sent.
      */
-    public function Save(): bool
+    protected function Save(): bool
     {
         $missing = [];
-        foreach ($this->RequiredFields as $field) {
+        foreach (['BuildId', 'UserId', 'Category'] as $field) {
             if (!$this->$field) {
                 $missing[] = $field;
             }
@@ -113,16 +94,13 @@ class BuildEmail
             return false;
         }
 
-        $this->SetTime();
+        Build::findOrFail((int) $this->BuildId)->emails()->create([
+            'userid' => (int) $this->UserId,
+            'category' => (int) $this->Category,
+            'time' => Carbon::now(),
+        ]);
 
-        $sql = 'INSERT INTO buildemail (userid, buildid, category, time) VALUES (:u, :b, :c, :t)';
-        $db = Database::getInstance();
-        $stmt = $db->prepare($sql);
-        $stmt->bindParam(':u', $this->UserId);
-        $stmt->bindParam(':b', $this->BuildId);
-        $stmt->bindParam(':c', $this->Category);
-        $stmt->bindParam(':t', $this->Time);
-        return $db->execute($stmt);
+        return true;
     }
 
     public function GetEmail()
@@ -147,9 +125,9 @@ class BuildEmail
     /**
      * @return $this
      */
-    public function SetSent($exists): static
+    protected function SetSent(): static
     {
-        $this->Sent = $exists;
+        $this->Sent = true;
         return $this;
     }
 
@@ -177,18 +155,6 @@ class BuildEmail
     public function SetBuildId($buildId): static
     {
         $this->BuildId = $buildId;
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    public function SetTime($time = null): static
-    {
-        if (is_null($time)) {
-            $time = date('Y-m-d H:i:s');
-        }
-        $this->Time = $time;
         return $this;
     }
 }

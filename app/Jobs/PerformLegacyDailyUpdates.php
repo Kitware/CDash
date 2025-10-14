@@ -173,14 +173,6 @@ class PerformLegacyDailyUpdates implements ShouldQueue
         }
     }
 
-    /** Remove the buildemail that have been there from more than 48h */
-    private function cleanBuildEmail(): void
-    {
-        $now = date(FMT_DATETIME, time() - 3600 * 48);
-
-        DB::delete('DELETE FROM buildemail WHERE time<?', [$now]);
-    }
-
     /** Clean the usertemp table if more than 24hrs */
     private function cleanUserTemp(): void
     {
@@ -201,8 +193,6 @@ class PerformLegacyDailyUpdates implements ShouldQueue
         // Send an email if some expected builds have not been submitting
         $this->sendEmailExpectedBuilds($projectid, $currentstarttime);
 
-        // cleanBuildEmail
-        $this->cleanBuildEmail();
         $this->cleanUserTemp();
 
         // Delete expired buildgroups and rules.

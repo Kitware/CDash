@@ -6,6 +6,7 @@ use App\Jobs\NotifyExpiringAuthTokens;
 use App\Jobs\PerformLegacyDailyUpdates;
 use App\Jobs\PruneAuthTokens;
 use App\Jobs\PruneBuilds;
+use App\Jobs\PruneEmails;
 use App\Jobs\PruneJobs;
 use App\Jobs\PruneSubmissionFiles;
 use App\Jobs\PruneUploads;
@@ -41,6 +42,10 @@ class Kernel extends ConsoleKernel
         // hourly.
         $schedule->job(new PruneBuilds())
             ->daily()
+            ->withoutOverlapping();
+
+        $schedule->job(new PruneEmails())
+            ->hourly()
             ->withoutOverlapping();
 
         // A wrapper for the legacy "daily updates" process.  Pieces of this should be moved elsewhere.
