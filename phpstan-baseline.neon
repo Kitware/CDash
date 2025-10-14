@@ -11728,62 +11728,8 @@ parameters:
 			path: app/cdash/app/Model/Label.php
 
 		-
-			rawMessage: '''
-				Call to deprecated function pdo_execute():
-				v2.5.0 01/22/2018
-			'''
-			identifier: function.deprecated
-			count: 4
-			path: app/cdash/app/Model/PendingSubmissions.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method getPdo() of class CDash\Database:
-				04/22/2023  Use Laravel query builder or Eloquent instead
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/app/Model/PendingSubmissions.php
-
-		-
-			rawMessage: 'Method CDash\Model\PendingSubmissions::AtomicUpdate() has parameter $caller with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Model/PendingSubmissions.php
-
-		-
-			rawMessage: 'Method CDash\Model\PendingSubmissions::AtomicUpdate() has parameter $clause with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Model/PendingSubmissions.php
-
-		-
-			rawMessage: 'Method CDash\Model\PendingSubmissions::AtomicUpdate() throws checked exception Error but it''s missing from the PHPDoc @throws tag.'
-			identifier: missingType.checkedException
-			count: 1
-			path: app/cdash/app/Model/PendingSubmissions.php
-
-		-
-			rawMessage: 'Method CDash\Model\PendingSubmissions::Fill() has no return type specified.'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Model/PendingSubmissions.php
-
-		-
 			rawMessage: 'Method CDash\Model\PendingSubmissions::GetModelForBuildId() has parameter $buildid with no type specified.'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Model/PendingSubmissions.php
-
-		-
-			rawMessage: 'Method CDash\Model\PendingSubmissions::GetNumFiles() has no return type specified.'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Model/PendingSubmissions.php
-
-		-
-			rawMessage: 'Method CDash\Model\PendingSubmissions::GetRecheck() has no return type specified.'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/app/Model/PendingSubmissions.php
 
@@ -11796,36 +11742,6 @@ parameters:
 		-
 			rawMessage: 'Method CDash\Model\PendingSubmissions::RecheckForBuildId() has parameter $buildid with no type specified.'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Model/PendingSubmissions.php
-
-		-
-			rawMessage: Property CDash\Model\PendingSubmissions::$Build has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/PendingSubmissions.php
-
-		-
-			rawMessage: Property CDash\Model\PendingSubmissions::$Filled has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/PendingSubmissions.php
-
-		-
-			rawMessage: Property CDash\Model\PendingSubmissions::$NumFiles has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/PendingSubmissions.php
-
-		-
-			rawMessage: Property CDash\Model\PendingSubmissions::$PDO has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/PendingSubmissions.php
-
-		-
-			rawMessage: Property CDash\Model\PendingSubmissions::$Recheck has no type specified.
-			identifier: missingType.property
 			count: 1
 			path: app/cdash/app/Model/PendingSubmissions.php
 

@@ -17,198 +17,105 @@
 
 namespace CDash\Model;
 
-use CDash\Database;
-use Exception;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 /** PendingSubmission class */
 class PendingSubmissions
 {
-    public $Build;
-    public $NumFiles;
-    public $Recheck;
-    private $Filled;
-    private $PDO;
-
-    public function __construct()
-    {
-        $this->Build = null;
-        $this->NumFiles = 0;
-        $this->Recheck = 0;
-        $this->Filled = false;
-        $this->PDO = Database::getInstance()->getPdo();
-    }
+    public ?Build $Build = null;
+    public int $NumFiles = 0;
+    public int $Recheck = 0; // TODO: convert to boolean
+    private bool $Filled = false;
 
     /** Return true if a record already exists for this build. */
     public function Exists(): bool
     {
-        if (!$this->Build) {
+        if ($this->Build === null) {
             return false;
         }
-        $stmt = $this->PDO->prepare(
-            'SELECT COUNT(*) FROM pending_submissions
-            WHERE buildid = :buildid');
-        $params = [':buildid' => $this->Build->Id];
-        pdo_execute($stmt, $params);
-        if ($stmt->fetchColumn() > 0) {
-            return true;
-        }
-        return false;
+
+        return \App\Models\PendingSubmissions::where('buildid', $this->Build->Id)->exists();
     }
 
     /** Insert a new record in the database or update an existing one. */
-    public function Save(): bool
+    public function Save(): void
     {
-        if (!$this->Build) {
+        if ($this->Build === null) {
             Log::error('Build not set', [
                 'function' => 'PendingSubmission::Save',
             ]);
-            return false;
+            return;
         }
 
-        DB::beginTransaction();
-        if ($this->Exists()) {
-            $stmt = $this->PDO->prepare(
-                'UPDATE pending_submissions
-                SET numfiles = :numfiles,
-                    recheck  = :recheck
-                WHERE buildid = :buildid');
-        } else {
-            $stmt = $this->PDO->prepare(
-                'INSERT INTO pending_submissions
-                (buildid, numfiles, recheck)
-                VALUES
-                (:buildid, :numfiles, :recheck)');
-        }
-        $stmt->bindParam(':buildid', $this->Build->Id);
-        $stmt->bindParam(':numfiles', $this->NumFiles);
-        $stmt->bindParam(':recheck', $this->Recheck);
-        if (!pdo_execute($stmt)) {
-            DB::rollBack();
-            return false;
-        }
-        DB::commit();
-        return true;
+        \App\Models\PendingSubmissions::upsert([
+            'buildid' => $this->Build->Id,
+            'numfiles' => $this->NumFiles,
+            'recheck' => $this->Recheck,
+        ], 'buildid');
     }
 
     /** Delete this record from the database. */
-    public function Delete(): bool
+    public function Delete(): void
     {
-        if (!$this->Build) {
+        if ($this->Build === null) {
             Log::error('Build not set', [
                 'function' => 'PendingSubmission::Delete',
             ]);
-            return false;
+            return;
         }
         if (!$this->Exists()) {
             Log::error('Record does not exist', [
                 'function' => 'PendingSubmission::Delete',
             ]);
-            return false;
+            return;
         }
 
-        $stmt = $this->PDO->prepare(
-            'DELETE FROM pending_submissions WHERE buildid = ?');
-        return pdo_execute($stmt, [$this->Build->Id]);
+        \App\Models\Build::findOrFail((int) $this->Build->Id)->pendingSubmissions()->delete();
     }
 
-    public function Fill()
+    protected function Fill(): void
     {
         if ($this->Filled) {
-            return true;
+            return;
         }
-        if (!$this->Build) {
+        if ($this->Build === null) {
             Log::error('Build not set', [
                 'function' => 'PendingSubmission::Fill',
             ]);
-            return false;
+            return;
         }
 
-        $stmt = $this->PDO->prepare(
-            'SELECT * FROM pending_submissions WHERE buildid = ?');
-        if (!pdo_execute($stmt, [$this->Build->Id])) {
-            return false;
-        }
-
-        $row = $stmt->fetch();
-        if (is_array($row)) {
-            $this->NumFiles = $row['numfiles'];
-            $this->Recheck = $row['recheck'];
+        $model = \App\Models\Build::findOrFail((int) $this->Build->Id)->pendingSubmissions()->first();
+        if ($model !== null) {
+            $this->NumFiles = $model->numfiles;
+            $this->Recheck = $model->recheck;
         }
         $this->Filled = true;
     }
 
     /** Get number of pending submissions for a given build. */
-    public function GetNumFiles()
+    public function GetNumFiles(): int
     {
         $this->Filled = false;
         $this->Fill();
         return $this->NumFiles;
     }
 
-    /** Get whether or not this build has been scheduled for rechek. */
-    public function GetRecheck()
+    public function Increment(): void
     {
-        $this->Filled = false;
-        $this->Fill();
-        return $this->Recheck;
+        \App\Models\PendingSubmissions::where('buildid', $this->Build->Id ?? -1)->increment('numfiles');
     }
 
-    // Atomically update an existing pending_submissions record in the database.
-    private function AtomicUpdate($caller, $clause): bool
+    public function Decrement(): void
     {
-        if (!$this->Build) {
-            Log::error('Build not set', [
-                'function' => "PendingSubmission::$caller",
-            ]);
-            return false;
-        }
-
-        DB::beginTransaction();
-        if (!$this->Exists()) {
-            DB::commit();
-            return false;
-        }
-
-        $stmt = $this->PDO->prepare(
-            "UPDATE pending_submissions
-            SET $clause
-            WHERE buildid = ?");
-        try {
-            if ($stmt->execute([$this->Build->Id])) {
-                DB::commit();
-            } else {
-                // The UPDATE statement didn't execute cleanly.
-                $error_info = $stmt->errorInfo();
-                $error = $error_info[2];
-                throw new Exception($error);
-            }
-        } catch (Exception $e) {
-            DB::rollBack();
-            // Ignore any 'Numeric value out of range' SQL errors.
-            if ($this->GetNumFiles() > 0) {
-                // Otherwise log the error and return false.
-                report($e);
-                return false;
-            }
-        }
-        return true;
+        \App\Models\PendingSubmissions::where('buildid', $this->Build->Id ?? -1)->decrement('numfiles');
     }
 
-    public function Increment(): bool
+    protected function MarkForRecheck(): void
     {
-        return $this->AtomicUpdate('Increment', 'numfiles = numfiles + 1');
-    }
-
-    public function Decrement(): bool
-    {
-        return $this->AtomicUpdate('Decrement', 'numfiles = numfiles - 1');
-    }
-
-    public function MarkForRecheck(): bool
-    {
-        return $this->AtomicUpdate('MarkForRecheck', 'recheck = 1');
+        \App\Models\PendingSubmissions::where('buildid', $this->Build->Id ?? -1)->update([
+            'recheck' => 1,
+        ]);
     }
 
     public static function GetModelForBuildId($buildid): PendingSubmissions
@@ -220,15 +127,15 @@ class PendingSubmissions
         return $pendingSubmissions;
     }
 
-    public static function RecheckForBuildId($buildid): bool
+    public static function RecheckForBuildId($buildid): void
     {
         $pendingSubmissions = self::GetModelForBuildId($buildid);
-        return $pendingSubmissions->MarkForRecheck();
+        $pendingSubmissions->MarkForRecheck();
     }
 
-    public static function IncrementForBuildId($buildid): bool
+    public static function IncrementForBuildId($buildid): void
     {
         $pendingSubmissions = self::GetModelForBuildId($buildid);
-        return $pendingSubmissions->Increment();
+        $pendingSubmissions->Increment();
     }
 }
