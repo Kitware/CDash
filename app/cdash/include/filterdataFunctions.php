@@ -1137,6 +1137,10 @@ function generate_filter_sql($filter, $pageSpecificFilters): string
         }
     }
 
+    if ($field === 'status') {
+        $sql_value = strtolower($sql_value);
+    }
+
     $sql = '';
     if ($sql_field != '' && $sql_compare != '') {
         $sql = "$sql_field $sql_compare $sql_value";
