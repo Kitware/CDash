@@ -94,11 +94,11 @@ class BuildPropertiesTestCase extends KWWebTestCase
         $error->SourceLine = 1;
         $error->PreContext = 'this is precontext';
         $error->PostContext = 'this is postcontext';
-        $error->RepeatCount = '0';
+        $error->RepeatCount = 0;
 
-        $error->BuildId = $this->Builds['error1']->Id;
+        $error->BuildId = (int) $this->Builds['error1']->Id;
         $error->Insert();
-        $error->BuildId = $this->Builds['error2']->Id;
+        $error->BuildId = (int) $this->Builds['error2']->Id;
         $error->Insert();
 
         $warning = new BuildFailure();

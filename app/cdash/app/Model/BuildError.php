@@ -19,8 +19,6 @@ namespace CDash\Model;
 
 use App\Models\BasicBuildAlert;
 use App\Utils\RepositoryUtils;
-use Illuminate\Support\Facades\Log;
-use PDO;
 
 /** BuildError */
 class BuildError
@@ -72,31 +70,12 @@ class BuildError
     }
 
     /**
-     * Returns all errors from builderror for current build
-     */
-    public function GetErrorsForBuild(int $fetchStyle = PDO::FETCH_ASSOC): array|false
-    {
-        if (!$this->BuildId) {
-            Log::warning('BuildId not set', [
-                'function' => 'BuildError::GetErrorsForBuild',
-            ]);
-            return false;
-        }
-
-        $result = BasicBuildAlert::where('buildid', $this->BuildId)
-            ->orderBy('logline')
-            ->get();
-
-        return $fetchStyle === PDO::FETCH_ASSOC ? $result->toArray() : $result->all();
-    }
-
-    /**
      * @return array{
      *     'file': string,
      *     'directory': string,
      * }
      */
-    private static function GetSourceFile($data): array
+    private static function GetSourceFile(array $data): array
     {
         $sourceFile = [];
 
@@ -125,27 +104,26 @@ class BuildError
      *
      * @return array<string,mixed>
      **/
-    public static function marshal($data, Project $project, $revision): array
+    public static function marshal(array $data, Project $project, $revision): array
     {
         deepEncodeHTMLEntities($data);
 
-        // Sets up access to $file and $directory
-        extract(self::GetSourceFile($data));
-        $marshaled = [
-            'new' => (int) ($data['newstatus'] ?? -1),
-            'logline' => (int) $data['logline'],
-            'cvsurl' => RepositoryUtils::get_diff_url($project->Id, $project->CvsUrl, $directory, $file, $revision),
-        ];
+        $sourceFile = self::GetSourceFile($data);
 
         // When building without launchers, CTest truncates the source dir to
         // /.../<project-name>/.  Use this pattern to linkify compiler output.
         $source_dir = "/\.\.\./[^/]+";
-        $marshaled = array_merge($marshaled, [
+
+        $marshaled = [
+            'new' => (int) ($data['newstatus'] ?? -1),
+            'logline' => (int) $data['logline'],
+            'cvsurl' => RepositoryUtils::get_diff_url($project->Id, $project->CvsUrl, $sourceFile['directory'], $sourceFile['file'], $revision),
             'precontext' => RepositoryUtils::linkify_compiler_output($project->CvsUrl, $source_dir, $revision, $data['precontext']),
             'text' => RepositoryUtils::linkify_compiler_output($project->CvsUrl, $source_dir, $revision, $data['text']),
             'postcontext' => RepositoryUtils::linkify_compiler_output($project->CvsUrl, $source_dir, $revision, $data['postcontext']),
             'sourcefile' => $data['sourcefile'],
-            'sourceline' => $data['sourceline']]);
+            'sourceline' => $data['sourceline'],
+        ];
 
         if (isset($data['subprojectid'])) {
             $marshaled['subprojectid'] = $data['subprojectid'];
