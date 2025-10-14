@@ -9,7 +9,6 @@ use App\Utils\PageTimer;
 use App\Validators\Password;
 use CDash\Database;
 use CDash\Model\Build;
-use CDash\Model\BuildConfigure;
 use CDash\Model\Project;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
@@ -253,12 +252,9 @@ final class UserController extends AbstractController
             $response['datelink'] = 'index.php?project=' . urlencode($projectname) . '&date=' . $date;
 
             // Configure
-            $BuildConfigure = new BuildConfigure();
-            $BuildConfigure->BuildId = $buildid;
-            $configure_row = $BuildConfigure->GetConfigureForBuild();
-            if ($configure_row) {
-                $response['configure'] = $configure_row['status'];
-                if ($configure_row['status'] != 0) {
+            if ($build->configure()->exists()) {
+                $response['configure'] = $build->configure->status;
+                if ($build->configure->status !== 0) {
                     $response['configureclass'] = 'error';
                 } else {
                     $response['configureclass'] = 'normal';

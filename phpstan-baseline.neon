@@ -2584,8 +2584,8 @@ parameters:
 			path: app/Http/Controllers/UserController.php
 
 		-
-			rawMessage: Cannot access offset 'status' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
+			rawMessage: Cannot access property $status on App\Models\Configure|null.
+			identifier: property.nonObject
 			count: 2
 			path: app/Http/Controllers/UserController.php
 
@@ -2604,12 +2604,6 @@ parameters:
 		-
 			rawMessage: Cannot cast mixed to int.
 			identifier: cast.int
-			count: 1
-			path: app/Http/Controllers/UserController.php
-
-		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
-			identifier: notEqual.notAllowed
 			count: 1
 			path: app/Http/Controllers/UserController.php
 
@@ -2634,7 +2628,7 @@ parameters:
 		-
 			rawMessage: 'Only booleans are allowed in an if condition, mixed given.'
 			identifier: if.condNotBoolean
-			count: 3
+			count: 2
 			path: app/Http/Controllers/UserController.php
 
 		-
@@ -9867,7 +9861,7 @@ parameters:
 				v2.5.0 01/22/2018
 			'''
 			identifier: function.deprecated
-			count: 3
+			count: 2
 			path: app/cdash/app/Model/BuildConfigure.php
 
 		-
@@ -20907,12 +20901,6 @@ parameters:
 		-
 			rawMessage: 'Cannot call method fetchColumn() on PDOStatement|false.'
 			identifier: method.nonObject
-			count: 1
-			path: app/cdash/tests/test_buildconfigure.php
-
-		-
-			rawMessage: 'Only booleans are allowed in a negated boolean, mixed given.'
-			identifier: booleanNot.exprNotBoolean
 			count: 1
 			path: app/cdash/tests/test_buildconfigure.php
 
