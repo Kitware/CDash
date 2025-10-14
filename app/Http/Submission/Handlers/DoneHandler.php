@@ -18,7 +18,6 @@ namespace App\Http\Submission\Handlers;
 =========================================================================*/
 
 use CDash\Model\Build;
-use CDash\Model\BuildUpdate;
 use CDash\Model\PendingSubmissions;
 use CDash\Model\Repository;
 
@@ -70,10 +69,8 @@ class DoneHandler extends AbstractXmlHandler
             // Should we re-run any checks that were previously marked
             // as pending?
             if ($this->PendingSubmissions->Recheck) {
-                $update = new BuildUpdate();
-                $update->BuildId = $this->Build->Id;
-                $update->FillFromBuildId();
-                Repository::createOrUpdateCheck($update->Revision);
+                $revision = \App\Models\Build::findOrFail((int) $this->Build->Id)->updates()->first()->revision ?? '';
+                Repository::createOrUpdateCheck($revision);
             }
 
             if ($this->PendingSubmissions->Exists()) {

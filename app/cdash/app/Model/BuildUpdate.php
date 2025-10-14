@@ -19,43 +19,29 @@ namespace CDash\Model;
 
 use App\Models\Build;
 use App\Models\BuildUpdate as EloquentBuildUpdate;
-use CDash\Database;
+use App\Models\BuildUpdateFile;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 class BuildUpdate
 {
-    private $Files;
+    /** @var array<BuildUpdateFile> */
+    private array $Files = [];
     public $StartTime;
     public $EndTime;
-    public $Command;
+    public $Command = '';
     public $Type;
     public $Status;
     public $Revision;
     public $PriorRevision;
     public $Path;
     public $BuildId;
-    public $Append;
+    public $Append = false;
     public $UpdateId;
     public $Errors;
-    private $PDO;
 
-    public function __construct()
-    {
-        $this->Files = [];
-        $this->Command = '';
-        $this->Append = false;
-        $this->PDO = Database::getInstance()->getPdo();
-    }
-
-    public function AddFile($file): void
+    public function AddFile(BuildUpdateFile $file): void
     {
         $this->Files[] = $file;
-    }
-
-    public function GetFiles(): array
-    {
-        return $this->Files;
     }
 
     // Insert the update
@@ -92,9 +78,7 @@ class BuildUpdate
                 if ($update->builds()->count() === 1) {
                     $update->delete();
                 }
-                DB::table('build2update')
-                    ->where('buildid', $this->BuildId)
-                    ->delete();
+                $build->updates()->detach();
                 $exists = false;
                 $this->UpdateId = '';
             }
@@ -106,7 +90,7 @@ class BuildUpdate
             $nfiles = count($this->Files);
             $nwarnings = 0;
             foreach ($this->Files as $file) {
-                if ($file->Author === 'Local User' && $file->Revision == -1) {
+                if ($file->author === 'Local User' && $file->revision == -1) {
                     $nwarnings++;
                 }
             }
@@ -144,8 +128,7 @@ class BuildUpdate
             }
 
             foreach ($this->Files as $file) {
-                $file->UpdateId = $this->UpdateId;
-                $file->Insert();
+                $update_model->updateFiles()->save($file);
             }
 
             return true;
@@ -211,53 +194,5 @@ class BuildUpdate
 
         // Assign the parent's update to the child.
         $childBuild->updates()->attach($updateid);
-    }
-
-    public function FillFromBuildId(): bool
-    {
-        if (!$this->BuildId) {
-            return false;
-        }
-
-        $buildUpdate = Build::findOrFail((int) $this->BuildId)->updates()->first();
-        if ($buildUpdate === null) {
-            return false;
-        }
-
-        $this->UpdateId = $buildUpdate->id;
-        $this->StartTime = $buildUpdate->starttime;
-        $this->EndTime = $buildUpdate->endtime;
-        $this->Command = $buildUpdate->command;
-        $this->Type = $buildUpdate->type;
-        $this->Status = $buildUpdate->status;
-        $this->Revision = $buildUpdate->revision;
-        $this->PriorRevision = $buildUpdate->priorrevision;
-        $this->Path = $buildUpdate->path;
-
-        // Get updated files too.
-        $stmt = $this->PDO->prepare(
-            'SELECT uf.* FROM updatefile uf
-            JOIN build2update b2u ON uf.updateid = b2u.updateid
-            WHERE b2u.buildid = ?');
-        pdo_execute($stmt, [$this->BuildId]);
-        while ($row = $stmt->fetch()) {
-            $file = new BuildUpdateFile();
-            $file->Filename = $row['filename'];
-            $file->CheckinDate = $row['checkindate'];
-            $file->Author = $row['author'];
-            $file->Email = $row['email'];
-            $file->Committer = $row['committer'];
-            $file->CommitterEmail = $row['committeremail'];
-            $file->Log = $row['log'];
-            $file->Revision = $row['revision'];
-            $file->PriorRevision = $row['priorrevision'];
-            $file->Status = $row['status'];
-            $file->UpdateId = $row['updateid'];
-            $this->AddFile($file);
-        }
-
-        usort($this->Files, fn ($file1, $file2) => Str::afterLast('/', $file1->Filename) <=> Str::afterLast('/', $file2->Filename));
-
-        return true;
     }
 }

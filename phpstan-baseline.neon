@@ -745,12 +745,6 @@ parameters:
 			path: app/Http/Controllers/BuildController.php
 
 		-
-			rawMessage: 'Parameter #1 $haystack of function strrpos expects string, (array<string>|string) given.'
-			identifier: argument.type
-			count: 2
-			path: app/Http/Controllers/BuildController.php
-
-		-
 			rawMessage: 'Parameter #1 $haystack of function substr_count expects string, mixed given.'
 			identifier: argument.type
 			count: 2
@@ -775,19 +769,7 @@ parameters:
 			path: app/Http/Controllers/BuildController.php
 
 		-
-			rawMessage: 'Parameter #1 $str of function XMLStrFormat expects string, array<string>|string given.'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/BuildController.php
-
-		-
 			rawMessage: 'Parameter #1 $string of function htmlspecialchars expects string, mixed given.'
-			identifier: argument.type
-			count: 2
-			path: app/Http/Controllers/BuildController.php
-
-		-
-			rawMessage: 'Parameter #1 $string of function substr expects string, (array<string>|string) given.'
 			identifier: argument.type
 			count: 2
 			path: app/Http/Controllers/BuildController.php
@@ -5560,6 +5542,12 @@ parameters:
 			path: app/Http/Submission/Handlers/UpdateHandler.php
 
 		-
+			rawMessage: Class App\Http\Submission\Handlers\UpdateHandler has an uninitialized property $UpdateFile. Give it default value or assign it in the constructor.
+			identifier: property.uninitialized
+			count: 1
+			path: app/Http/Submission/Handlers/UpdateHandler.php
+
+		-
 			rawMessage: 'Construct empty() is not allowed. Use more strict comparison.'
 			identifier: empty.notAllowed
 			count: 2
@@ -5633,12 +5621,6 @@ parameters:
 
 		-
 			rawMessage: Property App\Http\Submission\Handlers\UpdateHandler::$Update has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/Http/Submission/Handlers/UpdateHandler.php
-
-		-
-			rawMessage: Property App\Http\Submission\Handlers\UpdateHandler::$UpdateFile has no type specified.
 			identifier: missingType.property
 			count: 1
 			path: app/Http/Submission/Handlers/UpdateHandler.php
@@ -9259,6 +9241,12 @@ parameters:
 			path: app/cdash/app/Lib/Repository/GitHub.php
 
 		-
+			rawMessage: 'Parameter #1 $time of static method Carbon\Carbon::parse() expects Carbon\Month|Carbon\WeekDay|DateTimeInterface|float|int|string|null, mixed given.'
+			identifier: argument.type
+			count: 1
+			path: app/cdash/app/Lib/Repository/GitHub.php
+
+		-
 			rawMessage: 'Parameter #1 $value of function count expects array|Countable, mixed given.'
 			identifier: argument.type
 			count: 1
@@ -9274,6 +9262,42 @@ parameters:
 			rawMessage: Possibly invalid array key type mixed.
 			identifier: offsetAccess.invalidOffset
 			count: 2
+			path: app/cdash/app/Lib/Repository/GitHub.php
+
+		-
+			rawMessage: 'Property App\Models\BuildUpdateFile::$author (string) does not accept mixed.'
+			identifier: assign.propertyType
+			count: 1
+			path: app/cdash/app/Lib/Repository/GitHub.php
+
+		-
+			rawMessage: 'Property App\Models\BuildUpdateFile::$committer (string) does not accept mixed.'
+			identifier: assign.propertyType
+			count: 1
+			path: app/cdash/app/Lib/Repository/GitHub.php
+
+		-
+			rawMessage: 'Property App\Models\BuildUpdateFile::$committeremail (string) does not accept mixed.'
+			identifier: assign.propertyType
+			count: 1
+			path: app/cdash/app/Lib/Repository/GitHub.php
+
+		-
+			rawMessage: 'Property App\Models\BuildUpdateFile::$email (string) does not accept mixed.'
+			identifier: assign.propertyType
+			count: 1
+			path: app/cdash/app/Lib/Repository/GitHub.php
+
+		-
+			rawMessage: 'Property App\Models\BuildUpdateFile::$log (string) does not accept mixed.'
+			identifier: assign.propertyType
+			count: 1
+			path: app/cdash/app/Lib/Repository/GitHub.php
+
+		-
+			rawMessage: 'Property App\Models\BuildUpdateFile::$revision (string) does not accept mixed.'
+			identifier: assign.propertyType
+			count: 1
 			path: app/cdash/app/Lib/Repository/GitHub.php
 
 		-
@@ -9337,15 +9361,6 @@ parameters:
 			'''
 			identifier: function.deprecated
 			count: 23
-			path: app/cdash/app/Model/Build.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method execute() of class CDash\Database:
-				04/22/2023  Use Laravel query builder or Eloquent instead
-			'''
-			identifier: method.deprecated
-			count: 1
 			path: app/cdash/app/Model/Build.php
 
 		-
@@ -9751,6 +9766,12 @@ parameters:
 			rawMessage: 'Only numeric types are allowed in -, int|false given on the right side.'
 			identifier: minus.rightNonNumeric
 			count: 3
+			path: app/cdash/app/Model/Build.php
+
+		-
+			rawMessage: PHPDoc tag @var with type App\Models\BuildUpdateFile is not subtype of type TValue.
+			identifier: varTag.type
+			count: 1
 			path: app/cdash/app/Model/Build.php
 
 		-
@@ -10786,44 +10807,14 @@ parameters:
 			path: app/cdash/app/Model/BuildRelationship.php
 
 		-
-			rawMessage: '''
-				Call to deprecated function pdo_execute():
-				v2.5.0 01/22/2018
-			'''
-			identifier: function.deprecated
-			count: 1
-			path: app/cdash/app/Model/BuildUpdate.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method getPdo() of class CDash\Database:
-				04/22/2023  Use Laravel query builder or Eloquent instead
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/app/Model/BuildUpdate.php
-
-		-
 			rawMessage: 'Loose comparison via "==" is not allowed.'
 			identifier: equal.notAllowed
 			count: 2
 			path: app/cdash/app/Model/BuildUpdate.php
 
 		-
-			rawMessage: 'Method CDash\Model\BuildUpdate::AddFile() has parameter $file with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Model/BuildUpdate.php
-
-		-
 			rawMessage: 'Method CDash\Model\BuildUpdate::AssociateBuild() has parameter $stamp with no type specified.'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Model/BuildUpdate.php
-
-		-
-			rawMessage: 'Method CDash\Model\BuildUpdate::GetFiles() return type has no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
 			count: 1
 			path: app/cdash/app/Model/BuildUpdate.php
 
@@ -10853,18 +10844,6 @@ parameters:
 
 		-
 			rawMessage: Property CDash\Model\BuildUpdate::$Errors has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/BuildUpdate.php
-
-		-
-			rawMessage: Property CDash\Model\BuildUpdate::$Files has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/BuildUpdate.php
-
-		-
-			rawMessage: Property CDash\Model\BuildUpdate::$PDO has no type specified.
 			identifier: missingType.property
 			count: 1
 			path: app/cdash/app/Model/BuildUpdate.php
@@ -10910,108 +10889,6 @@ parameters:
 			identifier: missingType.property
 			count: 1
 			path: app/cdash/app/Model/BuildUpdate.php
-
-		-
-			rawMessage: '''
-				Call to deprecated function add_last_sql_error():
-				04/22/2023
-			'''
-			identifier: function.deprecated
-			count: 1
-			path: app/cdash/app/Model/BuildUpdateFile.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method executePrepared() of class CDash\Database:
-				04/22/2023  Use Laravel query builder or Eloquent instead
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/app/Model/BuildUpdateFile.php
-
-		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
-			identifier: equal.notAllowed
-			count: 1
-			path: app/cdash/app/Model/BuildUpdateFile.php
-
-		-
-			rawMessage: 'Parameter #2 $timestamp of function date expects int|null, (int|false) given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/app/Model/BuildUpdateFile.php
-
-		-
-			rawMessage: 'Parameter #2 $timestamp of function date expects int|null, float|int|string given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/app/Model/BuildUpdateFile.php
-
-		-
-			rawMessage: Property CDash\Model\BuildUpdateFile::$Author has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/BuildUpdateFile.php
-
-		-
-			rawMessage: Property CDash\Model\BuildUpdateFile::$CheckinDate has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/BuildUpdateFile.php
-
-		-
-			rawMessage: Property CDash\Model\BuildUpdateFile::$Committer has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/BuildUpdateFile.php
-
-		-
-			rawMessage: Property CDash\Model\BuildUpdateFile::$CommitterEmail has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/BuildUpdateFile.php
-
-		-
-			rawMessage: Property CDash\Model\BuildUpdateFile::$Email has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/BuildUpdateFile.php
-
-		-
-			rawMessage: Property CDash\Model\BuildUpdateFile::$Filename has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/BuildUpdateFile.php
-
-		-
-			rawMessage: Property CDash\Model\BuildUpdateFile::$Log has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/BuildUpdateFile.php
-
-		-
-			rawMessage: Property CDash\Model\BuildUpdateFile::$PriorRevision has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/BuildUpdateFile.php
-
-		-
-			rawMessage: Property CDash\Model\BuildUpdateFile::$Revision has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/BuildUpdateFile.php
-
-		-
-			rawMessage: Property CDash\Model\BuildUpdateFile::$Status has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/BuildUpdateFile.php
-
-		-
-			rawMessage: Property CDash\Model\BuildUpdateFile::$UpdateId has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/BuildUpdateFile.php
 
 		-
 			rawMessage: 'Method CDash\Model\Coverage::AddLabel() has parameter $label with no type specified.'

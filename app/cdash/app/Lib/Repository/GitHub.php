@@ -17,10 +17,10 @@
 
 namespace CDash\Lib\Repository;
 
+use App\Models\BuildUpdateFile;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildUpdate;
-use CDash\Model\BuildUpdateFile;
 use CDash\Model\PendingSubmissions;
 use CDash\Model\Project;
 use DateTime;
@@ -31,6 +31,7 @@ use Github\AuthMethod;
 use Github\Client as GitHubClient;
 use Github\Exception\RuntimeException;
 use Github\HttpClient\Builder as GitHubBuilder;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Encoding\ChainedFormatter;
@@ -478,13 +479,11 @@ class GitHub implements RepositoryInterface
         if ($previous_buildid < 1) {
             return false;
         }
-        $previous_update = new BuildUpdate();
-        $previous_update->BuildId = $previous_buildid;
-        $previous_update->FillFromBuildId();
-        if (!$previous_update->Revision) {
+        $previous_update = \App\Models\Build::findOrFail($previous_buildid)->updates()->first();
+        if ($previous_update === null) {
             return false;
         }
-        $base = $previous_update->Revision;
+        $base = $previous_update->revision;
 
         // Record the previous revision in the buildupdate table.
         $stmt = $this->db->prepare(
@@ -629,16 +628,16 @@ class GitHub implements RepositoryInterface
 
             // Record this modified file as part of the changeset.
             $updateFile = new BuildUpdateFile();
-            $updateFile->Filename = $modified_file['filename'];
-            $updateFile->CheckinDate = $commit['commit']['author']['date'];
-            $updateFile->Author = $commit['commit']['author']['name'];
-            $updateFile->Email = $commit['commit']['author']['email'];
-            $updateFile->Committer = $commit['commit']['committer']['name'];
-            $updateFile->CommitterEmail = $commit['commit']['committer']['email'];
-            $updateFile->Log = $commit['commit']['message'];
-            $updateFile->Revision = $commit['sha'];
-            $updateFile->PriorRevision = $base;
-            $updateFile->Status = 'UPDATED';
+            $updateFile->filename = $modified_file['filename'];
+            $updateFile->checkindate = Carbon::parse($commit['commit']['author']['date']);
+            $updateFile->author = $commit['commit']['author']['name'];
+            $updateFile->email = $commit['commit']['author']['email'];
+            $updateFile->committer = $commit['commit']['committer']['name'];
+            $updateFile->committeremail = $commit['commit']['committer']['email'];
+            $updateFile->log = $commit['commit']['message'];
+            $updateFile->revision = $commit['sha'];
+            $updateFile->priorrevision = $base;
+            $updateFile->status = 'UPDATED';
             $update->AddFile($updateFile);
         }
 

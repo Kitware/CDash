@@ -19,6 +19,7 @@ namespace CDash\Model;
 
 use App\Models\BasicBuildAlert;
 use App\Models\Build as EloquentBuild;
+use App\Models\BuildUpdateFile;
 use App\Models\Site;
 use App\Models\Test;
 use App\Utils\DatabaseCleanupUtils;
@@ -2425,43 +2426,34 @@ class Build
         // file submission.
 
         if ($this->CommitAuthors === []) {
-            $db = Database::getInstance();
-            $sql = '
-                SELECT
-                    author,
-                    email,
-                    committeremail
-                FROM
-                    updatefile AS uf,
-                    build2update AS b2u
-                WHERE b2u.updateid = uf.updateid
-                AND b2u.buildid = :buildId
-            ';
-            $stmt = $this->PDO->prepare($sql);
-            $stmt->bindParam(':buildId', $this->Id);
-            if ($db->execute($stmt)) {
-                $authors = [];
-                foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
-                    $hasAuthor = !empty($row['email']);
-                    $hasCommitter = !empty($row['committeremail']);
+            $update_files = EloquentBuild::with('updates.updateFiles')
+                ->findOrFail((int) $this->Id)
+                ->updates
+                ->pluck('updateFiles')
+                ->flatten();
 
-                    if ($hasAuthor) {
-                        $authors[] = $row['email'];
-                    }
+            $authors = [];
+            /** @var BuildUpdateFile $row */
+            foreach ($update_files as $row) {
+                $hasAuthor = !empty($row->email);
+                $hasCommitter = !empty($row->committeremail);
 
-                    if ($hasCommitter) {
-                        $authors[] = $row['committeremail'];
-                    }
-
-                    if ($hasAuthor === false
-                        && $hasCommitter === false
-                        && filter_var($row['author'], FILTER_VALIDATE_EMAIL) !== false
-                    ) {
-                        $authors[] = $row['author'];
-                    }
+                if ($hasAuthor) {
+                    $authors[] = $row->email;
                 }
-                $this->CommitAuthors = array_unique($authors);
+
+                if ($hasCommitter) {
+                    $authors[] = $row->committeremail;
+                }
+
+                if ($hasAuthor === false
+                    && $hasCommitter === false
+                    && filter_var($row->author, FILTER_VALIDATE_EMAIL) !== false
+                ) {
+                    $authors[] = $row->author;
+                }
             }
+            $this->CommitAuthors = array_unique($authors);
         }
         return $this->CommitAuthors;
     }
