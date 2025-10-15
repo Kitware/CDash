@@ -54,7 +54,7 @@ class GlobalInvitationTypeTest extends TestCase
             'invitation_timestamp' => Carbon::now(),
             'password' => Hash::make(Str::password()),
         ]);
-        $this->invitations[] = $invitation;
+        $this->invitations[] = $invitation->refresh();
 
         return $invitation;
     }

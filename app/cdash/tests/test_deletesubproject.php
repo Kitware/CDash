@@ -25,6 +25,9 @@ class DeleteSubProjectTestCase extends KWWebTestCase
             return false;
         }
 
+        // The end date might be rounded to one second in the future, so it's easiest to just wait until then to check.
+        sleep(1);
+
         $this->get($this->url . '/api/v1/viewSubProjects.php?project=Trilinos');
         $this->assertNoText('FEApp');
 

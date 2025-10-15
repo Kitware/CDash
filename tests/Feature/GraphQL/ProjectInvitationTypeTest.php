@@ -46,7 +46,7 @@ class ProjectInvitationTypeTest extends TestCase
             'project_id' => $this->project->id,
             'role' => ProjectRole::USER,
             'invitation_timestamp' => Carbon::now(),
-        ]);
+        ])->refresh();
 
         $this->actingAs($this->adminUser)->graphQL('
             query($id: ID) {
