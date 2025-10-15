@@ -988,7 +988,7 @@ final class BuildController extends AbstractBuildController
 
     public function viewBuildGroup(): View
     {
-        $this->setProjectByName(request()->input('project'));
+        $this->setProjectByName(request()->input('project', ''));
         return $this->angular_view('index');
     }
 
