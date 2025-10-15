@@ -1,6 +1,10 @@
 "A datetime and timezone string in ISO 8601 format `Y-m-dTH:i:sP`, e.g. `2020-04-20T13:53:12+02:00`."
 scalar DateTimeTz @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTimeTz")
 
+"A datetime string in ISO 8601 format in UTC with nanoseconds `YYYY-MM-DDTHH:mm:ss.SSSSSSZ`, e.g. `2020-04-20T16:20:04.000000Z`."
+scalar DateTimeUtc
+@scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTimeUtc")
+
 # It would be better to replace these with a "Duration" scalar type in the future.
 "A non-negative decimal number of seconds."
 scalar NonNegativeSeconds @scalar(class: "App\\GraphQL\\Scalars\\NonNegativeSeconds")
@@ -569,7 +573,7 @@ type BuildCommand @model(class: "App\\Models\\BuildCommand") {
 
   type: BuildCommandType! @filterable
 
-  startTime: DateTimeTz! @rename(attribute: "starttime") @filterable
+  startTime: DateTimeUtc! @rename(attribute: "starttime") @filterable
 
   duration: NonNegativeIntegerMilliseconds! @filterable
 

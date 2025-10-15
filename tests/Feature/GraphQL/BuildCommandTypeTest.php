@@ -54,6 +54,7 @@ class BuildCommandTypeTest extends TestCase
             'config' => Str::random(10),
             'workingdirectory' => Str::uuid()->toString(),
         ]);
+        $command->refresh();
 
         $this->graphQL('
             query build($id: ID) {
@@ -87,7 +88,7 @@ class BuildCommandTypeTest extends TestCase
                                 'node' => [
                                     'id' => (string) $command->id,
                                     'type' => 'CUSTOM',
-                                    'startTime' => $command->starttime->toIso8601String(),
+                                    'startTime' => $command->starttime->toIso8601ZuluString('microsecond'),
                                     'duration' => $command->duration,
                                     'command' => $command->command,
                                     'result' => $command->result,
