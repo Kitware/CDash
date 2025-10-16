@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  * the build table.
  *
  * @property int $buildid
- * @property string $properties
+ * @property array<mixed> $properties
  *
  * @mixin Builder<BuildProperties>
  */
@@ -26,5 +26,10 @@ class BuildProperties extends Model
     protected $fillable = [
         'buildid',
         'properties',
+    ];
+
+    protected $casts = [
+        'buildid' => 'integer',
+        'properties' => 'array',
     ];
 }
