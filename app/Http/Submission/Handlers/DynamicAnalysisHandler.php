@@ -18,6 +18,7 @@ namespace App\Http\Submission\Handlers;
 =========================================================================*/
 
 use App\Http\Submission\Traits\UpdatesSiteInformation;
+use App\Models\DynamicAnalysisDefect;
 use App\Models\Site;
 use App\Models\SiteInformation;
 use App\Utils\SubmissionUtils;
@@ -30,7 +31,6 @@ use CDash\Messaging\Topic\TopicCollection;
 use CDash\Model\Build;
 use CDash\Model\BuildGroup;
 use CDash\Model\DynamicAnalysis;
-use CDash\Model\DynamicAnalysisDefect;
 use CDash\Model\DynamicAnalysisSummary;
 use CDash\Model\Label;
 use CDash\Model\Project;
@@ -45,7 +45,7 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
     private $Checker;
 
     private DynamicAnalysis $DynamicAnalysis;
-    private $DynamicAnalysisDefect;
+    private DynamicAnalysisDefect $DynamicAnalysisDefect;
     private $DynamicAnalysisSummaries;
     private $Label;
 
@@ -141,8 +141,8 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
             $this->DynamicAnalysis->Status = $attributes['STATUS'];
             $this->TestSubProjectName = '';
         } elseif ($name === 'DEFECT') {
-            $this->DynamicAnalysisDefect = $factory->create(DynamicAnalysisDefect::class);
-            $this->DynamicAnalysisDefect->Type = $attributes['TYPE'];
+            $this->DynamicAnalysisDefect = new DynamicAnalysisDefect();
+            $this->DynamicAnalysisDefect->type = $attributes['TYPE'];
         } elseif ($name === 'LABEL') {
             $this->Label = $factory->create(Label::class);
         } elseif ($name === 'LOG') {
@@ -171,8 +171,7 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
             $GLOBALS['PHP_ERROR_BUILD_ID'] = $build->Id;
             $this->DynamicAnalysisSummaries[$this->SubProjectName]->Empty = false;
             foreach ($this->DynamicAnalysis->GetDefects() as $defect) {
-                $this->DynamicAnalysisSummaries[$this->SubProjectName]->AddDefects(
-                    $defect->Value);
+                $this->DynamicAnalysisSummaries[$this->SubProjectName]->AddDefects($defect->value);
             }
             $this->DynamicAnalysis->BuildId = $build->Id;
             $this->DynamicAnalysis->Insert();
@@ -249,7 +248,7 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
             }
         } elseif ($parent === 'RESULTS') {
             if ($element === 'DEFECT') {
-                $this->DynamicAnalysisDefect->Value .= $data;
+                $this->DynamicAnalysisDefect->value = $data;
             }
         } elseif ($parent === 'SUBPROJECT' && $element === 'LABEL') {
             $this->SubProjects[$this->SubProjectName][] = $data;

@@ -19,6 +19,7 @@ namespace CDash\Model;
 
 use App\Models\Build;
 use App\Models\DynamicAnalysis as EloquentDynamicAnalysis;
+use App\Models\DynamicAnalysisDefect;
 use App\Models\Label;
 use CDash\Database;
 use Illuminate\Support\Facades\Log;
@@ -36,26 +37,23 @@ class DynamicAnalysis
     public $Path;
     public $FullCommandLine;
     public $Log;
-    private $Defects;
+    /** @var array<DynamicAnalysisDefect> */
+    private array $Defects = [];
     public $BuildId;
     public $Labels;
     public $LogCompression;
     public $LogEncoding;
-    private $Filled;
+    private $Filled = false;
     private $PDO;
 
     public function __construct()
     {
-        $this->Id = null;
-        $this->Filled = false;
         $this->PDO = Database::getInstance()->getPdo();
-        $this->Defects = [];
     }
 
     /** Add a defect */
-    public function AddDefect($defect): void
+    public function AddDefect(DynamicAnalysisDefect $defect): void
     {
-        $defect->DynamicAnalysisId = $this->Id;
         $this->Defects[] = $defect;
     }
 
@@ -172,21 +170,20 @@ class DynamicAnalysis
         $this->Log ??= '';
         $this->BuildId = intval($this->BuildId);
 
-        $this->Id = Build::findOrFail($this->BuildId)->dynamicAnalyses()->create([
+        $eloquent_da = Build::findOrFail($this->BuildId)->dynamicAnalyses()->create([
             'status' => $this->Status,
             'checker' => $this->Checker,
             'name' => $this->Name,
             'path' => $path,
             'fullcommandline' => $fullCommandLine,
             'log' => $this->Log,
-        ])->id;
+        ]);
+
+        $this->Id = $eloquent_da->id;
 
         // Add the defects
-        if (!empty($this->Defects)) {
-            foreach ($this->Defects as $defect) {
-                $defect->DynamicAnalysisId = $this->Id;
-                $defect->Insert();
-            }
+        foreach ($this->Defects as $defect) {
+            $eloquent_da->defects()->save($defect);
         }
 
         // Log won't be re-used, clear it here to save memory.
