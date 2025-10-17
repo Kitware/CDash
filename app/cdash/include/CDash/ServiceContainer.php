@@ -22,7 +22,7 @@ use DI\ContainerBuilder;
 
 class ServiceContainer extends Singleton
 {
-    private $container;
+    private Container $container;
 
     protected function __construct()
     {
@@ -37,21 +37,33 @@ class ServiceContainer extends Singleton
 
     /**
      * The create method will return a new instance of a class.
+     *
+     * @template T
+     *
+     * @param class-string<T> $class_name
+     *
+     * @return T
      */
-    public function create($class_name)
+    public function create(string $class_name)
     {
         return $this->container->make($class_name);
     }
 
     /**
-     * The get method will return a singelton instance of a class.
+     * The get method will return a singleton instance of a class.
+     *
+     * @template T
+     *
+     * @param class-string<T> $class_name
+     *
+     * @return T
      */
-    public function get($class_name)
+    public function get(string $class_name)
     {
         return $this->container->get($class_name);
     }
 
-    public function getContainer()
+    public function getContainer(): Container
     {
         return $this->container;
     }
@@ -59,17 +71,5 @@ class ServiceContainer extends Singleton
     public function setContainer(Container $container): void
     {
         $this->container = $container;
-    }
-
-    public static function singleton($class_name)
-    {
-        $self = self::getInstance();
-        return $self->get($class_name);
-    }
-
-    public static function instance($class_name)
-    {
-        $self = self::getInstance();
-        return $self->create($class_name);
     }
 }

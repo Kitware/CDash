@@ -3574,6 +3574,18 @@ parameters:
 			path: app/Http/Submission/Handlers/BuildPropertiesJSONHandler.php
 
 		-
+			rawMessage: Binary operation "." between mixed and "\n" results in an error.
+			identifier: binaryOp.invalid
+			count: 1
+			path: app/Http/Submission/Handlers/ConfigureHandler.php
+
+		-
+			rawMessage: Binary operation "." between mixed and ' UTC' results in an error.
+			identifier: binaryOp.invalid
+			count: 1
+			path: app/Http/Submission/Handlers/ConfigureHandler.php
+
+		-
 			rawMessage: 'Call to an undefined method CDash\Messaging\Preferences\NotificationPreferencesInterface::get().'
 			identifier: method.notFound
 			count: 1
@@ -3587,6 +3599,24 @@ parameters:
 
 		-
 			rawMessage: Cannot access an offset on array|float|int|string|false|null.
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Http/Submission/Handlers/ConfigureHandler.php
+
+		-
+			rawMessage: Cannot access offset 'log' on mixed.
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Http/Submission/Handlers/ConfigureHandler.php
+
+		-
+			rawMessage: Cannot access offset 'starttime' on mixed.
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Http/Submission/Handlers/ConfigureHandler.php
+
+		-
+			rawMessage: Cannot access offset 'status' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: app/Http/Submission/Handlers/ConfigureHandler.php
@@ -3666,6 +3696,24 @@ parameters:
 		-
 			rawMessage: 'Only booleans are allowed in an if condition, int|false given.'
 			identifier: if.condNotBoolean
+			count: 1
+			path: app/Http/Submission/Handlers/ConfigureHandler.php
+
+		-
+			rawMessage: 'Only booleans are allowed in an if condition, mixed given.'
+			identifier: if.condNotBoolean
+			count: 1
+			path: app/Http/Submission/Handlers/ConfigureHandler.php
+
+		-
+			rawMessage: 'Parameter #1 $duration of method CDash\Model\Build::SetConfigureDuration() expects int, (float|int) given.'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Submission/Handlers/ConfigureHandler.php
+
+		-
+			rawMessage: 'Parameter #1 $value of function intval expects array|bool|float|int|resource|string|null, mixed given.'
+			identifier: argument.type
 			count: 1
 			path: app/Http/Submission/Handlers/ConfigureHandler.php
 
@@ -4135,6 +4183,12 @@ parameters:
 			rawMessage: Access to an undefined property App\Http\Submission\Handlers\DynamicAnalysisHandler::$PullRequest.
 			identifier: property.notFound
 			count: 1
+			path: app/Http/Submission/Handlers/DynamicAnalysisHandler.php
+
+		-
+			rawMessage: Access to an undefined property CDash\Model\DynamicAnalysisSummary::$Empty.
+			identifier: property.notFound
+			count: 2
 			path: app/Http/Submission/Handlers/DynamicAnalysisHandler.php
 
 		-
@@ -5263,6 +5317,12 @@ parameters:
 			rawMessage: 'Only numeric types are allowed in +, int|false given on the right side.'
 			identifier: plus.rightNonNumeric
 			count: 3
+			path: app/Http/Submission/Handlers/TestingHandler.php
+
+		-
+			rawMessage: 'Parameter #1 $duration of method CDash\Model\Build::UpdateTestDuration() expects int, (float|int) given.'
+			identifier: argument.type
+			count: 1
 			path: app/Http/Submission/Handlers/TestingHandler.php
 
 		-
@@ -11725,6 +11785,12 @@ parameters:
 			path: app/cdash/app/Model/Project.php
 
 		-
+			rawMessage: 'Cannot call method add() on mixed.'
+			identifier: method.nonObject
+			count: 1
+			path: app/cdash/app/Model/Project.php
+
+		-
 			rawMessage: 'Cannot call method bindParam() on PDOStatement|false.'
 			identifier: method.nonObject
 			count: 1
@@ -11812,6 +11878,24 @@ parameters:
 			rawMessage: 'Method CDash\Model\Project::GetNumberOfSubProjects() has parameter $date with no type specified.'
 			identifier: missingType.parameter
 			count: 1
+			path: app/cdash/app/Model/Project.php
+
+		-
+			rawMessage: 'Method CDash\Model\Project::GetProjectSubscribers() should return CDash\Collection\SubscriberCollection but returns mixed.'
+			identifier: return.type
+			count: 1
+			path: app/cdash/app/Model/Project.php
+
+		-
+			rawMessage: 'Method CDash\Model\Project::GetProjectSubscribers() throws checked exception DI\DependencyException but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
+			count: 3
+			path: app/cdash/app/Model/Project.php
+
+		-
+			rawMessage: 'Method CDash\Model\Project::GetProjectSubscribers() throws checked exception DI\NotFoundException but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
+			count: 3
 			path: app/cdash/app/Model/Project.php
 
 		-
@@ -12616,62 +12700,26 @@ parameters:
 			path: app/cdash/include/CDash/Database.php
 
 		-
-			rawMessage: 'Method CDash\ServiceContainer::create() has no return type specified.'
-			identifier: missingType.return
+			rawMessage: 'Method CDash\ServiceContainer::create() throws checked exception DI\DependencyException but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
 			count: 1
 			path: app/cdash/include/CDash/ServiceContainer.php
 
 		-
-			rawMessage: 'Method CDash\ServiceContainer::create() has parameter $class_name with no type specified.'
-			identifier: missingType.parameter
+			rawMessage: 'Method CDash\ServiceContainer::create() throws checked exception DI\NotFoundException but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
 			count: 1
 			path: app/cdash/include/CDash/ServiceContainer.php
 
 		-
-			rawMessage: 'Method CDash\ServiceContainer::get() has no return type specified.'
-			identifier: missingType.return
+			rawMessage: 'Method CDash\ServiceContainer::get() throws checked exception DI\DependencyException but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
 			count: 1
 			path: app/cdash/include/CDash/ServiceContainer.php
 
 		-
-			rawMessage: 'Method CDash\ServiceContainer::get() has parameter $class_name with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/include/CDash/ServiceContainer.php
-
-		-
-			rawMessage: 'Method CDash\ServiceContainer::getContainer() has no return type specified.'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/include/CDash/ServiceContainer.php
-
-		-
-			rawMessage: 'Method CDash\ServiceContainer::instance() has no return type specified.'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/include/CDash/ServiceContainer.php
-
-		-
-			rawMessage: 'Method CDash\ServiceContainer::instance() has parameter $class_name with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/include/CDash/ServiceContainer.php
-
-		-
-			rawMessage: 'Method CDash\ServiceContainer::singleton() has no return type specified.'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/include/CDash/ServiceContainer.php
-
-		-
-			rawMessage: 'Method CDash\ServiceContainer::singleton() has parameter $class_name with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/include/CDash/ServiceContainer.php
-
-		-
-			rawMessage: Property CDash\ServiceContainer::$container has no type specified.
-			identifier: missingType.property
+			rawMessage: 'Method CDash\ServiceContainer::get() throws checked exception DI\NotFoundException but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
 			count: 1
 			path: app/cdash/include/CDash/ServiceContainer.php
 
@@ -18163,6 +18211,18 @@ parameters:
 			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::equalTo().'
 			identifier: staticMethod.dynamicCall
 			count: 2
+			path: app/cdash/tests/case/CDash/ServiceContainerTest.php
+
+		-
+			rawMessage: 'Parameter #1 $class_name of method CDash\ServiceContainer::create() expects class-string<SomeClassName>, string given.'
+			identifier: argument.type
+			count: 1
+			path: app/cdash/tests/case/CDash/ServiceContainerTest.php
+
+		-
+			rawMessage: 'Parameter #1 $class_name of method CDash\ServiceContainer::get() expects class-string<SomeClassName>, string given.'
+			identifier: argument.type
+			count: 1
 			path: app/cdash/tests/case/CDash/ServiceContainerTest.php
 
 		-
