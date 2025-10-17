@@ -17,28 +17,19 @@
 
 namespace CDash\Model;
 
-use CDash\Database;
-use Illuminate\Support\Facades\DB;
+use App\Models\Project;
+use App\Models\SubProjectGroup as EloquentSubProjectGroup;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 
 class SubProjectGroup
 {
-    private int $Id;
-    private int $ProjectId;
-    private string $Name;
-    private int $IsDefault;
-    private ?int $CoverageThreshold;
-    private int $Position;
-
-    public function __construct()
-    {
-        $this->Id = 0;
-        $this->ProjectId = 0;
-        $this->Name = '';
-        $this->IsDefault = 0;
-        $this->Position = 1;
-        $this->CoverageThreshold = null;
-    }
+    private int $Id = 0;
+    private int $ProjectId = 0;
+    private string $Name = '';
+    private int $IsDefault = 0;
+    private ?int $CoverageThreshold = null;
+    private int $Position = 1;
 
     /** Get the Id of this subproject group. */
     public function GetId(): int
@@ -49,46 +40,30 @@ class SubProjectGroup
     /** Set the id of this subproject group.  This function loads the
      * rest of the details about this group from the database.
      **/
-    public function SetId(int $id): bool
+    public function SetId(int $id): void
     {
-        if (!is_numeric($id)) {
-            return false;
-        }
         $this->Id = $id;
 
-        $db = Database::getInstance();
-        $row = $db->executePreparedSingleRow("
-                   SELECT *
-                   FROM subprojectgroup
-                   WHERE id=? AND endtime='1980-01-01 00:00:00'
-               ", [$this->Id]);
-        if (empty($row)) {
-            Log::warning("No subprojectgroup found with Id='$this->Id'", [
-                'function' => 'SubProjectGroup::SetId',
-            ]);
-            return false;
-        }
+        $model = EloquentSubProjectGroup::findOrFail($id);
 
-        $this->Name = $row['name'];
-        $this->ProjectId = intval($row['projectid']);
-        $this->CoverageThreshold = intval($row['coveragethreshold']);
-        $this->IsDefault = intval($row['is_default']);
-        $this->Position = intval($row['position']);
-        return true;
+        $this->Name = $model->name;
+        $this->ProjectId = $model->projectid;
+        $this->CoverageThreshold = $model->coveragetheshold;
+        $this->IsDefault = $model->is_default;
+        $this->Position = $model->position;
     }
 
     /** Function to set the project id. */
-    public function SetProjectId(int $projectid): bool
+    public function SetProjectId(int $projectid): void
     {
         $this->ProjectId = $projectid;
         if ($this->Name !== '') {
-            return $this->Fill();
+            $this->Fill();
         }
-        return true;
     }
 
     /** Get the Name of this subproject group. */
-    public function GetName(): string|false
+    public function GetName(): string
     {
         if (strlen($this->Name) > 0) {
             return $this->Name;
@@ -98,14 +73,9 @@ class SubProjectGroup
             abort(500, 'SubProjectGroup GetName(): Id not set');
         }
 
-        $db = Database::getInstance();
-        $row = $db->executePreparedSingleRow('SELECT name FROM subprojectgroup WHERE id=?', [$this->Id]);
+        // Also fills the other fields.
+        $this->SetId($this->Id);
 
-        if (empty($row)) {
-            return false;
-        }
-
-        $this->Name = $row['name'];
         return $this->Name;
     }
 
@@ -153,224 +123,138 @@ class SubProjectGroup
     /** Populate the ivars of an existing subproject group.
      * Called automatically once name & projectid are set.
      **/
-    public function Fill(): bool
+    protected function Fill(): void
     {
         if ($this->Name === '' || $this->ProjectId === 0) {
             Log::warning("Name='" . $this->Name . "' or ProjectId='" . $this->ProjectId . "' not set", [
                 'function' => 'SubProjectGroup::Fill',
             ]);
-            return false;
+            return;
         }
 
-        $db = Database::getInstance();
-        $row = $db->executePreparedSingleRow("
-                   SELECT id, coveragethreshold, is_default, starttime
-                   FROM subprojectgroup
-                   WHERE
-                       projectid=?
-                       AND name=?
-                       AND endtime='1980-01-01 00:00:00'
-               ", [$this->ProjectId, $this->Name]);
+        $model = EloquentSubProjectGroup::where([
+            'projectid' => $this->ProjectId,
+            'name' => $this->Name,
+            'endtime' => '1980-01-01 00:00:00',
+        ])->first();
 
-        if (empty($row)) {
-            return false;
+        if ($model === null) {
+            return;
         }
 
-        $this->Id = intval($row['id']);
-        $this->CoverageThreshold = intval($row['coveragethreshold']);
-        $this->IsDefault = intval($row['is_default']);
-        return true;
+        $this->Id = $model->id;
+        $this->CoverageThreshold = $model->coveragetheshold;
+        $this->IsDefault = $model->is_default;
+        return;
     }
 
     /** Delete a subproject group */
-    public function Delete(bool $keephistory = true): bool
+    public function Delete(bool $keephistory = true): void
     {
         if ($this->Id < 1) {
-            return false;
+            return;
         }
 
-        $db = Database::getInstance();
+        $eloquent_model = EloquentSubProjectGroup::findOrFail($this->Id);
 
         // If there are no subprojects in this group we can safely remove it.
-        $query_array = $db->executePreparedSingleRow('SELECT count(*) AS c FROM subproject WHERE groupid=?', [$this->Id]);
-        if ($query_array === false) {
-            add_last_sql_error('SubProjectGroup Delete');
-            return false;
-        }
-        if (intval($query_array['c']) === 0) {
+        if ($eloquent_model->subProjects()->count() === 0) {
             $keephistory = false;
         }
 
         if (!$keephistory) {
-            DB::delete('DELETE FROM subprojectgroup WHERE id=?', [$this->Id]);
+            $eloquent_model->delete();
         } else {
-            $endtime = gmdate(FMT_DATETIME);
-            $query = $db->executePrepared('
-                         UPDATE subprojectgroup
-                         SET endtime=?
-                         WHERE id=?
-                     ', [$endtime, $this->Id]);
-            if ($query === false) {
-                add_last_sql_error('SubProjectGroup Delete');
-                return false;
-            }
+            $eloquent_model->update([
+                'endtime' => Carbon::now(),
+            ]);
         }
-        return true;
     }
 
     /** Return if a subproject group exists */
-    public function Exists(): bool
+    protected function Exists(): bool
     {
-        // If no id specify return false
         if ($this->Id < 1) {
             return false;
         }
 
-        $db = Database::getInstance();
-
-        $query = $db->executePreparedSingleRow("
-                     SELECT count(*) AS c
-                     FROM subprojectgroup
-                     WHERE
-                         id=?
-                         AND endtime='1980-01-01 00:00:00'
-                 ", [$this->Id]);
-        return intval($query['c']) > 0;
+        return EloquentSubProjectGroup::where([
+            'id' => $this->Id,
+            'endtime' => '1980-01-01 00:00:00',
+        ])->exists();
     }
 
-    // Save this subproject group in the database.
-    public function Save(): bool
+    /** Save this subproject group in the database. */
+    public function Save(): void
     {
         if ($this->Name === '' || $this->ProjectId === 0) {
             Log::warning("Name='" . $this->Name . "' or ProjectId='" . $this->ProjectId . "' not set", [
                 'function' => 'SubProjectGroup::Save',
             ]);
-            return false;
+            return;
         }
 
-        $db = Database::getInstance();
+        $project = Project::findOrFail($this->ProjectId);
 
         // Load the default coverage threshold for this project if one
         // hasn't been set for this group.
         if (!isset($this->CoverageThreshold)) {
-            $row = $db->executePreparedSingleRow('SELECT coveragethreshold FROM project WHERE id=?', [$this->ProjectId]);
-            if (empty($row)) {
-                return false;
-            }
-            $this->CoverageThreshold = intval($row['coveragethreshold']);
+            $this->CoverageThreshold = $project->coveragethreshold;
         }
 
         // Force is_default=1 if this will be the first subproject group
         // for this project.
-        $query_array = $db->executePreparedSingleRow('
-                           SELECT COUNT(*) AS c
-                           FROM subprojectgroup
-                           WHERE projectid=?
-                       ', [$this->ProjectId]);
-        if ($query_array === false) {
-            add_last_sql_error('SubProjectGroup::Save Count');
-            return false;
-        }
-        if (intval($query_array['c']) === 0) {
+        if ($project->subProjectGroups()->count() === 0) {
             $this->IsDefault = 1;
         }
 
-        // Check if the group already exists.
-        if ($this->Exists()) {
-            // Trim the name
-            $this->Name = trim($this->Name);
+        // Trim the name
+        $this->Name = trim($this->Name);
 
+        $model = EloquentSubProjectGroup::find($this->Id);
+
+        // Check if the group already exists.
+        if ($model !== null) {
             // Update the group
-            $query = $db->executePrepared('
-                         UPDATE subprojectgroup
-                         SET
-                             name=?,
-                             projectid=?,
-                             is_default=?,
-                             coveragethreshold=?
-                         WHERE id=?
-                     ', [$this->Name, $this->ProjectId, $this->IsDefault, $this->CoverageThreshold, $this->Id]);
-            if ($query === false) {
-                add_last_sql_error('SubProjectGroup::Save Update');
-                return false;
-            }
+            $model->update([
+                'name' => $this->Name,
+                'projectid' => $this->ProjectId,
+                'is_default' => $this->IsDefault,
+                'coveragethreshold' => $this->CoverageThreshold,
+            ]);
         } else {
             // insert the subproject
 
-            // Trim the name
-            $this->Name = trim($this->Name);
-
             // Double check that it's not already in the database.
-            $query = $db->executePreparedSingleRow("
-                         SELECT id
-                         FROM subprojectgroup
-                         WHERE
-                             name=?
-                             AND projectid=?
-                             AND endtime='1980-01-01 00:00:00'
-                     ", [$this->Name, $this->ProjectId]);
-            if (!empty($query)) {
-                $this->Id = intval($query['id']);
-                return true;
+            $model = EloquentSubProjectGroup::where([
+                'name' => $this->Name,
+                'projectid' => $this->ProjectId,
+                'endtime' => '1980-01-01 00:00:00',
+            ])->first();
+            if ($model !== null) {
+                $this->Id = $model->id;
+                return;
             }
 
-            $id = '';
-            $idvalue = [];
-            $prepared_array = $db->createPreparedArray(7);
-            if ($this->Id) {
-                $id = 'id,';
-                $idvalue[] = $this->Id;
-                $prepared_array = $db->createPreparedArray(8);
-            }
-
-            $starttime = gmdate(FMT_DATETIME);
-            $endtime = '1980-01-01T00:00:00';
-            $position = $this->GetNextPosition();
-            $query = $db->executePrepared("
-                         INSERT INTO subprojectgroup (
-                             $id
-                             name,
-                             projectid,
-                             is_default,
-                             coveragethreshold,
-                             starttime,
-                             endtime,
-                             position
-                         )
-                         VALUES $prepared_array
-                     ", array_merge($idvalue, [
-                $this->Name,
-                $this->ProjectId,
-                $this->IsDefault,
-                $this->CoverageThreshold,
-                $starttime,
-                $endtime,
-                $position,
-            ]));
-
-            if ($query === false) {
-                add_last_sql_error('SubProjectGroup::Save Insert');
-                return false;
-            }
-
-            if ($this->Id < 1) {
-                $this->Id = DB::getPdo()->lastInsertId();
-            }
+            $this->Id = EloquentSubProjectGroup::create([
+                'name' => $this->Name,
+                'projectid' => $this->ProjectId,
+                'is_default' => $this->IsDefault,
+                'coveragethreshold' => $this->CoverageThreshold,
+                'starttime' => Carbon::now(),
+                'endtime' => '1980-01-01 00:00:00',
+                'position' => $this->GetNextPosition(),
+            ])->id;
         }
 
         // Make sure there's only one default group per project.
         if ($this->IsDefault) {
-            $query = $db->executePrepared('
-                         UPDATE subprojectgroup
-                         SET is_default=0
-                         WHERE projectid=? AND id<>?
-                     ', [$this->ProjectId, $this->Id]);
-            if ($query === false) {
-                add_last_sql_error('SubProjectGroup Update Default');
-                return false;
-            }
+            EloquentSubProjectGroup::where('projectid', $this->ProjectId)
+                ->where('id', '!=', $this->Id)
+                ->update([
+                    'is_default' => 0,
+                ]);
         }
-        return true;
     }
 
     public function GetPosition(): int
@@ -379,18 +263,13 @@ class SubProjectGroup
     }
 
     /** Get the next position available for this group. */
-    public function GetNextPosition(): int
+    protected function GetNextPosition(): int
     {
-        $db = Database::getInstance();
-        $query = $db->executePreparedSingleRow("
-                     SELECT position
-                     FROM subprojectgroup
-                     WHERE
-                         projectid=?
-                         AND endtime='1980-01-01 00:00:00'
-                     ORDER BY position DESC
-                     LIMIT 1
-                 ", [$this->ProjectId]);
-        return !empty($query) ? intval($query['position']) + 1 : 1;
+        $model = EloquentSubProjectGroup::where([
+            'projectid' => $this->ProjectId,
+            'endtime' => '1980-01-01 00:00:00',
+        ])->orderBy('position', 'desc')->first();
+
+        return $model !== null ? $model->position + 1 : 1;
     }
 }

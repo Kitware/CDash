@@ -276,4 +276,12 @@ class Project extends Model
     {
         return $this->hasMany(ProjectInvitation::class, 'project_id');
     }
+
+    /**
+     * @return HasMany<SubProjectGroup, $this>
+     */
+    public function subProjectGroups(): HasMany
+    {
+        return $this->hasMany(SubProjectGroup::class, 'projectid');
+    }
 }

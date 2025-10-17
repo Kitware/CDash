@@ -17,6 +17,7 @@
 
 namespace CDash\Model;
 
+use App\Models\Project;
 use App\Models\Project as EloquentProject;
 use App\Models\SubProject as EloquentSubProject;
 use CDash\Database;
@@ -133,15 +134,12 @@ class SubProject
     {
         // Assign it to the default group if necessary.
         if ($this->GroupId === 0) {
-            $groupid_query = DB::select('
-                SELECT id
-                FROM subprojectgroup
-                WHERE
-                    projectid = ?
-                    AND is_default = 1
-            ', [$this->ProjectId])[0] ?? [];
-            if ($groupid_query !== []) {
-                $this->GroupId = (int) $groupid_query->id;
+            $model = EloquentProject::findOrFail($this->ProjectId)
+                ->subProjectGroups()
+                ->where('is_default', 1)
+                ->first();
+            if ($model !== null) {
+                $this->GroupId = $model->id;
             }
         }
 
@@ -244,27 +242,23 @@ class SubProject
     /** Function to set this subproject's group. */
     public function SetGroup(string $groupName): bool
     {
-        $db = Database::getInstance();
-        $row = $db->executePreparedSingleRow("
-                   SELECT id
-                   FROM subprojectgroup
-                   WHERE
-                       name=?
-                       AND endtime='1980-01-01 00:00:00'
-               ", [$groupName]);
+        $model = Project::findOrFail($this->ProjectId)
+            ->subProjectGroups()
+            ->where([
+                'name' => $this->Name,
+                'endtime' => '1980-01-01 00:00:00',
+            ])->first();
 
-        if (empty($row)) {
+        if ($model === null) {
             // Create the group if it doesn't exist yet.
             $subprojectGroup = new SubProjectGroup();
             $subprojectGroup->SetName($groupName);
             $subprojectGroup->SetProjectId($this->ProjectId);
-            if ($subprojectGroup->Save() === false) {
-                return false;
-            }
+            $subprojectGroup->Save();
             $this->GroupId = $subprojectGroup->GetId();
             return true;
         }
-        $this->GroupId = intval($row['id']);
+        $this->GroupId = $model->id;
         return true;
     }
 
