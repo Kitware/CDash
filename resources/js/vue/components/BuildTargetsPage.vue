@@ -2,6 +2,10 @@
   <div class="tw-flex tw-flex-col tw-w-full tw-gap-4">
     <BuildSummaryCard :build-id="buildId" />
 
+    <loading-indicator :is-loading="!build || !targets">
+      <CommandGanttChart :commands="formattedCommands" />
+    </loading-indicator>
+
     <FilterBuilder
       filter-type="BuildTargetsFiltersMultiFilterInput"
       primary-record-name="targets"
@@ -43,9 +47,17 @@ import DataTable from './shared/DataTable.vue';
 import LoadingIndicator from './shared/LoadingIndicator.vue';
 import gql from 'graphql-tag';
 import FilterBuilder from './shared/FilterBuilder.vue';
+import CommandGanttChart from './shared/CommandGanttChart.vue';
+import { DateTime, Duration } from 'luxon';
 
 export default {
-  components: {FilterBuilder, LoadingIndicator, DataTable, BuildSummaryCard},
+  components: {
+    CommandGanttChart,
+    FilterBuilder,
+    LoadingIndicator,
+    DataTable,
+    BuildSummaryCard,
+  },
 
   props: {
     buildId: {
@@ -68,10 +80,10 @@ export default {
   apollo: {
     targets: {
       query: gql`
-        query($buildId: ID!, $filters: BuildTargetsFiltersMultiFilterInput, $after: String) {
+        query($buildId: ID!, $filters: BuildTargetsFiltersMultiFilterInput) {
           build(id: $buildId) {
             id
-            targets(filters: $filters, after: $after) {
+            targets(filters: $filters, first: 100000) {
               edges {
                 node {
                   id
@@ -79,31 +91,99 @@ export default {
                   type
                 }
               }
-              pageInfo {
-                hasNextPage
-                endCursor
+            }
+            children {
+              edges {
+                node {
+                  id
+                  targets(filters: $filters, first: 100000) {
+                    edges {
+                      node {
+                        id
+                        name
+                        type
+                      }
+                    }
+                  }
+                }
               }
             }
           }
         }
       `,
-      update: data => data?.build?.targets,
+      update: data => {
+        let targets = data?.build?.targets?.edges || [];
+
+        if (data?.build?.children) {
+          data.build.children.edges.forEach(childEdge => {
+            targets = targets.concat(childEdge?.node?.targets?.edges || []);
+          });
+        }
+
+        return { edges: targets };
+      },
       variables() {
         return {
           buildId: this.buildId,
           filters: this.initialFilters,
         };
       },
-      result({data}) {
-        if (data && data.build.targets.pageInfo.hasNextPage) {
-          this.$apollo.queries.targets.fetchMore({
-            variables: {
-              buildId: this.buildId,
-              filters: this.initialFilters,
-              after: data.build.targets.pageInfo.endCursor,
-            },
-          });
+    },
+
+    build: {
+      query: gql`
+        query($buildId: ID!) {
+          build(id: $buildId) {
+            id
+            commands(first: 100000) {
+              edges {
+                node {
+                  id
+                  startTime
+                  duration
+                  source
+                  language
+                  config
+                  type
+                  target {
+                    id
+                    name
+                  }
+                }
+              }
+            }
+
+            children(first: 100000) {
+              edges {
+                node {
+                  id
+                  commands(first: 100000) {
+                    edges {
+                      node {
+                        id
+                        startTime
+                        duration
+                        source
+                        language
+                        config
+                        type
+                        target {
+                          id
+                          name
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
+      `,
+      variables() {
+        return {
+          buildId: this.buildId,
+        };
       },
     },
   },
@@ -125,6 +205,37 @@ export default {
             value: edge.node.type,
             text: this.humanReadableTargetType(edge.node.type),
           },
+        };
+      });
+    },
+
+    visibleTargetIds() {
+      if (!this.targets || !this.targets.edges) {
+        return new Set();
+      }
+      return new Set(this.targets.edges.map(edge => edge.node.id));
+    },
+
+    formattedCommands() {
+      if (!this.build) {
+        return [];
+      }
+      let commands = [...this.build.commands.edges];
+      this.build.children.edges.forEach((child) => commands = commands.concat(child.node.commands.edges));
+
+      const visibleIds = this.visibleTargetIds;
+
+      return commands?.map(edge => {
+        const targetId = edge.node.target?.id;
+        return {
+          startTime: DateTime.fromISO(edge.node.startTime),
+          duration: Duration.fromMillis(edge.node.duration),
+          type: edge.node.type,
+          targetName: edge.node.target?.name,
+          source: edge.node.source,
+          language: edge.node.language,
+          config: edge.node.config,
+          disabled: !targetId || !visibleIds.has(targetId),
         };
       });
     },
