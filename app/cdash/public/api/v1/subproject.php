@@ -213,16 +213,14 @@ function rest_post($projectid): void
     }
 
     if (isset($_POST['newLayout'])) {
-        $db = Database::getInstance();
-
         // Update the order of the SubProject groups.
         $inputRows = $_POST['newLayout'];
         foreach ($inputRows as $inputRow) {
             // TODO: (williamjallen) refactor this to execute a constant number of queries
-            $id = intval($inputRow['id'] ?? 0);
-            $position = intval($inputRow['position'] ?? 0);
-            $db->executePrepared('UPDATE subprojectgroup SET position=? WHERE id=?', [$position, $id]);
-            add_last_sql_error('API::subproject::newLayout::INSERT', $projectid);
+            \App\Models\SubProjectGroup::findOrFail((int) ($inputRow['id'] ?? 0))
+                ->update([
+                    'position' => (int) ($inputRow['position'] ?? 0)
+                ]);
         }
     }
 }
