@@ -49,13 +49,17 @@
               :id="note.node.id"
               :key="note.node.id"
               :ref="r => noteRefs.push(r)"
-              class="tw-p-4 tw-border tw-border-base-300 tw-bg-base-100 tw-rounded-box tw-scroll-mt-28"
+              class="tw-border tw-border-base-300 tw-bg-base-100 tw-rounded-box tw-scroll-mt-28"
               data-test="notes-content-item"
             >
-              <h3 class="tw-text-xl tw-font-bold tw-mb-4 tw-break-words">
+              <h3 class="tw-p-4 tw-text-xl tw-font-bold tw-break-words">
                 {{ note.node.name }}
               </h3>
-              <pre class="tw-text-base-content tw-whitespace-pre-wrap tw-break-words tw-font-mono">{{ note.node.text }}</pre>
+              <hr>
+              <code-box
+                :text="note.node.text"
+                :bordered="false"
+              />
             </div>
           </div>
         </main>
@@ -68,10 +72,11 @@
 import BuildSummaryCard from './shared/BuildSummaryCard.vue';
 import gql from 'graphql-tag';
 import LoadingIndicator from './shared/LoadingIndicator.vue';
+import CodeBox from './shared/CodeBox.vue';
 
 export default {
   name: 'BuildNotesPage',
-  components: {LoadingIndicator, BuildSummaryCard},
+  components: {CodeBox, LoadingIndicator, BuildSummaryCard},
 
   props: {
     buildId: {
