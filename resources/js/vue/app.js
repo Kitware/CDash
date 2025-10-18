@@ -35,6 +35,7 @@ const ProjectMembersPage = Vue.defineAsyncComponent(() => import('./components/P
 const UsersPage = Vue.defineAsyncComponent(() => import('./components/UsersPage.vue'));
 const BuildFilesPage = Vue.defineAsyncComponent(() => import('./components/BuildFilesPage.vue'));
 const BuildTargetsPage = Vue.defineAsyncComponent(() => import('./components/BuildTargetsPage.vue'));
+const BuildCommandsPage = Vue.defineAsyncComponent(() => import('./components/BuildCommandsPage.vue'));
 const CoverageFilePage = Vue.defineAsyncComponent(() => import('./components/CoverageFilePage.vue'));
 
 const cdash_components = {
@@ -59,6 +60,7 @@ const cdash_components = {
   UsersPage,
   BuildFilesPage,
   BuildTargetsPage,
+  BuildCommandsPage,
   CoverageFilePage,
 };
 

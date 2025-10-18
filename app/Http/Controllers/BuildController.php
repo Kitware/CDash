@@ -32,6 +32,18 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 final class BuildController extends AbstractBuildController
 {
+    public function commands(int $build_id): View
+    {
+        $this->setBuildById($build_id);
+
+        $filters = json_decode(request()->get('filters')) ?? ['all' => []];
+
+        return $this->vue('build-commands-page', 'Commands', [
+            'build-id' => $this->build->Id,
+            'initial-filters' => $filters,
+        ]);
+    }
+
     public function targets(int $build_id): View
     {
         $this->setBuildById($build_id);
