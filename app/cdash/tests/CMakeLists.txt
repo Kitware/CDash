@@ -347,6 +347,8 @@ add_browser_test(/Browser/Pages/BuildNotesPageTest)
 
 add_browser_test(/Browser/Pages/BuildTargetsPageTest)
 
+add_browser_test(/Browser/Pages/BuildTestsPageTest)
+
 add_php_test(image)
 set_tests_properties(image PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 

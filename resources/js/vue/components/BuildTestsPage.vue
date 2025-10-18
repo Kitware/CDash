@@ -9,7 +9,7 @@
       :execute-query-link="executeQueryLink"
       @change-filters="filters => changedFilters = filters"
     />
-    <loading-indicator :is-loading="!build">
+    <loading-indicator :is-loading="!tests">
       <data-table
         :columns="[
           {
@@ -33,6 +33,7 @@
         :rows="formattedTestRows"
         :full-width="true"
         initial-sort-column="status"
+        test-id="tests-table"
       />
     </loading-indicator>
   </div>
@@ -69,12 +70,12 @@ export default {
   },
 
   apollo: {
-    build: {
+    tests: {
       query: gql`
-        query($buildid: ID, $filters: BuildTestsFiltersMultiFilterInput, $after: String) {
+        query($buildid: ID, $filters: BuildTestsFiltersMultiFilterInput) {
           build(id: $buildid) {
             id
-            tests(filters: $filters, after: $after, first: 100) {
+            tests(filters: $filters, first: 1000000) {
               edges {
                 node {
                   id
@@ -84,31 +85,38 @@ export default {
                   runningTime
                 }
               }
-              pageInfo {
-                hasNextPage
-                hasPreviousPage
-                startCursor
-                endCursor
+            }
+            children(first: 100000) {
+              edges {
+                node {
+                  id
+                  tests(filters: $filters, first: 1000000) {
+                    edges {
+                      node {
+                        id
+                        name
+                        status
+                        details
+                        runningTime
+                      }
+                    }
+                  }
+                }
               }
             }
           }
         }
       `,
+      update: (data) => {
+        let tests = [...data.build.tests.edges];
+        data.build.children.edges.forEach((child) => tests = tests.concat(child.node.tests.edges));
+        return tests;
+      },
       variables() {
         return {
           buildid: this.buildId,
           filters: this.initialFilters,
-          after: '',
         };
-      },
-      result({data}) {
-        if (data && data.build.tests.pageInfo.hasNextPage) {
-          this.$apollo.queries.build.fetchMore({
-            variables: {
-              after: data.build.tests.pageInfo.endCursor,
-            },
-          });
-        }
       },
     },
   },
@@ -125,7 +133,7 @@ export default {
     },
 
     formattedTestRows() {
-      return this.build.tests.edges?.map(edge => {
+      return this.tests?.map(edge => {
         return {
           name: {
             value: edge.node.name,
