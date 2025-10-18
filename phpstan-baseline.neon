@@ -753,7 +753,7 @@ parameters:
 		-
 			rawMessage: 'Parameter #1 $json of function json_decode expects string, mixed given.'
 			identifier: argument.type
-			count: 2
+			count: 3
 			path: app/Http/Controllers/BuildController.php
 
 		-
