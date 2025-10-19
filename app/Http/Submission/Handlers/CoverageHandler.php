@@ -229,7 +229,7 @@ class CoverageHandler extends AbstractXmlHandler
                     break;
             }
         } elseif ($element === 'LABEL') {
-            $this->Label->SetText($data);
+            $this->Label->Text = $data;
         }
     }
 }

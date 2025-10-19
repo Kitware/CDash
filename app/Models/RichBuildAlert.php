@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
@@ -48,5 +49,13 @@ class RichBuildAlert extends Model
     public function details(): HasOne
     {
         return $this->hasOne(RichBuildAlertDetails::class, 'id', 'detailsid');
+    }
+
+    /**
+     * @return BelongsToMany<Label, $this>
+     */
+    public function labels(): BelongsToMany
+    {
+        return $this->belongsToMany(Label::class, 'label2buildfailure', 'buildfailureid', 'labelid');
     }
 }

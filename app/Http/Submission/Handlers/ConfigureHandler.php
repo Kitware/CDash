@@ -310,7 +310,7 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
                 }
             }
             if (empty($subproject_name)) {
-                $this->Label->SetText($data);
+                $this->Label->Text = $data;
             }
         }
     }

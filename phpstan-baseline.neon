@@ -537,7 +537,7 @@ parameters:
 		-
 			rawMessage: 'Argument of an invalid type array|false supplied for foreach, only iterables are supported.'
 			identifier: foreach.nonIterable
-			count: 7
+			count: 6
 			path: app/Http/Controllers/BuildController.php
 
 		-
@@ -687,12 +687,6 @@ parameters:
 		-
 			rawMessage: 'Method App\Http\Controllers\BuildController::buildOverview() never returns Illuminate\Http\RedirectResponse so it can be removed from the return type.'
 			identifier: return.unusedType
-			count: 1
-			path: app/Http/Controllers/BuildController.php
-
-		-
-			rawMessage: 'Only booleans are allowed in &&, array|false given on the left side.'
-			identifier: booleanAnd.leftNotBoolean
 			count: 1
 			path: app/Http/Controllers/BuildController.php
 
@@ -11686,12 +11680,6 @@ parameters:
 			path: app/cdash/app/Model/Label.php
 
 		-
-			rawMessage: 'Method CDash\Model\Label::GetTextFromBuildFailure() return type has no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/app/Model/Label.php
-
-		-
 			rawMessage: 'Method CDash\Model\Label::Insert() has no return type specified.'
 			identifier: missingType.return
 			count: 1
@@ -11713,12 +11701,6 @@ parameters:
 			rawMessage: Property CDash\Model\Label::$Id has no type specified.
 			identifier: missingType.property
 			count: 1
-			path: app/cdash/app/Model/Label.php
-
-		-
-			rawMessage: Variable property access on mixed.
-			identifier: property.dynamicName
-			count: 2
 			path: app/cdash/app/Model/Label.php
 
 		-
