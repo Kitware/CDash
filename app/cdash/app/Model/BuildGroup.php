@@ -29,7 +29,6 @@ class BuildGroup
     public const EXPERIMENTAL = 'Experimental';
 
     private int $Position = 0;
-    private Database $PDO;
     /** @var EloquentBuildGroup */
     private $eloquent_model;
 
@@ -46,8 +45,6 @@ class BuildGroup
             'includesubprojectotal' => 1,
             'emailcommitters' => 0,
         ]);
-
-        $this->PDO = Database::getInstance();
     }
 
     /** Get the id */
@@ -128,11 +125,6 @@ class BuildGroup
             return false;
         }
         return $this->eloquent_model->starttime;
-    }
-
-    public function SetEndTime(Carbon $time): void
-    {
-        $this->eloquent_model->endtime = $time;
     }
 
     /** Get/Set the autoremove timeframe */
@@ -347,7 +339,7 @@ class BuildGroup
         }
 
         // We delete all the build2grouprule associated with the group
-        DB::delete('DELETE FROM build2grouprule WHERE groupid=?', [$this->eloquent_model->id]);
+        $this->eloquent_model->rules()->delete();
 
         // We delete the buildgroup
         $this->eloquent_model->delete();
@@ -503,17 +495,19 @@ class BuildGroup
     /** Get the active rules for this build group. */
     public function GetRules(): array|false
     {
-        $stmt = $this->PDO->prepare("
-                SELECT * FROM build2grouprule
-                WHERE groupid = :groupid AND
-                      endtime = '1980-01-01 00:00:00'");
-        if ($stmt === false || !$this->PDO->execute($stmt, [':groupid' => $this->eloquent_model->id])) {
-            return false;
-        }
         $rules = [];
-        while ($row = $stmt->fetch()) {
+        /** @var \App\Models\BuildGroupRule $eloquent_rule */
+        foreach ($this->eloquent_model->rules()->active()->get() as $eloquent_rule) {
             $rule = new BuildGroupRule();
-            $rule->FillFromRow($row, $this->eloquent_model->projectid);
+            $rule->ProjectId = $this->eloquent_model->projectid;
+            $rule->BuildName = $eloquent_rule->buildname;
+            $rule->BuildType = $eloquent_rule->buildtype;
+            $rule->EndTime = $eloquent_rule->endtime;
+            $rule->Expected = $eloquent_rule->expected;
+            $rule->GroupId = $eloquent_rule->groupid;
+            $rule->ParentGroupId = $eloquent_rule->parentgroupid;
+            $rule->SiteId = $eloquent_rule->siteid;
+            $rule->StartTime = $eloquent_rule->starttime;
             $rules[] = $rule;
         }
         return $rules;

@@ -107,9 +107,7 @@ function rest_delete(): void
         $buildgrouprule->BuildName =
             isset($wildcard['match']) ? convert_wildcards($wildcard['match']) : '';
         $buildgrouprule->GroupId = $wildcard['buildgroupid'];
-        if (!$buildgrouprule->Delete(true)) {
-            abort(500, 'Something went wrong...');
-        }
+        $buildgrouprule->Delete(true);
     }
 
     if (isset($_GET['dynamic'])) {
@@ -132,9 +130,7 @@ function rest_delete(): void
             $buildgrouprule->ParentGroupId = $parentgroupid;
         }
 
-        if (!$buildgrouprule->Delete(true)) {
-            abort(500, 'Something went wrong...');
-        }
+        $buildgrouprule->Delete(true);
     }
 }
 
