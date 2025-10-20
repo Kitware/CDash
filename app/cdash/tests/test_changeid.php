@@ -2,9 +2,12 @@
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 use CDash\Database;
+use Tests\Traits\CreatesProjects;
 
 class ChangeIdTestCase extends KWWebTestCase
 {
+    use CreatesProjects;
+
     protected $ProjectId;
 
     public function __construct()
@@ -15,26 +18,18 @@ class ChangeIdTestCase extends KWWebTestCase
 
     public function testChangeId(): void
     {
-        $this->login();
-
-        // Create a project for this test.
-        $settings = [
-            'Name' => 'ChangeIdProject',
-            'Description' => 'ChangeIdProject',
-            'CvsUrl' => 'github.com/Kitware/ChangeIdProject',
-            'CvsViewerType' => 'github',
-        ];
-        $this->ProjectId = $this->createProject($settings);
-        if ($this->ProjectId < 1) {
-            $this->fail('Failed to create project');
-            return;
-        }
+        $project = $this->makePublicProject();
+        $this->ProjectId = $project->id;
+        $project->save([
+            'cvsurl' => 'github.com/Kitware/ChangeIdProject',
+            'cvsviewertype' => 'github',
+        ]);
 
         // Submit our testing data.
         $dir = dirname(__FILE__) . '/data/GithubPR';
-        $this->submission('ChangeIdProject', "$dir/UpdateBug_Build.xml");
-        $this->submission('ChangeIdProject', "$dir/UpdateBug_Test.xml");
-        $this->submission('ChangeIdProject', "$dir/Update.xml");
+        $this->submission($project->name, "$dir/UpdateBug_Build.xml");
+        $this->submission($project->name, "$dir/UpdateBug_Test.xml");
+        $this->submission($project->name, "$dir/Update.xml");
 
         // Make sure the builds have a changeid associated with them.
         $db = Database::getInstance();
@@ -46,6 +41,7 @@ class ChangeIdTestCase extends KWWebTestCase
             $this->assertEqual($row['changeid'], 555);
             $this->assertEqual($row['generator'], 'ctest-3.14.0-rc1');
         }
-        $this->deleteProject($this->ProjectId);
+
+        $project->delete();
     }
 }
