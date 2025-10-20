@@ -709,17 +709,16 @@ class Project
             throw new RuntimeException('ID not set for project');
         }
 
-        $query = DB::select("
-                     SELECT id
-                     FROM subprojectgroup
-                     WHERE projectid=? AND endtime='1980-01-01 00:00:00'
-                 ", [(int) $this->Id]);
+        $groups = EloquentProject::findOrFail((int) $this->Id)
+            ->subProjectGroups()
+            ->where('endtime', '1980-01-01 00:00:00')
+            ->get();
 
         $subProjectGroups = [];
-        foreach ($query as $result) {
+        foreach ($groups as $group) {
             $subProjectGroup = new SubProjectGroup();
             // SetId automatically loads the rest of the group's data.
-            $subProjectGroup->SetId((int) $result->id);
+            $subProjectGroup->SetId($group->id);
             $subProjectGroups[] = $subProjectGroup;
         }
         return $subProjectGroups;
