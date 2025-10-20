@@ -2,42 +2,35 @@
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-use CDash\Model\Project;
+use App\Models\Project;
+use Tests\Traits\CreatesProjects;
 
 class NumericUpdateTestCase extends KWWebTestCase
 {
-    private $project;
+    use CreatesProjects;
+
+    private Project $project;
 
     public function __construct()
     {
         parent::__construct();
-        $this->project = null;
+        $this->project = $this->makePublicProject();
     }
 
     public function __destruct()
     {
         // Delete project & build created by this test.
-        if ($this->project) {
-            remove_project_builds($this->project->Id);
-            $this->project->Delete();
-        }
+        remove_project_builds($this->project->id);
+        $this->project->delete();
     }
 
     public function testNumericUpdate(): void
     {
-        // Create test project.
-        $this->login();
-        $this->project = new Project();
-        $this->project->Id = $this->createProject([
-            'Name' => 'NumericUpdate',
-        ]);
-        $this->project->Fill();
-
         // Submit our testing data.
-        $this->submission('NumericUpdate', dirname(__FILE__) . '/data/UpdateNumeric.xml');
+        $this->submission($this->project->name, dirname(__FILE__) . '/data/UpdateNumeric.xml');
 
         // Check index.php, make sure it shows the expected revision.
-        $this->get($this->url . '/api/v1/index.php?project=NumericUpdate&date=2020-06-01');
+        $this->get($this->url . '/api/v1/index.php?project=' . $this->project->name . '&date=2020-06-01');
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
         $buildgroup = array_pop($jsonobj['buildgroups']);

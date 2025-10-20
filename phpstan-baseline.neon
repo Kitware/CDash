@@ -25156,12 +25156,6 @@ parameters:
 			path: app/cdash/tests/test_numericupdate.php
 
 		-
-			rawMessage: Property NumericUpdateTestCase::$project has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/test_numericupdate.php
-
-		-
 			rawMessage: Binary operation "." between 'POST returned ' and mixed results in an error.
 			identifier: binaryOp.invalid
 			count: 2
