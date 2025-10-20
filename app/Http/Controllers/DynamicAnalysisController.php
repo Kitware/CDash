@@ -223,8 +223,7 @@ final class DynamicAnalysisController extends AbstractBuildController
         $DA_response['filename'] = $DA->Name;
         // Only display the first 1MB of the log (in case it's huge)
         $DA_response['log'] = substr($DA->Log, 0, 1024 * 1024);
-        $href = "testSummary.php?project={$this->project->Id}&name=$DA->Name&date=$date";
-        $DA_response['href'] = $href;
+        $DA_response['href'] = "queryTests.php?project={$this->project->Name}&filtercount=1&showfilters=1&field1=testname&compare1=61&value1={$DA->Name}&date={$this->date}";
         $response['dynamicanalysis'] = $DA_response;
 
         $pageTimer->end($response);

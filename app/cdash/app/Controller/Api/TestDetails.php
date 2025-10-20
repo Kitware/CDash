@@ -121,8 +121,6 @@ class TestDetails extends BuildTestApi
 
         $response['menu'] = $menu;
 
-        $summaryLink = "testSummary.php?project={$this->project->Id}&name={$testName}&date={$this->date}";
-
         $test_response = [];
         $test_response['buildid'] = $this->build->Id;
         $test_response['build'] = $this->build->Name;
@@ -141,7 +139,7 @@ class TestDetails extends BuildTestApi
             $test_response['labels'] = '';
         }
 
-        $test_response['summaryLink'] = $summaryLink;
+        $test_response['summaryLink'] = "queryTests.php?project={$this->project->Name}&filtercount=1&showfilters=1&field1=testname&compare1=61&value1={$testName}&date={$this->date}";
         switch ($testRow['status']) {
             case 'passed':
                 $test_response['status'] = 'Passed';

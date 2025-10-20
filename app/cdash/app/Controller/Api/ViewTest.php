@@ -358,7 +358,7 @@ class ViewTest extends BuildApi
 
         // Generate a response for each test found.
         while ($row = $stmt->fetch()) {
-            $marshaledTest = self::marshal($row, $row['buildid'], $this->build->ProjectId, $this->project->ShowTestTime, $this->project->TestTimeMaxStatus, $testdate);
+            $marshaledTest = self::marshal($row, $row['buildid'], $this->project->Name, $this->project->ShowTestTime, $this->project->TestTimeMaxStatus, $testdate);
 
             if ($marshaledTest['status'] === 'Passed') {
                 $numPassed++;
@@ -395,7 +395,7 @@ class ViewTest extends BuildApi
 
         if ($numMissing > 0) {
             foreach ($this->build->MissingTests as $name) {
-                $marshaledTest = self::marshalMissing($name, $buildid, $this->build->ProjectId, $this->project->ShowTestTime, $this->project->TestTimeMaxStatus, $testdate);
+                $marshaledTest = self::marshalMissing($name, $buildid, $this->project->Name, $this->project->ShowTestTime, $this->project->TestTimeMaxStatus, $testdate);
                 array_unshift($tests, $marshaledTest);
             }
         }
@@ -643,7 +643,7 @@ class ViewTest extends BuildApi
     /**
      * Marshal functions moved here from the old BuildTest model class.
      */
-    public static function marshalMissing($name, $buildid, $projectid, $projectshowtesttime, $testtimemaxstatus, $testdate): array
+    public static function marshalMissing($name, $buildid, $projectname, $projectshowtesttime, $testtimemaxstatus, $testdate): array
     {
         $data = [];
         $data['testname'] = $name;
@@ -654,7 +654,7 @@ class ViewTest extends BuildApi
         $data['details'] = '';
         $data['newstatus'] = false;
 
-        $test = self::marshal($data, $buildid, $projectid, $projectshowtesttime, $testtimemaxstatus, $testdate);
+        $test = self::marshal($data, $buildid, $projectname, $projectshowtesttime, $testtimemaxstatus, $testdate);
 
         // Since these tests are missing they should
         // not behave like other tests
@@ -676,7 +676,7 @@ class ViewTest extends BuildApi
         return $statuses[$status];
     }
 
-    public static function marshal($data, $buildid, $projectid, $projectshowtesttime, $testtimemaxstatus, $testdate): array
+    public static function marshal($data, $buildid, $projectname, $projectshowtesttime, $testtimemaxstatus, $testdate): array
     {
         $marshaledStatus = self::marshalStatus($data['status']);
         if ($data['details'] === 'Disabled') {
@@ -691,7 +691,7 @@ class ViewTest extends BuildApi
             'execTime' => time_difference($data['time'], true, '', true),
             'execTimeFull' => floatval($data['time']),
             'details' => $data['details'],
-            'summaryLink' => "testSummary.php?project=$projectid&name=" . urlencode($data['testname']) . "&date=$testdate",
+            'summaryLink' => "queryTests.php?project={$projectname}&filtercount=1&showfilters=1&field1=testname&compare1=61&value1=" . urlencode($data['testname']) . "&date={$testdate}",
             'summary' => 'Summary', /* Default value later replaced by AJAX */
             'detailsLink' => "tests/{$data['buildtestid']}",
         ];

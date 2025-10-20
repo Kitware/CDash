@@ -49,7 +49,7 @@ beforeEach(() => {
       environment: 'foo=bar',
       labels: 'label1, label2, label3',
       output: '\u001b[32mHello world!\n\u001b[91m<script type="text\/javascript">console.log("MALICIOUS JAVASCRIPT!!!");<\/script>\n\u001b[0mGood bye world!\n',
-      summaryLink: 'testSummary.php?project=1&name=my-test',
+      summaryLink: 'queryTests.php?project=TimeStatus&filtercount=1&showfilters=1&field1=testname&compare1=61&value1=nap&date=2018-01-25',
       status: 'Failed',
       statusColor: 'error-text',
       update: {
@@ -136,7 +136,7 @@ lines</pre>`);
   // Verify links.
   const summary_link = component.find('#summary_link');
   expect(summary_link.text()).toBe('my-test');
-  expect(summary_link.attributes('href')).toMatch('/testSummary.php?project=1&name=my-test');
+  expect(summary_link.attributes('href')).toMatch('/queryTests.php?project=TimeStatus&filtercount=1&showfilters=1&field1=testname&compare1=61&value1=nap&date=2018-01-25');
 
   const build_link = component.find('#build_link');
   expect(build_link.text()).toBe('my build');

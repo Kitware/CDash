@@ -89,7 +89,6 @@
           Use the form above to add test measurements of type <span class="text-monospace">numeric/double</span> or <span class="text-monospace">text/string</span>. Any measurement added here will be displayed as an extra column on the following pages:
           <ul>
             <li><span class="text-monospace">queryTests.php</span></li>
-            <li><span class="text-monospace">testSummary.php</span></li>
             <li><span class="text-monospace">viewTest.php</span></li>
           </ul>
         </li>

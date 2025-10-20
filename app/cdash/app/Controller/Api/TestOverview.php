@@ -191,8 +191,7 @@ class TestOverview extends ResultsApi
                 round(($test['failed'] / $total_runs) * 100, 2);
             $test_response['timeoutpercent'] =
                 round(($test['timeout'] / $total_runs) * 100, 2);
-            $test_response['link'] =
-                "testSummary.php?project={$this->project->Id}&name=$name&date=$this->date";
+            $test_response['link'] = "queryTests.php?project={$this->project->Name}&filtercount=1&showfilters=1&field1=testname&compare1=61&value1={$name}&date={$this->date}";
             $test_response['totalruns'] = $total_runs;
             $test_response['prettytime'] = time_difference($test['time'], true, '', true);
             $test_response['time'] = $test['time'];

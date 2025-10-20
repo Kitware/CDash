@@ -57,10 +57,6 @@ class TestGraphPermissionsTestCase extends KWWebTestCase
         if ($response['error'] !== 'You do not have access to the requested project or the requested project does not exist.') {
             $this->fail('Unauthorized case #2 fails');
         }
-        $response = $this->get($this->url . "/ajax/showtestfailuregraph.php?testname=itkVectorSegmentationLevelSetFunctionTest1&projectid={$this->project}&starttime=1235350800");
-        if (str_contains($response, 'You are not authorized to view this page.')) {
-            $this->fail('Unauthorized case #3 fails');
-        }
 
         // Login and make sure we can see the graphs now.
         $this->login();
@@ -71,12 +67,6 @@ class TestGraphPermissionsTestCase extends KWWebTestCase
         $response = json_decode($this->get($this->url . "/api/v1/testGraph.php?buildid={$this->build}&testname=$testname&type=status"), true);
         if (array_key_exists('requirelogin', $response)) {
             $this->fail('Authorized case #2 fails');
-        }
-
-        // A horrible hack to make sure a real page was rendered
-        $response = $this->get($this->url . "/ajax/showtestfailuregraph.php?testname=itkVectorSegmentationLevelSetFunctionTest1&projectid={$this->project}&starttime=1235350800");
-        if (!str_contains($response, '</script>')) {
-            $this->fail('Authorized case #3 fails');
         }
     }
 }
