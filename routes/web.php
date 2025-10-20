@@ -114,6 +114,9 @@ Route::get('/viewDynamicAnalysis.php', function (Request $request) {
 Route::get('/builds/{build_id}/targets', 'BuildController@targets')
     ->whereNumber('build_id');
 
+Route::get('/builds/{build_id}/commands', 'BuildController@commands')
+    ->whereNumber('build_id');
+
 Route::get('/builds/{build_id}/files', 'BuildController@files')
     ->whereNumber('build_id');
 Route::permanentRedirect('/build/{build_id}/files', url('/builds/{build_id}/files'));
