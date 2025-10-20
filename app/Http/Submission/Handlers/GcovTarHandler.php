@@ -386,7 +386,7 @@ class GcovTarHandler extends AbstractSubmissionHandler
         if (array_key_exists($path, $this->Labels)) {
             foreach ($this->Labels[$path] as $labelText) {
                 $label = new Label();
-                $label->SetText($labelText);
+                $label->Text = $labelText;
                 $coverage->AddLabel($label);
             }
         }
@@ -489,7 +489,7 @@ class GcovTarHandler extends AbstractSubmissionHandler
         if (array_key_exists($path, $this->Labels)) {
             foreach ($this->Labels[$path] as $labelText) {
                 $label = new Label();
-                $label->SetText($labelText);
+                $label->Text = $labelText;
                 $coverage->AddLabel($label);
             }
         }

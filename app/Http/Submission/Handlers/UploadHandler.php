@@ -307,7 +307,7 @@ class UploadHandler extends AbstractXmlHandler
         } elseif ($parent === 'UPLOAD' && $element === 'TIME') {
             $this->Timestamp = (int) $data;
         } elseif ($element === 'LABEL') {
-            $this->Label->SetText($data);
+            $this->Label->Text = $data;
         }
     }
 

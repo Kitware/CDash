@@ -57,7 +57,7 @@ class RemoveBuildsTestCase extends KWWebTestCase
 
         // Label
         $label = new Label();
-        $label->SetText('remove me');
+        $label->Text = 'remove me';
 
         // Build
         $build = new Build();

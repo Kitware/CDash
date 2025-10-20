@@ -313,7 +313,7 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
                 }
             }
             if (is_a($this->Label, Label::class)) {
-                $this->Label->SetText($data);
+                $this->Label->Text = $data;
                 $this->Labels[] = $this->Label;
             }
         }

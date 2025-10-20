@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Build as EloquentBuild;
 use App\Models\BuildUpdateFile;
 use App\Models\Comment;
+use App\Models\RichBuildAlert;
 use App\Models\UploadFile;
 use App\Models\User;
 use App\Utils\DatabaseCleanupUtils;
@@ -18,7 +19,6 @@ use CDash\Model\BuildError;
 use CDash\Model\BuildFailure;
 use CDash\Model\BuildGroupRule;
 use CDash\Model\BuildRelationship;
-use CDash\Model\Label;
 use CDash\ServiceContainer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -220,15 +220,7 @@ final class BuildController extends AbstractBuildController
         $build_response['lastsubmitdate'] = $lastsubmitdate;
 
         // Add labels to the response
-        // TODO: Make this more efficient by getting all of the labels right away instead of the labelids
-        $labelids = $this->build->GetLabels();
-        $labels = [];
-        foreach ($labelids as $labelid) {
-            $label = new Label();
-            $label->Id = $labelid;
-            $labels[] = $label->GetText();
-        }
-        $build_response['labels'] = $labels;
+        $build_response['labels'] = $eloquent_build->labels()->pluck('text')->toArray();
 
         $e_errors = $this->build->GetErrors(['type' => Build::TYPE_ERROR]);
         $e_warnings = $this->build->GetErrors(['type' => Build::TYPE_WARN]);
@@ -963,15 +955,9 @@ final class BuildController extends AbstractBuildController
                 $failure = BuildFailure::marshal($fail, $this->project, $revision, true, $buildfailure);
 
                 if ($this->project->DisplayLabels) {
-                    /** @var Label $label */
-                    $label = $service->get(Label::class);
-                    $label->BuildFailureId = $fail['id'];
-                    $rows = $label->GetTextFromBuildFailure();
-                    if ($rows && count($rows) > 0) {
-                        $failure['labels'] = [];
-                        foreach ($rows as $row) {
-                            $failure['labels'][] = $row->text;
-                        }
+                    $labels = RichBuildAlert::findOrFail((int) $fail['id'])->labels()->pluck('text');
+                    if ($labels->count() > 0) {
+                        $failure['labels'] = $labels->toArray();
                     }
                 }
                 $this->addErrorResponse($failure, $response);

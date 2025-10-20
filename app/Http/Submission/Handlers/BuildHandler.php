@@ -494,7 +494,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
                     }
                     if (!$hasLabel) {
                         $label = $factory->create(Label::class);
-                        $label->SetText($this->SubProjectName);
+                        $label->Text = $this->SubProjectName;
                         $this->Error->AddLabel($label);
                     }
                 }
@@ -645,7 +645,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
                 }
             }
             if (empty($this->ErrorSubProjectName)) {
-                $this->Label->SetText($data);
+                $this->Label->Text = $data;
             }
         } elseif (
             $this->currentPathMatches('site.build.commands.*.namedmeasurement.value')

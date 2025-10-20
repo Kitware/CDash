@@ -261,7 +261,7 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
                 }
             }
             if (empty($this->TestSubProjectName)) {
-                $this->Label->SetText($data);
+                $this->Label->Text = $data;
             }
         }
     }

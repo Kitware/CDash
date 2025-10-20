@@ -183,7 +183,7 @@ class CoverageJUnitHandler extends AbstractXmlHandler
     {
         $element = $this->getElement();
         if ($element === 'LABEL') {
-            $this->Label->SetText($data);
+            $this->Label->Text = $data;
         }
     }
 }
