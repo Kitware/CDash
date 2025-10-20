@@ -17,45 +17,33 @@
 
 namespace CDash\Model;
 
+use App\Models\BuildGroup;
+use App\Models\BuildGroupRule as EloquentBuildGroupRule;
 use CDash\Database;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 
 class BuildGroupRule
 {
-    public $BuildName;
-    public $BuildType;
-    public $EndTime;
-    public $Expected;
-    public $GroupId;
-    public $ParentGroupId;
-    public $ProjectId;
-    public $SiteId;
-    public $StartTime;
-
-    private $PDO;
+    public $BuildName = '';
+    public $BuildType = '';
+    public $EndTime = '1980-01-01 00:00:00';
+    public $Expected = 0;
+    public $GroupId = 0;
+    public $ParentGroupId = 0;
+    public $ProjectId = 0;
+    public $SiteId = 0;
+    public $StartTime = '1980-01-01 00:00:00';
 
     public function __construct(?Build $build = null)
     {
-        if (!is_null($build)) {
+        if ($build !== null) {
             $this->BuildType = $build->Type;
             $this->BuildName = $build->Name;
             $this->SiteId = $build->SiteId;
             $this->GroupId = $build->GroupId;
             $this->ProjectId = $build->ProjectId;
-        } else {
-            $this->BuildType = '';
-            $this->BuildName = '';
-            $this->SiteId = 0;
-            $this->GroupId = 0;
-            $this->ProjectId = 0;
         }
-        $this->Expected = 0;
-        $this->StartTime = '1980-01-01 00:00:00';
-        $this->EndTime = '1980-01-01 00:00:00';
-        $this->ParentGroupId = 0;
-
-        $this->PDO = Database::getInstance();
     }
 
     /** Check if the rule already exists */
@@ -66,28 +54,14 @@ class BuildGroupRule
             return false;
         }
 
-        $stmt = $this->PDO->prepare(
-            'SELECT count(*) AS c FROM build2grouprule
-            WHERE groupid       = :groupid AND
-                  parentgroupid = :parentgroupid AND
-                  buildtype     = :buildtype AND
-                  buildname     = :buildname AND
-                  siteid        = :siteid AND
-                  endtime       = :endtime');
-        $query_params = [
-            ':groupid' => $this->GroupId,
-            ':parentgroupid' => $this->ParentGroupId,
-            ':buildtype' => $this->BuildType,
-            ':buildname' => $this->BuildName,
-            ':siteid' => $this->SiteId,
-            ':endtime' => $this->EndTime,
-        ];
-
-        $this->PDO->execute($stmt, $query_params);
-        if ($stmt->fetchColumn() == 0) {
-            return false;
-        }
-        return true;
+        return EloquentBuildGroupRule::where([
+            'groupid' => $this->GroupId,
+            'parentgroupid' => $this->ParentGroupId,
+            'buildtype' => (string) $this->BuildType,
+            'buildname' => $this->BuildName,
+            'siteid' => $this->SiteId,
+            'endtime' => $this->EndTime,
+        ])->exists();
     }
 
     /** Insert this rule into the database. */
@@ -101,24 +75,18 @@ class BuildGroupRule
         }
 
         if (!$this->Exists()) {
-            $stmt = $this->PDO->prepare(
-                'INSERT INTO build2grouprule
-                    (groupid, parentgroupid, buildtype, buildname, siteid,
-                     expected, starttime, endtime)
-                 VALUES
-                    (:groupid, :parentgroupid, :buildtype, :buildname, :siteid,
-                     :expected, :starttime, :endtime)');
-            $query_params = [
-                ':groupid' => $this->GroupId,
-                ':parentgroupid' => $this->ParentGroupId,
-                ':buildtype' => $this->BuildType,
-                ':buildname' => $this->BuildName,
-                ':siteid' => $this->SiteId,
-                ':expected' => $this->Expected,
-                ':starttime' => $this->StartTime,
-                ':endtime' => $this->EndTime,
-            ];
-            return $this->PDO->execute($stmt, $query_params);
+            EloquentBuildGroupRule::create([
+                'groupid' => $this->GroupId,
+                'parentgroupid' => $this->ParentGroupId,
+                'buildtype' => (string) $this->BuildType,
+                'buildname' => $this->BuildName,
+                'siteid' => $this->SiteId,
+                'expected' => $this->Expected,
+                'starttime' => $this->StartTime,
+                'endtime' => $this->EndTime,
+            ]);
+
+            return true;
         }
         return false;
     }
@@ -131,130 +99,101 @@ class BuildGroupRule
         }
 
         // Otherwise update an existing row.
-        $stmt = $this->PDO->prepare(
-            "UPDATE build2grouprule SET expected = :expected
-            WHERE groupid   = :groupid AND
-                  buildtype = :buildtype AND
-                  buildname = :buildname AND
-                  siteid    = :siteid AND
-                  endtime   = '1980-01-01 00:00:00'");
-        return $this->PDO->execute($stmt, [
-            ':expected' => $this->Expected,
-            ':groupid' => $this->GroupId,
-            ':buildtype' => $this->BuildType,
-            ':buildname' => $this->BuildName,
-            ':siteid' => $this->SiteId]);
+        EloquentBuildGroupRule::where([
+            'groupid' => $this->GroupId,
+            // Are we missing parentgroupid?
+            'buildtype' => (string) $this->BuildType,
+            'buildname' => $this->BuildName,
+            'siteid' => $this->SiteId,
+            'endtime' => '1980-01-01 00:00:00',
+        ])->update([
+            'expected' => $this->Expected,
+        ]);
+
+        return true;
     }
 
     public function GetExpected(): int
     {
-        $stmt = $this->PDO->prepare(
-            'SELECT expected FROM build2grouprule
-            WHERE groupid   = :groupid   AND
-                  buildtype = :buildtype AND
-                  buildname = :buildname AND
-                  siteid    = :siteid    AND
-                  endtime   = :endtime');
-        $this->PDO->execute($stmt, [
-            ':groupid' => $this->GroupId,
-            ':buildtype' => $this->BuildType,
-            ':buildname' => $this->BuildName,
-            ':siteid' => $this->SiteId,
-            ':endtime' => $this->EndTime]);
-        return $stmt->fetchColumn() ? 1 : 0;
+        return EloquentBuildGroupRule::firstWhere([
+            'groupid' => $this->GroupId,
+            // Are we missing parentgroupid?
+            'buildtype' => (string) $this->BuildType,
+            'buildname' => $this->BuildName,
+            'siteid' => $this->SiteId,
+            'endtime' => '1980-01-01 00:00:00',
+        ])->expected ?? 0;
     }
 
     /** Delete a rule */
-    public function Delete($soft = true): bool
+    public function Delete($soft = true): void
     {
         if ($soft) {
-            return $this->SoftDelete();
+            $this->SoftDelete();
         } else {
-            return $this->HardDelete();
+            $this->HardDelete();
         }
     }
 
     /** Soft delete (mark a build rule as finished). */
-    private function SoftDelete(): bool
+    private function SoftDelete(): void
     {
-        $now = gmdate(FMT_DATETIME);
-        $stmt = $this->PDO->prepare(
-            'UPDATE build2grouprule
-            SET endtime = :endtime
-            WHERE groupid       = :groupid AND
-                  parentgroupid = :parentgroupid AND
-                  buildtype     = :buildtype AND
-                  buildname     = :buildname AND
-                  siteid        = :siteid AND
-                  endtime       = :begin_epoch');
-        $query_params = [
-            ':endtime' => $now,
-            ':groupid' => $this->GroupId,
-            ':parentgroupid' => $this->ParentGroupId,
-            ':buildtype' => $this->BuildType,
-            ':buildname' => $this->BuildName,
-            ':siteid' => $this->SiteId,
-            ':begin_epoch' => '1980-01-01 00:00:00',
-        ];
-        return $this->PDO->execute($stmt, $query_params);
+        EloquentBuildGroupRule::where([
+            'groupid' => $this->GroupId,
+            'parentgroupid' => $this->ParentGroupId,
+            'buildtype' => (string) $this->BuildType,
+            'buildname' => $this->BuildName,
+            'siteid' => $this->SiteId,
+            'endtime' => '1980-01-01 00:00:00',
+        ])->update([
+            'endtime' => Carbon::now(),
+        ]);
     }
 
     /** Hard delete (remove a build rule from the database). */
-    private function HardDelete(): bool
+    private function HardDelete(): void
     {
-        $stmt = $this->PDO->prepare(
-            'DELETE FROM build2grouprule
-                WHERE groupid       = :groupid AND
-                      parentgroupid = :parentgroupid AND
-                      buildtype     = :buildtype AND
-                      buildname     = :buildname AND
-                      siteid        = :siteid AND
-                      expected      = :expected AND
-                      starttime     = :starttime AND
-                      endtime       = :endtime');
-        $query_params = [
-            ':groupid' => $this->GroupId,
-            ':parentgroupid' => $this->ParentGroupId,
-            ':buildtype' => $this->BuildType,
-            ':buildname' => $this->BuildName,
-            ':siteid' => $this->SiteId,
-            ':expected' => $this->Expected,
-            ':starttime' => $this->StartTime,
-            ':endtime' => $this->EndTime,
-        ];
-        return $this->PDO->execute($stmt, $query_params);
+        EloquentBuildGroupRule::where([
+            'groupid' => $this->GroupId,
+            'parentgroupid' => $this->ParentGroupId,
+            'buildtype' => (string) $this->BuildType,
+            'buildname' => $this->BuildName,
+            'siteid' => $this->SiteId,
+            'expected' => $this->Expected,
+            'starttime' => $this->StartTime,
+            'endtime' => $this->EndTime,
+        ])->delete();
     }
 
     /** Soft delete all active previous versions of this rule. */
     public function SoftDeleteExpiredRules($now): void
     {
-        $stmt = $this->PDO->prepare(
-            "UPDATE build2grouprule
-            SET endtime = :endtime
-            WHERE buildtype = :buildtype AND
-                  buildname = :buildname AND
-                  siteid    = :siteid AND
-                  endtime   = '1980-01-01 00:00:00' AND
-                  groupid IN
-                      (SELECT id FROM buildgroup WHERE projectid = :projectid)");
-        $this->PDO->execute($stmt, [
-            ':endtime' => $now,
-            ':projectid' => $this->ProjectId,
-            ':buildtype' => $this->BuildType,
-            ':buildname' => $this->BuildName,
-            ':siteid' => $this->SiteId]);
+        $groupids = BuildGroup::where('projectid', (int) $this->ProjectId)
+            ->pluck('id')
+            ->toArray();
+        EloquentBuildGroupRule::whereIn('groupid', $groupids)
+            ->where([
+                'buildtype' => $this->BuildType,
+                'buildname' => $this->BuildName,
+                'siteid' => $this->SiteId,
+                'endtime' => '1980-01-01 00:00:00',
+            ])->update([
+                'endtime' => $now,
+            ]);
     }
 
     /** Change the group that this rule points to. */
     public function ChangeGroup($newgroupid): void
     {
-        $stmt = $this->PDO->prepare(
-            "UPDATE build2grouprule SET groupid = :newgroupid
-            WHERE groupid   = :groupid   AND
-                  buildtype = :buildtype AND
-                  buildname = :buildname AND
-                  siteid    = :siteid    AND
-                  endtime   = '1980-01-01 00:00:00'");
+        EloquentBuildGroupRule::where([
+            'groupid' => $this->GroupId,
+            'buildtype' => $this->BuildType,
+            'buildname' => $this->BuildName,
+            'siteid' => $this->SiteId,
+            'endtime' => '1980-01-01 00:00:00',
+        ])->update([
+            'groupid' => $newgroupid,
+        ]);
 
         $query_params = [
             ':newgroupid' => $newgroupid,
@@ -263,42 +202,27 @@ class BuildGroupRule
             ':buildname' => $this->BuildName,
             ':siteid' => $this->SiteId];
 
-        $this->PDO->execute($stmt, $query_params);
+        $PDO = Database::getInstance();
 
         // Move any builds that follow this rule to the new group.
-        $stmt = $this->PDO->prepare(
+        $stmt = $PDO->prepare(
             'UPDATE build2group SET groupid = :newgroupid
             WHERE groupid = :groupid AND
                   buildid IN
                   (SELECT id FROM build WHERE siteid = :siteid    AND
                                               name   = :buildname AND
                                               type   = :buildtype)');
-        $this->PDO->execute($stmt, $query_params);
+        $PDO->execute($stmt, $query_params);
     }
 
     public static function DeleteExpiredRulesForProject($projectid, $cutoff_date): void
     {
-        DB::delete("
-            DELETE FROM build2grouprule
-            WHERE groupid IN (
-                SELECT id FROM buildgroup WHERE projectid = ?
-            )
-            AND endtime != '1980-01-01 00:00:00'
-            AND endtime < ?
-        ", [$projectid, $cutoff_date]);
-    }
-
-    // Populate this object with a row from the database and a projectid.
-    public function FillFromRow($row, $projectid): void
-    {
-        $this->BuildName = $row['buildname'];
-        $this->BuildType = $row['buildtype'];
-        $this->EndTime = $row['endtime'];
-        $this->Expected = $row['expected'];
-        $this->GroupId = $row['groupid'];
-        $this->ParentGroupId = $row['parentgroupid'];
-        $this->ProjectId = $projectid;
-        $this->SiteId = $row['siteid'];
-        $this->StartTime = $row['starttime'];
+        $groupids = BuildGroup::where('projectid', (int) $projectid)
+            ->pluck('id')
+            ->toArray();
+        EloquentBuildGroupRule::whereIn('groupid', $groupids)
+            ->where('endtime', '!=', '1980-01-01 00:00:00')
+            ->where('endtime', '<', $cutoff_date)
+            ->delete();
     }
 }

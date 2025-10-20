@@ -80,4 +80,12 @@ class BuildGroup extends Model
     {
         return $this->hasMany(BuildGroupPosition::class, 'buildgroupid');
     }
+
+    /**
+     * @return HasMany<BuildGroupRule, $this>
+     */
+    public function rules(): HasMany
+    {
+        return $this->hasMany(BuildGroupRule::class, 'groupid');
+    }
 }
