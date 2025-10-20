@@ -6,9 +6,12 @@ use App\Utils\TestingDay;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\Project;
+use Tests\Traits\CreatesProjects;
 
 class ConsistentTestingDayTestCase extends KWWebTestCase
 {
+    use CreatesProjects;
+
     private $project;
 
     public function __construct()
@@ -29,13 +32,11 @@ class ConsistentTestingDayTestCase extends KWWebTestCase
     public function testConsistentTestingDay(): void
     {
         // Create test project.
-        $this->login();
         $this->project = new Project();
-        $this->project->Id = $this->createProject([
-            'Name' => 'ConsistentTestingDay',
-            'NightlyTime' => '16:30:00 America/New_York',
-        ]);
+        $this->project->Id = $this->makePublicProject('ConsistentTestingDay')->id;
         $this->project->Fill();
+        $this->project->SetNightlyTime('16:30:00 America/New_York');
+        $this->project->Save();
 
         // Submit our testing data.
         $dir = dirname(__FILE__) . '/data/TestingDay';
@@ -113,11 +114,8 @@ class ConsistentTestingDayTestCase extends KWWebTestCase
         $this->assertEqual(0, count($jsonobj['buildgroups']));
 
         // Change nightly time & time zone for this project.
-        $this->createProject([
-            'Id' => $this->project->Id,
-            'Name' => 'ConsistentTestingDay',
-            'NightlyTime' => '22:00:00 America/Denver',
-        ], true);
+        $this->project->SetNightlyTime('22:00:00 America/Denver');
+        $this->project->Save();
 
         // Submit Upload.xml file.
         $this->submission('ConsistentTestingDay', "$dir/Upload.xml");
