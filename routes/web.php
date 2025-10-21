@@ -14,6 +14,7 @@
 use App\Http\Controllers\CoverageFileController;
 use App\Http\Controllers\GlobalInvitationController;
 use App\Http\Controllers\ProjectInvitationController;
+use App\Models\DynamicAnalysis;
 use App\Models\Project;
 use App\Models\Test;
 use Illuminate\Http\Request;
@@ -109,6 +110,18 @@ Route::permanentRedirect('/build/{id}/dynamic_analysis', url('/builds/{id}/dynam
 Route::get('/viewDynamicAnalysis.php', function (Request $request) {
     $buildid = $request->query('buildid');
     return redirect("/builds/{$buildid}/dynamic_analysis", 301);
+});
+
+Route::get('/builds/{build_id}/dynamic_analysis/{file_id}', 'DynamicAnalysisController@viewDynamicAnalysisFile')
+    ->whereNumber(['build_id', 'file_id']);
+Route::get('/viewDynamicAnalysisFile.php', function (Request $request) {
+    $fileid = $request->integer('id');
+    $da_model = DynamicAnalysis::find($fileid);
+    if ($da_model === null || Gate::denies('view', $da_model->build)) {
+        abort(400, 'Unknown Build.');
+    }
+
+    return redirect("/builds/{$da_model->build?->id}/dynamic_analysis/{$fileid}", 301);
 });
 
 Route::get('/builds/{build_id}/targets', 'BuildController@targets')
@@ -251,8 +264,6 @@ Route::get('/viewSite.php', function (Request $request) {
     $siteid = $request->query('siteid');
     return redirect("/sites/$siteid", 301);
 });
-
-Route::get('/viewDynamicAnalysisFile.php', 'DynamicAnalysisController@viewDynamicAnalysisFile');
 
 Route::get('/manageBuildGroup.php', 'BuildController@manageBuildGroup');
 
