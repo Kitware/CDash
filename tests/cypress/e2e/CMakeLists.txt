@@ -29,9 +29,6 @@ set_tests_properties(cypress/e2e/query-tests PROPERTIES DEPENDS cypress/e2e/remo
 add_cypress_e2e_test(view-test)
 set_tests_properties(cypress/e2e/view-test PROPERTIES DEPENDS cypress/e2e/remove-build)
 
-add_cypress_e2e_test(test-summary)
-set_tests_properties(cypress/e2e/test-summary PROPERTIES DEPENDS cypress/e2e/remove-build)
-
 add_cypress_e2e_test(tests)
 set_tests_properties(cypress/e2e/tests PROPERTIES DEPENDS cypress/e2e/remove-build)
 

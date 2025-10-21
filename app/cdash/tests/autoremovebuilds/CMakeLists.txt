@@ -12,7 +12,6 @@ set_property(TEST deletesubproject PROPERTY DEPENDS
   cypress/e2e/expected-build
   cypress/e2e/remove-build
   cypress/e2e/view-sub-projects
-  cypress/e2e/test-summary
   cypress/e2e/query-tests
   cypress/e2e/filter-labels
   cypress/e2e/view-test-pagination

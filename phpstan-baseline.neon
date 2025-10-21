@@ -2401,21 +2401,6 @@ parameters:
 			path: app/Http/Controllers/TestController.php
 
 		-
-			rawMessage: '''
-				Call to deprecated method executePreparedSingleRow() of class CDash\Database:
-				04/22/2023  Use Laravel query builder or Eloquent instead
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/Http/Controllers/TestController.php
-
-		-
-			rawMessage: Cannot access offset 'c' on array|false|null.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/Http/Controllers/TestController.php
-
-		-
 			rawMessage: Cannot access property $buildid on mixed.
 			identifier: property.nonObject
 			count: 1
@@ -2436,7 +2421,7 @@ parameters:
 		-
 			rawMessage: Cannot cast mixed to int.
 			identifier: cast.int
-			count: 2
+			count: 1
 			path: app/Http/Controllers/TestController.php
 
 		-
@@ -2454,7 +2439,7 @@ parameters:
 		-
 			rawMessage: 'Parameter #1 $string of function htmlspecialchars expects string, mixed given.'
 			identifier: argument.type
-			count: 2
+			count: 1
 			path: app/Http/Controllers/TestController.php
 
 		-
@@ -2472,7 +2457,7 @@ parameters:
 		-
 			rawMessage: 'Parameter #2 $timestamp of function gmdate expects int|null, (float|int) given.'
 			identifier: argument.type
-			count: 2
+			count: 1
 			path: app/Http/Controllers/TestController.php
 
 		-
@@ -8953,7 +8938,7 @@ parameters:
 			path: app/cdash/app/Controller/Api/ViewTest.php
 
 		-
-			rawMessage: 'Method CDash\Controller\Api\ViewTest::marshal() has parameter $projectid with no type specified.'
+			rawMessage: 'Method CDash\Controller\Api\ViewTest::marshal() has parameter $projectname with no type specified.'
 			identifier: missingType.parameter
 			count: 1
 			path: app/cdash/app/Controller/Api/ViewTest.php
@@ -8995,7 +8980,7 @@ parameters:
 			path: app/cdash/app/Controller/Api/ViewTest.php
 
 		-
-			rawMessage: 'Method CDash\Controller\Api\ViewTest::marshalMissing() has parameter $projectid with no type specified.'
+			rawMessage: 'Method CDash\Controller\Api\ViewTest::marshalMissing() has parameter $projectname with no type specified.'
 			identifier: missingType.parameter
 			count: 1
 			path: app/cdash/app/Controller/Api/ViewTest.php

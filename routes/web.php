@@ -189,8 +189,6 @@ Route::get('/overview.php', 'ProjectOverviewController@overview');
 // TODO: (williamjallen) This should be in the auth section, but needs to be here until we get rid of Protractor..
 Route::get('/manageOverview.php', 'ProjectOverviewController@manageOverview');
 
-Route::get('/ajax/showtestfailuregraph.php', 'TestController@ajaxTestFailureGraph');
-
 Route::match(['get', 'post'], '/projects', 'ViewProjectsController@viewActiveProjects');
 Route::permanentRedirect('/viewProjects.php', url('/projects'));
 Route::match(['get', 'post'], '/projects/all', 'ViewProjectsController@viewAllProjects');
@@ -198,10 +196,28 @@ Route::match(['get', 'post'], '/projects/all', 'ViewProjectsController@viewAllPr
 Route::get('/viewTest.php', 'ViewTestController@viewTest');
 
 Route::get('/queryTests.php', 'TestController@queryTests');
+Route::get('/testSummary.php', function (Request $request) {
+    $project = Project::find($request->integer('project'));
+    if ($project === null || Gate::denies('view', $project)) {
+        abort(403, 'Unknown project');
+    }
+
+    $queryParams = [
+        'project' => $project->name,
+        'filtercount' => 1,
+        'showfilters' => 1,
+        'field1' => 'testname',
+        'compare1' => 61,
+        'value1' => $request->string('name')->toString(),
+    ];
+    if ($request->has('date')) {
+        $queryParams['date'] = $request->string('date')->toString();
+    }
+
+    return redirect(url()->query('/queryTests.php', $queryParams), 301);
+});
 
 Route::get('/testOverview.php', 'TestController@testOverview');
-
-Route::get('/testSummary.php', 'TestController@testSummary');
 
 Route::match(['get', 'post'], '/viewCoverage.php', 'CoverageController@viewCoverage');
 
