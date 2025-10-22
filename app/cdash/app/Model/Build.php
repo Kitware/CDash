@@ -213,7 +213,7 @@ class Build
         $Label->Text = $subProject->GetName();
         $Label->Insert();
 
-        Log::info('New subproject detected: ' . $subproject, [
+        Log::debug('New subproject detected: ' . $subproject, [
             'projectid' => $this->ProjectId,
             'buildid' => $this->Id,
         ]);
