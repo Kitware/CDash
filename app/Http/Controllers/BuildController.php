@@ -56,13 +56,13 @@ final class BuildController extends AbstractBuildController
         ]);
     }
 
-    // Render the build configure page.
     public function configure(int $build_id): View
     {
-        return $this->renderBuildPage($build_id, 'configure');
+        $this->setBuildById($build_id);
+
+        return $this->vue('build-configure', 'Configure', [], false);
     }
 
-    // Render the build notes page.
     public function notes(int $build_id): View
     {
         $this->setBuildById($build_id);
@@ -72,15 +72,18 @@ final class BuildController extends AbstractBuildController
         ]);
     }
 
-    // Render the build summary page.
     public function summary(int $build_id): View
     {
-        return $this->renderBuildPage($build_id, 'summary', 'Build Summary');
+        $this->setBuildById($build_id);
+
+        return $this->vue('build-summary', 'Build Summary', [], false);
     }
 
     public function update(int $build_id): View
     {
-        return $this->renderBuildPage($build_id, 'update', 'Files Updated');
+        $this->setBuildById($build_id);
+
+        return $this->vue('build-update', 'Files Updated', [], false);
     }
 
     public function tests(int $build_id): View
@@ -93,15 +96,6 @@ final class BuildController extends AbstractBuildController
             'build-id' => $this->build->Id,
             'initial-filters' => $filters,
         ]);
-    }
-
-    protected function renderBuildPage(int $build_id, string $page_name, string $page_title = ''): View
-    {
-        $this->setBuildById($build_id);
-        if ($page_title === '') {
-            $page_title = ucfirst($page_name);
-        }
-        return $this->view("build.{$page_name}", $page_title);
     }
 
     public function apiBuildSummary(): JsonResponse

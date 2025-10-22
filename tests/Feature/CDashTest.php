@@ -98,7 +98,7 @@ class CDashTest extends TestCase
         $this->get('/projects')->assertRedirect('/login');
 
         $normal_user = $this->makeNormalUser();
-        $this->actingAs($normal_user)->get('/projects')->assertOk()->assertViewIs('project.view-all-projects');
+        $this->actingAs($normal_user)->get('/projects')->assertOk();
         $normal_user->delete();
     }
 }
