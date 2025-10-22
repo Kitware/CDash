@@ -34,9 +34,9 @@ Once a user with administrative privileges has been created, you can use that us
 
 ### Running the test suite
 ```bash
-docker exec -it cdash /bin/bash
+docker exec -it cdash-website-1 /bin/bash
 cd _build
-ctest
+ctest -j3 --schedule-random --output-on-failure
 ```
 
 ## Configuration
