@@ -31,7 +31,8 @@ final class ViewProjectsController extends AbstractController
             return $this->redirectToLogin();
         }
 
-        return $this->view('project.view-all-projects', 'Projects')
-            ->with('show_all', $all);
+        return $this->vue('all-projects', 'Projects', [
+            'show-all' => $all,
+        ], false);
     }
 }
