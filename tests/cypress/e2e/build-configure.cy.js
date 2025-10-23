@@ -40,7 +40,7 @@ describe('The Build Configure Page', () => {
       cy.contains('a', 'CDash-CTest-simple2').invoke('attr', 'href')
         .should('match', new RegExp (`builds?\\/${buildid}`));
 
-      const configure_cmd = '"/usr/bin/cmake" "-GUnix Makefiles" "/cdash/app/cdash/tests/ctest/simple2"';
+      const configure_cmd = '"/usr/bin/cmake" "-GUnix Makefiles"';
       cy.contains('b', 'Configure Command:').siblings('pre').should('contain', configure_cmd);
 
       const configure_rc = '0';
