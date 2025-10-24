@@ -112,8 +112,7 @@ class TestOverview extends ResultsApi
         if ($has_subprojects) {
             $sp_select = ', sp.name AS subproject';
             $sp_join = '
-                JOIN subproject2build AS sp2b ON (sp2b.buildid=b.id)
-                JOIN subproject AS sp ON (sp2b.subprojectid=sp.id)';
+                JOIN subproject AS sp ON (b.subprojectid=sp.id)';
         }
 
         // Main query: find all the requested tests.

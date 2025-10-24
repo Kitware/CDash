@@ -214,10 +214,9 @@ class ViewTest extends BuildApi
         }
 
         if ($this->build->GetParentId() == Build::PARENT_BUILD) {
-            $parentBuildFieldSql = ', sp2b.subprojectid, sp.name subprojectname';
+            $parentBuildFieldSql = ', b.subprojectid, sp.name subprojectname';
             $parentBuildJoinSql = 'JOIN build b ON (b.id = bt.buildid)
-                JOIN subproject2build sp2b on (sp2b.buildid = b.id)
-                JOIN subproject sp on (sp.id = sp2b.subprojectid)';
+                JOIN subproject sp on (sp.id = b.subprojectid)';
             $parentBuildWhere = 'b.parentid = :buildid';
         } else {
             $parentBuildFieldSql = '';

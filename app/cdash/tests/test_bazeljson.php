@@ -203,8 +203,7 @@ class BazelJSONTestCase extends KWWebTestCase
                         configureerrors, configurewarnings,
                         sp.name
                 FROM build b
-                JOIN subproject2build sp2b ON sp2b.buildid = b.id
-                JOIN subproject sp ON sp.id = sp2b.subprojectid
+                JOIN subproject sp ON sp.id = b.subprojectid
                 WHERE parentid = $parentid");
         while ($row = $stmt->fetch()) {
             $subproject_name = $row['name'];

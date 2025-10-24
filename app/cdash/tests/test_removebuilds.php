@@ -358,10 +358,6 @@ class RemoveBuildsTestCase extends KWWebTestCase
             'date' => $time,
             'groupid' => 1,
         ]);
-        DB::table('subproject2build')->insert([
-            'subprojectid' => 1,
-            'buildid' => $build->Id,
-        ]);
         DB::table('testdiff')->insert([
             'buildid' => $build->Id,
             'type' => 0,
@@ -440,7 +436,6 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $this->verify('coveragefilelog', 'buildid', '=', $build->Id, 2);
         $this->verify('dynamicanalysissummary', 'buildid', '=', $build->Id, 1);
         $this->verify('summaryemail', 'buildid', '=', $build->Id, 1);
-        $this->verify('subproject2build', 'buildid', '=', $build->Id, 1);
         $this->verify('testdiff', 'buildid', '=', $build->Id, 1);
 
         [$buildfailureid, $detailsid] =
@@ -526,7 +521,6 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $this->verify('label2test', 'labelid', '=', $labelid, 1, $extra_msg);
         $this->verify('note', 'id', 'IN', $noteids, 1, $extra_msg);
         $this->verify('summaryemail', 'buildid', '=', $build->Id, 0, $extra_msg);
-        $this->verify('subproject2build', 'buildid', '=', $build->Id, 0, $extra_msg);
         $this->verify('test2image', 'testid', 'IN', $testids, 0, $extra_msg);
         $this->verify('testdiff', 'buildid', '=', $build->Id, 0, $extra_msg);
         $this->verify('updatefile', 'updateid', '=', $updateid, 1, $extra_msg);
@@ -569,7 +563,6 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $this->verify('label2test', 'labelid', '=', $labelid, 0, $extra_msg);
         $this->verify('note', 'id', 'IN', $noteids, 0, $extra_msg);
         $this->verify('summaryemail', 'buildid', '=', $existing_build->Id, 0, $extra_msg);
-        $this->verify('subproject2build', 'buildid', '=', $existing_build->Id, 0, $extra_msg);
         $this->verify('test2image', 'testid', 'IN', $testids, 0, $extra_msg);
         $this->verify('testdiff', 'buildid', '=', $existing_build->Id, 0, $extra_msg);
         $this->verify('updatefile', 'updateid', '=', $updateid, 0, $extra_msg);

@@ -814,8 +814,7 @@ function get_aggregate_build(Build $build): Build
     $subproj_where = '';
     $subproj_where_params = [];
     if ($build->SubProjectId) {
-        $subproj_table = 'INNER JOIN subproject2build AS sp2b ON (build.id=sp2b.buildid)';
-        $subproj_where = 'AND sp2b.subprojectid=?';
+        $subproj_where = 'AND subprojectid=?';
         $subproj_where_params[] = intval($build->SubProjectId);
     }
 

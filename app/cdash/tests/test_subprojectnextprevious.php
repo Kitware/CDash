@@ -42,8 +42,7 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
         // Get the ids for the three subsequent builds of Didasko.
         $result = DB::select("
                 SELECT b.id FROM build AS b
-                LEFT JOIN subproject2build AS sp2b ON sp2b.buildid=b.id
-                LEFT JOIN subproject AS sp ON sp.id = sp2b.subprojectid
+                LEFT JOIN subproject AS sp ON sp.id = b.subprojectid
                 WHERE sp.name = 'Didasko'
                 ORDER BY b.starttime");
 

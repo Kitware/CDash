@@ -231,20 +231,11 @@ class Build
             return $this->SubProjectName;
         }
 
-        $stmt = $this->PDO->prepare(
-            'SELECT sp.name FROM subproject sp
-            JOIN subproject2build sp2b ON sp.id = sp2b.subprojectid
-            WHERE sp2b.buildid = ?');
-        if (!pdo_execute($stmt, [$this->Id])) {
-            return false;
-        }
-
-        $subproject_name = $stmt->fetchColumn();
+        $subproject_name = EloquentBuild::findOrFail((int) $this->Id)->subProject->name ?? false;
         if ($subproject_name !== false) {
             $this->SubProjectName = $subproject_name;
-            return $this->SubProjectName;
         }
-        return false;
+        return $subproject_name;
     }
 
     /**
@@ -334,14 +325,7 @@ class Build
 
     private function QuerySubProjectId(int $buildid): int|false
     {
-        $stmt = $this->PDO->prepare(
-            'SELECT sp.id FROM subproject sp
-            JOIN subproject2build sp2b ON sp.id = sp2b.subprojectid
-            WHERE sp2b.buildid = ?');
-        if (!pdo_execute($stmt, [$buildid])) {
-            return false;
-        }
-        return (int) $stmt->fetchColumn();
+        return EloquentBuild::findOrFail($buildid)->subProject->id ?? false;
     }
 
     /** Fill the current build information from the buildid */
@@ -504,7 +488,6 @@ class Build
             }
         }
 
-        $subproj_table = '';
         $subproj_criteria = '';
         $parent_criteria = '';
 
@@ -516,10 +499,8 @@ class Build
         }
 
         if ($this->SubProjectId) {
-            $subproj_table =
-                'INNER JOIN subproject2build AS sp2b ON (build.id=sp2b.buildid)';
             $subproj_criteria =
-                'AND sp2b.subprojectid = :subprojectid';
+                'AND subprojectid = :subprojectid';
             $values_to_bind['subprojectid'] = $this->SubProjectId;
         }
         if ($this->ParentId === Build::PARENT_BUILD) {
@@ -529,7 +510,6 @@ class Build
 
         $stmt = $this->PDO->prepare("
             SELECT id FROM build
-            $subproj_table
             $related_build_criteria
             $subproj_criteria
             $parent_criteria
@@ -722,8 +702,7 @@ class Build
                            b.configureerrors, b.configurewarnings
                     FROM configure c
                     JOIN build2configure b2c ON b2c.configureid = c.id
-                    JOIN subproject2build sp2b ON sp2b.buildid = b2c.buildid
-                    JOIN subproject sp ON sp.id = sp2b.subprojectid
+                    JOIN subproject sp ON sp.id = b.subprojectid
                     JOIN build b ON b.id = b2c.buildid
                     WHERE b.parentid = ?');
             } elseif (count($configure_rows) === 1) {
@@ -762,7 +741,6 @@ class Build
         if ((int) $this->SubProjectId !== 0) {
             $stmt = $this->PDO->prepare(
                 'SELECT id FROM build
-                JOIN subproject2build ON subproject2build.buildid = build.id
                 WHERE projectid = ? AND siteid = ? AND name = ? AND
                       stamp = ? AND subprojectid = ?');
             $params[] = $this->SubProjectId;
@@ -2080,14 +2058,12 @@ class Build
         }
 
         $sql = '
-            SELECT sp2b.subprojectid, sp.name subprojectname, be.*
+            SELECT b.subprojectid, sp.name subprojectname, be.*
             FROM builderror be
             JOIN build AS b
                 ON b.id = be.buildid
-            JOIN subproject2build AS sp2b
-                ON sp2b.buildid = be.buildid
             JOIN subproject AS sp
-                ON sp.id = sp2b.subprojectid
+                ON sp.id = b.subprojectid
             WHERE b.parentid = ?
         ';
 
@@ -2122,16 +2098,14 @@ class Build
                 bfd.stdoutput,
                 bfd.type,
                 bfd.exitcondition,
-                sp2b.subprojectid,
+                b.subprojectid,
                 sp.name subprojectname
-             FROM buildfailure AS bf
-             LEFT JOIN buildfailuredetails AS bfd
+            FROM buildfailure AS bf
+            LEFT JOIN buildfailuredetails AS bfd
                 ON (bfd.id=bf.detailsid)
-            JOIN subproject2build AS sp2b
-                ON bf.buildid = sp2b.buildid
+            JOIN build b ON bf.buildid = b.id
             JOIN subproject AS sp
-                ON sp.id = sp2b.subprojectid
-            JOIN build b on bf.buildid = b.id
+                ON sp.id = b.subprojectid
             WHERE b.parentid = ?
         ';
 
@@ -2150,10 +2124,9 @@ class Build
         $row = DB::select('
             SELECT b.id
             FROM build b
-            JOIN subproject2build sp2b ON (sp2b.buildid = b.id)
             WHERE
                 b.parentid = ?
-                AND sp2b.subprojectid = ?
+                AND b.subprojectid = ?
         ', [$parentid, $subprojectid])[0] ?? [];
         if (!$row) {
             return null;
@@ -2334,11 +2307,9 @@ class Build
             }
         }
 
-        // Add the subproject2build relationship if necessary.
+        // Add the subproject relationship if necessary.
         if ($this->SubProjectId) {
-            DB::table('subproject2build')->insertOrIgnore([
-                ['subprojectid' => $this->SubProjectId, 'buildid' => $this->Id],
-            ]);
+            EloquentBuild::where('id', $this->Id)->update(['subprojectid' => $this->SubProjectId]);
         }
     }
 

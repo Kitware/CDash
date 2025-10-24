@@ -322,8 +322,7 @@ final class ProjectOverviewController extends AbstractProjectController
                                                   sp.groupid AS subprojectgroupid
                                               FROM build AS b
                                               LEFT JOIN coveragesummary AS cs ON (cs.buildid=b.id)
-                                              LEFT JOIN subproject2build AS sp2b ON (sp2b.buildid = b.id)
-                                              LEFT JOIN subproject as sp ON (sp2b.subprojectid = sp.id)
+                                              LEFT JOIN subproject as sp ON (b.subprojectid = sp.id)
                                               WHERE b.parentid=?
                                           ', [intval($build_row->id)]);
                     foreach ($child_builds_array as $child_build_row) {

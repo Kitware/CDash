@@ -17,6 +17,7 @@
 
 namespace CDash\Model;
 
+use App\Models\Build;
 use App\Models\Project;
 use App\Models\Project as EloquentProject;
 use App\Models\SubProject as EloquentSubProject;
@@ -89,7 +90,7 @@ class SubProject
         // If there is no build in the subproject we remove
         $count = (int) DB::select('
             SELECT count(*) AS c
-            FROM subproject2build
+            FROM build
             WHERE subprojectid = ?
         ', [$this->Id])[0]->c;
         if ($count === 0) {
@@ -103,7 +104,7 @@ class SubProject
         DB::delete('DELETE FROM subproject2subproject WHERE dependsonid=?', [intval($this->Id)]);
 
         if (!$keephistory) {
-            DB::delete('DELETE FROM subproject2build WHERE subprojectid=?', [intval($this->Id)]);
+            Build::where('subprojectid', $this->Id)->update(['subprojectid' => null]);
             $subproject->children()->detach();
             $subproject->delete();
         } else {
@@ -297,13 +298,12 @@ class SubProject
 
         $project = DB::select('
                        SELECT build.starttime
-                       FROM build, subproject2build, build2group, buildgroup
+                       FROM build, build2group, buildgroup
                        WHERE
                            subprojectid=?
                            AND build2group.buildid=build.id
                            AND build2group.groupid=buildgroup.id
                            AND buildgroup.includesubprojectotal=1
-                           AND subproject2build.buildid=build.id
                        ORDER BY build.starttime DESC
                        LIMIT 1
                    ', [$this->Id]);
@@ -353,7 +353,6 @@ class SubProject
             FROM build b
             JOIN build2group b2g ON (b2g.buildid = b.id)
             JOIN buildgroup bg ON (bg.id = b2g.groupid)
-            JOIN subproject2build sp2b ON (sp2b.buildid = b.id)
             WHERE
                 $extraWhere
                 b.projectid = ? AND
