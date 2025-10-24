@@ -1109,12 +1109,10 @@ final class BuildController extends AbstractBuildController
 
         // Take subproject into account, such that if there is one, then the
         // previous builds must be associated with the same subproject.
-        $subproj_table = '';
         $subproj_criteria = '';
         $query_params = [];
         if ($this->build->SubProjectId > 0) {
-            $subproj_table = 'INNER JOIN subproject2build AS sp2b ON (b.id=sp2b.buildid)';
-            $subproj_criteria = 'AND sp2b.subprojectid = ?';
+            $subproj_criteria = 'AND b.subprojectid = ?';
             $query_params[] = $this->build->SubProjectId;
         }
 
@@ -1135,7 +1133,6 @@ final class BuildController extends AbstractBuildController
                             FROM build AS b
                             LEFT JOIN build2update AS b2u ON (b2u.buildid=b.id)
                             LEFT JOIN buildupdate AS bu ON (b2u.updateid=bu.id)
-                            $subproj_table
                             WHERE
                                 siteid = ?
                                 AND b.type = ?

@@ -115,10 +115,9 @@ class JavaJSONTarHandler extends AbstractSubmissionHandler
 
             // get the buildid that corresponds to this subproject.
             $buildid_result = DB::select('
-                                  SELECT buildid
-                                  FROM subproject2build AS sp2b
-                                  INNER JOIN subproject AS sp ON (sp.id = sp2b.subprojectid)
-                                  INNER JOIN build AS b ON (b.id = sp2b.buildid)
+                                  SELECT b.id AS buildid
+                                  FROM subproject AS sp
+                                  INNER JOIN build AS b ON (sp.id = b.subprojectid)
                                   WHERE
                                       sp.name = ?
                                       AND b.parentid=?

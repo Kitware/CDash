@@ -1701,8 +1701,7 @@ final class CoverageController extends AbstractBuildController
                       INNER JOIN build2group AS b2g ON (b2g.buildid=b.id)
                       INNER JOIN buildgroup AS g ON (g.id=b2g.groupid)
                       INNER JOIN coveragesummary AS cs ON (cs.buildid = b.id)
-                      LEFT JOIN subproject2build AS sp2b ON (sp2b.buildid = b.id)
-                      LEFT JOIN subproject AS sp ON (sp2b.subprojectid = sp.id)
+                      LEFT JOIN subproject AS sp ON (b.subprojectid = sp.id)
                       WHERE
                           b.projectid=?
                           AND g.type='Daily'

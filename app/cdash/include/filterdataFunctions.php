@@ -255,7 +255,7 @@ class IndexPhpFilters extends DefaultFilters
                 break;
 
             case 'subproject':
-                $sql_field = '(SELECT name FROM subproject, subproject2build WHERE subproject2build.subprojectid=subproject.id AND subproject2build.buildid=b.id)';
+                $sql_field = '(SELECT subproject.name FROM subproject WHERE subproject.id=b.subprojectid)';
 
                 break;
 

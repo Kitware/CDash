@@ -155,7 +155,7 @@ class Index extends ResultsApi
 
         // Should we query by subproject?
         if (is_numeric($this->subProjectId)) {
-            $sql .= ' AND sp2b.subprojectid=? ';
+            $sql .= ' AND b.subprojectid=? ';
             $query_params[] = (int) $this->subProjectId;
         }
 
@@ -328,8 +328,7 @@ class Index extends ResultsApi
                 LEFT JOIN testdiff AS tfailed_diff ON (tfailed_diff.buildid=b.id AND tfailed_diff.type=1)
                 LEFT JOIN testdiff AS tpassed_diff ON (tpassed_diff.buildid=b.id AND tpassed_diff.type=2)
                 LEFT JOIN testdiff AS tstatusfailed_diff ON (tstatusfailed_diff.buildid=b.id AND tstatusfailed_diff.type=3)
-                LEFT JOIN subproject2build AS sp2b ON (sp2b.buildid = b.id)
-                LEFT JOIN subproject as sp ON (sp2b.subprojectid = sp.id)';
+                LEFT JOIN subproject as sp ON (b.subprojectid = sp.id)';
     }
 
     public function populateBuildRow(array $build_row): array
@@ -628,8 +627,7 @@ class Index extends ResultsApi
                                           sb.name,
                                           btt.time AS testtime
                                       FROM build AS b
-                                      INNER JOIN subproject2build AS sb2b ON (b.id = sb2b.buildid)
-                                      INNER JOIN subproject AS sb ON (sb2b.subprojectid = sb.id)
+                                      INNER JOIN subproject AS sb ON (b.subprojectid = sb.id)
                                       LEFT JOIN buildtesttime AS btt ON (btt.buildid = b.id)
                                       WHERE
                                           b.parentid=?

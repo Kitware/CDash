@@ -9393,7 +9393,7 @@ parameters:
 				v2.5.0 01/22/2018
 			'''
 			identifier: function.deprecated
-			count: 23
+			count: 21
 			path: app/cdash/app/Model/Build.php
 
 		-

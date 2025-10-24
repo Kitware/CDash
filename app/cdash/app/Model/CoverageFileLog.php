@@ -230,11 +230,10 @@ class CoverageFileLog
                 $row = $db->executePreparedSingleRow('
                            SELECT id
                            FROM build
-                           INNER JOIN subproject2build AS sp2b ON (build.id=sp2b.buildid)
                            WHERE
                                parentid=?
                                AND projectid=?
-                               AND sp2b.subprojectid=?
+                               AND b.subprojectid=?
                        ', [
                     intval($this->AggregateBuildId),
                     intval($this->Build->ProjectId),

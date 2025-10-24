@@ -17,6 +17,7 @@ use Illuminate\Support\Str;
  * @property int $siteid
  * @property int $projectid
  * @property int $parentid
+ * @property int $subprojectid
  * @property string $stamp
  * @property string $name
  * @property string $type
@@ -64,6 +65,7 @@ class Build extends Model
         'siteid',
         'projectid',
         'parentid',
+        'subprojectid',
         'stamp',
         'name',
         'type',
@@ -100,6 +102,7 @@ class Build extends Model
         'siteid' => 'integer',
         'projectid' => 'integer',
         'parentid' => 'integer',
+        'subprojectid' => 'integer',
         'starttime' => 'datetime',
         'endtime' => 'datetime',
         'submittime' => 'datetime',
@@ -132,6 +135,14 @@ class Build extends Model
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class, 'projectid');
+    }
+
+    /**
+     * @return BelongsTo<SubProject, $this>
+     */
+    public function subProject(): BelongsTo
+    {
+        return $this->belongsTo(SubProject::class, 'subprojectid');
     }
 
     /**

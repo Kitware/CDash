@@ -221,8 +221,7 @@ class CoverageAcrossSubProjectsTestCase extends KWWebTestCase
                 SELECT cs.loctested, cs.locuntested, spg.name
                 FROM build AS b
                 INNER JOIN coveragesummary AS cs ON (b.id=cs.buildid)
-                INNER JOIN subproject2build AS sp2b ON (b.id=sp2b.buildid)
-                INNER JOIN subproject AS sp ON (sp2b.subprojectid=sp.id)
+                INNER JOIN subproject AS sp ON (b.subprojectid=sp.id)
                 INNER JOIN subprojectgroup AS spg ON (sp.groupid=spg.id)
                 WHERE parentid='$parentid'");
         $num_builds = count($result);
