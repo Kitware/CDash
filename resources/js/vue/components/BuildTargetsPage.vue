@@ -11,7 +11,9 @@
     />
 
     <loading-indicator :is-loading="!build || !targets">
-      <CommandGanttChart :commands="formattedCommands" />
+      <div class="tw-w-full tw-bg-base-100 tw-flex tw-flex-col tw-rounded-lg tw-border tw-border-gray-200 tw-p-4">
+        <CommandGanttChart :commands="formattedCommands" />
+      </div>
     </loading-indicator>
 
     <LoadingIndicator :is-loading="!targets">

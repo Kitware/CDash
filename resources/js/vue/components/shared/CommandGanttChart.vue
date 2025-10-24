@@ -1,9 +1,5 @@
 <template>
-  <div
-    id="chart-wrapper"
-    ref="chartWrapperRef"
-    class="card tw-w-full tw-bg-base-100 tw-flex tw-flex-col tw-rounded-lg tw-border tw-border-gray-200"
-  >
+  <div>
     <div
       id="legend-container"
       class="tw-flex tw-flex-wrap tw-justify-center tw-gap-x-5 tw-gap-y-2.5 tw-p-2.5 tw-text-xs"
@@ -195,9 +191,9 @@ export default {
           formatter: this.getTooltipElement,
         },
         grid: {
-          top: '10px',
-          left: '20px',
-          right: '20px',
+          top: '0px',
+          left: '10px',
+          right: '10px',
           bottom: '50px',
         },
         xAxis: {
