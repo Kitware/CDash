@@ -2929,24 +2929,6 @@ parameters:
 			path: app/Http/Submission/Handlers/BazelJSONHandler.php
 
 		-
-			rawMessage: '''
-				Call to deprecated function pdo_execute():
-				v2.5.0 01/22/2018
-			'''
-			identifier: function.deprecated
-			count: 2
-			path: app/Http/Submission/Handlers/BazelJSONHandler.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method getPdo() of class CDash\Database:
-				04/22/2023  Use Laravel query builder or Eloquent instead
-			'''
-			identifier: method.deprecated
-			count: 2
-			path: app/Http/Submission/Handlers/BazelJSONHandler.php
-
-		-
 			rawMessage: Cannot access offset 'command' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -2962,18 +2944,6 @@ parameters:
 			rawMessage: Cannot access offset 'label' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 4
-			path: app/Http/Submission/Handlers/BazelJSONHandler.php
-
-		-
-			rawMessage: Cannot access offset 'name' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/Http/Submission/Handlers/BazelJSONHandler.php
-
-		-
-			rawMessage: Cannot access offset 'path' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
 			path: app/Http/Submission/Handlers/BazelJSONHandler.php
 
 		-
@@ -3031,12 +3001,6 @@ parameters:
 			path: app/Http/Submission/Handlers/BazelJSONHandler.php
 
 		-
-			rawMessage: 'Cannot call method fetch() on PDOStatement|false.'
-			identifier: method.nonObject
-			count: 1
-			path: app/Http/Submission/Handlers/BazelJSONHandler.php
-
-		-
 			rawMessage: 'Construct empty() is not allowed. Use more strict comparison.'
 			identifier: empty.notAllowed
 			count: 12
@@ -3081,12 +3045,6 @@ parameters:
 		-
 			rawMessage: 'Method App\Http\Submission\Handlers\BazelJSONHandler::CreateNewTest() has parameter $test_time with no type specified.'
 			identifier: missingType.parameter
-			count: 1
-			path: app/Http/Submission/Handlers/BazelJSONHandler.php
-
-		-
-			rawMessage: 'Method App\Http\Submission\Handlers\BazelJSONHandler::GetSubProjectForPath() should return string but returns mixed.'
-			identifier: return.type
 			count: 1
 			path: app/Http/Submission/Handlers/BazelJSONHandler.php
 
@@ -3169,12 +3127,6 @@ parameters:
 			path: app/Http/Submission/Handlers/BazelJSONHandler.php
 
 		-
-			rawMessage: 'Only booleans are allowed in a while condition, mixed given.'
-			identifier: while.condNotBoolean
-			count: 1
-			path: app/Http/Submission/Handlers/BazelJSONHandler.php
-
-		-
 			rawMessage: 'Only booleans are allowed in an if condition, int|false given.'
 			identifier: if.condNotBoolean
 			count: 1
@@ -3193,12 +3145,6 @@ parameters:
 			path: app/Http/Submission/Handlers/BazelJSONHandler.php
 
 		-
-			rawMessage: 'Parameter #1 $stmt of function pdo_execute expects PDOStatement, (PDOStatement|false) given.'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Submission/Handlers/BazelJSONHandler.php
-
-		-
 			rawMessage: 'Parameter #1 $string of function strtolower expects string, mixed given.'
 			identifier: argument.type
 			count: 1
@@ -3214,12 +3160,6 @@ parameters:
 			rawMessage: 'Parameter #2 $array of function array_key_exists expects array, mixed given.'
 			identifier: argument.type
 			count: 8
-			path: app/Http/Submission/Handlers/BazelJSONHandler.php
-
-		-
-			rawMessage: 'Parameter #2 $needle of function str_contains expects string, mixed given.'
-			identifier: argument.type
-			count: 1
 			path: app/Http/Submission/Handlers/BazelJSONHandler.php
 
 		-
@@ -3272,12 +3212,6 @@ parameters:
 
 		-
 			rawMessage: Property App\Http\Submission\Handlers\BazelJSONHandler::$NumTestsPassed has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/Http/Submission/Handlers/BazelJSONHandler.php
-
-		-
-			rawMessage: Property App\Http\Submission\Handlers\BazelJSONHandler::$PDO has no type specified.
 			identifier: missingType.property
 			count: 1
 			path: app/Http/Submission/Handlers/BazelJSONHandler.php
@@ -3553,18 +3487,6 @@ parameters:
 			path: app/Http/Submission/Handlers/BuildPropertiesJSONHandler.php
 
 		-
-			rawMessage: Binary operation "." between mixed and "\n" results in an error.
-			identifier: binaryOp.invalid
-			count: 1
-			path: app/Http/Submission/Handlers/ConfigureHandler.php
-
-		-
-			rawMessage: Binary operation "." between mixed and ' UTC' results in an error.
-			identifier: binaryOp.invalid
-			count: 1
-			path: app/Http/Submission/Handlers/ConfigureHandler.php
-
-		-
 			rawMessage: 'Call to an undefined method CDash\Messaging\Preferences\NotificationPreferencesInterface::get().'
 			identifier: method.notFound
 			count: 1
@@ -3583,20 +3505,20 @@ parameters:
 			path: app/Http/Submission/Handlers/ConfigureHandler.php
 
 		-
-			rawMessage: Cannot access offset 'log' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
+			rawMessage: Cannot access property $log on mixed.
+			identifier: property.nonObject
 			count: 1
 			path: app/Http/Submission/Handlers/ConfigureHandler.php
 
 		-
-			rawMessage: Cannot access offset 'starttime' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
+			rawMessage: Cannot access property $starttime on mixed.
+			identifier: property.nonObject
 			count: 1
 			path: app/Http/Submission/Handlers/ConfigureHandler.php
 
 		-
-			rawMessage: Cannot access offset 'status' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
+			rawMessage: Cannot access property $status on mixed.
+			identifier: property.nonObject
 			count: 1
 			path: app/Http/Submission/Handlers/ConfigureHandler.php
 
@@ -3686,12 +3608,6 @@ parameters:
 
 		-
 			rawMessage: 'Parameter #1 $duration of method CDash\Model\Build::SetConfigureDuration() expects int, (float|int) given.'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Submission/Handlers/ConfigureHandler.php
-
-		-
-			rawMessage: 'Parameter #1 $value of function intval expects array|bool|float|int|resource|string|null, mixed given.'
 			identifier: argument.type
 			count: 1
 			path: app/Http/Submission/Handlers/ConfigureHandler.php
@@ -6410,15 +6326,6 @@ parameters:
 
 		-
 			rawMessage: '''
-				Call to deprecated function add_last_sql_error():
-				04/22/2023
-			'''
-			identifier: function.deprecated
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
-			rawMessage: '''
 				Call to deprecated method executePrepared() of class CDash\Database:
 				04/22/2023  Use Laravel query builder or Eloquent instead
 			'''
@@ -7011,7 +6918,7 @@ parameters:
 				v2.5.0 01/22/2018
 			'''
 			identifier: function.deprecated
-			count: 9
+			count: 6
 			path: app/Utils/SubmissionUtils.php
 
 		-
@@ -7036,39 +6943,21 @@ parameters:
 			path: app/Utils/SubmissionUtils.php
 
 		-
-			rawMessage: Cannot access offset 'difference_negative' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/Utils/SubmissionUtils.php
-
-		-
-			rawMessage: Cannot access offset 'difference_positive' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/Utils/SubmissionUtils.php
-
-		-
 			rawMessage: Cannot access offset 0 on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 3
 			path: app/Utils/SubmissionUtils.php
 
 		-
-			rawMessage: 'Cannot call method bindParam() on PDOStatement|false.'
-			identifier: method.nonObject
-			count: 2
-			path: app/Utils/SubmissionUtils.php
-
-		-
 			rawMessage: 'Cannot call method bindValue() on PDOStatement|false.'
 			identifier: method.nonObject
-			count: 20
+			count: 13
 			path: app/Utils/SubmissionUtils.php
 
 		-
 			rawMessage: 'Cannot call method fetch() on PDOStatement|false.'
 			identifier: method.nonObject
-			count: 6
+			count: 5
 			path: app/Utils/SubmissionUtils.php
 
 		-
@@ -7132,12 +7021,6 @@ parameters:
 			path: app/Utils/SubmissionUtils.php
 
 		-
-			rawMessage: 'Only booleans are allowed in an if condition, mixed given.'
-			identifier: if.condNotBoolean
-			count: 2
-			path: app/Utils/SubmissionUtils.php
-
-		-
 			rawMessage: 'Only numeric types are allowed in +, int<0, max>|false given on the left side.'
 			identifier: plus.leftNonNumeric
 			count: 1
@@ -7146,7 +7029,7 @@ parameters:
 		-
 			rawMessage: 'Parameter #1 $stmt of function pdo_execute expects PDOStatement, (PDOStatement|false) given.'
 			identifier: argument.type
-			count: 9
+			count: 6
 			path: app/Utils/SubmissionUtils.php
 
 		-
@@ -7329,7 +7212,7 @@ parameters:
 		-
 			rawMessage: 'Only booleans are allowed in an if condition, object|null given.'
 			identifier: if.condNotBoolean
-			count: 2
+			count: 1
 			path: app/Utils/TestDiffUtil.php
 
 		-
@@ -9393,7 +9276,7 @@ parameters:
 				v2.5.0 01/22/2018
 			'''
 			identifier: function.deprecated
-			count: 21
+			count: 15
 			path: app/cdash/app/Model/Build.php
 
 		-
@@ -9921,7 +9804,7 @@ parameters:
 				v2.5.0 01/22/2018
 			'''
 			identifier: function.deprecated
-			count: 2
+			count: 1
 			path: app/cdash/app/Model/BuildConfigure.php
 
 		-
@@ -9943,6 +9826,12 @@ parameters:
 			rawMessage: 'Cannot call method Insert() on mixed.'
 			identifier: method.nonObject
 			count: 1
+			path: app/cdash/app/Model/BuildConfigure.php
+
+		-
+			rawMessage: 'Cannot call method bindParam() on PDOStatement|false.'
+			identifier: method.nonObject
+			count: 2
 			path: app/cdash/app/Model/BuildConfigure.php
 
 		-
@@ -9990,6 +9879,12 @@ parameters:
 		-
 			rawMessage: 'Method CDash\Model\BuildConfigure::marshal() has parameter $data with no type specified.'
 			identifier: missingType.parameter
+			count: 1
+			path: app/cdash/app/Model/BuildConfigure.php
+
+		-
+			rawMessage: 'Parameter #1 $stmt of function pdo_execute expects PDOStatement, (PDOStatement|false) given.'
+			identifier: argument.type
 			count: 1
 			path: app/cdash/app/Model/BuildConfigure.php
 
@@ -10043,12 +9938,6 @@ parameters:
 
 		-
 			rawMessage: Property CDash\Model\BuildConfigure::$NumberOfWarnings has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/BuildConfigure.php
-
-		-
-			rawMessage: Property CDash\Model\BuildConfigure::$PDO has no type specified.
 			identifier: missingType.property
 			count: 1
 			path: app/cdash/app/Model/BuildConfigure.php
@@ -10328,15 +10217,6 @@ parameters:
 			identifier: missingType.property
 			count: 1
 			path: app/cdash/app/Model/BuildErrorFilter.php
-
-		-
-			rawMessage: '''
-				Call to deprecated function add_last_sql_error():
-				04/22/2023
-			'''
-			identifier: function.deprecated
-			count: 2
-			path: app/cdash/app/Model/BuildFailure.php
 
 		-
 			rawMessage: '''
@@ -11198,15 +11078,6 @@ parameters:
 
 		-
 			rawMessage: '''
-				Call to deprecated function add_last_sql_error():
-				04/22/2023
-			'''
-			identifier: function.deprecated
-			count: 1
-			path: app/cdash/app/Model/CoverageSummary.php
-
-		-
-			rawMessage: '''
 				Call to deprecated method coverageResults() of class App\Models\Build:
 				07/27/2025 Use this relation only to edit the underlying coverage table.  Use coverage() instead.
 			'''
@@ -11327,24 +11198,6 @@ parameters:
 			identifier: variable.undefined
 			count: 1
 			path: app/cdash/app/Model/CoverageSummary.php
-
-		-
-			rawMessage: '''
-				Call to deprecated function pdo_execute():
-				v2.5.0 01/22/2018
-			'''
-			identifier: function.deprecated
-			count: 1
-			path: app/cdash/app/Model/DynamicAnalysis.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method getPdo() of class CDash\Database:
-				04/22/2023  Use Laravel query builder or Eloquent instead
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/app/Model/DynamicAnalysis.php
 
 		-
 			rawMessage: 'Call to function base64_decode() requires parameter #2 to be set.'
@@ -11492,12 +11345,6 @@ parameters:
 
 		-
 			rawMessage: Property CDash\Model\DynamicAnalysis::$Name has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/DynamicAnalysis.php
-
-		-
-			rawMessage: Property CDash\Model\DynamicAnalysis::$PDO has no type specified.
 			identifier: missingType.property
 			count: 1
 			path: app/cdash/app/Model/DynamicAnalysis.php
@@ -12191,15 +12038,6 @@ parameters:
 			identifier: offsetAccess.invalidOffset
 			count: 1
 			path: app/cdash/app/Model/Repository.php
-
-		-
-			rawMessage: '''
-				Call to deprecated function add_last_sql_error():
-				04/22/2023
-			'''
-			identifier: function.deprecated
-			count: 1
-			path: app/cdash/app/Model/SubProject.php
 
 		-
 			rawMessage: '''
@@ -14507,15 +14345,6 @@ parameters:
 
 		-
 			rawMessage: '''
-				Call to deprecated function pdo_execute():
-				v2.5.0 01/22/2018
-			'''
-			identifier: function.deprecated
-			count: 2
-			path: app/cdash/include/common.php
-
-		-
-			rawMessage: '''
 				Call to deprecated function pdo_real_escape_string():
 				04/01/2023
 			'''
@@ -14542,29 +14371,8 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
-			rawMessage: '''
-				Call to deprecated method getPdo() of class CDash\Database:
-				04/22/2023  Use Laravel query builder or Eloquent instead
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
 			rawMessage: 'Call to function in_array() requires parameter #3 to be set.'
 			identifier: function.strict
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			rawMessage: Cannot access offset 'filesize' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			rawMessage: Cannot access offset 'sha1sum' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: app/cdash/include/common.php
 
@@ -14577,24 +14385,6 @@ parameters:
 		-
 			rawMessage: Cannot access property $admin on App\Models\User|null.
 			identifier: property.nonObject
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			rawMessage: 'Cannot call method bindParam() on PDOStatement|false.'
-			identifier: method.nonObject
-			count: 2
-			path: app/cdash/include/common.php
-
-		-
-			rawMessage: 'Cannot call method fetch() on PDOStatement|false.'
-			identifier: method.nonObject
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			rawMessage: 'Cannot call method fetchColumn() on PDOStatement|false.'
-			identifier: method.nonObject
 			count: 1
 			path: app/cdash/include/common.php
 
@@ -14654,24 +14444,6 @@ parameters:
 
 		-
 			rawMessage: 'Function add_XML_value() has parameter $value with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			rawMessage: 'Function add_last_sql_error() has parameter $buildid with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			rawMessage: 'Function add_last_sql_error() has parameter $functionname with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			rawMessage: 'Function add_last_sql_error() has parameter $projectid with no type specified.'
 			identifier: missingType.parameter
 			count: 1
 			path: app/cdash/include/common.php
@@ -14899,18 +14671,6 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
-			rawMessage: 'Function unlink_uploaded_file() has no return type specified.'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			rawMessage: 'Function unlink_uploaded_file() has parameter $fileid with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
 			rawMessage: 'Function xml_replace_callback() has parameter $matches with no type specified.'
 			identifier: missingType.parameter
 			count: 1
@@ -14961,7 +14721,7 @@ parameters:
 		-
 			rawMessage: 'Loose comparison via "==" is not allowed.'
 			identifier: equal.notAllowed
-			count: 4
+			count: 3
 			path: app/cdash/include/common.php
 
 		-
@@ -14973,7 +14733,7 @@ parameters:
 		-
 			rawMessage: 'Only booleans are allowed in a negated boolean, mixed given.'
 			identifier: booleanNot.exprNotBoolean
-			count: 2
+			count: 1
 			path: app/cdash/include/common.php
 
 		-
@@ -15040,12 +14800,6 @@ parameters:
 			rawMessage: 'Parameter #1 $source of method DOMDocument::loadXML() expects string, string|false given.'
 			identifier: argument.type
 			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			rawMessage: 'Parameter #1 $stmt of function pdo_execute expects PDOStatement, (PDOStatement|false) given.'
-			identifier: argument.type
-			count: 2
 			path: app/cdash/include/common.php
 
 		-
@@ -16121,15 +15875,6 @@ parameters:
 
 		-
 			rawMessage: '''
-				Call to deprecated function pdo_error():
-				04/01/2023
-			'''
-			identifier: function.deprecated
-			count: 1
-			path: app/cdash/public/api/v1/manageBuildGroup.php
-
-		-
-			rawMessage: '''
 				Call to deprecated method execute() of class CDash\Database:
 				04/22/2023  Use Laravel query builder or Eloquent instead
 			'''
@@ -16197,7 +15942,7 @@ parameters:
 		-
 			rawMessage: 'Construct empty() is not allowed. Use more strict comparison.'
 			identifier: empty.notAllowed
-			count: 5
+			count: 4
 			path: app/cdash/public/api/v1/manageBuildGroup.php
 
 		-
@@ -16563,15 +16308,6 @@ parameters:
 		-
 			rawMessage: 'Argument of an invalid type mixed supplied for foreach, only iterables are supported.'
 			identifier: foreach.nonIterable
-			count: 1
-			path: app/cdash/public/api/v1/subproject.php
-
-		-
-			rawMessage: '''
-				Call to deprecated function add_last_sql_error():
-				04/22/2023
-			'''
-			identifier: function.deprecated
 			count: 1
 			path: app/cdash/public/api/v1/subproject.php
 

@@ -296,7 +296,6 @@ class CoverageSummary
                         WHERE buildid=?
                     ', [intval($this->BuildId)]);
         if (empty($coverage)) {
-            add_last_sql_error('CoverageSummary:ComputeDifference');
             return false;
         }
         $loctested = intval($coverage['loctested']);

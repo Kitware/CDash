@@ -154,22 +154,37 @@ class SubmissionUtils
     public static function compute_error_difference($buildid, $previousbuildid, $warning): void
     {
         $pdo = Database::getInstance()->getPdo();
+
         // Look at the difference positive and negative test errors
-        $stmt = $pdo->prepare(
-            'UPDATE builderror SET newstatus=1
-        WHERE buildid=:buildid AND type=:type AND crc32 IN
-        (SELECT crc32 FROM
-        (SELECT crc32 FROM builderror WHERE buildid=:buildid AND type=:type)
-        AS builderrora
-        LEFT JOIN
-        (SELECT crc32 as crc32b FROM builderror
-        WHERE buildid=:previousbuildid AND type=:type)
-        AS builderrorb ON builderrora.crc32=builderrorb.crc32b
-        WHERE builderrorb.crc32b IS NULL)');
-        $stmt->bindValue(':buildid', $buildid);
-        $stmt->bindValue(':type', $warning);
-        $stmt->bindValue(':previousbuildid', $previousbuildid);
-        pdo_execute($stmt);
+        DB::update('
+            UPDATE builderror
+            SET newstatus=1
+            WHERE
+                buildid=:buildid
+                AND type=:type
+                AND crc32 IN (
+                    SELECT crc32
+                    FROM (
+                        SELECT crc32
+                        FROM builderror
+                        WHERE
+                            buildid=:buildid
+                            AND type=:type
+                    ) AS builderrora
+                    LEFT JOIN (
+                        SELECT crc32 AS crc32b
+                        FROM builderror
+                        WHERE
+                            buildid=:previousbuildid
+                            AND type=:type
+                    ) AS builderrorb ON builderrora.crc32=builderrorb.crc32b
+                    WHERE builderrorb.crc32b IS NULL
+                )
+        ', [
+            'buildid' => $buildid,
+            'type' => $warning,
+            'previousbuildid' => $previousbuildid,
+        ]);
 
         // Recurring buildfailures are represented by the buildfailuredetails table.
         // Get a list of buildfailuredetails IDs for the current build and the
@@ -253,17 +268,22 @@ class SubmissionUtils
 
         // Check if a diff already exists for this build.
         DB::beginTransaction();
-        $stmt = $pdo->prepare(
-            'SELECT * FROM builderrordiff WHERE buildid=:buildid AND type=:type FOR UPDATE');
-        $stmt->bindParam(':buildid', $buildid);
-        $stmt->bindParam(':type', $warning);
-        pdo_execute($stmt);
-        $row = $stmt->fetch();
+        $query = DB::select('
+            SELECT *
+            FROM builderrordiff
+            WHERE
+                buildid=:buildid
+                AND type=:type
+            FOR UPDATE
+        ', [
+            'buildid' => $buildid,
+            'type' => $warning,
+        ]);
         $existing_npositives = 0;
         $existing_nnegatives = 0;
-        if ($row) {
-            $existing_npositives = $row['difference_positive'];
-            $existing_nnegatives = $row['difference_negative'];
+        if ($query !== []) {
+            $existing_npositives = $query[0]->difference_positive;
+            $existing_nnegatives = $query[0]->difference_negative;
         }
 
         // Only log if there's a diff since last build or an existing diff record.
@@ -272,26 +292,33 @@ class SubmissionUtils
             return;
         }
 
-        if ($row) {
+        if ($query !== []) {
             // Update existing record.
-            $stmt = $pdo->prepare(
-                'UPDATE builderrordiff
-            SET difference_positive=:npositives, difference_negative=:nnegatives
-            WHERE buildid=:buildid AND type=:type');
+            DB::update('
+                UPDATE builderrordiff
+                SET
+                    difference_positive=:npositives,
+                    difference_negative=:nnegatives
+                WHERE
+                    buildid=:buildid
+                  AND type=:type
+            ', [
+                'npositives' => $npositives,
+                'nnegatives' => $nnegatives,
+                'buildid' => $buildid,
+                'type' => $warning,
+            ]);
         } else {
             // Insert new record.
-            $stmt = $pdo->prepare(
-                'INSERT INTO builderrordiff
-            (buildid, type, difference_positive, difference_negative)
-            VALUES (:buildid, :type, :npositives, :nnegatives)');
-        }
-        $stmt->bindValue(':buildid', $buildid);
-        $stmt->bindValue(':type', $warning);
-        $stmt->bindValue(':npositives', $npositives);
-        $stmt->bindValue(':nnegatives', $nnegatives);
-        if (!pdo_execute($stmt)) {
-            DB::rollBack();
-            return;
+            DB::insert('
+                INSERT INTO builderrordiff (buildid, type, difference_positive, difference_negative)
+                VALUES (:buildid, :type, :npositives, :nnegatives)
+            ', [
+                'npositives' => $npositives,
+                'nnegatives' => $nnegatives,
+                'buildid' => $buildid,
+                'type' => $warning,
+            ]);
         }
         DB::commit();
     }

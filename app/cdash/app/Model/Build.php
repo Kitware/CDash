@@ -370,9 +370,7 @@ class Build
             $this->SubProjectId = $subprojectid;
         }
 
-        $stmt = $this->PDO->prepare('SELECT groupid FROM build2group WHERE buildid = ?');
-        pdo_execute($stmt, [$buildid]);
-        $this->GroupId = (int) $stmt->fetchColumn();
+        $this->GroupId = (int) (DB::select('SELECT groupid FROM build2group WHERE buildid = ?', [$buildid])[0]->groupid ?? false);
         $this->Filled = true;
     }
 
@@ -736,28 +734,26 @@ class Build
         //
         $this->SetSubProject($subproject);
 
-        $params = [$this->ProjectId, $this->SiteId, $this->Name, $this->Stamp];
+        $query = EloquentBuild::where([
+            'projectid' => $this->ProjectId,
+            'siteid' => $this->SiteId,
+            'name' => $this->Name,
+            'stamp' => $this->Stamp,
+        ]);
 
         if ((int) $this->SubProjectId !== 0) {
-            $stmt = $this->PDO->prepare(
-                'SELECT id FROM build
-                WHERE projectid = ? AND siteid = ? AND name = ? AND
-                      stamp = ? AND subprojectid = ?');
-            $params[] = $this->SubProjectId;
+            $query = $query->where('subprojectid', $this->SubProjectId);
         } else {
-            $stmt = $this->PDO->prepare(
-                'SELECT id FROM build
-                WHERE projectid = ? AND siteid = ? AND name = ? AND stamp = ?
-                AND parentid IN (0, -1)');
-        }
-        pdo_execute($stmt, $params);
-        $id = $stmt->fetchColumn();
-        if ($id > 0) {
-            $this->Id = (int) $id;
-            return $this->Id;
+            $query = $query->whereIn('parentid', [0, -1]);
         }
 
-        return 0;
+        $id = $query->first()->id ?? 0;
+
+        if ($id > 0) {
+            $this->Id = $id;
+        }
+
+        return $id;
     }
 
     public function InsertLabelAssociations(): bool
@@ -1258,12 +1254,7 @@ class Build
         // (+/- number of tests that failed, etc.)
         TestDiffUtil::computeDifferences($this);
 
-        $project_stmt = $this->PDO->prepare(
-            'SELECT testtimestd, testtimestdthreshold, testtimemaxstatus
-            FROM project WHERE id = ?');
-        if (!pdo_execute($project_stmt, [$this->ProjectId])) {
-            return false;
-        }
+        $project = \App\Models\Project::findOrFail((int) $this->ProjectId);
 
         // The weight of the current test compared to the previous mean/std
         // (this defines a window).
@@ -1272,95 +1263,47 @@ class Build
         // the time status check.
         $testtimestatusfailed = 0;
 
-        $project_array = $project_stmt->fetch();
-        $projecttimestd = $project_array['testtimestd'];
-        $projecttimestdthreshold = $project_array['testtimestdthreshold'];
-        $projecttestmaxstatus = $project_array['testtimemaxstatus'];
-
         // Get the tests performed by the previous build.
-        $previous_tests_stmt = $this->PDO->prepare(
-            'SELECT b2t.id AS buildtestid, b2t.testname
-            FROM build2test b2t
-            WHERE b2t.buildid = ?');
-        if (!pdo_execute($previous_tests_stmt, [$previousbuildid])) {
-            return false;
-        }
-
-        $testarray = [];
-        while ($row = $previous_tests_stmt->fetch()) {
-            $test = [];
-            $test['buildtestid'] = $row['buildtestid'];
-            $test['name'] = $row['testname'];
-            $testarray[] = $test;
-        }
+        $previous_tests = Test::where('buildid', $previousbuildid)->get();
 
         // Loop through the tests performed by this build.
-        $tests_stmt = $this->PDO->prepare(
-            'SELECT b2t.id AS buildtestid, b2t.time, b2t.testname,
-                    b2t.status, b2t.timestatus
-            FROM build2test b2t
-            WHERE b2t.buildid = ?');
-        if (!pdo_execute($tests_stmt, [$this->Id])) {
-            return false;
-        }
-        while ($row = $tests_stmt->fetch()) {
-            $testtime = $row['time'];
-            $buildtestid = $row['buildtestid'];
-            $teststatus = $row['status'];
-            $testname = $row['testname'];
-            $previousbuildtestid = 0;
-
-            foreach ($testarray as $test) {
-                if ($test['name'] === $testname) {
-                    $previousbuildtestid = $test['buildtestid'];
-                    break;
-                }
-            }
-
-            if ($previousbuildtestid > 0) {
-                $previous_test_stmt = $this->PDO->prepare(
-                    'SELECT timemean, timestd, timestatus FROM build2test
-                    WHERE id = ?');
-                if (!pdo_execute($previous_test_stmt, [$previousbuildtestid])) {
-                    continue;
-                }
-
-                $previoustest_array = $previous_test_stmt->fetch();
-                $previoustimemean = $previoustest_array['timemean'];
-                $previoustimestd = $previoustest_array['timestd'];
-                $previoustimestatus = $previoustest_array['timestatus'];
-
-                if ($teststatus === 'passed') {
+        $current_tests = Test::where('buildid', $this->Id)->get();
+        /** @var Test $current_test */
+        foreach ($current_tests as $current_test) {
+            $previous_test = $previous_tests->firstWhere('testname', $current_test->testname);
+            if ($previous_test !== null) {
+                if ($current_test->status === 'passed') {
                     // if the current test passed
 
                     // Check the current status
-                    if ($previoustimestd < $projecttimestdthreshold) {
-                        $previoustimestd = $projecttimestdthreshold;
+                    $previoustimestd = $previous_test->timestd;
+                    if ($previous_test->timestd < $project->testtimestdthreshold) {
+                        $previoustimestd = $project->testtimestdthreshold;
                     }
 
-                    if ($testtime > $previoustimemean + $projecttimestd * $previoustimestd) {
+                    if ($current_test->time > $previous_test->timemean + $project->testtimestd * $previoustimestd) {
                         // only do positive std
 
-                        $timestatus = $previoustimestatus + 1; // flag
+                        $timestatus = $previous_test->timestatus + 1; // flag
                     } else {
                         $timestatus = 0; // reset the time status to 0
                     }
 
-                    if ($timestatus > 0 && $timestatus <= $projecttestmaxstatus) {
+                    if ($timestatus > 0 && $timestatus <= $project->testtimemaxstatus) {
                         // if we are currently detecting the time changed we should use previous mean std
 
-                        $timemean = $previoustimemean;
+                        $timemean = $previous_test->timemean;
                         $timestd = $previoustimestd;
                     } else {
                         // Update the mean and std
-                        $timemean = (1 - $weight) * $previoustimemean + $weight * $testtime;
-                        $timestd = sqrt((1 - $weight) * $previoustimestd * $previoustimestd + $weight * ($testtime - $timemean) * ($testtime - $timemean));
+                        $timemean = (1 - $weight) * $previous_test->timemean + $weight * $current_test->time;
+                        $timestd = sqrt((1 - $weight) * $previoustimestd * $previoustimestd + $weight * ($current_test->time - $timemean) * ($current_test->time - $timemean));
                     }
                 } else {
                     // the test failed so we just replicate the previous test time
 
-                    $timemean = $previoustimemean;
-                    $timestd = $previoustimestd;
+                    $timemean = $previous_test->timemean;
+                    $timestd = $previous_test->timestd;
                     $timestatus = 0;
                 }
             } else {
@@ -1368,20 +1311,15 @@ class Build
 
                 $timestd = 0;
                 $timestatus = 0;
-                $timemean = $testtime;
+                $timemean = $current_test->time;
             }
 
-            $buildtest = Test::findOrFail((int) $buildtestid);
-            $buildtest->timestatus = (int) $timestatus;
+            $current_test->timestatus = (int) $timestatus;
+            $current_test->timemean = $timemean;
+            $current_test->timestd = $timestd;
+            $current_test->save();
 
-            $buildtest->timemean = $timemean;
-            $buildtest->timestd = $timestd;
-
-            DB::transaction(function () use ($buildtest): void {
-                $buildtest->save();
-            });
-
-            if ($timestatus >= $projecttestmaxstatus) {
+            if ($timestatus >= $project->testtimemaxstatus) {
                 $testtimestatusfailed++;
             }
         }
@@ -2121,19 +2059,18 @@ class Build
      */
     public static function GetSubProjectBuild(int $parentid, int $subprojectid): ?self
     {
-        $row = DB::select('
-            SELECT b.id
-            FROM build b
-            WHERE
-                b.parentid = ?
-                AND b.subprojectid = ?
-        ', [$parentid, $subprojectid])[0] ?? [];
-        if (!$row) {
+        $eloquent_model = EloquentBuild::where([
+            'parentid' => $parentid,
+            'subprojectid' => $subprojectid,
+        ])->first();
+
+        if ($eloquent_model === null) {
             return null;
         }
+
         $build = new Build();
-        $build->Id = $row->id;
-        $build->FillFromId($build->Id);
+        $build->Id = $eloquent_model->id;
+        $build->FillFromId($eloquent_model->id);
         return $build;
     }
 

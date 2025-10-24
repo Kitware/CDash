@@ -667,7 +667,6 @@ class RepositoryUtils
                         ORDER BY name
                         LIMIT $maxitems
                     ", [$buildid]);
-            add_last_sql_error('sendmail');
             $numrows = count($da_query);
 
             if ($numrows > 0) {
