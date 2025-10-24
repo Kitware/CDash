@@ -22,6 +22,7 @@ use App\Models\DynamicAnalysis as EloquentDynamicAnalysis;
 use App\Models\DynamicAnalysisDefect;
 use App\Models\Label;
 use CDash\Database;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class DynamicAnalysis
@@ -44,12 +45,6 @@ class DynamicAnalysis
     public $LogCompression;
     public $LogEncoding;
     private $Filled = false;
-    private $PDO;
-
-    public function __construct()
-    {
-        $this->PDO = Database::getInstance()->getPdo();
-    }
 
     /** Add a defect */
     public function AddDefect(DynamicAnalysisDefect $defect): void
@@ -223,33 +218,36 @@ class DynamicAnalysis
     /** Encapsulate common bits of functions below. */
     private function GetRelatedId($build, $order, $time_clause = null): int
     {
-        $stmt = $this->PDO->prepare(
-            "SELECT dynamicanalysis.id FROM dynamicanalysis
-        JOIN build ON (dynamicanalysis.buildid = build.id)
-        WHERE build.siteid = :siteid AND
-              build.type = :buildtype AND
-              build.name = :buildname AND
-              build.projectid = :projectid AND
-              $time_clause
-              dynamicanalysis.name = :filename
-        ORDER BY build.starttime $order LIMIT 1");
+        $params = [
+            'siteid' => $build->SiteId,
+            'buildtype' => $build->Type,
+            'buildname' => $build->Name,
+            'projectid' => $build->ProjectId,
+            'filename' => $this->Name,
+        ];
 
-        $stmt->bindParam(':siteid', $build->SiteId);
-        $stmt->bindParam(':buildtype', $build->Type);
-        $stmt->bindParam(':buildname', $build->Name);
-        $stmt->bindParam(':projectid', $build->ProjectId);
-        if ($time_clause) {
-            $stmt->bindParam(':starttime', $build->StartTime);
+        if ($time_clause !== null) {
+            $params['starttime'] = $build->StartTime;
         }
-        $stmt->bindParam(':filename', $this->Name);
-        if (!pdo_execute($stmt)) {
+
+        $query = DB::select("
+            SELECT dynamicanalysis.id
+            FROM dynamicanalysis
+            JOIN build ON (dynamicanalysis.buildid = build.id)
+            WHERE build.siteid = :siteid AND
+                build.type = :buildtype AND
+                build.name = :buildname AND
+                build.projectid = :projectid AND
+                $time_clause
+                dynamicanalysis.name = :filename
+            ORDER BY build.starttime $order
+            LIMIT 1
+        ", $params);
+
+        if ($query === []) {
             return 0;
         }
-        $row = $stmt->fetch();
-        if (!$row) {
-            return 0;
-        }
-        return intval($row['id']);
+        return intval($query[0]->id);
     }
 
     /** Get the previous id for this DA */

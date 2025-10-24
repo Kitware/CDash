@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Utils;
 
 use App\Enums\TestDiffType;
+use App\Models\Test;
+use App\Models\TestDiff;
 use CDash\Model\Build;
 use Illuminate\Support\Facades\DB;
 
@@ -73,8 +75,7 @@ class TestDiffUtil
         }
 
         // Set build2test::newstatus=1 for tests whose status has changed since this previous build.
-        DB::table('build2test')
-            ->whereIntegerInRaw('id', $newstatus_b2t_ids)
+        Test::whereIn('id', $newstatus_b2t_ids)
             ->update(['newstatus' => 1]);
 
         foreach ($previous_tests as $previous_test) {
@@ -107,23 +108,13 @@ class TestDiffUtil
             }
 
             // UPDATE or INSERT a new record as necessary.
-            if ($existing_testdiff) {
-                DB::table('testdiff')
-                    ->where('buildid', $build->Id)
-                    ->where('type', $type)
-                    ->update([
-                        'difference_positive' => $num_positive,
-                        'difference_negative' => $num_negative,
-                    ]);
-            } else {
-                DB::table('testdiff')
-                    ->insertOrIgnore([[
-                        'buildid' => $build->Id,
-                        'type' => $type,
-                        'difference_positive' => $num_positive,
-                        'difference_negative' => $num_negative,
-                    ]]);
-            }
+            TestDiff::updateOrCreate([
+                'buildid' => $build->Id,
+                'type' => $type,
+            ], [
+                'difference_positive' => $num_positive,
+                'difference_negative' => $num_negative,
+            ]);
         }, 5);
 
         return true;

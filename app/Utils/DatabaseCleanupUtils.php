@@ -13,10 +13,12 @@ use App\Models\Image;
 use App\Models\Note;
 use App\Models\RichBuildAlertDetails;
 use App\Models\Test;
+use App\Models\UploadFile;
 use CDash\Database;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use InvalidArgumentException;
 
 class DatabaseCleanupUtils
@@ -231,7 +233,9 @@ class DatabaseCleanupUtils
         foreach ($build2uploadfiles as $build2uploadfile_array) {
             $fileid = intval($build2uploadfile_array->fileid);
             $fileids[] = $fileid;
-            unlink_uploaded_file($fileid);
+
+            $sha1sum = UploadFile::findOrFail($fileid)->sha1sum;
+            Storage::delete("upload/{$sha1sum}");
         }
 
         if (count($fileids) > 0) {

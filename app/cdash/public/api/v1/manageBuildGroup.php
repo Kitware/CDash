@@ -225,10 +225,6 @@ $wildcards = $db->executePrepared("
                      AND bg.projectid=?
                      AND b2gr.endtime = '1980-01-01 00:00:00'
              ", [intval($projectid)]);
-$err = pdo_error();
-if (!empty($err)) {
-    $response['error'] = $err;
-}
 
 $wildcards_response = [];
 foreach ($wildcards as $wildcard_array) {

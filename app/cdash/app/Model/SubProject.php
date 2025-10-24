@@ -368,7 +368,6 @@ class SubProject
         $project = $db->executePrepared($query, $params);
 
         if ($project === false) {
-            add_last_sql_error('SubProject CommonBuildQuery');
             return false;
         }
         if ($allSubProjects) {

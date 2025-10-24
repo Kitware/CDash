@@ -22,8 +22,8 @@ use App\Models\Configure as EloquentConfigure;
 use CDash\Database;
 use Exception;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use PDO;
 
 /** BuildConfigure class */
 class BuildConfigure
@@ -40,8 +40,6 @@ class BuildConfigure
     public Collection $LabelCollection;
     private $Crc32;
 
-    private $PDO;
-
     /**
      * BuildConfigure constructor.
      */
@@ -51,7 +49,6 @@ class BuildConfigure
         $this->Log = '';
         $this->Status = '';
         $this->LabelCollection = collect();
-        $this->PDO = Database::getInstance()->getPdo();
     }
 
     public function AddLabel($label): void
@@ -257,15 +254,12 @@ class BuildConfigure
             return false;
         }
 
-        $sql =
-            'SELECT * FROM configure c
+        return DB::select('
+            SELECT *
+            FROM configure c
             JOIN build2configure b2c ON c.id = b2c.configureid
-            WHERE buildid = ?';
-        $query = $this->PDO->prepare($sql);
-
-        pdo_execute($query, [$this->BuildId]);
-
-        return $query->fetch(PDO::FETCH_ASSOC);
+            WHERE buildid = ?
+        ', [$this->BuildId])[0] ?? false;
     }
 
     /** Compute the warnings from the log. In the future we might want to add errors */
@@ -275,7 +269,7 @@ class BuildConfigure
         $log_lines = explode("\n", $this->Log);
         $numlines = count($log_lines);
 
-        $stmt = $this->PDO->prepare(
+        $stmt = Database::getInstance()->getPdo()->prepare(
             'INSERT INTO configureerror (configureid, type, text)
              VALUES (:id, 1, :text)');
         $stmt->bindParam(':id', $this->Id);

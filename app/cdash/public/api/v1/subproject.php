@@ -99,7 +99,6 @@ function rest_get($projectid): bool
              ", [$projectid]);
 
     if ($query === false) {
-        add_last_sql_error('getSubProject Select');
         return false;
     }
 

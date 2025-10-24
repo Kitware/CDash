@@ -376,33 +376,6 @@ function add_XML_value(string $tag, $value): string
 }
 
 /**
- * Report last my SQL error
- *
- * @deprecated 04/22/2023
- */
-function add_last_sql_error($functionname, $projectid = 0, $buildid = 0): void
-{
-    $pdo_error = pdo_error();
-    if (strlen($pdo_error) > 0) {
-        $context = [
-            'function' => $functionname,
-        ];
-
-        if ($projectid > 0) {
-            $context['projectid'] = $projectid;
-        }
-
-        if ($buildid > 0) {
-            $context['buildid'] = $buildid;
-        }
-
-        Log::error('SQL error: ' . $pdo_error, $context);
-        $text = "SQL error in $functionname():" . $pdo_error . '<br>';
-        echo $text;
-    }
-}
-
-/**
  * Get the project id from the project name
  */
 function get_project_id($projectname): int
@@ -449,48 +422,6 @@ function remove_project_builds($projectid): void
         $buildids[] = (int) $build_array->id;
     }
     DatabaseCleanupUtils::removeBuildsChunked($buildids);
-}
-
-/**
- * Deletes the symlink to an uploaded file.  If it is the only symlink to that content,
- * it will also delete the content itself.
- * Returns the number of bytes deleted from disk (0 for symlink, otherwise the size of the content)
- */
-function unlink_uploaded_file($fileid)
-{
-    $pdo = Database::getInstance()->getPdo();
-    $stmt = $pdo->prepare(
-        'SELECT sha1sum, filename, filesize FROM uploadfile
-        WHERE id = ? AND isurl = 0');
-
-    if (!pdo_execute($stmt, [$fileid])) {
-        return 0;
-    }
-    $row = $stmt->fetch();
-    if (!$row) {
-        return 0;
-    }
-
-    $sha1sum = $row['sha1sum'];
-    $filesize = $row['filesize'];
-
-    $shareCount = 0;
-    $stmt = $pdo->prepare(
-        'SELECT COUNT(*) FROM uploadfile
-        WHERE sha1sum = :sha1sum AND id != :fileid');
-    $stmt->bindParam(':sha1sum', $sha1sum);
-    $stmt->bindParam(':fileid', $fileid);
-    if (pdo_execute($stmt)) {
-        $shareCount = $stmt->fetchColumn();
-    }
-
-    if ($shareCount == 0) {
-        // Delete file if this is the only build referencing it.
-        Storage::delete("upload/{$sha1sum}");
-        return $filesize;
-    } else {
-        return 0;
-    }
 }
 
 /**
@@ -953,26 +884,6 @@ function deepEncodeHTMLEntities(&$structure): void
         }
     } elseif (is_string($structure)) {
         $structure = $encode($structure);
-    }
-}
-
-/**
- * Get the last pdo error or empty string in the case of no error.
- *
- * @deprecated 04/01/2023
- *
- * @return string containing error message (or not in the case of production)
- */
-function pdo_error(): string
-{
-    $error_info = Database::getInstance()->getPdo()->errorInfo();
-    if (isset($error_info[2]) && $error_info[0] !== '00000') {
-        if (config('app.env') === 'production') {
-            return 'SQL error encountered, query hidden.';
-        }
-        return $error_info[2];
-    } else {
-        return ''; // no error;
     }
 }
 

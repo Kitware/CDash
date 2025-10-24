@@ -143,7 +143,6 @@ class BuildFailure
                          SELECT id FROM buildfailureargument WHERE argument=?
                      ', [$argumentescaped]);
             if ($query === false) {
-                add_last_sql_error('BuildFailure Insert', 0, $this->BuildId);
                 return false;
             }
 
@@ -169,7 +168,6 @@ class BuildFailure
         }
         $query = rtrim($query, ',');
         if (count($params) > 0 && $db->executePrepared($query, $params) === false) {
-            add_last_sql_error('BuildFailure Insert', 0, $this->BuildId);
             return false;
         }
 

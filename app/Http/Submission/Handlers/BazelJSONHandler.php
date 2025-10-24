@@ -25,6 +25,7 @@ use CDash\Model\Build;
 use CDash\Model\BuildConfigure;
 use CDash\Model\BuildError;
 use CDash\Model\BuildErrorFilter;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use stdClass;
@@ -47,8 +48,6 @@ class BazelJSONHandler extends AbstractSubmissionHandler
     private $TestName;
     private $ParseConfigure;
     private ?BuildErrorFilter $BuildErrorFilter = null;
-
-    private $PDO;
 
     public function __construct(Build $build)
     {
@@ -74,8 +73,6 @@ class BazelJSONHandler extends AbstractSubmissionHandler
         $this->TestsOutput = [];
         $this->TestName = '';
         $this->ParseConfigure = true;
-
-        $this->PDO = Database::getInstance()->getPdo();
     }
 
     protected function HasSubProjects(): bool
@@ -667,9 +664,7 @@ class BazelJSONHandler extends AbstractSubmissionHandler
         if (array_key_exists('', $this->Builds)) {
             $this->ParentBuild = $this->Builds[''];
             unset($this->Builds['']);
-            $stmt = $this->PDO->prepare(
-                'UPDATE build SET parentid = ? WHERE id = ?');
-            pdo_execute($stmt, [Build::PARENT_BUILD, $this->ParentBuild->Id]);
+            \App\Models\Build::where('id', $this->ParentBuild->Id)->update(['parentid' => Build::PARENT_BUILD]);
             $this->ParentBuild->SetParentId(Build::PARENT_BUILD);
         }
 
@@ -793,19 +788,23 @@ class BazelJSONHandler extends AbstractSubmissionHandler
      */
     private static function GetSubProjectForPath(string $filepath, int $projectid): string
     {
-        $pdo = Database::getInstance()->getPdo();
         // Get all the subprojects for this project that have a path defined.
         // Sort by longest paths first.
-        $stmt = $pdo->prepare(
-            "SELECT name, path FROM subproject
-            WHERE projectid = ? AND path != ''
-            ORDER BY CHAR_LENGTH(path) DESC");
-        pdo_execute($stmt, [$projectid]);
-        while ($row = $stmt->fetch()) {
+        $query = DB::select("
+            SELECT
+                name,
+                path
+            FROM subproject
+            WHERE
+                projectid = ?
+                AND path != ''
+            ORDER BY CHAR_LENGTH(path) DESC
+        ", [$projectid]);
+        foreach ($query as $row) {
             // Return the name of the subproject with the longest path
             // that matches our input path.
-            if (str_contains($filepath, $row['path'])) {
-                return $row['name'];
+            if (str_contains($filepath, $row->path)) {
+                return $row->name;
             }
         }
 
