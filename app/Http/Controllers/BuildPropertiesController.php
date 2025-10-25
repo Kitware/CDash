@@ -8,16 +8,10 @@ use DateInterval;
 use DateTime;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Session;
-use Illuminate\View\View;
 use PDOStatement;
 
 final class BuildPropertiesController extends AbstractBuildController
 {
-    public function buildProperties(): View
-    {
-        return $this->view('build.properties', 'Build Properties');
-    }
-
     public function apiBuildProperties(): JsonResponse
     {
         $pageTimer = new PageTimer();
@@ -33,6 +27,7 @@ final class BuildPropertiesController extends AbstractBuildController
 
         // Begin our JSON response.
         $response = begin_JSON_response();
+        $response['deprecated'] = 'This endpoint will be removed in the next major version of CDash.';
         $response['title'] = "{$this->project->Name} - Build Properties";
         $response['showcalendar'] = 0;
         $response['nightlytime'] = $this->project->NightlyTime;

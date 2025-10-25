@@ -246,8 +246,6 @@ Route::get('/viewBuildError.php', 'BuildController@viewBuildError');
 
 Route::get('/viewBuildGroup.php', 'BuildController@viewBuildGroup');
 
-Route::get('/buildProperties.php', 'BuildPropertiesController@buildProperties');
-
 Route::get('/viewSubProjects.php', 'SubProjectController@viewSubProjects');
 
 Route::get('/manageSubProject.php', 'SubProjectController@manageSubProject');
