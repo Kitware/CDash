@@ -12,6 +12,10 @@
     <loading-indicator :is-loading="!tests">
       <data-table
         :columns="[
+          ...(hasSubProjects ? [{
+            name: 'subProject',
+            displayName: 'SubProject',
+          }] : []),
           {
             name: 'name',
             displayName: 'Name',
@@ -101,6 +105,10 @@ export default {
                       }
                     }
                   }
+                  subProject {
+                    id
+                    name
+                  }
                 }
               }
             }
@@ -109,7 +117,14 @@ export default {
       `,
       update: (data) => {
         let tests = [...data.build.tests.edges];
-        data.build.children.edges.forEach((child) => tests = tests.concat(child.node.tests.edges));
+        data.build.children.edges.forEach((child) => {
+          tests = tests.concat(
+            child.node.tests.edges.map((test) => ({
+              ...test,
+              subProject: child.node.subProject.name,
+            })),
+          );
+        });
         return tests;
       },
       variables() {
@@ -128,6 +143,10 @@ export default {
   },
 
   computed: {
+    hasSubProjects() {
+      return this.tests?.some((element) => element.subProject) ?? false;
+    },
+
     executeQueryLink() {
       return `${window.location.origin}${window.location.pathname}?filters=${encodeURIComponent(JSON.stringify(this.changedFilters))}`;
     },
@@ -152,6 +171,7 @@ export default {
             href: `${this.$baseURL}/tests/${edge.node.id}`,
             classes: [this.testStatusToColorClass(edge.node.status)],
           },
+          subProject: edge.subProject ?? '',
         };
       });
     },

@@ -510,6 +510,8 @@ type Build {
   urls: [UploadedUrl!]! @hasMany(relation: "uploadedFiles", type: CONNECTION, scopes: ["urls"]) @orderBy(column: "id", direction: ASC)
 
   files: [UploadedFile!]! @hasMany(relation: "uploadedFiles", type: CONNECTION, scopes: ["files"]) @orderBy(column: "id", direction: ASC)
+
+  subProject: SubProject! @belongsTo
 }
 
 
@@ -890,4 +892,13 @@ type UploadedFile @model(class: "App\\Models\\UploadFile") {
 
   "File size in bytes."
   size: Int! @rename(attribute: "filesize")
+}
+
+
+# TODO: add the rest of the fields once types and relationships are solidified.
+type SubProject {
+  "Unique primary key."
+  id: ID!
+
+  name: String!
 }
