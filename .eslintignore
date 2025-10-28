@@ -9,7 +9,6 @@ resources/js/angular/services/renderTimer.js
 resources/js/angular/services/multisort.js
 resources/js/angular/services/modal.js
 resources/js/angular/services/filters.js
-resources/js/angular/services/comparators.js
 resources/js/angular/services/apiLoader.js
 resources/js/angular/services/anchors.js
 resources/js/angular/linechart.js
