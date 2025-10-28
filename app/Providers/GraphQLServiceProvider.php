@@ -6,6 +6,7 @@ use App\Enums\BuildCommandType;
 use App\Enums\GlobalRole;
 use App\Enums\ProjectRole;
 use App\Enums\TargetType;
+use App\Enums\TestTimeStatusCategory;
 use GraphQL\Type\Definition\PhpEnumType;
 use Illuminate\Support\ServiceProvider;
 use Nuwave\Lighthouse\Schema\TypeRegistry;
@@ -18,5 +19,6 @@ final class GraphQLServiceProvider extends ServiceProvider
         $typeRegistry->register(new PhpEnumType(ProjectRole::class));
         $typeRegistry->register(new PhpEnumType(TargetType::class));
         $typeRegistry->register(new PhpEnumType(BuildCommandType::class));
+        $typeRegistry->register(new PhpEnumType(TestTimeStatusCategory::class));
     }
 }

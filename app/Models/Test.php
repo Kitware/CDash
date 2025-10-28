@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\TestTimeStatusCategory;
 use CDash\Model\Label;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -26,6 +27,7 @@ use Illuminate\Support\Facades\Config;
  * @property int $newstatus
  * @property string $details
  * @property string $testname
+ * @property TestTimeStatusCategory $timestatuscategory
  *
  * @mixin Builder<Test>
  */
@@ -74,6 +76,7 @@ class Test extends Model
         'timestd' => 'float',
         'timestatus' => 'integer',
         'newstatus' => 'integer',
+        'timestatuscategory' => TestTimeStatusCategory::class,
     ];
 
     /**
