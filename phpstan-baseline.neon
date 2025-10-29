@@ -11212,18 +11212,6 @@ parameters:
 			path: app/cdash/app/Model/DynamicAnalysis.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
-			identifier: equal.notAllowed
-			count: 3
-			path: app/cdash/app/Model/DynamicAnalysis.php
-
-		-
-			rawMessage: 'Method CDash\Model\DynamicAnalysis::AddLabel() has parameter $label with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Model/DynamicAnalysis.php
-
-		-
 			rawMessage: 'Method CDash\Model\DynamicAnalysis::GetDefects() return type has no value type specified in iterable type array.'
 			identifier: missingType.iterableValue
 			count: 1
@@ -11278,38 +11266,8 @@ parameters:
 			path: app/cdash/app/Model/DynamicAnalysis.php
 
 		-
-			rawMessage: 'Parameter #1 $string of function base64_decode expects string, (array<string>|string) given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/app/Model/DynamicAnalysis.php
-
-		-
 			rawMessage: 'Parameter #2 $data of function inflate_add expects string, null given.'
 			identifier: argument.type
-			count: 1
-			path: app/cdash/app/Model/DynamicAnalysis.php
-
-		-
-			rawMessage: Property CDash\Model\DynamicAnalysis::$BuildId has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/DynamicAnalysis.php
-
-		-
-			rawMessage: Property CDash\Model\DynamicAnalysis::$Checker has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/DynamicAnalysis.php
-
-		-
-			rawMessage: Property CDash\Model\DynamicAnalysis::$Filled has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/DynamicAnalysis.php
-
-		-
-			rawMessage: Property CDash\Model\DynamicAnalysis::$FullCommandLine has no type specified.
-			identifier: missingType.property
 			count: 1
 			path: app/cdash/app/Model/DynamicAnalysis.php
 
@@ -11320,72 +11278,6 @@ parameters:
 			path: app/cdash/app/Model/DynamicAnalysis.php
 
 		-
-			rawMessage: Property CDash\Model\DynamicAnalysis::$Labels has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/DynamicAnalysis.php
-
-		-
-			rawMessage: Property CDash\Model\DynamicAnalysis::$Log has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/DynamicAnalysis.php
-
-		-
-			rawMessage: Property CDash\Model\DynamicAnalysis::$LogCompression has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/DynamicAnalysis.php
-
-		-
-			rawMessage: Property CDash\Model\DynamicAnalysis::$LogEncoding has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/DynamicAnalysis.php
-
-		-
-			rawMessage: Property CDash\Model\DynamicAnalysis::$Name has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/DynamicAnalysis.php
-
-		-
-			rawMessage: Property CDash\Model\DynamicAnalysis::$Path has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/DynamicAnalysis.php
-
-		-
-			rawMessage: Property CDash\Model\DynamicAnalysis::$Status has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/DynamicAnalysis.php
-
-		-
-			rawMessage: '''
-				Call to deprecated function pdo_execute():
-				v2.5.0 01/22/2018
-			'''
-			identifier: function.deprecated
-			count: 3
-			path: app/cdash/app/Model/DynamicAnalysisSummary.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method getPdo() of class CDash\Database:
-				04/22/2023  Use Laravel query builder or Eloquent instead
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/app/Model/DynamicAnalysisSummary.php
-
-		-
-			rawMessage: 'Method CDash\Model\DynamicAnalysisSummary::AddDefects() has parameter $defects with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Model/DynamicAnalysisSummary.php
-
-		-
 			rawMessage: 'Method CDash\Model\DynamicAnalysisSummary::Insert() has no return type specified.'
 			identifier: missingType.return
 			count: 1
@@ -11394,30 +11286,6 @@ parameters:
 		-
 			rawMessage: 'Method CDash\Model\DynamicAnalysisSummary::Insert() has parameter $append with no type specified.'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Model/DynamicAnalysisSummary.php
-
-		-
-			rawMessage: Property CDash\Model\DynamicAnalysisSummary::$BuildId has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/DynamicAnalysisSummary.php
-
-		-
-			rawMessage: Property CDash\Model\DynamicAnalysisSummary::$Checker has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/DynamicAnalysisSummary.php
-
-		-
-			rawMessage: Property CDash\Model\DynamicAnalysisSummary::$NumDefects has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/DynamicAnalysisSummary.php
-
-		-
-			rawMessage: Property CDash\Model\DynamicAnalysisSummary::$PDO has no type specified.
-			identifier: missingType.property
 			count: 1
 			path: app/cdash/app/Model/DynamicAnalysisSummary.php
 
@@ -16540,12 +16408,6 @@ parameters:
 			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertCount().'
 			identifier: staticMethod.dynamicCall
 			count: 3
-			path: app/cdash/tests/case/CDash/DynamicAnalysisUseCaseTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertEquals().'
-			identifier: staticMethod.dynamicCall
-			count: 2
 			path: app/cdash/tests/case/CDash/DynamicAnalysisUseCaseTest.php
 
 		-

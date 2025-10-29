@@ -17,50 +17,32 @@
 
 namespace CDash\Model;
 
-use CDash\Database;
 use Illuminate\Support\Facades\DB;
 
 class DynamicAnalysisSummary
 {
-    public $BuildId;
-    public $Checker;
-    private $NumDefects;
-    private $PDO;
-
-    public function __construct()
-    {
-        $this->BuildId = 0;
-        $this->Checker = '';
-        $this->NumDefects = 0;
-        $this->PDO = Database::getInstance()->getPdo();
-    }
+    public int $BuildId = 0;
+    public string $Checker = '';
+    private int $NumDefects = 0;
 
     /** Add defects to the summary */
-    public function AddDefects($defects): void
+    public function AddDefects(int $defects): void
     {
         $this->NumDefects += $defects;
     }
 
     /** Check if a summary already exists for this build. */
-    public function Exists(): bool
+    protected function Exists(): bool
     {
         if ($this->BuildId < 1) {
             return false;
         }
-        $stmt = $this->PDO->prepare('
-                SELECT COUNT(*) AS c FROM dynamicanalysissummary
-                WHERE buildid = ?');
-        if (pdo_execute($stmt, [$this->BuildId])) {
-            $row = $stmt->fetch();
-            if ($row['c'] > 0) {
-                return true;
-            }
-        }
-        return false;
+
+        return \App\Models\DynamicAnalysisSummary::where('buildid', $this->BuildId)->exists();
     }
 
     /** Remove the dynamic analysis summary for this build. */
-    public function Remove(): void
+    protected function Remove(): void
     {
         if ($this->BuildId < 1) {
             abort(500, 'Invalid BuildId');
@@ -69,10 +51,9 @@ class DynamicAnalysisSummary
             abort(500, 'Dynamic Analysis does not exist.');
         }
 
-        DB::delete('DELETE FROM dynamicanalysissummary WHERE buildid = ?', [$this->BuildId]);
+        \App\Models\DynamicAnalysisSummary::where('buildid', $this->BuildId)->delete();
     }
 
-    // Insert the DynamicAnalysisSummary
     public function Insert($append = false)
     {
         if ($this->BuildId < 1) {
@@ -81,46 +62,28 @@ class DynamicAnalysisSummary
 
         DB::beginTransaction();
 
-        $stmt = $this->PDO->prepare('
-                INSERT INTO dynamicanalysissummary
-                (buildid, checker, numdefects)
-                VALUES (:buildid, :checker, :numdefects)');
-
         if ($this->Exists()) {
             if ($append) {
-                // Load the existing results for this build.
-                $stmt = $this->PDO->prepare('
-                    SELECT checker, numdefects FROM dynamicanalysissummary
-                    WHERE buildid = ? FOR UPDATE');
-                pdo_execute($stmt, [$this->BuildId]);
-                $row = $stmt->fetch();
-                if (!$row) {
-                    DB::rollBack();
-                    return false;
-                }
-                $this->Checker = $row['checker'];
-                $this->NumDefects += $row['numdefects'];
-
-                // Prepare an UPDATE statement (rather than our default INSERT).
-                $stmt = $this->PDO->prepare('
-                        UPDATE dynamicanalysissummary
-                        SET checker=:checker, numdefects=:numdefects
-                        WHERE buildid=:buildid');
+                \App\Models\DynamicAnalysisSummary::where('buildid', $this->BuildId)
+                    ->increment('numdefects', $this->NumDefects);
+                $model = \App\Models\DynamicAnalysisSummary::where('buildid', $this->BuildId)->firstOrFail();
+                $this->Checker = $model->checker;
+                $this->NumDefects = $model->numdefects;
             } else {
-                // We only support one such summary per build, so if we're
-                // not append we delete any row that exists for this build
-                // before attempting to insert a new one.
-                $this->Remove();
+                \App\Models\DynamicAnalysisSummary::where('buildid', $this->BuildId)
+                    ->update([
+                        'checker' => $this->Checker,
+                        'numdefects' => $this->NumDefects,
+                    ]);
             }
+        } else {
+            \App\Models\DynamicAnalysisSummary::create([
+                'buildid' => $this->BuildId,
+                'checker' => $this->Checker,
+                'numdefects' => $this->NumDefects,
+            ]);
         }
 
-        $stmt->bindParam(':buildid', $this->BuildId);
-        $stmt->bindParam(':checker', $this->Checker);
-        $stmt->bindParam(':numdefects', $this->NumDefects);
-        if (!pdo_execute($stmt)) {
-            DB::rollBack();
-            return false;
-        }
         DB::commit();
         return true;
     }

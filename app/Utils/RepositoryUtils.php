@@ -7,7 +7,6 @@ namespace App\Utils;
 use App\Models\Configure;
 use CDash\Database;
 use CDash\Model\Build;
-use CDash\Model\DynamicAnalysis;
 use CDash\Model\Project;
 use CDash\ServiceContainer;
 use Illuminate\Support\Facades\Log;
@@ -731,9 +730,10 @@ class RepositoryUtils
         }
 
         // Dynamic analysis errors
-        $DynamicAnalysis = new DynamicAnalysis();
-        $DynamicAnalysis->BuildId = $buildid;
-        $errors['dynamicanalysis_errors'] = $DynamicAnalysis->GetNumberOfErrors();
+        $errors['dynamicanalysis_errors'] = \App\Models\Build::find($buildid)
+            ?->dynamicAnalyses()
+            ->whereIn('status', ['notrun', 'failed'])
+            ->count() ?? 0;
 
         // Check if this is a clean build.
         if ($errors['configure_errors'] == 0

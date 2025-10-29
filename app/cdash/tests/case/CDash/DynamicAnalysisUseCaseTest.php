@@ -66,7 +66,7 @@ class DynamicAnalysisUseCaseTest extends CDashUseCaseTestCase
 
         /** @var DynamicAnalysis $failed */
         $failed = $collection->get('experimentalFail');
-        $this->assertEquals(DynamicAnalysis::FAILED, $failed->Status);
+        self::assertSame(DynamicAnalysis::FAILED, $failed->Status);
 
         $build = $builds->get('MyThirdPartyDependency');
         $this->assertInstanceOf(Build::class, $build);
@@ -76,6 +76,6 @@ class DynamicAnalysisUseCaseTest extends CDashUseCaseTestCase
 
         /** @var DynamicAnalysis $passed */
         $passed = $collection->get('thirdparty');
-        $this->assertEquals(DynamicAnalysis::PASSED, $passed->Status);
+        self::assertSame(DynamicAnalysis::PASSED, $passed->Status);
     }
 }

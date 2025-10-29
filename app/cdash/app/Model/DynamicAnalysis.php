@@ -32,19 +32,19 @@ class DynamicAnalysis
     public const NOTRUN = 'notrun';
 
     public $Id;
-    public $Status;
-    public $Checker;
-    public $Name;
-    public $Path;
-    public $FullCommandLine;
-    public $Log;
+    public string $Status = ''; // TODO: use an enum for this
+    public string $Checker = '';
+    public string $Name = '';
+    public string $Path = '';
+    public string $FullCommandLine = '';
+    public string $Log = '';
     /** @var array<DynamicAnalysisDefect> */
     private array $Defects = [];
-    public $BuildId;
-    public $Labels;
-    public $LogCompression;
-    public $LogEncoding;
-    private $Filled = false;
+    public int $BuildId = -1;
+    /** @var array<\CDash\Model\Label> */
+    public array $Labels = [];
+    public string $LogCompression = '';
+    public string $LogEncoding = '';
 
     /** Add a defect */
     public function AddDefect(DynamicAnalysisDefect $defect): void
@@ -57,40 +57,13 @@ class DynamicAnalysis
         return $this->Defects;
     }
 
-    public function AddLabel($label): void
+    public function AddLabel(\CDash\Model\Label $label): void
     {
         $this->Labels[] = $label;
     }
 
-    /** Find how many dynamic analysis tests were failed or notrun status */
-    public function GetNumberOfErrors(): int|false
-    {
-        if (strlen($this->BuildId) == 0) {
-            abort(500, 'DynamicAnalysis::GetNumberOfErrors BuildId not set');
-        }
-
-        $build = Build::find((int) $this->BuildId);
-        if ($build === null) {
-            return 0;
-        }
-
-        return $build->dynamicAnalyses()
-            ->whereIn('status', ['notrun', 'failed'])
-            ->count();
-    }
-
-    /** Remove all the dynamic analysis associated with a buildid */
-    public function RemoveAll(): void
-    {
-        if (strlen($this->BuildId) == 0) {
-            abort(500, 'DynamicAnalysis::RemoveAll BuildId not set');
-        }
-
-        Build::findOrFail((int) $this->BuildId)->dynamicAnalyses()->delete();
-    }
-
     /** Insert labels */
-    public function InsertLabelAssociations(): void
+    protected function InsertLabelAssociations(): void
     {
         if (empty($this->Labels)) {
             return;
@@ -114,40 +87,42 @@ class DynamicAnalysis
     /** Insert the DynamicAnalysis */
     public function Insert()
     {
-        if (strlen($this->BuildId) == 0) {
+        if ($this->BuildId === -1) {
             abort(500, 'DynamicAnalysis::Insert BuildId not set');
         }
 
         $max_log_length = 1024 * 1024;
 
+        $log = $this->Log;
         // Handle log decoding/decompression
-        if (strtolower($this->LogEncoding ?? '') === 'base64') {
-            $this->Log = str_replace(["\r\n", "\n", "\r"], '', $this->Log);
-            $this->Log = base64_decode($this->Log);
+        if (strtolower($this->LogEncoding) === 'base64') {
+            $log = str_replace(["\r\n", "\n", "\r"], '', $log);
+            $log = base64_decode($log);
         }
-        if (strtolower($this->LogCompression ?? '') === 'gzip') {
+        if (strtolower($this->LogCompression) === 'gzip') {
             // Avoid memory exhaustion errors by buffering data as we
             // decompress the gzipped log.
             $uncompressed_log = '';
             $inflate_context = inflate_init(ZLIB_ENCODING_DEFLATE);
-            foreach (str_split($this->Log, 1024) as $chunk) {
+            foreach (str_split($log, 1024) as $chunk) {
                 $uncompressed_log .= inflate_add($inflate_context, $chunk, ZLIB_NO_FLUSH);
                 if (strlen($uncompressed_log) >= $max_log_length) {
                     break;
                 }
             }
             $uncompressed_log .= inflate_add($inflate_context, null, ZLIB_FINISH);
-            $this->Log = $uncompressed_log;
+            $log = $uncompressed_log;
         }
 
-        if ($this->Log === false) {
+        if ($log === false) {
             Log::error('Unable to decompress dynamic analysis log', [
                 'function' => 'DynamicAnalysis::Insert',
                 'buildid' => $this->BuildId,
                 'dynamicanalysisid' => $this->Id,
             ]);
-            $this->Log = '';
+            $log = '';
         }
+        $this->Log = $log;
 
         // Only store 1MB of log.
         if (strlen($this->Log) > $max_log_length) {
@@ -157,13 +132,8 @@ class DynamicAnalysis
             $this->Log .= $truncated_msg;
         }
 
-        $this->Status ??= '';
-        $this->Checker ??= '';
-        $this->Name ??= '';
         $path = substr($this->Path, 0, 255);
         $fullCommandLine = substr($this->FullCommandLine, 0, 255);
-        $this->Log ??= '';
-        $this->BuildId = intval($this->BuildId);
 
         $eloquent_da = Build::findOrFail($this->BuildId)->dynamicAnalyses()->create([
             'status' => $this->Status,
@@ -194,9 +164,6 @@ class DynamicAnalysis
     {
         if (!$this->Id) {
             return false;
-        }
-        if ($this->Filled) {
-            return true;
         }
 
         $model = EloquentDynamicAnalysis::find((int) $this->Id);

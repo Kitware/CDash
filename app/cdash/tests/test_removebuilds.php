@@ -239,7 +239,7 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $DA_defect->value = 5;
 
         $DA = new DynamicAnalysis();
-        $DA->BuildId = $build->Id;
+        $DA->BuildId = (int) $build->Id;
         $DA->Checker = 'Valgrind';
         $DA->FullCommandLine = 'php DA_removebuilds.php';
         $DA->Log = 'build removed successfully';
@@ -251,7 +251,7 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $DA->Insert();
 
         $DA_summary = new DynamicAnalysisSummary();
-        $DA_summary->BuildId = $build->Id;
+        $DA_summary->BuildId = (int) $build->Id;
         $DA_summary->Checker = 'Valgrind';
         $DA_summary->AddDefects($DA_defect->value);
         $DA_summary->Insert();
