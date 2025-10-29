@@ -188,6 +188,80 @@ class TestTypeTest extends TestCase
         ]);
     }
 
+    /**
+     * @return array<array<int|string>>
+     */
+    public static function timeStatuses(): array
+    {
+        return [
+            [0, 'PASSED'],
+            [1, 'FAILED'],
+            [5, 'FAILED'],
+        ];
+    }
+
+    #[DataProvider('timeStatuses')]
+    public function testTimeStatusCategoryEnum(int $timestatus_db_value, string $enum_value): void
+    {
+        $this->project->builds()->create([
+            'name' => 'build1',
+            'uuid' => Str::uuid()->toString(),
+        ])->tests()->create([
+            'testname' => 'test1',
+            'status' => 'passed',
+            'timestatus' => $timestatus_db_value,
+            'outputid' => $this->test_output->id,
+        ]);
+
+        $this->graphQL('
+            query project($id: ID) {
+                project(id: $id) {
+                    builds {
+                        edges {
+                            node {
+                                name
+                                tests {
+                                    edges {
+                                        node {
+                                            name
+                                            timeStatusCategory
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        ', [
+            'id' => $this->project->id,
+        ])->assertExactJson([
+            'data' => [
+                'project' => [
+                    'builds' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'name' => 'build1',
+                                    'tests' => [
+                                        'edges' => [
+                                            [
+                                                'node' => [
+                                                    'name' => 'test1',
+                                                    'timeStatusCategory' => $enum_value,
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+    }
+
     public function testLabelRelationship(): void
     {
         $build = $this->project->builds()->create([

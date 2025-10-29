@@ -524,6 +524,8 @@ type Test {
 
   status: TestStatus! @filterable
 
+  timeStatusCategory: TestTimeStatusCategory! @rename(attribute: "timestatuscategory") @filterable
+
   runningTime: NonNegativeSeconds! @rename(attribute: "time") @filterable
 
   details: String! @filterable
