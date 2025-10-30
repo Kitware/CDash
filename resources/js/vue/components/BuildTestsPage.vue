@@ -33,6 +33,10 @@
             name: 'status',
             displayName: 'Status',
           },
+          ...(showTestTimeStatus ? [{
+            name: 'timeStatus',
+            displayName: 'Time Status',
+          }] : []),
         ]"
         :rows="formattedTestRows"
         :full-width="true"
@@ -67,6 +71,11 @@ export default {
       required: true,
     },
 
+    showTestTimeStatus: {
+      type: Boolean,
+      required: true,
+    },
+
     initialFilters: {
       type: Object,
       required: true,
@@ -87,6 +96,7 @@ export default {
                   status
                   details
                   runningTime
+                  timeStatusCategory
                 }
               }
             }
@@ -102,6 +112,7 @@ export default {
                         status
                         details
                         runningTime
+                        timeStatusCategory
                       }
                     }
                   }
@@ -172,6 +183,12 @@ export default {
             classes: [this.testStatusToColorClass(edge.node.status)],
           },
           subProject: edge.subProject ?? '',
+          timeStatus: {
+            value: edge.node.timeStatusCategory,
+            text: this.humanReadableTestStatus(edge.node.timeStatusCategory),
+            href: `${this.$baseURL}/tests/${edge.node.id}?graph=time`,
+            classes: [this.testStatusToColorClass(edge.node.timeStatusCategory)],
+          },
         };
       });
     },

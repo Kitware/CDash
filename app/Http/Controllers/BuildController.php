@@ -94,6 +94,7 @@ final class BuildController extends AbstractBuildController
 
         return $this->vue('build-tests-page', 'Tests', [
             'build-id' => $this->build->Id,
+            'show-test-time-status' => (bool) $this->project->ShowTestTime,
             'initial-filters' => $filters,
         ]);
     }
