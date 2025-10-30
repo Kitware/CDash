@@ -173,7 +173,7 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
             foreach ($this->DynamicAnalysis->GetDefects() as $defect) {
                 $this->DynamicAnalysisSummaries[$this->SubProjectName]->AddDefects($defect->value);
             }
-            $this->DynamicAnalysis->BuildId = $build->Id;
+            $this->DynamicAnalysis->BuildId = (int) $build->Id;
             $this->DynamicAnalysis->Insert();
             $analysis = clone $this->DynamicAnalysis;
             $build->AddDynamicAnalysis($analysis);
@@ -196,7 +196,7 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
                 // But we still want a line showing the current dynamic analysis
                 if ($this->DynamicAnalysisSummaries[$subprojectName]->Empty) {
                     $this->DynamicAnalysis = $factory->create(DynamicAnalysis::class);
-                    $this->DynamicAnalysis->BuildId = $build->Id;
+                    $this->DynamicAnalysis->BuildId = (int) $build->Id;
                     $this->DynamicAnalysis->Status = 'passed';
                     $this->DynamicAnalysis->Checker = $this->Checker;
                     $this->DynamicAnalysis->Insert();
@@ -318,11 +318,8 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
             // Otherwise make sure that the build is up-to-date.
             $build->UpdateBuild($build->Id, -1, -1);
 
-            // Remove any previous analysis.
-            /** @var DynamicAnalysis $DA */
-            $DA = $factory->create(DynamicAnalysis::class);
-            $DA->BuildId = $build->Id;
-            $DA->RemoveAll();
+            // Remove any previous analyses.
+            \App\Models\Build::findOrFail((int) $build->Id)->dynamicAnalyses()->delete();
         }
 
         $this->Builds[$subprojectName] = $build;
@@ -330,7 +327,7 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
         // Initialize a dynamic analysis summary for this build.
         $summary = $factory->create(DynamicAnalysisSummary::class);
         $summary->Empty = true;
-        $summary->BuildId = $build->Id;
+        $summary->BuildId = (int) $build->Id;
         $summary->Checker = $this->Checker;
         $this->DynamicAnalysisSummaries[$subprojectName] = $summary;
     }
