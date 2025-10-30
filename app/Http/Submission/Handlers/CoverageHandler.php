@@ -36,11 +36,11 @@ class CoverageHandler extends AbstractXmlHandler
     private $StartTimeStamp;
     private $EndTimeStamp;
 
-    private $Coverage;
-    private $Coverages;
-    private $CoverageFile;
-    private $CoverageSummaries;
-    private $Label;
+    private Coverage $Coverage;
+    private array $Coverages = [];
+    private CoverageFile $CoverageFile;
+    private array $CoverageSummaries = [];
+    private Label $Label;
     protected static ?string $schema_file = '/app/Validators/Schemas/Coverage.xsd';
 
     /** Constructor */
@@ -48,8 +48,6 @@ class CoverageHandler extends AbstractXmlHandler
     {
         parent::__construct($project);
         $this->Site = new Site();
-        $this->Coverages = [];
-        $this->CoverageSummaries = [];
     }
 
     /** startElement */

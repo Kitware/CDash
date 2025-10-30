@@ -17,22 +17,13 @@ namespace App\Http\Submission\Handlers;
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-use CDash\Model\Build;
-use CDash\Model\Project;
 use CDash\Model\SubProject;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class SubProjectDirectoriesHandler extends AbstractSubmissionHandler
 {
-    private $SubProjectOrder;
-
-    public function __construct(Build|Project $init)
-    {
-        parent::__construct($init);
-
-        $this->SubProjectOrder = [];
-    }
+    private array $SubProjectOrder = [];
 
     /**
      * Parse a text file containing a Bazel package per line.

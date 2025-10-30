@@ -34,10 +34,10 @@ class CoverageJUnitHandler extends AbstractXmlHandler
     private $StartTimeStamp;
     private $EndTimeStamp;
 
-    private $Coverage;
-    private $CoverageFile;
+    private Coverage $Coverage;
+    private CoverageFile $CoverageFile;
     private CoverageSummary $CoverageSummary;
-    private $Label;
+    private Label $Label;
 
     /** Constructor */
     public function __construct(Project $project)

@@ -30,22 +30,24 @@ use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 
 class OpenCoverTarHandler extends AbstractXmlHandler
 {
-    protected $CoverageSummaries;
+    /** @var array<string,CoverageSummary> */
+    protected array $CoverageSummaries = [];
+    protected array $Coverages = [];
+    protected array $CoverageFiles = [];
+    protected array $CoverageFileLogs = [];
+    protected bool $ParseCSFiles = true;
+    protected $coverageFile;
+    protected $coverageFileLog;
+    protected $currentModule;
+    protected string $tarDir;
 
     public function __construct(Build $build)
     {
         parent::__construct($build);
 
-        $this->CoverageSummaries = [];
         $coverageSummary = new CoverageSummary();
         $coverageSummary->BuildId = $this->Build->Id;
         $this->CoverageSummaries['default'] = $coverageSummary;
-
-        $this->Coverages = [];
-        $this->CoverageFiles = [];
-        $this->CoverageFileLogs = [];
-
-        $this->ParseCSFiles = true;
     }
 
     public function startElement($parser, $name, $attributes): void
@@ -160,7 +162,7 @@ class OpenCoverTarHandler extends AbstractXmlHandler
                 $jsonContents = file_get_contents($fileinfo->getPath() . DIRECTORY_SEPARATOR . $fileinfo->getFilename());
                 $jsonDecoded = json_decode($jsonContents, true);
                 if (array_key_exists('parseCSFiles', $jsonDecoded)) {
-                    $this->ParseCSFiles = $jsonDecoded['parseCSFiles'];
+                    $this->ParseCSFiles = (bool) $jsonDecoded['parseCSFiles'];
                 }
             }
         }

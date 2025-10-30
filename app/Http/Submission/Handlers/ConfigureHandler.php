@@ -38,18 +38,18 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
 {
     use UpdatesSiteInformation;
 
-    private $StartTimeStamp;
-    private $EndTimeStamp;
-    private $Builds;
+    private $StartTimeStamp = 0;
+    private $EndTimeStamp = 0;
+    private array $Builds = [];
     private array $BuildInformation;
     // Map SubProjects to Labels
-    private $SubProjects;
+    private array $SubProjects = [];
     private $Configure;
     private $Label;
-    private $Notified;
-    private $BuildName;
-    private $BuildStamp;
-    private $Generator;
+    private bool $Notified = false;
+    private string $BuildName;
+    private string $BuildStamp;
+    private string $Generator;
     private $PullRequest;
     protected static ?string $schema_file = '/app/Validators/Schemas/Configure.xsd';
 
@@ -57,12 +57,6 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
     {
         parent::__construct($project);
 
-        $this->Builds = [];
-        $this->SubProjects = [];
-        $this->StartTimeStamp = 0;
-        $this->EndTimeStamp = 0;
-        // Only complain about errors & warnings once.
-        $this->Notified = false;
         // Instantiate model factory.
         $this->getModelFactory();
     }

@@ -31,46 +31,39 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
     use UpdatesSiteInformation;
 
     protected static ?string $schema_file = '/app/Validators/Schemas/Test.xsd';
-    private $StartTimeStamp;
-    private $EndTimeStamp;
+    private $StartTimeStamp = 0;
+    private $EndTimeStamp = 0;
 
     private $TestMeasurement;
     private $Label;
 
     // TODO: Evaluate whether this is needed
-    private $Labels;
+    private array $Labels;
 
-    private $TestCreator;
+    private TestCreator $TestCreator;
 
     /** @var Build[] Builds */
-    private $Builds;
+    private $Builds = [];
     private array $BuildInformation;
 
     // Map SubProjects to Labels
-    private $SubProjects;
+    private $SubProjects = [];
     private $TestSubProjectName;
-    private $BuildName;
-    private $BuildStamp;
-    private $Generator;
+    private string $BuildName;
+    private string $BuildStamp;
+    private string $Generator;
     private $PullRequest;
 
     // Keep a record of the number of tests passed, failed and notrun
     // This works only because we have one test file per submission
-    private $NumberTestsFailed;
-    private $NumberTestsNotRun;
-    private $NumberTestsPassed;
+    private array $NumberTestsFailed = [];
+    private array $NumberTestsNotRun = [];
+    private array $NumberTestsPassed = [];
 
     /** Constructor */
     public function __construct(Project $project)
     {
         parent::__construct($project);
-        $this->Builds = [];
-        $this->SubProjects = [];
-        $this->NumberTestsFailed = [];
-        $this->NumberTestsNotRun = [];
-        $this->NumberTestsPassed = [];
-        $this->StartTimeStamp = 0;
-        $this->EndTimeStamp = 0;
     }
 
     /** Start Element */

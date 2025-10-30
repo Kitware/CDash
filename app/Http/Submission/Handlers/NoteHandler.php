@@ -29,18 +29,16 @@ class NoteHandler extends AbstractXmlHandler
 {
     use UpdatesSiteInformation;
 
-    private $AdjustStartTime;
-    private $NoteCreator;
+    private bool $AdjustStartTime = false;
+    private NoteCreator $NoteCreator;
     protected static ?string $schema_file = '/app/Validators/Schemas/Notes.xsd';
+    protected $Timestamp = 0;
 
     /** Constructor */
     public function __construct(Project $project)
     {
         parent::__construct($project);
         $this->Site = new Site();
-
-        $this->AdjustStartTime = false;
-        $this->Timestamp = 0;
     }
 
     /** startElement function */
