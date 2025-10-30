@@ -37,6 +37,10 @@
             name: 'timeStatus',
             displayName: 'Time Status',
           }] : []),
+          {
+            name: 'history',
+            displayName: 'History',
+          },
         ]"
         :rows="formattedTestRows"
         :full-width="true"
@@ -54,6 +58,7 @@ import gql from 'graphql-tag';
 import FilterBuilder from './shared/FilterBuilder.vue';
 import LoadingIndicator from './shared/LoadingIndicator.vue';
 import BuildSummaryCard from './shared/BuildSummaryCard.vue';
+import {DateTime} from 'luxon';
 
 export default {
   name: 'BuildTestsPage',
@@ -73,6 +78,16 @@ export default {
 
     showTestTimeStatus: {
       type: Boolean,
+      required: true,
+    },
+
+    projectName: {
+      type: String,
+      required: true,
+    },
+
+    buildTime: {
+      type: String,
       required: true,
     },
 
@@ -188,6 +203,11 @@ export default {
             text: this.humanReadableTestStatus(edge.node.timeStatusCategory),
             href: `${this.$baseURL}/tests/${edge.node.id}?graph=time`,
             classes: [this.testStatusToColorClass(edge.node.timeStatusCategory)],
+          },
+          history: {
+            value: '',
+            text: 'History',
+            href: `${this.$baseURL}/queryTests.php?project=${this.projectName}&filtercount=1&showfilters=1&field1=testname&compare1=61&value1=${edge.node.name}&date=${DateTime.fromISO(this.buildTime).toISODate()}`,
           },
         };
       });

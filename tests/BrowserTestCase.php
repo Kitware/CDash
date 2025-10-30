@@ -7,6 +7,7 @@ use Facebook\WebDriver\Chrome\ChromeOptions;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Config;
 use Laravel\Dusk\Browser;
 use Laravel\Dusk\Dusk;
 use Laravel\Dusk\TestCase as BaseTestCase;
@@ -20,17 +21,17 @@ abstract class BrowserTestCase extends BaseTestCase
      */
     public function setUp(): void
     {
-        parent::setUp();
-
-        Dusk::selectorHtmlAttribute('data-test');
-
-        $env_contents = file_get_contents(base_path('.env'));
+        // The APP_URL must be set prior to config initialization so we can correctly generate test URLs.
+        $env_contents = file_get_contents('/cdash/.env');
         if ($env_contents === false) {
             throw new Exception('Unable to read .env file.');
         }
-
         $env_after_substitution = str_replace('APP_URL=http://localhost:8080', 'APP_URL=http://website:8080', $env_contents);
-        file_put_contents(base_path('.env'), $env_after_substitution);
+        file_put_contents('/cdash/.env', $env_after_substitution);
+
+        parent::setUp();
+
+        Dusk::selectorHtmlAttribute('data-test');
 
         Browser::$baseUrl = 'http://website:8080';
         Browser::$waitSeconds = 10;
