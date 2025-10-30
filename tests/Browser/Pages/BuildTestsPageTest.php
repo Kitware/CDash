@@ -216,4 +216,96 @@ class BuildTestsPageTest extends BrowserTestCase
             ;
         });
     }
+
+    public function testConfigurableTimeStatusColumn(): void
+    {
+        // This should be the default...
+        $this->project->showtesttime = 0;
+        $this->project->save();
+
+        /** @var Build $build */
+        $build = $this->project->builds()->create([
+            'siteid' => $this->site->id,
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        /** @var Test $test */
+        $test = $build->tests()->create([
+            'testname' => Str::uuid()->toString(),
+            'status' => 'passed',
+            'timestatus' => 5,
+            'outputid' => $this->testOutput->id,
+        ]);
+
+        // Check that the time status column is hidden when not configured to show it
+        $this->browse(function (Browser $browser) use ($test, $build): void {
+            $browser->visit("/builds/{$build->id}/tests")
+                ->waitFor('@tests-table')
+                ->assertDontSeeIn('@tests-table', 'Time Status')
+                ->assertDontSeeIn('@tests-table', 'Failed')
+                ->assertSeeIn('@tests-table', $test->testname)
+            ;
+        });
+
+        // Check that failed time status displays properly
+        $this->project->showtesttime = 1;
+        $this->project->save();
+        $this->browse(function (Browser $browser) use ($test, $build): void {
+            $browser->visit("/builds/{$build->id}/tests")
+                ->waitFor('@tests-table')
+                ->assertSeeIn('@tests-table', 'Time Status')
+                ->assertSeeIn('@tests-table', 'Failed')
+                ->assertSeeIn('@tests-table', $test->testname)
+            ;
+        });
+
+        // Check that passing time status displays properly
+        $test->timestatus = 0;
+        $test->status = 'failed';
+        $test->save();
+        $this->browse(function (Browser $browser) use ($test, $build): void {
+            $browser->visit("/builds/{$build->id}/tests")
+                ->waitFor('@tests-table')
+                ->assertSeeIn('@tests-table', 'Time Status')
+                ->assertSeeIn('@tests-table', 'Passed')
+                ->assertSeeIn('@tests-table', $test->testname)
+            ;
+        });
+    }
+
+    public function testHistoryColumn(): void
+    {
+        /** @var Build $build */
+        $build = $this->project->builds()->create([
+            'siteid' => $this->site->id,
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+            'starttime' => '2025-01-01 11:22:33',
+        ]);
+
+        /** @var Test $test */
+        $test = $build->tests()->create([
+            'testname' => Str::uuid()->toString(),
+            'status' => 'failed',
+            'outputid' => $this->testOutput->id,
+        ]);
+
+        $this->browse(function (Browser $browser) use ($test, $build): void {
+            $browser->visit("/builds/{$build->id}/tests")
+                ->waitFor('@tests-table')
+                ->assertSeeIn('@tests-table', 'History')
+                ->assertSeeIn('@tests-table', $test->testname)
+                ->clickLink('History')
+                ->assertUrlIs(url('queryTests.php'))
+                ->assertQueryStringHas('project', $this->project->name)
+                ->assertQueryStringHas('filtercount', '1')
+                ->assertQueryStringHas('showfilters', '1')
+                ->assertQueryStringHas('field1', 'testname')
+                ->assertQueryStringHas('compare1', '61')
+                ->assertQueryStringHas('value1', $test->testname)
+                ->assertQueryStringHas('date', '2025-01-01')
+            ;
+        });
+    }
 }
