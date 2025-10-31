@@ -4,12 +4,12 @@ services:
       DB_LOGIN: postgres
       DB_PORT: 5432
   database:
-    image: postgres:17
+    image: postgres:18
     environment:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_DATABASE}
     volumes:
-      - postgresqldata:/var/lib/postgresql/data
+      - postgresqldata:/var/lib/postgresql/18/docker
     healthcheck:
       test: "pg_isready -U postgres"
       interval: 1s
