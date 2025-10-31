@@ -201,7 +201,6 @@ export default {
           name: {
             value: edge.node.name,
             text: edge.node.name,
-            href: `${this.$baseURL}/targets/${edge.node.id}`,
           },
           type: {
             value: edge.node.type,
