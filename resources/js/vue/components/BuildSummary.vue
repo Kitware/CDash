@@ -761,6 +761,23 @@
       </div>
       <br>
 
+      <!-- Instrumentation section -->
+      <div class="title-divider">
+        Instrumentation
+        <a href="https://cmake.org/cmake/help/latest/manual/cmake-instrumentation.7.html">
+          <font-awesome-icon :icon="FA.faQuestionCircle" />
+        </a>
+      </div>
+      <a :href="$baseURL + '/builds/' + cdash.build.id + '/targets'">
+        View Targets
+      </a>
+      <br>
+      <a :href="$baseURL + '/builds/' + cdash.build.id + '/commands'">
+        View Commands
+      </a>
+      <br>
+      <br>
+
       <!-- Display comments for this build -->
       <div
         v-if="cdash.notes.length > 0 || cdash.user.id > 0"
@@ -1163,8 +1180,13 @@
 
 <script>
 import ApiLoader from './shared/ApiLoader';
+import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
+import {
+  faQuestionCircle,
+} from '@fortawesome/free-solid-svg-icons';
 export default {
   name: 'BuildSummary',
+  components: {FontAwesomeIcon},
 
   data () {
     return {
@@ -1193,6 +1215,14 @@ export default {
         'tests': false,
       },
     };
+  },
+
+  computed: {
+    FA() {
+      return {
+        faQuestionCircle,
+      };
+    },
   },
 
   mounted () {
