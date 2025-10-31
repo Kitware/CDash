@@ -46,25 +46,22 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
 
     private DynamicAnalysis $DynamicAnalysis;
     private DynamicAnalysisDefect $DynamicAnalysisDefect;
-    private $DynamicAnalysisSummaries;
+    private $DynamicAnalysisSummaries = [];
     private $Label;
 
-    private $Builds;
+    private $Builds = [];
     private array $BuildInformation;
 
     protected static ?string $schema_file = '/app/Validators/Schemas/DynamicAnalysis.xsd';
 
     // Map SubProjects to Labels
-    private $SubProjects;
+    private $SubProjects = [];
     private $TestSubProjectName;
 
     /** Constructor */
     public function __construct(Project $project)
     {
         parent::__construct($project);
-        $this->Builds = [];
-        $this->SubProjects = [];
-        $this->DynamicAnalysisSummaries = [];
     }
 
     /** Start element */

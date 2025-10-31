@@ -25,26 +25,21 @@ use Illuminate\Support\Facades\Log;
 
 class ProjectHandler extends AbstractXmlHandler
 {
-    private $SubProject;
-    private $SubProjectPosition;
-    private $Dependencies; // keep an array of dependencies in order to remove them
-    private $SubProjects; // keep an array of subprojects in order to remove them
-    private $CurrentDependencies; // The dependencies of the current SubProject.
-    private $ProjectNameMatches;
+    private SubProject $SubProject;
+    private int $SubProjectPosition = 1;
+    private array $Dependencies; // keep an array of dependencies in order to remove them
+    private array $SubProjects; // keep an array of subprojects in order to remove them
+    private array $CurrentDependencies; // The dependencies of the current SubProject.
+    // Only actually track stuff and write it into the database if the
+    // Project.xml file's name element matches this project's name in the
+    // database.
+    private bool $ProjectNameMatches = true;
     protected static ?string $schema_file = '/app/Validators/Schemas/Project.xsd';
 
     /** Constructor */
     public function __construct(Project $project)
     {
         parent::__construct($project);
-
-        // Only actually track stuff and write it into the database if the
-        // Project.xml file's name element matches this project's name in the
-        // database.
-        //
-        $this->ProjectNameMatches = true;
-
-        $this->SubProjectPosition = 1;
     }
 
     /** startElement function */

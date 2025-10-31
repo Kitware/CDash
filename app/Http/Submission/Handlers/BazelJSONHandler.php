@@ -32,47 +32,36 @@ use stdClass;
 
 class BazelJSONHandler extends AbstractSubmissionHandler
 {
-    private $Builds;
-    private $BuildErrors;
-    private $CommandLine;
+    private $Builds = [];
+    private $BuildErrors = [
+        '' => [],
+    ];
+    private $CommandLine = '';
     private array $Configures = [];
     private ?bool $_HasSubProjects = null;
-    private $NumTestsPassed;
-    private $NumTestsFailed;
-    private $NumTestsNotRun;
+    private $NumTestsPassed = [
+        '' => 0,
+    ];
+    private $NumTestsFailed = [
+        '' => 0,
+    ];
+    private $NumTestsNotRun = [
+        '' => 0,
+    ];
     private $ParentBuild;
-    private $RecordingTestOutput;
-    private $RecordingTestSummary;
-    private $Tests;
-    private $TestsOutput;
-    private $TestName;
-    private $ParseConfigure;
+    private $RecordingTestOutput = false;
+    private $RecordingTestSummary = false;
+    private $Tests = [];
+    private $TestsOutput = [];
+    private $TestName = '';
+    private $ParseConfigure = true;
     private ?BuildErrorFilter $BuildErrorFilter = null;
 
     public function __construct(Build $build)
     {
         parent::__construct($build);
 
-        $this->Builds = [];
         $this->Builds[''] = $this->Build;
-        $this->ParentBuild = null;
-
-        $this->CommandLine = '';
-
-        $this->NumTestsPassed = [];
-        $this->NumTestsFailed = [];
-        $this->NumTestsNotRun = [];
-        $this->NumTestsPassed[''] = 0;
-        $this->NumTestsFailed[''] = 0;
-        $this->NumTestsNotRun[''] = 0;
-
-        $this->BuildErrors = ['' => []];
-        $this->RecordingTestOutput = false;
-        $this->RecordingTestSummary = false;
-        $this->Tests = [];
-        $this->TestsOutput = [];
-        $this->TestName = '';
-        $this->ParseConfigure = true;
     }
 
     protected function HasSubProjects(): bool

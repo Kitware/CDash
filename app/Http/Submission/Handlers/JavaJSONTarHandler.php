@@ -31,13 +31,12 @@ use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 
 class JavaJSONTarHandler extends AbstractSubmissionHandler
 {
-    private $CoverageSummaries;
+    private array $CoverageSummaries = [];
 
     public function __construct(Build $init)
     {
         parent::__construct($init);
 
-        $this->CoverageSummaries = [];
         $coverageSummary = new CoverageSummary();
         $coverageSummary->BuildId = $this->Build->Id;
         $this->CoverageSummaries['default'] = $coverageSummary;

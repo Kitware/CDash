@@ -31,34 +31,25 @@ class TestingJUnitHandler extends AbstractXmlHandler
     private $StartTimeStamp;
     private $EndTimeStamp;
     // Should we update the end time of the build?
-    private $UpdateEndTime;
+    private bool $UpdateEndTime = false;
     // The buildgroup to submit to (defaults to Nightly).
-    private $Group;
+    private string $Group = 'Nightly';
 
     // Keep a record of the number of tests passed, failed and notrun.
     // This works only because we have one test file per submission.
-    private $NumberTestsFailed;
-    private $NumberTestsNotRun;
-    private $NumberTestsPassed;
-    private $TestProperties;
-    private $HasSiteTag;
-    private $BuildAdded;
-    private $TotalTestDuration;
+    private int $NumberTestsFailed = 0;
+    private int $NumberTestsNotRun = 0;
+    private int $NumberTestsPassed = 0;
+    private string $TestProperties = '';
+    private bool $HasSiteTag = false;
+    private bool $BuildAdded = false;
+    private $TotalTestDuration = 0;
+    protected TestCreator $TestCreator;
 
     /** Constructor */
     public function __construct(Project $project)
     {
         parent::__construct($project);
-
-        $this->UpdateEndTime = false;
-        $this->Group = 'Nightly';
-        $this->NumberTestsFailed = 0;
-        $this->NumberTestsNotRun = 0;
-        $this->NumberTestsPassed = 0;
-        $this->TestProperties = '';
-        $this->HasSiteTag = false;
-        $this->BuildAdded = false;
-        $this->TotalTestDuration = 0;
     }
 
     /** Destructor */

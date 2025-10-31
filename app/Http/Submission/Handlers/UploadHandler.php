@@ -48,28 +48,22 @@ class UploadHandler extends AbstractXmlHandler
     use UpdatesSiteInformation;
 
     private UploadFile $UploadFile;
-    private $TmpFilename;
-    private $Base64TmpFileWriteHandle;
-    private $Base64TmpFilename;
+    private string $TmpFilename = '';
+    private $Base64TmpFileWriteHandle = 0;
+    private string $Base64TmpFilename = '';
     private $Label;
-    private int $Timestamp;
-    private bool $BuildInitialized;
+    private int $Timestamp = 0;
+    private bool $BuildInitialized = false;
     protected static ?string $schema_file = '/app/Validators/Schemas/Upload.xsd';
 
     /** If True, means an error happened while processing the file */
-    private $UploadError;
+    private bool $UploadError = false;
 
     /** Constructor */
     public function __construct(Project $project)
     {
         parent::__construct($project);
         $this->Site = new Site();
-        $this->TmpFilename = '';
-        $this->Base64TmpFileWriteHandle = 0;
-        $this->Base64TmpFilename = '';
-        $this->UploadError = false;
-        $this->Timestamp = 0;
-        $this->BuildInitialized = false;
     }
 
     /** Start element */
@@ -136,12 +130,13 @@ class UploadHandler extends AbstractXmlHandler
             }
 
             // Create tmp file
-            $this->TmpFilename = tempnam(storage_path('app/tmp'), 'cdash_upload');
-            if ($this->TmpFilename === false) {
+            $tmpname = tempnam(storage_path('app/tmp'), 'cdash_upload');
+            if ($tmpname === false) {
                 Log::error('Failed to create temporary filename');
                 $this->UploadError = true;
                 return;
             }
+            $this->TmpFilename = $tmpname;
             $this->Base64TmpFilename = $this->TmpFilename . '-base64';
 
             // Open base64 temporary file for writing

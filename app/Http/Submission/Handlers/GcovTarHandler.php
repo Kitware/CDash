@@ -34,12 +34,12 @@ use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 
 class GcovTarHandler extends AbstractSubmissionHandler
 {
-    private $CoverageSummary;
-    private $SourceDirectory;
-    private $BinaryDirectory;
-    private $Labels;
+    private CoverageSummary $CoverageSummary;
+    private $SourceDirectory = '';
+    private $BinaryDirectory = '';
+    private array $Labels = [];
     private ?string $SubProjectPath = null;
-    private $SubProjectSummaries;
+    private array $SubProjectSummaries = [];
     private $AggregateBuildId;
     private $PreviousAggregateParentId;
 
@@ -49,11 +49,6 @@ class GcovTarHandler extends AbstractSubmissionHandler
 
         $this->CoverageSummary = new CoverageSummary();
         $this->CoverageSummary->BuildId = $this->Build->Id;
-        $this->SourceDirectory = '';
-        $this->BinaryDirectory = '';
-        $this->Labels = [];
-        $this->SubProjectSummaries = [];
-        $this->PreviousAggregateParentId = null;
     }
 
     /**
@@ -161,8 +156,7 @@ class GcovTarHandler extends AbstractSubmissionHandler
     {
         $coverageFileLog = new CoverageFileLog();
         $coverageFileLog->AggregateBuildId = $this->AggregateBuildId;
-        $coverageFileLog->PreviousAggregateParentId =
-            $this->PreviousAggregateParentId;
+        $coverageFileLog->PreviousAggregateParentId = $this->PreviousAggregateParentId ?? null;
         $coverageFile = new CoverageFile();
         $coverage = new Coverage();
         $coverage->CoverageFile = $coverageFile;
@@ -449,8 +443,7 @@ class GcovTarHandler extends AbstractSubmissionHandler
     {
         $coverageFileLog = new CoverageFileLog();
         $coverageFileLog->AggregateBuildId = $this->AggregateBuildId;
-        $coverageFileLog->PreviousAggregateParentId =
-            $this->PreviousAggregateParentId;
+        $coverageFileLog->PreviousAggregateParentId = $this->PreviousAggregateParentId ?? null;
         $coverageFile = new CoverageFile();
         $coverageFile->FullPath = trim($path);
         $coverage = new Coverage();

@@ -25,12 +25,11 @@ use Illuminate\Support\Facades\Storage;
 class RetryHandler
 {
     private string $FileName;
-    public int $Retries;
+    public int $Retries = 0;
 
     public function __construct(string $filename)
     {
         $this->FileName = $filename;
-        $this->Retries = 0;
     }
 
     /** Increments the "retries" attribute on the root element of the specified

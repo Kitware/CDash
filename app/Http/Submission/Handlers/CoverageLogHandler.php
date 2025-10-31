@@ -30,11 +30,11 @@ class CoverageLogHandler extends AbstractXmlHandler
     private $StartTimeStamp;
     private $EndTimeStamp;
 
-    private $CurrentCoverageFile;
-    private $CurrentCoverageFileLog;
-    private $CoverageFiles;
+    private CoverageFile $CurrentCoverageFile;
+    private CoverageFileLog $CurrentCoverageFileLog;
+    private array $CoverageFiles = [];
 
-    private $CurrentLine;
+    private string $CurrentLine = '';
 
     protected static ?string $schema_file = '/app/Validators/Schemas/CoverageLog.xsd';
 
@@ -43,8 +43,6 @@ class CoverageLogHandler extends AbstractXmlHandler
     {
         parent::__construct($project);
         $this->Site = new Site();
-        $this->CoverageFiles = [];
-        $this->CurrentLine = '';
     }
 
     /** Start element */

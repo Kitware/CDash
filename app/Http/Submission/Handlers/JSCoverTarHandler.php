@@ -31,20 +31,18 @@ use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 
 class JSCoverTarHandler extends AbstractSubmissionHandler
 {
-    private $CoverageSummaries;
+    protected array $CoverageSummaries = [];
+    protected array $Coverages = [];
+    protected array $CoverageFiles = [];
+    protected array $CoverageFileLogs = [];
 
     public function __construct(Build $build)
     {
         parent::__construct($build);
 
-        $this->CoverageSummaries = [];
         $coverageSummary = new CoverageSummary();
         $coverageSummary->BuildId = $this->Build->Id;
         $this->CoverageSummaries['default'] = $coverageSummary;
-
-        $this->Coverages = [];
-        $this->CoverageFiles = [];
-        $this->CoverageFileLogs = [];
     }
 
     /**

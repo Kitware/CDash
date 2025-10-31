@@ -23,18 +23,16 @@ use CDash\Model\Repository;
 
 class DoneHandler extends AbstractXmlHandler
 {
-    private $FinalAttempt;
-    private $PendingSubmissions;
-    private $Requeue;
-    public $backupFileName;
+    private bool $FinalAttempt = false;
+    private PendingSubmissions $PendingSubmissions;
+    private bool $Requeue = false;
+    public string $backupFileName;
     protected static ?string $schema_file = '/app/Validators/Schemas/Done.xsd';
 
     public function __construct(Build $build)
     {
         parent::__construct($build);
-        $this->FinalAttempt = false;
         $this->PendingSubmissions = new PendingSubmissions();
-        $this->Requeue = false;
     }
 
     public function startElement($parser, $name, $attributes): void

@@ -57,17 +57,17 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
     private $EndTimeStamp;
     private $Error;
     private $Label;
-    private $Builds;
+    private $Builds = [];
     private array $BuildInformation;
-    private $BuildCommand;
+    private $BuildCommand = '';
     private $BuildGroup;
-    private $Labels;
+    private $Labels = [];
     // Map SubProjects to Labels
-    private $SubProjects;
+    private $SubProjects = [];
     private $ErrorSubProjectName;
-    private $BuildName;
-    private $BuildStamp;
-    private $Generator;
+    private string $BuildName;
+    private string $BuildStamp;
+    private string $Generator;
     private $PullRequest;
     private ?BuildErrorFilter $BuildErrorFilter = null;
     protected static ?string $schema_file = '/app/Validators/Schemas/Build.xsd';
@@ -120,10 +120,6 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
     public function __construct(Project $project)
     {
         parent::__construct($project);
-        $this->Builds = [];
-        $this->BuildCommand = '';
-        $this->Labels = [];
-        $this->SubProjects = [];
     }
 
     public function startElement($parser, $name, $attributes): void
