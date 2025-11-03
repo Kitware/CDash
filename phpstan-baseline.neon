@@ -8245,6 +8245,12 @@ parameters:
 			path: app/cdash/app/Controller/Api/TestDetails.php
 
 		-
+			rawMessage: Possibly invalid array key type float|int.
+			identifier: offsetAccess.invalidOffset
+			count: 1
+			path: app/cdash/app/Controller/Api/TestDetails.php
+
+		-
 			rawMessage: Property CDash\Controller\Api\TestDetails::$buildtest has no type specified.
 			identifier: missingType.property
 			count: 1
@@ -13342,7 +13348,7 @@ parameters:
 			path: app/cdash/include/Test/CDashUseCaseTestCase.php
 
 		-
-			rawMessage: 'Cannot call method appendChild() on DOMNode|false.'
+			rawMessage: 'Cannot call method appendChild() on DOMElement|false.'
 			identifier: method.nonObject
 			count: 13
 			path: app/cdash/include/Test/UseCase/BuildUseCase.php
@@ -13462,13 +13468,13 @@ parameters:
 			path: app/cdash/include/Test/UseCase/BuildUseCase.php
 
 		-
-			rawMessage: 'Parameter #1 $parent of method CDash\Test\UseCase\BuildUseCase::createFailureElement() expects DOMElement, (DOMNode|false) given.'
+			rawMessage: 'Parameter #1 $parent of method CDash\Test\UseCase\BuildUseCase::createFailureElement() expects DOMElement, (DOMElement|false) given.'
 			identifier: argument.type
 			count: 1
 			path: app/cdash/include/Test/UseCase/BuildUseCase.php
 
 		-
-			rawMessage: 'Parameter #1 $parent of method CDash\Test\UseCase\UseCase::createChildElementsFromKeys() expects DOMElement, (DOMNode|false) given.'
+			rawMessage: 'Parameter #1 $parent of method CDash\Test\UseCase\UseCase::createChildElementsFromKeys() expects DOMElement, (DOMElement|false) given.'
 			identifier: argument.type
 			count: 3
 			path: app/cdash/include/Test/UseCase/BuildUseCase.php
@@ -13492,7 +13498,7 @@ parameters:
 			path: app/cdash/include/Test/UseCase/BuildUseCase.php
 
 		-
-			rawMessage: 'Cannot call method appendChild() on DOMNode|false.'
+			rawMessage: 'Cannot call method appendChild() on DOMElement|false.'
 			identifier: method.nonObject
 			count: 17
 			path: app/cdash/include/Test/UseCase/ConfigUseCase.php
@@ -13516,13 +13522,13 @@ parameters:
 			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
 
 		-
-			rawMessage: 'Cannot call method appendChild() on DOMNode|false.'
+			rawMessage: 'Cannot call method appendChild() on DOMElement|false.'
 			identifier: method.nonObject
 			count: 12
 			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
 
 		-
-			rawMessage: 'Cannot call method setAttribute() on DOMNode|false.'
+			rawMessage: 'Cannot call method setAttribute() on DOMElement|false.'
 			identifier: method.nonObject
 			count: 4
 			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
@@ -13606,7 +13612,13 @@ parameters:
 			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
 
 		-
-			rawMessage: 'Parameter #1 $parent of method CDash\Test\UseCase\DynamicAnalysisUseCase::createResultsElement() expects DOMElement, (DOMNode|false) given.'
+			rawMessage: 'PHPDoc tag @var with type DOMNode is not subtype of type (DOMElement|false).'
+			identifier: varTag.type
+			count: 1
+			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
+
+		-
+			rawMessage: 'Parameter #1 $parent of method CDash\Test\UseCase\DynamicAnalysisUseCase::createResultsElement() expects DOMElement, (DOMElement|false) given.'
 			identifier: argument.type
 			count: 1
 			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
@@ -13624,7 +13636,7 @@ parameters:
 			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
 
 		-
-			rawMessage: 'Parameter #1 $parent of method CDash\Test\UseCase\UseCase::createChildElementsFromKeys() expects DOMElement, (DOMNode|false) given.'
+			rawMessage: 'Parameter #1 $parent of method CDash\Test\UseCase\UseCase::createChildElementsFromKeys() expects DOMElement, (DOMElement|false) given.'
 			identifier: argument.type
 			count: 1
 			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
@@ -13636,7 +13648,7 @@ parameters:
 			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
 
 		-
-			rawMessage: 'Parameter #1 $parent of method CDash\Test\UseCase\UseCase::createLabelsElement() expects DOMElement, (DOMNode|false) given.'
+			rawMessage: 'Parameter #1 $parent of method CDash\Test\UseCase\UseCase::createLabelsElement() expects DOMElement, (DOMElement|false) given.'
 			identifier: argument.type
 			count: 1
 			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
@@ -13660,13 +13672,13 @@ parameters:
 			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
 
 		-
-			rawMessage: 'Cannot call method appendChild() on DOMNode|false.'
+			rawMessage: 'Cannot call method appendChild() on DOMElement|false.'
 			identifier: method.nonObject
 			count: 32
 			path: app/cdash/include/Test/UseCase/TestUseCase.php
 
 		-
-			rawMessage: 'Cannot call method setAttribute() on DOMNode|false.'
+			rawMessage: 'Cannot call method setAttribute() on DOMElement|false.'
 			identifier: method.nonObject
 			count: 2
 			path: app/cdash/include/Test/UseCase/TestUseCase.php
@@ -13750,13 +13762,13 @@ parameters:
 			path: app/cdash/include/Test/UseCase/TestUseCase.php
 
 		-
-			rawMessage: 'Parameter #1 $parent of method CDash\Test\UseCase\TestUseCase::createTestElement() expects DOMElement, (DOMNode|false) given.'
+			rawMessage: 'Parameter #1 $parent of method CDash\Test\UseCase\TestUseCase::createTestElement() expects DOMElement, (DOMElement|false) given.'
 			identifier: argument.type
 			count: 1
 			path: app/cdash/include/Test/UseCase/TestUseCase.php
 
 		-
-			rawMessage: 'Parameter #1 $parent of method CDash\Test\UseCase\UseCase::createLabelsElement() expects DOMElement, (DOMNode|false) given.'
+			rawMessage: 'Parameter #1 $parent of method CDash\Test\UseCase\UseCase::createLabelsElement() expects DOMElement, (DOMElement|false) given.'
 			identifier: argument.type
 			count: 1
 			path: app/cdash/include/Test/UseCase/TestUseCase.php
@@ -13768,13 +13780,13 @@ parameters:
 			path: app/cdash/include/Test/UseCase/TestUseCase.php
 
 		-
-			rawMessage: 'Cannot call method appendChild() on DOMNode|false.'
+			rawMessage: 'Cannot call method appendChild() on DOMElement|false.'
 			identifier: method.nonObject
 			count: 47
 			path: app/cdash/include/Test/UseCase/UpdateUseCase.php
 
 		-
-			rawMessage: 'Cannot call method setAttribute() on DOMNode|false.'
+			rawMessage: 'Cannot call method setAttribute() on DOMElement|false.'
 			identifier: method.nonObject
 			count: 2
 			path: app/cdash/include/Test/UseCase/UpdateUseCase.php
@@ -13864,7 +13876,7 @@ parameters:
 			path: app/cdash/include/Test/UseCase/UpdateUseCase.php
 
 		-
-			rawMessage: 'Parameter #1 $root of method CDash\Test\UseCase\UpdateUseCase::createDirectoryElement() expects DOMElement, (DOMNode|false) given.'
+			rawMessage: 'Parameter #1 $root of method CDash\Test\UseCase\UpdateUseCase::createDirectoryElement() expects DOMElement, (DOMElement|false) given.'
 			identifier: argument.type
 			count: 1
 			path: app/cdash/include/Test/UseCase/UpdateUseCase.php
@@ -13894,7 +13906,7 @@ parameters:
 			path: app/cdash/include/Test/UseCase/UseCase.php
 
 		-
-			rawMessage: 'Cannot call method appendChild() on DOMNode|false.'
+			rawMessage: 'Cannot call method appendChild() on DOMElement|false.'
 			identifier: method.nonObject
 			count: 2
 			path: app/cdash/include/Test/UseCase/UseCase.php
@@ -20053,12 +20065,6 @@ parameters:
 			'''
 			identifier: method.deprecated
 			count: 3
-			path: app/cdash/tests/test_builddetails.php
-
-		-
-			rawMessage: 'Cannot access offset int<0, max> on mixed.'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
 			path: app/cdash/tests/test_builddetails.php
 
 		-
