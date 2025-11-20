@@ -308,4 +308,82 @@ class BuildTestsPageTest extends BrowserTestCase
             ;
         });
     }
+
+    public function testMeasurementColumns(): void
+    {
+        /** @var Build $build */
+        $build = $this->project->builds()->create([
+            'siteid' => $this->site->id,
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        /** @var Test $test */
+        $test = $build->tests()->create([
+            'testname' => Str::uuid()->toString(),
+            'status' => 'failed',
+            'outputid' => $this->testOutput->id,
+        ]);
+
+        $measurement1 = $test->testMeasurements()->create([
+            'name' => Str::uuid()->toString(),
+            'type' => 'text/string',
+            'value' => Str::uuid()->toString(),
+        ]);
+
+        $measurement2 = $test->testMeasurements()->create([
+            'name' => Str::uuid()->toString(),
+            'type' => 'text/string',
+            'value' => Str::uuid()->toString(),
+        ]);
+
+        $this->project->measurements()->create([
+            'name' => $measurement1->name,
+            'position' => 1,
+        ]);
+
+        $this->browse(function (Browser $browser) use ($build, $measurement1, $measurement2): void {
+            $browser->visit("/builds/{$build->id}/tests")
+                ->waitFor('@tests-table')
+                ->assertSeeIn('@tests-table', $measurement1->name)
+                ->assertSeeIn('@tests-table', $measurement1->value)
+                ->assertDontSeeIn('@tests-table', $measurement2->name)
+                ->assertDontSeeIn('@tests-table', $measurement2->value)
+            ;
+        });
+    }
+
+    public function testMeasurementColumnOrder(): void
+    {
+        /** @var Build $build */
+        $build = $this->project->builds()->create([
+            'siteid' => $this->site->id,
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        $measurement1 = $this->project->measurements()->create([
+            'name' => Str::uuid()->toString(),
+            'position' => 1,
+        ]);
+
+        $measurement2 = $this->project->measurements()->create([
+            'name' => Str::uuid()->toString(),
+            'position' => 2,
+        ]);
+
+        $measurement3 = $this->project->measurements()->create([
+            'name' => Str::uuid()->toString(),
+            'position' => 3,
+        ]);
+
+        $this->browse(function (Browser $browser) use ($build, $measurement1, $measurement2, $measurement3): void {
+            $browser->visit("/builds/{$build->id}/tests")
+                ->waitFor('@tests-table')
+                ->assertSeeIn('@tests-table th:nth-child(3)', $measurement1->name)
+                ->assertSeeIn('@tests-table th:nth-child(4)', $measurement2->name)
+                ->assertSeeIn('@tests-table th:nth-child(5)', $measurement3->name)
+            ;
+        });
+    }
 }

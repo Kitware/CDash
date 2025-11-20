@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Build as EloquentBuild;
 use App\Models\BuildUpdateFile;
 use App\Models\Comment;
+use App\Models\Project;
 use App\Models\RichBuildAlert;
 use App\Models\UploadFile;
 use App\Models\User;
@@ -93,12 +94,15 @@ final class BuildController extends AbstractBuildController
 
         $filters = json_decode(request()->get('filters')) ?? ['all' => []];
 
+        $eloquent_project = Project::findOrFail((int) $this->project->Id);
+
         return $this->vue('build-tests-page', 'Tests', [
             'build-id' => $this->build->Id,
-            'show-test-time-status' => (bool) $this->project->ShowTestTime,
-            'project-name' => $this->project->Name,
+            'show-test-time-status' => (bool) $eloquent_project->showtesttime,
+            'project-name' => $eloquent_project->name,
             'build-time' => Carbon::parse($this->build->StartTime)->toIso8601String(),
             'initial-filters' => $filters,
+            'pinned-measurements' => $eloquent_project->measurements()->orderBy('position')->pluck('name')->toArray(),
         ]);
     }
 

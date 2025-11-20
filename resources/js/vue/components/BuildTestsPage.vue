@@ -25,6 +25,7 @@
             name: 'time',
             displayName: 'Time',
           },
+          ...pinnedMeasurementColumns,
           {
             name: 'details',
             displayName: 'Details',
@@ -95,12 +96,22 @@ export default {
       type: Object,
       required: true,
     },
+
+    /** A list of measurements to display, ordered by position. */
+    pinnedMeasurements: {
+      type: Array,
+      required: true,
+    },
   },
 
   apollo: {
     tests: {
       query: gql`
-        query($buildid: ID, $filters: BuildTestsFiltersMultiFilterInput) {
+        query(
+          $buildid: ID,
+          $filters: BuildTestsFiltersMultiFilterInput,
+          $measurementFilters: TestTestMeasurementsFiltersMultiFilterInput,
+        ) {
           build(id: $buildid) {
             id
             tests(filters: $filters, first: 1000000) {
@@ -112,6 +123,15 @@ export default {
                   details
                   runningTime
                   timeStatusCategory
+                  testMeasurements(filters: $measurementFilters, first: 100) {
+                    edges {
+                      node {
+                        id
+                        name
+                        value
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -128,6 +148,15 @@ export default {
                         details
                         runningTime
                         timeStatusCategory
+                        testMeasurements(filters: $measurementFilters, first: 100) {
+                          edges {
+                            node {
+                              id
+                              name
+                              value
+                            }
+                          }
+                        }
                       }
                     }
                   }
@@ -157,6 +186,13 @@ export default {
         return {
           buildid: this.buildId,
           filters: this.initialFilters,
+          measurementFilters: {
+            any: this.pinnedMeasurements.map((name) => ({
+              eq: {
+                name: name,
+              },
+            })),
+          },
         };
       },
     },
@@ -171,6 +207,13 @@ export default {
   computed: {
     hasSubProjects() {
       return this.tests?.some((element) => element.subProject) ?? false;
+    },
+
+    pinnedMeasurementColumns() {
+      return this.pinnedMeasurements.map((name) => ({
+        name: name,
+        displayName: name,
+      }));
     },
 
     executeQueryLink() {
@@ -209,6 +252,10 @@ export default {
             text: 'History',
             href: `${this.$baseURL}/queryTests.php?project=${this.projectName}&filtercount=1&showfilters=1&field1=testname&compare1=61&value1=${edge.node.name}&date=${DateTime.fromISO(this.buildTime).toISODate()}`,
           },
+          ...this.pinnedMeasurements.reduce((acc, name) => ({
+            ...acc,
+            [name]: edge.node.testMeasurements.edges.find((measurementEdge) => measurementEdge.node.name === name)?.node.value ?? '',
+          }), {}),
         };
       });
     },
