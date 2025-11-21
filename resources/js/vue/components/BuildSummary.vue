@@ -3,6 +3,8 @@
     <p>{{ cdash.error }}</p>
   </section>
   <section v-else>
+    <build-summary-card :build-id="buildId" />
+
     <loading-indicator :is-loading="loading">
       <!-- Display link to create bug tracker issue if supported. -->
       <div v-if="cdash.newissueurl">
@@ -14,154 +16,6 @@
         </a>
         <br>
       </div>
-      <br>
-
-      <!-- Build log for a single submission -->
-      <table class="tabb striped">
-        <thead>
-          <tr class="table-heading1">
-            <th
-              colspan="2"
-              class="header"
-            >
-              Build Information
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th>
-              Site Name:
-            </th>
-            <td>
-              <a
-                id="site_link"
-                :href="$baseURL + '/sites/' + cdash.build.siteid"
-              >
-                {{ cdash.build.site }}
-              </a>
-            </td>
-          </tr>
-          <tr>
-            <th>
-              Build Name:
-            </th>
-            <td style="white-space: nowrap;">
-              {{ cdash.build.name }}
-              <span v-if="cdash.build.note">
-                (<a
-                  class="tw-link tw-link-hover"
-                  :href="$baseURL + '/builds/' + cdash.build.id + '/notes'"
-                >view notes</a>)
-              </span>
-            </td>
-          </tr>
-          <tr v-if="cdash.build.labels.length > 0">
-            <th>
-              Labels:
-            </th>
-            <td style="white-space: nowrap;">
-              {{ cdash.build.labels.join(', ') }}
-            </td>
-          </tr>
-          <tr>
-            <th>
-              Stamp:
-            </th>
-            <td>
-              {{ cdash.build.stamp }}
-            </td>
-          </tr>
-          <tr>
-            <th>
-              Time:
-            </th>
-            <td>
-              {{ cdash.build.time }}
-            </td>
-          </tr>
-          <tr>
-            <th>
-              Type:
-            </th>
-            <td>
-              {{ cdash.build.type }}
-            </td>
-          </tr>
-          <!-- Display Operating System information  -->
-          <tr v-if="cdash.build.osname">
-            <th>
-              OS Name:
-            </th>
-            <td>
-              {{ cdash.build.osname }}
-            </td>
-          </tr>
-          <tr v-if="cdash.build.osplatform">
-            <th>
-              OS Platform:
-            </th>
-            <td>
-              {{ cdash.build.osplatform }}
-            </td>
-          </tr>
-          <tr v-if="cdash.build.osrelease">
-            <th>
-              OS Release:
-            </th>
-            <td>
-              {{ cdash.build.osrelease }}
-            </td>
-          </tr>
-          <tr v-if="cdash.build.osversion">
-            <th>
-              OS Version:
-            </th>
-            <td>
-              {{ cdash.build.osversion }}
-            </td>
-          </tr>
-          <!-- Display Compiler information  -->
-          <tr v-if="cdash.build.compilername">
-            <th>
-              Compiler Name:
-            </th>
-            <td>
-              {{ cdash.build.compilername }}
-            </td>
-          </tr>
-          <tr v-if="cdash.build.compilerversion">
-            <th>
-              Compiler Version:
-            </th>
-            <td>
-              {{ cdash.build.compilerversion }}
-            </td>
-          </tr>
-          <tr v-if="cdash.build.generator">
-            <th>
-              CTest version:
-            </th>
-            <td>
-              {{ cdash.build.generator }}
-            </td>
-          </tr>
-          <tr v-if="cdash.build.lastsubmitbuild > 0">
-            <th>
-              Last submission:
-            </th>
-            <td>
-              <a
-                class="tw-link tw-link-hover"
-                :href="$baseURL + '/builds/' + cdash.build.lastsubmitbuild"
-              >
-                {{ cdash.build.lastsubmitdate }}
-              </a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
       <br>
 
       <table>
@@ -1245,14 +1099,21 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import CodeBox from './shared/CodeBox.vue';
 import LoadingIndicator from './shared/LoadingIndicator.vue';
+import BuildSummaryCard from './shared/BuildSummaryCard.vue';
 export default {
   name: 'BuildSummary',
-  components: {LoadingIndicator, CodeBox, FontAwesomeIcon},
+  components: {BuildSummaryCard, LoadingIndicator, CodeBox, FontAwesomeIcon},
+
+  props: {
+    buildId: {
+      type: Number,
+      required: true,
+    },
+  },
 
   data () {
     return {
       // API results.
-      buildid: null,
       cdash: {},
       loading: true,
       errored: false,
@@ -1287,8 +1148,7 @@ export default {
   },
 
   mounted () {
-    this.buildid = window.location.pathname.split('/').pop();
-    const endpoint_path = `/api/v1/buildSummary.php?buildid=${this.buildid}`;
+    const endpoint_path = `/api/v1/buildSummary.php?buildid=${this.buildId}`;
     ApiLoader.loadPageData(this, endpoint_path);
   },
 
@@ -1305,7 +1165,7 @@ export default {
     loadGraphData: function(graphType) {
       this.graphLoading = true;
       this.$axios
-        .get(`/api/v1/getPreviousBuilds.php?buildid=${this.buildid}`)
+        .get(`/api/v1/getPreviousBuilds.php?buildid=${this.buildId}`)
         .then(response => {
           this.cdash.buildtimes = [];
           this.cdash.builderrors = [];
