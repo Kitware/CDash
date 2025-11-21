@@ -3,10 +3,7 @@
     <p>{{ cdash.error }}</p>
   </section>
   <section v-else>
-    <div v-if="loading">
-      <img :src="$baseURL + '/img/loading.gif'">
-    </div>
-    <div v-else>
+    <loading-indicator :is-loading="loading">
       <!-- Display link to create bug tracker issue if supported. -->
       <div v-if="cdash.newissueurl">
         <a
@@ -1204,7 +1201,7 @@
         <br>
         <br>
       </div>
-    </div>
+    </loading-indicator>
   </section>
 </template>
 
@@ -1215,9 +1212,10 @@ import {
   faQuestionCircle,
 } from '@fortawesome/free-solid-svg-icons';
 import CodeBox from './shared/CodeBox.vue';
+import LoadingIndicator from './shared/LoadingIndicator.vue';
 export default {
   name: 'BuildSummary',
-  components: {CodeBox, FontAwesomeIcon},
+  components: {LoadingIndicator, CodeBox, FontAwesomeIcon},
 
   data () {
     return {
