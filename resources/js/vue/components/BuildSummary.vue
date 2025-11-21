@@ -521,96 +521,14 @@
       <div class="title-divider">
         History
       </div>
-      <a
-        id="toggle_history_graph"
-        class="tw-link tw-link-hover"
-        @click="toggleHistoryGraph()"
-      >
-        Show Build History
-      </a>
-      <br>
 
       <a
         class="tw-link tw-link-hover"
         :href="$baseURL + '/index.php?project=' + cdash.projectname_encoded + '&filtercount=4&showfilters=1&filtercombine=and&field1=site&compare1=61&value1=' + cdash.build.sitename_encoded + '&field2=buildname&compare2=61&value2=' + cdash.build.name + '&field3=buildtype&compare3=61&value3=' + cdash.build.type + '&field4=buildstarttime&compare4=84&value4=' + cdash.build.starttime"
       >
-        Build History Filter
+        Show Build History
       </a>
       <br>
-
-      <div>
-        <img
-          v-show="showHistoryGraph && graphLoading"
-          :src="$baseURL + '/img/loading.gif'"
-        >
-        <table
-          v-show="showHistoryGraph && !graphLoading"
-          id="historyGraph"
-          width="100%"
-          border="0"
-          class="dart"
-        >
-          <thead>
-            <tr class="table-heading">
-              <th class="nob">
-                Start Time
-              </th>
-              <th class="nob">
-                Updated Files
-              </th>
-              <th class="nob">
-                Configure Errors
-              </th>
-              <th class="nob">
-                Configure Warnings
-              </th>
-              <th class="nob">
-                Build Errors
-              </th>
-              <th class="nob">
-                Build Warnings
-              </th>
-              <th class="nob">
-                Failed Tests
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              v-for="(build, index) in cdash.buildhistory"
-              :key="build.id"
-              :class="{'even': index % 2 === 0, 'odd': index % 2 !== 0 }"
-            >
-              <td>
-                <a
-                  class="tw-link tw-link-hover"
-                  :href="$baseURL + '/builds/' + build.id"
-                >
-                  {{ build.starttime }}
-                </a>
-              </td>
-              <td>
-                {{ build.nfiles }}
-              </td>
-              <td :class="build.configureerrors > 0 ? 'error' : 'normal'">
-                {{ build.configureerrors }}
-              </td>
-              <td :class="build.configurewarnings > 0 ? 'warning' : 'normal'">
-                {{ build.configurewarnings }}
-              </td>
-              <td :class="build.builderrors > 0 ? 'error' : 'normal'">
-                {{ build.builderrors }}
-              </td>
-              <td :class="build.buildwarnings > 0 ? 'warning' : 'normal'">
-                {{ build.buildwarnings }}
-              </td>
-              <td :class="build.testfailed > 0 ? 'error' : 'normal'">
-                {{ build.testfailed }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
       <br>
 
       <!-- Instrumentation section -->
@@ -1120,7 +1038,6 @@ export default {
 
       // Booleans controlling whether a section should be displayed or not.
       showErrorGraph: false,
-      showHistoryGraph: false,
       showTestGraph: false,
       showTimeGraph: false,
       showWarningGraph: false,
@@ -1155,11 +1072,6 @@ export default {
   methods: {
     postSetup: function (response) {
       this.cdash.noteStatus = '0';
-    },
-
-    toggleHistoryGraph: function () {
-      this.showHistoryGraph = !this.showHistoryGraph;
-      this.loadGraphData();
     },
 
     loadGraphData: function(graphType) {
