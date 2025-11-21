@@ -871,17 +871,21 @@
         Graphs
       </div>
 
-      <img
-        :src="$baseURL + '/img/graph.png'"
-        title="graph"
-      >
-      <a
-        id="toggle_time_graph"
-        class="tw-link tw-link-hover"
-        @click="toggleTimeGraph()"
-      >
-        Show Build Time Graph
-      </a>
+      <div class="tw-flex tw-flex-row">
+        <img
+          width="20"
+          height="20"
+          :src="$baseURL + '/img/graph.png'"
+          title="graph"
+        >
+        <a
+          id="toggle_time_graph"
+          class="tw-link tw-link-hover"
+          @click="toggleTimeGraph()"
+        >
+          Show Build Time Graph
+        </a>
+      </div>
       <div style="text-align: center;">
         <img
           v-show="showTimeGraph && graphLoading"
@@ -894,17 +898,21 @@
         />
       </div>
 
-      <img
-        :src="$baseURL + '/img/graph.png'"
-        title="graph"
-      >
-      <a
-        id="toggle_error_graph"
-        class="tw-link tw-link-hover"
-        @click="toggleErrorGraph()"
-      >
-        Show Build Errors Graph
-      </a>
+      <div class="tw-flex tw-flex-row">
+        <img
+          width="20"
+          height="20"
+          :src="$baseURL + '/img/graph.png'"
+          title="graph"
+        >
+        <a
+          id="toggle_error_graph"
+          class="tw-link tw-link-hover"
+          @click="toggleErrorGraph()"
+        >
+          Show Build Errors Graph
+        </a>
+      </div>
       <div style="text-align: center;">
         <img
           v-show="showErrorGraph && graphLoading"
@@ -917,17 +925,21 @@
         />
       </div>
 
-      <img
-        :src="$baseURL + '/img/graph.png'"
-        title="graph"
-      >
-      <a
-        id="toggle_warning_graph"
-        class="tw-link tw-link-hover"
-        @click="toggleWarningGraph()"
-      >
-        Show Build Warnings Graph
-      </a>
+      <div class="tw-flex tw-flex-row">
+        <img
+          width="20"
+          height="20"
+          :src="$baseURL + '/img/graph.png'"
+          title="graph"
+        >
+        <a
+          id="toggle_warning_graph"
+          class="tw-link tw-link-hover"
+          @click="toggleWarningGraph()"
+        >
+          Show Build Warnings Graph
+        </a>
+      </div>
       <div style="text-align: center;">
         <img
           v-show="showWarningGraph && graphLoading"
@@ -940,17 +952,21 @@
         />
       </div>
 
-      <img
-        :src="$baseURL + '/img/graph.png'"
-        title="graph"
-      >
-      <a
-        id="toggle_test_graph"
-        class="tw-link tw-link-hover"
-        @click="toggleTestGraph()"
-      >
-        Show Build Tests Failed Graph
-      </a>
+      <div class="tw-flex tw-flex-row">
+        <img
+          width="20"
+          height="20"
+          :src="$baseURL + '/img/graph.png'"
+          title="graph"
+        >
+        <a
+          id="toggle_test_graph"
+          class="tw-link tw-link-hover"
+          @click="toggleTestGraph()"
+        >
+          Show Build Tests Failed Graph
+        </a>
+      </div>
       <div style="text-align: center;">
         <img
           v-show="showTestGraph && graphLoading"
