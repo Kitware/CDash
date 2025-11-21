@@ -789,7 +789,7 @@
       <div v-if="cdash.notes.length > 0">
         <div v-for="note in cdash.notes">
           <b>{{ note.status }}</b> by <b>{{ note.user }}</b> at {{ note.date }}
-          <pre>{{ note.text }}</pre>
+          <code-box :text="note.text" />
           <hr>
         </div>
       </div>
@@ -1034,14 +1034,14 @@
         <br>
 
         <b>Configure Command:</b>
-        <pre class="pre-wrap">{{ cdash.configure.command }}</pre>
+        <code-box :text="cdash.configure.command" />
 
         <b>Configure Return Value:</b>
-        <pre class="pre-wrap">{{ cdash.configure.status }}</pre>
+        <code-box :text="cdash.configure.status" />
 
         <b>Configure Output:</b>
 
-        <pre>{{ cdash.configure.output }}</pre>
+        <code-box :text="cdash.configure.output" />
 
         <a
           id="configure_link"
@@ -1062,7 +1062,7 @@
       </div>
       <br>
 
-      <b>Build command: </b><pre class="pre-wrap">{{ cdash.build.command }}</pre>
+      <b>Build command: </b><code-box :text="cdash.build.command" />
 
       <b>Start Time: </b>{{ cdash.build.starttime }}
       <br>
@@ -1082,15 +1082,30 @@
           File: <b>{{ error.sourcefile }}</b>
           Line: <b>{{ error.sourceline }}</b>
         </div>
-        <pre>{{ error.precontext }}</pre>
-        <pre>{{ error.text }}</pre>
-        <pre>{{ error.postcontext }}</pre>
+        <code-box
+          v-if="error?.precontext?.trim()"
+          :text="error.precontext"
+        />
+        <code-box
+          v-if="error?.text?.trim()"
+          :text="error.text"
+        />
+        <code-box
+          v-if="error?.postcontext?.trim()"
+          :text="error.postcontext"
+        />
 
-        <div v-if="error.stdoutput || error.stderror">
+        <div v-if="error?.stdoutput?.trim() || error?.stderror?.trim()">
           <br>
           <b>{{ error.sourcefile }}</b>
-          <pre v-if="error.stdoutput">{{ error.stdoutput }}</pre>
-          <pre v-if="error.stderror">{{ error.stderror }}</pre>
+          <code-box
+            v-if="error?.stdoutput?.trim()"
+            :text="error.stdoutput"
+          />
+          <code-box
+            v-if="error?.stderror?.trim()"
+            :text="error.stderror"
+          />
         </div>
       </div>
 
@@ -1119,15 +1134,30 @@
           File: <b>{{ warning.sourcefile }}</b>
           Line: <b>{{ warning.sourceline }}</b>
         </div>
-        <pre>{{ warning.precontext }}</pre>
-        <pre>{{ warning.text }}</pre>
-        <pre>{{ warning.postcontext }}</pre>
+        <code-box
+          v-if="warning?.precontext?.trim()"
+          :text="warning.precontext"
+        />
+        <code-box
+          v-if="warning?.text?.trim()"
+          :text="warning.text"
+        />
+        <code-box
+          v-if="warning?.postcontext?.trim()"
+          :text="warning.postcontext"
+        />
 
-        <div v-if="warning.stdoutput || warning.stderror">
+        <div v-if="warning?.stdoutput?.trim() || warning?.stderror?.trim()">
           <br>
           <b>{{ warning.sourcefile }}</b>
-          <pre v-if="warning.stdoutput">{{ warning.stdoutput }}</pre>
-          <pre v-if="warning.stderror">{{ warning.stderror }}</pre>
+          <code-box
+            v-if="warning?.stdoutput?.trim()"
+            :text="warning.stdoutput"
+          />
+          <code-box
+            v-if="warning?.stderror?.trim()"
+            :text="warning.stderror"
+          />
         </div>
       </div>
       <br>
@@ -1184,9 +1214,10 @@ import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 import {
   faQuestionCircle,
 } from '@fortawesome/free-solid-svg-icons';
+import CodeBox from './shared/CodeBox.vue';
 export default {
   name: 'BuildSummary',
-  components: {FontAwesomeIcon},
+  components: {CodeBox, FontAwesomeIcon},
 
   data () {
     return {
