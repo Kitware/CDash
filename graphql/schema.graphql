@@ -534,7 +534,9 @@ type Test {
   Test measurements for this test, sorted in descending order so newer results
   appear first when using paginated queries.
   """
-  testMeasurements: [TestMeasurement!]! @hasMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)
+  testMeasurements(
+    filters: _ @filter
+  ): [TestMeasurement!]! @hasMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)
 
   labels(
     filters: _ @filter
@@ -558,12 +560,12 @@ type TestMeasurement {
   """
   Example: "Exit Value"
   """
-  name: String!
+  name: String! @filterable
 
   """
   Example: "text/string", "numeric/double", "text/preformatted", etc
   """
-  type: String!
+  type: String! @filterable
 
   """
   The value for this measurement.  Even though some values may be numeric, all
