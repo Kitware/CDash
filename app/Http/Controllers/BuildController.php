@@ -77,7 +77,7 @@ final class BuildController extends AbstractBuildController
     {
         $this->setBuildById($build_id);
 
-        return $this->vue('build-summary', 'Build Summary', [], false);
+        return $this->vue('build-summary', 'Build Summary');
     }
 
     public function update(int $build_id): View

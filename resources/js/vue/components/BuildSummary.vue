@@ -7,7 +7,7 @@
       <!-- Display link to create bug tracker issue if supported. -->
       <div v-if="cdash.newissueurl">
         <a
-          class="cdash-link"
+          class="tw-link tw-link-hover"
           :href="cdash.newissueurl"
         >
           <b>Create {{ cdash.bugtracker }} issue for this build</b>
@@ -50,7 +50,7 @@
               {{ cdash.build.name }}
               <span v-if="cdash.build.note">
                 (<a
-                  class="cdash-link"
+                  class="tw-link tw-link-hover"
                   :href="$baseURL + '/builds/' + cdash.build.id + '/notes'"
                 >view notes</a>)
               </span>
@@ -152,7 +152,7 @@
             </th>
             <td>
               <a
-                class="cdash-link"
+                class="tw-link tw-link-hover"
                 :href="$baseURL + '/builds/' + cdash.build.lastsubmitbuild"
               >
                 {{ cdash.build.lastsubmitdate }}
@@ -180,7 +180,7 @@
                       class="header"
                     >
                       <a
-                        class="cdash-link"
+                        class="tw-link tw-link-hover"
                         :href="$baseURL + '/builds/' + cdash.previousbuild.buildid"
                       >
                         <b>Previous Build</b>
@@ -204,7 +204,7 @@
                     >
                       <b>
                         <a
-                          class="cdash-link"
+                          class="tw-link tw-link-hover"
                           :href="$baseURL + '/builds/' + cdash.previousbuild.buildid + '/update'"
                         >
                           {{ cdash.previousbuild.nupdateerrors }}
@@ -217,7 +217,7 @@
                     >
                       <b>
                         <a
-                          class="cdash-link"
+                          class="tw-link tw-link-hover"
                           :href="$baseURL + '/builds/' + cdash.previousbuild.buildid + '/update'"
                         >
                           {{ cdash.previousbuild.nupdatewarnings }}
@@ -236,7 +236,7 @@
                     >
                       <b>
                         <a
-                          class="cdash-link"
+                          class="tw-link tw-link-hover"
                           :href="$baseURL + '/builds/' + cdash.previousbuild.buildid + '/configure'"
                         >
                           {{ cdash.previousbuild.nconfigureerrors }}
@@ -249,7 +249,7 @@
                     >
                       <b>
                         <a
-                          class="cdash-link"
+                          class="tw-link tw-link-hover"
                           :href="$baseURL + '/builds/' + cdash.previousbuild.buildid + '/configure'"
                         >
                           {{ cdash.previousbuild.nconfigurewarnings }}
@@ -268,7 +268,7 @@
                     >
                       <b>
                         <a
-                          class="cdash-link"
+                          class="tw-link tw-link-hover"
                           :href="$baseURL + '/viewBuildError.php?buildid=' + cdash.previousbuild.buildid"
                         >
                           {{ cdash.previousbuild.nerrors }}
@@ -281,7 +281,7 @@
                     >
                       <b>
                         <a
-                          class="cdash-link"
+                          class="tw-link tw-link-hover"
                           :href="$baseURL + '/viewBuildError.php?type=1&buildid=' + cdash.previousbuild.buildid"
                         >
                           {{ cdash.previousbuild.nwarnings }}
@@ -300,7 +300,7 @@
                     >
                       <b>
                         <a
-                          class="cdash-link"
+                          class="tw-link tw-link-hover"
                           :href="$baseURL + '/viewTest.php?onlyfailed&buildid=' + cdash.previousbuild.buildid"
                         >
                           {{ cdash.previousbuild.ntestfailed }}
@@ -313,7 +313,7 @@
                     >
                       <b>
                         <a
-                          class="cdash-link"
+                          class="tw-link tw-link-hover"
                           :href="$baseURL + '/viewTest.php?onlynotrun&buildid=' + cdash.previousbuild.buildid"
                         >
                           {{ cdash.previousbuild.ntestnotrun }}
@@ -366,7 +366,7 @@
                     >
                       <b>
                         <a
-                          class="cdash-link"
+                          class="tw-link tw-link-hover"
                           :href="$baseURL + '/builds/' + cdash.build.id + '/update'"
                         >
                           {{ cdash.update.nerrors }}
@@ -379,7 +379,7 @@
                     >
                       <b>
                         <a
-                          class="cdash-link"
+                          class="tw-link tw-link-hover"
                           :href="$baseURL + '/builds/' + cdash.build.id + '/update'"
                         >
                           {{ cdash.update.nwarnings }}
@@ -390,7 +390,7 @@
                   <tr v-if="cdash.hasconfigure">
                     <th>
                       <a
-                        class="cdash-link"
+                        class="tw-link tw-link-hover"
                         href="#Configure"
                       >
                         <b>Configure</b>
@@ -402,7 +402,7 @@
                     >
                       <b>
                         <a
-                          class="cdash-link"
+                          class="tw-link tw-link-hover"
                           :href="$baseURL + '/builds/' + cdash.build.id + '/configure'"
                         >
                           {{ cdash.configure.nerrors }}
@@ -415,7 +415,7 @@
                     >
                       <b>
                         <a
-                          class="cdash-link"
+                          class="tw-link tw-link-hover"
                           :href="$baseURL + '/builds/' + cdash.build.id + '/configure'"
                         >
                           {{ cdash.configure.nwarnings }}
@@ -426,7 +426,7 @@
                   <tr>
                     <th>
                       <a
-                        class="cdash-link"
+                        class="tw-link tw-link-hover"
                         href="#Build"
                       >
                         <b>Build</b>
@@ -438,7 +438,7 @@
                     >
                       <b>
                         <a
-                          class="cdash-link"
+                          class="tw-link tw-link-hover"
                           :href="$baseURL + '/viewBuildError.php?buildid=' + cdash.build.id"
                         >
                           {{ cdash.build.nerrors }}
@@ -451,7 +451,7 @@
                     >
                       <b>
                         <a
-                          class="cdash-link"
+                          class="tw-link tw-link-hover"
                           :href="$baseURL + '/viewBuildError.php?type=1&buildid=' + cdash.build.id"
                         >
                           {{ cdash.build.nwarnings }}
@@ -462,7 +462,7 @@
                   <tr>
                     <th>
                       <a
-                        class="cdash-link"
+                        class="tw-link tw-link-hover"
                         href="#Test"
                       >
                         <b>Test</b>
@@ -474,7 +474,7 @@
                     >
                       <b>
                         <a
-                          class="cdash-link"
+                          class="tw-link tw-link-hover"
                           :href="$baseURL + '/viewTest.php?onlyfailed&buildid=' + cdash.build.id"
                         >
                           {{ cdash.test.nfailed }}
@@ -487,7 +487,7 @@
                     >
                       <b>
                         <a
-                          class="cdash-link"
+                          class="tw-link tw-link-hover"
                           :href="$baseURL + '/viewTest.php?onlynotrun&buildid=' + cdash.build.id"
                         >
                           {{ cdash.test.nnotrun }}
@@ -514,7 +514,7 @@
                       class="header"
                     >
                       <a
-                        class="cdash-link"
+                        class="tw-link tw-link-hover"
                         :href="$baseURL + '/builds/' + cdash.nextbuild.buildid"
                       >
                         <b>Next Build</b>
@@ -538,7 +538,7 @@
                     >
                       <b>
                         <a
-                          class="cdash-link"
+                          class="tw-link tw-link-hover"
                           :href="$baseURL + '/builds/' + cdash.nextbuild.buildid + '/update'"
                         >
                           {{ cdash.nextbuild.nupdateerrors }}
@@ -551,7 +551,7 @@
                     >
                       <b>
                         <a
-                          class="cdash-link"
+                          class="tw-link tw-link-hover"
                           :href="$baseURL + '/builds/' + cdash.nextbuild.buildid + '/update'"
                         >
                           {{ cdash.nextbuild.nupdatewarnings }}
@@ -570,7 +570,7 @@
                     >
                       <b>
                         <a
-                          class="cdash-link"
+                          class="tw-link tw-link-hover"
                           :href="$baseURL + '/builds/' + cdash.nextbuild.buildid + '/configure'"
                         >
                           {{ cdash.nextbuild.nconfigureerrors }}
@@ -583,7 +583,7 @@
                     >
                       <b>
                         <a
-                          class="cdash-link"
+                          class="tw-link tw-link-hover"
                           :href="$baseURL + '/builds/' + cdash.nextbuild.buildid + '/configure'"
                         >
                           {{ cdash.nextbuild.nconfigurewarnings }}
@@ -602,7 +602,7 @@
                     >
                       <b>
                         <a
-                          class="cdash-link"
+                          class="tw-link tw-link-hover"
                           :href="$baseURL + '/viewBuildError.php?buildid=' + cdash.nextbuild.buildid"
                         >
                           {{ cdash.nextbuild.nerrors }}
@@ -615,7 +615,7 @@
                     >
                       <b>
                         <a
-                          class="cdash-link"
+                          class="tw-link tw-link-hover"
                           :href="$baseURL + '/viewBuildError.php?type=1&buildid=' + cdash.nextbuild.buildid"
                         >
                           {{ cdash.nextbuild.nwarnings }}
@@ -634,7 +634,7 @@
                     >
                       <b>
                         <a
-                          class="cdash-link"
+                          class="tw-link tw-link-hover"
                           :href="$baseURL + '/viewTest.php?onlyfailed&buildid=' + cdash.nextbuild.buildid"
                         >
                           {{ cdash.nextbuild.ntestfailed }}
@@ -647,7 +647,7 @@
                     >
                       <b>
                         <a
-                          class="cdash-link"
+                          class="tw-link tw-link-hover"
                           :href="$baseURL + '/viewTest.php?onlynotrun&buildid=' + cdash.nextbuild.buildid"
                         >
                           {{ cdash.nextbuild.ntestnotrun }}
@@ -669,6 +669,7 @@
       </div>
       <a
         id="toggle_history_graph"
+        class="tw-link tw-link-hover"
         @click="toggleHistoryGraph()"
       >
         Show Build History
@@ -676,7 +677,7 @@
       <br>
 
       <a
-        id="history_link"
+        class="tw-link tw-link-hover"
         :href="$baseURL + '/index.php?project=' + cdash.projectname_encoded + '&filtercount=4&showfilters=1&filtercombine=and&field1=site&compare1=61&value1=' + cdash.build.sitename_encoded + '&field2=buildname&compare2=61&value2=' + cdash.build.name + '&field3=buildtype&compare3=61&value3=' + cdash.build.type + '&field4=buildstarttime&compare4=84&value4=' + cdash.build.starttime"
       >
         Build History Filter
@@ -728,7 +729,7 @@
             >
               <td>
                 <a
-                  class="cdash-link"
+                  class="tw-link tw-link-hover"
                   :href="$baseURL + '/builds/' + build.id"
                 >
                   {{ build.starttime }}
@@ -765,11 +766,17 @@
           <font-awesome-icon :icon="FA.faQuestionCircle" />
         </a>
       </div>
-      <a :href="$baseURL + '/builds/' + cdash.build.id + '/targets'">
+      <a
+        class="tw-link tw-link-hover"
+        :href="$baseURL + '/builds/' + cdash.build.id + '/targets'"
+      >
         View Targets
       </a>
       <br>
-      <a :href="$baseURL + '/builds/' + cdash.build.id + '/commands'">
+      <a
+        class="tw-link tw-link-hover"
+        :href="$baseURL + '/builds/' + cdash.build.id + '/commands'"
+      >
         View Commands
       </a>
       <br>
@@ -800,6 +807,7 @@
         >
         <a
           id="toggle_note"
+          class="tw-link tw-link-hover"
           @click="toggleNote()"
         >
           Add a comment to this Build
@@ -869,6 +877,7 @@
       >
       <a
         id="toggle_time_graph"
+        class="tw-link tw-link-hover"
         @click="toggleTimeGraph()"
       >
         Show Build Time Graph
@@ -891,6 +900,7 @@
       >
       <a
         id="toggle_error_graph"
+        class="tw-link tw-link-hover"
         @click="toggleErrorGraph()"
       >
         Show Build Errors Graph
@@ -913,6 +923,7 @@
       >
       <a
         id="toggle_warning_graph"
+        class="tw-link tw-link-hover"
         @click="toggleWarningGraph()"
       >
         Show Build Warnings Graph
@@ -935,6 +946,7 @@
       >
       <a
         id="toggle_test_graph"
+        class="tw-link tw-link-hover"
         @click="toggleTestGraph()"
       >
         Show Build Tests Failed Graph
@@ -962,7 +974,7 @@
           :key="from.relatedid"
         >
           This build {{ from.relationship }} <a
-            class="cdash-link"
+            class="tw-link tw-link-hover"
             :href="$baseURL + '/builds/' + from.relatedid"
           >{{ from.name }}</a>.
         </div>
@@ -971,7 +983,7 @@
           :key="to.buildid"
         >
           <a
-            class="cdash-link"
+            class="tw-link tw-link-hover"
             :href="$baseURL + '/builds/' + to.buildid"
           >{{ to.name }}</a> {{ to.relationship }} this build.
         </div>
@@ -1001,7 +1013,7 @@
 
         <b>Number of Updates: </b>
         <a
-          id="update_link"
+          class="tw-link tw-link-hover"
           :href="$baseURL + '/builds/' + cdash.build.id + '/update'"
         >
           {{ cdash.update.nupdates }}
@@ -1042,6 +1054,7 @@
 
         <a
           id="configure_link"
+          class="tw-link tw-link-hover"
           :href="$baseURL + '/builds/' + cdash.build.id + '/configure'"
         >
           View Configure Summary
@@ -1107,7 +1120,7 @@
       </div>
 
       <a
-        id="errors_link"
+        class="tw-link tw-link-hover"
         :href="$baseURL + '/viewBuildError.php?buildid=' + cdash.build.id"
       >
         View Errors Summary
@@ -1161,6 +1174,7 @@
 
       <a
         id="warnings_link"
+        class="tw-link tw-link-hover"
         :href="$baseURL + '/viewBuildError.php?type=1&buildid=' + cdash.build.id"
       >
         View Warnings Summary
@@ -1177,6 +1191,7 @@
       </div>
       <a
         id="tests_link"
+        class="tw-link tw-link-hover"
         :href="$baseURL + '/viewTest.php?buildid=' + cdash.build.id"
       >
         View Tests Summary
@@ -1194,6 +1209,7 @@
         </div>
         <a
           id="coverage_link"
+          class="tw-link tw-link-hover"
           :href="$baseURL + '/viewCoverage.php?buildid=' + cdash.build.id"
         >
           View Coverage Summary
