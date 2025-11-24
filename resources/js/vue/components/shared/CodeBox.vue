@@ -49,6 +49,7 @@ export default {
             overflow: 'auto',
           },
         }),
+        EditorView.lineWrapping,
       ],
     });
 

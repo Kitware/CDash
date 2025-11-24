@@ -3,168 +3,19 @@
     <p>{{ cdash.error }}</p>
   </section>
   <section v-else>
-    <div v-if="loading">
-      <img :src="$baseURL + '/img/loading.gif'">
-    </div>
-    <div v-else>
+    <build-summary-card :build-id="buildId" />
+
+    <loading-indicator :is-loading="loading">
       <!-- Display link to create bug tracker issue if supported. -->
       <div v-if="cdash.newissueurl">
         <a
-          class="cdash-link"
+          class="tw-link tw-link-hover"
           :href="cdash.newissueurl"
         >
           <b>Create {{ cdash.bugtracker }} issue for this build</b>
         </a>
         <br>
       </div>
-      <br>
-
-      <!-- Build log for a single submission -->
-      <table class="tabb striped">
-        <thead>
-          <tr class="table-heading1">
-            <th
-              colspan="2"
-              class="header"
-            >
-              Build Information
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th>
-              Site Name:
-            </th>
-            <td>
-              <a
-                id="site_link"
-                :href="$baseURL + '/sites/' + cdash.build.siteid"
-              >
-                {{ cdash.build.site }}
-              </a>
-            </td>
-          </tr>
-          <tr>
-            <th>
-              Build Name:
-            </th>
-            <td style="white-space: nowrap;">
-              {{ cdash.build.name }}
-              <span v-if="cdash.build.note">
-                (<a
-                  class="cdash-link"
-                  :href="$baseURL + '/builds/' + cdash.build.id + '/notes'"
-                >view notes</a>)
-              </span>
-            </td>
-          </tr>
-          <tr v-if="cdash.build.labels.length > 0">
-            <th>
-              Labels:
-            </th>
-            <td style="white-space: nowrap;">
-              {{ cdash.build.labels.join(', ') }}
-            </td>
-          </tr>
-          <tr>
-            <th>
-              Stamp:
-            </th>
-            <td>
-              {{ cdash.build.stamp }}
-            </td>
-          </tr>
-          <tr>
-            <th>
-              Time:
-            </th>
-            <td>
-              {{ cdash.build.time }}
-            </td>
-          </tr>
-          <tr>
-            <th>
-              Type:
-            </th>
-            <td>
-              {{ cdash.build.type }}
-            </td>
-          </tr>
-          <!-- Display Operating System information  -->
-          <tr v-if="cdash.build.osname">
-            <th>
-              OS Name:
-            </th>
-            <td>
-              {{ cdash.build.osname }}
-            </td>
-          </tr>
-          <tr v-if="cdash.build.osplatform">
-            <th>
-              OS Platform:
-            </th>
-            <td>
-              {{ cdash.build.osplatform }}
-            </td>
-          </tr>
-          <tr v-if="cdash.build.osrelease">
-            <th>
-              OS Release:
-            </th>
-            <td>
-              {{ cdash.build.osrelease }}
-            </td>
-          </tr>
-          <tr v-if="cdash.build.osversion">
-            <th>
-              OS Version:
-            </th>
-            <td>
-              {{ cdash.build.osversion }}
-            </td>
-          </tr>
-          <!-- Display Compiler information  -->
-          <tr v-if="cdash.build.compilername">
-            <th>
-              Compiler Name:
-            </th>
-            <td>
-              {{ cdash.build.compilername }}
-            </td>
-          </tr>
-          <tr v-if="cdash.build.compilerversion">
-            <th>
-              Compiler Version:
-            </th>
-            <td>
-              {{ cdash.build.compilerversion }}
-            </td>
-          </tr>
-          <tr v-if="cdash.build.generator">
-            <th>
-              CTest version:
-            </th>
-            <td>
-              {{ cdash.build.generator }}
-            </td>
-          </tr>
-          <tr v-if="cdash.build.lastsubmitbuild > 0">
-            <th>
-              Last submission:
-            </th>
-            <td>
-              <a
-                class="cdash-link"
-                :href="$baseURL + '/builds/' + cdash.build.lastsubmitbuild"
-              >
-                {{ cdash.build.lastsubmitdate }}
-              </a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
       <br>
 
       <table>
@@ -183,7 +34,7 @@
                       class="header"
                     >
                       <a
-                        class="cdash-link"
+                        class="tw-link tw-link-hover"
                         :href="$baseURL + '/builds/' + cdash.previousbuild.buildid"
                       >
                         <b>Previous Build</b>
@@ -207,7 +58,7 @@
                     >
                       <b>
                         <a
-                          class="cdash-link"
+                          class="tw-link tw-link-hover"
                           :href="$baseURL + '/builds/' + cdash.previousbuild.buildid + '/update'"
                         >
                           {{ cdash.previousbuild.nupdateerrors }}
@@ -220,7 +71,7 @@
                     >
                       <b>
                         <a
-                          class="cdash-link"
+                          class="tw-link tw-link-hover"
                           :href="$baseURL + '/builds/' + cdash.previousbuild.buildid + '/update'"
                         >
                           {{ cdash.previousbuild.nupdatewarnings }}
@@ -239,7 +90,7 @@
                     >
                       <b>
                         <a
-                          class="cdash-link"
+                          class="tw-link tw-link-hover"
                           :href="$baseURL + '/builds/' + cdash.previousbuild.buildid + '/configure'"
                         >
                           {{ cdash.previousbuild.nconfigureerrors }}
@@ -252,7 +103,7 @@
                     >
                       <b>
                         <a
-                          class="cdash-link"
+                          class="tw-link tw-link-hover"
                           :href="$baseURL + '/builds/' + cdash.previousbuild.buildid + '/configure'"
                         >
                           {{ cdash.previousbuild.nconfigurewarnings }}
@@ -271,7 +122,7 @@
                     >
                       <b>
                         <a
-                          class="cdash-link"
+                          class="tw-link tw-link-hover"
                           :href="$baseURL + '/viewBuildError.php?buildid=' + cdash.previousbuild.buildid"
                         >
                           {{ cdash.previousbuild.nerrors }}
@@ -284,7 +135,7 @@
                     >
                       <b>
                         <a
-                          class="cdash-link"
+                          class="tw-link tw-link-hover"
                           :href="$baseURL + '/viewBuildError.php?type=1&buildid=' + cdash.previousbuild.buildid"
                         >
                           {{ cdash.previousbuild.nwarnings }}
@@ -303,7 +154,7 @@
                     >
                       <b>
                         <a
-                          class="cdash-link"
+                          class="tw-link tw-link-hover"
                           :href="$baseURL + '/viewTest.php?onlyfailed&buildid=' + cdash.previousbuild.buildid"
                         >
                           {{ cdash.previousbuild.ntestfailed }}
@@ -316,7 +167,7 @@
                     >
                       <b>
                         <a
-                          class="cdash-link"
+                          class="tw-link tw-link-hover"
                           :href="$baseURL + '/viewTest.php?onlynotrun&buildid=' + cdash.previousbuild.buildid"
                         >
                           {{ cdash.previousbuild.ntestnotrun }}
@@ -369,7 +220,7 @@
                     >
                       <b>
                         <a
-                          class="cdash-link"
+                          class="tw-link tw-link-hover"
                           :href="$baseURL + '/builds/' + cdash.build.id + '/update'"
                         >
                           {{ cdash.update.nerrors }}
@@ -382,7 +233,7 @@
                     >
                       <b>
                         <a
-                          class="cdash-link"
+                          class="tw-link tw-link-hover"
                           :href="$baseURL + '/builds/' + cdash.build.id + '/update'"
                         >
                           {{ cdash.update.nwarnings }}
@@ -393,7 +244,7 @@
                   <tr v-if="cdash.hasconfigure">
                     <th>
                       <a
-                        class="cdash-link"
+                        class="tw-link tw-link-hover"
                         href="#Configure"
                       >
                         <b>Configure</b>
@@ -405,7 +256,7 @@
                     >
                       <b>
                         <a
-                          class="cdash-link"
+                          class="tw-link tw-link-hover"
                           :href="$baseURL + '/builds/' + cdash.build.id + '/configure'"
                         >
                           {{ cdash.configure.nerrors }}
@@ -418,7 +269,7 @@
                     >
                       <b>
                         <a
-                          class="cdash-link"
+                          class="tw-link tw-link-hover"
                           :href="$baseURL + '/builds/' + cdash.build.id + '/configure'"
                         >
                           {{ cdash.configure.nwarnings }}
@@ -429,7 +280,7 @@
                   <tr>
                     <th>
                       <a
-                        class="cdash-link"
+                        class="tw-link tw-link-hover"
                         href="#Build"
                       >
                         <b>Build</b>
@@ -441,7 +292,7 @@
                     >
                       <b>
                         <a
-                          class="cdash-link"
+                          class="tw-link tw-link-hover"
                           :href="$baseURL + '/viewBuildError.php?buildid=' + cdash.build.id"
                         >
                           {{ cdash.build.nerrors }}
@@ -454,7 +305,7 @@
                     >
                       <b>
                         <a
-                          class="cdash-link"
+                          class="tw-link tw-link-hover"
                           :href="$baseURL + '/viewBuildError.php?type=1&buildid=' + cdash.build.id"
                         >
                           {{ cdash.build.nwarnings }}
@@ -465,7 +316,7 @@
                   <tr>
                     <th>
                       <a
-                        class="cdash-link"
+                        class="tw-link tw-link-hover"
                         href="#Test"
                       >
                         <b>Test</b>
@@ -477,7 +328,7 @@
                     >
                       <b>
                         <a
-                          class="cdash-link"
+                          class="tw-link tw-link-hover"
                           :href="$baseURL + '/viewTest.php?onlyfailed&buildid=' + cdash.build.id"
                         >
                           {{ cdash.test.nfailed }}
@@ -490,7 +341,7 @@
                     >
                       <b>
                         <a
-                          class="cdash-link"
+                          class="tw-link tw-link-hover"
                           :href="$baseURL + '/viewTest.php?onlynotrun&buildid=' + cdash.build.id"
                         >
                           {{ cdash.test.nnotrun }}
@@ -517,7 +368,7 @@
                       class="header"
                     >
                       <a
-                        class="cdash-link"
+                        class="tw-link tw-link-hover"
                         :href="$baseURL + '/builds/' + cdash.nextbuild.buildid"
                       >
                         <b>Next Build</b>
@@ -541,7 +392,7 @@
                     >
                       <b>
                         <a
-                          class="cdash-link"
+                          class="tw-link tw-link-hover"
                           :href="$baseURL + '/builds/' + cdash.nextbuild.buildid + '/update'"
                         >
                           {{ cdash.nextbuild.nupdateerrors }}
@@ -554,7 +405,7 @@
                     >
                       <b>
                         <a
-                          class="cdash-link"
+                          class="tw-link tw-link-hover"
                           :href="$baseURL + '/builds/' + cdash.nextbuild.buildid + '/update'"
                         >
                           {{ cdash.nextbuild.nupdatewarnings }}
@@ -573,7 +424,7 @@
                     >
                       <b>
                         <a
-                          class="cdash-link"
+                          class="tw-link tw-link-hover"
                           :href="$baseURL + '/builds/' + cdash.nextbuild.buildid + '/configure'"
                         >
                           {{ cdash.nextbuild.nconfigureerrors }}
@@ -586,7 +437,7 @@
                     >
                       <b>
                         <a
-                          class="cdash-link"
+                          class="tw-link tw-link-hover"
                           :href="$baseURL + '/builds/' + cdash.nextbuild.buildid + '/configure'"
                         >
                           {{ cdash.nextbuild.nconfigurewarnings }}
@@ -605,7 +456,7 @@
                     >
                       <b>
                         <a
-                          class="cdash-link"
+                          class="tw-link tw-link-hover"
                           :href="$baseURL + '/viewBuildError.php?buildid=' + cdash.nextbuild.buildid"
                         >
                           {{ cdash.nextbuild.nerrors }}
@@ -618,7 +469,7 @@
                     >
                       <b>
                         <a
-                          class="cdash-link"
+                          class="tw-link tw-link-hover"
                           :href="$baseURL + '/viewBuildError.php?type=1&buildid=' + cdash.nextbuild.buildid"
                         >
                           {{ cdash.nextbuild.nwarnings }}
@@ -637,7 +488,7 @@
                     >
                       <b>
                         <a
-                          class="cdash-link"
+                          class="tw-link tw-link-hover"
                           :href="$baseURL + '/viewTest.php?onlyfailed&buildid=' + cdash.nextbuild.buildid"
                         >
                           {{ cdash.nextbuild.ntestfailed }}
@@ -650,7 +501,7 @@
                     >
                       <b>
                         <a
-                          class="cdash-link"
+                          class="tw-link tw-link-hover"
                           :href="$baseURL + '/viewTest.php?onlynotrun&buildid=' + cdash.nextbuild.buildid"
                         >
                           {{ cdash.nextbuild.ntestnotrun }}
@@ -670,95 +521,14 @@
       <div class="title-divider">
         History
       </div>
+
       <a
-        id="toggle_history_graph"
-        @click="toggleHistoryGraph()"
+        class="tw-link tw-link-hover"
+        :href="$baseURL + '/index.php?project=' + cdash.projectname_encoded + '&filtercount=4&showfilters=1&filtercombine=and&field1=site&compare1=61&value1=' + cdash.build.sitename_encoded + '&field2=buildname&compare2=61&value2=' + cdash.build.name + '&field3=buildtype&compare3=61&value3=' + cdash.build.type + '&field4=buildstarttime&compare4=84&value4=' + cdash.build.starttime"
       >
         Show Build History
       </a>
       <br>
-
-      <a
-        id="history_link"
-        :href="$baseURL + '/index.php?project=' + cdash.projectname_encoded + '&filtercount=4&showfilters=1&filtercombine=and&field1=site&compare1=61&value1=' + cdash.build.sitename_encoded + '&field2=buildname&compare2=61&value2=' + cdash.build.name + '&field3=buildtype&compare3=61&value3=' + cdash.build.type + '&field4=buildstarttime&compare4=84&value4=' + cdash.build.starttime"
-      >
-        Build History Filter
-      </a>
-      <br>
-
-      <div>
-        <img
-          v-show="showHistoryGraph && graphLoading"
-          :src="$baseURL + '/img/loading.gif'"
-        >
-        <table
-          v-show="showHistoryGraph && !graphLoading"
-          id="historyGraph"
-          width="100%"
-          border="0"
-          class="dart"
-        >
-          <thead>
-            <tr class="table-heading">
-              <th class="nob">
-                Start Time
-              </th>
-              <th class="nob">
-                Updated Files
-              </th>
-              <th class="nob">
-                Configure Errors
-              </th>
-              <th class="nob">
-                Configure Warnings
-              </th>
-              <th class="nob">
-                Build Errors
-              </th>
-              <th class="nob">
-                Build Warnings
-              </th>
-              <th class="nob">
-                Failed Tests
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              v-for="(build, index) in cdash.buildhistory"
-              :key="build.id"
-              :class="{'even': index % 2 === 0, 'odd': index % 2 !== 0 }"
-            >
-              <td>
-                <a
-                  class="cdash-link"
-                  :href="$baseURL + '/builds/' + build.id"
-                >
-                  {{ build.starttime }}
-                </a>
-              </td>
-              <td>
-                {{ build.nfiles }}
-              </td>
-              <td :class="build.configureerrors > 0 ? 'error' : 'normal'">
-                {{ build.configureerrors }}
-              </td>
-              <td :class="build.configurewarnings > 0 ? 'warning' : 'normal'">
-                {{ build.configurewarnings }}
-              </td>
-              <td :class="build.builderrors > 0 ? 'error' : 'normal'">
-                {{ build.builderrors }}
-              </td>
-              <td :class="build.buildwarnings > 0 ? 'warning' : 'normal'">
-                {{ build.buildwarnings }}
-              </td>
-              <td :class="build.testfailed > 0 ? 'error' : 'normal'">
-                {{ build.testfailed }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
       <br>
 
       <!-- Instrumentation section -->
@@ -768,11 +538,17 @@
           <font-awesome-icon :icon="FA.faQuestionCircle" />
         </a>
       </div>
-      <a :href="$baseURL + '/builds/' + cdash.build.id + '/targets'">
+      <a
+        class="tw-link tw-link-hover"
+        :href="$baseURL + '/builds/' + cdash.build.id + '/targets'"
+      >
         View Targets
       </a>
       <br>
-      <a :href="$baseURL + '/builds/' + cdash.build.id + '/commands'">
+      <a
+        class="tw-link tw-link-hover"
+        :href="$baseURL + '/builds/' + cdash.build.id + '/commands'"
+      >
         View Commands
       </a>
       <br>
@@ -789,7 +565,7 @@
       <div v-if="cdash.notes.length > 0">
         <div v-for="note in cdash.notes">
           <b>{{ note.status }}</b> by <b>{{ note.user }}</b> at {{ note.date }}
-          <pre>{{ note.text }}</pre>
+          <code-box :text="note.text" />
           <hr>
         </div>
       </div>
@@ -797,16 +573,21 @@
 
       <div v-if="cdash.user.id > 0">
         <!-- Add Comments -->
-        <img
-          :src="$baseURL + '/img/document.png'"
-          title="graph"
-        >
-        <a
-          id="toggle_note"
-          @click="toggleNote()"
-        >
-          Add a comment to this Build
-        </a>
+        <div class="tw-flex tw-flex-row">
+          <img
+            width="20"
+            height="20"
+            :src="$baseURL + '/img/document.png'"
+            title="graph"
+          >
+          <a
+            id="toggle_note"
+            class="tw-link tw-link-hover"
+            @click="toggleNote()"
+          >
+            Add a comment to this Build
+          </a>
+        </div>
         <div
           v-show="showNote"
           id="new_note_div"
@@ -819,6 +600,7 @@
                   <textarea
                     id="note_text"
                     v-model="cdash.noteText"
+                    class="tw-textarea tw-textarea-bordered"
                     cols="50"
                     rows="5"
                   />
@@ -830,6 +612,7 @@
                   <select
                     id="note_status"
                     v-model="cdash.noteStatus"
+                    class="tw-select tw-select-bordered"
                   >
                     <option value="0">
                       Simple Note
@@ -846,13 +629,14 @@
               <tr>
                 <td />
                 <td>
-                  <input
+                  <button
                     id="add_note"
-                    type="submit"
-                    value="Add Note"
+                    class="tw-btn"
                     :disabled="!cdash.noteText"
                     @click="addNote()"
                   >
+                    Add Note
+                  </button>
                 </td>
               </tr>
             </tbody>
@@ -866,16 +650,21 @@
         Graphs
       </div>
 
-      <img
-        :src="$baseURL + '/img/graph.png'"
-        title="graph"
-      >
-      <a
-        id="toggle_time_graph"
-        @click="toggleTimeGraph()"
-      >
-        Show Build Time Graph
-      </a>
+      <div class="tw-flex tw-flex-row">
+        <img
+          width="20"
+          height="20"
+          :src="$baseURL + '/img/graph.png'"
+          title="graph"
+        >
+        <a
+          id="toggle_time_graph"
+          class="tw-link tw-link-hover"
+          @click="toggleTimeGraph()"
+        >
+          Show Build Time Graph
+        </a>
+      </div>
       <div style="text-align: center;">
         <img
           v-show="showTimeGraph && graphLoading"
@@ -888,16 +677,21 @@
         />
       </div>
 
-      <img
-        :src="$baseURL + '/img/graph.png'"
-        title="graph"
-      >
-      <a
-        id="toggle_error_graph"
-        @click="toggleErrorGraph()"
-      >
-        Show Build Errors Graph
-      </a>
+      <div class="tw-flex tw-flex-row">
+        <img
+          width="20"
+          height="20"
+          :src="$baseURL + '/img/graph.png'"
+          title="graph"
+        >
+        <a
+          id="toggle_error_graph"
+          class="tw-link tw-link-hover"
+          @click="toggleErrorGraph()"
+        >
+          Show Build Errors Graph
+        </a>
+      </div>
       <div style="text-align: center;">
         <img
           v-show="showErrorGraph && graphLoading"
@@ -910,16 +704,21 @@
         />
       </div>
 
-      <img
-        :src="$baseURL + '/img/graph.png'"
-        title="graph"
-      >
-      <a
-        id="toggle_warning_graph"
-        @click="toggleWarningGraph()"
-      >
-        Show Build Warnings Graph
-      </a>
+      <div class="tw-flex tw-flex-row">
+        <img
+          width="20"
+          height="20"
+          :src="$baseURL + '/img/graph.png'"
+          title="graph"
+        >
+        <a
+          id="toggle_warning_graph"
+          class="tw-link tw-link-hover"
+          @click="toggleWarningGraph()"
+        >
+          Show Build Warnings Graph
+        </a>
+      </div>
       <div style="text-align: center;">
         <img
           v-show="showWarningGraph && graphLoading"
@@ -932,16 +731,21 @@
         />
       </div>
 
-      <img
-        :src="$baseURL + '/img/graph.png'"
-        title="graph"
-      >
-      <a
-        id="toggle_test_graph"
-        @click="toggleTestGraph()"
-      >
-        Show Build Tests Failed Graph
-      </a>
+      <div class="tw-flex tw-flex-row">
+        <img
+          width="20"
+          height="20"
+          :src="$baseURL + '/img/graph.png'"
+          title="graph"
+        >
+        <a
+          id="toggle_test_graph"
+          class="tw-link tw-link-hover"
+          @click="toggleTestGraph()"
+        >
+          Show Build Tests Failed Graph
+        </a>
+      </div>
       <div style="text-align: center;">
         <img
           v-show="showTestGraph && graphLoading"
@@ -965,7 +769,7 @@
           :key="from.relatedid"
         >
           This build {{ from.relationship }} <a
-            class="cdash-link"
+            class="tw-link tw-link-hover"
             :href="$baseURL + '/builds/' + from.relatedid"
           >{{ from.name }}</a>.
         </div>
@@ -974,7 +778,7 @@
           :key="to.buildid"
         >
           <a
-            class="cdash-link"
+            class="tw-link tw-link-hover"
             :href="$baseURL + '/builds/' + to.buildid"
           >{{ to.name }}</a> {{ to.relationship }} this build.
         </div>
@@ -1004,7 +808,7 @@
 
         <b>Number of Updates: </b>
         <a
-          id="update_link"
+          class="tw-link tw-link-hover"
           :href="$baseURL + '/builds/' + cdash.build.id + '/update'"
         >
           {{ cdash.update.nupdates }}
@@ -1034,17 +838,18 @@
         <br>
 
         <b>Configure Command:</b>
-        <pre class="pre-wrap">{{ cdash.configure.command }}</pre>
+        <code-box :text="cdash.configure.command" />
 
         <b>Configure Return Value:</b>
-        <pre class="pre-wrap">{{ cdash.configure.status }}</pre>
+        <code-box :text="cdash.configure.status" />
 
         <b>Configure Output:</b>
 
-        <pre>{{ cdash.configure.output }}</pre>
+        <code-box :text="cdash.configure.output" />
 
         <a
           id="configure_link"
+          class="tw-link tw-link-hover"
           :href="$baseURL + '/builds/' + cdash.build.id + '/configure'"
         >
           View Configure Summary
@@ -1062,7 +867,7 @@
       </div>
       <br>
 
-      <b>Build command: </b><pre class="pre-wrap">{{ cdash.build.command }}</pre>
+      <b>Build command: </b><code-box :text="cdash.build.command" />
 
       <b>Start Time: </b>{{ cdash.build.starttime }}
       <br>
@@ -1082,20 +887,35 @@
           File: <b>{{ error.sourcefile }}</b>
           Line: <b>{{ error.sourceline }}</b>
         </div>
-        <pre>{{ error.precontext }}</pre>
-        <pre>{{ error.text }}</pre>
-        <pre>{{ error.postcontext }}</pre>
+        <code-box
+          v-if="error?.precontext?.trim()"
+          :text="error.precontext"
+        />
+        <code-box
+          v-if="error?.text?.trim()"
+          :text="error.text"
+        />
+        <code-box
+          v-if="error?.postcontext?.trim()"
+          :text="error.postcontext"
+        />
 
-        <div v-if="error.stdoutput || error.stderror">
+        <div v-if="error?.stdoutput?.trim() || error?.stderror?.trim()">
           <br>
           <b>{{ error.sourcefile }}</b>
-          <pre v-if="error.stdoutput">{{ error.stdoutput }}</pre>
-          <pre v-if="error.stderror">{{ error.stderror }}</pre>
+          <code-box
+            v-if="error?.stdoutput?.trim()"
+            :text="error.stdoutput"
+          />
+          <code-box
+            v-if="error?.stderror?.trim()"
+            :text="error.stderror"
+          />
         </div>
       </div>
 
       <a
-        id="errors_link"
+        class="tw-link tw-link-hover"
         :href="$baseURL + '/viewBuildError.php?buildid=' + cdash.build.id"
       >
         View Errors Summary
@@ -1119,21 +939,37 @@
           File: <b>{{ warning.sourcefile }}</b>
           Line: <b>{{ warning.sourceline }}</b>
         </div>
-        <pre>{{ warning.precontext }}</pre>
-        <pre>{{ warning.text }}</pre>
-        <pre>{{ warning.postcontext }}</pre>
+        <code-box
+          v-if="warning?.precontext?.trim()"
+          :text="warning.precontext"
+        />
+        <code-box
+          v-if="warning?.text?.trim()"
+          :text="warning.text"
+        />
+        <code-box
+          v-if="warning?.postcontext?.trim()"
+          :text="warning.postcontext"
+        />
 
-        <div v-if="warning.stdoutput || warning.stderror">
+        <div v-if="warning?.stdoutput?.trim() || warning?.stderror?.trim()">
           <br>
           <b>{{ warning.sourcefile }}</b>
-          <pre v-if="warning.stdoutput">{{ warning.stdoutput }}</pre>
-          <pre v-if="warning.stderror">{{ warning.stderror }}</pre>
+          <code-box
+            v-if="warning?.stdoutput?.trim()"
+            :text="warning.stdoutput"
+          />
+          <code-box
+            v-if="warning?.stderror?.trim()"
+            :text="warning.stderror"
+          />
         </div>
       </div>
       <br>
 
       <a
         id="warnings_link"
+        class="tw-link tw-link-hover"
         :href="$baseURL + '/viewBuildError.php?type=1&buildid=' + cdash.build.id"
       >
         View Warnings Summary
@@ -1150,6 +986,7 @@
       </div>
       <a
         id="tests_link"
+        class="tw-link tw-link-hover"
         :href="$baseURL + '/viewTest.php?buildid=' + cdash.build.id"
       >
         View Tests Summary
@@ -1167,6 +1004,7 @@
         </div>
         <a
           id="coverage_link"
+          class="tw-link tw-link-hover"
           :href="$baseURL + '/viewCoverage.php?buildid=' + cdash.build.id"
         >
           View Coverage Summary
@@ -1174,7 +1012,7 @@
         <br>
         <br>
       </div>
-    </div>
+    </loading-indicator>
   </section>
 </template>
 
@@ -1184,21 +1022,29 @@ import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 import {
   faQuestionCircle,
 } from '@fortawesome/free-solid-svg-icons';
+import CodeBox from './shared/CodeBox.vue';
+import LoadingIndicator from './shared/LoadingIndicator.vue';
+import BuildSummaryCard from './shared/BuildSummaryCard.vue';
 export default {
   name: 'BuildSummary',
-  components: {FontAwesomeIcon},
+  components: {BuildSummaryCard, LoadingIndicator, CodeBox, FontAwesomeIcon},
+
+  props: {
+    buildId: {
+      type: Number,
+      required: true,
+    },
+  },
 
   data () {
     return {
       // API results.
-      buildid: null,
       cdash: {},
       loading: true,
       errored: false,
 
       // Booleans controlling whether a section should be displayed or not.
       showErrorGraph: false,
-      showHistoryGraph: false,
       showTestGraph: false,
       showTimeGraph: false,
       showWarningGraph: false,
@@ -1226,8 +1072,7 @@ export default {
   },
 
   mounted () {
-    this.buildid = window.location.pathname.split('/').pop();
-    const endpoint_path = `/api/v1/buildSummary.php?buildid=${this.buildid}`;
+    const endpoint_path = `/api/v1/buildSummary.php?buildid=${this.buildId}`;
     ApiLoader.loadPageData(this, endpoint_path);
   },
 
@@ -1236,15 +1081,10 @@ export default {
       this.cdash.noteStatus = '0';
     },
 
-    toggleHistoryGraph: function () {
-      this.showHistoryGraph = !this.showHistoryGraph;
-      this.loadGraphData();
-    },
-
     loadGraphData: function(graphType) {
       this.graphLoading = true;
       this.$axios
-        .get(`/api/v1/getPreviousBuilds.php?buildid=${this.buildid}`)
+        .get(`/api/v1/getPreviousBuilds.php?buildid=${this.buildId}`)
         .then(response => {
           this.cdash.buildtimes = [];
           this.cdash.builderrors = [];

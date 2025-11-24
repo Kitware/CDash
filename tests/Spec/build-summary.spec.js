@@ -57,7 +57,7 @@ beforeEach(() => {
       nwarnings: 0,
       output: '',
       starttime: 'today',
-      status: 0,
+      status: '0',
     },
     coverage: 98,
     hasconfigure: true,
@@ -105,27 +105,32 @@ afterEach(() => {
 });
 
 test('BuildSummary handles API response', async () => {
-  axiosMockAdapter.onGet('/api/v1/buildSummary.php?buildid=').reply(200, apiResponse);
-  const component = mount(BuildSummary);
+  axiosMockAdapter.onGet('/api/v1/buildSummary.php?buildid=1').reply(200, apiResponse);
+  const component = mount(BuildSummary, {
+    props: {
+      buildId: 1,
+    },
+    global: {
+      stubs: {
+        BuildSummaryCard: {
+          template: '<div />',
+        },
+      },
+    },
+  });
   await new Promise(process.nextTick);
 
   expect(component.vm.loading).toBe(false);
   expect(component.vm.cdash.coverage).toBe(98);
   const html = component.html();
   expect(html).toContain('MyProject');
-  expect(html).toContain('mysite');
-  expect(html).toContain('Linux');
-  expect(html).toContain('label1, label2');
-  const site_link = component.find('#site_link');
-  expect(site_link.attributes('href')).toMatch('/sites/1');
-  expect(site_link.text()).toBe('mysite');
 
   const configure_link = component.find('#configure_link');
   expect(configure_link.attributes('href')).toMatch('/builds/1/configure');
   expect(configure_link.text()).toBe('View Configure Summary');
 
   // test the current build table
-  const curr_build_table = component.findAll('table').at(1).findAll('table').at(0);
+  const curr_build_table = component.findAll('table').at(1);
   const curr_build_rows = curr_build_table.findAll('tr');
   expect(curr_build_rows.at(0).text()).toBe('This Build');
   expect(curr_build_rows.at(1).findAll('th').at(0).text()).toBe('Stage');
@@ -136,7 +141,7 @@ test('BuildSummary handles API response', async () => {
   expect(curr_build_rows.at(4).findAll('td').at(1).text()).toBe('5');
 
   // test the next build table
-  const next_build_table = component.findAll('table').at(1).findAll('table').at(1);
+  const next_build_table = component.findAll('table').at(2);
   const next_build_rows = next_build_table.findAll('tr');
   expect(next_build_rows.at(0).text()).toBe('Next Build');
   expect(next_build_rows.at(0).find('a').attributes('href')).toMatch('/builds/2');
@@ -158,12 +163,20 @@ test('BuildSummary handles API response', async () => {
 });
 
 test('BuildSummary can toggle the graphs', async () => {
-  axiosMockAdapter.onGet('/api/v1/buildSummary.php?buildid=').reply(200, apiResponse);
-  const component = mount(BuildSummary);
+  axiosMockAdapter.onGet('/api/v1/buildSummary.php?buildid=1').reply(200, apiResponse);
+  const component = mount(BuildSummary, {
+    props: {
+      buildId: 1,
+    },
+    global: {
+      stubs: {
+        BuildSummaryCard: {
+          template: '<div />',
+        },
+      },
+    },
+  });
   await new Promise(process.nextTick);
-
-  expect(component.vm.showHistoryGraph).toBe(false);
-  expect(component.find('#historyGraph').isVisible()).toBe(false);
 
   expect(component.vm.showTimeGraph).toBe(false);
   expect(component.find('#buildtimegrapholder').isVisible()).toBe(false);
@@ -191,18 +204,7 @@ test('BuildSummary can toggle the graphs', async () => {
       time: 0,
     }],
   };
-  axiosMockAdapter.onGet('/api/v1/getPreviousBuilds.php?buildid=').reply(200, graph_data);
-  const history_button = component.find('#toggle_history_graph');
-  history_button.trigger('click');
-  await new Promise(process.nextTick);
-
-  expect(component.vm.showHistoryGraph).toBe(true);
-  expect(component.find('#historyGraph').isVisible()).toBe(true);
-
-  history_button.trigger('click');
-  await component.vm.$nextTick();
-  expect(component.vm.showHistoryGraph).toBe(false);
-  expect(component.find('#historyGraph').isVisible()).toBe(false);
+  axiosMockAdapter.onGet('/api/v1/getPreviousBuilds.php?buildid=1').reply(200, graph_data);
 
   const time_button = component.find('#toggle_time_graph');
   time_button.trigger('click');
@@ -246,8 +248,19 @@ test('BuildSummary can toggle the graphs', async () => {
 });
 
 test('BuildSummary can add a build note', async () => {
-  axiosMockAdapter.onGet('/api/v1/buildSummary.php?buildid=').reply(200, apiResponse);
-  const component = mount(BuildSummary);
+  axiosMockAdapter.onGet('/api/v1/buildSummary.php?buildid=1').reply(200, apiResponse);
+  const component = mount(BuildSummary, {
+    props: {
+      buildId: 1,
+    },
+    global: {
+      stubs: {
+        BuildSummaryCard: {
+          template: '<div />',
+        },
+      },
+    },
+  });
   await new Promise(process.nextTick);
 
   expect(component.find('#new_note_div').isVisible()).toBe(false);
