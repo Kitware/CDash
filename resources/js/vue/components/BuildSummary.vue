@@ -573,17 +573,21 @@
 
       <div v-if="cdash.user.id > 0">
         <!-- Add Comments -->
-        <img
-          :src="$baseURL + '/img/document.png'"
-          title="graph"
-        >
-        <a
-          id="toggle_note"
-          class="tw-link tw-link-hover"
-          @click="toggleNote()"
-        >
-          Add a comment to this Build
-        </a>
+        <div class="tw-flex tw-flex-row">
+          <img
+            width="20"
+            height="20"
+            :src="$baseURL + '/img/document.png'"
+            title="graph"
+          >
+          <a
+            id="toggle_note"
+            class="tw-link tw-link-hover"
+            @click="toggleNote()"
+          >
+            Add a comment to this Build
+          </a>
+        </div>
         <div
           v-show="showNote"
           id="new_note_div"
@@ -596,6 +600,7 @@
                   <textarea
                     id="note_text"
                     v-model="cdash.noteText"
+                    class="tw-textarea tw-textarea-bordered"
                     cols="50"
                     rows="5"
                   />
@@ -607,6 +612,7 @@
                   <select
                     id="note_status"
                     v-model="cdash.noteStatus"
+                    class="tw-select tw-select-bordered"
                   >
                     <option value="0">
                       Simple Note
@@ -623,13 +629,14 @@
               <tr>
                 <td />
                 <td>
-                  <input
+                  <button
                     id="add_note"
-                    type="submit"
-                    value="Add Note"
+                    class="tw-btn"
                     :disabled="!cdash.noteText"
                     @click="addNote()"
                   >
+                    Add Note
+                  </button>
                 </td>
               </tr>
             </tbody>
