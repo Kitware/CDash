@@ -27,7 +27,6 @@ final class DynamicAnalysisController extends AbstractBuildController
                 'buildid' => $buildid,
                 'fileid' => $fileid,
             ],
-            false,
         );
     }
 

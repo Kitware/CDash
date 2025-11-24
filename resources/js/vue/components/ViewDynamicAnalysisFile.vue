@@ -3,33 +3,12 @@
     <p>{{ cdash.error }}</p>
   </section>
   <section v-else>
+    <build-summary-card :build-id="buildid" />
+
     <loading-indicator :is-loading="loading">
-      <h3>Dynamic analysis started on {{ cdash.build.buildtime }}</h3>
-
-      <table border="0">
-        <tbody>
-          <tr>
-            <td align="right">
-              <b>Site Name:</b>
-            </td>
-            <td>
-              {{ cdash.build.site }}
-            </td>
-          </tr>
-
-          <tr>
-            <td align="right">
-              <b>Build Name:</b>
-            </td>
-            <td>
-              {{ cdash.build.buildname }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
+      <br>
       <a
-        class="cdash-link"
+        class="tw-link tw-link-hover"
         :href="$baseURL + '/' + cdash.dynamicanalysis.href"
       >
         {{ cdash.dynamicanalysis.filename }}
@@ -39,7 +18,7 @@
         {{ cdash.dynamicanalysis.status }}
       </span>
 
-      <pre>{{ cdash.dynamicanalysis.log }}</pre>
+      <code-box :text="cdash.dynamicanalysis.log" />
     </loading-indicator>
   </section>
 </template>
@@ -47,9 +26,11 @@
 <script>
 import ApiLoader from './shared/ApiLoader';
 import LoadingIndicator from './shared/LoadingIndicator.vue';
+import BuildSummaryCard from './shared/BuildSummaryCard.vue';
+import CodeBox from './shared/CodeBox.vue';
 
 export default {
-  components: {LoadingIndicator},
+  components: {CodeBox, BuildSummaryCard, LoadingIndicator},
 
   props: {
     buildid: {
