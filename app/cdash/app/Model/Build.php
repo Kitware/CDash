@@ -700,8 +700,8 @@ class Build
                            b.configureerrors, b.configurewarnings
                     FROM configure c
                     JOIN build2configure b2c ON b2c.configureid = c.id
-                    JOIN subproject sp ON sp.id = b.subprojectid
                     JOIN build b ON b.id = b2c.buildid
+                    JOIN subproject sp ON sp.id = b.subprojectid
                     WHERE b.parentid = ?');
             } elseif (count($configure_rows) === 1) {
                 // One configure row is shared by all the SubProjects.

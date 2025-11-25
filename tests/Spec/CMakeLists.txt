@@ -6,7 +6,6 @@ function(add_vue_test TestName)
   )
 endfunction()
 
-add_vue_test(build-configure)
 add_vue_test(build-summary)
 add_vue_test(edit-project)
 add_vue_test(manage-measurements)

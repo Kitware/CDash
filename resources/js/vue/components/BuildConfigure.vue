@@ -1,196 +1,147 @@
 <template>
-  <section v-if="errored">
-    <p>{{ cdash.error }}</p>
-  </section>
-  <section v-else>
-    <div v-if="loading">
-      <img :src="$baseURL + '/img/loading.gif'">
-    </div>
-    <div v-else>
-      <br>
-      <table
-        v-if="!cdash.build.hassubprojects"
-        border="0"
-      >
-        <tbody>
-          <tr>
-            <td align="left">
-              <b>Site: </b>
-              <a
-                class="cdash-link"
-                :href="$baseURL + '/sites/' + cdash.build.siteid"
-              >
-                {{ cdash.build.site }}
-              </a>
-            </td>
-          </tr>
-          <tr>
-            <td align="left">
-              <b>Build: </b>
-              <a
-                class="cdash-link"
-                :href="$baseURL + '/builds/' + buildid"
-              >
-                {{ cdash.build.buildname }}
-              </a>
-            </td>
-          </tr>
-          <tr>
-            <td align="left">
-              <b>Build Start Time: </b>
-              {{ cdash.build.buildstarttime }}
-            </td>
-          </tr>
-          <tr>
-            <td align="left">
-              <b>Configure Command: </b>
-              <pre class="pre-wrap">{{ cdash.configures[0].command }}</pre>
-            </td>
-          </tr>
-          <tr>
-            <td align="left">
-              <b>Configure Return Value: </b>
-              <pre class="pre-wrap">{{ cdash.configures[0].status }}</pre>
-            </td>
-          </tr>
-          <tr>
-            <td align="left">
-              <b>Configure Output:</b>
-              <pre>{{ cdash.configures[0].output }}</pre>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+  <div class="tw-flex tw-flex-col tw-w-full tw-gap-4">
+    <build-summary-card :build-id="buildId" />
 
-      <table
-        v-if="cdash.build.hassubprojects"
-        style="width:100%"
+    <loading-indicator :is-loading="!configures">
+      <div v-if="configures.length === 0">
+        No configure found for this build.
+      </div>
+      <configure-card
+        v-else-if="hasSingleConfigure"
+        :return-value="configures[0].configure.returnValue"
+        :log="configures[0].configure.log"
+        :command="configures[0].configure.command"
+      />
+      <div
+        v-else
+        class="tw-join tw-join-vertical tw-w-full"
       >
-        <thead>
-          <tr class="table-heading">
-            <th
-              align="left"
-              width="15%"
-            >
-              Subproject
-            </th>
-            <th
-              align="left"
-              width="5%"
-            >
-              Error
-            </th>
-            <th
-              align="left"
-              width="5%"
-            >
-              Warn
-            </th>
-            <th align="left">
-              Configure
-            </th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr v-for="configure in cdash.configures">
-            <td style="vertical-align:top">
-              {{ configure.subprojectname }}
-            </td>
-            <td style="vertical-align:top">
-              {{ configure.configureerrors }}
-            </td>
-            <td style="vertical-align:top">
-              {{ configure.configurewarnings }}
-            </td>
-            <td>
-              <a
-                class="cdash-link"
-                @click="configure.show = !configure.show"
-              >
-                <span v-show="!configure.show">View</span>
-                <span v-show="configure.show">Hide</span>
-              </a>
-              <table
-                v-show="configure.show"
-                class="configure tabb"
-                border="0"
-                cellpadding="4"
-                cellspacing="0"
-                width="100%"
-              >
-                <tbody>
-                  <tr>
-                    <td align="left">
-                      <b>Site: </b>
-                      <a
-                        class="cdash-link"
-                        :href="$baseURL + '/sites/' + cdash.build.siteid"
-                      >
-                        {{ cdash.build.site }}
-                      </a>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td align="left">
-                      <b>Build Name: </b>{{ cdash.build.buildname }}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td align="left">
-                      <b>Configure Command:</b>
-                      <pre class="pre-wrap">{{ configure.command }}</pre>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td align="left">
-                      <b>Configure Return Value:</b>
-                      <pre class="pre-wrap">{{ configure.status }}</pre>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td align="left">
-                      <b>Configure Output:</b>
-                      <pre>{{ configure.output }}</pre>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <br>
-    </div>
-  </section>
+        <details
+          v-for="configure in configures"
+          class="tw-collapse tw-collapse-plus tw-join-item tw-border"
+          :data-test="'collapse-' + configure.subProject.id"
+        >
+          <summary class="tw-collapse-title tw-text-xl tw-font-medium">
+            <span>{{ configure.subProject.name }}</span>
+            <span
+              v-if="configure.configureErrorsCount > 0"
+              class="tw-badge tw-ml-2 tw-bg-red-400"
+              :data-test="'errors-' + configure.subProject.id"
+            ><font-awesome-icon :icon="FA.faCircleExclamation" /> {{ configure.configureErrorsCount }}</span>
+            <span
+              v-if="configure.configureWarningsCount > 0"
+              class="tw-badge tw-ml-1 tw-bg-orange-400"
+              :data-test="'warnings-' + configure.subProject.id"
+            ><font-awesome-icon :icon="FA.faTriangleExclamation" /> {{ configure.configureWarningsCount }}</span>
+          </summary>
+          <div class="tw-collapse-content">
+            <configure-card
+              :return-value="configure.configure.returnValue"
+              :log="configure.configure.log"
+              :command="configure.configure.command"
+            />
+          </div>
+        </details>
+      </div>
+    </loading-indicator>
+  </div>
 </template>
 
 <script>
-import ApiLoader from './shared/ApiLoader';
-export default {
-  name: 'BuildConfigure',
+import gql from 'graphql-tag';
+import BuildSummaryCard from './shared/BuildSummaryCard.vue';
+import LoadingIndicator from './shared/LoadingIndicator.vue';
+import ConfigureCard from './shared/ConfigureCard.vue';
+import {
+  faCircleExclamation,
+  faTriangleExclamation,
+} from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 
-  data () {
-    return {
-      // API results.
-      buildid: null,
-      cdash: {},
-      loading: true,
-      errored: false,
-    };
+export default {
+  components: {FontAwesomeIcon, ConfigureCard, LoadingIndicator, BuildSummaryCard},
+  props: {
+    buildId: {
+      type: Number,
+      required: true,
+    },
   },
 
-  mounted () {
-    const path_parts = window.location.pathname.split('/');
-    this.buildid = path_parts[path_parts.length - 2];
-    const endpoint_path = `/api/v1/viewConfigure.php?buildid=${this.buildid}`;
-    ApiLoader.loadPageData(this, endpoint_path);
+  apollo: {
+    configures: {
+      query: gql`
+        query($buildid: ID) {
+          build(id: $buildid) {
+            id
+            configure {
+              id
+              command
+              log
+              returnValue
+            }
+            children(first: 100000) {
+              edges {
+                node {
+                  id
+                  configureWarningsCount
+                  configureErrorsCount
+                  configure {
+                    id
+                    command
+                    log
+                    returnValue
+                  }
+                  subProject {
+                    id
+                    name
+                  }
+                }
+              }
+            }
+          }
+        }
+      `,
+      update: (data) => {
+        let configures = data.build.configure !== null ? [{configure: data.build.configure}] : [];
+        data.build.children.edges.forEach((child) => {
+          configures = configures.concat({
+            ...child.node,
+          });
+        });
+        return configures;
+      },
+      variables() {
+        return {
+          buildid: this.buildId,
+        };
+      },
+    },
+  },
+
+  computed: {
+    FA() {
+      return {
+        faCircleExclamation,
+        faTriangleExclamation,
+      };
+    },
+
+    hasSingleConfigure() {
+      let childConfiguresAreSame = true;
+      let firstConfigureId = null;
+      this.configures.forEach((configure) => {
+        if (firstConfigureId === null) {
+          firstConfigureId = configure.configure.id;
+          return;
+        }
+
+        if (firstConfigureId !== configure.configure.id) {
+          childConfiguresAreSame = false;
+        }
+      });
+
+      return childConfiguresAreSame;
+    },
   },
 };
 </script>
-
-<style scoped>
-.pre-wrap {
-  white-space: pre-wrap;
-}
-</style>

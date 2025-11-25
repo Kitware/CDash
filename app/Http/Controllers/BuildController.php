@@ -62,7 +62,9 @@ final class BuildController extends AbstractBuildController
     {
         $this->setBuildById($build_id);
 
-        return $this->vue('build-configure', 'Configure', [], false);
+        return $this->vue('build-configure', 'Configure', [
+            'build-id' => $this->build->Id,
+        ]);
     }
 
     public function notes(int $build_id): View
@@ -1022,6 +1024,7 @@ final class BuildController extends AbstractBuildController
         $this->setBuildById((int) $_GET['buildid']);
 
         $response = begin_JSON_response();
+        $response['deprecated'] = 'This endpoint will be removed in the next major version of CDash.';
 
         $date = TestingDay::get($this->project, $this->build->StartTime);
         get_dashboard_JSON($this->project->Name, $date, $response);

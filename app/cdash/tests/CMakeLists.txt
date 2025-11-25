@@ -212,6 +212,8 @@ set_property(TEST /Feature/GraphQL/SiteTypeTest APPEND PROPERTY RUN_SERIAL TRUE)
 
 add_feature_test(/Feature/GraphQL/BuildTypeTest)
 
+add_feature_test(/Feature/GraphQL/ConfigureTypeTest)
+
 add_feature_test(/Feature/GraphQL/TestTypeTest)
 
 add_feature_test(/Feature/GraphQL/TestMeasurementTypeTest)
@@ -348,6 +350,8 @@ add_browser_test(/Browser/Pages/BuildNotesPageTest)
 add_browser_test(/Browser/Pages/BuildTargetsPageTest)
 
 add_browser_test(/Browser/Pages/BuildTestsPageTest)
+
+add_browser_test(/Browser/Pages/BuildConfigurePageTest)
 
 add_php_test(image)
 set_tests_properties(image PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
