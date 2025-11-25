@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use Database\Factories\ConfigureFactory;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
@@ -18,6 +20,9 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
  */
 class Configure extends Model
 {
+    /** @use HasFactory<ConfigureFactory> */
+    use HasFactory;
+
     protected $table = 'configure';
 
     public $timestamps = false;

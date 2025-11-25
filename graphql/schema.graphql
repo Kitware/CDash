@@ -367,6 +367,19 @@ type RemoveUserMutationPayload implements MutationPayloadInterface {
 }
 
 
+"Configure."
+type Configure {
+  "Unique primary key."
+  id: ID! @filterable
+
+  command: String! @filterable
+
+  log: String! @filterable
+
+  returnValue: Int! @rename(attribute: "status") @filterable
+}
+
+
 "Build."
 type Build {
   "Unique primary key."
@@ -512,6 +525,8 @@ type Build {
   files: [UploadedFile!]! @hasMany(relation: "uploadedFiles", type: CONNECTION, scopes: ["files"]) @orderBy(column: "id", direction: ASC)
 
   subProject: SubProject! @belongsTo
+
+  configure: Configure @hasOneThrough
 }
 
 
