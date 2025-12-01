@@ -38,7 +38,7 @@ final class BuildController extends AbstractBuildController
     {
         $this->setBuildById($build_id);
 
-        $filters = json_decode(request()->get('filters')) ?? ['all' => []];
+        $filters = json_decode(request()->query('filters')) ?? ['all' => []];
 
         return $this->vue('build-commands-page', 'Commands', [
             'build-id' => $this->build->Id,
@@ -50,7 +50,7 @@ final class BuildController extends AbstractBuildController
     {
         $this->setBuildById($build_id);
 
-        $filters = json_decode(request()->get('filters')) ?? ['all' => []];
+        $filters = json_decode(request()->query('filters')) ?? ['all' => []];
 
         return $this->vue('build-targets-page', 'Targets', [
             'build-id' => $this->build->Id,
@@ -96,7 +96,7 @@ final class BuildController extends AbstractBuildController
     {
         $this->setBuildById($build_id);
 
-        $filters = json_decode(request()->get('filters')) ?? ['all' => []];
+        $filters = json_decode(request()->query('filters')) ?? ['all' => []];
 
         $eloquent_project = Project::findOrFail((int) $this->project->Id);
 

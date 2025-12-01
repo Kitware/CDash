@@ -745,7 +745,7 @@ parameters:
 			path: app/Http/Controllers/BuildController.php
 
 		-
-			rawMessage: 'Parameter #1 $json of function json_decode expects string, mixed given.'
+			rawMessage: 'Parameter #1 $json of function json_decode expects string, (array|string|null) given.'
 			identifier: argument.type
 			count: 3
 			path: app/Http/Controllers/BuildController.php
