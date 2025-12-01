@@ -6,6 +6,8 @@ updates:
       interval: "monthly"
       time: "02:00"
       timezone: "America/New_York"
+    cooldown:
+      default-days: 7
     labels:
       - dependencies
       - "release notes: external dependencies"
@@ -16,6 +18,8 @@ updates:
       interval: "monthly"
       time: "02:00"
       timezone: "America/New_York"
+    cooldown:
+      default-days: 7
     labels:
       - dependencies
       - "release notes: external dependencies"
@@ -26,6 +30,8 @@ updates:
       interval: "monthly"
       time: "02:00"
       timezone: "America/New_York"
+    cooldown:
+      default-days: 7
     labels:
       - dependencies
       - "release notes: external dependencies"
