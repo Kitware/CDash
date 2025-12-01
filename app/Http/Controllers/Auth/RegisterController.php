@@ -53,9 +53,9 @@ final class RegisterController extends AbstractController
         }
         // We can route a user here with our form pre-populated
         return $this->view('auth.register', 'Register')
-            ->with('fname', $request->get('fname'))
-            ->with('lname', $request->get('lname'))
-            ->with('email', $request->get('email'));
+            ->with('fname', $request->input('fname'))
+            ->with('lname', $request->input('lname'))
+            ->with('email', $request->input('email'));
     }
 
     /**
@@ -125,10 +125,10 @@ final class RegisterController extends AbstractController
         } catch (ValidationException $e) {
             $e->response = response($this->view('auth.register', 'Register')
                     ->with('errors', $e->validator->getMessageBag())
-                    ->with('fname', $request->get('fname'))
-                    ->with('lname', $request->get('lname'))
-                    ->with('email', $request->get('email'))
-                    ->with('institution', $request->get('institution')), 422);
+                    ->with('fname', $request->input('fname'))
+                    ->with('lname', $request->input('lname'))
+                    ->with('email', $request->input('email'))
+                    ->with('institution', $request->input('institution')), 422);
             throw $e;
         }
 
