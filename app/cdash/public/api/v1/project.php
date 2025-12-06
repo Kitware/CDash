@@ -116,16 +116,23 @@ function rest_post($user): void
 
     // If we should block a spammer's build.
     if (isset($_REQUEST['AddBlockedBuild']) && !empty($_REQUEST['AddBlockedBuild'])) {
-        $response['blockedid'] =
-            $project->AddBlockedBuild($_REQUEST['AddBlockedBuild']['buildname'],
-                $_REQUEST['AddBlockedBuild']['sitename'], $_REQUEST['AddBlockedBuild']['ipaddress']);
+        $response['blockedid'] = EloquentProject::findOrFail((int) $project->Id)
+            ->blockedbuilds()
+            ->create([
+                'buildname' => $_REQUEST['AddBlockedBuild']['buildname'],
+                'sitename' => $_REQUEST['AddBlockedBuild']['sitename'],
+                'ipaddress' => $_REQUEST['AddBlockedBuild']['ipaddress'],
+            ])->id;
         echo json_encode($response);
         return;
     }
 
     // If we should remove a build from the blocked list.
     if (isset($_REQUEST['RemoveBlockedBuild']) && !empty($_REQUEST['RemoveBlockedBuild'])) {
-        $project->RemoveBlockedBuild((int) $_REQUEST['RemoveBlockedBuild']['id']);
+        EloquentProject::findOrFail((int) $project->Id)
+            ->blockedbuilds()
+            ->findOrFail((int) $_REQUEST['RemoveBlockedBuild']['id'])
+            ->delete();
         return;
     }
 
