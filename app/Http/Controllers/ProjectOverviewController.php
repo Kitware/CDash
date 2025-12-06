@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\ProjectService;
 use App\Utils\PageTimer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
@@ -25,7 +26,7 @@ final class ProjectOverviewController extends AbstractProjectController
         $pageTimer = new PageTimer();
 
         // Check if this project has SubProjects.
-        $has_subprojects = $this->project->GetNumberOfSubProjects() > 0;
+        $has_subprojects = ProjectService::getNumberOfSubProjects((int) $this->project->Id) > 0;
 
         // Handle optional date argument.
         $date = htmlspecialchars($_GET['date'] ?? date(FMT_DATE));

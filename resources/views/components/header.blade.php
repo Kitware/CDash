@@ -1,5 +1,6 @@
 @php
 use Illuminate\Support\Str;
+use App\Services\ProjectService;
 
 if (isset($project)) {
     $logoid = $project->ImageId;
@@ -233,7 +234,7 @@ $userInProject = isset($project) && auth()->user() !== null && \App\Models\Proje
                                     Sites
                                 </a>
                             </li>
-                            @if(isset($project->Id) && $project->GetNumberOfSubProjects(request()->get('date')) > 0)
+                            @if(isset($project->Id) && ProjectService::getNumberOfSubProjects((int) $project->Id, request()->get('date')) > 0)
                                 <li>
                                     <a href="{{ url('/viewSubProjects.php') }}?project={{ rawurlencode($project->Name) }}">
                                         SubProjects

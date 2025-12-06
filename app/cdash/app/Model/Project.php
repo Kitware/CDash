@@ -387,22 +387,6 @@ class Project
         return (int) $this->CoverageThreshold;
     }
 
-    /** Get the number of subproject */
-    public function GetNumberOfSubProjects($date = null): int
-    {
-        if (!$this->Id) {
-            throw new RuntimeException('ID not set for project');
-        }
-
-        if ($date !== null) {
-            $date = Carbon::parse($date);
-        }
-
-        return EloquentProject::findOrFail((int) $this->Id)
-            ->subprojects($date)
-            ->count();
-    }
-
     /**
      * Get the subproject ids
      *

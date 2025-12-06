@@ -18,6 +18,7 @@ namespace App\Http\Submission\Handlers;
 =========================================================================*/
 
 use App\Models\Project as EloquentProject;
+use App\Services\ProjectService;
 use App\Utils\SubmissionUtils;
 use App\Utils\TestCreator;
 use CDash\Database;
@@ -67,7 +68,7 @@ class BazelJSONHandler extends AbstractSubmissionHandler
     protected function HasSubProjects(): bool
     {
         if ($this->_HasSubProjects === null) {
-            $this->_HasSubProjects = $this->GetProject()->GetNumberOfSubProjects() > 0;
+            $this->_HasSubProjects = ProjectService::getNumberOfSubProjects((int) $this->GetProject()->Id) > 0;
         }
         return $this->_HasSubProjects;
     }

@@ -18,6 +18,7 @@ namespace App\Http\Submission\Handlers;
 =========================================================================*/
 
 use App\Models\Site;
+use App\Services\ProjectService;
 use App\Utils\SubmissionUtils;
 use CDash\Model\Build;
 use CDash\Model\CoverageFile;
@@ -95,9 +96,7 @@ class CoverageLogHandler extends AbstractXmlHandler
             }
 
             // Does this project have subprojects?
-            $project = new Project();
-            $project->Id = $this->GetProject()->Id;
-            $has_subprojects = $project->GetNumberOfSubProjects() > 0;
+            $has_subprojects = ProjectService::getNumberOfSubProjects((int) $this->GetProject()->Id) > 0;
 
             // Record the coverage data that we parsed from this file.
             foreach ($this->CoverageFiles as $coverageInfo) {
