@@ -82,4 +82,27 @@ class ProjectService extends AbstractService
             'endtime' => Carbon::create(1980),
         ]);
     }
+
+    /**
+     * @deprecated 12/06/2025  Use Eloquent relationships for all new code.
+     *
+     * @return \CDash\Model\BuildGroup[]
+     */
+    public static function getBuildGroups(int $projectid): array
+    {
+        $eloquent_buildgroups = Project::findOrFail($projectid)
+            ->buildgroups()
+            ->where('endtime', Carbon::create(1980))
+            ->get();
+
+        $buildgroups = [];
+        /** @var BuildGroup $model */
+        foreach ($eloquent_buildgroups as $model) {
+            $buildgroup = new \CDash\Model\BuildGroup();
+            $buildgroup->SetId($model->id);
+            $buildgroup->SetName($model->name);
+            $buildgroups[] = $buildgroup;
+        }
+        return $buildgroups;
+    }
 }

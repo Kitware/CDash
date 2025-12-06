@@ -11341,12 +11341,6 @@ parameters:
 			path: app/cdash/app/Model/Project.php
 
 		-
-			rawMessage: 'Method CDash\Model\Project::GetBuildGroups() return type has no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
 			rawMessage: 'Method CDash\Model\Project::GetBuildsDailyAverage() should return int but returns (float|int).'
 			identifier: return.type
 			count: 1
@@ -15567,6 +15561,15 @@ parameters:
 				04/22/2023  Use Laravel query builder or Eloquent instead
 			'''
 			identifier: method.deprecated
+			count: 1
+			path: app/cdash/public/api/v1/manageBuildGroup.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method getBuildGroups() of class App\Services\ProjectService:
+				12/06/2025  Use Eloquent relationships for all new code.
+			'''
+			identifier: staticMethod.deprecated
 			count: 1
 			path: app/cdash/public/api/v1/manageBuildGroup.php
 

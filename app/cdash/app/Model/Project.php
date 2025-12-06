@@ -19,6 +19,7 @@ namespace CDash\Model;
 
 use App\Models\Project as EloquentProject;
 use App\Models\SubProject;
+use App\Services\ProjectService;
 use App\Utils\DatabaseCleanupUtils;
 use CDash\Collection\SubscriberCollection;
 use CDash\Database;
@@ -349,25 +350,6 @@ class Project
             $repositories[] = $rep;
         }
         return $repositories;
-    }
-
-    /** Get the build groups */
-    public function GetBuildGroups(): array
-    {
-        $query = DB::select("
-                     SELECT id, name
-                     FROM buildgroup
-                     WHERE projectid=? AND endtime='1980-01-01 00:00:00'
-                 ", [(int) $this->Id]);
-
-        $buildgroups = [];
-        foreach ($query as $row) {
-            $buildgroup = new BuildGroup();
-            $buildgroup->SetId(intval($row->id));
-            $buildgroup->SetName($row->name);
-            $buildgroups[] = $buildgroup;
-        }
-        return $buildgroups;
     }
 
     /** Get the Name of the project */
@@ -825,7 +807,7 @@ class Project
     /**
      * Returns a SubscriberCollection; a collection of all users and their subscription preferences.
      */
-    public function GetProjectSubscribers(): SubscriberCollection
+    protected function GetProjectSubscribers(): SubscriberCollection
     {
         $service = ServiceContainer::getInstance()->getContainer();
         $collection = $service->make(SubscriberCollection::class);
