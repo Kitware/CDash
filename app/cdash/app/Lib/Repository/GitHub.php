@@ -18,10 +18,10 @@
 namespace CDash\Lib\Repository;
 
 use App\Models\BuildUpdateFile;
+use App\Models\PendingSubmissions;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildUpdate;
-use CDash\Model\PendingSubmissions;
 use CDash\Model\Project;
 use DateTime;
 use DateTimeImmutable;
@@ -454,7 +454,9 @@ class GitHub implements RepositoryInterface
                 $this->numPending++;
                 // Schedule this check to re-run when the build
                 // is finished.
-                PendingSubmissions::RecheckForBuildId($row['id']);
+                PendingSubmissions::where('buildid', (int) $row['id'])->update([
+                    'recheck' => true,
+                ]);
             }
         }
         $build_summary = "[$build_name]($build_url) | $icon | [$msg]($details_url)";

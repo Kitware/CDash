@@ -10,6 +10,7 @@ use App\Http\Submission\Handlers\DoneHandler;
 use App\Http\Submission\Handlers\RetryHandler;
 use App\Http\Submission\Handlers\UpdateHandler;
 use App\Models\BuildFile;
+use App\Models\PendingSubmissions;
 use App\Models\Site;
 use App\Models\SuccessfulJob;
 use App\Utils\SubmissionUtils;
@@ -22,7 +23,6 @@ use CDash\Messaging\Subscription\SubscriptionCollection;
 use CDash\Model\Build;
 use CDash\Model\BuildEmail;
 use CDash\Model\BuildGroup;
-use CDash\Model\PendingSubmissions;
 use CDash\Model\Project;
 use CDash\Model\Repository;
 use Illuminate\Bus\Queueable;
@@ -130,7 +130,7 @@ class ProcessSubmission implements ShouldQueue
             Storage::move("inprogress/{$this->filename}", "inbox/{$this->filename}");
 
             // Requeue the file with exponential backoff.
-            PendingSubmissions::IncrementForBuildId($this->buildid);
+            PendingSubmissions::where('buildid', $this->buildid)->increment('numfiles');
             $delay = ((int) config('cdash.retry_base')) ** $retry_handler->Retries;
             if (config('queue.default') === 'sqs-fifo') {
                 // Special handling for sqs-fifo, which does not support per-message delays.
@@ -257,11 +257,7 @@ class ProcessSubmission implements ShouldQueue
         }
 
         $build = $handler->getBuild();
-        $pendingSubmissions = new PendingSubmissions();
-        $pendingSubmissions->Build = $build;
-        if ($pendingSubmissions->Exists()) {
-            $pendingSubmissions->Decrement();
-        }
+        PendingSubmissions::where('buildid', $build->Id ?? -1)->decrement('numfiles');
 
         // Set status on repository.
         if ($handler instanceof UpdateHandler

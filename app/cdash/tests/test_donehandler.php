@@ -2,11 +2,11 @@
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
+use App\Models\PendingSubmissions;
 use App\Models\Site;
 use App\Utils\DatabaseCleanupUtils;
 use CDash\Database;
 use CDash\Model\Build;
-use CDash\Model\PendingSubmissions;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
 
@@ -92,11 +92,11 @@ class DoneHandlerTestCase extends KWWebTestCase
 
         // Invoke the Done handler again to verify that requeuing works
         // as intended.
-        $pending = new PendingSubmissions();
-        $pending->Build = $build;
-        $pending->NumFiles = 2;
-        $pending->Recheck = 1;
-        $pending->Save();
+        PendingSubmissions::upsert([
+            'buildid' => $build->Id,
+            'numfiles' => 2,
+            'recheck' => true,
+        ], 'buildid');
 
         $this->submission_assign_buildid($tmpfname, 'InsightExample', $buildname, $site->name, $stamp);
 

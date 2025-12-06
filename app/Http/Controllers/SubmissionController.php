@@ -5,12 +5,12 @@ namespace App\Http\Controllers;
 use App\Enums\SubmissionValidationType;
 use App\Exceptions\BadSubmissionException;
 use App\Jobs\ProcessSubmission;
+use App\Models\PendingSubmissions;
 use App\Models\Site;
 use App\Utils\AuthTokenUtil;
 use App\Utils\SubmissionUtils;
 use App\Utils\UnparsedSubmissionProcessor;
 use CDash\Model\Build;
-use CDash\Model\PendingSubmissions;
 use CDash\Model\Project;
 use Exception;
 use Illuminate\Contracts\Encryption\DecryptException;
@@ -190,7 +190,6 @@ final class SubmissionController extends AbstractProjectController
         }
 
         // Check if CTest provided us enough info to assign a buildid.
-        $pendingSubmissions = new PendingSubmissions();
         $buildid = null;
         if (isset($_GET['build']) && isset($_GET['site']) && isset($_GET['stamp'])) {
             $build = new Build();
@@ -205,20 +204,22 @@ final class SubmissionController extends AbstractProjectController
             }
 
             $build->SiteId = Site::firstOrCreate(['name' => $_GET['site']], ['name' => $_GET['site']])->id;
-            $pendingSubmissions->Build = $build;
 
             if ($build->AddBuild()) {
                 // Insert row to keep track of how many submissions are waiting to be
                 // processed for this build. This value will be incremented
                 // (and decremented) later on.
-                $pendingSubmissions->NumFiles = 0;
-                $pendingSubmissions->Save();
+                PendingSubmissions::upsert([
+                    'buildid' => $build->Id,
+                    'numfiles' => 0,
+                    'recheck' => false,
+                ], 'buildid');
             }
             $buildid = $build->Id;
         }
 
         if ($buildid !== null) {
-            $pendingSubmissions->Increment();
+            PendingSubmissions::where('buildid', (int) $buildid)->increment('numfiles');
         }
         ProcessSubmission::dispatch($filename, $this->project->Id, $buildid, $expected_md5);
         fclose($fp);

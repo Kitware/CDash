@@ -19,9 +19,9 @@ namespace App\Utils;
 
 use App\Jobs\ProcessSubmission;
 use App\Models\BuildFile;
+use App\Models\PendingSubmissions;
 use App\Models\Site;
 use CDash\Model\Build;
-use CDash\Model\PendingSubmissions;
 use CDash\Model\Project;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -332,13 +332,11 @@ class UnparsedSubmissionProcessor
         $buildfile->save();
 
         // Increment the count of pending submission files for this build.
-        $pendingSubmissions = new PendingSubmissions();
-        $pendingSubmissions->Build = $this->build;
-        if (!$pendingSubmissions->Exists()) {
-            $pendingSubmissions->NumFiles = 0;
-            $pendingSubmissions->Save();
-        }
-        $pendingSubmissions->Increment();
+        DB::transaction(function (): void {
+            PendingSubmissions::updateOrCreate([
+                'buildid' => (int) $this->build->Id,
+            ])->increment('numfiles');
+        });
     }
 
     public function parseDataFileParameters(): void
