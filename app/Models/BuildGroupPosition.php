@@ -18,7 +18,7 @@ use Illuminate\Support\Carbon;
  */
 class BuildGroupPosition extends Model
 {
-    protected $table = 'buildgroup';
+    protected $table = 'buildgroupposition';
 
     public $timestamps = false;
 

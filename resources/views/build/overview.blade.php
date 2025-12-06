@@ -12,7 +12,7 @@
         <b>Group: </b>
         <select onchange="document.form1.submit()" name="groupSelection">
             <option value="0">All</option>
-            @foreach($project->GetBuildGroups() as $group)
+            @foreach(ProjectService::getBuildGroups((int) $project->Id) as $group)
                 <option
                     value="{{ $group->GetId() }}"
                     @if($group->GetId() === $selected_group) selected @endif

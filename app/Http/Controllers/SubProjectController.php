@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Services\ProjectService;
 use App\Utils\PageTimer;
 use CDash\Model\SubProject;
 use Illuminate\Http\JsonResponse;
@@ -78,7 +79,7 @@ final class SubProjectController extends AbstractProjectController
         $response['threshold'] = $this->project->GetCoverageThreshold();
 
         $subprojects_response = []; // JSON for subprojects
-        foreach ($this->project->GetSubProjects() as $subproject) {
+        foreach (ProjectService::getSubProjects((int) $this->project->Id) as $subproject) {
             $subprojects_response[] = [
                 'id' => $subproject->id,
                 'name' => $subproject->name,
@@ -88,7 +89,7 @@ final class SubProjectController extends AbstractProjectController
         $response['subprojects'] = $subprojects_response;
 
         $groups = [];
-        foreach ($this->project->GetSubProjectGroups() as $subProjectGroup) {
+        foreach (ProjectService::getSubProjectGroups((int) $this->project->Id) as $subProjectGroup) {
             $group = [
                 'id' => $subProjectGroup->GetId(),
                 'name' => $subProjectGroup->GetName(),
@@ -128,7 +129,7 @@ final class SubProjectController extends AbstractProjectController
             $date = htmlspecialchars(pdo_real_escape_string($_GET['date']));
             $date_specified = true;
         } else {
-            $last_start_timestamp = $this->project->GetLastSubmission();
+            $last_start_timestamp = ProjectService::getLastStartTimestamp((int) $this->project->Id);
             $date = strlen($last_start_timestamp) > 0 ? $last_start_timestamp : null;
             $date_specified = false;
         }
@@ -192,7 +193,7 @@ final class SubProjectController extends AbstractProjectController
         $project_response['ntestpass'] = $this->project->GetNumberOfPassingTests($beginning_UTCDate, $end_UTCDate);
         $project_response['ntestfail'] = $this->project->GetNumberOfFailingTests($beginning_UTCDate, $end_UTCDate);
         $project_response['ntestnotrun'] = $this->project->GetNumberOfNotRunTests($beginning_UTCDate, $end_UTCDate);
-        $project_last_submission = $this->project->GetLastSubmission();
+        $project_last_submission = ProjectService::getLastStartTimestamp((int) $this->project->Id);
         if (strlen($project_last_submission) === 0) {
             $project_response['starttime'] = 'NA';
         } else {
@@ -201,7 +202,7 @@ final class SubProjectController extends AbstractProjectController
         $response['project'] = $project_response;
 
         // Look for the subproject
-        $subprojects = $this->project->GetSubProjects();
+        $subprojects = ProjectService::getSubProjects((int) $this->project->Id);
         $subprojProp = [];
         foreach ($subprojects as $subproject) {
             $subprojProp[$subproject->id] = ['name' => $subproject->name];
@@ -286,10 +287,10 @@ final class SubProjectController extends AbstractProjectController
 
         $date = isset($_GET['date']) ? Carbon::parse($_GET['date']) : null;
 
-        $subprojects = $this->project->GetSubProjects();
+        $subprojects = ProjectService::getSubProjects((int) $this->project->Id);
 
         $subproject_groups = [];
-        $groups = $this->project->GetSubProjectGroups();
+        $groups = ProjectService::getSubProjectGroups((int) $this->project->Id);
         foreach ($groups as $group) {
             $subproject_groups[$group->GetId()] = $group;
         }

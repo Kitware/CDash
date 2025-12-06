@@ -18,7 +18,6 @@
 namespace CDash\Model;
 
 use App\Models\Project as EloquentProject;
-use App\Models\SubProject;
 use App\Utils\DatabaseCleanupUtils;
 use CDash\Collection\SubscriberCollection;
 use CDash\Database;
@@ -31,7 +30,6 @@ use DateTime;
 use DateTimeZone;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -95,25 +93,6 @@ class Project
     public function __construct()
     {
         $this->PDO = Database::getInstance();
-    }
-
-    /** Add a build group */
-    protected function AddBuildGroup(BuildGroup $buildgroup): void
-    {
-        $buildgroup->SetProjectId($this->Id);
-        $buildgroup->Save();
-    }
-
-    /** Delete a project */
-    public function Delete(): bool
-    {
-        if (!$this->Id || EloquentProject::find($this->Id) === null) {
-            return false;
-        }
-
-        EloquentProject::findOrFail((int) $this->Id)->delete();
-
-        return true;
     }
 
     /** Return if a project exists */
@@ -305,8 +284,6 @@ class Project
 
     /**
      * Add a logo
-     *
-     * TODO: (williamjallen) This function is only ever used in the tests.  Remove it?
      */
     public function AddLogo($contents, string $filetype)
     {
@@ -358,25 +335,6 @@ class Project
         return $repositories;
     }
 
-    /** Get the build groups */
-    public function GetBuildGroups(): array
-    {
-        $query = DB::select("
-                     SELECT id, name
-                     FROM buildgroup
-                     WHERE projectid=? AND endtime='1980-01-01 00:00:00'
-                 ", [(int) $this->Id]);
-
-        $buildgroups = [];
-        foreach ($query as $row) {
-            $buildgroup = new BuildGroup();
-            $buildgroup->SetId(intval($row->id));
-            $buildgroup->SetName($row->name);
-            $buildgroups[] = $buildgroup;
-        }
-        return $buildgroups;
-    }
-
     /** Get the Name of the project */
     public function GetName(): string|false
     {
@@ -411,91 +369,6 @@ class Project
         }
 
         return (int) $this->CoverageThreshold;
-    }
-
-    /** Get the number of subproject */
-    public function GetNumberOfSubProjects($date = null): int
-    {
-        if (!$this->Id) {
-            throw new RuntimeException('ID not set for project');
-        }
-
-        if ($date !== null) {
-            $date = Carbon::parse($date);
-        }
-
-        return EloquentProject::findOrFail((int) $this->Id)
-            ->subprojects($date)
-            ->count();
-    }
-
-    /**
-     * Get the subproject ids
-     *
-     * @return Collection<int, SubProject>
-     */
-    public function GetSubProjects(): Collection
-    {
-        if (!$this->Id) {
-            throw new RuntimeException('ID not set for project');
-        }
-
-        return EloquentProject::findOrFail((int) $this->Id)
-            ->subprojects()
-            ->get();
-    }
-
-    /** Get the last submission of the subproject*/
-    public function GetLastSubmission(): string|false
-    {
-        if (!config('cdash.show_last_submission')) {
-            return false;
-        }
-
-        if (!$this->Id) {
-            throw new RuntimeException('ID not set for project');
-        }
-
-        $starttime = EloquentProject::findOrFail((int) $this->Id)
-            ->builds()
-            ->max('starttime');
-
-        if ($starttime === null) {
-            return false;
-        }
-
-        return date(FMT_DATETIMESTD, strtotime($starttime . 'UTC'));
-    }
-
-    /** Get the number of builds given per day */
-    public function GetBuildsDailyAverage(string $startUTCdate, string $endUTCdate): int
-    {
-        if (!$this->Id) {
-            throw new RuntimeException('ID not set for project');
-        }
-
-        $project = DB::select('
-                       SELECT starttime
-                       FROM build
-                       WHERE
-                           projectid=?
-                           AND starttime>?
-                           AND starttime<=?
-                           AND parentid IN (-1, 0)
-                       ORDER BY starttime ASC
-                       LIMIT 1
-                   ', [(int) $this->Id, $startUTCdate, $endUTCdate]);
-        if ($project === []) {
-            return 0;
-        }
-        $first_build = $project[0]->starttime;
-        $nb_days = strtotime($endUTCdate) - strtotime($first_build);
-        $nb_days = intval($nb_days / 86400) + 1;
-        $nbuilds = EloquentProject::findOrFail((int) $this->Id)
-            ->builds()
-            ->betweenDates(Carbon::parse($startUTCdate), Carbon::parse($endUTCdate))
-            ->count();
-        return $nbuilds / $nb_days;
     }
 
     /** Get the number of warning builds given a date range */
@@ -699,32 +572,6 @@ class Project
     }
 
     /**
-     * Return the list of subproject groups that belong to this project.
-     *
-     * @return array<SubProjectGroup>
-     */
-    public function GetSubProjectGroups(): array
-    {
-        if (!$this->Id) {
-            throw new RuntimeException('ID not set for project');
-        }
-
-        $groups = EloquentProject::findOrFail((int) $this->Id)
-            ->subProjectGroups()
-            ->where('endtime', '1980-01-01 00:00:00')
-            ->get();
-
-        $subProjectGroups = [];
-        foreach ($groups as $group) {
-            $subProjectGroup = new SubProjectGroup();
-            // SetId automatically loads the rest of the group's data.
-            $subProjectGroup->SetId($group->id);
-            $subProjectGroups[] = $subProjectGroup;
-        }
-        return $subProjectGroups;
-    }
-
-    /**
      * Return a JSON representation of this object.
      *
      * @return array<string,mixed>
@@ -758,72 +605,6 @@ class Project
             unset($response['UploadQuota']);
         }
         return $response;
-    }
-
-    /**
-     * Called once when the project is initially created.
-     */
-    public function InitialSetup(): bool
-    {
-        if (!$this->Id) {
-            throw new RuntimeException('ID not set for project');
-        }
-
-        // Add the default groups.
-        $BuildGroup = new BuildGroup();
-        $BuildGroup->SetName('Nightly');
-        $BuildGroup->SetDescription('Nightly builds');
-        $BuildGroup->SetSummaryEmail(0);
-        $this->AddBuildGroup($BuildGroup);
-
-        $BuildGroup = new BuildGroup();
-        $BuildGroup->SetName('Continuous');
-        $BuildGroup->SetDescription('Continuous builds');
-        $BuildGroup->SetSummaryEmail(0);
-        $this->AddBuildGroup($BuildGroup);
-
-        $BuildGroup = new BuildGroup();
-        $BuildGroup->SetName('Experimental');
-        $BuildGroup->SetDescription('Experimental builds');
-        // default to "No Email" for the Experimental group
-        $BuildGroup->SetSummaryEmail(2);
-        $this->AddBuildGroup($BuildGroup);
-
-        // Set up overview page to initially contain just the "Nightly" group.
-        $groups = $this->GetBuildGroups();
-        foreach ($groups as $group) {
-            if ($group->GetName() === 'Nightly') {
-                $buildgroupid = (int) $group->GetId();
-                DB::table('overview_components')->insert([
-                    'projectid' => $this->Id,
-                    'buildgroupid' => $buildgroupid,
-                    'position' => 1,
-                    'type' => 'build',
-                ]);
-                break;
-            }
-        }
-
-        return true;
-    }
-
-    public function AddBlockedBuild(string $buildname, string $sitename, string $ip): int
-    {
-        return EloquentProject::findOrFail((int) $this->Id)
-            ->blockedbuilds()
-            ->create([
-                'buildname' => $buildname,
-                'sitename' => $sitename,
-                'ipaddress' => $ip,
-            ])->id;
-    }
-
-    public function RemoveBlockedBuild(int $id): void
-    {
-        EloquentProject::findOrFail((int) $this->Id)
-            ->blockedbuilds()
-            ->findOrFail($id)
-            ->delete();
     }
 
     /** Delete old builds if this project has too many. */
@@ -879,7 +660,7 @@ class Project
     /**
      * Returns a SubscriberCollection; a collection of all users and their subscription preferences.
      */
-    public function GetProjectSubscribers(): SubscriberCollection
+    protected function GetProjectSubscribers(): SubscriberCollection
     {
         $service = ServiceContainer::getInstance()->getContainer();
         $collection = $service->make(SubscriberCollection::class);
@@ -942,20 +723,5 @@ class Project
         $beginningOfDay = gmdate(FMT_DATETIME, $beginning_timestamp);
         $endOfDay = gmdate(FMT_DATETIME, $end_timestamp);
         return [$beginningOfDay, $endOfDay];
-    }
-
-    /**
-     * Returns a boolean indicating whether the specified string could be a valid project name
-     */
-    public static function validateProjectName(string $projectname): bool
-    {
-        if (preg_match('/^[a-zA-Z0-9\ +.\-_]+$/', $projectname) !== 1) {
-            return false;
-        }
-        if (str_contains($projectname, '_-_')) {
-            return false;
-        }
-
-        return true;
     }
 }

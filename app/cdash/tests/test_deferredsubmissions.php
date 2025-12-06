@@ -34,7 +34,7 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         $this->projectname = 'DeferredSubmissions';
         if ($this->project->FindByName($this->projectname)) {
             remove_project_builds($this->project->Id);
-            $this->project->Delete();
+            App\Models\Project::findOrFail((int) $this->project->Id)->delete();
         }
         $this->project->Id = $this->createProject([
             'Name' => $this->projectname,
@@ -499,7 +499,7 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         $projectname2 = 'DeferredSubmissions2';
         if ($project2->FindByName($projectname2)) {
             remove_project_builds($project2->Id);
-            $project2->Delete();
+            App\Models\Project::findOrFail((int) $project2->Id)->delete();
         }
         $project2->Id = $this->createProject([
             'Name' => $projectname2,

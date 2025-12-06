@@ -17,8 +17,10 @@
 
 namespace CDash\Api\v1\Project;
 
-use App\Rules\ProjectAuthenticateSubmissions;
-use App\Rules\ProjectVisibilityAllowed;
+use App\Rules\ProjectAuthenticateSubmissionsRule;
+use App\Rules\ProjectNameRule;
+use App\Rules\ProjectVisibilityRule;
+use App\Services\ProjectService;
 use App\Utils\RepositoryUtils;
 use CDash\Model\Project;
 use App\Models\Project as EloquentProject;
@@ -70,7 +72,7 @@ function rest_delete(): void
         return;
     }
     remove_project_builds($project->Id);
-    $project->Delete();
+    \App\Models\Project::findOrFail((int) $project->Id)->delete();
     http_response_code(200);
 }
 
@@ -114,16 +116,23 @@ function rest_post($user): void
 
     // If we should block a spammer's build.
     if (isset($_REQUEST['AddBlockedBuild']) && !empty($_REQUEST['AddBlockedBuild'])) {
-        $response['blockedid'] =
-            $project->AddBlockedBuild($_REQUEST['AddBlockedBuild']['buildname'],
-                $_REQUEST['AddBlockedBuild']['sitename'], $_REQUEST['AddBlockedBuild']['ipaddress']);
+        $response['blockedid'] = EloquentProject::findOrFail((int) $project->Id)
+            ->blockedbuilds()
+            ->create([
+                'buildname' => $_REQUEST['AddBlockedBuild']['buildname'],
+                'sitename' => $_REQUEST['AddBlockedBuild']['sitename'],
+                'ipaddress' => $_REQUEST['AddBlockedBuild']['ipaddress'],
+            ])->id;
         echo json_encode($response);
         return;
     }
 
     // If we should remove a build from the blocked list.
     if (isset($_REQUEST['RemoveBlockedBuild']) && !empty($_REQUEST['RemoveBlockedBuild'])) {
-        $project->RemoveBlockedBuild((int) $_REQUEST['RemoveBlockedBuild']['id']);
+        EloquentProject::findOrFail((int) $project->Id)
+            ->blockedbuilds()
+            ->findOrFail((int) $_REQUEST['RemoveBlockedBuild']['id'])
+            ->delete();
         return;
     }
 
@@ -202,12 +211,6 @@ function create_project(&$response, $user): void
 {
     $Name = $_REQUEST['project']['Name'];
 
-    if (!Project::validateProjectName($Name)) {
-        $response['error'] = 'Project name contains invalid characters or patterns.';
-        http_response_code(400);
-        return;
-    }
-
     // Make sure that a project with this name does not already exist.
     if (\App\Models\Project::where('name', $Name)->exists()) {
         $response['error'] = "Project '$Name' already exists.";
@@ -219,9 +222,9 @@ function create_project(&$response, $user): void
     $Project = new Project();
     $Project->Name = $Name;
     populate_project($Project);
-    $Project->InitialSetup();
 
     $eloquent_project = EloquentProject::findOrFail((int) $Project->Id);
+    ProjectService::initializeBuildGroups($eloquent_project);
 
     // Add the current user to this project.
     $eloquent_project->users()
@@ -258,11 +261,13 @@ function populate_project($Project): void
     }
 
     $validator = Validator::make([
+        'name' => $project_settings['Name'],
         'visibility' => $project_settings['Public'],
         'authenticatesubmissions' => (bool) ($project_settings['AuthenticateSubmissions'] ?? false),
     ], [
-        'visibility' => new ProjectVisibilityAllowed(),
-        'authenticatesubmissions' => new ProjectAuthenticateSubmissions(),
+        'name' => new ProjectNameRule(),
+        'visibility' => new ProjectVisibilityRule(),
+        'authenticatesubmissions' => new ProjectAuthenticateSubmissionsRule(),
     ]);
     if ($validator->fails()) {
         abort(403, $validator->messages());

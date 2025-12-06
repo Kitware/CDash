@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Translation\PotentiallyTranslatedString;
 
-class ProjectVisibilityAllowed implements ValidationRule
+class ProjectVisibilityRule implements ValidationRule
 {
     /**
      * Verify that the current user is able to create/edit a project with the requested visibility.

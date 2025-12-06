@@ -18,6 +18,7 @@
 namespace CDash\Api\v1\ManageBuildGroup;
 
 use App\Models\User;
+use App\Services\ProjectService;
 use App\Utils\PageTimer;
 use CDash\Database;
 use CDash\Model\BuildGroup;
@@ -120,7 +121,7 @@ $response['sites'] = $sites;
 // Get the BuildGroups for this Project.
 $Project = new Project();
 $Project->Id = $projectid;
-$buildgroups = $Project->GetBuildGroups();
+$buildgroups = ProjectService::getBuildGroups((int) $Project->Id);
 $buildgroups_response = [];
 $dynamics_response = [];
 /** @var BuildGroup $buildgroup */

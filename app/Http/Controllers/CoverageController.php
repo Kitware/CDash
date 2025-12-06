@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Project as EloquentProject;
 use App\Models\User;
+use App\Services\ProjectService;
 use App\Utils\PageTimer;
 use App\Utils\TestingDay;
 use CDash\Database;
@@ -1365,8 +1366,8 @@ final class CoverageController extends AbstractBuildController
 
         // Are there any subproject groups?
         $subproject_groups = [];
-        if ($this->project->GetNumberOfSubProjects($end_UTCDate) > 0) {
-            $subproject_groups = $this->project->GetSubProjectGroups();
+        if (ProjectService::getNumberOfSubProjects((int) $this->project->Id, $end_UTCDate) > 0) {
+            $subproject_groups = ProjectService::getSubProjectGroups((int) $this->project->Id);
         }
         foreach ($subproject_groups as $group) {
             // Keep track of coverage info on a per-group basis.

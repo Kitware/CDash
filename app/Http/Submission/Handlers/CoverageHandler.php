@@ -20,6 +20,7 @@ namespace App\Http\Submission\Handlers;
 use App\Http\Submission\Traits\UpdatesSiteInformation;
 use App\Models\Site;
 use App\Models\SiteInformation;
+use App\Services\ProjectService;
 use App\Utils\SubmissionUtils;
 use CDash\Model\Build;
 use CDash\Model\Coverage;
@@ -133,7 +134,7 @@ class CoverageHandler extends AbstractXmlHandler
                 $this->Build->UpdateBuild($this->Build->Id, -1, -1);
             }
 
-            $hasSubProjects = $this->GetProject()->GetNumberOfSubProjects() > 0;
+            $hasSubProjects = ProjectService::getNumberOfSubProjects((int) $this->GetProject()->Id) > 0;
 
             foreach ($this->Coverages as $coverageInfo) {
                 $coverage = $coverageInfo[0];
