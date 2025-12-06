@@ -20,6 +20,7 @@ namespace App\Utils;
 use App\Jobs\ProcessSubmission;
 use App\Models\BuildFile;
 use App\Models\Site;
+use App\Rules\ProjectNameRule;
 use CDash\Model\Build;
 use CDash\Model\PendingSubmissions;
 use CDash\Model\Project;
@@ -29,6 +30,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -118,10 +120,6 @@ class UnparsedSubmissionProcessor
             }
         }
 
-        if (!Project::validateProjectName(htmlspecialchars($_POST['project']))) {
-            abort(Response::HTTP_BAD_REQUEST, 'Invalid project specified');
-        }
-
         $this->projectname = htmlspecialchars($_POST['project']);
         $this->buildname = htmlspecialchars($_POST['build']);
         $this->buildstamp = htmlspecialchars($_POST['stamp']);
@@ -136,6 +134,16 @@ class UnparsedSubmissionProcessor
         $this->subprojectname = '';
         if (isset($_POST['subproject'])) {
             $this->subprojectname = htmlspecialchars($_POST['subproject']);
+        }
+
+        $validator = Validator::make([
+            'name' => $this->projectname,
+        ], [
+            'name' => new ProjectNameRule(),
+        ]);
+
+        if ($validator->fails()) {
+            abort(Response::HTTP_BAD_REQUEST, $validator->errors()->first());
         }
 
         $this->getAuthTokenHash();
@@ -231,9 +239,15 @@ class UnparsedSubmissionProcessor
             $this->project = $this->build->GetProject();
             $this->project->Fill();
 
-            if (!Project::validateProjectName($this->project->Name)) {
-                Log::info("Invalid project name: {$this->project->Name}");
-                abort(Response::HTTP_BAD_REQUEST, 'Invalid project name.');
+            $validator = Validator::make([
+                'name' => $this->project->Name,
+            ], [
+                'name' => new ProjectNameRule(),
+            ]);
+
+            if ($validator->fails()) {
+                Log::info($validator->errors()->first());
+                abort(Response::HTTP_BAD_REQUEST, $validator->errors()->first());
             }
             $this->projectname = $this->project->Name;
 
@@ -255,7 +269,14 @@ class UnparsedSubmissionProcessor
                 $projectname = substr($filename, 0, $pos);
                 break;
             }
-            if (is_null($projectname) || !Project::validateProjectName($projectname)) {
+
+            $validator = Validator::make([
+                'name' => $projectname,
+            ], [
+                'name' => new ProjectNameRule(),
+            ]);
+
+            if (is_null($projectname) || $validator->fails()) {
                 Log::info("Could not find build metadata file for {$this->buildid}");
                 abort(Response::HTTP_NOT_FOUND, 'Build not found');
             }
@@ -429,8 +450,14 @@ class UnparsedSubmissionProcessor
     {
         $build_metadata = json_decode(stream_get_contents($fp), true);
 
-        if (!Project::validateProjectName($build_metadata['projectname'])) {
-            abort(Response::HTTP_BAD_REQUEST, "Invalid project name: {$build_metadata['projectname']}");
+        $validator = Validator::make([
+            'name' => $build_metadata['projectname'],
+        ], [
+            'name' => new ProjectNameRule(),
+        ]);
+
+        if ($validator->fails()) {
+            abort(Response::HTTP_BAD_REQUEST, $validator->errors()->first());
         }
 
         $this->projectname = $build_metadata['projectname'];

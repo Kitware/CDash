@@ -7,7 +7,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Translation\PotentiallyTranslatedString;
 
-class ProjectAuthenticateSubmissions implements ValidationRule
+class ProjectAuthenticateSubmissionsRule implements ValidationRule
 {
     /**
      * Run the validation rule.

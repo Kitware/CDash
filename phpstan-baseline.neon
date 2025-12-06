@@ -6103,16 +6103,22 @@ parameters:
 			path: app/Providers/RouteServiceProvider.php
 
 		-
+			rawMessage: Cannot cast mixed to string.
+			identifier: cast.string
+			count: 1
+			path: app/Rules/ProjectNameRule.php
+
+		-
 			rawMessage: Cannot cast mixed to int.
 			identifier: cast.int
 			count: 1
-			path: app/Rules/ProjectVisibilityAllowed.php
+			path: app/Rules/ProjectVisibilityRule.php
 
 		-
 			rawMessage: 'Parameter #1 $value of static method Illuminate\Support\Str::upper() expects string, bool|string given.'
 			identifier: argument.type
 			count: 1
-			path: app/Rules/ProjectVisibilityAllowed.php
+			path: app/Rules/ProjectVisibilityRule.php
 
 		-
 			rawMessage: Cannot cast mixed to int.
@@ -7188,7 +7194,7 @@ parameters:
 		-
 			rawMessage: Cannot access offset 'projectname' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
+			count: 2
 			path: app/Utils/UnparsedSubmissionProcessor.php
 
 		-
@@ -7266,18 +7272,6 @@ parameters:
 		-
 			rawMessage: 'Parameter #1 $json of function json_decode expects string, string|null given.'
 			identifier: argument.type
-			count: 1
-			path: app/Utils/UnparsedSubmissionProcessor.php
-
-		-
-			rawMessage: 'Parameter #1 $projectname of static method CDash\Model\Project::validateProjectName() expects string, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: app/Utils/UnparsedSubmissionProcessor.php
-
-		-
-			rawMessage: 'Part $build_metadata[''projectname''] (mixed) of encapsed string cannot be cast to string.'
-			identifier: encapsedStringPart.nonString
 			count: 1
 			path: app/Utils/UnparsedSubmissionProcessor.php
 
@@ -15690,7 +15684,7 @@ parameters:
 		-
 			rawMessage: Cannot access offset 'Name' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
+			count: 2
 			path: app/cdash/public/api/v1/project.php
 
 		-
@@ -15911,12 +15905,6 @@ parameters:
 
 		-
 			rawMessage: 'Parameter #1 $json of function json_decode expects string, string|false given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: 'Parameter #1 $projectname of static method CDash\Model\Project::validateProjectName() expects string, mixed given.'
 			identifier: argument.type
 			count: 1
 			path: app/cdash/public/api/v1/project.php

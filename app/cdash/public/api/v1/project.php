@@ -17,8 +17,9 @@
 
 namespace CDash\Api\v1\Project;
 
-use App\Rules\ProjectAuthenticateSubmissions;
-use App\Rules\ProjectVisibilityAllowed;
+use App\Rules\ProjectAuthenticateSubmissionsRule;
+use App\Rules\ProjectNameRule;
+use App\Rules\ProjectVisibilityRule;
 use App\Services\ProjectService;
 use App\Utils\RepositoryUtils;
 use CDash\Model\Project;
@@ -203,12 +204,6 @@ function create_project(&$response, $user): void
 {
     $Name = $_REQUEST['project']['Name'];
 
-    if (!Project::validateProjectName($Name)) {
-        $response['error'] = 'Project name contains invalid characters or patterns.';
-        http_response_code(400);
-        return;
-    }
-
     // Make sure that a project with this name does not already exist.
     if (\App\Models\Project::where('name', $Name)->exists()) {
         $response['error'] = "Project '$Name' already exists.";
@@ -259,11 +254,13 @@ function populate_project($Project): void
     }
 
     $validator = Validator::make([
+        'name' => $project_settings['Name'],
         'visibility' => $project_settings['Public'],
         'authenticatesubmissions' => (bool) ($project_settings['AuthenticateSubmissions'] ?? false),
     ], [
-        'visibility' => new ProjectVisibilityAllowed(),
-        'authenticatesubmissions' => new ProjectAuthenticateSubmissions(),
+        'name' => new ProjectNameRule(),
+        'visibility' => new ProjectVisibilityRule(),
+        'authenticatesubmissions' => new ProjectAuthenticateSubmissionsRule(),
     ]);
     if ($validator->fails()) {
         abort(403, $validator->messages());

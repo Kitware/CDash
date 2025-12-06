@@ -210,10 +210,10 @@ input CreateProjectInput {
   homeurl: String!
 
   "Visibility."
-  visibility: ProjectVisibility! @rename(attribute: "public") @rules(attribute: "public", apply: ["App\\Rules\\ProjectVisibilityAllowed"])
+  visibility: ProjectVisibility! @rename(attribute: "public") @rules(attribute: "public", apply: ["App\\Rules\\ProjectVisibilityRule"])
 
   "A boolean indicating whether authenticated submissions are required."
-  authenticateSubmissions: Boolean! @rename(attribute: "authenticatesubmissions") @rules(attribute: "authenticatesubmissions", apply: ["App\\Rules\\ProjectAuthenticateSubmissions"])
+  authenticateSubmissions: Boolean! @rename(attribute: "authenticatesubmissions") @rules(attribute: "authenticatesubmissions", apply: ["App\\Rules\\ProjectAuthenticateSubmissionsRule"])
 
   "A LDAP group users must be a member of to access the project."
   ldapFilter: String @rename(attribute: "ldapfilter")
