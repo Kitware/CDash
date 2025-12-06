@@ -86,7 +86,11 @@
       "Database\\Factories\\": "database/factories/",
       "Database\\Seeders\\": "database/seeders/",
       "CDash\\": "app/cdash/include/CDash/"
-    }
+    },
+    "files": [
+      "app/cdash/include/common.php",
+      "app/cdash/include/filterdataFunctions.php"
+    ]
   },
   "autoload-dev": {
     "psr-4": {

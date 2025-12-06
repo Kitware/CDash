@@ -14,7 +14,7 @@ class LdapUtils
 {
     public static function syncUser(User $user): void
     {
-        $ldap_provider = match (env('LDAP_PROVIDER', 'openldap')) {
+        $ldap_provider = match (config()->string('cdash.ldap_provider')) {
             'openldap' => \LdapRecord\Models\OpenLDAP\User::class,
             'activedirectory' => \LdapRecord\Models\ActiveDirectory\User::class,
             'freeipa' => \LdapRecord\Models\FreeIPA\User::class,
@@ -22,7 +22,7 @@ class LdapUtils
         };
 
         if ($ldap_provider === false) {
-            throw new Exception('Invalid LDAP provider: ' . env('LDAP_PROVIDER'));
+            throw new Exception('Invalid LDAP provider: ' . config()->string('cdash.ldap_provider'));
         }
 
         // If this user doesn't have a GUID assigned already (for example, if the user was added

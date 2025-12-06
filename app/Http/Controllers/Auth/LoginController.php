@@ -69,7 +69,7 @@ final class LoginController extends AbstractController
     {
         if ((bool) config('cdash.ldap_enabled')) {
             return [
-                (string) env('LDAP_LOCATE_USERS_BY', 'mail') => $request->post('email'),
+                config()->string('cdash.ldap_locate_users_by') => $request->post('email'),
                 'password' => $request->post('password'),
                 'fallback' => $this->traitCredentials($request),
             ];
