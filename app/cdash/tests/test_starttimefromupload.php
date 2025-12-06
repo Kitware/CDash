@@ -20,7 +20,7 @@ class StartTimeFromUploadTestCase extends KWWebTestCase
     {
         // Delete project & build created by this test.
         remove_project_builds($this->project->Id);
-        $this->project->Delete();
+        App\Models\Project::findOrFail((int) $this->project->Id)->delete();
     }
 
     public function testStartTimeFromUpload(): void

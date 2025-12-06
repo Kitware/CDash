@@ -8,7 +8,7 @@ use CDash\Model\Project;
 class JUnitHandlerTestCase extends KWWebTestCase
 {
     protected $PDO;
-    protected $Project;
+    protected ?Project $Project;
 
     public function __construct()
     {
@@ -19,9 +19,9 @@ class JUnitHandlerTestCase extends KWWebTestCase
 
     public function __destruct()
     {
-        if ($this->Project) {
+        if ($this->Project !== null) {
             remove_project_builds($this->Project->Id);
-            $this->Project->Delete();
+            App\Models\Project::findOrFail((int) $this->Project->Id)->delete();
         }
     }
 

@@ -19,11 +19,6 @@ class ProjectModelTestCase extends KWWebTestCase
     {
         $project = new Project();
 
-        if (!($project->Delete() === false)) {
-            $this->fail("Project::Delete didn't return false for no id");
-            return 1;
-        }
-
         $project->Id = '27123';
         if (!($project->Exists() === false)) {
             $this->fail("Project::Exists didn't return false for bogus id");

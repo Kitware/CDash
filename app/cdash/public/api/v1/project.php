@@ -72,7 +72,7 @@ function rest_delete(): void
         return;
     }
     remove_project_builds($project->Id);
-    $project->Delete();
+    \App\Models\Project::findOrFail((int) $project->Id)->delete();
     http_response_code(200);
 }
 

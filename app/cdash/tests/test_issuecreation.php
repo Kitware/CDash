@@ -30,7 +30,7 @@ class IssueCreationTestCase extends KWWebTestCase
     {
         foreach ($this->Projects as $name => $project) {
             remove_project_builds($project->Id);
-            $project->Delete();
+            EloquentProject::findOrFail((int) $project->Id)->delete();
         }
         $this->user->delete();
     }

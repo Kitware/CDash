@@ -34,7 +34,7 @@ class DisplayImageTestCase extends KWWebTestCase
         // Try to access a public image
         $response = $this->get($this->url . '/image/' . $image->Id);
         if ($response === false || $response === true || str_contains($response, 'Not Found')) {
-            $project->Delete();
+            App\Models\Project::findOrFail((int) $project->Id)->delete();
             DB::delete('DELETE FROM image WHERE id=?', [$image->Id]);
 
             $this->fail('Failed to access image for public project');
@@ -46,14 +46,14 @@ class DisplayImageTestCase extends KWWebTestCase
 
         $response = $this->get($this->url . '/image/' . $image->Id);
         if ($response === false || $response === true || !str_contains($response, 'Not Found')) {
-            $project->Delete();
+            App\Models\Project::findOrFail((int) $project->Id)->delete();
             DB::delete('DELETE FROM image WHERE id=?', [$image->Id]);
 
             $this->fail('Access to image for private project granted for anonymous user');
             return 1;
         }
 
-        $project->Delete();
+        App\Models\Project::findOrFail((int) $project->Id)->delete();
         DB::delete('DELETE FROM image WHERE id=?', [$image->Id]);
 
         $this->pass('Passed');
