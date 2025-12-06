@@ -997,6 +997,15 @@ parameters:
 			path: app/Http/Controllers/CDash.php
 
 		-
+			rawMessage: '''
+				Call to deprecated method getSubProjects() of class App\Services\ProjectService:
+				12/06/2025  Use Eloquent relationships for all new code
+			'''
+			identifier: staticMethod.deprecated
+			count: 1
+			path: app/Http/Controllers/CTestConfigurationController.php
+
+		-
 			rawMessage: Access to an undefined property Illuminate\Database\Eloquent\Relations\Pivot::$role.
 			identifier: property.notFound
 			count: 1
@@ -2269,6 +2278,15 @@ parameters:
 			'''
 			identifier: staticMethod.deprecated
 			count: 2
+			path: app/Http/Controllers/SubProjectController.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method getSubProjects() of class App\Services\ProjectService:
+				12/06/2025  Use Eloquent relationships for all new code
+			'''
+			identifier: staticMethod.deprecated
+			count: 3
 			path: app/Http/Controllers/SubProjectController.php
 
 		-
@@ -4988,6 +5006,15 @@ parameters:
 			identifier: missingType.property
 			count: 1
 			path: app/Http/Submission/Handlers/OpenCoverTarHandler.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method getSubProjects() of class App\Services\ProjectService:
+				12/06/2025  Use Eloquent relationships for all new code
+			'''
+			identifier: staticMethod.deprecated
+			count: 1
+			path: app/Http/Submission/Handlers/ProjectHandler.php
 
 		-
 			rawMessage: Class App\Http\Submission\Handlers\ProjectHandler has an uninitialized property $CurrentDependencies. Give it default value or assign it in the constructor.

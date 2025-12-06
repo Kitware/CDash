@@ -79,7 +79,7 @@ final class SubProjectController extends AbstractProjectController
         $response['threshold'] = $this->project->GetCoverageThreshold();
 
         $subprojects_response = []; // JSON for subprojects
-        foreach ($this->project->GetSubProjects() as $subproject) {
+        foreach (ProjectService::getSubProjects((int) $this->project->Id) as $subproject) {
             $subprojects_response[] = [
                 'id' => $subproject->id,
                 'name' => $subproject->name,
@@ -202,7 +202,7 @@ final class SubProjectController extends AbstractProjectController
         $response['project'] = $project_response;
 
         // Look for the subproject
-        $subprojects = $this->project->GetSubProjects();
+        $subprojects = ProjectService::getSubProjects((int) $this->project->Id);
         $subprojProp = [];
         foreach ($subprojects as $subproject) {
             $subprojProp[$subproject->id] = ['name' => $subproject->name];
@@ -287,7 +287,7 @@ final class SubProjectController extends AbstractProjectController
 
         $date = isset($_GET['date']) ? Carbon::parse($_GET['date']) : null;
 
-        $subprojects = $this->project->GetSubProjects();
+        $subprojects = ProjectService::getSubProjects((int) $this->project->Id);
 
         $subproject_groups = [];
         $groups = ProjectService::getSubProjectGroups((int) $this->project->Id);
