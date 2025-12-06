@@ -6,7 +6,9 @@ namespace App\Services;
 
 use App\Models\BuildGroup;
 use App\Models\Project;
+use App\Models\SubProject;
 use App\Models\SubProjectGroup;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -166,5 +168,17 @@ class ProjectService extends AbstractService
             $subProjectGroups[] = $subProjectGroup;
         }
         return $subProjectGroups;
+    }
+
+    /**
+     * @return Collection<int, SubProject>
+     *
+     * @deprecated 12/06/2025  Use Eloquent relationships for all new code
+     */
+    public static function getSubProjects(int $projectid): Collection
+    {
+        return Project::findOrFail($projectid)
+            ->subprojects()
+            ->get();
     }
 }

@@ -387,22 +387,6 @@ class Project
         return (int) $this->CoverageThreshold;
     }
 
-    /**
-     * Get the subproject ids
-     *
-     * @return Collection<int, SubProject>
-     */
-    public function GetSubProjects(): Collection
-    {
-        if (!$this->Id) {
-            throw new RuntimeException('ID not set for project');
-        }
-
-        return EloquentProject::findOrFail((int) $this->Id)
-            ->subprojects()
-            ->get();
-    }
-
     /** Get the number of builds given per day */
     public function GetBuildsDailyAverage(string $startUTCdate, string $endUTCdate): int
     {
