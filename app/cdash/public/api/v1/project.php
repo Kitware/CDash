@@ -19,6 +19,7 @@ namespace CDash\Api\v1\Project;
 
 use App\Rules\ProjectAuthenticateSubmissions;
 use App\Rules\ProjectVisibilityAllowed;
+use App\Services\ProjectService;
 use App\Utils\RepositoryUtils;
 use CDash\Model\Project;
 use App\Models\Project as EloquentProject;
@@ -219,9 +220,9 @@ function create_project(&$response, $user): void
     $Project = new Project();
     $Project->Name = $Name;
     populate_project($Project);
-    $Project->InitialSetup();
 
     $eloquent_project = EloquentProject::findOrFail((int) $Project->Id);
+    ProjectService::initializeBuildGroups($eloquent_project);
 
     // Add the current user to this project.
     $eloquent_project->users()

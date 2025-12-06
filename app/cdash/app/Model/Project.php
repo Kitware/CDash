@@ -97,13 +97,6 @@ class Project
         $this->PDO = Database::getInstance();
     }
 
-    /** Add a build group */
-    protected function AddBuildGroup(BuildGroup $buildgroup): void
-    {
-        $buildgroup->SetProjectId($this->Id);
-        $buildgroup->Save();
-    }
-
     /** Delete a project */
     public function Delete(): bool
     {
@@ -758,53 +751,6 @@ class Project
             unset($response['UploadQuota']);
         }
         return $response;
-    }
-
-    /**
-     * Called once when the project is initially created.
-     */
-    public function InitialSetup(): bool
-    {
-        if (!$this->Id) {
-            throw new RuntimeException('ID not set for project');
-        }
-
-        // Add the default groups.
-        $BuildGroup = new BuildGroup();
-        $BuildGroup->SetName('Nightly');
-        $BuildGroup->SetDescription('Nightly builds');
-        $BuildGroup->SetSummaryEmail(0);
-        $this->AddBuildGroup($BuildGroup);
-
-        $BuildGroup = new BuildGroup();
-        $BuildGroup->SetName('Continuous');
-        $BuildGroup->SetDescription('Continuous builds');
-        $BuildGroup->SetSummaryEmail(0);
-        $this->AddBuildGroup($BuildGroup);
-
-        $BuildGroup = new BuildGroup();
-        $BuildGroup->SetName('Experimental');
-        $BuildGroup->SetDescription('Experimental builds');
-        // default to "No Email" for the Experimental group
-        $BuildGroup->SetSummaryEmail(2);
-        $this->AddBuildGroup($BuildGroup);
-
-        // Set up overview page to initially contain just the "Nightly" group.
-        $groups = $this->GetBuildGroups();
-        foreach ($groups as $group) {
-            if ($group->GetName() === 'Nightly') {
-                $buildgroupid = (int) $group->GetId();
-                DB::table('overview_components')->insert([
-                    'projectid' => $this->Id,
-                    'buildgroupid' => $buildgroupid,
-                    'position' => 1,
-                    'type' => 'build',
-                ]);
-                break;
-            }
-        }
-
-        return true;
     }
 
     public function AddBlockedBuild(string $buildname, string $sitename, string $ip): int
