@@ -387,37 +387,6 @@ class Project
         return (int) $this->CoverageThreshold;
     }
 
-    /** Get the number of builds given per day */
-    public function GetBuildsDailyAverage(string $startUTCdate, string $endUTCdate): int
-    {
-        if (!$this->Id) {
-            throw new RuntimeException('ID not set for project');
-        }
-
-        $project = DB::select('
-                       SELECT starttime
-                       FROM build
-                       WHERE
-                           projectid=?
-                           AND starttime>?
-                           AND starttime<=?
-                           AND parentid IN (-1, 0)
-                       ORDER BY starttime ASC
-                       LIMIT 1
-                   ', [(int) $this->Id, $startUTCdate, $endUTCdate]);
-        if ($project === []) {
-            return 0;
-        }
-        $first_build = $project[0]->starttime;
-        $nb_days = strtotime($endUTCdate) - strtotime($first_build);
-        $nb_days = intval($nb_days / 86400) + 1;
-        $nbuilds = EloquentProject::findOrFail((int) $this->Id)
-            ->builds()
-            ->betweenDates(Carbon::parse($startUTCdate), Carbon::parse($endUTCdate))
-            ->count();
-        return $nbuilds / $nb_days;
-    }
-
     /** Get the number of warning builds given a date range */
     public function GetNumberOfWarningBuilds(string $startUTCdate, string $endUTCdate): int
     {

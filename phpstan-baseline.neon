@@ -2635,6 +2635,18 @@ parameters:
 			path: app/Http/Controllers/UserController.php
 
 		-
+			rawMessage: 'Method App\Http\Controllers\UserController::GetBuildsDailyAverage() should return int but returns (float|int).'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/UserController.php
+
+		-
+			rawMessage: 'Method App\Http\Controllers\UserController::GetBuildsDailyAverage() throws checked exception DivisionByZeroError but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
+			count: 1
+			path: app/Http/Controllers/UserController.php
+
+		-
 			rawMessage: 'Method App\Http\Controllers\UserController::ReportLastBuild() has parameter $nightlytime with no type specified.'
 			identifier: missingType.parameter
 			count: 1
@@ -2665,9 +2677,15 @@ parameters:
 			path: app/Http/Controllers/UserController.php
 
 		-
+			rawMessage: 'Only numeric types are allowed in -, (int|false) given on the right side.'
+			identifier: minus.rightNonNumeric
+			count: 1
+			path: app/Http/Controllers/UserController.php
+
+		-
 			rawMessage: 'Only numeric types are allowed in -, int|false given on the left side.'
 			identifier: minus.leftNonNumeric
-			count: 2
+			count: 3
 			path: app/Http/Controllers/UserController.php
 
 		-
@@ -11476,18 +11494,6 @@ parameters:
 			path: app/cdash/app/Model/Project.php
 
 		-
-			rawMessage: 'Method CDash\Model\Project::GetBuildsDailyAverage() should return int but returns (float|int).'
-			identifier: return.type
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			rawMessage: 'Method CDash\Model\Project::GetBuildsDailyAverage() throws checked exception DivisionByZeroError but it''s missing from the PHPDoc @throws tag.'
-			identifier: missingType.checkedException
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
 			rawMessage: 'Method CDash\Model\Project::GetIdByName() has no return type specified.'
 			identifier: missingType.return
 			count: 1
@@ -11526,18 +11532,6 @@ parameters:
 		-
 			rawMessage: 'Only booleans are allowed in a negated boolean, CDash\Collection\SubscriberCollection given.'
 			identifier: booleanNot.exprNotBoolean
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			rawMessage: 'Only numeric types are allowed in -, (int|false) given on the right side.'
-			identifier: minus.rightNonNumeric
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			rawMessage: 'Only numeric types are allowed in -, int|false given on the left side.'
-			identifier: minus.leftNonNumeric
 			count: 1
 			path: app/cdash/app/Model/Project.php
 
