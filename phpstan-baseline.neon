@@ -1076,6 +1076,15 @@ parameters:
 
 		-
 			rawMessage: '''
+				Call to deprecated method getSubProjectGroups() of class App\Services\ProjectService:
+				12/06/2025  Use Eloquent relationships for all new code
+			'''
+			identifier: staticMethod.deprecated
+			count: 1
+			path: app/Http/Controllers/CoverageController.php
+
+		-
+			rawMessage: '''
 				Call to deprecated method prepare() of class CDash\Database:
 				04/22/2023  Use Laravel query builder or Eloquent instead
 			'''
@@ -1789,6 +1798,15 @@ parameters:
 			path: app/Http/Controllers/ProjectOverviewController.php
 
 		-
+			rawMessage: '''
+				Call to deprecated method getSubProjectGroups() of class App\Services\ProjectService:
+				12/06/2025  Use Eloquent relationships for all new code
+			'''
+			identifier: staticMethod.deprecated
+			count: 1
+			path: app/Http/Controllers/ProjectOverviewController.php
+
+		-
 			rawMessage: 'Call to function array_key_exists() with mixed and array{} will always evaluate to false.'
 			identifier: function.impossibleType
 			count: 2
@@ -2238,6 +2256,15 @@ parameters:
 		-
 			rawMessage: '''
 				Call to deprecated method getLastStartTimestamp() of class App\Services\ProjectService:
+				12/06/2025  Use Eloquent relationships for all new code
+			'''
+			identifier: staticMethod.deprecated
+			count: 2
+			path: app/Http/Controllers/SubProjectController.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method getSubProjectGroups() of class App\Services\ProjectService:
 				12/06/2025  Use Eloquent relationships for all new code
 			'''
 			identifier: staticMethod.deprecated
@@ -15463,6 +15490,15 @@ parameters:
 			'''
 			identifier: staticMethod.deprecated
 			count: 2
+			path: app/cdash/public/api/v1/index.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method getSubProjectGroups() of class App\Services\ProjectService:
+				12/06/2025  Use Eloquent relationships for all new code
+			'''
+			identifier: staticMethod.deprecated
+			count: 1
 			path: app/cdash/public/api/v1/index.php
 
 		-

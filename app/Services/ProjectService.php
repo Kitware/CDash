@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\Models\BuildGroup;
 use App\Models\Project;
+use App\Models\SubProjectGroup;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -140,5 +141,30 @@ class ProjectService extends AbstractService
         return Project::findOrFail($projectid)
             ->subprojects($date)
             ->count();
+    }
+
+    /**
+     * Return the list of subproject groups that belong to this project.
+     *
+     * @return array<\CDash\Model\SubProjectGroup>
+     *
+     * @deprecated 12/06/2025  Use Eloquent relationships for all new code
+     */
+    public static function getSubProjectGroups(int $projectid): array
+    {
+        $groups = Project::findOrFail($projectid)
+            ->subProjectGroups()
+            ->where('endtime', '1980-01-01 00:00:00')
+            ->get();
+
+        $subProjectGroups = [];
+        /** @var SubProjectGroup $group */
+        foreach ($groups as $group) {
+            $subProjectGroup = new \CDash\Model\SubProjectGroup();
+            // SetId automatically loads the rest of the group's data.
+            $subProjectGroup->SetId($group->id);
+            $subProjectGroups[] = $subProjectGroup;
+        }
+        return $subProjectGroups;
     }
 }

@@ -1367,7 +1367,7 @@ final class CoverageController extends AbstractBuildController
         // Are there any subproject groups?
         $subproject_groups = [];
         if (ProjectService::getNumberOfSubProjects((int) $this->project->Id, $end_UTCDate) > 0) {
-            $subproject_groups = $this->project->GetSubProjectGroups();
+            $subproject_groups = ProjectService::getSubProjectGroups((int) $this->project->Id);
         }
         foreach ($subproject_groups as $group) {
             // Keep track of coverage info on a per-group basis.
