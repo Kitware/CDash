@@ -19,7 +19,6 @@ namespace CDash\Model;
 
 use App\Models\Project as EloquentProject;
 use App\Models\SubProject;
-use App\Services\ProjectService;
 use App\Utils\DatabaseCleanupUtils;
 use CDash\Collection\SubscriberCollection;
 use CDash\Database;
@@ -418,28 +417,6 @@ class Project
         return EloquentProject::findOrFail((int) $this->Id)
             ->subprojects()
             ->get();
-    }
-
-    /** Get the last submission of the subproject*/
-    public function GetLastSubmission(): string|false
-    {
-        if (!config('cdash.show_last_submission')) {
-            return false;
-        }
-
-        if (!$this->Id) {
-            throw new RuntimeException('ID not set for project');
-        }
-
-        $starttime = EloquentProject::findOrFail((int) $this->Id)
-            ->builds()
-            ->max('starttime');
-
-        if ($starttime === null) {
-            return false;
-        }
-
-        return date(FMT_DATETIMESTD, strtotime($starttime . 'UTC'));
     }
 
     /** Get the number of builds given per day */
