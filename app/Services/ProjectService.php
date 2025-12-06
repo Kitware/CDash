@@ -125,4 +125,20 @@ class ProjectService extends AbstractService
 
         return date(FMT_DATETIMESTD, strtotime($starttime . 'UTC'));
     }
+
+    /**
+     * Get the number of subprojects, optionally as of the specified date
+     *
+     * @deprecated 12/06/2025  Use Eloquent relationships for all new code
+     */
+    public static function getNumberOfSubProjects(int $projectid, $date = null): int
+    {
+        if ($date !== null) {
+            $date = Carbon::parse($date);
+        }
+
+        return Project::findOrFail($projectid)
+            ->subprojects($date)
+            ->count();
+    }
 }

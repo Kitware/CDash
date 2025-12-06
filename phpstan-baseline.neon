@@ -1067,6 +1067,15 @@ parameters:
 
 		-
 			rawMessage: '''
+				Call to deprecated method getNumberOfSubProjects() of class App\Services\ProjectService:
+				12/06/2025  Use Eloquent relationships for all new code
+			'''
+			identifier: staticMethod.deprecated
+			count: 1
+			path: app/Http/Controllers/CoverageController.php
+
+		-
+			rawMessage: '''
 				Call to deprecated method prepare() of class CDash\Database:
 				04/22/2023  Use Laravel query builder or Eloquent instead
 			'''
@@ -1767,6 +1776,15 @@ parameters:
 		-
 			rawMessage: 'Binary operation "/" between (array|float|int) and int<min, -1>|int<1, max> results in an error.'
 			identifier: binaryOp.invalid
+			count: 1
+			path: app/Http/Controllers/ProjectOverviewController.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method getNumberOfSubProjects() of class App\Services\ProjectService:
+				12/06/2025  Use Eloquent relationships for all new code
+			'''
+			identifier: staticMethod.deprecated
 			count: 1
 			path: app/Http/Controllers/ProjectOverviewController.php
 
@@ -2926,6 +2944,15 @@ parameters:
 			path: app/Http/Submission/Handlers/BazelJSONHandler.php
 
 		-
+			rawMessage: '''
+				Call to deprecated method getNumberOfSubProjects() of class App\Services\ProjectService:
+				12/06/2025  Use Eloquent relationships for all new code
+			'''
+			identifier: staticMethod.deprecated
+			count: 1
+			path: app/Http/Submission/Handlers/BazelJSONHandler.php
+
+		-
 			rawMessage: Cannot access offset 'command' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -3676,6 +3703,15 @@ parameters:
 			path: app/Http/Submission/Handlers/ConfigureHandler.php
 
 		-
+			rawMessage: '''
+				Call to deprecated method getNumberOfSubProjects() of class App\Services\ProjectService:
+				12/06/2025  Use Eloquent relationships for all new code
+			'''
+			identifier: staticMethod.deprecated
+			count: 1
+			path: app/Http/Submission/Handlers/CoverageHandler.php
+
+		-
 			rawMessage: Class App\Http\Submission\Handlers\CoverageHandler has an uninitialized property $Coverage. Give it default value or assign it in the constructor.
 			identifier: property.uninitialized
 			count: 1
@@ -3864,6 +3900,15 @@ parameters:
 		-
 			rawMessage: 'Call to an undefined method object::Update().'
 			identifier: method.notFound
+			count: 1
+			path: app/Http/Submission/Handlers/CoverageLogHandler.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method getNumberOfSubProjects() of class App\Services\ProjectService:
+				12/06/2025  Use Eloquent relationships for all new code
+			'''
+			identifier: staticMethod.deprecated
 			count: 1
 			path: app/Http/Submission/Handlers/CoverageLogHandler.php
 
@@ -6136,6 +6181,12 @@ parameters:
 			path: app/Services/ProjectService.php
 
 		-
+			rawMessage: 'Method App\Services\ProjectService::getNumberOfSubProjects() has parameter $date with no type specified.'
+			identifier: missingType.parameter
+			count: 1
+			path: app/Services/ProjectService.php
+
+		-
 			rawMessage: 'Only booleans are allowed in a negated boolean, bool|string given.'
 			identifier: booleanNot.exprNotBoolean
 			count: 1
@@ -8310,6 +8361,15 @@ parameters:
 		-
 			rawMessage: Access to an undefined property CDash\Controller\Api\TestOverview::$pageTimer.
 			identifier: property.notFound
+			count: 1
+			path: app/cdash/app/Controller/Api/TestOverview.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method getNumberOfSubProjects() of class App\Services\ProjectService:
+				12/06/2025  Use Eloquent relationships for all new code
+			'''
+			identifier: staticMethod.deprecated
 			count: 1
 			path: app/cdash/app/Controller/Api/TestOverview.php
 
@@ -11376,12 +11436,6 @@ parameters:
 		-
 			rawMessage: 'Method CDash\Model\Project::GetIdByName() has no return type specified.'
 			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			rawMessage: 'Method CDash\Model\Project::GetNumberOfSubProjects() has parameter $date with no type specified.'
-			identifier: missingType.parameter
 			count: 1
 			path: app/cdash/app/Model/Project.php
 
@@ -15400,6 +15454,15 @@ parameters:
 			'''
 			identifier: function.deprecated
 			count: 3
+			path: app/cdash/public/api/v1/index.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method getNumberOfSubProjects() of class App\Services\ProjectService:
+				12/06/2025  Use Eloquent relationships for all new code
+			'''
+			identifier: staticMethod.deprecated
+			count: 2
 			path: app/cdash/public/api/v1/index.php
 
 		-

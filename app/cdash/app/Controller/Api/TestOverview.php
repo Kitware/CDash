@@ -17,6 +17,7 @@
 
 namespace CDash\Controller\Api;
 
+use App\Services\ProjectService;
 use CDash\Database;
 use CDash\Model\BuildGroup;
 use CDash\Model\Project;
@@ -30,7 +31,7 @@ class TestOverview extends ResultsApi
 
     public function getResponse(): array
     {
-        $has_subprojects = $this->project->GetNumberOfSubProjects() > 0;
+        $has_subprojects = ProjectService::getNumberOfSubProjects((int) $this->project->Id) > 0;
 
         // Begin our JSON response.
         $response = begin_JSON_response();
