@@ -74,6 +74,6 @@ class FilterBuildErrorsTestCase extends KWWebTestCase
 
         // Cleanup.
         DatabaseCleanupUtils::removeBuild($buildid);
-        $project->Delete();
+        App\Models\Project::findOrFail((int) $project->Id)->delete();
     }
 }

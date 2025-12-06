@@ -95,18 +95,6 @@ class Project
         $this->PDO = Database::getInstance();
     }
 
-    /** Delete a project */
-    public function Delete(): bool
-    {
-        if (!$this->Id || EloquentProject::find($this->Id) === null) {
-            return false;
-        }
-
-        EloquentProject::findOrFail((int) $this->Id)->delete();
-
-        return true;
-    }
-
     /** Return if a project exists */
     public function Exists(): bool
     {

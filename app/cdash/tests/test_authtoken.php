@@ -17,7 +17,7 @@ class AuthTokenTestCase extends KWWebTestCase
 
     private $Token;
     private $PostBuildId;
-    private $Project;
+    private ?Project $Project;
     private $Hash;
 
     public function __construct()
@@ -31,9 +31,9 @@ class AuthTokenTestCase extends KWWebTestCase
 
     public function __destruct()
     {
-        if ($this->Project) {
+        if ($this->Project !== null) {
             remove_project_builds($this->Project->Id);
-            $this->Project->Delete();
+            EloquentProject::findOrFail((int) $this->Project->Id)->delete();
         }
     }
 

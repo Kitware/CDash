@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class ConfigureAppendTestCase extends KWWebTestCase
 {
-    private $project;
+    private ?Project $project;
 
     public function __construct()
     {
@@ -20,9 +20,9 @@ class ConfigureAppendTestCase extends KWWebTestCase
     public function __destruct()
     {
         // Delete project & build created by this test.
-        if ($this->project) {
+        if ($this->project !== null) {
             remove_project_builds($this->project->Id);
-            $this->project->Delete();
+            App\Models\Project::findOrFail((int) $this->project->Id)->delete();
         }
     }
 

@@ -135,7 +135,7 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Cleanup.
         DatabaseCleanupUtils::removeBuild($buildid);
-        $project->Delete();
+        App\Models\Project::findOrFail((int) $project->Id)->delete();
     }
 
     public function testBazelSubProjs()
@@ -243,7 +243,7 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Cleanup.
         remove_project_builds($projectid);
-        $project->Delete();
+        App\Models\Project::findOrFail((int) $projectid)->delete();
     }
 
     public function testBazelTestFailed()

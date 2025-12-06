@@ -186,7 +186,7 @@ class TestHistoryTestCase extends KWWebTestCase
         $this->project = new Project();
         if ($this->project->FindByName('TestHistory')) {
             remove_project_builds($this->project->Id);
-            $this->project->Delete();
+            App\Models\Project::findOrFail((int) $this->project->Id)->delete();
         }
 
         // Create test project.
