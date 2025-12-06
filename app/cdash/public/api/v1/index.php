@@ -248,7 +248,7 @@ $build_data = array_merge($build_data, $controller->getDynamicBuilds());
 $coverage_groups = [];
 $groupId = -1;
 if (isset($_GET['parentid']) && (int) $_GET['parentid'] > 0 && ProjectService::getNumberOfSubProjects($Project->Id, $end_UTCDate) > 0) {
-    $groups = $Project->GetSubProjectGroups();
+    $groups = ProjectService::getSubProjectGroups($Project->Id);
     foreach ($groups as $group) {
         // Keep track of coverage info on a per-group basis.
         $groupId = $group->GetId();

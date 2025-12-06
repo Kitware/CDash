@@ -635,32 +635,6 @@ class Project
     }
 
     /**
-     * Return the list of subproject groups that belong to this project.
-     *
-     * @return array<SubProjectGroup>
-     */
-    public function GetSubProjectGroups(): array
-    {
-        if (!$this->Id) {
-            throw new RuntimeException('ID not set for project');
-        }
-
-        $groups = EloquentProject::findOrFail((int) $this->Id)
-            ->subProjectGroups()
-            ->where('endtime', '1980-01-01 00:00:00')
-            ->get();
-
-        $subProjectGroups = [];
-        foreach ($groups as $group) {
-            $subProjectGroup = new SubProjectGroup();
-            // SetId automatically loads the rest of the group's data.
-            $subProjectGroup->SetId($group->id);
-            $subProjectGroups[] = $subProjectGroup;
-        }
-        return $subProjectGroups;
-    }
-
-    /**
      * Return a JSON representation of this object.
      *
      * @return array<string,mixed>

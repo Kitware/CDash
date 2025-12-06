@@ -89,7 +89,7 @@ final class SubProjectController extends AbstractProjectController
         $response['subprojects'] = $subprojects_response;
 
         $groups = [];
-        foreach ($this->project->GetSubProjectGroups() as $subProjectGroup) {
+        foreach (ProjectService::getSubProjectGroups((int) $this->project->Id) as $subProjectGroup) {
             $group = [
                 'id' => $subProjectGroup->GetId(),
                 'name' => $subProjectGroup->GetName(),
@@ -290,7 +290,7 @@ final class SubProjectController extends AbstractProjectController
         $subprojects = $this->project->GetSubProjects();
 
         $subproject_groups = [];
-        $groups = $this->project->GetSubProjectGroups();
+        $groups = ProjectService::getSubProjectGroups((int) $this->project->Id);
         foreach ($groups as $group) {
             $subproject_groups[$group->GetId()] = $group;
         }
