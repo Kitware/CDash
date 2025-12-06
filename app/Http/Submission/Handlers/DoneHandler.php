@@ -17,14 +17,13 @@ namespace App\Http\Submission\Handlers;
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use App\Models\PendingSubmissions;
 use CDash\Model\Build;
-use CDash\Model\PendingSubmissions;
 use CDash\Model\Repository;
 
 class DoneHandler extends AbstractXmlHandler
 {
     private bool $FinalAttempt = false;
-    private PendingSubmissions $PendingSubmissions;
     private bool $Requeue = false;
     public string $backupFileName;
     protected static ?string $schema_file = '/app/Validators/Schemas/Done.xsd';
@@ -32,7 +31,6 @@ class DoneHandler extends AbstractXmlHandler
     public function __construct(Build $build)
     {
         parent::__construct($build);
-        $this->PendingSubmissions = new PendingSubmissions();
     }
 
     public function startElement($parser, $name, $attributes): void
@@ -49,9 +47,10 @@ class DoneHandler extends AbstractXmlHandler
     {
         parent::endElement($parser, $name);
         if ($name === 'DONE') {
+            $pendingSubmissionsModel = PendingSubmissions::firstWhere('buildid', (int) $this->Build->Id);
+
             // Check pending submissions and requeue this file if necessary.
-            $this->PendingSubmissions->Build = $this->Build;
-            if ($this->PendingSubmissions->GetNumFiles() > 1) {
+            if ($pendingSubmissionsModel !== null && $pendingSubmissionsModel->numfiles > 1) {
                 // There are still pending submissions.
                 if (!$this->FinalAttempt) {
                     // Requeue this Done.xml file so that we can attempt to parse
@@ -66,14 +65,12 @@ class DoneHandler extends AbstractXmlHandler
 
             // Should we re-run any checks that were previously marked
             // as pending?
-            if ($this->PendingSubmissions->Recheck) {
+            if ($pendingSubmissionsModel !== null && $pendingSubmissionsModel->recheck) {
                 $revision = \App\Models\Build::findOrFail((int) $this->Build->Id)->updates()->first()->revision ?? '';
                 Repository::createOrUpdateCheck($revision);
             }
 
-            if ($this->PendingSubmissions->Exists()) {
-                $this->PendingSubmissions->Delete();
-            }
+            $pendingSubmissionsModel?->delete();
 
             // Set the status of this build on our repository.
             Repository::setStatus($this->Build, true);

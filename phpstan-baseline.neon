@@ -4003,12 +4003,6 @@ parameters:
 			path: app/Http/Submission/Handlers/DoneHandler.php
 
 		-
-			rawMessage: 'Only booleans are allowed in an if condition, int given.'
-			identifier: if.condNotBoolean
-			count: 1
-			path: app/Http/Submission/Handlers/DoneHandler.php
-
-		-
 			rawMessage: Access to an undefined property App\Http\Submission\Handlers\DynamicAnalysisHandler::$BuildName.
 			identifier: property.notFound
 			count: 5
@@ -11216,24 +11210,6 @@ parameters:
 			identifier: missingType.property
 			count: 1
 			path: app/cdash/app/Model/Label.php
-
-		-
-			rawMessage: 'Method CDash\Model\PendingSubmissions::GetModelForBuildId() has parameter $buildid with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Model/PendingSubmissions.php
-
-		-
-			rawMessage: 'Method CDash\Model\PendingSubmissions::IncrementForBuildId() has parameter $buildid with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Model/PendingSubmissions.php
-
-		-
-			rawMessage: 'Method CDash\Model\PendingSubmissions::RecheckForBuildId() has parameter $buildid with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Model/PendingSubmissions.php
 
 		-
 			rawMessage: 'Access to an undefined property App\Models\Project|Illuminate\Database\Eloquent\Collection<int, App\Models\Project>::$id.'

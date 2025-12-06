@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property int $buildid
  * @property int $numfiles
- * @property int $recheck // TODO: convert to a boolean
+ * @property bool $recheck // TODO: convert to a boolean
  *
  * @mixin Builder<PendingSubmissions>
  */
@@ -31,6 +31,6 @@ class PendingSubmissions extends Model
     protected $casts = [
         'buildid' => 'integer',
         'numfiles' => 'integer',
-        'recheck' => 'integer',
+        'recheck' => 'boolean',
     ];
 }

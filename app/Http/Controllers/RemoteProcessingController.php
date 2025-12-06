@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Submission\Handlers\RetryHandler;
 use App\Jobs\ProcessSubmission;
-use CDash\Model\PendingSubmissions;
+use App\Models\PendingSubmissions;
 use Exception;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\Response;
@@ -111,7 +111,7 @@ final class RemoteProcessingController extends AbstractController
         Storage::move("inprogress/{$filename}", "inbox/{$filename}");
 
         // Requeue the file with exponential backoff.
-        PendingSubmissions::IncrementForBuildId($buildid);
+        PendingSubmissions::where('buildid', $buildid)->increment('numfiles');
         $delay = ((int) config('cdash.retry_base')) ** $retry_handler->Retries;
         ProcessSubmission::dispatch($filename, $projectid, $buildid, $md5)->delay(now()->addSeconds($delay));
         return response('OK', Response::HTTP_OK);
