@@ -14,12 +14,14 @@ class FilterRules implements Rule
      */
     public function passes(LdapRecord $user, ?Eloquent $model = null): bool
     {
-        $filter = env('LDAP_FILTERS_ON', false);
+        $filter = config('cdash.ldap_filters_on');
 
         // No filter provided
-        if ($filter === false) {
+        if ($filter === null) {
             return true;
         }
+
+        $filter = (string) $filter;
 
         if (!($model instanceof User)) {
             return false;
@@ -29,7 +31,7 @@ class FilterRules implements Rule
             return false;
         }
 
-        return match (env('LDAP_PROVIDER', 'openldap')) {
+        return match (config()->string('cdash.ldap_provider')) {
             'openldap' => \LdapRecord\Models\OpenLDAP\User::rawFilter($filter)->findByGuid($model->ldapguid) instanceof \LdapRecord\Models\OpenLDAP\User,
             'activedirectory' => \LdapRecord\Models\ActiveDirectory\User::rawFilter($filter)->findByGuid($model->ldapguid) instanceof \LdapRecord\Models\ActiveDirectory\User,
             'freeipa' => \LdapRecord\Models\FreeIPA\User::rawFilter($filter)->findByGuid($model->ldapguid) instanceof \LdapRecord\Models\FreeIPA\User,

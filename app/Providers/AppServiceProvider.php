@@ -2,14 +2,6 @@
 
 namespace App\Providers;
 
-define('FMT_TIME', 'H:i:s');  // time
-define('FMT_DATE', 'Y-m-d');  // date
-define('FMT_DATETIMESTD', 'Y-m-d H:i:s');  // date and time standard
-define('FMT_DATETIME', 'Y-m-d\TH:i:s');  // date and time
-define('FMT_DATETIMETZ', 'Y-m-d\TH:i:s T');  // date and time with time zone
-define('FMT_DATETIMEMS', 'Y-m-d\TH:i:s.u');  // date and time with milliseconds
-define('FMT_DATETIMEDISPLAY', 'M d, Y - H:i T');  // date and time standard
-
 use App\Database\Query\Grammars\PostgresGrammar;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
@@ -17,9 +9,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
-
-require_once 'include/common.php';
-require_once 'include/filterdataFunctions.php';
 
 class AppServiceProvider extends ServiceProvider
 {

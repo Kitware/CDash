@@ -91,4 +91,7 @@ return [
     // Whether or not "normal" username+password authentication is enabled
     'username_password_authentication_enabled' => env('USERNAME_PASSWORD_AUTHENTICATION_ENABLED', true),
     'ldap_enabled' => env('CDASH_AUTHENTICATION_PROVIDER') === 'ldap',
+    'ldap_filters_on' => env('LDAP_FILTERS_ON'),
+    'ldap_provider' => env('LDAP_PROVIDER', 'openldap'),
+    'ldap_locate_users_by' => env('LDAP_LOCATE_USERS_BY', 'mail'),
 ];

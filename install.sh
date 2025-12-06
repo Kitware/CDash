@@ -73,9 +73,14 @@ until php artisan db:monitor ; do sleep 1; done
 echo "Running migrations..."
 php artisan migrate --force
 
-echo "Clearing caches..."
+echo "Refreshing caches..."
 php artisan view:cache
 php artisan lighthouse:cache
+if $DEVELOPMENT; then
+  echo "Skipping config cache in development mode..."
+else
+  php artisan config:cache
+fi
 
 if $INITIAL_DOCKER_INSTALL; then
   echo "Skipping website build..."

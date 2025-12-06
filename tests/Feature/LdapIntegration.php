@@ -207,6 +207,8 @@ class LdapIntegration extends TestCase
 
         // Restrict login to members of group 1 only
         putenv('LDAP_FILTERS_ON=(uid=*group_1*)');
+        $this->refreshApplication();
+
         $this->post('/login', [
             'email' => $user_group_1->getAttribute('uid')[0],
             'password' => $user_group_1->getAttribute('userpassword')[0],
@@ -230,6 +232,7 @@ class LdapIntegration extends TestCase
 
         // Restrict login to both groups
         putenv('LDAP_FILTERS_ON=(|(uid=*group_1*)(uid=*group_2*))');
+        $this->refreshApplication();
 
         $this->post('/login', [
             'email' => $user_group_1->getAttribute('uid')[0],
@@ -255,6 +258,7 @@ class LdapIntegration extends TestCase
 
         // "Delete" the env variable
         putenv('LDAP_FILTERS_ON');
+        $this->refreshApplication();
     }
 
     public function testArtisanSyncsProjectMembership(): void

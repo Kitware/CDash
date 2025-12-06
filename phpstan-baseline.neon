@@ -415,12 +415,6 @@ parameters:
 			path: app/Http/Controllers/Auth/LoginController.php
 
 		-
-			rawMessage: 'Called ''env'' outside of the config directory which returns null when the config is cached, use ''config''.'
-			identifier: larastan.noEnvCallsOutsideOfConfig
-			count: 1
-			path: app/Http/Controllers/Auth/LoginController.php
-
-		-
 			rawMessage: 'Method App\Http\Controllers\Auth\LoginController::redirectTo() should return string but returns mixed.'
 			identifier: return.type
 			count: 1
@@ -5992,18 +5986,6 @@ parameters:
 			path: app/Jobs/PruneJobs.php
 
 		-
-			rawMessage: 'Called ''env'' outside of the config directory which returns null when the config is cached, use ''config''.'
-			identifier: larastan.noEnvCallsOutsideOfConfig
-			count: 2
-			path: app/Ldap/Rules/FilterRules.php
-
-		-
-			rawMessage: 'Parameter #1 $filters of static method LdapRecord\Query\Builder::rawFilter() expects array|string, string|true given.'
-			identifier: argument.type
-			count: 3
-			path: app/Ldap/Rules/FilterRules.php
-
-		-
 			rawMessage: 'Only booleans are allowed in an if condition, bool|string given.'
 			identifier: if.condNotBoolean
 			count: 1
@@ -6161,12 +6143,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: app/Utils/DatabaseCleanupUtils.php
-
-		-
-			rawMessage: 'Called ''env'' outside of the config directory which returns null when the config is cached, use ''config''.'
-			identifier: larastan.noEnvCallsOutsideOfConfig
-			count: 2
-			path: app/Utils/LdapUtils.php
 
 		-
 			rawMessage: Property App\Utils\NoteCreator::$buildid has no type specified.
