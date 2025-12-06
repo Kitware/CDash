@@ -18,7 +18,6 @@
 namespace CDash\Model;
 
 use App\Models\Project as EloquentProject;
-use App\Models\SubProject;
 use App\Utils\DatabaseCleanupUtils;
 use CDash\Collection\SubscriberCollection;
 use CDash\Database;
@@ -31,7 +30,6 @@ use DateTime;
 use DateTimeZone;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -298,8 +296,6 @@ class Project
 
     /**
      * Add a logo
-     *
-     * TODO: (williamjallen) This function is only ever used in the tests.  Remove it?
      */
     public function AddLogo($contents, string $filetype)
     {
@@ -621,25 +617,6 @@ class Project
             unset($response['UploadQuota']);
         }
         return $response;
-    }
-
-    public function AddBlockedBuild(string $buildname, string $sitename, string $ip): int
-    {
-        return EloquentProject::findOrFail((int) $this->Id)
-            ->blockedbuilds()
-            ->create([
-                'buildname' => $buildname,
-                'sitename' => $sitename,
-                'ipaddress' => $ip,
-            ])->id;
-    }
-
-    public function RemoveBlockedBuild(int $id): void
-    {
-        EloquentProject::findOrFail((int) $this->Id)
-            ->blockedbuilds()
-            ->findOrFail($id)
-            ->delete();
     }
 
     /** Delete old builds if this project has too many. */

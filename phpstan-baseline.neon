@@ -16018,12 +16018,6 @@ parameters:
 			path: app/cdash/public/api/v1/project.php
 
 		-
-			rawMessage: 'Parameter #1 $buildname of method CDash\Model\Project::AddBlockedBuild() expects string, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
 			rawMessage: 'Parameter #1 $filename of function fopen expects string, mixed given.'
 			identifier: argument.type
 			count: 1
@@ -16055,18 +16049,6 @@ parameters:
 
 		-
 			rawMessage: 'Parameter #2 $length of function fread expects int<1, max>, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: 'Parameter #2 $sitename of method CDash\Model\Project::AddBlockedBuild() expects string, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: 'Parameter #3 $ip of method CDash\Model\Project::AddBlockedBuild() expects string, mixed given.'
 			identifier: argument.type
 			count: 1
 			path: app/cdash/public/api/v1/project.php
