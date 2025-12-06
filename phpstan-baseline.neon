@@ -2218,6 +2218,15 @@ parameters:
 			path: app/Http/Controllers/SubProjectController.php
 
 		-
+			rawMessage: '''
+				Call to deprecated method getLastStartTimestamp() of class App\Services\ProjectService:
+				12/06/2025  Use Eloquent relationships for all new code
+			'''
+			identifier: staticMethod.deprecated
+			count: 2
+			path: app/Http/Controllers/SubProjectController.php
+
+		-
 			rawMessage: Cannot access offset 'nbuilderrors' on array|false.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -6119,6 +6128,24 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: app/Rules/ProjectVisibilityRule.php
+
+		-
+			rawMessage: Binary operation "." between mixed and 'UTC' results in an error.
+			identifier: binaryOp.invalid
+			count: 1
+			path: app/Services/ProjectService.php
+
+		-
+			rawMessage: 'Only booleans are allowed in a negated boolean, bool|string given.'
+			identifier: booleanNot.exprNotBoolean
+			count: 1
+			path: app/Services/ProjectService.php
+
+		-
+			rawMessage: 'Parameter #2 $timestamp of function date expects int|null, int|false given.'
+			identifier: argument.type
+			count: 1
+			path: app/Services/ProjectService.php
 
 		-
 			rawMessage: Cannot cast mixed to int.
@@ -11236,12 +11263,6 @@ parameters:
 			path: app/cdash/app/Model/Project.php
 
 		-
-			rawMessage: Binary operation "." between mixed and 'UTC' results in an error.
-			identifier: binaryOp.invalid
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
 			rawMessage: 'Call to an undefined method App\Models\Project|Illuminate\Database\Eloquent\Collection<int, App\Models\Project>::fill().'
 			identifier: method.notFound
 			count: 1
@@ -11401,12 +11422,6 @@ parameters:
 			path: app/cdash/app/Model/Project.php
 
 		-
-			rawMessage: 'Only booleans are allowed in a negated boolean, bool|string given.'
-			identifier: booleanNot.exprNotBoolean
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
 			rawMessage: 'Only numeric types are allowed in -, (int|false) given on the right side.'
 			identifier: minus.rightNonNumeric
 			count: 1
@@ -11415,12 +11430,6 @@ parameters:
 		-
 			rawMessage: 'Only numeric types are allowed in -, int|false given on the left side.'
 			identifier: minus.leftNonNumeric
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			rawMessage: 'Parameter #2 $timestamp of function date expects int|null, int|false given.'
-			identifier: argument.type
 			count: 1
 			path: app/cdash/app/Model/Project.php
 
@@ -15567,7 +15576,7 @@ parameters:
 		-
 			rawMessage: '''
 				Call to deprecated method getBuildGroups() of class App\Services\ProjectService:
-				12/06/2025  Use Eloquent relationships for all new code.
+				12/06/2025  Use Eloquent relationships for all new code
 			'''
 			identifier: staticMethod.deprecated
 			count: 1

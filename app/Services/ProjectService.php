@@ -84,7 +84,7 @@ class ProjectService extends AbstractService
     }
 
     /**
-     * @deprecated 12/06/2025  Use Eloquent relationships for all new code.
+     * @deprecated 12/06/2025  Use Eloquent relationships for all new code
      *
      * @return \CDash\Model\BuildGroup[]
      */
@@ -104,5 +104,25 @@ class ProjectService extends AbstractService
             $buildgroups[] = $buildgroup;
         }
         return $buildgroups;
+    }
+
+    /**
+     * @deprecated 12/06/2025  Use Eloquent relationships for all new code
+     */
+    public static function getLastStartTimestamp(int $projectid): string|false
+    {
+        if (!config('cdash.show_last_submission')) {
+            return false;
+        }
+
+        $starttime = Project::findOrFail($projectid)
+            ->builds()
+            ->max('starttime');
+
+        if ($starttime === null) {
+            return false;
+        }
+
+        return date(FMT_DATETIMESTD, strtotime($starttime . 'UTC'));
     }
 }
