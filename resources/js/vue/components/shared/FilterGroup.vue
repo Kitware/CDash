@@ -156,6 +156,7 @@ export default {
     },
 
     currentCombineType() {
+      // eslint-disable-next-line no-prototype-builtins
       return this.filters.hasOwnProperty('any') ? 'any' : 'all';
     },
 

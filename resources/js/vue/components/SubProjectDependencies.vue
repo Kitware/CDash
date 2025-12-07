@@ -75,8 +75,11 @@
 </template>
 
 <script>
+import $ from 'jquery';
 import ApiLoader from './shared/ApiLoader';
 import DependencyEdgeBundling from './shared/DependencyEdgeBundling.js';
+import d3 from 'd3';
+
 export default {
   name: 'SubProjectDependencies',
 
@@ -146,7 +149,7 @@ export default {
           .style('opacity', '.9');
       }
 
-      function mouseOuted(d) {
+      function mouseOuted() {
         $('#header1').text('');
         vm.nameHeader = false;
         vm.dependentsList = false;

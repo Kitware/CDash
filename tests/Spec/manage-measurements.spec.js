@@ -1,7 +1,6 @@
-import {mount, config, createLocalVue} from '@vue/test-utils';
+import {mount, config} from '@vue/test-utils';
 import axios from 'axios';
 import AxiosMockAdapter from 'axios-mock-adapter';
-import bootstrap from 'bootstrap';
 import expect from 'expect';
 import ManageMeasurements from '../../resources/js/vue/components/ManageMeasurements.vue';
 

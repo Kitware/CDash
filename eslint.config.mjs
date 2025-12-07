@@ -16,6 +16,7 @@ export default defineConfig([
     'public/assets/*',
     'public/vendor/*',
     'resources/js/angular/*',
+    '**/__mocks__/**',
   ]),
 
   {
@@ -23,7 +24,6 @@ export default defineConfig([
     languageOptions: {
       globals: {
         ...globals.browser,
-        ...globals.jquery,
       },
     },
     rules: {

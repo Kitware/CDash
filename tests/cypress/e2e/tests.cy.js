@@ -100,7 +100,7 @@ describe('the test page', () => {
 
     cy.get('#queryTestsTable').find('tbody').find('tr').eq(2).find('td').eq(3).click();
 
-    cy.on('uncaught:exception', (err, runnable) => {
+    cy.on('uncaught:exception', (err) => {
       // FIXME: we catch this because rendering the graphs throws a console
       //   error and it's not worth fixing before we convert to d3
       if (err.message.includes('e.mousewheel is not a function')) {

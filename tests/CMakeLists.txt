@@ -34,14 +34,6 @@ set_tests_properties(php_static_analysis PROPERTIES
 
 # Run the JS linter
 add_test(
-  NAME eslint_ignore_list
-  COMMAND
-    awk
-    "BEGIN{rc=0}{if(system(\"ls \"\$1\" >/dev/null 2>&1\")){print\"cannot ignore missing file: \"\$1;rc=1}}END{exit rc}"
-    ${CMAKE_SOURCE_DIR}/.eslintignore
-  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-)
-add_test(
   NAME eslint
   COMMAND npm run eslint
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
