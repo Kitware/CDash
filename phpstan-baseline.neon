@@ -12007,24 +12007,6 @@ parameters:
 			path: app/cdash/app/Service/RepositoryService.php
 
 		-
-			rawMessage: 'Function cdash_autoload() has parameter $className with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/bootstrap/cdash_autoload.php
-
-		-
-			rawMessage: 'Parameter #1 $filename of function file_exists expects string, string|false given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/bootstrap/cdash_autoload.php
-
-		-
-			rawMessage: 'Part $filenames (array<string>|string|null) of encapsed string cannot be cast to string.'
-			identifier: encapsedStringPart.nonString
-			count: 1
-			path: app/cdash/bootstrap/cdash_autoload.php
-
-		-
 			rawMessage: 'Cannot call method fetchAll() on PDOStatement|false.'
 			identifier: method.nonObject
 			count: 1

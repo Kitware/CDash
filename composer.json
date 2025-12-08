@@ -85,6 +85,14 @@
       "App\\": "app/",
       "Database\\Factories\\": "database/factories/",
       "Database\\Seeders\\": "database/seeders/",
+      "CDash\\Model\\": "app/cdash/app/Model/",
+      "CDash\\Service\\": "app/cdash/app/Service/",
+      "CDash\\Lib\\": "app/cdash/app/Lib/",
+      "CDash\\Controller\\": "app/cdash/app/Controller/",
+      "CDash\\Test\\": "app/cdash/include/Test/",
+      "CDash\\Submission\\": "app/cdash/include/Submission/",
+      "CDash\\Messaging\\": "app/cdash/include/Messaging/",
+      "CDash\\Collection\\": "app/cdash/include/Collection/",
       "CDash\\": "app/cdash/include/CDash/"
     },
     "files": [
