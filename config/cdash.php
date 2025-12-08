@@ -3,15 +3,6 @@
 use App\Enums\SubmissionValidationType;
 use Illuminate\Support\Str;
 
-$cdash_directory_name = env('CDASH_DIRECTORY', 'cdash');
-$cdash = realpath(app_path($cdash_directory_name));
-
-// read in all of our cdash config files
-if ($cdash) {
-    set_include_path(base_path('/app/cdash'));
-    include_once 'bootstrap/cdash_autoload.php';
-}
-
 $unlimited_projects = json_decode(env('UNLIMITED_PROJECTS', ''), true);
 if (!is_array($unlimited_projects)) {
     $unlimited_projects = [];
@@ -91,4 +82,7 @@ return [
     // Whether or not "normal" username+password authentication is enabled
     'username_password_authentication_enabled' => env('USERNAME_PASSWORD_AUTHENTICATION_ENABLED', true),
     'ldap_enabled' => env('CDASH_AUTHENTICATION_PROVIDER') === 'ldap',
+    'ldap_filters_on' => env('LDAP_FILTERS_ON'),
+    'ldap_provider' => env('LDAP_PROVIDER', 'openldap'),
+    'ldap_locate_users_by' => env('LDAP_LOCATE_USERS_BY', 'mail'),
 ];

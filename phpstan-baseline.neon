@@ -415,12 +415,6 @@ parameters:
 			path: app/Http/Controllers/Auth/LoginController.php
 
 		-
-			rawMessage: 'Called ''env'' outside of the config directory which returns null when the config is cached, use ''config''.'
-			identifier: larastan.noEnvCallsOutsideOfConfig
-			count: 1
-			path: app/Http/Controllers/Auth/LoginController.php
-
-		-
 			rawMessage: 'Method App\Http\Controllers\Auth\LoginController::redirectTo() should return string but returns mixed.'
 			identifier: return.type
 			count: 1
@@ -5986,18 +5980,6 @@ parameters:
 			path: app/Jobs/PruneJobs.php
 
 		-
-			rawMessage: 'Called ''env'' outside of the config directory which returns null when the config is cached, use ''config''.'
-			identifier: larastan.noEnvCallsOutsideOfConfig
-			count: 2
-			path: app/Ldap/Rules/FilterRules.php
-
-		-
-			rawMessage: 'Parameter #1 $filters of static method LdapRecord\Query\Builder::rawFilter() expects array|string, string|true given.'
-			identifier: argument.type
-			count: 3
-			path: app/Ldap/Rules/FilterRules.php
-
-		-
 			rawMessage: 'Only booleans are allowed in an if condition, bool|string given.'
 			identifier: if.condNotBoolean
 			count: 1
@@ -6155,12 +6137,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: app/Utils/DatabaseCleanupUtils.php
-
-		-
-			rawMessage: 'Called ''env'' outside of the config directory which returns null when the config is cached, use ''config''.'
-			identifier: larastan.noEnvCallsOutsideOfConfig
-			count: 2
-			path: app/Utils/LdapUtils.php
 
 		-
 			rawMessage: Property App\Utils\NoteCreator::$buildid has no type specified.
@@ -12007,24 +11983,6 @@ parameters:
 			path: app/cdash/app/Service/RepositoryService.php
 
 		-
-			rawMessage: 'Function cdash_autoload() has parameter $className with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/bootstrap/cdash_autoload.php
-
-		-
-			rawMessage: 'Parameter #1 $filename of function file_exists expects string, string|false given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/bootstrap/cdash_autoload.php
-
-		-
-			rawMessage: 'Part $filenames (array<string>|string|null) of encapsed string cannot be cast to string.'
-			identifier: encapsedStringPart.nonString
-			count: 1
-			path: app/cdash/bootstrap/cdash_autoload.php
-
-		-
 			rawMessage: 'Cannot call method fetchAll() on PDOStatement|false.'
 			identifier: method.nonObject
 			count: 1
@@ -17689,6 +17647,18 @@ parameters:
 			path: app/cdash/tests/case/PHPUnitTestTest.php
 
 		-
+			rawMessage: 'Path in require_once() "tests/kwtest/kw_db.php" is not a file or it does not exist.'
+			identifier: requireOnce.fileNotFound
+			count: 1
+			path: app/cdash/tests/cdash_test_case.php
+
+		-
+			rawMessage: 'Path in require_once() "tests/kwtest/kw_web_tester.php" is not a file or it does not exist.'
+			identifier: requireOnce.fileNotFound
+			count: 1
+			path: app/cdash/tests/cdash_test_case.php
+
+		-
 			rawMessage: Access to constant FLAT_FILE on an unknown class CDash\Middleware\Queue\DriverFactory.
 			identifier: class.notFound
 			count: 1
@@ -18688,6 +18658,12 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
+			rawMessage: 'Path in require_once() "tests/kwtest/simpletest/web_tester.php" is not a file or it does not exist.'
+			identifier: requireOnce.fileNotFound
+			count: 1
+			path: app/cdash/tests/kwtest/kw_web_tester.php
+
+		-
 			rawMessage: Property CDashControllerBrowser::$files has no type specified.
 			identifier: missingType.property
 			count: 1
@@ -18770,6 +18746,18 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: app/cdash/tests/singletest.php
+
+		-
+			rawMessage: 'Path in require_once() "tests/kwtest/kw_test_manager.php" is not a file or it does not exist.'
+			identifier: requireOnce.fileNotFound
+			count: 1
+			path: app/cdash/tests/singletest.php
+
+		-
+			rawMessage: 'Path in require_once() "tests/test_branchcoverage.php" is not a file or it does not exist.'
+			identifier: requireOnce.fileNotFound
+			count: 1
+			path: app/cdash/tests/test_actualbranchcoverage.php
 
 		-
 			rawMessage: Property ActualBranchCoverageTestCase::$projectname has no type specified.
@@ -18856,6 +18844,12 @@ parameters:
 			rawMessage: 'Parameter #1 $value of function count expects array|Countable, mixed given.'
 			identifier: argument.type
 			count: 2
+			path: app/cdash/tests/test_actualtrilinossubmission.php
+
+		-
+			rawMessage: 'Path in require_once() "tests/trilinos_submission_test.php" is not a file or it does not exist.'
+			identifier: requireOnce.fileNotFound
+			count: 1
 			path: app/cdash/tests/test_actualtrilinossubmission.php
 
 		-
@@ -21310,6 +21304,12 @@ parameters:
 			rawMessage: 'Only booleans are allowed in an if condition, object|null given.'
 			identifier: if.condNotBoolean
 			count: 2
+			path: app/cdash/tests/test_deferredsubmissions.php
+
+		-
+			rawMessage: 'Path in require_once() "tests/test_branchcoverage.php" is not a file or it does not exist.'
+			identifier: requireOnce.fileNotFound
+			count: 1
 			path: app/cdash/tests/test_deferredsubmissions.php
 
 		-
@@ -24625,6 +24625,12 @@ parameters:
 			path: app/cdash/tests/test_parallelsubmissions.php
 
 		-
+			rawMessage: 'Path in require_once() "tests/trilinos_submission_test.php" is not a file or it does not exist.'
+			identifier: requireOnce.fileNotFound
+			count: 1
+			path: app/cdash/tests/test_parallelsubmissions.php
+
+		-
 			rawMessage: Property ParallelSubmissionsTestCase::$ConfigFile has no type specified.
 			identifier: missingType.property
 			count: 1
@@ -24807,6 +24813,12 @@ parameters:
 		-
 			rawMessage: 'Method ProjectXmlSequenceTestCase::submitFile() has parameter $filename with no type specified.'
 			identifier: missingType.parameter
+			count: 1
+			path: app/cdash/tests/test_projectxmlsequence.php
+
+		-
+			rawMessage: 'Path in require_once() "tests/kwtest/kw_unlink.php" is not a file or it does not exist.'
+			identifier: requireOnce.fileNotFound
 			count: 1
 			path: app/cdash/tests/test_projectxmlsequence.php
 
@@ -26653,6 +26665,12 @@ parameters:
 			path: app/cdash/tests/test_uniquediffs.php
 
 		-
+			rawMessage: 'Path in require_once() "tests/test_branchcoverage.php" is not a file or it does not exist.'
+			identifier: requireOnce.fileNotFound
+			count: 1
+			path: app/cdash/tests/test_unparsedsubmissionshonorbuildid.php
+
+		-
 			rawMessage: Property UnparsedSubmissionsHonorBuildIdTestCase::$projectname has no type specified.
 			identifier: missingType.property
 			count: 1
@@ -27133,19 +27151,7 @@ parameters:
 			path: config/cache.php
 
 		-
-			rawMessage: 'Only booleans are allowed in an if condition, string|false given.'
-			identifier: if.condNotBoolean
-			count: 1
-			path: config/cdash.php
-
-		-
 			rawMessage: 'Parameter #1 $json of function json_decode expects string, bool|string given.'
-			identifier: argument.type
-			count: 1
-			path: config/cdash.php
-
-		-
-			rawMessage: 'Parameter #1 $path of function app_path expects string, bool|string given.'
 			identifier: argument.type
 			count: 1
 			path: config/cdash.php
