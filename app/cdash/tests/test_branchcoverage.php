@@ -6,10 +6,9 @@
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
+use App\Models\PendingSubmissions;
 use App\Utils\DatabaseCleanupUtils;
 use CDash\Database;
-use CDash\Model\Build;
-use CDash\Model\PendingSubmissions;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -148,10 +147,9 @@ class BranchCoverageTestCase extends KWWebTestCase
         }
 
         // Verify that this pending submission was recorded for this build.
-        $pending = new PendingSubmissions();
-        $build = new Build();
-        $build->Id = $this->buildid;
-        $pending->Build = $build;
-        $this->assertEqual($pending->GetNumFiles(), 0);
+        $this->assertEqual(
+            PendingSubmissions::where('buildid', $this->buildid)->first()?->numfiles,
+            false
+        );
     }
 }
