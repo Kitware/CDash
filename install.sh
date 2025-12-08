@@ -77,7 +77,8 @@ echo "Refreshing caches..."
 php artisan view:cache
 php artisan lighthouse:cache
 if $DEVELOPMENT; then
-  echo "Skipping config cache in development mode..."
+  # Wipe the cache in case we're coming from a non-dev install
+  php artisan config:clear
 else
   php artisan config:cache
 fi
