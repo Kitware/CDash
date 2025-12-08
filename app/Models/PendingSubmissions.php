@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property int $buildid
  * @property int $numfiles
- * @property bool $recheck // TODO: convert to a boolean
+ * @property bool $recheck
  *
  * @mixin Builder<PendingSubmissions>
  */
