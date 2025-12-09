@@ -34,5 +34,9 @@ class ProjectServiceTest extends TestCase
 
         self::assertTrue($project->exists());
         self::assertSame(3, $project->buildgroups()->count());
+        self::assertEquals(
+            ['Nightly', 'Continuous', 'Experimental'],
+            $project->buildgroups()->pluck('name')->toArray(),
+        );
     }
 }

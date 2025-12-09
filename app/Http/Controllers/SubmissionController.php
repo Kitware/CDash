@@ -7,6 +7,7 @@ use App\Exceptions\BadSubmissionException;
 use App\Jobs\ProcessSubmission;
 use App\Models\PendingSubmissions;
 use App\Models\Site;
+use App\Rules\ProjectNameRule;
 use App\Utils\AuthTokenUtil;
 use App\Utils\SubmissionUtils;
 use App\Utils\UnparsedSubmissionProcessor;
@@ -21,6 +22,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use League\Flysystem\UnableToMoveFile;
 use League\Flysystem\UnableToReadFile;
@@ -88,7 +90,13 @@ final class SubmissionController extends AbstractProjectController
             $this->failProcessing(null, Response::HTTP_BAD_REQUEST, 'No project name provided.');
         }
 
-        if (!Project::validateProjectName($projectname)) {
+        $validator = Validator::make([
+            'name' => $projectname,
+        ], [
+            'name' => new ProjectNameRule(),
+        ]);
+
+        if ($validator->fails()) {
             Log::info("Rejected submission with invalid project name: $projectname");
             $this->failProcessing(null, Response::HTTP_BAD_REQUEST, "Invalid project name: $projectname");
         }

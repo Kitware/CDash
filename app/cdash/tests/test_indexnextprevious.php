@@ -21,7 +21,7 @@ class IndexNextPreviousTestCase extends KWWebTestCase
         $project->Id = get_project_id($projectname);
         if ($project->Id >= 0) {
             remove_project_builds($project->Id);
-            $project->Delete();
+            App\Models\Project::findOrFail($project->Id)->delete();
         }
 
         // Make a separate project for this test.

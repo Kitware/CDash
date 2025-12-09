@@ -991,6 +991,15 @@ parameters:
 			path: app/Http/Controllers/CDash.php
 
 		-
+			rawMessage: '''
+				Call to deprecated method getSubProjects() of class App\Services\ProjectService:
+				12/06/2025  Use Eloquent relationships for all new code
+			'''
+			identifier: staticMethod.deprecated
+			count: 1
+			path: app/Http/Controllers/CTestConfigurationController.php
+
+		-
 			rawMessage: Access to an undefined property Illuminate\Database\Eloquent\Relations\Pivot::$role.
 			identifier: property.notFound
 			count: 1
@@ -1057,6 +1066,24 @@ parameters:
 			'''
 			identifier: method.deprecated
 			count: 9
+			path: app/Http/Controllers/CoverageController.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method getNumberOfSubProjects() of class App\Services\ProjectService:
+				12/06/2025  Use Eloquent relationships for all new code
+			'''
+			identifier: staticMethod.deprecated
+			count: 1
+			path: app/Http/Controllers/CoverageController.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method getSubProjectGroups() of class App\Services\ProjectService:
+				12/06/2025  Use Eloquent relationships for all new code
+			'''
+			identifier: staticMethod.deprecated
+			count: 1
 			path: app/Http/Controllers/CoverageController.php
 
 		-
@@ -1765,6 +1792,24 @@ parameters:
 			path: app/Http/Controllers/ProjectOverviewController.php
 
 		-
+			rawMessage: '''
+				Call to deprecated method getNumberOfSubProjects() of class App\Services\ProjectService:
+				12/06/2025  Use Eloquent relationships for all new code
+			'''
+			identifier: staticMethod.deprecated
+			count: 1
+			path: app/Http/Controllers/ProjectOverviewController.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method getSubProjectGroups() of class App\Services\ProjectService:
+				12/06/2025  Use Eloquent relationships for all new code
+			'''
+			identifier: staticMethod.deprecated
+			count: 1
+			path: app/Http/Controllers/ProjectOverviewController.php
+
+		-
 			rawMessage: 'Call to function array_key_exists() with mixed and array{} will always evaluate to false.'
 			identifier: function.impossibleType
 			count: 2
@@ -2212,6 +2257,33 @@ parameters:
 			path: app/Http/Controllers/SubProjectController.php
 
 		-
+			rawMessage: '''
+				Call to deprecated method getLastStartTimestamp() of class App\Services\ProjectService:
+				12/06/2025  Use Eloquent relationships for all new code
+			'''
+			identifier: staticMethod.deprecated
+			count: 2
+			path: app/Http/Controllers/SubProjectController.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method getSubProjectGroups() of class App\Services\ProjectService:
+				12/06/2025  Use Eloquent relationships for all new code
+			'''
+			identifier: staticMethod.deprecated
+			count: 2
+			path: app/Http/Controllers/SubProjectController.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method getSubProjects() of class App\Services\ProjectService:
+				12/06/2025  Use Eloquent relationships for all new code
+			'''
+			identifier: staticMethod.deprecated
+			count: 3
+			path: app/Http/Controllers/SubProjectController.php
+
+		-
 			rawMessage: Cannot access offset 'nbuilderrors' on array|false.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -2557,6 +2629,18 @@ parameters:
 			path: app/Http/Controllers/UserController.php
 
 		-
+			rawMessage: 'Method App\Http\Controllers\UserController::GetBuildsDailyAverage() should return int but returns (float|int).'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/UserController.php
+
+		-
+			rawMessage: 'Method App\Http\Controllers\UserController::GetBuildsDailyAverage() throws checked exception DivisionByZeroError but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
+			count: 1
+			path: app/Http/Controllers/UserController.php
+
+		-
 			rawMessage: 'Method App\Http\Controllers\UserController::ReportLastBuild() has parameter $nightlytime with no type specified.'
 			identifier: missingType.parameter
 			count: 1
@@ -2587,9 +2671,15 @@ parameters:
 			path: app/Http/Controllers/UserController.php
 
 		-
+			rawMessage: 'Only numeric types are allowed in -, (int|false) given on the right side.'
+			identifier: minus.rightNonNumeric
+			count: 1
+			path: app/Http/Controllers/UserController.php
+
+		-
 			rawMessage: 'Only numeric types are allowed in -, int|false given on the left side.'
 			identifier: minus.leftNonNumeric
-			count: 2
+			count: 3
 			path: app/Http/Controllers/UserController.php
 
 		-
@@ -2907,6 +2997,15 @@ parameters:
 		-
 			rawMessage: 'Call to an undefined method App\Models\Project|Illuminate\Database\Eloquent\Collection<int, App\Models\Project>::subprojects().'
 			identifier: method.notFound
+			count: 1
+			path: app/Http/Submission/Handlers/BazelJSONHandler.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method getNumberOfSubProjects() of class App\Services\ProjectService:
+				12/06/2025  Use Eloquent relationships for all new code
+			'''
+			identifier: staticMethod.deprecated
 			count: 1
 			path: app/Http/Submission/Handlers/BazelJSONHandler.php
 
@@ -3661,6 +3760,15 @@ parameters:
 			path: app/Http/Submission/Handlers/ConfigureHandler.php
 
 		-
+			rawMessage: '''
+				Call to deprecated method getNumberOfSubProjects() of class App\Services\ProjectService:
+				12/06/2025  Use Eloquent relationships for all new code
+			'''
+			identifier: staticMethod.deprecated
+			count: 1
+			path: app/Http/Submission/Handlers/CoverageHandler.php
+
+		-
 			rawMessage: Class App\Http\Submission\Handlers\CoverageHandler has an uninitialized property $Coverage. Give it default value or assign it in the constructor.
 			identifier: property.uninitialized
 			count: 1
@@ -3849,6 +3957,15 @@ parameters:
 		-
 			rawMessage: 'Call to an undefined method object::Update().'
 			identifier: method.notFound
+			count: 1
+			path: app/Http/Submission/Handlers/CoverageLogHandler.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method getNumberOfSubProjects() of class App\Services\ProjectService:
+				12/06/2025  Use Eloquent relationships for all new code
+			'''
+			identifier: staticMethod.deprecated
 			count: 1
 			path: app/Http/Submission/Handlers/CoverageLogHandler.php
 
@@ -4895,6 +5012,15 @@ parameters:
 			identifier: missingType.property
 			count: 1
 			path: app/Http/Submission/Handlers/OpenCoverTarHandler.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method getSubProjects() of class App\Services\ProjectService:
+				12/06/2025  Use Eloquent relationships for all new code
+			'''
+			identifier: staticMethod.deprecated
+			count: 1
+			path: app/Http/Submission/Handlers/ProjectHandler.php
 
 		-
 			rawMessage: Class App\Http\Submission\Handlers\ProjectHandler has an uninitialized property $CurrentDependencies. Give it default value or assign it in the constructor.
@@ -6079,16 +6205,46 @@ parameters:
 			path: app/Providers/RouteServiceProvider.php
 
 		-
+			rawMessage: Cannot cast mixed to string.
+			identifier: cast.string
+			count: 1
+			path: app/Rules/ProjectNameRule.php
+
+		-
 			rawMessage: Cannot cast mixed to int.
 			identifier: cast.int
 			count: 1
-			path: app/Rules/ProjectVisibilityAllowed.php
+			path: app/Rules/ProjectVisibilityRule.php
 
 		-
 			rawMessage: 'Parameter #1 $value of static method Illuminate\Support\Str::upper() expects string, bool|string given.'
 			identifier: argument.type
 			count: 1
-			path: app/Rules/ProjectVisibilityAllowed.php
+			path: app/Rules/ProjectVisibilityRule.php
+
+		-
+			rawMessage: Binary operation "." between mixed and 'UTC' results in an error.
+			identifier: binaryOp.invalid
+			count: 1
+			path: app/Services/ProjectService.php
+
+		-
+			rawMessage: 'Method App\Services\ProjectService::getNumberOfSubProjects() has parameter $date with no type specified.'
+			identifier: missingType.parameter
+			count: 1
+			path: app/Services/ProjectService.php
+
+		-
+			rawMessage: 'Only booleans are allowed in a negated boolean, bool|string given.'
+			identifier: booleanNot.exprNotBoolean
+			count: 1
+			path: app/Services/ProjectService.php
+
+		-
+			rawMessage: 'Parameter #2 $timestamp of function date expects int|null, int|false given.'
+			identifier: argument.type
+			count: 1
+			path: app/Services/ProjectService.php
 
 		-
 			rawMessage: Cannot cast mixed to int.
@@ -7158,7 +7314,7 @@ parameters:
 		-
 			rawMessage: Cannot access offset 'projectname' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
+			count: 2
 			path: app/Utils/UnparsedSubmissionProcessor.php
 
 		-
@@ -7236,18 +7392,6 @@ parameters:
 		-
 			rawMessage: 'Parameter #1 $json of function json_decode expects string, string|null given.'
 			identifier: argument.type
-			count: 1
-			path: app/Utils/UnparsedSubmissionProcessor.php
-
-		-
-			rawMessage: 'Parameter #1 $projectname of static method CDash\Model\Project::validateProjectName() expects string, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: app/Utils/UnparsedSubmissionProcessor.php
-
-		-
-			rawMessage: 'Part $build_metadata[''projectname''] (mixed) of encapsed string cannot be cast to string.'
-			identifier: encapsedStringPart.nonString
 			count: 1
 			path: app/Utils/UnparsedSubmissionProcessor.php
 
@@ -8259,6 +8403,15 @@ parameters:
 		-
 			rawMessage: Access to an undefined property CDash\Controller\Api\TestOverview::$pageTimer.
 			identifier: property.notFound
+			count: 1
+			path: app/cdash/app/Controller/Api/TestOverview.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method getNumberOfSubProjects() of class App\Services\ProjectService:
+				12/06/2025  Use Eloquent relationships for all new code
+			'''
+			identifier: staticMethod.deprecated
 			count: 1
 			path: app/cdash/app/Controller/Api/TestOverview.php
 
@@ -11194,12 +11347,6 @@ parameters:
 			path: app/cdash/app/Model/Project.php
 
 		-
-			rawMessage: Binary operation "." between mixed and 'UTC' results in an error.
-			identifier: binaryOp.invalid
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
 			rawMessage: 'Call to an undefined method App\Models\Project|Illuminate\Database\Eloquent\Collection<int, App\Models\Project>::fill().'
 			identifier: method.notFound
 			count: 1
@@ -11299,32 +11446,8 @@ parameters:
 			path: app/cdash/app/Model/Project.php
 
 		-
-			rawMessage: 'Method CDash\Model\Project::GetBuildGroups() return type has no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			rawMessage: 'Method CDash\Model\Project::GetBuildsDailyAverage() should return int but returns (float|int).'
-			identifier: return.type
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			rawMessage: 'Method CDash\Model\Project::GetBuildsDailyAverage() throws checked exception DivisionByZeroError but it''s missing from the PHPDoc @throws tag.'
-			identifier: missingType.checkedException
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
 			rawMessage: 'Method CDash\Model\Project::GetIdByName() has no return type specified.'
 			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			rawMessage: 'Method CDash\Model\Project::GetNumberOfSubProjects() has parameter $date with no type specified.'
-			identifier: missingType.parameter
 			count: 1
 			path: app/cdash/app/Model/Project.php
 
@@ -11361,30 +11484,6 @@ parameters:
 		-
 			rawMessage: 'Only booleans are allowed in a negated boolean, CDash\Collection\SubscriberCollection given.'
 			identifier: booleanNot.exprNotBoolean
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			rawMessage: 'Only booleans are allowed in a negated boolean, bool|string given.'
-			identifier: booleanNot.exprNotBoolean
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			rawMessage: 'Only numeric types are allowed in -, (int|false) given on the right side.'
-			identifier: minus.rightNonNumeric
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			rawMessage: 'Only numeric types are allowed in -, int|false given on the left side.'
-			identifier: minus.leftNonNumeric
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			rawMessage: 'Parameter #2 $timestamp of function date expects int|null, int|false given.'
-			identifier: argument.type
 			count: 1
 			path: app/cdash/app/Model/Project.php
 
@@ -15340,6 +15439,24 @@ parameters:
 			path: app/cdash/public/api/v1/index.php
 
 		-
+			rawMessage: '''
+				Call to deprecated method getNumberOfSubProjects() of class App\Services\ProjectService:
+				12/06/2025  Use Eloquent relationships for all new code
+			'''
+			identifier: staticMethod.deprecated
+			count: 2
+			path: app/cdash/public/api/v1/index.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method getSubProjectGroups() of class App\Services\ProjectService:
+				12/06/2025  Use Eloquent relationships for all new code
+			'''
+			identifier: staticMethod.deprecated
+			count: 1
+			path: app/cdash/public/api/v1/index.php
+
+		-
 			rawMessage: Cannot access offset 'nbuilderrors' on array|false.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -15512,6 +15629,15 @@ parameters:
 
 		-
 			rawMessage: '''
+				Call to deprecated method getBuildGroups() of class App\Services\ProjectService:
+				12/06/2025  Use Eloquent relationships for all new code
+			'''
+			identifier: staticMethod.deprecated
+			count: 1
+			path: app/cdash/public/api/v1/manageBuildGroup.php
+
+		-
+			rawMessage: '''
 				Call to deprecated method prepare() of class CDash\Database:
 				04/22/2023  Use Laravel query builder or Eloquent instead
 			'''
@@ -15624,7 +15750,7 @@ parameters:
 		-
 			rawMessage: Cannot access offset 'Name' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
+			count: 2
 			path: app/cdash/public/api/v1/project.php
 
 		-
@@ -15826,12 +15952,6 @@ parameters:
 			path: app/cdash/public/api/v1/project.php
 
 		-
-			rawMessage: 'Parameter #1 $buildname of method CDash\Model\Project::AddBlockedBuild() expects string, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
 			rawMessage: 'Parameter #1 $filename of function fopen expects string, mixed given.'
 			identifier: argument.type
 			count: 1
@@ -15850,12 +15970,6 @@ parameters:
 			path: app/cdash/public/api/v1/project.php
 
 		-
-			rawMessage: 'Parameter #1 $projectname of static method CDash\Model\Project::validateProjectName() expects string, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
 			rawMessage: 'Parameter #1 $string of function htmlspecialchars expects string, string|false given.'
 			identifier: argument.type
 			count: 1
@@ -15869,18 +15983,6 @@ parameters:
 
 		-
 			rawMessage: 'Parameter #2 $length of function fread expects int<1, max>, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: 'Parameter #2 $sitename of method CDash\Model\Project::AddBlockedBuild() expects string, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: 'Parameter #3 $ip of method CDash\Model\Project::AddBlockedBuild() expects string, mixed given.'
 			identifier: argument.type
 			count: 1
 			path: app/cdash/public/api/v1/project.php
@@ -19258,12 +19360,6 @@ parameters:
 			path: app/cdash/tests/test_attachedfiles.php
 
 		-
-			rawMessage: Property AttachedFilesTestCase::$project has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/test_attachedfiles.php
-
-		-
 			rawMessage: Access to an undefined property App\Models\AuthToken::$Hash.
 			identifier: property.notFound
 			count: 1
@@ -19290,6 +19386,12 @@ parameters:
 		-
 			rawMessage: Cannot access offset 'title' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/cdash/tests/test_authtoken.php
+
+		-
+			rawMessage: Cannot access property $Id on CDash\Model\Project|null.
+			identifier: property.nonObject
 			count: 1
 			path: app/cdash/tests/test_authtoken.php
 
@@ -19421,12 +19523,6 @@ parameters:
 
 		-
 			rawMessage: Property AuthTokenTestCase::$PostBuildId has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/test_authtoken.php
-
-		-
-			rawMessage: Property AuthTokenTestCase::$Project has no type specified.
 			identifier: missingType.property
 			count: 1
 			path: app/cdash/tests/test_authtoken.php
@@ -20689,12 +20785,6 @@ parameters:
 			path: app/cdash/tests/test_configureappend.php
 
 		-
-			rawMessage: Property ConfigureAppendTestCase::$project has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/test_configureappend.php
-
-		-
 			rawMessage: '''
 				Call to deprecated method execute() of class CDash\Database:
 				04/22/2023  Use Laravel query builder or Eloquent instead
@@ -20824,12 +20914,6 @@ parameters:
 			rawMessage: 'Parameter #1 $value of function count expects array|Countable, mixed given.'
 			identifier: argument.type
 			count: 7
-			path: app/cdash/tests/test_consistenttestingday.php
-
-		-
-			rawMessage: Property ConsistentTestingDayTestCase::$project has no type specified.
-			identifier: missingType.property
-			count: 1
 			path: app/cdash/tests/test_consistenttestingday.php
 
 		-
@@ -21544,23 +21628,11 @@ parameters:
 			path: app/cdash/tests/test_dynamicanalysisdefectlongtype.php
 
 		-
-			rawMessage: Property DynamicAnalysisDefectLongTypeTestCase::$project has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/test_dynamicanalysisdefectlongtype.php
-
-		-
 			rawMessage: '''
 				Call to deprecated method submission() of class KWWebTestCase:
 				12/09/2024  Use \Test\Traits\CreatesSubmissions instead
 			'''
 			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/test_dynamicanalysislogs.php
-
-		-
-			rawMessage: Property DynamicAnalysisLogsTestCase::$project has no type specified.
-			identifier: missingType.property
 			count: 1
 			path: app/cdash/tests/test_dynamicanalysislogs.php
 
@@ -22948,12 +23020,6 @@ parameters:
 			path: app/cdash/tests/test_junithandler.php
 
 		-
-			rawMessage: Property JUnitHandlerTestCase::$Project has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/test_junithandler.php
-
-		-
 			rawMessage: '''
 				Call to deprecated method prepare() of class CDash\Database:
 				04/22/2023  Use Laravel query builder or Eloquent instead
@@ -23008,14 +23074,14 @@ parameters:
 			path: app/cdash/tests/test_longbuildname.php
 
 		-
-			rawMessage: Cannot access property $log on App\Models\Configure|null.
+			rawMessage: Cannot access property $Id on CDash\Model\Project|null.
 			identifier: property.nonObject
 			count: 1
 			path: app/cdash/tests/test_longbuildname.php
 
 		-
-			rawMessage: Property LongBuildNameTestCase::$project has no type specified.
-			identifier: missingType.property
+			rawMessage: Cannot access property $log on App\Models\Configure|null.
+			identifier: property.nonObject
 			count: 1
 			path: app/cdash/tests/test_longbuildname.php
 
@@ -23038,12 +23104,6 @@ parameters:
 			rawMessage: 'Parameter #2 $data of function fwrite expects string, string|false given.'
 			identifier: argument.type
 			count: 2
-			path: app/cdash/tests/test_lotsofsubprojects.php
-
-		-
-			rawMessage: Property LotsOfSubProjectsTestCase::$project has no type specified.
-			identifier: missingType.property
-			count: 1
 			path: app/cdash/tests/test_lotsofsubprojects.php
 
 		-
@@ -23575,6 +23635,12 @@ parameters:
 			path: app/cdash/tests/test_multiplelabelsfortests.php
 
 		-
+			rawMessage: Cannot access property $Id on CDash\Model\Project|null.
+			identifier: property.nonObject
+			count: 1
+			path: app/cdash/tests/test_multiplelabelsfortests.php
+
+		-
 			rawMessage: Cannot access property $id on App\Models\Test|null.
 			identifier: property.nonObject
 			count: 1
@@ -23589,12 +23655,6 @@ parameters:
 		-
 			rawMessage: 'Parameter #1 $value of function count expects array|Countable, mixed given.'
 			identifier: argument.type
-			count: 1
-			path: app/cdash/tests/test_multiplelabelsfortests.php
-
-		-
-			rawMessage: Property MultipleLabelsForTestsTestCase::$project has no type specified.
-			identifier: missingType.property
 			count: 1
 			path: app/cdash/tests/test_multiplelabelsfortests.php
 
@@ -24220,12 +24280,6 @@ parameters:
 			path: app/cdash/tests/test_namedmeasurements.php
 
 		-
-			rawMessage: Property NamedMeasurementsTestCase::$project has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/test_namedmeasurements.php
-
-		-
 			rawMessage: Access to an undefined property NoBackupTestCase::$Original.
 			identifier: property.notFound
 			count: 2
@@ -24397,12 +24451,6 @@ parameters:
 			'''
 			identifier: method.deprecated
 			count: 3
-			path: app/cdash/tests/test_notesparsererrormessages.php
-
-		-
-			rawMessage: Property NotesParserErrorMessagesTestCase::$project has no type specified.
-			identifier: missingType.property
-			count: 1
 			path: app/cdash/tests/test_notesparsererrormessages.php
 
 		-
@@ -25033,12 +25081,6 @@ parameters:
 			path: app/cdash/tests/test_querytestsfilterlabels.php
 
 		-
-			rawMessage: Property QueryTestsFilterLabelsTestCase::$project has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/test_querytestsfilterlabels.php
-
-		-
 			rawMessage: Cannot access offset 'builds' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 3
@@ -25110,12 +25152,6 @@ parameters:
 		-
 			rawMessage: 'Parameter #1 $value of function count expects array|Countable, mixed given.'
 			identifier: argument.type
-			count: 1
-			path: app/cdash/tests/test_redundanttests.php
-
-		-
-			rawMessage: Property RedundantTestsTestCase::$project has no type specified.
-			identifier: missingType.property
 			count: 1
 			path: app/cdash/tests/test_redundanttests.php
 
@@ -25314,12 +25350,6 @@ parameters:
 				12/09/2024  Use \Test\Traits\CreatesSubmissions instead
 			'''
 			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/test_starttimefromnotes.php
-
-		-
-			rawMessage: Property StartTimeFromNotesTestCase::$project has no type specified.
-			identifier: missingType.property
 			count: 1
 			path: app/cdash/tests/test_starttimefromnotes.php
 
@@ -25641,12 +25671,6 @@ parameters:
 		-
 			rawMessage: 'Parameter #1 $stmt of method CDash\Database::execute() expects PDOStatement, PDOStatement|false given.'
 			identifier: argument.type
-			count: 1
-			path: app/cdash/tests/test_subprojectorder.php
-
-		-
-			rawMessage: Property SubProjectOrderTestCase::$project has no type specified.
-			identifier: missingType.property
 			count: 1
 			path: app/cdash/tests/test_subprojectorder.php
 
@@ -26089,12 +26113,6 @@ parameters:
 			rawMessage: 'Loose comparison via "!=" is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 2
-			path: app/cdash/tests/test_testimages.php
-
-		-
-			rawMessage: Property TestImagesTestCase::$project has no type specified.
-			identifier: missingType.property
-			count: 1
 			path: app/cdash/tests/test_testimages.php
 
 		-

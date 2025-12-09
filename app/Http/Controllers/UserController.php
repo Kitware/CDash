@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
@@ -76,7 +77,7 @@ final class UserController extends AbstractController
             $project_response['name'] = $Project->Name;
             $project_response['name_encoded'] = urlencode($Project->Name);
             $project_response['nbuilds'] = $project_row->builds()->count();
-            $project_response['average_builds'] = round($Project->GetBuildsDailyAverage(gmdate(FMT_DATETIME, time() - (3600 * 24 * 7)), gmdate(FMT_DATETIME)), 2);
+            $project_response['average_builds'] = round(self::GetBuildsDailyAverage((int) $Project->Id, gmdate(FMT_DATETIME, time() - (3600 * 24 * 7)), gmdate(FMT_DATETIME)), 2);
             $project_response['success'] = $Project->GetNumberOfPassingBuilds($start, gmdate(FMT_DATETIME));
             $project_response['error'] = $Project->GetNumberOfErrorBuilds($start, gmdate(FMT_DATETIME));
             $project_response['warning'] = $Project->GetNumberOfWarningBuilds($start, gmdate(FMT_DATETIME));
@@ -204,6 +205,33 @@ final class UserController extends AbstractController
 
         $pageTimer->end($response);
         return response()->json(cast_data_for_JSON($response));
+    }
+
+    /** Get the number of builds given per day */
+    private static function GetBuildsDailyAverage(int $projectid, string $startUTCdate, string $endUTCdate): int
+    {
+        $project = DB::select('
+                       SELECT starttime
+                       FROM build
+                       WHERE
+                           projectid=?
+                           AND starttime>?
+                           AND starttime<=?
+                           AND parentid IN (-1, 0)
+                       ORDER BY starttime ASC
+                       LIMIT 1
+                   ', [$projectid, $startUTCdate, $endUTCdate]);
+        if ($project === []) {
+            return 0;
+        }
+        $first_build = $project[0]->starttime;
+        $nb_days = strtotime($endUTCdate) - strtotime($first_build);
+        $nb_days = intval($nb_days / 86400) + 1;
+        $nbuilds = \App\Models\Project::findOrFail($projectid)
+            ->builds()
+            ->betweenDates(Carbon::parse($startUTCdate), Carbon::parse($endUTCdate))
+            ->count();
+        return $nbuilds / $nb_days;
     }
 
     /** Report statistics about the last build */

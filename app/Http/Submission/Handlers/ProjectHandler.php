@@ -17,6 +17,7 @@ namespace App\Http\Submission\Handlers;
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use App\Services\ProjectService;
 use CDash\Model\Label;
 use CDash\Model\Project;
 use CDash\Model\SubProject;
@@ -139,7 +140,7 @@ class ProjectHandler extends AbstractXmlHandler
 
             if (config('cdash.delete_old_subprojects')) {
                 // Delete old subprojects that weren't included in this file.
-                $previousSubProjectIds = $this->GetProject()->GetSubProjects()->pluck('id')->toArray();
+                $previousSubProjectIds = ProjectService::getSubProjects((int) $this->GetProject()->Id)->pluck('id')->toArray();
                 foreach ($previousSubProjectIds as $previousId) {
                     $found = false;
                     foreach ($this->SubProjects as $subproject) {
