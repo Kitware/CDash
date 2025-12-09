@@ -531,6 +531,19 @@
       <br>
       <br>
 
+      <!-- Notes section -->
+      <div class="title-divider">
+        Notes
+      </div>
+      <a
+        class="tw-link tw-link-hover"
+        :href="$baseURL + '/builds/' + cdash.build.id + '/notes'"
+      >
+        View Notes
+      </a>
+      <br>
+      <br>
+
       <!-- Instrumentation section -->
       <div class="title-divider">
         Instrumentation
