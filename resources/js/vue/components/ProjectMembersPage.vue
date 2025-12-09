@@ -583,6 +583,7 @@ export default {
           this.inviteMembersModalError = mutationResult.data.inviteToProject.message;
         }
         else {
+          // eslint-disable-next-line no-undef
           invite_members_modal.close();
           this.inviteMembersModalEmail = '';
           this.inviteMembersModalRole = this.USER_TYPES.USER;

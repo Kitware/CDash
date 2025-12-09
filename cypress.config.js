@@ -12,7 +12,7 @@ module.exports = defineConfig({
   defaultCommandTimeout: 120000,
   retries: 2,
   e2e: {
-    setupNodeEvents(on, config) {
+    setupNodeEvents() {
       // implement node event listeners here
     },
     baseUrl: 'http://localhost:8080',

@@ -42,7 +42,6 @@
 
 import DataTable from './shared/DataTable.vue';
 import gql from 'graphql-tag';
-import FilterBuilder from './shared/FilterBuilder.vue';
 import LoadingIndicator from './shared/LoadingIndicator.vue';
 
 export default {

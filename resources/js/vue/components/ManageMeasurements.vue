@@ -155,8 +155,10 @@
 </template>
 
 <script>
+import $ from 'jquery';
 import ApiLoader from './shared/ApiLoader';
 import draggable from 'vuedraggable';
+
 export default {
   name: 'ManageMeasurements',
 
@@ -247,7 +249,7 @@ export default {
 
       this.$axios
         .delete('/api/v1/manageMeasurements.php', { data: parameters})
-        .then(response => {
+        .then(() => {
           // Find the measurement to remove.
           for (let i = 0, len = this.cdash.measurements.length; i < len; i++) {
             if (this.cdash.measurements[i].id === this.measurementToDelete) {

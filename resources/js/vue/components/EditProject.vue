@@ -2109,7 +2109,9 @@
 </template>
 
 <script>
+import $ from 'jquery';
 import ApiLoader from './shared/ApiLoader';
+
 export default {
   name: 'EditProject',
   props: {
@@ -2172,7 +2174,7 @@ export default {
   },
 
   methods: {
-    postSetup: function (response) {
+    postSetup: function () {
       this.cdash.changesmade = false;
 
       let disableTabs = false;
@@ -2372,7 +2374,7 @@ export default {
         const parameters = { project: this.cdash.project };
         this.$axios
           .delete('/api/v1/project.php', { data: parameters})
-          .then(response => {
+          .then(() => {
             // Redirect to /user
             window.location = `${this.$baseURL}/user`;
           });
@@ -2434,6 +2436,8 @@ export default {
       this.$axios
         .post('/api/v1/project.php', parameters)
         .then(response => {
+          // TODO: Is this a bug?
+          // eslint-disable-next-line no-unused-vars
           const cdash = response.data;
           // Find and remove this build.
           let index = -1;
@@ -2457,6 +2461,7 @@ export default {
       if (!this.cdash.project.BugTrackerType) {
         return;
       }
+      // eslint-disable-next-line no-unsafe-negation
       if (!this.cdash.project.BugTrackerType in this.bugtrackerexamples) {
         this.newissuehelp = '';
       }

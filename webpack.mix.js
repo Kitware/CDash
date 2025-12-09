@@ -11,7 +11,7 @@ mix.sourceMaps(true, 'source-map');
 mix.version();
 
 // Write out version file for angular.js
-fs = require('fs');
+const fs = require('fs');
 const dir = 'public/assets/js/angular';
 if (!fs.existsSync(dir)) {
   fs.mkdirSync(dir, { recursive: true });

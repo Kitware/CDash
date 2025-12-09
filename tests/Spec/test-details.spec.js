@@ -11,13 +11,7 @@ import $ from 'jquery';
 $.plot = function() {
   return null;
 };
-$.fn.je_compare = function() {
-  return null;
-};
 global.$ = $;
-
-import AnsiUp from 'ansi_up';
-global.AnsiUp = AnsiUp;
 
 let axiosMockAdapter;
 let apiResponse;
@@ -48,7 +42,7 @@ beforeEach(() => {
       details: 'Completed (OTHER_FAULT)',
       environment: 'foo=bar',
       labels: 'label1, label2, label3',
-      output: '\u001b[32mHello world!\n\u001b[91m<script type="text\/javascript">console.log("MALICIOUS JAVASCRIPT!!!");<\/script>\n\u001b[0mGood bye world!\n',
+      output: '\u001b[32mHello world!\n\u001b[91m<script type="text/javascript">console.log("MALICIOUS JAVASCRIPT!!!");</script>\n\u001b[0mGood bye world!\n',
       summaryLink: 'queryTests.php?project=TimeStatus&filtercount=1&showfilters=1&field1=testname&compare1=61&value1=nap&date=2018-01-25',
       status: 'Failed',
       statusColor: 'error-text',

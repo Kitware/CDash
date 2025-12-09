@@ -10,6 +10,9 @@ module.exports = {
     '^.+\\.vue$': '@vue/vue3-jest',
   },
   transformIgnorePatterns: [
-    '/node_modules/(?!echarts|zrender)/',
+    '/node_modules/(?!echarts|zrender|jquery)/',
   ],
+  moduleNameMapper: {
+    'flot': '<rootDir>/tests/__mocks__/fileMock.js',
+  },
 };

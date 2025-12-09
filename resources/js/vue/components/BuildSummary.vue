@@ -1017,6 +1017,7 @@
 </template>
 
 <script>
+import $ from 'jquery';
 import ApiLoader from './shared/ApiLoader';
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 import {
@@ -1072,12 +1073,15 @@ export default {
   },
 
   mounted () {
+    // Ensure jQuery is globally available before loading plugins
+    window.jQuery = $;
+
     const endpoint_path = `/api/v1/buildSummary.php?buildid=${this.buildId}`;
     ApiLoader.loadPageData(this, endpoint_path);
   },
 
   methods: {
-    postSetup: function (response) {
+    postSetup: function () {
       this.cdash.noteStatus = '0';
     },
 
@@ -1189,6 +1193,8 @@ export default {
       }
 
       // Render the graph.
+      // eslint-disable-next-line no-undef
+      require('flot/dist/es5/jquery.flot');
       const plot = $.plot($(element), [{label: label, data: data}],
         options);
 
@@ -1212,7 +1218,7 @@ export default {
         }
       });
 
-      $(element).bind('dblclick', (event) => {
+      $(element).bind('dblclick', () => {
         // Set axis range to null.  This makes all data points visible.
         const axes = plot.getAxes(),
           xaxis = axes.xaxis.options,

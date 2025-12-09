@@ -44,7 +44,6 @@
             <link rel="stylesheet" type="text/css" href="{{ asset(mix('assets/css/vue_common.css')) }}"/>
             <link rel="stylesheet" type="text/css" href="{{ asset(mix('assets/css/bootstrap.min.css')) }}"/>
         @endif
-        <script src="{{ asset(mix('assets/js/3rdparty.min.js')) }}" type="text/javascript" defer></script>
         <script src="{{ asset(mix('assets/js/app.js')) }}" type="text/javascript" defer></script>
     @else
         <link rel="stylesheet" type="text/css" href="{{ asset(mix('assets/css/legacy_3rdparty.css')) }}"/>

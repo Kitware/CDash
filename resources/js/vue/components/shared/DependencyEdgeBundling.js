@@ -1,3 +1,5 @@
+import d3 from 'd3';
+
 export default {
   /**
    * Dependency edge bundling chart for d3.js
@@ -8,7 +10,7 @@ export default {
    *   .datum(data)
    *   .call(chart);
    */
-  initChart: function(options) {
+  initChart: function() {
 
     let diameter ;
     let radius ;
@@ -81,6 +83,7 @@ export default {
           length = data[item].name.length;
           if (maxLength < length) {
             maxLength = length;
+            // eslint-disable-next-line no-unused-vars
             maxItem = data[item].name;
           }
         }

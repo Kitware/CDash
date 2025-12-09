@@ -13,6 +13,8 @@
 </template>
 <script>
 import {ref, onMounted } from 'vue';
+import d3 from 'd3';
+
 export default {
   name: 'TimelinePlot',
   /*
@@ -199,7 +201,7 @@ export default {
 
       // ################## ADD BRUSHING ##################
       // add a clipPath object to restrict object to render only inside the plot
-      const clip = svg.append('defs')
+      svg.append('defs')
         .append('svg:clipPath')
         .attr('id', 'clip')
         .append('svg:rect')
@@ -280,14 +282,14 @@ export default {
       const tooltip = d3.select('div .timeline-tooltip');
 
       // make tooltip visible when user hovers on a point
-      function showTooltip(d,i) {
+      function showTooltip() {
         d3.select(this).style('opacity', 1); // make circle appear
         tooltip.transition().duration(100).style('opacity', 1);
       }
 
       // load information about data point and display it in the tooltip div
       function renderTooltip(k) {
-        return function(d,i) {
+        return function(d) {
           // get x,y coordinates from the circle the user is hovering on
           const [x_val, y_val] = Object.values(d).map(String);
           // render the tooltip div element with this point's data
@@ -302,7 +304,7 @@ export default {
       }
 
       // make tooltip invisible when user mouse leaves point
-      function hideTooltip(d,i) {
+      function hideTooltip() {
         d3.select(this).style('opacity', 0); // make cirle disappear
         tooltip.transition().duration(100).style('opacity', 0);
       }
@@ -370,7 +372,7 @@ export default {
         .append('text')
         .attr('font-size', legend_font_size)
         .text((d) => d)
-        .each(function(d,i) {
+        .each(function() {
           const thisWidth = this.getComputedTextLength();
           textWidths.push(thisWidth);
           this.remove(); // remove the text just after displaying it
@@ -395,7 +397,7 @@ export default {
           'transform': `translate(${(width-legendWidth)},0)`,
         });
       // add SVG rect object to serve as our legend border
-      const legend_box = legend.append('rect')
+      legend.append('rect')
         .attr({
           'width': legendWidth,
           'height': legendHeight,
@@ -413,7 +415,7 @@ export default {
         }
       }
       // restore all lines to original opacity on mouse leave
-      function undimLines(_, i) {
+      function undimLines() {
         for (let j = 0; j < data.length; j++) {
           plot_lines[j].transition().duration(150).attr('opacity', 1);
         }

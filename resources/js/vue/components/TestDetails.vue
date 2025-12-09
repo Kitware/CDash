@@ -91,9 +91,11 @@
           <td>
             <div class="je_compare">
               <img
-                v-for="image in cdash.test.compareimages"
+                v-for="(image, index) in cdash.test.compareimages"
+                :key="image.imgid"
                 :src="$baseURL + '/image/' + image.imgid"
                 :alt="image.role"
+                @load="index === 0 && initializeJeCompare()"
               >
             </div>
           </td>
@@ -246,6 +248,7 @@
 </template>
 
 <script>
+import $ from 'jquery';
 import ApiLoader from './shared/ApiLoader';
 import QueryParams from './shared/QueryParams';
 import TextMutator from './shared/TextMutator';
@@ -273,6 +276,7 @@ export default {
       showgraph: false,
       graphSelection: '',
       rawdatalink: '',
+      jeCompareInitialized: false,
     };
   },
 
@@ -300,6 +304,9 @@ export default {
   },
 
   mounted () {
+    // Ensure jQuery is globally available before loading plugins
+    window.jQuery = $;
+
     this.buildtestid = window.location.pathname.split('/').pop();
     let endpoint_path = `/api/v1/testDetails.php?buildtestid=${this.buildtestid}`;
     this.queryParams = QueryParams.get();
@@ -310,14 +317,18 @@ export default {
     ApiLoader.loadPageData(this, endpoint_path);
   },
 
-  updated: function () {
-    this.$nextTick(() => {
-      $('.je_compare').je_compare({caption: true});
-    });
-  },
-
   methods: {
-    postSetup: function(response) {
+    initializeJeCompare() {
+      if (this.jeCompareInitialized) {
+        return;
+      }
+      // eslint-disable-next-line no-undef
+      require('../../angular/je_compare.js');
+      $('.je_compare').je_compare({caption: true});
+      this.jeCompareInitialized = true;
+    },
+
+    postSetup: function() {
       this.cdash.test.output = TextMutator.ctestNonXmlCharEscape(this.cdash.test.output);
       this.cdash.test.output = TextMutator.terminalColors(this.cdash.test.output, true);
 
@@ -458,6 +469,7 @@ export default {
         chart_data[1].lines = { fill: true };
         // The lack of a 'break' here is intentional.
         // time & measurement charts share common options.
+        // eslint-disable-next-line no-fallthrough
       case 'measurement':
         options.lines = { show: true };
         options.points = { show: true };
@@ -474,8 +486,9 @@ export default {
         }
       });
 
-      const plot = $.plot(
-        $('#graph_holder'), chart_data, options);
+      // eslint-disable-next-line no-undef
+      require('flot/dist/es5/jquery.flot');
+      $.plot($('#graph_holder'), chart_data, options);
 
       // Show tooltip on hover.
       $('#graph_holder').bind('plothover', (event, pos, item) => {
