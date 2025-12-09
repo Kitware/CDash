@@ -7,7 +7,7 @@ import { defineConfig, globalIgnores } from 'eslint/config';
 
 export default defineConfig([
   js.configs.recommended,
-  pluginVue.configs['flat/essential'],
+  ...pluginVue.configs['flat/recommended'],
 
   globalIgnores([
     'vendor/*',
