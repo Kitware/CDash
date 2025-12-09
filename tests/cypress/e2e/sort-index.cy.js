@@ -135,7 +135,8 @@ describe('sort_index', () => {
 
     // reverse order & check values again
     cy.get('@buildtime_header').click();
-    cy.get('@files_header').click({ shiftKey: true }).click({ shiftKey: true });
+    cy.get('@files_header').click({ shiftKey: true });
+    cy.get('@files_header').click({ shiftKey: true });
     // check both icons
     cy.get('@buildtime_header').find('span').should('have.class', 'glyphicon-chevron-up');
     cy.get('@files_header').find('span').should('have.class', 'glyphicon-chevron-up');

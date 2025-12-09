@@ -54,7 +54,7 @@ export default defineConfig([
   },
   {
     files: ['**/cypress/**/*.js'],
-    ...pluginCypress.configs.globals,
+    ...pluginCypress.configs.recommended,
   },
   {
     files: ['**/*.spec.js'],

@@ -16,8 +16,13 @@ describe('subProjectGroupOrder', () => {
     cy.get('table[data-cy="existing-subproject-groups"]').find('thead').as('drop_position');
 
     cy.get('@prod_group_tr').trigger('mousedown', { which: 1 });
-    cy.get('@drag_through').trigger('mousemove').wait(200); // must drag it over other rows for it to work
-    cy.get('@drop_position').trigger('mousemove').wait(200).trigger('mouseup', {force: true});
+    cy.get('@drag_through').trigger('mousemove');
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(200); // must drag it over other rows for it to work
+    cy.get('@drop_position').trigger('mousemove');
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(200);
+    cy.get('@drop_position').trigger('mouseup', {force: true});
 
     cy.contains('button', 'Save Order').as('save_order_button').click();
 
@@ -30,6 +35,7 @@ describe('subProjectGroupOrder', () => {
 
     // navigate to our example of coverage across groups
     cy.visit('index.php?project=CrossSubProjectExample&parentid=121');
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(1000);
 
     // make sure that Production is the first group listed after Total
@@ -37,6 +43,7 @@ describe('subProjectGroupOrder', () => {
 
     // restore group order
     cy.visit('manageSubProject.php?projectid=15');
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(1000);
     cy.get('a').contains('SubProject Groups').click();
     // cy.get('tbody#sortable').contains('tr', 'Production').as('prod_group_tr'); // TODO: (sbelsk) this too
@@ -45,12 +52,18 @@ describe('subProjectGroupOrder', () => {
     cy.get('@save_order_button').as('drop_position');
 
     cy.get('@prod_group_tr').trigger('mousedown', { which: 1 });
-    cy.get('@drag_through').trigger('mousemove').wait(200); // must drag it over other rows for it to work
-    cy.get('@drop_position').trigger('mousemove').wait(200).trigger('mouseup', {force: true});
+    cy.get('@drag_through').trigger('mousemove'); // must drag it over other rows for it to work
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(200);
+    cy.get('@drop_position').trigger('mousemove');
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(200);
+    cy.get('@drop_position').trigger('mouseup', {force: true});
     cy.get('@save_order_button').click();
 
     // verify that we restored it
     cy.visit('index.php?project=CrossSubProjectExample&parentid=121');
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(1000);
     cy.get('#coveragetable').find('tbody').eq(3).should('contain', 'Production');
   });

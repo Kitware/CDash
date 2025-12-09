@@ -14,10 +14,14 @@ describe('User profile page', () => {
     cy.get('[name=email]').should('have.value', 'admin@example.com');
     cy.get('[name=institution]').should('have.value', 'testing');
 
-    cy.get('[name=fname]').clear().type('first name here');
-    cy.get('[name=lname]').clear().type('last name here');
-    cy.get('[name=email]').clear().type('emailtest@example.com');
-    cy.get('[name=institution]').clear().type('Kitware (Test)');
+    cy.get('[name=fname]').clear();
+    cy.get('[name=fname]').type('first name here');
+    cy.get('[name=lname]').clear();
+    cy.get('[name=lname]').type('last name here');
+    cy.get('[name=email]').clear();
+    cy.get('[name=email]').type('emailtest@example.com');
+    cy.get('[name=institution]').clear();
+    cy.get('[name=institution]').type('Kitware (Test)');
 
     cy.get('[name=updateprofile]').click();
     cy.get('#main_content').should('contain.text', 'Your profile has been updated');
@@ -28,14 +32,14 @@ describe('User profile page', () => {
 
     cy.visit('/profile');
 
-    cy.get('[name=fname]').should('have.value', 'first name here')
-      .clear().type('admin');
-    cy.get('[name=lname]').should('have.value', 'last name here')
-      .clear().type('admin');
-    cy.get('[name=email]').should('have.value', 'emailtest@example.com')
-      .clear().type('admin@example.com');
-    cy.get('[name=institution]').should('have.value', 'Kitware (Test)')
-      .clear().type('testing');
+    cy.get('[name=fname]').should('have.value', 'first name here').clear();
+    cy.get('[name=fname]').type('admin');
+    cy.get('[name=lname]').should('have.value', 'last name here').clear();
+    cy.get('[name=lname]').type('admin');
+    cy.get('[name=email]').should('have.value', 'emailtest@example.com').clear();
+    cy.get('[name=email]').type('admin@example.com');
+    cy.get('[name=institution]').should('have.value', 'Kitware (Test)').clear();
+    cy.get('[name=institution]').type('testing');
 
     cy.get('[name=updateprofile]').click();
     cy.get('#main_content').should('contain.text', 'Your profile has been updated');
