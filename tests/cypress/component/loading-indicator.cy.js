@@ -11,6 +11,7 @@ it('displays according to isLoading prop', () => {
   });
 
   // The loading indicator has a delay to prevent a flicker on pages which render immediately.
+  // eslint-disable-next-line cypress/no-unnecessary-waiting
   cy.wait(1000);
 
   cy.get('img[alt="The page is loading."]').should('be.visible');
@@ -26,6 +27,7 @@ it('displays according to isLoading prop', () => {
     },
   });
 
+  // eslint-disable-next-line cypress/no-unnecessary-waiting
   cy.wait(1000);
 
   cy.get('img[alt="The page is loading."]').should('not.exist');

@@ -85,7 +85,8 @@ describe('the test page', () => {
     cy.get('a#commandlinelink').should('contain', 'Hide Command Line');
     cy.get('pre#commandline').should('contain', '/a/path/to/test/nap --run-test .');
     // toggle it back
-    cy.get('a#commandlinelink').click().should('contain', 'Show Command Line');
+    cy.get('a#commandlinelink').click();
+    cy.get('a#commandlinelink').should('contain', 'Show Command Line');
 
     // verify the test output field
     cy.get('pre#test_output').should('contain', 'PASS');

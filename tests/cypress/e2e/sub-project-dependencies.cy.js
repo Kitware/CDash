@@ -18,17 +18,18 @@ describe('SubProjectDependencies', () => {
 
     // check tooltip displays as expected
     cy.get('[data-cy="tooltip"]').should('have.css', 'opacity', '0'); // initially hidden
-    cy.get('text.node').first().trigger('mouseover').then(() => {
-      // tooltip becomes visible on hover
-      cy.get('[data-cy="tooltip"]').should('have.css', 'opacity', '0.9');
-      cy.get('[data-cy="tooltip-name-header"]').should('contain', 'Amesos');
-      // 'Anasazi' is known to be a dependent of 'Amesos'
-      cy.get('text.node').filter(':contains("Anasazi")').first().should('have.class', 'node--source');
-      // 'Amesos' is known to depend on 'Teuchos'
-      cy.get('text.node').filter(':contains("Teuchos")').first().should('have.class', 'node--target');
-    });
-    cy.get('text.node').first().trigger('mouseout').then(() => {
-      cy.get('[data-cy="tooltip"]').should('have.css', 'opacity', '0'); // should be hidden again
-    });
+    cy.get('text.node').first().trigger('mouseover');
+
+    // tooltip becomes visible on hover
+    cy.get('[data-cy="tooltip"]').should('have.css', 'opacity', '0.9');
+    cy.get('[data-cy="tooltip-name-header"]').should('contain', 'Amesos');
+    // 'Anasazi' is known to be a dependent of 'Amesos'
+    cy.get('text.node').filter(':contains("Anasazi")').first().should('have.class', 'node--source');
+    // 'Amesos' is known to depend on 'Teuchos'
+    cy.get('text.node').filter(':contains("Teuchos")').first().should('have.class', 'node--target');
+
+    // should be hidden again after moving mouse away
+    cy.get('text.node').first().trigger('mouseout');
+    cy.get('[data-cy="tooltip"]').should('have.css', 'opacity', '0');
   });
 });

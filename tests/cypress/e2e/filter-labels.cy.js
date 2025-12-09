@@ -41,7 +41,8 @@ describe('filterLabels', () => {
     cy.get('#id_value1').type('a');
 
     cy.get('button[name="add1"]').click();
-    cy.get('#id_value2').clear().type('b');
+    cy.get('#id_value2').clear();
+    cy.get('#id_value2').type('b');
 
     // add a third one in between the two.
     cy.get('button[name="add1"]').click();

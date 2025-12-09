@@ -158,6 +158,7 @@ describe('manageSubProject', () => {
     //   because the UI doesn't show the icon next to the
     //   default group unless it's the only existing one
     cy.get('table[data-cy="existing-subproject-groups"]').find('span.glyphicon-trash').click();
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(1000); // wait because the UI has a delay/fadeout on delete
     cy.get('table[data-cy="existing-subproject-groups"]').find('span.glyphicon-trash').click();
 
