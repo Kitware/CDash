@@ -305,7 +305,7 @@
 <td ng-if="::buildgroup.hastestdata" align="center" ng-class="::{'warning': build.test.notrun > 0, 'normal': build.test.notrun == 0}">
   <div ng-if="::build.hastest"
        ng-class="::{'valuewithsub': build.test.nnotrundiffp > 0 || build.test.nnotrundiffn > 0}">
-    <a class="cdash-link" ng-href="viewTest.php?onlynotrun&buildid={{::build.id}}{{::cdash.testfilters}}{{::cdash.extrafilterurl}}">
+    <a class="cdash-link" ng-href="{{ !cdash.testfilters && !cdash.extrafilterurl ? 'builds/' + build.id + '/tests?filters=%7B%22all%22%3A%5B%7B%22eq%22%3A%7B%22status%22%3A%22NOT_RUN%22%7D%7D%5D%7D' : 'viewTest.php?onlynotrun&buildid=' + build.id + cdash.testfilters + cdash.extrafilterurl }}">
       {{::build.test.notrun}}
     </a>
     <a ng-if="::build.test.nnotrundiffp > 0" class="sup cdash-link" ng-href="viewTest.php?onlydelta&buildid={{::build.id}}{{::cdash.testfilters}}{{::cdash.extrafilterurl}}">
@@ -318,7 +318,7 @@
 <td ng-if="::buildgroup.hastestdata" align="center" ng-class="::{'error': build.test.fail > 0, 'normal': build.test.fail < 1}">
   <div ng-if="::build.hastest"
        ng-class="::{'valuewithsub': build.test.nfaildiffp > 0 || build.test.nfaildiffn > 0}">
-    <a class="cdash-link" ng-href="viewTest.php?onlyfailed&buildid={{::build.id}}{{::cdash.testfilters}}{{::cdash.extrafilterurl}}">
+    <a class="cdash-link" ng-href="{{ !cdash.testfilters && !cdash.extrafilterurl ? 'builds/' + build.id + '/tests?filters=%7B%22all%22%3A%5B%7B%22eq%22%3A%7B%22status%22%3A%22FAILED%22%7D%7D%5D%7D' : 'viewTest.php?onlyfailed&buildid=' + build.id + cdash.testfilters + cdash.extrafilterurl }}">
       {{::build.test.fail}}
     </a>
     <a ng-if="::build.test.nfaildiffp > 0" class="sup cdash-link" ng-href="viewTest.php?onlydelta&buildid={{::build.id}}{{::cdash.testfilters}}{{::cdash.extrafilterurl}}">
@@ -333,7 +333,7 @@
 <td ng-if="::buildgroup.hastestdata" align="center" ng-class="::{'normal': build.test.pass > -1}">
   <div ng-if="::build.hastest"
        ng-class="::{'valuewithsub': build.test.npassdiffp > 0 || build.test.npassdiffn > 0}">
-    <a class="cdash-link" ng-href="viewTest.php?onlypassed&buildid={{::build.id}}{{::cdash.testfilters}}{{::cdash.extrafilterurl}}">
+    <a class="cdash-link" ng-href="{{ !cdash.testfilters && !cdash.extrafilterurl ? 'builds/' + build.id + '/tests?filters=%7B%22all%22%3A%5B%7B%22eq%22%3A%7B%22status%22%3A%22PASSED%22%7D%7D%5D%7D' : 'viewTest.php?onlypassed&buildid=' + build.id + cdash.testfilters + cdash.extrafilterurl }}">
       {{::build.test.pass}}
     </a>
     <a ng-if="::build.test.npassdiffp > 0" class="sup cdash-link" ng-href="viewTest.php?onlydelta&buildid={{::build.id}}{{::cdash.testfilters}}{{::cdash.extrafilterurl}}">
@@ -352,7 +352,7 @@
   <div ng-if="::build.hastest"
        ng-class="::{'valuewithsub': build.build.test.ntimediffp > 0 || build.test.ntimediffn > 0}">
     <div ng-if="::build.test.timestatus > 0">
-      <a class="cdash-link" ng-href="viewTest.php?onlytimestatus&buildid={{::build.id}}{{::cdash.testfilters}}{{::cdash.extrafilterurl}}">
+      <a class="cdash-link" ng-href="{{ !cdash.testfilters && !cdash.extrafilterurl ? 'builds/' + build.id + '/tests?filters=%7B%22all%22%3A%5B%7B%22eq%22%3A%7B%22timeStatusCategory%22%3A%22FAILED%22%7D%7D%5D%7D' : 'viewTest.php?onlytimestatus&buildid=' + build.id + cdash.testfilters + cdash.extrafilterurl }}">
         {{::build.test.timestatus}}
       </a>
       <a ng-if="::build.test.ntimediffp > 0" class="sup cdash-link" ng-href="viewTest.php?onlydelta&buildid={{::build.id}}{{::cdash.testfilters}}{{::cdash.extrafilterurl}}">

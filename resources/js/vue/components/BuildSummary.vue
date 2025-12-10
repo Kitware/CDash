@@ -155,7 +155,7 @@
                       <b>
                         <a
                           class="tw-link tw-link-hover"
-                          :href="$baseURL + '/viewTest.php?onlyfailed&buildid=' + cdash.previousbuild.buildid"
+                          :href="$baseURL + '/builds/' + cdash.previousbuild.buildid + '/tests?filters=%7B%22all%22%3A%5B%7B%22eq%22%3A%7B%22status%22%3A%22FAILED%22%7D%7D%5D%7D'"
                         >
                           {{ cdash.previousbuild.ntestfailed }}
                         </a>
@@ -168,7 +168,7 @@
                       <b>
                         <a
                           class="tw-link tw-link-hover"
-                          :href="$baseURL + '/viewTest.php?onlynotrun&buildid=' + cdash.previousbuild.buildid"
+                          :href="$baseURL + '/builds/' + cdash.previousbuild.buildid + '/tests?filters=%7B%22all%22%3A%5B%7B%22eq%22%3A%7B%22status%22%3A%22NOT_RUN%22%7D%7D%5D%7D'"
                         >
                           {{ cdash.previousbuild.ntestnotrun }}
                         </a>
@@ -329,7 +329,7 @@
                       <b>
                         <a
                           class="tw-link tw-link-hover"
-                          :href="$baseURL + '/viewTest.php?onlyfailed&buildid=' + cdash.build.id"
+                          :href="$baseURL + '/builds/' + cdash.build.id + '/tests?filters=%7B%22all%22%3A%5B%7B%22eq%22%3A%7B%22status%22%3A%22FAILED%22%7D%7D%5D%7D'"
                         >
                           {{ cdash.test.nfailed }}
                         </a>
@@ -342,7 +342,7 @@
                       <b>
                         <a
                           class="tw-link tw-link-hover"
-                          :href="$baseURL + '/viewTest.php?onlynotrun&buildid=' + cdash.build.id"
+                          :href="$baseURL + '/builds/' + cdash.build.id + '/tests?filters=%7B%22all%22%3A%5B%7B%22eq%22%3A%7B%22status%22%3A%22NOT_RUN%22%7D%7D%5D%7D'"
                         >
                           {{ cdash.test.nnotrun }}
                         </a>
@@ -489,7 +489,7 @@
                       <b>
                         <a
                           class="tw-link tw-link-hover"
-                          :href="$baseURL + '/viewTest.php?onlyfailed&buildid=' + cdash.nextbuild.buildid"
+                          :href="$baseURL + '/builds/' + cdash.nextbuild.buildid + '/tests?filters=%7B%22all%22%3A%5B%7B%22eq%22%3A%7B%22status%22%3A%22FAILED%22%7D%7D%5D%7D'"
                         >
                           {{ cdash.nextbuild.ntestfailed }}
                         </a>
@@ -502,7 +502,7 @@
                       <b>
                         <a
                           class="tw-link tw-link-hover"
-                          :href="$baseURL + '/viewTest.php?onlynotrun&buildid=' + cdash.nextbuild.buildid"
+                          :href="$baseURL + '/builds/' + cdash.nextbuild.buildid + '/tests?filters=%7B%22all%22%3A%5B%7B%22eq%22%3A%7B%22status%22%3A%22NOT_RUN%22%7D%7D%5D%7D'"
                         >
                           {{ cdash.nextbuild.ntestnotrun }}
                         </a>
@@ -987,7 +987,7 @@
       <a
         id="tests_link"
         class="tw-link tw-link-hover"
-        :href="$baseURL + '/viewTest.php?buildid=' + cdash.build.id"
+        :href="$baseURL + '/builds/' + cdash.build.id + '/tests'"
       >
         View Tests Summary
       </a>

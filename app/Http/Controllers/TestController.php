@@ -355,7 +355,7 @@ final class TestController extends AbstractProjectController
             $build_response['buildStamp'] = $row->stamp;
             $build_response['time'] = floatval($row->time);
 
-            $buildLink = "viewTest.php?buildid=$buildid";
+            $buildLink = "builds/$buildid/tests";
             $build_response['buildid'] = $buildid;
             $build_response['buildLink'] = $buildLink;
             $buildtestid = $row->buildtestid;

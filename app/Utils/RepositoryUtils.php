@@ -693,7 +693,7 @@ class RepositoryUtils
 
                 $list = array_slice($errors['missing_tests']['list'], 0, $maxitems);
                 $information .= PHP_EOL;
-                $url = "({$serverURI}/viewTest.php?buildid={$buildid})";
+                $url = "({$serverURI}/builds/{$buildid}/tests)";
                 $information .= implode(" {$url}\n", array_values($list));
                 $information .= $url;
                 $information .= PHP_EOL;
