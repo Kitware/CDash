@@ -56,9 +56,9 @@ class TimeoutsAndMissingTestsTestCase extends KWWebTestCase
             'Type: Nightly',
             'Total Missing Tests: 3',
             '*Missing Tests*',
-            "DashboardSendTest ({$url}/viewTest.php?buildid=",
-            "Parser1Test1 ({$url}/viewTest.php?buildid=",
-            "SystemInfoTest ({$url}/viewTest.php?buildid=",
+            "DashboardSendTest ({$url}/builds/",
+            "Parser1Test1 ({$url}/builds/",
+            "SystemInfoTest ({$url}/builds/",
             '-CDash on',
         ];
         if ($this->assertLogContains($expected, 18)) {

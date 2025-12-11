@@ -919,7 +919,7 @@ class Build
         // Should we should post test failures to a pull request?
         if (!empty($this->PullRequest) && $numberTestsFailed > 0) {
             $message = "$this->Name experienced failing tests";
-            $url = url('/viewTest.php') . "?onlyfailed&buildid=$this->Id";
+            $url = url('/builds/') . "?onlyfailed&buildid=$this->Id";
             $this->NotifyPullRequest($message, $url);
         }
     }

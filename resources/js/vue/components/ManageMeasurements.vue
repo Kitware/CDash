@@ -90,6 +90,7 @@
           <ul>
             <li><span class="text-monospace">queryTests.php</span></li>
             <li><span class="text-monospace">viewTest.php</span></li>
+            <li><span class="text-monospace">builds/&lt;id&gt;/tests</span></li>
           </ul>
         </li>
         <li>Other types of test measurements (eg. <span class="text-monospace">image/png</span>) are not supported for display on these pages, and they may not be rendered correctly if added here.</li>

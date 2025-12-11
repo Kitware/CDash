@@ -1,15 +1,4 @@
 describe('the test page', () => {
-  it('can be reached from the viewTest page', () => {
-    // navigate to viewTest
-    cy.visit('index.php?project=TimeStatus');
-    cy.get('#main_content').find('table').find('tbody').find('tr').eq(0).find('td').eq(4).find('a').click();
-    // find the link to the test page and click it
-    cy.get('#viewTestTable').find('tbody').find('tr').eq(0).find('td').eq(0).find('a').click();
-    // make sure we're really on the test page
-    cy.get('#subheadername').should('contain', 'TimeStatus').and('contain', 'Test Results');
-  });
-
-
   it('can be reached from the queryTests page', () => {
     cy.visit('queryTests.php?project=TimeStatus&date=2018-01-25');
     // find the link to the test page and click it
