@@ -115,6 +115,7 @@ test('BuildSummary handles API response', async () => {
         BuildSummaryCard: {
           template: '<div />',
         },
+        transition: false,
       },
     },
   });
@@ -173,22 +174,23 @@ test('BuildSummary can toggle the graphs', async () => {
         BuildSummaryCard: {
           template: '<div />',
         },
+        transition: false,
       },
     },
   });
   await new Promise(process.nextTick);
 
   expect(component.vm.showTimeGraph).toBe(false);
-  expect(component.find('#buildtimegrapholder').isVisible()).toBe(false);
+  expect(component.find('#buildtimegrapholder').element.style.display).toBe('none');
 
   expect(component.vm.showErrorGraph).toBe(false);
-  expect(component.find('#builderrorsgrapholder').isVisible()).toBe(false);
+  expect(component.find('#builderrorsgrapholder').element.style.display).toBe('none');
 
   expect(component.vm.showWarningGraph).toBe(false);
-  expect(component.find('#buildwarningsgrapholder').isVisible()).toBe(false);
+  expect(component.find('#buildwarningsgrapholder').element.style.display).toBe('none');
 
   expect(component.vm.showTestGraph).toBe(false);
-  expect(component.find('#buildtestsfailedgrapholder').isVisible()).toBe(false);
+  expect(component.find('#buildtestsfailedgrapholder').element.style.display).toBe('none');
 
   const graph_data = {
     builds: [{
@@ -210,41 +212,41 @@ test('BuildSummary can toggle the graphs', async () => {
   time_button.trigger('click');
   await component.vm.$nextTick();
   expect(component.vm.showTimeGraph).toBe(true);
-  expect(component.find('#buildtimegrapholder').isVisible()).toBe(true);
+  expect(component.find('#buildtimegrapholder').element.style.display).toBe('');
   time_button.trigger('click');
   await component.vm.$nextTick();
   expect(component.vm.showTimeGraph).toBe(false);
-  expect(component.find('#buildtimegrapholder').isVisible()).toBe(false);
+  expect(component.find('#buildtimegrapholder').element.style.display).toBe('none');
 
   const error_button = component.find('#toggle_error_graph');
   error_button.trigger('click');
   await component.vm.$nextTick();
   expect(component.vm.showErrorGraph).toBe(true);
-  expect(component.find('#builderrorsgrapholder').isVisible()).toBe(true);
+  expect(component.find('#builderrorsgrapholder').element.style.display).toBe('');
   error_button.trigger('click');
   await component.vm.$nextTick();
   expect(component.vm.showErrorGraph).toBe(false);
-  expect(component.find('#builderrorsgrapholder').isVisible()).toBe(false);
+  expect(component.find('#builderrorsgrapholder').element.style.display).toBe('none');
 
   const warning_button = component.find('#toggle_warning_graph');
   warning_button.trigger('click');
   await component.vm.$nextTick();
   expect(component.vm.showWarningGraph).toBe(true);
-  expect(component.find('#buildwarningsgrapholder').isVisible()).toBe(true);
+  expect(component.find('#buildwarningsgrapholder').element.style.display).toBe('');
   warning_button.trigger('click');
   await component.vm.$nextTick();
   expect(component.vm.showWarningGraph).toBe(false);
-  expect(component.find('#buildwarningsgrapholder').isVisible()).toBe(false);
+  expect(component.find('#buildwarningsgrapholder').element.style.display).toBe('none');
 
   const test_button = component.find('#toggle_test_graph');
   test_button.trigger('click');
   await component.vm.$nextTick();
   expect(component.vm.showTestGraph).toBe(true);
-  expect(component.find('#buildtestsfailedgrapholder').isVisible()).toBe(true);
+  expect(component.find('#buildtestsfailedgrapholder').element.style.display).toBe('');
   test_button.trigger('click');
   await component.vm.$nextTick();
   expect(component.vm.showTestGraph).toBe(false);
-  expect(component.find('#buildtestsfailedgrapholder').isVisible()).toBe(false);
+  expect(component.find('#buildtestsfailedgrapholder').element.style.display).toBe('none');
 });
 
 test('BuildSummary can add a build note', async () => {
@@ -258,18 +260,19 @@ test('BuildSummary can add a build note', async () => {
         BuildSummaryCard: {
           template: '<div />',
         },
+        transition: false,
       },
     },
   });
   await new Promise(process.nextTick);
 
-  expect(component.find('#new_note_div').isVisible()).toBe(false);
+  expect(component.find('#new_note_div').element.style.display).toBe('none');
   expect(component.vm.cdash.notes.length).toBe(0);
 
   const toggle_button = component.find('#toggle_note');
   toggle_button.trigger('click');
   await component.vm.$nextTick();
-  expect(component.find('#new_note_div').isVisible()).toBe(true);
+  expect(component.find('#new_note_div').element.style.display).toBe('');
 
   const api_response = {
     note: {
