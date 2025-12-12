@@ -4,7 +4,7 @@
   "repository": "https://github.com/Kitware/CDash",
   "license": "BSD-3-Clause",
   "scripts": {
-    "test": "jest tests/Spec/*.spec.js tests/Spec/**/*.spec.js",
+    "test": "jest",
     "development": "mix",
     "dev": "npm run development",
     "watch": "mix watch",
