@@ -8,6 +8,9 @@ config.global.mocks['$baseURL'] = '';
 axios.defaults.baseURL = config.global.mocks['$baseURL'];
 
 import $ from 'jquery';
+$.fn.modal = function() {
+  return null;
+};
 global.$ = $;
 
 let axiosMockAdapter;

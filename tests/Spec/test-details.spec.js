@@ -104,7 +104,13 @@ afterEach(() => {
 
 it('handles API response', async () => {
   axiosMockAdapter.onGet('/api/v1/testDetails.php?buildtestid=').reply(200, apiResponse);
-  const component = mount(TestDetails);
+  const component = mount(TestDetails, {
+    global: {
+      stubs: {
+        transition: false,
+      },
+    },
+  });
   await new Promise(process.nextTick);
   expect(component.vm.loading).toBe(false);
 
@@ -151,51 +157,75 @@ lines</pre>`);
 
 it('can toggle command line', async () => {
   axiosMockAdapter.onGet('/api/v1/testDetails.php?buildtestid=').reply(200, apiResponse);
-  const component = mount(TestDetails);
+  const component = mount(TestDetails, {
+    global: {
+      stubs: {
+        transition: false,
+      },
+    },
+  });
   await new Promise(process.nextTick);
 
   // Command line hidden by default.
-  expect(component.find('#commandline').isVisible()).toBe(false);
+  expect(component.find('#commandline').element.style.display).toBe('none');
 
   // Toggle it on.
   const commandlinelink = component.find('#commandlinelink');
   commandlinelink.trigger('click');
   await new Promise(process.nextTick);
-  expect(component.find('#commandline').isVisible()).toBe(true);
+  expect(component.find('#commandline').element.style.display).toBe('');
 });
 
 it('can toggle environment', async () => {
   axiosMockAdapter.onGet('/api/v1/testDetails.php?buildtestid=').reply(200, apiResponse);
-  const component = mount(TestDetails);
+  const component = mount(TestDetails, {
+    global: {
+      stubs: {
+        transition: false,
+      },
+    },
+  });
   await new Promise(process.nextTick);
 
   // We have an environment but it's hidden by default.
   expect(component.vm.hasenvironment).toBe(true);
   expect(component.vm.showenvironment).toBe(false);
-  expect(component.find('#environment').isVisible()).toBe(false);
+  expect(component.find('#environment').element.style.display).toBe('none');
 
   // Toggle it on.
   const environmentlink = component.find('#environmentlink');
   environmentlink.trigger('click');
   await new Promise(process.nextTick);
-  expect(component.find('#environment').isVisible()).toBe(true);
+  expect(component.find('#environment').element.style.display).toBe('');
 });
 
 it('"Show Environment" toggle is conditionally rendered', async () => {
   apiResponse.test.environment = '';
   axiosMockAdapter.onGet('/api/v1/testDetails.php?buildtestid=').reply(200, apiResponse);
-  const component = mount(TestDetails);
+  const component = mount(TestDetails, {
+    global: {
+      stubs: {
+        transition: false,
+      },
+    },
+  });
   await new Promise(process.nextTick);
   expect(component.find('#environmentlink').exists()).toBe(false);
 });
 
 it('can toggle the graphs', async () => {
   axiosMockAdapter.onGet('/api/v1/testDetails.php?buildtestid=').reply(200, apiResponse);
-  const component = mount(TestDetails);
+  const component = mount(TestDetails, {
+    global: {
+      stubs: {
+        transition: false,
+      },
+    },
+  });
   await new Promise(process.nextTick);
 
   expect(component.vm.showgraph).toBe(false);
-  expect(component.find('#graph_holder').isVisible()).toBe(false);
+  expect(component.find('#graph_holder').element.style.display).toBe('none');
 
   axiosMockAdapter.onGet('/api/v1/testGraph.php?testname=my-test&buildid=1&type=time').reply(200, graphData);
   const graph_selector = component.find('#GraphSelection');
@@ -213,7 +243,7 @@ it('can toggle the graphs', async () => {
   await new Promise(process.nextTick);
 
   expect(component.vm.showgraph).toBe(true);
-  expect(component.find('#graph_holder').isVisible()).toBe(true);
+  expect(component.find('#graph_holder').element.style.display).toBe('');
 
   const json_link = component.find('a[href*="testGraph.php"]');
   expect(json_link.isVisible()).toBe(true);
@@ -228,7 +258,13 @@ it('can load the graphs by default', async () => {
   expect(window.location.search).toBe('?graph=time');
   axiosMockAdapter.onGet('/api/v1/testDetails.php?buildtestid=&graph=time').reply(200, apiResponse);
   axiosMockAdapter.onGet('/api/v1/testGraph.php?testname=my-test&buildid=1&type=time').reply(200, graphData);
-  const component = mount(TestDetails);
+  const component = mount(TestDetails, {
+    global: {
+      stubs: {
+        transition: false,
+      },
+    },
+  });
   await new Promise(process.nextTick);
   expect(component.vm.showgraph).toBe(true);
 });
