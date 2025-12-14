@@ -152,9 +152,6 @@ final class SubmissionController extends AbstractProjectController
         $this->project = new Project();
         $this->project->FindByName($projectname);
 
-        // Remove some old builds if the project has too many.
-        $this->project->CheckForTooManyBuilds();
-
         // Check for valid authentication token if this project requires one.
         if ($this->project->AuthenticateSubmissions && !AuthTokenUtil::checkToken($authtoken_hash, $this->project->Id)) {
             Storage::delete("inbox/{$filename}");
@@ -164,6 +161,9 @@ final class SubmissionController extends AbstractProjectController
             Log::info("Rejected submission with invalid project name: $projectname");
             $this->failProcessing($filename, Response::HTTP_NOT_FOUND, 'The requested project does not exist.');
         }
+
+        // Remove some old builds if the project has too many.
+        $this->project->CheckForTooManyBuilds();
 
         // Figure out what type of XML file this is.
         $stored_filename = 'inbox/' . $filename;
