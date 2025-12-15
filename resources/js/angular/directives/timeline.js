@@ -2,7 +2,7 @@ var timelineController =
   function TimelineChartController($http, $scope) {
     $scope.loading = true;
 
-    query_parameters = {
+    var query_parameters = {
       project: $scope.$parent.cdash.projectname,
       filterdata: $scope.$parent.cdash.filterdata
     };
@@ -225,7 +225,7 @@ var timelineController =
       // The end of our range is pointing at the end of the testing day.
       // We want to report the beginning of this day instead, so we grab the date
       // corresponding to the previous timestamp.
-      idx = timestamps.indexOf(String(extent[1]));
+      var idx = timestamps.indexOf(String(extent[1]));
       if (idx > 0) {
         $scope.$parent.cdash.end_date = $scope.timeline.time_to_date[timestamps[idx - 1]];
       } else {
@@ -258,10 +258,10 @@ var timelineController =
 };
 timelineController.$inject = ["$http", "$scope"];
 
-CDash.directive('timeline', ["VERSION", function (VERSION) {
+export function timeline(VERSION) {
   return {
     restrict: 'A',
     templateUrl: 'assets/js/angular/views/partials/timeline.html?id=' + VERSION,
     controller: timelineController
   };
-}]);
+}

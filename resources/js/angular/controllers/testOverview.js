@@ -1,5 +1,4 @@
-CDash.controller('TestOverviewController',
-  ["$scope", "$rootScope", "$filter", "apiLoader", "filters", "multisort", function TestOverviewController($scope, $rootScope, $filter, apiLoader, filters, multisort) {
+export function TestOverviewController($scope, $rootScope, $filter, apiLoader, filters, multisort) {
     $scope.groupChanged = false;
 
     // Hide filters by default.
@@ -98,4 +97,4 @@ CDash.controller('TestOverviewController',
       uri += filters.getString();
       window.location = uri;
     };
-}]);
+}

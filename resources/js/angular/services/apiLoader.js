@@ -1,5 +1,5 @@
 // Encapsulate common code involved in loading our page data from the API.
-CDash.factory('apiLoader', ["$http", "$rootScope", "$window", "renderTimer", function ($http, $rootScope, $window, renderTimer) {
+export function apiLoader($http, $rootScope, $window, renderTimer) {
   const loadPageData = function(controllerScope, endpoint) {
     controllerScope.loading = true;
 
@@ -38,4 +38,4 @@ CDash.factory('apiLoader', ["$http", "$rootScope", "$window", "renderTimer", fun
   return {
     loadPageData: loadPageData
   };
-}]);
+}

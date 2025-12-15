@@ -1,4 +1,4 @@
-CDash.directive('convertToNumber', function() {
+export function convertToNumber() {
   return {
     require: 'ngModel',
     link: function(scope, element, attrs, ngModel) {
@@ -10,4 +10,4 @@ CDash.directive('convertToNumber', function() {
       });
     }
   };
-});
+}

@@ -1,6 +1,6 @@
 // assumes the ids of the sortable child elements
 // are properly set
-function getSortedElements(parent) {
+export function getSortedElements(parent) {
   var positions = [];
   $(parent).children().each(function() {
     var pos = {};

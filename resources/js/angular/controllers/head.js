@@ -1,4 +1,4 @@
-CDash.controller('HeadController', ["$rootScope", "$document", function HeadController($rootScope, $document) {
+export function HeadController($rootScope, $document) {
   // Adapted from:
   // http://www.quirksmode.org/js/cookies.html
   $rootScope.readCookie = function(name) {
@@ -33,7 +33,8 @@ CDash.controller('HeadController', ["$rootScope", "$document", function HeadCont
 
   $rootScope.setupCalendar = function(date) {
     if (date) {
-      year = date.substr(0, 4);
+      var year = date.substr(0, 4);
+      var month, day;
       if (date.length == 8) {
         month = date.substr(4, 2);
         day = date.substr(6, 2);
@@ -90,4 +91,4 @@ CDash.controller('HeadController', ["$rootScope", "$document", function HeadCont
     $( "#calendar" ).toggle();
   };
 
-}]);
+}

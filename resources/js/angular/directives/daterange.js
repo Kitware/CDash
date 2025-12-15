@@ -1,4 +1,4 @@
-CDash.directive('daterange', ["VERSION", function (VERSION) {
+export function daterange(VERSION) {
   return {
     restrict: 'A',
     templateUrl: 'assets/js/angular/views/partials/daterange.html?id=' + VERSION,
@@ -40,4 +40,4 @@ CDash.directive('daterange', ["VERSION", function (VERSION) {
       }
     }
   };
-}]);
+}

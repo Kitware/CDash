@@ -1,9 +1,5 @@
 
-FiltersController.$inject = ["$scope", "$rootScope", "$http", "$timeout"];angular
-    .module('CDash')
-    .controller('FiltersController', FiltersController);
-
-function FiltersController($scope, $rootScope, $http, $timeout) {
+export function FiltersController($scope, $rootScope, $http, $timeout) {
 
   // The different type of data filters that we support.
   $scope.filterdefinitions = {
@@ -272,7 +268,7 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
 
     // Assign the default comparison value to this filter if its type has changed.
     var found = false;
-    for (i in comparisons) {
+    for (var i in comparisons) {
       if (comparisons[i].value == filter.compare) {
         found = true;
         break;
@@ -319,7 +315,7 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
     // Reconstruct the URL to include the query string parameters that survived
     // the culling above.
     var s = window.location.origin + window.location.pathname + '?';
-    for (var i = 0; i < params.length; i++) {
+    for (i = 0; i < params.length; i++) {
       s += params[i] + '&';
     }
 
@@ -349,7 +345,7 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
     s = s + "filtercount=" + n;
     s = s + "&showfilters=1";
 
-    l = $("#id_limit").val();
+    var l = $("#id_limit").val();
     if (l != 0) {
       s = s + "&limit=" + l;
     }
@@ -358,7 +354,7 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
       s = s + "&filtercombine=" + $scope.filterdata.filtercombine;
     }
 
-    for (var i = 1; i <= n; i++) {
+    for (i = 1; i <= n; i++) {
       if ($scope.filterdata.filters[i-1].hasOwnProperty('filters')) {
         var num_subfilters = $scope.filterdata.filters[i-1].filters.length;
         if (num_subfilters < 1) {
@@ -453,16 +449,14 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
   });
 }
 
-angular.module('CDash')
-       .directive('filterRow', ["VERSION", function (VERSION) {
+export const filterRow = ["VERSION", function (VERSION) {
   return {
     templateUrl: 'assets/js/angular/views/partials/filterRow.html?id=' + VERSION,
   };
-}]);
+}];
 
-angular.module('CDash')
-       .directive('filterButtons', ["VERSION", function (VERSION) {
+export const filterButtons = ["VERSION", function (VERSION) {
   return {
     templateUrl: 'assets/js/angular/views/partials/filterButtons.html?id=' + VERSION,
   };
-}]);
+}];

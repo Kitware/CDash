@@ -1,5 +1,4 @@
-CDash.controller('CompareCoverageController',
-  ["$scope", "$rootScope", "apiLoader", "filters", "multisort", function CompareCoverageController($scope, $rootScope, apiLoader, filters, multisort) {
+export function CompareCoverageController($scope, $rootScope, apiLoader, filters, multisort) {
     // Hide filters by default.
     $scope.showfilters = false;
 
@@ -18,4 +17,4 @@ CDash.controller('CompareCoverageController',
     $scope.updateOrderByFields = function(obj, field, $event) {
       multisort.updateOrderByFields(obj, field, $event);
     };
-}]);
+}
