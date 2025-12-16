@@ -11,6 +11,8 @@ scalar NonNegativeSeconds @scalar(class: "App\\GraphQL\\Scalars\\NonNegativeSeco
 "A non-negative integer number of milliseconds."
 scalar NonNegativeIntegerMilliseconds @scalar(class: "App\\GraphQL\\Scalars\\NonNegativeIntegerMilliseconds")
 
+scalar Url @scalar(class: "App\\GraphQL\\Scalars\\Url")
+
 
 "Indicates what fields are available at the top level of a query operation."
 type Query {
@@ -144,7 +146,10 @@ type Project {
   description: String!
 
   "Homepage for this project."
-  homeurl: String!
+  homeurl: Url @deprecated(reason: "Use 'homeUrl' instead.")
+
+  "Homepage for this project."
+  homeUrl: Url @rename(attribute: "homeurl")
 
   "Visibility."
   visibility: ProjectVisibility! @rename(attribute: "public") @filterable
@@ -201,13 +206,16 @@ enum ProjectVisibility {
 
 input CreateProjectInput {
   "Unique name."
-  name: String!
+  name: String! @rules(apply: ["App\\Rules\\ProjectVisibilityRule"])
 
   "Description."
   description: String!
 
   "Project homepage"
-  homeurl: String!
+  homeurl: Url @deprecated(reason: "Use 'homeUrl' instead.") @rules(apply: ["prohibits:homeUrl"])
+
+  "Project homepage"
+  homeUrl: Url @rename(attribute: "homeurl") @rules(apply: ["prohibits:homeurl"])
 
   "Visibility."
   visibility: ProjectVisibility! @rename(attribute: "public") @rules(attribute: "public", apply: ["App\\Rules\\ProjectVisibilityRule"])
