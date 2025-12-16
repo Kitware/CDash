@@ -1,5 +1,4 @@
-CDash.controller('QueryTestsController',
-  ["$scope", "$rootScope", "$filter", "apiLoader", "filters", "multisort", function QueryTestsController($scope, $rootScope, $filter, apiLoader, filters, multisort) {
+export function QueryTestsController($scope, $rootScope, $filter, apiLoader, filters, multisort) {
     $scope.loading = true;
 
     // Pagination settings.
@@ -80,4 +79,4 @@ CDash.controller('QueryTestsController',
       var field = 'measurements[' + idx + ']';
       $scope.updateOrderByFields(field, $event);
     }
-}]);
+}

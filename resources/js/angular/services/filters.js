@@ -1,4 +1,4 @@
-CDash.factory('filters', function () {
+export function filtersSvc() {
   var filters = {};
 
   filters.toggle = function(show) {
@@ -54,4 +54,4 @@ CDash.factory('filters', function () {
   }
 
   return filters;
-});
+}

@@ -1,4 +1,6 @@
-CDash.controller('ManageOverviewController', ["$scope", "$http", "apiLoader", function ManageOverviewController($scope, $http, apiLoader) {
+import { getSortedElements } from '../cdashSortable.js';
+
+export function ManageOverviewController($scope, $http, apiLoader) {
   apiLoader.loadPageData($scope, 'api/v1/manageOverview.php');
   $scope.finishSetup = function() {
     // Setup sortable elements.
@@ -45,7 +47,7 @@ CDash.controller('ManageOverviewController', ["$scope", "$http", "apiLoader", fu
   $scope.saveLayout = function() {
     // Mark all build and static components as such.
     var buildElements = getSortedElements('#buildSortable');
-    for (i = 0; i < buildElements.length; ++i) {
+    for (var i = 0; i < buildElements.length; ++i) {
       buildElements[i]['type'] = 'build';
     }
     var staticElements = getSortedElements('#staticSortable');
@@ -67,4 +69,4 @@ CDash.controller('ManageOverviewController', ["$scope", "$http", "apiLoader", fu
       $("#loading").attr("src", "img/check.gif");
     });
   };
-}]);
+}

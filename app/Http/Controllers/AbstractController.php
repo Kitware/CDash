@@ -30,7 +30,6 @@ abstract class AbstractController extends BaseController
         // A hack to ensure that redirects work properly after being redirected to the login page
         session(['url.intended' => url()->full()]);
 
-        $controller_name = '';
         $path = request()->path() === '/' ? 'index.php' : request()->path();
         $file = pathinfo(substr($path, strrpos($path, '/')), PATHINFO_FILENAME);
 
@@ -38,11 +37,7 @@ abstract class AbstractController extends BaseController
         if ($file === 'viewBuildGroup') {
             $file = 'index';
         }
-        $controller_path = config('cdash.file.path.js.controllers');
-        $controller = "{$controller_path}/{$file}.js";
-        if (is_readable($controller)) {
-            $controller_name = Str::studly($file) . 'Controller';
-        }
+        $controller_name = Str::studly($file) . 'Controller';
 
         return $this->view('cdash', $title)
             ->with('xsl_content', file_get_contents(base_path("public/assets/js/angular/views/$view.html")))

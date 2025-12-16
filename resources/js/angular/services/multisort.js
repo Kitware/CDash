@@ -1,5 +1,5 @@
 // Sort by multiple columns at once.
-CDash.factory('multisort', function () {
+export function multisort() {
   return {
     updateOrderByFields: function(obj, field, $event) {
       // Note that by default we sort in descending order.
@@ -33,4 +33,4 @@ CDash.factory('multisort', function () {
       }
     }
   };
-});
+}

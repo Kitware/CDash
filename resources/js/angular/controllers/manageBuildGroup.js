@@ -1,4 +1,6 @@
-CDash.filter('filter_builds', function() {
+import { getSortedElements } from '../cdashSortable.js';
+
+export function filter_builds() {
   // Filter the builds based on what group they belong to.
   return function(input, group) {
     if (typeof group === 'undefined' || group === null) {
@@ -6,7 +8,7 @@ CDash.filter('filter_builds', function() {
       return input;
     }
 
-    group_id = Number(group.id);
+    var group_id = Number(group.id);
     var output = [];
     for (var i = 0; i < input.length; i++) {
       if (Number(input[i].groupid) === group_id) {
@@ -16,9 +18,9 @@ CDash.filter('filter_builds', function() {
     }
     return output;
   };
-})
+}
 
-.filter('filter_buildgroups', function() {
+export function filter_buildgroups() {
   // Filter BuildGroups based on their type
   return function(input, type) {
     if (typeof type === 'undefined' || type === null) {
@@ -32,9 +34,9 @@ CDash.filter('filter_builds', function() {
     }
     return output;
   };
-})
+}
 
-.controller('ManageBuildGroupController', ["$scope", "$http", "apiLoader", "modalSvc", function ManageBuildGroupController($scope, $http, apiLoader, modalSvc) {
+export function ManageBuildGroupController($scope, $http, apiLoader, modalSvc) {
   apiLoader.loadPageData($scope, 'api/v1/manageBuildGroup.php');
   $scope.finishSetup = function() {
     // Sort BuildGroups by position.
@@ -279,6 +281,4 @@ CDash.filter('filter_builds', function() {
       }
     });
   };
-
-
-}]);
+}

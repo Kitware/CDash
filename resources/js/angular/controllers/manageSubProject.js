@@ -1,4 +1,6 @@
-CDash.filter('filter_subproject_groups', function() {
+import { getSortedElements } from '../cdashSortable.js';
+
+export function filter_subproject_groups() {
   // Filter the subprojects based on group.
   return function(input, group) {
     if (typeof group === 'undefined' || group === null) {
@@ -6,7 +8,7 @@ CDash.filter('filter_subproject_groups', function() {
       return input;
     }
 
-    group_id = Number(group.id);
+    var group_id = Number(group.id);
     var output = [];
     for (var key in input) {
       if (Number(input[key].group) === group_id) {
@@ -16,8 +18,9 @@ CDash.filter('filter_subproject_groups', function() {
     }
     return output;
   };
-})
-.controller('ManageSubProjectController', ["$scope", "$http", "apiLoader", function ManageSubProjectController($scope, $http, apiLoader) {
+}
+
+export function ManageSubProjectController($scope, $http, apiLoader) {
   apiLoader.loadPageData($scope, 'api/v1/manageSubProject.php');
   $scope.finishSetup = function() {
     // Sort groups by position.
@@ -146,5 +149,4 @@ CDash.filter('filter_subproject_groups', function() {
       }
     });
   };
-
-}]);
+};

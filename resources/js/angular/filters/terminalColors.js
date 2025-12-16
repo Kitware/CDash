@@ -1,10 +1,13 @@
-CDash.filter('ctestNonXmlCharEscape', function() {
+import AnsiUp from 'ansi_up';
+
+export function ctestNonXmlCharEscape() {
   return function(input) {
     var pattern = /\[NON-XML-CHAR-0x1B\]/g;
     return input.replace(pattern, '\x1B');
   };
-})
-.filter('terminalColors', function() {
+}
+
+export function terminalColors() {
   return function(input, htmlEscape) {
     var ansiUp = new AnsiUp;
     if (htmlEscape !== undefined) {
@@ -12,9 +15,10 @@ CDash.filter('ctestNonXmlCharEscape', function() {
     }
     return ansiUp.ansi_to_html(input);
   };
-})
-.filter('trustAsHtml', ['$sce', function($sce) {
+}
+
+export const trustAsHtml = ['$sce', function($sce) {
   return function(input) {
     return $sce.trustAsHtml(input);
   };
-}]);
+}];

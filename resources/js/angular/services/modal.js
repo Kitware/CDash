@@ -1,8 +1,8 @@
-CDash.factory('modalSvc', ["$uibModal", function modalSvc ($uibModal) {
+export function modalSvc ($uibModal) {
   const showModal = function(modelId, okFn, template, parent_scope, size, success, error) {
     parent_scope = typeof parent_scope !== 'undefined' ? parent_scope : null;
     size = typeof size !== 'undefined' ? size : 'sm';
-    $modal = $uibModal.open({
+    var $modal = $uibModal.open({
       animation: true,
       backdrop: true,
       controller: function () {
@@ -39,4 +39,4 @@ CDash.factory('modalSvc', ["$uibModal", function modalSvc ($uibModal) {
   return {
     showModal: showModal,
   };
-}]);
+}

@@ -21,15 +21,6 @@ return [
             'verify' => env('REGISTRATION_EMAIL_VERIFY', true),
         ],
     ],
-    'file' => [
-        'path' => [
-            'js' => [
-                'controllers' => base_path('public/assets/js/angular/controllers'),
-                'version' => base_path('public/assets/js/angular/version.js'),
-            ],
-            'public' => base_path('public'),
-        ],
-    ],
     'login' => [
         'max_attempts' => env('LOCKOUT_ATTEMPTS', 5),
         'lockout' => [

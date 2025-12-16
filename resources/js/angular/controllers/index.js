@@ -1,4 +1,4 @@
-CDash.filter("showEmptyBuildsLast", function () {
+export function showEmptyBuildsLast() {
   // Move missing expected builds and those missing data to the bottom of the table.
   return function (builds, sortField) {
     if (!angular.isArray(builds)) return;
@@ -45,10 +45,9 @@ CDash.filter("showEmptyBuildsLast", function () {
     present = present.concat(missing);
     return present.concat(expecteds);
   };
-})
+}
 
-
-.controller('IndexController', ["$scope", "$rootScope", "$location", "$http", "$filter", "$timeout", "anchors", "apiLoader", "filters", "multisort", "modalSvc", function IndexController($scope, $rootScope, $location, $http, $filter, $timeout, anchors, apiLoader, filters, multisort, modalSvc) {
+export function IndexController($scope, $rootScope, $location, $http, $filter, $timeout, anchors, apiLoader, filters, multisort, modalSvc) {
   // Show spinner while page is loading.
   $scope.loading = true;
 
@@ -591,4 +590,4 @@ CDash.filter("showEmptyBuildsLast", function () {
     cookie_name += '_sort';
     return cookie_name;
   };
-}]);
+}

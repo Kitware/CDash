@@ -283,10 +283,5 @@
     </tr>
   </thead>
   </table>
-
-  <script src="assets/js/angular/cdashCoverageGraph.js" type="text/javascript" charset="utf-8"></script>
-  <script src="assets/js/angular/cdashFilters.js" type="text/javascript" charset="utf-8"></script>
-  <script src="assets/js/angular/cdashViewCoverage.js" type="text/javascript" charset="utf-8"></script>
-
     </xsl:template>
 </xsl:stylesheet>
