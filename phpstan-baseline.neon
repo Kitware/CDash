@@ -343,6 +343,24 @@ parameters:
 			path: app/GraphQL/Scalars/NonNegativeSeconds.php
 
 		-
+			rawMessage: Cannot cast mixed to string.
+			identifier: cast.string
+			count: 1
+			path: app/GraphQL/Scalars/Url.php
+
+		-
+			rawMessage: Casting to string something that's already string.
+			identifier: cast.useless
+			count: 1
+			path: app/GraphQL/Scalars/Url.php
+
+		-
+			rawMessage: 'Part $value (mixed) of encapsed string cannot be cast to string.'
+			identifier: encapsedStringPart.nonString
+			count: 2
+			path: app/GraphQL/Scalars/Url.php
+
+		-
 			rawMessage: Class App\Http\Controllers\AbstractBuildController has an uninitialized property $build. Give it default value or assign it in the constructor.
 			identifier: property.uninitialized
 			count: 1
