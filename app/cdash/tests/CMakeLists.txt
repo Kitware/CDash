@@ -23,7 +23,7 @@ function(add_legacy_unit_test TestName)
       ${PHP_EXE}
       ${phpunit_extra_arg}
       ${PHPUNIT}
-      -c ${testing_dir}/phpunit.xml
+      -c ${CDash_SOURCE_DIR}/phpunit.xml
       --bootstrap ${testing_dir}/bootstrap.php
       ${testing_dir}/case/${TestName}Test.php
   )
