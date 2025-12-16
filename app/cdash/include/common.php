@@ -543,14 +543,7 @@ function get_css_file(): string
 
 function begin_XML_for_XSLT(): string
 {
-    $css_file = get_css_file();
-
-    $xml = '<?xml version="1.0" encoding="UTF-8"?><cdash>';
-    $xml .= add_XML_value('cssfile', $css_file);
-    $xml .= add_XML_value('version', AbstractController::getCDashVersion());
-    $xml .= add_XML_value('_token', csrf_token());
-
-    return $xml;
+    return '<?xml version="1.0" encoding="UTF-8"?><cdash>';
 }
 
 function begin_JSON_response(): array

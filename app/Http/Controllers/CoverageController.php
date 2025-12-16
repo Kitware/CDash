@@ -6,7 +6,6 @@ use App\Models\Project as EloquentProject;
 use App\Models\User;
 use App\Services\ProjectService;
 use App\Utils\PageTimer;
-use App\Utils\TestingDay;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\Project;
@@ -28,81 +27,6 @@ final class CoverageController extends AbstractBuildController
         return $this->angular_view('compareCoverage', 'Compare Coverage');
     }
 
-    private static function get_cdash_dashboard_xml_by_name(string $projectname, $date): string
-    {
-        $projectid = get_project_id($projectname);
-        if ($projectid === -1) {
-            return '';
-        }
-
-        $default = [
-            'cvsurl' => 'unknown',
-            'bugtrackerurl' => 'unknown',
-            'documentationurl' => 'unknown',
-            'name' => $projectname,
-            'nightlytime' => '00:00:00',
-        ];
-
-        $db = Database::getInstance();
-
-        $sql = 'SELECT * FROM project WHERE id=:id';
-        $stmt = $db->prepare($sql);
-        $stmt->bindParam(':id', $projectid);
-        $db->execute($stmt);
-        $result = $stmt ? $stmt->fetch() : [];
-
-        $project_array = array_merge($default, $result);
-
-        [$previousdate, $currentstarttime, $nextdate] = get_dates($date, $project_array['nightlytime']);
-
-        $xml = '<dashboard>
-  <datetime>' . date('l, F d Y H:i:s', time()) . '</datetime>
-  <date>' . $date . '</date>
-  <unixtimestamp>' . $currentstarttime . '</unixtimestamp>
-  <startdate>' . date('l, F d Y H:i:s', $currentstarttime) . '</startdate>
-  <svn>' . make_cdash_url(htmlentities($project_array['cvsurl'])) . '</svn>
-  <bugtracker>' . make_cdash_url(htmlentities($project_array['bugtrackerurl'])) . '</bugtracker>
-  <documentation>' . make_cdash_url(htmlentities($project_array['documentationurl'])) . '</documentation>
-  <projectid>' . $projectid . '</projectid>
-  <projectname>' . $project_array['name'] . '</projectname>
-  <projectname_encoded>' . urlencode($project_array['name']) . '</projectname_encoded>
-  <projectpublic>' . $project_array['public'] . '</projectpublic>
-  <previousdate>' . $previousdate . '</previousdate>
-  <nextdate>' . $nextdate . '</nextdate>';
-
-        if (empty($project_array['homeurl'])) {
-            $xml .= '<home>index.php?project=' . urlencode($project_array['name']) . '</home>';
-        } else {
-            $xml .= '<home>' . make_cdash_url(htmlentities($project_array['homeurl'])) . '</home>';
-        }
-
-        $xml .= '</dashboard>';
-
-        if (Auth::check()) {
-            $user = Auth::user();
-            $xml .= '<user>';
-            $xml .= add_XML_value('id', $user->id);
-
-            // Is the user super administrator?
-            $xml .= add_XML_value('admin', $user->admin);
-
-            // Is the user administrator of the project
-
-            $project = EloquentProject::find((int) $projectid);
-            $role = $project !== null ? $project->users()->withPivot('role')->find((int) ($user->id ?? -1))->pivot->role ?? 0 : -1;
-
-            $xml .= add_XML_value('projectrole', $role);
-
-            $xml .= '</user>';
-        }
-        return $xml;
-    }
-
-    /**
-     * TODO: (williamjallen) this function contains legacy XSL templating and should be converted
-     *       to a proper Blade template with Laravel-based DB queries eventually.  This contents
-     *       this function are originally from viewCoverage.php and have been copied (almost) as-is.
-     */
     public function viewCoverage(): View|RedirectResponse
     {
         @set_time_limit(0);
@@ -143,7 +67,6 @@ final class CoverageController extends AbstractBuildController
         }
 
         $xml = begin_XML_for_XSLT();
-        $xml .= self::get_cdash_dashboard_xml_by_name($this->project->Name, $date);
         $xml .= '<buildid>' . $this->build->Id . '</buildid>';
 
         $threshold = $this->project->CoverageThreshold;
@@ -157,31 +80,6 @@ final class CoverageController extends AbstractBuildController
                 $threshold = intval($row['coveragethreshold']);
             }
         }
-
-        $date = TestingDay::get($this->project, $this->build->StartTime);
-        $xml .= '<menu>';
-        $xml .= add_XML_value('back', 'index.php?project=' . urlencode($this->project->Name) . "&date=$date");
-
-        $build = new Build();
-        $build->Id = $this->build->Id;
-        $previous_buildid = $build->GetPreviousBuildId();
-        $current_buildid = $build->GetCurrentBuildId();
-        $next_buildid = $build->GetNextBuildId();
-
-        if ($previous_buildid > 0) {
-            $xml .= add_XML_value('previous', 'viewCoverage.php?buildid=' . $previous_buildid);
-        } else {
-            $xml .= add_XML_value('noprevious', '1');
-        }
-
-        $xml .= add_XML_value('current', "viewCoverage.php?buildid=$current_buildid");
-
-        if ($next_buildid > 0) {
-            $xml .= add_XML_value('next', "viewCoverage.php?buildid=$next_buildid");
-        } else {
-            $xml .= add_XML_value('nonext', '1');
-        }
-        $xml .= '</menu>';
 
         $xml .= add_XML_value('filtercount', $filtercount);
         if ($filtercount > 0) {

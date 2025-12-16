@@ -22,19 +22,11 @@ final class SubscribeProjectController extends AbstractProjectController
         $user = Auth::user();
 
         $xml = begin_XML_for_XSLT();
-        $xml .= '<menutitle>CDash</menutitle>';
-        $xml .= '<menusubtitle>Subscription</menusubtitle>';
 
         if (!isset($_GET['projectid']) || !is_numeric($_GET['projectid'])) {
             abort(400, 'Not a valid projectid!');
         }
         $this->setProjectById((int) $_GET['projectid']);
-
-        if (isset($_GET['edit']) && intval($_GET['edit']) > 0) {
-            $xml .= '<edit>1</edit>';
-        } else {
-            $xml .= '<edit>0</edit>';
-        }
 
         $db = Database::getInstance();
 
