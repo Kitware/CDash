@@ -5,7 +5,7 @@ return [
     'enabled' => env('SAML2_ENABLED', false),
 
     /* What text to display in the SAML2 login button */
-    'login_text' => env('SAML2_LOGIN_TEXT', 'SAML2'),
+    'login_text' => env('SAML2_LOGIN_TEXT', 'Sign in with SAML2'),
 
     /* Whether or not to automatically register new users */
     'autoregister_new_users' => env('SAML2_AUTO_REGISTER_NEW_USERS', false),

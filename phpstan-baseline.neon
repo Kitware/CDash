@@ -18490,19 +18490,19 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			rawMessage: 'Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester.php:832::__construct() has parameter $response with no type specified.'
+			rawMessage: 'Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester.php:833::__construct() has parameter $response with no type specified.'
 			identifier: missingType.parameter
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			rawMessage: 'Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester.php:832::getSent() has no return type specified.'
+			rawMessage: 'Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester.php:833::getSent() has no return type specified.'
 			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			rawMessage: 'Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester.php:832::read() has no return type specified.'
+			rawMessage: 'Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester.php:833::read() has no return type specified.'
 			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
@@ -18730,7 +18730,7 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			rawMessage: Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester.php:832::$read has no type specified.
+			rawMessage: Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester.php:833::$read has no type specified.
 			identifier: missingType.property
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php

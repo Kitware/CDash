@@ -1,9 +1,6 @@
 @php
-    $oauthCollection = collect(config('oauth2'));
-    $has_oauth2_login = $oauthCollection->firstWhere('enable', true);
-
-    $socialiteCollection = collect(config('services'))->where("oauth","true");
-    $has_socialite_login = $socialiteCollection->firstWhere('enable', true);
+    $oauthCollection = collect(config('services'))->where("oauth","true");
+    $has_oauth_login = $oauthCollection->firstWhere('enable', true);
 
     $has_saml2_login = config('saml2.enabled');
     $saml2_login_text = config('saml2.login_text');
@@ -13,92 +10,77 @@
     $title = 'Login';
 @endphp
 
-@extends('cdash')
+@extends('cdash', [
+    'vue' => true,
+    'daisyui' => true,
+])
 
 @section('main_content')
-    @includeIf('local.login')
     <div id="message" style="color: green;"></div>
-    @if ($show_login_form)
-        <form method="POST" action="login" name="loginform" id="loginform">
-            <input type="hidden" name="_token" id="csrf-token" value="{{ csrf_token() }}" />
-            <div class="row table-heading">
-                <div class="col-1 ml-2 mt-1 mb-1 text-right">
-                    {{ $login_field }}:
-                </div>
-                <div class="col-auto mt-1 mb-1">
-                    <input class="textbox" name="email" size="40" value="{{ old('email') }}">
-                    @if ($errors->has('email'))
-                        <div>
-                        <span class="invalid-feedback d-block" role="alert">
-                            <strong>{{ $errors->first('email') }}</strong>
-                        </span>
-                        </div>
-                    @endif
-                </div>
+    <div class="tw-flex tw-flex-row tw-w-full tw-justify-center tw-gap-8">
+        @if(View::exists('local.login'))
+            <div class="tw-max-w-xl">
+                @include('local.login')
             </div>
-			<div class="row table-heading">
-				<div class="col-1 ml-2 mt-1 mb-1 text-right">
-					Password:
-				</div>
-				<div class="col-auto mt-1 mb-1">
-					<input class="textbox" type="password" name="password" size="20" autocomplete="off">
-					<input class="textbox" type="checkbox" name="remember" id="remember" {{old('remember') ? 'checked' : ''}}> Remember Me
-					@if ($errors->has('password'))
-						<div>
-							<span class="invalid-feedback d-block" role="alert">
-								<strong>{{ $errors->first('password') }}</strong>
-							</span>
-						</div>
-					@endif
-				</div>
-			</div>
-			<div class="row table-heading pb-2">
-				<div class="col-1 ml-2 mt-1 mb-1">
-				</div>
-				<div class="col-1 mt-1 mb-1 mr-auto">
-					<input type="submit" value="Login >>" name="sent" class="textbox">
-				</div>
-				<div class="col-auto text-right">
-					@if (Route::has('password.request'))
-						<a class="cdash-link" href="recoverPassword.php">Forgot your password?</a>
-					@endif
-				</div>
-			</div>
-        </form>
-    @endif  <!-- $show_login_form -->
-
-    @if ($has_oauth2_login || $has_saml2_login || $has_socialite_login)
-    <div class="row table-heading border-top pt-2">
-        <div class="col-auto offset-1">
-            <p>
-                Sign in with:
-                @if ($has_saml2_login)
-                    <form method="POST" action="/saml2/login" name="saml2_login_form" id="saml2_login_form">
-                        <input type="hidden" name="_token" id="csrf-token" value="{{ csrf_token() }}" />
-                        <button type="submit" class="btn btn-primary">
-                            {{ $saml2_login_text }}
-                        </button>
-                    </form>
-                @endif
-                @foreach($socialiteCollection as $key => $config)
+        @endif
+        <div class="tw-flex tw-flex-col tw-w-96 tw-gap-2">
+            @if ($show_login_form)
+                <form method="POST" action="{{ url('/login') }}" name="loginform" id="loginform">
+                    @csrf
+                    <div class="tw-w-full tw-flex tw-flex-row tw-justify-center">
+                        <img src="{{ asset('img/cdash_logo_full.svg?rev=2023-05-31') }}" height="60" alt="CDash logo" style="height: 60px;">
+                    </div>
+                    <label class="tw-form-control tw-w-full">
+                        <span class="tw-label tw-label-text">
+                            {{ $login_field }}
+                        </span>
+                        <input type="text" name="email" value="{{ old('email') }}" class="tw-input tw-input-bordered tw-w-full" />
+                        @if ($errors->has('email'))
+                            <span class="tw-label-alt tw-text-error">
+                                {{ $errors->first('email') }}
+                            </span>
+                        @endif
+                    </label>
+                    <label class="tw-form-control tw-w-full">
+                        <span class="tw-label">
+                            <span class="tw-label-text">
+                                Password
+                            </span>
+                            <a href="{{ url('recoverPassword.php') }}" class="tw-label-text-alt tw-link tw-link-hover">
+                                Forgot Password?
+                            </a>
+                        </span>
+                        <input type="password" name="password" class="tw-input tw-input-bordered tw-w-full" />
+                        @if ($errors->has('password'))
+                            <span class="tw-label-alt tw-text-error">
+                                    {{ $errors->first('password') }}
+                                </span>
+                        @endif
+                    </label>
+                    <button class="tw-btn tw-btn-block tw-mt-2" type="submit">Sign In</button>
+                </form>
+            @endif
+            @if($show_login_form && ($has_saml2_login || $has_oauth_login))
+                <div class="tw-divider">OR</div>
+            @endif
+            @if($has_saml2_login)
+                <form method="POST" action="{{ url('/saml2/login') }}" name="saml2_login_form" id="saml2_login_form">
+                    @csrf
+                    <button type="submit" class="tw-btn tw-btn-block">
+                        {{ $saml2_login_text }}
+                    </button>
+                </form>
+            @endif
+            @if($has_oauth_login)
+                @foreach($oauthCollection as $provider => $config)
                     @if ($config['enable'])
-                        <a class="cdash-link" href="/auth/{{ $key }}/redirect">
-                            <button>
-                                <img class="paddr" src="img/{{ $key }}_signin.png" title="Log in with your {{ $key }} account" style="height:40px"/>
-                                {{ $config['display_name']}}
-                            </button>
+                        <a class="tw-btn tw-btn-block" href="{{ url("/auth/$provider/redirect") }}">
+                            <img src="img/{{ $provider }}_signin.png" alt="Log in with your {{ $provider }} account" style="height:40px"/>
+                            {{ $config['display_name']}}
                         </a>
                     @endif
                 @endforeach
-                @foreach($oauthCollection as $key => $config)
-                    @if ($config['enable'])
-                        <a class="cdash-link" href="/oauth/{{ $key }}">
-                            <img class="paddr" src="img/{{ $key }}_signin.png" title="Log in with your {{ $key }} account"/>
-                        </a>
-                    @endif
-                @endforeach
-            </p>
+            @endif
         </div>
     </div>
-    @endif
 @endsection
