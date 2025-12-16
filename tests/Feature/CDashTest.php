@@ -88,7 +88,8 @@ class CDashTest extends TestCase
         URL::forceRootUrl('http://localhost');
         Config::set('cdash.login_field', 'User');
         $this->get('/login')
-            ->assertSeeText('User:');
+            ->assertSeeText('User')
+            ->assertDontSeeText('Email');
     }
 
     public function testViewProjectsRedirectNoPublicProjects(): void

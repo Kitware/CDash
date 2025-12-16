@@ -50,7 +50,7 @@ class LoginAndRegistration extends TestCase
         // Verify that the normal login form is shown by default.
         $response = $this->get('/login');
         $response->assertOk();
-        $response->assertSeeText('Email:');
+        $response->assertSeeText('Email');
     }
 
     public function testRegisterUser(): void

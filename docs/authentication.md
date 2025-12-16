@@ -69,7 +69,7 @@ To begin, you will need to
 | GITHUB_CLIENT_ID | The Client ID assigned to your GitHub OAuth2 app. | '' |
 | GITHUB_CLIENT_SECRET | The Client Secret created for your GitHub OAuth2 app. | '' |
 | GITHUB_AUTO_REGISTER_NEW_USERS | Whether to automatically register a new user or provide them the Registration form | false |
-| GITHUB_DISPLAY_NAME | The text displayed on the GitHub OAuth2 login button | GitHub |
+| GITHUB_DISPLAY_NAME | The text displayed on the GitHub OAuth2 login button | Sign in with GitHub |
 
 ###### GitLab
 
@@ -82,7 +82,7 @@ First [configure GitLab as an OAuth2 authentication identity provider](https://d
 | GITLAB_CLIENT_SECRET | The OAuth 2 Client Secret from the Secret field. | '' |
 | GITLAB_DOMAIN | The GitLab server to authenticate against. | https://gitlab.com |
 | GITLAB_AUTO_REGISTER_NEW_USERS | Whether to automatically register a new user or provide them the Registration form | false |
-| GITLAB_DISPLAY_NAME | The text displayed on the GitLab OAuth2 login button | GitLab |
+| GITLAB_DISPLAY_NAME | The text displayed on the GitLab OAuth2 login button | Sign in with GitLab |
 
 ###### Google
 
@@ -94,7 +94,7 @@ Begin by [creating OAuth2 credentials for your Google project](https://developer
 | GOOGLE_CLIENT_ID | The client ID from your Google OAuth2 credentials. | '' |
 | GOOGLE_CLIENT_SECRET | The client secret from your Google OAuth2 credentials. | '' |
 | GOOGLE_AUTO_REGISTER_NEW_USERS | Whether to automatically register a new user or provide them the Registration form | false |
-| GOOGLE_DISPLAY_NAME | The text displayed on the Google OAuth2 login button | Google |
+| GOOGLE_DISPLAY_NAME | The text displayed on the Google OAuth2 login button | Sign in with Google |
 
 ###### PingIdentity
 
@@ -110,7 +110,7 @@ Begin by [creating OAuth2 client in your PingIdentity console](https://docs.ping
 | PINGIDENTITY_TOKEN_ENDPOINT | The URL fragment to the endpoint to ask for the Token | '/as/token.oauth2' |
 | PINGIDENTITY_USER_ENDPOINT | The URL fragment to the endpoint to ask for the user's information with the token | '/idp/userinfo.openid' |
 | PINGIDENTITY_AUTO_REGISTER_NEW_USERS | Whether to automatically register a new user or provide them the Registration form | false |
-| PINGIDENTITY_DISPLAY_NAME | The text displayed on the PingIdentity OAuth2 login button | PingIdentity |
+| PINGIDENTITY_DISPLAY_NAME | The text displayed on the PingIdentity OAuth2 login button | Sign in with PingIdentity |
 
 ## SAML2
 
@@ -122,6 +122,6 @@ Relevant `.env` variables for CDash SAML2 authentication:
 | Variable | Description | Default |
 | -------- |------------ | ------- |
 | SAML2_ENABLED | Whether or not to use SAML2 authentication. | false |
-| SAML2_LOGIN_TEXT | What text to display in the SAML2 login button. | SAML2 |
+| SAML2_LOGIN_TEXT | What text to display in the SAML2 login button. | Sign in with SAML2 |
 | SAML2_AUTO_REGISTER_NEW_USERS | Whether or not to automatically register new users upon first login. | false |
 | SAML2_PROXY_VARS | Whether or not to trust the X-Forwarded-Proto HTTP header | false |
