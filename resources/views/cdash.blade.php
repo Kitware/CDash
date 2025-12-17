@@ -30,24 +30,20 @@
 
     {{-- Framework-specific details --}}
     @if(isset($angular) && $angular === true)
-        <link rel="stylesheet" type="text/css" href="{{ asset(mix('assets/css/legacy_3rdparty.css')) }}"/>
+        <link rel="stylesheet" type="text/css" href="{{ asset(mix('assets/css/legacy.css')) }}"/>
         <link rel="stylesheet" type="text/css" href="{{ asset(mix(get_css_file())) }} }}"/>
-        <link rel="stylesheet" href="{{ asset(mix('assets/css/bootstrap.min.css')) }}"/>
         <script src="{{ asset(mix('assets/js/legacy.js')) }}"></script>
     @elseif(isset($vue) && $vue === true)
         <link rel="stylesheet" type="text/css" href="{{ asset(mix(get_css_file())) }}"/>
         @if(isset($daisyui) && $daisyui === true)
             <link rel="stylesheet" type="text/css" href="{{ asset(mix('assets/css/app.css')) }}"/>
         @else
-            <link rel="stylesheet" type="text/css" href="{{ asset(mix('assets/css/legacy_3rdparty.css')) }}"/>
-            <link rel="stylesheet" type="text/css" href="{{ asset(mix('assets/css/vue_common.css')) }}"/>
-            <link rel="stylesheet" type="text/css" href="{{ asset(mix('assets/css/bootstrap.min.css')) }}"/>
+            <link rel="stylesheet" type="text/css" href="{{ asset(mix('assets/css/legacy_vue.css')) }}"/>
         @endif
         <script src="{{ asset(mix('assets/js/app.js')) }}" type="text/javascript" defer></script>
     @else
-        <link rel="stylesheet" type="text/css" href="{{ asset(mix('assets/css/legacy_3rdparty.css')) }}"/>
+        <link rel="stylesheet" type="text/css" href="{{ asset(mix('assets/css/legacy.css')) }}"/>
         <link rel="stylesheet" type="text/css" href="{{ asset(mix(get_css_file())) }}"/>
-        <link rel="stylesheet" href="{{ asset(mix('assets/css/bootstrap.min.css')) }}"/>
         <script src="{{ asset(mix('assets/js/legacy.js')) }}"></script>
         @if(str_contains(request()->url(), 'viewCoverage.php')) {{-- This last XSL page needs special treatment... --}}
             <link rel="stylesheet" type="text/css" href="{{ asset(mix('assets/css/jquery.dataTables.css')) }}"/>

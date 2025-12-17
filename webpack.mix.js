@@ -26,15 +26,9 @@ mix.copy('resources/js/angular/views/partials/*.html', 'public/assets/js/angular
 mix.css('resources/css/cdash.css', 'public/assets/css/cdash.css');
 mix.css('resources/css/colorblind.css', 'public/assets/css/colorblind.css');
 mix.css('resources/css/jquery.dataTables.css', 'public/assets/css/jquery.dataTables.css');
-mix.css('resources/css/bootstrap.min.css', 'public/assets/css/bootstrap.min.css');
-mix.css('resources/css/vue_common.css', 'public/assets/css/vue_common.css');
 
-mix.styles([
-  'node_modules/bootstrap/dist/css/bootstrap.css',
-  'node_modules/jquery-ui-dist/jquery-ui.css',
-  'node_modules/nvd3/build/nv.d3.min.css',
-], 'public/assets/css/legacy_3rdparty.css');
-
+mix.css('resources/css/legacy.css', 'public/assets/css/legacy.css');
+mix.css('resources/css/legacy_vue.css', 'public/assets/css/legacy_vue.css');
 mix.sass('resources/sass/app.scss', 'public/assets/css/app.css');
 
 mix.copy('resources/js/angular/jquery.dataTables.min.js', 'public/assets/js/jquery.dataTables.min.js');
