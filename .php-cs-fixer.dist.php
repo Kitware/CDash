@@ -51,4 +51,5 @@ return $config->setRules([
     'ordered_traits' => true,
     'self_accessor' => true,
     'set_type_to_cast' => true,
+    'string_line_ending' => true,
 ])->setFinder($finder);
