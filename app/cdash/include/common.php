@@ -699,7 +699,7 @@ function cast_data_for_JSON($value)
     }
     // Do not support E notation for numbers (ie 6.02e23).
     // This can cause checksums (such as git commits) to be converted to 0.
-    if (is_numeric($value) && stripos($value, 'e') === false) {
+    if (is_numeric($value) && !str_contains(strtolower($value), strtolower('e'))) {
         if (is_nan($value) || is_infinite($value)) {
             // Special handling for values that are not supported by JSON.
             return 0;
