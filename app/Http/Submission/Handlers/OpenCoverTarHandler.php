@@ -254,15 +254,15 @@ class OpenCoverTarHandler extends AbstractXmlHandler
 
                 $this->coverageFile->File .= $line;
                 if (!(preg_match("/^\/\//", $trimmedLine)
-                   or preg_match('/using /', $trimmedLine)
-                   or preg_match('/^namespace/', $trimmedLine)
-                   or preg_match('/^public/', $trimmedLine)
-                   or preg_match('/^protected/', $trimmedLine)
-                   or preg_match('/^private/', $trimmedLine)
-                   or preg_match("/^\[/", $trimmedLine)
-                   or preg_match('/[{}]/', $trimmedLine)
-                   or ('' == $trimmedLine)
-                   or $inlongComment
+                   || preg_match('/using /', $trimmedLine)
+                   || preg_match('/^namespace/', $trimmedLine)
+                   || preg_match('/^public/', $trimmedLine)
+                   || preg_match('/^protected/', $trimmedLine)
+                   || preg_match('/^private/', $trimmedLine)
+                   || preg_match("/^\[/", $trimmedLine)
+                   || preg_match('/[{}]/', $trimmedLine)
+                   || ('' == $trimmedLine)
+                   || $inlongComment
                 ) && $this->ParseCSFiles) {
                     $this->coverageFileLog->AddLine($key, 0);
                 }
