@@ -48,4 +48,5 @@ return $config->setRules([
     'no_homoglyph_names' => true,
     'no_useless_sprintf' => true,
     'non_printable_character' => true,
+    'ordered_traits' => true,
 ])->setFinder($finder);
