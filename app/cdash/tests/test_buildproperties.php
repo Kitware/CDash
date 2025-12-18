@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 use App\Models\Project;
 use App\Utils\TestCreator;
@@ -215,7 +215,7 @@ class BuildPropertiesTestCase extends KWWebTestCase
 
         // Do the PUT submission.
         $puturl = $this->url . "/submit.php?type=BuildPropertiesJSON&md5=$md5&filename=$filename&buildid=$build->Id";
-        $filepath = dirname(__FILE__) . "/data/BuildProperties/$filename";
+        $filepath = __DIR__ . "/data/BuildProperties/$filename";
         if (!$this->uploadfile($puturl, $filepath)) {
             $this->fail("PUT submit failed for $buildname");
         }

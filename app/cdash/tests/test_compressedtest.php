@@ -4,7 +4,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 class CompressedTestCase extends KWWebTestCase
 {
@@ -27,14 +27,14 @@ class CompressedTestCase extends KWWebTestCase
         $this->createProject($settings);
 
         // Make sure we can submit to it.
-        $file = dirname(__FILE__) . '/data/CompressedTest.xml';
+        $file = __DIR__ . '/data/CompressedTest.xml';
         $this->submission('TestCompressionExample', $file);
     }
 
     public function testGITUpdate(): void
     {
         echo "4. testGITUpdate\n";
-        $file = dirname(__FILE__) . '/data/git-Update.xml';
+        $file = __DIR__ . '/data/git-Update.xml';
         if (!$this->submission('TestCompressionExample', $file)) {
             return;
         }

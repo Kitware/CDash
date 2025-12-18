@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 use CDash\Database;
 use CDash\Model\Project;
@@ -35,7 +35,7 @@ class SubProjectOrderTestCase extends KWWebTestCase
         $this->project->Fill();
 
         // Submit our testing data.
-        $test_data = dirname(__FILE__) . '/data/MultipleSubprojects/Build.xml';
+        $test_data = __DIR__ . '/data/MultipleSubprojects/Build.xml';
         if (!$this->submission('SubProjectOrder', $test_data)) {
             $this->fail('failed to submit Build.xml');
         }

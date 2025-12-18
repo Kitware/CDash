@@ -4,7 +4,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 class JSCoverCoverageTestCase extends KWWebTestCase
 {
@@ -44,7 +44,7 @@ class JSCoverCoverageTestCase extends KWWebTestCase
 
         // Do the PUT submission to actually upload our data.
         $puturl = $this->url . "/submit.php?type=JSCoverTar&md5=e99bdd400ab4643e4fbeef7ec649f04e&filename=JSCoverTest.tar&buildid=$buildid";
-        $filename = dirname(__FILE__) . '/data/JSCoverTest.tar';
+        $filename = __DIR__ . '/data/JSCoverTest.tar';
 
         $put_result = $this->uploadfile($puturl, $filename);
         if (!str_contains($put_result, '{"status":0}')) {

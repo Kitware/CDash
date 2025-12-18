@@ -4,7 +4,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 use CDash\Model\Project;
 use Illuminate\Support\Facades\DB;
@@ -35,7 +35,7 @@ class OutputColorTestCase extends KWWebTestCase
         }
 
         // Submit testing data.
-        $file = dirname(__FILE__) . '/data/OutputColor/Test.xml';
+        $file = __DIR__ . '/data/OutputColor/Test.xml';
         if (!$this->submission('OutputColor', $file)) {
             $this->fail("Failed to submit $file");
             return;
@@ -64,7 +64,7 @@ class OutputColorTestCase extends KWWebTestCase
         }
 
         // Verify that color output works as expected for preformatted test measurements too.
-        $file = dirname(__FILE__) . '/data/OutputColor/Test_2.xml';
+        $file = __DIR__ . '/data/OutputColor/Test_2.xml';
         if (!$this->submission('OutputColor', $file)) {
             $this->fail("Failed to submit $file");
             return;
@@ -82,7 +82,7 @@ class OutputColorTestCase extends KWWebTestCase
         $this->assertEqual($expected, $measurement['value']);
 
         // Submit build data for later check in viewBuildErrors.
-        $file = dirname(__FILE__) . '/data/OutputColor/Build.xml';
+        $file = __DIR__ . '/data/OutputColor/Build.xml';
         if (!$this->submission('OutputColor', $file)) {
             $this->fail("Failed to submit $file");
         }

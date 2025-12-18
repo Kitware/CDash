@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 use App\Models\PendingSubmissions;
 use App\Models\Site;
@@ -34,7 +34,7 @@ class DoneHandlerTestCase extends KWWebTestCase
             return;
         }
 
-        $this->ConfigFile = dirname(__FILE__) . '/../../../.env';
+        $this->ConfigFile = __DIR__ . '/../../../.env';
         $this->Original = file_get_contents($this->ConfigFile);
 
         config(['cdash.remote_workers' => 'true']);

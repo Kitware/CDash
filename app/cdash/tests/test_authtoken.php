@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 use App\Models\AuthToken;
 use App\Models\Project as EloquentProject;
@@ -151,7 +151,7 @@ class AuthTokenTestCase extends KWWebTestCase
 
     public function normalSubmit($headers)
     {
-        $file = dirname(__FILE__) . '/data/InsightExperimentalExample/Insight_Experimental_Build.xml';
+        $file = __DIR__ . '/data/InsightExperimentalExample/Insight_Experimental_Build.xml';
         $url = "{$this->url}/submit.php?project=AuthTokenProject";
         $result = $this->uploadfile($url, $file, $headers);
         if (!$result || !str_contains($result, '<status>OK</status>')) {
@@ -196,7 +196,7 @@ class AuthTokenTestCase extends KWWebTestCase
 
     public function putSubmit($headers)
     {
-        $file = dirname(__FILE__) . '/data/gcov.tar';
+        $file = __DIR__ . '/data/gcov.tar';
         $puturl = $this->url . "/submit.php?type=GcovTar&md5=5454e16948a1d58d897e174b75cc5633&filename=gcov.tar&buildid={$this->PostBuildId}";
         $put_result = $this->uploadfile($puturl, $file, $headers);
         if (!str_contains($put_result, '{"status":0}')) {

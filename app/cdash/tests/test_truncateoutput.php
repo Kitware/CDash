@@ -7,7 +7,7 @@
 use App\Utils\DatabaseCleanupUtils;
 use Illuminate\Support\Facades\DB;
 
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 class TruncateOutputTestCase extends KWWebTestCase
 {
@@ -19,7 +19,7 @@ class TruncateOutputTestCase extends KWWebTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->ConfigFile = dirname(__FILE__) . '/../../../.env';
+        $this->ConfigFile = __DIR__ . '/../../../.env';
         $this->Original = file_get_contents($this->ConfigFile);
 
         $this->Expected = "The beginning survives\n...\nCDash truncated output because it exceeded 44 characters.\n...\nThis part is preserved\n";
@@ -53,7 +53,7 @@ class TruncateOutputTestCase extends KWWebTestCase
         // Set a limit that will cause our test output to be truncated.
         file_put_contents($this->ConfigFile, "LARGE_TEXT_LIMIT=44\n", FILE_APPEND | LOCK_EX);
 
-        $rep = dirname(__FILE__) . '/data/TruncateOutput';
+        $rep = __DIR__ . '/data/TruncateOutput';
         foreach (['Build_stdout.xml', 'Build_stderr.xml', 'Build_both.xml'] as $file) {
             // Submit our testing data.
             if (!$this->submission('InsightExample', "$rep/$file")) {

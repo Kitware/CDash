@@ -4,7 +4,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 class EnableAsynchronousTestCase extends KWWebTestCase
 {
@@ -15,7 +15,7 @@ class EnableAsynchronousTestCase extends KWWebTestCase
 
     public function testEnableAsynchronous(): void
     {
-        $filename = dirname(__FILE__) . '/../../../.env';
+        $filename = __DIR__ . '/../../../.env';
         // Using .env, we no longer have to worry about being inside the closing PHP bracket.
         $injectedText = "// test config settings injected by file [' . __FILE__ . ']\nCDASH_ASYNCHRONOUS_SUBMISSION = true";
         file_put_contents($filename, $injectedText, FILE_APPEND);

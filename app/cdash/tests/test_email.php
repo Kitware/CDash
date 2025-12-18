@@ -5,7 +5,7 @@ use App\Models\Site;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 class EmailTestCase extends KWWebTestCase
 {
@@ -83,7 +83,7 @@ class EmailTestCase extends KWWebTestCase
     public function testSubmissionFirstBuild(): void
     {
         $this->deleteLog($this->logfilename);
-        $rep = dirname(__FILE__) . '/data/EmailProjectExample';
+        $rep = __DIR__ . '/data/EmailProjectExample';
         $file = "$rep/1_build.xml";
         if (!$this->submission('EmailProjectExample', $file)) {
             return;
@@ -105,7 +105,7 @@ class EmailTestCase extends KWWebTestCase
     public function testSubmissionEmailBuild(): void
     {
         $this->deleteLog($this->logfilename);
-        $rep = dirname(__FILE__) . '/data/EmailProjectExample';
+        $rep = __DIR__ . '/data/EmailProjectExample';
         $file = "$rep/2_build.xml";
         if (!$this->submission('EmailProjectExample', $file)) {
             return;
@@ -137,7 +137,7 @@ class EmailTestCase extends KWWebTestCase
     public function testSubmissionEmailTest(): void
     {
         $this->deleteLog($this->logfilename);
-        $rep = dirname(__FILE__) . '/data/EmailProjectExample';
+        $rep = __DIR__ . '/data/EmailProjectExample';
         $file = "$rep/2_test.xml";
 
         if (!$this->submission('EmailProjectExample', $file)) {
@@ -164,7 +164,7 @@ class EmailTestCase extends KWWebTestCase
     public function testSubmissionEmailDynamicAnalysis(): void
     {
         $this->deleteLog($this->logfilename);
-        $rep = dirname(__FILE__) . '/data/EmailProjectExample';
+        $rep = __DIR__ . '/data/EmailProjectExample';
         $file = "$rep/2_dynamicanalysis.xml";
 
         if (!$this->submission('EmailProjectExample', $file)) {
@@ -215,7 +215,7 @@ class EmailTestCase extends KWWebTestCase
 
     public function testEmailSentToGitCommitter(): void
     {
-        $rep = dirname(__FILE__) . '/data/EmailProjectExample';
+        $rep = __DIR__ . '/data/EmailProjectExample';
         $file = "$rep/3_update.xml";
         if (!$this->submission('EmailProjectExample', $file)) {
             return;
@@ -323,7 +323,7 @@ class EmailTestCase extends KWWebTestCase
         DB::insert('INSERT INTO site2user (siteid, userid) VALUES (?, ?)', [$site->id, 1]);
 
         // Submit our testing data.
-        $rep = dirname(__FILE__) . '/data/EmailProjectExample';
+        $rep = __DIR__ . '/data/EmailProjectExample';
         $file = "$rep/update_error.xml";
         if (!$this->submission('EmailProjectExample', $file)) {
             $this->fail('Failed to submit update_error.xml');

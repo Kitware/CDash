@@ -4,7 +4,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 require_once 'tests/kwtest/kw_unlink.php';
 
@@ -17,7 +17,7 @@ class ProjectXmlSequenceTestCase extends KWWebTestCase
 
     public function submitFile($filename)
     {
-        $file = dirname(__FILE__) . "/data/ProjectXmlSequence/$filename";
+        $file = __DIR__ . "/data/ProjectXmlSequence/$filename";
 
         if (!$this->submission('SubProjectExample', $file)) {
             return false;

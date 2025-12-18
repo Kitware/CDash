@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 use App\Utils\TestingDay;
 use CDash\Database;
@@ -39,7 +39,7 @@ class ConsistentTestingDayTestCase extends KWWebTestCase
         $this->project->Save();
 
         // Submit our testing data.
-        $dir = dirname(__FILE__) . '/data/TestingDay';
+        $dir = __DIR__ . '/data/TestingDay';
         $this->submission('ConsistentTestingDay', "$dir/Test_1.xml");
         $this->submission('ConsistentTestingDay', "$dir/Test_2.xml");
 

@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 use CDash\Model\Project;
 use Illuminate\Support\Facades\DB;
@@ -35,7 +35,7 @@ class DynamicAnalysisDefectLongTypeTestCase extends KWWebTestCase
         $this->project->Fill();
 
         // Submit our testing data.
-        $file = dirname(__FILE__) . '/data/DynamicAnalysisDefectLongType/DynamicAnalysis.xml';
+        $file = __DIR__ . '/data/DynamicAnalysisDefectLongType/DynamicAnalysis.xml';
         if (!$this->submission('DynamicAnalysisDefectLongType', $file)) {
             $this->fail("Failed to submit {$file}");
         }

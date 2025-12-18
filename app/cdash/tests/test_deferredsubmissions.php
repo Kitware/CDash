@@ -4,7 +4,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 require_once 'tests/test_branchcoverage.php';
 
 use App\Models\AuthToken;
@@ -26,7 +26,7 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->ConfigFile = dirname(__FILE__) . '/../../../.env';
+        $this->ConfigFile = __DIR__ . '/../../../.env';
         $this->Original = file_get_contents($this->ConfigFile);
 
         // Make sure we start from scratch each time the test is run.
@@ -43,7 +43,7 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         $this->project->Fill();
 
         $this->token = '';
-        $this->dataDir = dirname(__FILE__) . '/data/DeferredSubmission';
+        $this->dataDir = __DIR__ . '/data/DeferredSubmission';
     }
 
     public function __destruct()

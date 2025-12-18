@@ -4,7 +4,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 use App\Models\BuildUpdateFile;
 use App\Models\DynamicAnalysisDefect;
@@ -305,7 +305,7 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $image2 = new Image();
         $image2->Extension = 'image/gif';
         $image2->Name = 'smile.gif';
-        $image2->Data = base64_encode(file_get_contents(dirname(__FILE__) . '/data/smile.gif'));
+        $image2->Data = base64_encode(file_get_contents(__DIR__ . '/data/smile.gif'));
         $test_creator2->images->push($image2);
 
         $test_creator2->labels->push($label);
@@ -316,7 +316,7 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $test_creator2->create($existing_build);
 
         // UploadFile
-        $filename = dirname(__FILE__) . '/data/smile.gif';
+        $filename = __DIR__ . '/data/smile.gif';
         $upload1 = new UploadFile();
         $upload1->filename = $filename;
         $upload1->isurl = false;
@@ -325,7 +325,7 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $upload1->save();
         $upload1->builds()->attach((int) $build->Id);
 
-        $filename = dirname(__FILE__) . '/data/smile2.gif';
+        $filename = __DIR__ . '/data/smile2.gif';
         $upload2 = new UploadFile();
         $upload2->filename = $filename;
         $upload2->isurl = false;

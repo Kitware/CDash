@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\DB;
 
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 class TimeoutsAndMissingTestsTestCase extends KWWebTestCase
 {
@@ -31,7 +31,7 @@ class TimeoutsAndMissingTestsTestCase extends KWWebTestCase
     public function testMissingTestsSummarizedInEmail(): void
     {
         $this->deleteLog($this->logfilename);
-        $rep = dirname(__FILE__) . '/data/TimeoutsAndMissingTests';
+        $rep = __DIR__ . '/data/TimeoutsAndMissingTests';
         $file = "{$rep}/5_test.xml";
 
         if (!$this->submission('EmailProjectExample', $file)) {
@@ -96,7 +96,7 @@ class TimeoutsAndMissingTestsTestCase extends KWWebTestCase
     public function testTimeoutFailuresDifferentiatedInEmail(): void
     {
         $this->deleteLog($this->logfilename);
-        $rep = dirname(__FILE__) . '/data/TimeoutsAndMissingTests';
+        $rep = __DIR__ . '/data/TimeoutsAndMissingTests';
         $file = "{$rep}/4_test.xml";
 
         if (!$this->submission('EmailProjectExample', $file)) {

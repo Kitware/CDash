@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Artisan;
 
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 class InstallTestCase extends KWWebTestCase
 {

@@ -8,7 +8,7 @@ use CDash\Model\Image;
 use CDash\Model\Project;
 use Illuminate\Support\Facades\DB;
 
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 class DisplayImageTestCase extends KWWebTestCase
 {
@@ -20,7 +20,7 @@ class DisplayImageTestCase extends KWWebTestCase
     public function testDisplayImage()
     {
         $image = new Image();
-        $image->Filename = dirname(__FILE__) . '/data/smile.gif';
+        $image->Filename = __DIR__ . '/data/smile.gif';
         $image->Extension = 'image/gif';
         $image->Checksum = 100;
         $image->Save();

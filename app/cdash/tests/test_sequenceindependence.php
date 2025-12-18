@@ -6,7 +6,7 @@
 //
 use Illuminate\Support\Facades\DB;
 
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 class SequenceIndependenceTestCase extends KWWebTestCase
 {
@@ -190,7 +190,7 @@ class SequenceIndependenceTestCase extends KWWebTestCase
         }
 
         // Submit the files in the order specified.
-        $rep = dirname(__FILE__) . '/data/InsightExperimentalExample';
+        $rep = __DIR__ . '/data/InsightExperimentalExample';
         foreach ($file_order as $type) {
             $file = "$rep/Insight_Experimental_$type.xml";
             if (!$this->submission('InsightExample', $file)) {

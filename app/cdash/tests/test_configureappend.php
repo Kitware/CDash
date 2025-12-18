@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 use App\Models\Build;
 use App\Models\Configure;
@@ -37,7 +37,7 @@ class ConfigureAppendTestCase extends KWWebTestCase
         $this->project->Fill();
 
         // Submit our testing data.
-        $test_dir = dirname(__FILE__) . '/data/ConfigureAppend/';
+        $test_dir = __DIR__ . '/data/ConfigureAppend/';
         $files = ['Configure_1.xml', 'Configure_2.xml'];
         foreach ($files as $file) {
             if (!$this->submission('ConfigureAppend', "{$test_dir}/{$file}")) {

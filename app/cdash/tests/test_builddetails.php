@@ -7,7 +7,7 @@
 use App\Utils\DatabaseCleanupUtils;
 use Illuminate\Support\Facades\DB;
 
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 class BuildDetailsTestCase extends KWWebTestCase
 {
@@ -19,7 +19,7 @@ class BuildDetailsTestCase extends KWWebTestCase
     {
         parent::__construct();
 
-        $this->testDataDir = dirname(__FILE__) . '/data/BuildDetails';
+        $this->testDataDir = __DIR__ . '/data/BuildDetails';
         $this->testDataFiles = ['Subbuild1.xml', 'Subbuild2.xml', 'Subbuild3.xml'];
 
         $this->createProject([

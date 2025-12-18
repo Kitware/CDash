@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 use CDash\Model\Project;
 use GuzzleHttp\Exception\ClientException;
@@ -55,7 +55,7 @@ class RedundantTestsTestCase extends KWWebTestCase
         }
 
         // Submit our testing data.
-        if (!$this->submission('RedundantTests', dirname(__FILE__) . '/data/RedundantTests/Test.xml')) {
+        if (!$this->submission('RedundantTests', __DIR__ . '/data/RedundantTests/Test.xml')) {
             $this->fail('Failed to submit');
         }
 

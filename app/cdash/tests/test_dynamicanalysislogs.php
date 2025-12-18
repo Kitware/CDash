@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 use CDash\Model\DynamicAnalysis;
 use CDash\Model\Project;
@@ -36,7 +36,7 @@ class DynamicAnalysisLogsTestCase extends KWWebTestCase
         $this->project->Fill();
 
         // Submit our testing data.
-        $test_dir = dirname(__FILE__) . '/data/DynamicAnalysisLogs/';
+        $test_dir = __DIR__ . '/data/DynamicAnalysisLogs/';
         $files = ['Build.xml', 'Configure.xml', 'Test.xml', 'DynamicAnalysis.xml'];
         foreach ($files as $file) {
             if (!$this->submission('DynamicAnalysisLogs', "{$test_dir}/{$file}")) {

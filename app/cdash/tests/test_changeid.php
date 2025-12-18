@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 use CDash\Database;
 use Tests\Traits\CreatesProjects;
 
@@ -26,7 +26,7 @@ class ChangeIdTestCase extends KWWebTestCase
         ]);
 
         // Submit our testing data.
-        $dir = dirname(__FILE__) . '/data/GithubPR';
+        $dir = __DIR__ . '/data/GithubPR';
         $this->submission($project->name, "$dir/UpdateBug_Build.xml");
         $this->submission($project->name, "$dir/UpdateBug_Test.xml");
         $this->submission($project->name, "$dir/Update.xml");

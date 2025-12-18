@@ -4,7 +4,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 use CDash\Database;
 use CDash\Model\BuildConfigure;
@@ -59,7 +59,7 @@ class ConfigureWarningTestCase extends KWWebTestCase
         }
 
         // Submit our testing data.
-        $dir = dirname(__FILE__) . '/data/ConfigureWarnings';
+        $dir = __DIR__ . '/data/ConfigureWarnings';
         $this->submission('ConfigureWarningProject', "$dir/1.xml");
         $this->submission('ConfigureWarningProject', "$dir/2.xml");
 

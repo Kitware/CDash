@@ -4,7 +4,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 use App\Utils\DatabaseCleanupUtils;
 
@@ -54,7 +54,7 @@ class OpenCoverCoverageTestCase extends KWWebTestCase
 
         // Do the PUT submission to actually upload our data.
         $puturl = $this->url . "/submit.php?type=OpenCoverTar&md5=c0eeaf6be9838eacc75e652d6c85f925&filename=OpenCoverTest.tar&buildid=$buildid";
-        $filename = dirname(__FILE__) . '/data/OpenCoverTest.tar';
+        $filename = __DIR__ . '/data/OpenCoverTest.tar';
         $put_result = $this->uploadfile($puturl, $filename);
         if (!str_contains($put_result, '{"status":0}')) {
             $this->fail(
@@ -105,7 +105,7 @@ class OpenCoverCoverageTestCase extends KWWebTestCase
 
         // Do the PUT submission to actually upload our data.
         $puturl = $this->url . "/submit.php?type=OpenCoverTar&md5=21eb5dff198d703652f8a7c93a290140&filename=OpenCoverTestWithDataJson.tar&buildid=$buildid";
-        $filename = dirname(__FILE__) . '/data/OpenCoverTestWithDataJson.tar';
+        $filename = __DIR__ . '/data/OpenCoverTestWithDataJson.tar';
 
         $put_result = $this->uploadfile($puturl, $filename);
         if (!str_contains($put_result, '{"status":0}')) {

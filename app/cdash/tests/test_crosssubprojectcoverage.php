@@ -17,7 +17,7 @@
 
 use Illuminate\Support\Facades\DB;
 
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 class CoverageAcrossSubProjectsTestCase extends KWWebTestCase
 {
@@ -27,7 +27,7 @@ class CoverageAcrossSubProjectsTestCase extends KWWebTestCase
     {
         parent::__construct();
         $this->deleteLog($this->logfilename);
-        $this->DataDir = dirname(__FILE__) . '/data/CoverageAcrossSubProjects';
+        $this->DataDir = __DIR__ . '/data/CoverageAcrossSubProjects';
     }
 
     public function testCreateProjectTest(): void

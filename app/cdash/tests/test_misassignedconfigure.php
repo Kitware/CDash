@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 use CDash\Model\Project;
 use Illuminate\Support\Facades\DB;
@@ -32,7 +32,7 @@ class MisassignedConfigureTestCase extends KWWebTestCase
         $this->project->Fill();
         $this->deleteLog($this->logfilename);
 
-        $data_dir = dirname(__FILE__) . '/data/MultipleSubprojects/';
+        $data_dir = __DIR__ . '/data/MultipleSubprojects/';
 
         // Submit some testing data.
         $this->submission($this->project->Name, "{$data_dir}/Configure_bad.xml");

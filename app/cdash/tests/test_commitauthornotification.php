@@ -12,7 +12,7 @@ class CommitAuthorNotificationTestCase extends KWWebTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->dataDir = dirname(__FILE__) . "/data/{$this->projectName}";
+        $this->dataDir = __DIR__ . "/data/{$this->projectName}";
         $this->projectId = $this->createProject([
             'Name' => $this->projectName,
             'Description' => "Project {$this->projectName} test for cdash testing",

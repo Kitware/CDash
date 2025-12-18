@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 use CDash\Database;
 use CDash\Model\Project;
@@ -35,7 +35,7 @@ class AttachedFilesTestCase extends KWWebTestCase
         $this->project->Fill();
 
         // Submit our testing data.
-        $this->submission('AttachedFiles', dirname(__FILE__) . '/data/AttachedFileTest.xml');
+        $this->submission('AttachedFiles', __DIR__ . '/data/AttachedFileTest.xml');
 
         // Get the buildtest we created.
         $db = Database::getInstance();

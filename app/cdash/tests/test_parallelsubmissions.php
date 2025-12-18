@@ -5,7 +5,7 @@
 // relative to the top of the CDash source tree
 //
 
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 require_once 'tests/trilinos_submission_test.php';
 
 use App\Utils\DatabaseCleanupUtils;
@@ -20,7 +20,7 @@ class ParallelSubmissionsTestCase extends TrilinosSubmissionTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->ConfigFile = dirname(__FILE__) . '/../../../.env';
+        $this->ConfigFile = __DIR__ . '/../../../.env';
         $this->Original = file_get_contents($this->ConfigFile);
     }
 
@@ -64,7 +64,7 @@ class ParallelSubmissionsTestCase extends TrilinosSubmissionTestCase
         $this->assertEqual(147, $num_jobs);
 
         // Start 4 queue workers.
-        chdir(dirname(__FILE__) . '/../../../');
+        chdir(__DIR__ . '/../../../');
         foreach (range(0, 3) as $i) {
             exec('php artisan queue:work --stop-when-empty > /dev/null 2>&1 &');
         }

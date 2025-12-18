@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 use CDash\Model\Build;
 use CDash\Model\Project;
@@ -37,7 +37,7 @@ class StartTimeFromNotesTestCase extends KWWebTestCase
         $this->project->Fill();
 
         // Submit our testing data.
-        $file = dirname(__FILE__) . '/data/StartTimeFromNotes/Notes.xml';
+        $file = __DIR__ . '/data/StartTimeFromNotes/Notes.xml';
         if (!$this->submission('StartTimeFromNotes', $file)) {
             $this->fail("Failed to submit {$file}");
         }

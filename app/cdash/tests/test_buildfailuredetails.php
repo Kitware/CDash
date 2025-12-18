@@ -7,7 +7,7 @@
 use App\Utils\DatabaseCleanupUtils;
 use Illuminate\Support\Facades\DB;
 
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 class BuildFailureDetailsTestCase extends KWWebTestCase
 {
@@ -24,7 +24,7 @@ class BuildFailureDetailsTestCase extends KWWebTestCase
         echo "1. testBuildFailureDetails\n";
 
         // Submit our test data.
-        $rep = dirname(__FILE__) . '/data/BuildFailureDetails';
+        $rep = __DIR__ . '/data/BuildFailureDetails';
         if (!$this->submission('EmailProjectExample', "$rep/Build_1.xml")) {
             $this->fail('failed to submit Build_1.xml');
             return 1;

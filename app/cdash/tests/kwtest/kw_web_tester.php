@@ -15,8 +15,8 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once dirname(__FILE__) . '/../../../../vendor/autoload.php';
-require_once dirname(__FILE__) . '/kw_unlink.php';
+require_once __DIR__ . '/../../../../vendor/autoload.php';
+require_once __DIR__ . '/kw_unlink.php';
 
 // This is used by several of the tests, but the Laravel entrypoint is not used for
 // such tests, meaning that this could be undefined.

@@ -4,7 +4,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 use CDash\Model\Image;
 
@@ -19,7 +19,7 @@ class ImageTestCase extends KWWebTestCase
     {
         $image = new Image();
 
-        $pathToImage = dirname(__FILE__) . '/data/smile.gif';
+        $pathToImage = __DIR__ . '/data/smile.gif';
         $image->Filename = $pathToImage;
         $image->Extension = 'image/gif';
         // dummy checksum so we don't break the test on pgSQL

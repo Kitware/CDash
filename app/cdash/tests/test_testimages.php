@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 use App\Models\TestImage;
 use CDash\Model\Project;
@@ -36,7 +36,7 @@ class TestImagesTestCase extends KWWebTestCase
         $this->project->Fill();
 
         // Submit our testing data.
-        $test_dir = dirname(__FILE__) . '/data/TestImages/';
+        $test_dir = __DIR__ . '/data/TestImages/';
         for ($i = 1; $i < 3; $i++) {
             if (!$this->submission('TestImages', "{$test_dir}/Test_{$i}.xml")) {
                 $this->fail("Failed to submit Test_{$i}.xml");
