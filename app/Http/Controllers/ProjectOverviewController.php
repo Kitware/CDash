@@ -334,7 +334,7 @@ final class ProjectOverviewController extends AbstractProjectController
                         }
 
                         $subproject_group_id = $child_build_row->subprojectgroupid;
-                        if (is_null($subproject_group_id)) {
+                        if (null === $subproject_group_id) {
                             continue;
                         }
 
@@ -773,7 +773,7 @@ final class ProjectOverviewController extends AbstractProjectController
         // Check if we are saving an overview layout.
         if (Request::isMethod('post') && request()->has('saveLayout')) {
             $inputRows = json_decode(request()->input('saveLayout'), true);
-            if (!is_null($inputRows)) {
+            if (null !== $inputRows) {
                 // Remove any old overview layout from this project.
                 DB::delete('DELETE FROM overview_components WHERE projectid=?', [intval($this->project->Id)]);
 

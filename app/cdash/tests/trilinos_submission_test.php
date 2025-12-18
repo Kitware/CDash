@@ -80,7 +80,7 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
                 $parent_build = $build;
             }
         }
-        if (is_null($parent_build)) {
+        if (null === $parent_build) {
             $this->fail('Could not find expected parent build');
             return false;
         }

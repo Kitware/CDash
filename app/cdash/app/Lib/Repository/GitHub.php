@@ -127,7 +127,7 @@ class GitHub implements RepositoryInterface
         $pem = 'file://' . $pem;
 
         $integrationId = config('cdash.github_app_id');
-        if (is_null($integrationId)) {
+        if (null === $integrationId) {
             if ($required) {
                 throw new Exception('GITHUB_APP_ID is not set');
             }
@@ -314,7 +314,7 @@ class GitHub implements RepositoryInterface
         $build_summaries = [];
         foreach ($build_rows as $row) {
             $build_summary = $this->getCheckSummaryForBuildRow($row);
-            if (!is_null($build_summary)) {
+            if (null !== $build_summary) {
                 $build_summaries[] = $build_summary;
             }
         }
@@ -558,7 +558,7 @@ class GitHub implements RepositoryInterface
                     }
                 }
 
-                if (is_null($commit)) {
+                if (null === $commit) {
                     // Next, check the database.
                     $stmt = $this->db->prepare(
                         'SELECT DISTINCT revision FROM updatefile
@@ -571,13 +571,13 @@ class GitHub implements RepositoryInterface
                                 break;
                             }
                         }
-                        if (!is_null($commit)) {
+                        if (null !== $commit) {
                             break;
                         }
                     }
                 }
 
-                if (is_null($commit)) {
+                if (null === $commit) {
                     // Lastly, use the Github API to find what files this commit changed.
                     // To avoid being rate-limited, we only perform this lookup once
                     // per commit, caching the results as we go.
@@ -613,14 +613,14 @@ class GitHub implements RepositoryInterface
                                 break;
                             }
                         }
-                        if (!is_null($commit)) {
+                        if (null !== $commit) {
                             // Stop examining commits once we find one that matches.
                             break;
                         }
                     }
                 }
 
-                if (is_null($commit)) {
+                if (null === $commit) {
                     // Skip this file if we couldn't find a commit that modified it.
                     continue;
                 }

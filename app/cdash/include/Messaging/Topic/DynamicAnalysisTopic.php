@@ -34,7 +34,7 @@ class DynamicAnalysisTopic extends Topic implements Decoratable
 
     public function subscribesToBuild(Build $build): bool
     {
-        $ancestorSubscribe = is_null($this->topic) ? true : $this->topic->subscribesToBuild($build);
+        $ancestorSubscribe = null === $this->topic ? true : $this->topic->subscribesToBuild($build);
         $collection = $build->GetDynamicAnalysisCollection();
         $subscribe = false;
         if ($ancestorSubscribe) {

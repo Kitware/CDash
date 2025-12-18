@@ -334,7 +334,7 @@ class KWWebTestCase extends WebTestCase
         $stamp, $subproject = null, $header = null)
     {
         $url = $this->url . "/submit.php?project=$project&build=$build&site=$site&stamp=$stamp";
-        if (!is_null($subproject)) {
+        if (null !== $subproject) {
             $url .= "&subproject=$subproject";
         }
 
@@ -378,7 +378,7 @@ class KWWebTestCase extends WebTestCase
         curl_setopt($ch, CURLOPT_INFILE, $fp);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_INFILESIZE, filesize($filename));
-        if (!is_null($header)) {
+        if (null !== $header) {
             curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
         }
         curl_setopt($ch, CURLOPT_HEADER, true);

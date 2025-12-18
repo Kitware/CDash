@@ -43,7 +43,7 @@ class IndexFiltersTestCase extends KWWebTestCase
 
     public function filter($field, $compare, $value, $expected, $url = null)
     {
-        if (is_null($url)) {
+        if (null === $url) {
             $url = $this->InsightUrl;
         }
         $filter_string = "filtercount=1&showfilters=1&field1=$field&compare1=$compare&value1=$value";

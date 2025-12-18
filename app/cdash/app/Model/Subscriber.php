@@ -86,7 +86,7 @@ class Subscriber implements SubscriberInterface
 
     public function getTopics(): TopicCollection
     {
-        if (is_null($this->topics)) {
+        if (null === $this->topics) {
             $this->topics = new TopicCollection();
         }
         return $this->topics;

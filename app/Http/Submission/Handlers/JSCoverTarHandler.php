@@ -125,7 +125,7 @@ class JSCoverTarHandler extends AbstractSubmissionHandler
         $jsonDecoded = json_decode($jsonContents, true);
         foreach ($jsonDecoded as $path => $coverageEntry) {
             // Make sure it has the fields we expect.
-            if (is_null($coverageEntry)
+            if (null === $coverageEntry
                 || !array_key_exists('source', $coverageEntry)
                 || !array_key_exists('coverage', $coverageEntry)
             ) {

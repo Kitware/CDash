@@ -691,7 +691,7 @@ class Index extends ResultsApi
                 $this->siteResponse['buildname'] = $build_array['name'];
                 $this->siteResponse['buildplatform'] = $buildplatform;
                 $this->siteResponse['generator'] = $build_array['generator'];
-                if (!is_null($changelink)) {
+                if (null !== $changelink) {
                     $this->siteResponse['changelink'] = $changelink;
                     $this->siteResponse['changeicon'] = $changeicon;
                 }
@@ -703,7 +703,7 @@ class Index extends ResultsApi
             $build_response['buildname'] = $build_array['name'];
             $build_response['buildplatform'] = $buildplatform;
             $build_response['uploadfilecount'] = $build_array['builduploadfiles'];
-            if (!is_null($changelink)) {
+            if (null !== $changelink) {
                 $build_response['changelink'] = $changelink;
                 $build_response['changeicon'] = $changeicon;
             }

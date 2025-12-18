@@ -1528,7 +1528,7 @@ final class CoverageController extends AbstractBuildController
             $coverage_response['loctested'] = (int) $build_array['loctested'];
 
             // Compute the diff
-            if (!is_null($build_array['loctesteddiff']) || !is_null($build_array['locuntesteddiff'])) {
+            if (null !== $build_array['loctesteddiff'] || null !== $build_array['locuntesteddiff']) {
                 $loctesteddiff = (int) $build_array['loctesteddiff'];
                 $locuntesteddiff = (int) $build_array['locuntesteddiff'];
                 $previouspercent =

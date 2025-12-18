@@ -101,7 +101,7 @@ class JavaJSONTarHandler extends AbstractSubmissionHandler
     {
         $jsonContents = file_get_contents($fileinfo->getPath() . DIRECTORY_SEPARATOR . $fileinfo->getFilename());
         $jsonDecoded = json_decode($jsonContents, true);
-        if (is_null($jsonDecoded)) {
+        if (null === $jsonDecoded) {
             return;
         }
 
@@ -149,7 +149,7 @@ class JavaJSONTarHandler extends AbstractSubmissionHandler
         $jsonDecoded = json_decode($jsonContents, true);
 
         // Make sure it has the fields we expect.
-        if (is_null($jsonDecoded)
+        if (null === $jsonDecoded
             || !array_key_exists('file', $jsonDecoded)
             || !array_key_exists('package', $jsonDecoded)
             || !array_key_exists('lines', $jsonDecoded)

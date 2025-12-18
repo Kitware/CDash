@@ -1372,7 +1372,7 @@ final class BuildController extends AbstractBuildController
                     $gmtdate = strtotime($last_good_submit . ' UTC');
                 } else {
                     // Find the oldest submission for this build.
-                    if (is_null($first_submit)) {
+                    if (null === $first_submit) {
                         pdo_execute($oldest_build_stmt, $query_params);
                         $first_submit = $oldest_build_stmt->fetchColumn();
                     }

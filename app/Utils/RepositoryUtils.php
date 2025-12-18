@@ -25,7 +25,7 @@ class RepositoryUtils
         $project = $service->get(Project::class);
         $project->Id = $projectid;
         $project->Fill();
-        if (is_null($project->CvsViewerType)) {
+        if (null === $project->CvsViewerType) {
             return;
         }
         $cvsviewertype = strtolower($project->CvsViewerType);
@@ -242,7 +242,7 @@ class RepositoryUtils
             }
         }
 
-        if (is_null($repo) || !isset($repo['username'])
+        if (null === $repo || !isset($repo['username'])
             || !isset($repo['password'])) {
             Log::warning("Missing repository info for project #$project->Id");
             return;

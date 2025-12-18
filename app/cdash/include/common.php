@@ -582,7 +582,7 @@ function get_dashboard_JSON($projectname, $date, &$response): void
     $project_array['name'] = $projectname;
     $project_array['nightlytime'] = $project->Id ? $project->NightlyTime : '00:00:00';
 
-    if (is_null($date)) {
+    if (null === $date) {
         $date = date(FMT_DATE);
     }
     [$previousdate, $currentstarttime, $nextdate] = get_dates($date, $project_array['nightlytime']);
@@ -785,7 +785,7 @@ function get_aggregate_build(Build $build): Build
 
 function create_aggregate_build($build, $siteid = null): Build
 {
-    if (is_null($siteid)) {
+    if (null === $siteid) {
         $siteid = get_server_siteid();
     }
 

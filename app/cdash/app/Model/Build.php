@@ -715,7 +715,7 @@ class Build
                 return $stmt;
             }
         }
-        if (is_null($stmt)) {
+        if (null === $stmt) {
             $stmt = $this->PDO->prepare('
                 SELECT c.*, b.configureerrors, b.configurewarnings
                 FROM configure c

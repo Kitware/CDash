@@ -196,7 +196,7 @@ class BazelJSONHandler extends AbstractSubmissionHandler
     public function ParseLine($line)
     {
         $json_array = json_decode($line, true);
-        if (is_null($json_array)) {
+        if (null === $json_array) {
             Log::error('json_decode error: ' . json_last_error_msg(), [
                 'function' => 'BazelJSONHandler::ParseLine',
             ]);
@@ -432,7 +432,7 @@ class BazelJSONHandler extends AbstractSubmissionHandler
                             if ($record_error) {
                                 // Record any existing build error before creating
                                 // a new one.
-                                if (!is_null($build_error)) {
+                                if (null !== $build_error) {
                                     $this->RecordError($build_error, $type, $subproject_name);
                                     $subproject_name = '';
                                     $build_error = null;
@@ -492,7 +492,7 @@ class BazelJSONHandler extends AbstractSubmissionHandler
                                     }
                                     $this->InitializeSubProjectBuild($subproject_name);
                                 }
-                            } elseif (!is_null($build_error)) {
+                            } elseif (null !== $build_error) {
                                 // Record lines following the error/warning
                                 // as post context.
                                 $build_error->PostContext .= "$line\n";
@@ -501,7 +501,7 @@ class BazelJSONHandler extends AbstractSubmissionHandler
                         $log_line_number++;
                     }
 
-                    if (!is_null($build_error)) {
+                    if (null !== $build_error) {
                         $this->RecordError($build_error, $type, $subproject_name);
                         $build_error = null;
                     }
@@ -536,7 +536,7 @@ class BazelJSONHandler extends AbstractSubmissionHandler
                             break;
                         }
                         $child_build = $this->InitializeSubProjectBuild($subproject_name);
-                        if (!is_null($child_build)) {
+                        if (null !== $child_build) {
                             $child_build->InsertErrors = false;
                             SubmissionUtils::add_build($child_build);
                             $buildid = $child_build->Id;

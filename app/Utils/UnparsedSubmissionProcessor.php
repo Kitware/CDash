@@ -276,7 +276,7 @@ class UnparsedSubmissionProcessor
                 'name' => new ProjectNameRule(),
             ]);
 
-            if (is_null($projectname) || $validator->fails()) {
+            if (null === $projectname || $validator->fails()) {
                 Log::info("Could not find build metadata file for {$this->buildid}");
                 abort(Response::HTTP_NOT_FOUND, 'Build not found');
             }

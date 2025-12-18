@@ -18,7 +18,7 @@ class ViewSubProjectsTestCase extends KWWebTestCase
         $this->get($this->url . '/api/v1/viewSubProjects.php?project=Trilinos&date=2011-07-22');
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
-        if (is_null($jsonobj)) {
+        if (null === $jsonobj) {
             $this->fail("API response could be not be decoded to JSON:\n$content");
             return 1;
         }

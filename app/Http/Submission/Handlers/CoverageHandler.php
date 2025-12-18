@@ -144,11 +144,11 @@ class CoverageHandler extends AbstractXmlHandler
                     // Make sure this file gets associated with the correct SubProject.
                     $subproject = SubProject::GetSubProjectFromPath(
                         $coverageFile->FullPath, $this->GetProject()->Id);
-                    if (!is_null($subproject)) {
+                    if (null !== $subproject) {
                         // Find the sibling build that performed this SubProject.
                         $subprojectBuild = Build::GetSubProjectBuild(
                             $this->Build->GetParentId(), $subproject->GetId());
-                        if (is_null($subprojectBuild)) {
+                        if (null === $subprojectBuild) {
                             // Build doesn't exist yet, add it here.
                             $subprojectBuild = new Build();
                             $subprojectBuild->Name = $this->Build->Name;

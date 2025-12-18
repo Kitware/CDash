@@ -62,11 +62,11 @@ class TimelineTestCase extends KWWebTestCase
                     break;
                 }
             }
-            if (!is_null($build)) {
+            if (null !== $build) {
                 break;
             }
         }
-        if (is_null($build)) {
+        if (null === $build) {
             $this->fail('build lookup failed');
         }
 

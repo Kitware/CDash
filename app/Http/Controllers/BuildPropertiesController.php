@@ -54,7 +54,7 @@ final class BuildPropertiesController extends AbstractBuildController
             // Default to the current date.
             $date = date(FMT_DATE);
         }
-        if (is_null($beginning_timestamp)) {
+        if (null === $beginning_timestamp) {
             [$unused, $beginning_timestamp] = get_dates($date, $this->project->NightlyTime);
             $datetime = new DateTime();
             $datetime->setTimestamp($beginning_timestamp);
@@ -256,7 +256,7 @@ final class BuildPropertiesController extends AbstractBuildController
             $stmt = $pdo->prepare($sql);
             $stmt->execute($_GET['buildid']);
 
-            if (!$this->gather_defects($stmt, $prettyname, $defects_response) && !is_null($sql2)) {
+            if (!$this->gather_defects($stmt, $prettyname, $defects_response) && null !== $sql2) {
                 $stmt = $pdo->prepare($sql2);
                 $stmt->execute($_GET['buildid']);
                 $this->gather_defects($stmt, $prettyname, $defects_response);

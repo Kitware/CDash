@@ -34,10 +34,10 @@ class ManageMeasurementsTestCase extends KWWebTestCase
 
     public function __destruct()
     {
-        if (!is_null($this->BuildId)) {
+        if (null !== $this->BuildId) {
             DatabaseCleanupUtils::removeBuild($this->BuildId);
         }
-        if (!is_null($this->SubProjectBuildId)) {
+        if (null !== $this->SubProjectBuildId) {
             DatabaseCleanupUtils::removeBuild($this->SubProjectBuildId);
         }
 
