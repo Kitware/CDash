@@ -47,4 +47,5 @@ return $config->setRules([
     'modernize_types_casting' => true,
     'no_homoglyph_names' => true,
     'no_useless_sprintf' => true,
+    'non_printable_character' => true,
 ])->setFinder($finder);
