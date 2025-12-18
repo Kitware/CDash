@@ -36,4 +36,5 @@ return $config->setRules([
     'combine_nested_dirname' => true,
     'dir_constant' => true,
     'ereg_to_preg' => true,
+    'fopen_flag_order' => true,
 ])->setFinder($finder);
