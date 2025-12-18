@@ -33,4 +33,5 @@ return $config->setRules([
     'declare_strict_types' => false, // TODO: turn this back on.  Currently causes errors...
     // The following rules are a subset of @Symfony:risky and should eventually be replaced by the full ruleset.
     'array_push' => true,
+    'combine_nested_dirname' => true,
 ])->setFinder($finder);
