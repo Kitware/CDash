@@ -27769,28 +27769,28 @@ parameters:
 			rawMessage: 'You should use assertSame() instead of assertEquals(), because both values are scalars of the same type'
 			identifier: phpunit.assertEquals
 			count: 2
-			path: tests/Unit/app/Console/Command/ValidateXmlCommandTest.php
+			path: tests/Unit/Console/Command/ValidateXmlCommandTest.php
 
 		-
 			rawMessage: 'Parameter #1 $objectOrClass of class ReflectionClass constructor expects class-string<T of object>|T of object, array<string>|string given.'
 			identifier: argument.type
 			count: 1
-			path: tests/Unit/app/ControllerNameTest.php
+			path: tests/Unit/ControllerNameTest.php
 
 		-
 			rawMessage: 'Parameter #2 ...$arrays of function array_merge expects array, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: tests/Unit/app/ControllerNameTest.php
+			path: tests/Unit/ControllerNameTest.php
 
 		-
 			rawMessage: 'Parameter #3 $subject of function str_replace expects array<string>|string, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: tests/Unit/app/ControllerNameTest.php
+			path: tests/Unit/ControllerNameTest.php
 
 		-
 			rawMessage: 'You should use assertSame() instead of assertEquals(), because both values are scalars of the same type'
 			identifier: phpunit.assertEquals
 			count: 1
-			path: tests/Unit/app/Middleware/InternalTest.php
+			path: tests/Unit/Middleware/InternalTest.php

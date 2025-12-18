@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Submission\Instrumentation;
+namespace Tests\Feature\Submission\Tests;
 
 use App\Models\Project;
 use Tests\TestCase;

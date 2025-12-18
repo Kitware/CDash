@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\app\Middleware;
+namespace Tests\Unit\Middleware;
 
 use App\Http\Middleware\Internal;
 use Illuminate\Http\Request;
