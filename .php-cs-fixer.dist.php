@@ -40,4 +40,5 @@ return $config->setRules([
     'function_to_constant' => true,
     'get_class_to_class_keyword' => true,
     'implode_call' => true,
+    'is_null' => true,
 ])->setFinder($finder);
