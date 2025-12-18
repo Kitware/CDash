@@ -41,4 +41,5 @@ return $config->setRules([
     'get_class_to_class_keyword' => true,
     'implode_call' => true,
     'is_null' => true,
+    'logical_operators' => true,
 ])->setFinder($finder);
