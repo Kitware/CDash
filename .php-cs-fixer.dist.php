@@ -38,4 +38,5 @@ return $config->setRules([
     'ereg_to_preg' => true,
     'fopen_flag_order' => true,
     'function_to_constant' => true,
+    'get_class_to_class_keyword' => true,
 ])->setFinder($finder);
