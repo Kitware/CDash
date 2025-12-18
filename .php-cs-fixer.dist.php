@@ -34,4 +34,5 @@ return $config->setRules([
     // The following rules are a subset of @Symfony:risky and should eventually be replaced by the full ruleset.
     'array_push' => true,
     'combine_nested_dirname' => true,
+    'dir_constant' => true,
 ])->setFinder($finder);
