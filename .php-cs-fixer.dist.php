@@ -37,4 +37,5 @@ return $config->setRules([
     'dir_constant' => true,
     'ereg_to_preg' => true,
     'fopen_flag_order' => true,
+    'function_to_constant' => true,
 ])->setFinder($finder);
