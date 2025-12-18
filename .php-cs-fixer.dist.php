@@ -35,4 +35,5 @@ return $config->setRules([
     'array_push' => true,
     'combine_nested_dirname' => true,
     'dir_constant' => true,
+    'ereg_to_preg' => true,
 ])->setFinder($finder);
