@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Jobs;
+namespace Tests\Feature\Mail;
 
 use App\Mail\AuthTokenExpired;
 use App\Models\AuthToken;

@@ -83,13 +83,13 @@ endif()
 # Tests from this point to the next cdash_install() are expected to not need database or other
 # system resources.
 
-add_unit_test(/Unit/app/ControllerNameTest)
+add_unit_test(/Unit/ControllerNameTest)
 
-add_unit_test(/Unit/app/FillableAttributesTest)
+add_unit_test(/Unit/FillableAttributesTest)
 
-add_unit_test(/Unit/app/Validators/PasswordTest)
+add_unit_test(/Unit/Validators/PasswordTest)
 
-add_unit_test(/Unit/app/Middleware/InternalTest)
+add_unit_test(/Unit/Middleware/InternalTest)
 
 # TODO: Is this test useful now?
 add_legacy_unit_test(/PHPUnitTest)
@@ -98,7 +98,7 @@ add_legacy_unit_test(/CDash/ServiceContainer)
 
 add_legacy_unit_test(/CDash/LinkifyCompilerOutput)
 
-add_unit_test(/Unit/app/Console/Command/ValidateXmlCommandTest)
+add_unit_test(/Unit/Console/Command/ValidateXmlCommandTest)
 
 add_php_test(seconds_from_interval)
 

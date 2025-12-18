@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\app;
+namespace Tests\Unit;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\MassAssignmentException;
