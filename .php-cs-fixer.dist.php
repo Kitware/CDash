@@ -13,7 +13,6 @@ $finder = Finder::create()
     ->exclude('resources')
     ->exclude('public')
     ->exclude('app/cdash/tests/kwtest/simpletest')
-    ->notPath('app/cdash/tests/config.test.local.php')
     ->in(__DIR__);
 
 $config = new Config();
@@ -32,4 +31,6 @@ return $config->setRules([
     'global_namespace_import' => ['import_classes' => true, 'import_constants' => null, 'import_functions' => null],
     'phpdoc_align' => ['align' => 'left'],
     'declare_strict_types' => false, // TODO: turn this back on.  Currently causes errors...
+    // The following rules are a subset of @Symfony:risky and should eventually be replaced by the full ruleset.
+    'array_push' => true,
 ])->setFinder($finder);
