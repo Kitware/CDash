@@ -45,4 +45,5 @@ return $config->setRules([
     'long_to_shorthand_operator' => true,
     'modernize_strpos' => ['modernize_stripos' => true],
     'modernize_types_casting' => true,
+    'no_homoglyph_names' => true,
 ])->setFinder($finder);
