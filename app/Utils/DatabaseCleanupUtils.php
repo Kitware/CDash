@@ -326,7 +326,7 @@ class DatabaseCleanupUtils
                 $percent = round(($num_done / $total) * 100, -1);
                 if ($percent > $next_report) {
                     Log::info("Cleaning `{$table}`: {$next_report}%");
-                    $next_report = $next_report + 10;
+                    $next_report += 10;
                 }
             }
         }
