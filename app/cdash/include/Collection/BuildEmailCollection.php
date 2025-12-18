@@ -28,7 +28,7 @@ class BuildEmailCollection extends Collection
     {
         $email = $buildEmail->GetEmail();
         if (in_array($email, $this->keys)) {
-            array_push($this->collection[$email], $buildEmail);
+            $this->collection[$email][] = $buildEmail;
         } else {
             $this->addItem([$buildEmail], $email);
         }
@@ -47,7 +47,7 @@ class BuildEmailCollection extends Collection
                     $sub = $collection->get($category);
                     $sub->add($email);
                 } else {
-                    $sub = new BuildEmailCollection();
+                    $sub = new self();
                     $sub->add($email);
                     $collection->addItem($sub, $category);
                 }

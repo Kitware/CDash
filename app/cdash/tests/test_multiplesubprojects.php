@@ -4,7 +4,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 use App\Utils\DatabaseCleanupUtils;
 use CDash\Database;
@@ -24,7 +24,7 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->dataDir = dirname(__FILE__) . '/data/MultipleSubprojects';
+        $this->dataDir = __DIR__ . '/data/MultipleSubprojects';
     }
 
     public function setUp(): void
@@ -138,7 +138,7 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
         $this->restoreEmailPreference();
 
         // Remove extra subprojects
-        $rep = dirname(__FILE__) . '/data/SubProjectExample';
+        $rep = __DIR__ . '/data/SubProjectExample';
         $file = "$rep/Project_1.xml";
         if (!$this->submission('SubProjectExample', $file)) {
             $this->fail('failed to submit Project_1.xml');

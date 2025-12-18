@@ -391,6 +391,12 @@ parameters:
 			path: app/Http/Controllers/AbstractProjectController.php
 
 		-
+			rawMessage: Cannot cast mixed to int.
+			identifier: cast.int
+			count: 8
+			path: app/Http/Controllers/AdminController.php
+
+		-
 			rawMessage: 'Construct empty() is not allowed. Use more strict comparison.'
 			identifier: empty.notAllowed
 			count: 1
@@ -400,12 +406,6 @@ parameters:
 			rawMessage: 'Method App\Http\Controllers\AdminController::removeBuilds() never returns Illuminate\Http\RedirectResponse so it can be removed from the return type.'
 			identifier: return.unusedType
 			count: 1
-			path: app/Http/Controllers/AdminController.php
-
-		-
-			rawMessage: 'Parameter #1 $value of function intval expects array|bool|float|int|resource|string|null, mixed given.'
-			identifier: argument.type
-			count: 8
 			path: app/Http/Controllers/AdminController.php
 
 		-
@@ -493,13 +493,13 @@ parameters:
 			path: app/Http/Controllers/AuthTokenController.php
 
 		-
-			rawMessage: 'Parameter #1 $user_id of static method App\Utils\AuthTokenUtil::generateToken() expects int, int|string|null given.'
-			identifier: argument.type
+			rawMessage: Cannot cast mixed to int.
+			identifier: cast.int
 			count: 1
 			path: app/Http/Controllers/AuthTokenController.php
 
 		-
-			rawMessage: 'Parameter #1 $value of function intval expects array|bool|float|int|resource|string|null, mixed given.'
+			rawMessage: 'Parameter #1 $user_id of static method App\Utils\AuthTokenUtil::generateToken() expects int, int|string|null given.'
 			identifier: argument.type
 			count: 1
 			path: app/Http/Controllers/AuthTokenController.php
@@ -633,7 +633,7 @@ parameters:
 		-
 			rawMessage: Cannot cast mixed to int.
 			identifier: cast.int
-			count: 3
+			count: 11
 			path: app/Http/Controllers/BuildController.php
 
 		-
@@ -769,12 +769,6 @@ parameters:
 			path: app/Http/Controllers/BuildController.php
 
 		-
-			rawMessage: 'Parameter #1 $value of function intval expects array|bool|float|int|resource|string|null, mixed given.'
-			identifier: argument.type
-			count: 8
-			path: app/Http/Controllers/BuildController.php
-
-		-
 			rawMessage: 'Parameter #2 $timestamp of function date expects int|null, int|false given.'
 			identifier: argument.type
 			count: 11
@@ -817,8 +811,8 @@ parameters:
 			path: app/Http/Controllers/BuildNoteController.php
 
 		-
-			rawMessage: 'Parameter #1 $value of function intval expects array|bool|float|int|resource|string|null, mixed given.'
-			identifier: argument.type
+			rawMessage: Cannot cast mixed to int.
+			identifier: cast.int
 			count: 1
 			path: app/Http/Controllers/BuildNoteController.php
 
@@ -1200,7 +1194,19 @@ parameters:
 		-
 			rawMessage: Cannot cast mixed to int.
 			identifier: cast.int
-			count: 12
+			count: 19
+			path: app/Http/Controllers/CoverageController.php
+
+		-
+			rawMessage: Casting to int something that's already int.
+			identifier: cast.useless
+			count: 1
+			path: app/Http/Controllers/CoverageController.php
+
+		-
+			rawMessage: 'Casting to int something that''s already int<1, max>.'
+			identifier: cast.useless
+			count: 1
 			path: app/Http/Controllers/CoverageController.php
 
 		-
@@ -1456,12 +1462,6 @@ parameters:
 			path: app/Http/Controllers/CoverageController.php
 
 		-
-			rawMessage: 'Parameter #1 $value of function intval expects array|bool|float|int|resource|string|null, mixed given.'
-			identifier: argument.type
-			count: 7
-			path: app/Http/Controllers/CoverageController.php
-
-		-
 			rawMessage: 'Parameter #2 $build_array of static method App\Http\Controllers\CoverageController::apiCompareCoverage_get_build_label() expects array<string, mixed>, mixed given.'
 			identifier: argument.type
 			count: 1
@@ -1690,14 +1690,14 @@ parameters:
 			path: app/Http/Controllers/OAuthController.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
-			identifier: equal.notAllowed
+			rawMessage: Cannot cast mixed to int.
+			identifier: cast.int
 			count: 1
 			path: app/Http/Controllers/ProjectController.php
 
 		-
-			rawMessage: 'Parameter #1 $value of function intval expects array|bool|float|int|resource|string|null, mixed given.'
-			identifier: argument.type
+			rawMessage: 'Loose comparison via "==" is not allowed.'
+			identifier: equal.notAllowed
 			count: 1
 			path: app/Http/Controllers/ProjectController.php
 
@@ -1777,6 +1777,12 @@ parameters:
 			rawMessage: Cannot access offset 'type' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
+			path: app/Http/Controllers/ProjectOverviewController.php
+
+		-
+			rawMessage: Cannot cast mixed to int.
+			identifier: cast.int
+			count: 3
 			path: app/Http/Controllers/ProjectOverviewController.php
 
 		-
@@ -2146,12 +2152,6 @@ parameters:
 			path: app/Http/Controllers/ProjectOverviewController.php
 
 		-
-			rawMessage: 'Parameter #1 $value of function intval expects array|bool|float|int|resource|string|null, mixed given.'
-			identifier: argument.type
-			count: 3
-			path: app/Http/Controllers/ProjectOverviewController.php
-
-		-
 			rawMessage: 'Parameter #2 $timestamp of function gmdate expects int|null, (float|int) given.'
 			identifier: argument.type
 			count: 2
@@ -2272,6 +2272,12 @@ parameters:
 			path: app/Http/Controllers/SubProjectController.php
 
 		-
+			rawMessage: Cannot cast mixed to int.
+			identifier: cast.int
+			count: 1
+			path: app/Http/Controllers/SubProjectController.php
+
+		-
 			rawMessage: 'Construct empty() is not allowed. Use more strict comparison.'
 			identifier: empty.notAllowed
 			count: 1
@@ -2297,12 +2303,6 @@ parameters:
 
 		-
 			rawMessage: 'Parameter #1 $time of static method Carbon\Carbon::parse() expects Carbon\Month|Carbon\WeekDay|DateTimeInterface|float|int|string|null, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/SubProjectController.php
-
-		-
-			rawMessage: 'Parameter #1 $value of function intval expects array|bool|float|int|resource|string|null, mixed given.'
 			identifier: argument.type
 			count: 1
 			path: app/Http/Controllers/SubProjectController.php
@@ -2365,6 +2365,12 @@ parameters:
 			path: app/Http/Controllers/SubscribeProjectController.php
 
 		-
+			rawMessage: Cannot cast mixed to int.
+			identifier: cast.int
+			count: 6
+			path: app/Http/Controllers/SubscribeProjectController.php
+
+		-
 			rawMessage: 'Construct empty() is not allowed. Use more strict comparison.'
 			identifier: empty.notAllowed
 			count: 2
@@ -2374,12 +2380,6 @@ parameters:
 			rawMessage: 'Only booleans are allowed in an if condition, mixed given.'
 			identifier: if.condNotBoolean
 			count: 1
-			path: app/Http/Controllers/SubscribeProjectController.php
-
-		-
-			rawMessage: 'Parameter #1 $value of function intval expects array|bool|float|int|resource|string|null, mixed given.'
-			identifier: argument.type
-			count: 6
 			path: app/Http/Controllers/SubscribeProjectController.php
 
 		-
@@ -2409,6 +2409,12 @@ parameters:
 		-
 			rawMessage: Cannot cast mixed to int.
 			identifier: cast.int
+			count: 2
+			path: app/Http/Controllers/TestController.php
+
+		-
+			rawMessage: Casting to float something that's already float.
+			identifier: cast.useless
 			count: 1
 			path: app/Http/Controllers/TestController.php
 
@@ -2426,12 +2432,6 @@ parameters:
 
 		-
 			rawMessage: 'Parameter #1 $string of function htmlspecialchars expects string, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/TestController.php
-
-		-
-			rawMessage: 'Parameter #1 $value of function intval expects array|bool|float|int|resource|string|null, mixed given.'
 			identifier: argument.type
 			count: 1
 			path: app/Http/Controllers/TestController.php
@@ -2559,6 +2559,12 @@ parameters:
 		-
 			rawMessage: Cannot cast mixed to int.
 			identifier: cast.int
+			count: 2
+			path: app/Http/Controllers/UserController.php
+
+		-
+			rawMessage: Casting to int something that's already int.
+			identifier: cast.useless
 			count: 1
 			path: app/Http/Controllers/UserController.php
 
@@ -2629,12 +2635,6 @@ parameters:
 			path: app/Http/Controllers/UserController.php
 
 		-
-			rawMessage: 'Parameter #1 $value of function intval expects array|bool|float|int|resource|string|null, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/UserController.php
-
-		-
 			rawMessage: 'Parameter #2 $timestamp of function date expects int|null, (int|false) given.'
 			identifier: argument.type
 			count: 2
@@ -2659,12 +2659,6 @@ parameters:
 			path: app/Http/Controllers/UserNoteController.php
 
 		-
-			rawMessage: 'Call to function is_null() with string will always evaluate to false.'
-			identifier: function.impossibleType
-			count: 1
-			path: app/Http/Controllers/ViewTestController.php
-
-		-
 			rawMessage: 'Method App\Http\Controllers\ViewTestController::get_int_param() has parameter $name with no type specified.'
 			identifier: missingType.parameter
 			count: 1
@@ -2685,6 +2679,12 @@ parameters:
 		-
 			rawMessage: 'Parameter #2 $build of class CDash\Controller\Api\ViewTest constructor expects CDash\Model\Build, CDash\Model\Build|null given.'
 			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/ViewTestController.php
+
+		-
+			rawMessage: 'Strict comparison using === between null and string will always evaluate to false.'
+			identifier: identical.alwaysFalse
 			count: 1
 			path: app/Http/Controllers/ViewTestController.php
 
@@ -4876,14 +4876,14 @@ parameters:
 			path: app/Http/Submission/Handlers/OpenCoverTarHandler.php
 
 		-
-			rawMessage: 'Only booleans are allowed in or, int|false given on the left side.'
-			identifier: logicalOr.leftNotBoolean
+			rawMessage: 'Only booleans are allowed in ||, int|false given on the left side.'
+			identifier: booleanOr.leftNotBoolean
 			count: 1
 			path: app/Http/Submission/Handlers/OpenCoverTarHandler.php
 
 		-
-			rawMessage: 'Only booleans are allowed in or, int|false given on the right side.'
-			identifier: logicalOr.rightNotBoolean
+			rawMessage: 'Only booleans are allowed in ||, int|false given on the right side.'
+			identifier: booleanOr.rightNotBoolean
 			count: 7
 			path: app/Http/Submission/Handlers/OpenCoverTarHandler.php
 
@@ -6209,6 +6209,12 @@ parameters:
 			identifier: encapsedStringPart.nonString
 			count: 1
 			path: app/Utils/AuthTokenUtil.php
+
+		-
+			rawMessage: Casting to int something that's already int.
+			identifier: cast.useless
+			count: 1
+			path: app/Utils/DatabaseCleanupUtils.php
 
 		-
 			rawMessage: 'Construct empty() is not allowed. Use more strict comparison.'
@@ -8350,6 +8356,12 @@ parameters:
 			path: app/cdash/app/Controller/Api/TestOverview.php
 
 		-
+			rawMessage: Cannot cast mixed to int.
+			identifier: cast.int
+			count: 1
+			path: app/cdash/app/Controller/Api/TestOverview.php
+
+		-
 			rawMessage: Implicit array creation is not allowed - variable $tests_response does not exist.
 			identifier: variable.implicitArray
 			count: 1
@@ -8370,12 +8382,6 @@ parameters:
 		-
 			rawMessage: 'Only booleans are allowed in an if condition, int|string given.'
 			identifier: if.condNotBoolean
-			count: 1
-			path: app/cdash/app/Controller/Api/TestOverview.php
-
-		-
-			rawMessage: 'Parameter #1 $value of function intval expects array|bool|float|int|resource|string|null, mixed given.'
-			identifier: argument.type
 			count: 1
 			path: app/cdash/app/Controller/Api/TestOverview.php
 
@@ -9204,6 +9210,12 @@ parameters:
 		-
 			rawMessage: Cannot access property $time on mixed.
 			identifier: property.nonObject
+			count: 1
+			path: app/cdash/app/Model/Build.php
+
+		-
+			rawMessage: 'Casting to int something that''s already int<1, max>.'
+			identifier: cast.useless
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -10999,6 +11011,12 @@ parameters:
 			path: app/cdash/app/Model/CoverageSummary.php
 
 		-
+			rawMessage: 'Casting to int something that''s already int<1, max>.'
+			identifier: cast.useless
+			count: 1
+			path: app/cdash/app/Model/CoverageSummary.php
+
+		-
 			rawMessage: 'Construct empty() is not allowed. Use more strict comparison.'
 			identifier: empty.notAllowed
 			count: 11
@@ -11740,6 +11758,18 @@ parameters:
 			path: app/cdash/app/Model/SubProject.php
 
 		-
+			rawMessage: Casting to int something that's already int.
+			identifier: cast.useless
+			count: 1
+			path: app/cdash/app/Model/SubProject.php
+
+		-
+			rawMessage: 'Casting to int something that''s already int<min, -1>|int<1, max>.'
+			identifier: cast.useless
+			count: 1
+			path: app/cdash/app/Model/SubProject.php
+
+		-
 			rawMessage: 'Loose comparison via "!=" is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 1
@@ -12148,14 +12178,14 @@ parameters:
 			path: app/cdash/include/Collection/BuildEmailCollection.php
 
 		-
-			rawMessage: 'Cannot call method add() on mixed.'
-			identifier: method.nonObject
+			rawMessage: Cannot access an offset on mixed.
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: app/cdash/include/Collection/BuildEmailCollection.php
 
 		-
-			rawMessage: 'Parameter #1 $array of function array_push expects array, mixed given.'
-			identifier: argument.type
+			rawMessage: 'Cannot call method add() on mixed.'
+			identifier: method.nonObject
 			count: 1
 			path: app/cdash/include/Collection/BuildEmailCollection.php
 
@@ -14098,6 +14128,12 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
+			rawMessage: Casting to int something that's already int.
+			identifier: cast.useless
+			count: 1
+			path: app/cdash/include/common.php
+
+		-
 			rawMessage: Casting to string something that's already string.
 			identifier: cast.useless
 			count: 1
@@ -14458,12 +14494,6 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
-			rawMessage: 'Parameter #1 $haystack of function stripos expects string, float|int|string given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
 			rawMessage: 'Parameter #1 $num of function is_infinite expects float, float|int|string given.'
 			identifier: argument.type
 			count: 1
@@ -14489,6 +14519,12 @@ parameters:
 
 		-
 			rawMessage: 'Parameter #1 $string of function strlen expects string, (string|false) given.'
+			identifier: argument.type
+			count: 1
+			path: app/cdash/include/common.php
+
+		-
+			rawMessage: 'Parameter #1 $string of function strtolower expects string, float|int|string given.'
 			identifier: argument.type
 			count: 1
 			path: app/cdash/include/common.php
@@ -14625,7 +14661,7 @@ parameters:
 		-
 			rawMessage: Cannot cast mixed to int.
 			identifier: cast.int
-			count: 2
+			count: 6
 			path: app/cdash/include/filterdataFunctions.php
 
 		-
@@ -14980,12 +15016,6 @@ parameters:
 			rawMessage: 'Parameter #1 $url of function parse_url expects string, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: app/cdash/include/filterdataFunctions.php
-
-		-
-			rawMessage: 'Parameter #1 $value of function intval expects array|bool|float|int|resource|string|null, mixed given.'
-			identifier: argument.type
-			count: 4
 			path: app/cdash/include/filterdataFunctions.php
 
 		-

@@ -4,7 +4,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 use CDash\Database;
 use CDash\Model\Build;
@@ -22,7 +22,7 @@ class LimitedBuildsTestCase extends KWWebTestCase
     {
         parent::__construct();
 
-        $this->testDataDir = dirname(__FILE__) . '/data/BuildModel';
+        $this->testDataDir = __DIR__ . '/data/BuildModel';
         $this->PDO = Database::getInstance();
         $this->get_build_stmt = $this->PDO->prepare('SELECT id FROM build WHERE projectid = ?');
         $this->Projects = [];

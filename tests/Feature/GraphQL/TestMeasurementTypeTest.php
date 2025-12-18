@@ -12,8 +12,8 @@ use Tests\Traits\CreatesUsers;
 
 class TestMeasurementTypeTest extends TestCase
 {
-    use CreatesUsers;
     use CreatesProjects;
+    use CreatesUsers;
 
     private Project $project;
     private TestOutput $test_output;

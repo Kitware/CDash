@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 use CDash\Database;
 use CDash\Model\Project;
@@ -43,7 +43,7 @@ class JUnitHandlerTestCase extends KWWebTestCase
         $this->Project->Id = $projectid;
 
         // Submit our test data.
-        $xml = dirname(__FILE__) . '/data/JUNit_example.xml';
+        $xml = __DIR__ . '/data/JUNit_example.xml';
         if (!$this->submission('JUnitHandlerProject', $xml)) {
             $this->fail('Failed to submit test data');
         }

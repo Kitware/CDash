@@ -5,7 +5,7 @@
 // relative to the top of the CDash source tree
 //
 
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 class ProjectWebPageTestCase extends KWWebTestCase
 {
@@ -29,63 +29,63 @@ class ProjectWebPageTestCase extends KWWebTestCase
 
     public function testSubmissionBatchmakeBuild(): void
     {
-        $rep = dirname(__FILE__) . '/data/BatchmakeNightlyExample';
+        $rep = __DIR__ . '/data/BatchmakeNightlyExample';
         $file = "$rep/BatchMake_Nightly_Build.xml";
         $this->assertTrue($this->submission('BatchmakeExample', $file), "Submission of $file failed");
     }
 
     public function testSubmissionBatchmakeConfigure(): void
     {
-        $rep = dirname(__FILE__) . '/data/BatchmakeNightlyExample';
+        $rep = __DIR__ . '/data/BatchmakeNightlyExample';
         $file = "$rep/BatchMake_Nightly_Configure.xml";
         $this->assertTrue($this->submission('BatchmakeExample', $file), "Submission of $file failed");
     }
 
     public function testSubmissionBatchmakeNotes(): void
     {
-        $rep = dirname(__FILE__) . '/data/BatchmakeNightlyExample';
+        $rep = __DIR__ . '/data/BatchmakeNightlyExample';
         $file = "$rep/BatchMake_Nightly_Notes.xml";
         $this->assertTrue($this->submission('BatchmakeExample', $file), "Submission of $file failed");
     }
 
     public function testSubmissionBatchmakeTest(): void
     {
-        $rep = dirname(__FILE__) . '/data/BatchmakeNightlyExample';
+        $rep = __DIR__ . '/data/BatchmakeNightlyExample';
         $file = "$rep/BatchMake_Nightly_Test.xml";
         $this->assertTrue($this->submission('BatchmakeExample', $file), "Submission of $file failed");
     }
 
     public function testSubmissionBatchmakeUpdate(): void
     {
-        $rep = dirname(__FILE__) . '/data/BatchmakeNightlyExample';
+        $rep = __DIR__ . '/data/BatchmakeNightlyExample';
         $file = "$rep/BatchMake_Nightly_Update.xml";
         $this->assertTrue($this->submission('BatchmakeExample', $file), "Submission of $file failed");
     }
 
     public function testSubmissionInsightBuild(): void
     {
-        $rep = dirname(__FILE__) . '/data/InsightExperimentalExample';
+        $rep = __DIR__ . '/data/InsightExperimentalExample';
         $file = "$rep/Insight_Experimental_Build.xml";
         $this->assertTrue($this->submission('InsightExample', $file), "Submission of $file failed");
     }
 
     public function testSubmissionInsightConfigure(): void
     {
-        $rep = dirname(__FILE__) . '/data/InsightExperimentalExample';
+        $rep = __DIR__ . '/data/InsightExperimentalExample';
         $file = "$rep/Insight_Experimental_Configure.xml";
         $this->assertTrue($this->submission('InsightExample', $file), "Submission of $file failed");
     }
 
     public function testSubmissionInsightCoverage(): void
     {
-        $rep = dirname(__FILE__) . '/data/InsightExperimentalExample';
+        $rep = __DIR__ . '/data/InsightExperimentalExample';
         $file = "$rep/Insight_Experimental_Coverage.xml";
         $this->assertTrue($this->submission('InsightExample', $file), "Submission of $file failed");
     }
 
     public function testSubmissionInsightCoverageLog(): void
     {
-        $rep = dirname(__FILE__) . '/data/InsightExperimentalExample';
+        $rep = __DIR__ . '/data/InsightExperimentalExample';
         $file = "$rep/Insight_Experimental_CoverageLog.xml";
         if (!$this->submission('InsightExample', $file)) {
             return;
@@ -111,7 +111,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
 
     public function testSubmissionInsightDynamicAnalysis(): void
     {
-        $rep = dirname(__FILE__) . '/data/InsightExperimentalExample';
+        $rep = __DIR__ . '/data/InsightExperimentalExample';
         $file = "$rep/Insight_Experimental_DynamicAnalysis.xml";
         if (!$this->submission('InsightExample', $file)) {
             return;
@@ -121,7 +121,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
 
     public function testSubmissionInsightNotes(): void
     {
-        $rep = dirname(__FILE__) . '/data/InsightExperimentalExample';
+        $rep = __DIR__ . '/data/InsightExperimentalExample';
         $file = "$rep/Insight_Experimental_Notes.xml";
         if (!$this->submission('InsightExample', $file)) {
             return;
@@ -131,7 +131,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
 
     public function testSubmissionInsightTest(): void
     {
-        $rep = dirname(__FILE__) . '/data/InsightExperimentalExample';
+        $rep = __DIR__ . '/data/InsightExperimentalExample';
         $file = "$rep/Insight_Experimental_Test.xml";
         if (!$this->submission('InsightExample', $file)) {
             return;

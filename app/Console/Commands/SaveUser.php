@@ -37,7 +37,7 @@ class SaveUser extends Command
     public function handle(): void
     {
         $email = $this->option('email');
-        if (is_null($email)) {
+        if (null === $email) {
             $this->error('You must specify the --email option');
             return;
         }
@@ -57,7 +57,7 @@ class SaveUser extends Command
         $options = ['firstname', 'lastname', 'institution', 'password'];
         foreach ($options as $option_name) {
             $option_value = $this->option($option_name);
-            if (!is_null($option_value)) {
+            if (null !== $option_value) {
                 if ($option_name === 'password') {
                     $option_value = password_hash($option_value, PASSWORD_DEFAULT);
                 }

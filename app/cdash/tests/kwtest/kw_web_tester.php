@@ -15,8 +15,8 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once dirname(__FILE__) . '/../../../../vendor/autoload.php';
-require_once dirname(__FILE__) . '/kw_unlink.php';
+require_once __DIR__ . '/../../../../vendor/autoload.php';
+require_once __DIR__ . '/kw_unlink.php';
 
 // This is used by several of the tests, but the Laravel entrypoint is not used for
 // such tests, meaning that this could be undefined.
@@ -334,7 +334,7 @@ class KWWebTestCase extends WebTestCase
         $stamp, $subproject = null, $header = null)
     {
         $url = $this->url . "/submit.php?project=$project&build=$build&site=$site&stamp=$stamp";
-        if (!is_null($subproject)) {
+        if (null !== $subproject) {
             $url .= "&subproject=$subproject";
         }
 
@@ -378,7 +378,7 @@ class KWWebTestCase extends WebTestCase
         curl_setopt($ch, CURLOPT_INFILE, $fp);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_INFILESIZE, filesize($filename));
-        if (!is_null($header)) {
+        if (null !== $header) {
             curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
         }
         curl_setopt($ch, CURLOPT_HEADER, true);

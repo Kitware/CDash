@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 use CDash\Model\Project;
 use Illuminate\Support\Facades\DB;
@@ -45,13 +45,13 @@ class LotsOfSubProjectsTestCase extends KWWebTestCase
         // big test file to our repository.
         $test_filename = 'LotsOfSubProjects_Configure.xml';
         $handle = fopen($test_filename, 'w');
-        fwrite($handle, file_get_contents(dirname(__FILE__) . '/data/LotsOfSubProjects/Before.xml'));
+        fwrite($handle, file_get_contents(__DIR__ . '/data/LotsOfSubProjects/Before.xml'));
         foreach (range(1, 100) as $i) {
             fwrite($handle, "	<Subproject name=\"LotsOfSubProjects{$i}\">" . PHP_EOL);
             fwrite($handle, "		<Label>LotsOfSubProjects{$i}</Label>" . PHP_EOL);
             fwrite($handle, '	</Subproject>' . PHP_EOL);
         }
-        fwrite($handle, file_get_contents(dirname(__FILE__) . '/data/LotsOfSubProjects/After.xml'));
+        fwrite($handle, file_get_contents(__DIR__ . '/data/LotsOfSubProjects/After.xml'));
 
         // Submit our testing data.
         if (!$this->submission('LotsOfSubProjects', $test_filename)) {

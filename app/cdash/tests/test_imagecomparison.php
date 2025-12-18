@@ -4,7 +4,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 use App\Utils\DatabaseCleanupUtils;
 use CDash\Database;
@@ -23,7 +23,7 @@ class ImageComparisonTestCase extends KWWebTestCase
     public function testImageComparison()
     {
         // Submit test data.
-        if (!$this->submission('InsightExample', dirname(__FILE__) . '/data/ImageComparisonTest.xml')) {
+        if (!$this->submission('InsightExample', __DIR__ . '/data/ImageComparisonTest.xml')) {
             $this->fail('Failed to submit test data');
             return 1;
         }

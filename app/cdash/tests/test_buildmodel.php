@@ -4,7 +4,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 use App\Models\Project;
 use App\Utils\DatabaseCleanupUtils;
@@ -26,7 +26,7 @@ class BuildModelTestCase extends KWWebTestCase
 
         $this->deleteLog($this->logfilename);
 
-        $this->testDataDir = dirname(__FILE__) . '/data/BuildModel';
+        $this->testDataDir = __DIR__ . '/data/BuildModel';
         $this->testDataFiles = ['build1.xml', 'build2.xml', 'build3.xml', 'build4.xml',
             'build5.xml', 'configure1.xml'];
 

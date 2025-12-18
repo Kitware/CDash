@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 use App\Models\Test;
 use CDash\Model\Project;
@@ -39,7 +39,7 @@ class MultipleLabelsForTestsTestCase extends KWWebTestCase
         $this->deleteLog($this->logfilename);
 
         // Submit our testing data.
-        $test_dir = dirname(__FILE__) . '/data/MultipleLabelsForTests/';
+        $test_dir = __DIR__ . '/data/MultipleLabelsForTests/';
         $filename = "{$test_dir}/Test.xml";
         if (!$this->submission('MultipleLabelsForTests', $filename)) {
             $this->fail("Failed to submit {$filename}");

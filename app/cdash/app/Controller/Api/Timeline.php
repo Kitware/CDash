@@ -308,10 +308,10 @@ class Timeline extends Index
             $this->initializeDate($start_of_day_ms, $test_date);
 
             // Keep track of oldest and newest date.
-            if (is_null($oldest_time_ms) || $start_of_day_ms < $oldest_time_ms) {
+            if (null === $oldest_time_ms || $start_of_day_ms < $oldest_time_ms) {
                 $oldest_time_ms = $start_of_day_ms;
             }
-            if (is_null($newest_time_ms) || $start_of_day_ms > $newest_time_ms) {
+            if (null === $newest_time_ms || $start_of_day_ms > $newest_time_ms) {
                 $newest_time_ms = $start_of_day_ms;
             }
 
@@ -330,7 +330,7 @@ class Timeline extends Index
             }
         }
 
-        if (is_null($oldest_time_ms)) {
+        if (null === $oldest_time_ms) {
             // No builds found.
             return [];
         }

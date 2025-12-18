@@ -4,7 +4,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 class JavaJSONCoverageTestCase extends KWWebTestCase
 {
@@ -44,7 +44,7 @@ class JavaJSONCoverageTestCase extends KWWebTestCase
 
         // Do the PUT submission to actually upload our data.
         $puturl = $this->url . "/submit.php?type=JavaJSONTar&md5=67b5d3cee7b951ff2981c440b4a515ec&filename=JavaJSONTar_example.tar&buildid=$buildid";
-        $filename = dirname(__FILE__) . '/data/JavaJSONTar_example.tar';
+        $filename = __DIR__ . '/data/JavaJSONTar_example.tar';
 
         $put_result = $this->uploadfile($puturl, $filename);
         if (!str_contains($put_result, '{"status":0}')) {

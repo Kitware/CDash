@@ -23,7 +23,7 @@ class AggregateSubProjectCoverageTestCase extends KWWebTestCase
     {
         parent::__construct();
         $this->deleteLog($this->logfilename);
-        $this->DataDir = dirname(__FILE__) . '/data/AggregateSubProjectCoverage';
+        $this->DataDir = __DIR__ . '/data/AggregateSubProjectCoverage';
     }
 
     public function testSubmitCoverage()

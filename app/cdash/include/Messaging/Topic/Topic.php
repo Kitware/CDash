@@ -144,7 +144,7 @@ abstract class Topic implements TopicInterface
         $collection = $build->GetBuildEmailCollection();
         $address = $this->subscriber->getAddress();
 
-        if (!is_null($category)) {
+        if (null !== $category) {
             $collection = $collection
                 ->sortByCategory()
                 ->get($category);

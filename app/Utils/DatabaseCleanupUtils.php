@@ -128,7 +128,7 @@ class DatabaseCleanupUtils
             if (!is_numeric($b)) {
                 throw new InvalidArgumentException('Invalid Build ID');
             }
-            $buildids[] = intval($b);
+            $buildids[] = (int) $b;
         }
 
         // Use Eloquent relationships to delete shared records that are only
@@ -206,7 +206,7 @@ class DatabaseCleanupUtils
                                 ", array_merge($all_outputids, $buildids));
             $testoutputs_to_save = [];
             foreach ($save_test_result as $save_test_row) {
-                $testoutputs_to_save[] = intval($save_test_row->outputid);
+                $testoutputs_to_save[] = (int) $save_test_row->outputid;
             }
 
             // Use array_diff to get the list of tests that should be deleted.
@@ -231,7 +231,7 @@ class DatabaseCleanupUtils
 
         $fileids = [];
         foreach ($build2uploadfiles as $build2uploadfile_array) {
-            $fileid = intval($build2uploadfile_array->fileid);
+            $fileid = (int) $build2uploadfile_array->fileid;
             $fileids[] = $fileid;
 
             $sha1sum = UploadFile::findOrFail($fileid)->sha1sum;
@@ -247,11 +247,11 @@ class DatabaseCleanupUtils
         // In order to avoid making the list of builds to delete too large
         // we delete them in batches (one batch per parent).
         foreach ($buildids as $parentid) {
-            $child_result = DB::select('SELECT id FROM build WHERE parentid=?', [intval($parentid)]);
+            $child_result = DB::select('SELECT id FROM build WHERE parentid=?', [(int) $parentid]);
 
             $childids = [];
             foreach ($child_result as $child_array) {
-                $childids[] = intval($child_array->id);
+                $childids[] = (int) $child_array->id;
             }
             if (!empty($childids)) {
                 self::removeBuild($childids);
@@ -297,8 +297,8 @@ class DatabaseCleanupUtils
             return;
         }
 
-        $start = intval($start);
-        $max = intval($max);
+        $start = (int) $start;
+        $max = (int) $max;
         $total = $max - $start + 1;
         if ($total < 1) {
             Log::info("Invalid values found for min ({$start}) and/or max ({$max}) for `{$field}` on `{$table}`");
@@ -326,7 +326,7 @@ class DatabaseCleanupUtils
                 $percent = round(($num_done / $total) * 100, -1);
                 if ($percent > $next_report) {
                     Log::info("Cleaning `{$table}`: {$next_report}%");
-                    $next_report = $next_report + 10;
+                    $next_report += 10;
                 }
             }
         }

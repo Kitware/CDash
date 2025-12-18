@@ -25,7 +25,7 @@ class RepositoryUtils
         $project = $service->get(Project::class);
         $project->Id = $projectid;
         $project->Fill();
-        if (is_null($project->CvsViewerType)) {
+        if (null === $project->CvsViewerType) {
             return;
         }
         $cvsviewertype = strtolower($project->CvsViewerType);
@@ -138,7 +138,7 @@ class RepositoryUtils
         }
 
         $db = Database::getInstance();
-        $project = $db->executePreparedSingleRow('SELECT cvsviewertype, cvsurl FROM project WHERE id=?', [intval($projectid)]);
+        $project = $db->executePreparedSingleRow('SELECT cvsviewertype, cvsurl FROM project WHERE id=?', [(int) $projectid]);
         $projecturl = $project['cvsurl'];
         $cvsviewertype = strtolower($project['cvsviewertype'] ?? '');
         $cvsviewerurl = $project['cvsurl'] ?? '';
@@ -242,7 +242,7 @@ class RepositoryUtils
             }
         }
 
-        if (is_null($repo) || !isset($repo['username'])
+        if (null === $repo || !isset($repo['username'])
             || !isset($repo['password'])) {
             Log::warning("Missing repository info for project #$project->Id");
             return;
@@ -302,7 +302,7 @@ class RepositoryUtils
         }
 
         // Use our email functions to generate a message body and title for this build.
-        $errors = self::check_email_errors(intval($build->Id), false, 0, true);
+        $errors = self::check_email_errors((int) $build->Id, false, 0, true);
         $emailtext = [];
         foreach ($errors as $errorkey => $nerrors) {
             if ($nerrors < 1) {
@@ -310,7 +310,7 @@ class RepositoryUtils
             }
             $emailtext['nerror'] = 1;
             $emailtext['summary'][$errorkey] =
-                self::get_email_summary(intval($build->Id), $errors, $errorkey, 1, 500, 0, false);
+                self::get_email_summary((int) $build->Id, $errors, $errorkey, 1, 500, 0, false);
             $emailtext['category'][$errorkey] = $nerrors;
         }
         if (empty($emailtext)) {

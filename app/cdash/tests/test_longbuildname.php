@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 use App\Models\Build;
 use CDash\Model\Project;
@@ -38,7 +38,7 @@ class LongBuildNameTestCase extends KWWebTestCase
         $this->deleteLog($this->logfilename);
 
         // Submit our testing data.
-        $test_dir = dirname(__FILE__) . '/data/LongBuildName/';
+        $test_dir = __DIR__ . '/data/LongBuildName/';
         $filename = "{$test_dir}/Configure.xml";
         if (!$this->submission('LongBuildName', $filename)) {
             $this->fail("Failed to submit {$filename}");

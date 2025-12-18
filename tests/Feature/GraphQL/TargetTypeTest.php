@@ -17,8 +17,8 @@ use Tests\Traits\CreatesUsers;
 
 class TargetTypeTest extends TestCase
 {
-    use CreatesUsers;
     use CreatesProjects;
+    use CreatesUsers;
 
     private Project $project;
 

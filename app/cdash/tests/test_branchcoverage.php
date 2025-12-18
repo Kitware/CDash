@@ -4,7 +4,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 use App\Models\PendingSubmissions;
 use App\Utils\DatabaseCleanupUtils;
@@ -99,7 +99,7 @@ class BranchCoverageTestCase extends KWWebTestCase
     {
         // Do the PUT submission to actually upload our data.
         $puturl = $this->url . "/submit.php?type=GcovTar&md5=5454e16948a1d58d897e174b75cc5633&filename=gcov.tar&buildid={$this->buildid}";
-        $filename = dirname(__FILE__) . '/data/gcov.tar';
+        $filename = __DIR__ . '/data/gcov.tar';
         $headers = [];
         if ($token) {
             $headers = ["Authorization: Bearer {$token}"];

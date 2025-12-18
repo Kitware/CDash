@@ -4,7 +4,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 class TrilinosSubmissionTestCase extends KWWebTestCase
 {
@@ -15,7 +15,7 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
 
     public function submitFiles($test, $trilinosOnly = false)
     {
-        $dir = str_replace('\\', '/', dirname(__FILE__) . "/data/$test");
+        $dir = str_replace('\\', '/', __DIR__ . "/data/$test");
 
         $listfilename = $dir . '/orderedFileList.txt';
 
@@ -80,7 +80,7 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
                 $parent_build = $build;
             }
         }
-        if (is_null($parent_build)) {
+        if (null === $parent_build) {
             $this->fail('Could not find expected parent build');
             return false;
         }

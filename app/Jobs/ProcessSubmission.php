@@ -585,7 +585,7 @@ class ProcessSubmission implements ShouldQueue
             $stamp = $handler->getBuildStamp();
             $sitename = $handler->getSiteName();
 
-            $buildid = intval(DB::select('
+            $buildid = (int) (DB::select('
             SELECT build.id AS id
             FROM build, site
             WHERE
@@ -616,7 +616,7 @@ class ProcessSubmission implements ShouldQueue
         }
 
         // Send out update errors to site maintainers
-        $update_errors = self::check_email_update_errors(intval($buildid));
+        $update_errors = self::check_email_update_errors((int) $buildid);
         if ($update_errors['errors']) {
             // Find the site maintainer(s)
             $sitename = $handler->getSiteName();

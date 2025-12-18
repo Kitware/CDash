@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 use App\Utils\DatabaseCleanupUtils;
 use CDash\Model\Build;
@@ -10,7 +10,7 @@ class SubmissionAssignBuildIdTestCase extends KWWebTestCase
     public function testSubmissionAssignBuildId(): void
     {
         $begin_test_time = time();
-        $file_to_submit = dirname(__FILE__) . '/data/AssignBuildId/Configure.xml';
+        $file_to_submit = __DIR__ . '/data/AssignBuildId/Configure.xml';
         $buildid = $this->submission_assign_buildid(
             $file_to_submit, 'InsightExample', 'assign_buildid',
             'localhost', '20180918-0100-Nightly');

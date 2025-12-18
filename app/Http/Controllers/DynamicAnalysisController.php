@@ -136,7 +136,7 @@ final class DynamicAnalysisController extends AbstractBuildController
                                 label.id = label2dynamicanalysis.labelid
                                 AND label2dynamicanalysis.dynamicanalysisid = ?
                             ORDER BY text ASC
-                        ', [intval($dynid)], $dynamic_analysis);
+                        ', [(int) $dynid], $dynamic_analysis);
 
                         if (array_key_exists('labels', $dynamic_analysis)) {
                             $dynamic_analysis['labels'] = implode(', ', $dynamic_analysis['labels']);

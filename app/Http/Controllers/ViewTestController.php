@@ -72,7 +72,7 @@ final class ViewTestController extends AbstractBuildController
     private static function get_request_build($required = true): ?Build
     {
         $id = self::get_request_build_id($required);
-        if (is_null($id)) {
+        if (null === $id) {
             return null;
         }
         $build = new Build();
@@ -103,7 +103,7 @@ final class ViewTestController extends AbstractBuildController
     private static function get_int_param($name, $required = true): ?int
     {
         $value = get_param($name, $required);
-        if (is_null($value)) {
+        if (null === $value) {
             return null;
         }
 

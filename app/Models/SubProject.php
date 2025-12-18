@@ -65,7 +65,7 @@ class SubProject extends Model
             $date = Carbon::now()->setTimezone('UTC');
         }
 
-        return $this->belongsToMany(SubProject::class, 'subproject2subproject', 'subprojectid', 'dependsonid')
+        return $this->belongsToMany(self::class, 'subproject2subproject', 'subprojectid', 'dependsonid')
             ->wherePivot('starttime', '<=', Carbon::now()->setTimezone('UTC'))
             ->where(function ($query) use ($date): void {
                 $query->where('subproject2subproject.endtime', '>', $date)

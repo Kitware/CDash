@@ -97,7 +97,7 @@ abstract class ResultsApi extends ProjectApi
         $this->project->Fill();
         [$previousdate, $beginning_timestamp, $nextdate, $d] =
             get_dates($date, $this->project->NightlyTime);
-        if (is_null($date)) {
+        if (null === $date) {
             $date = $d;
         }
         $this->date = $date;

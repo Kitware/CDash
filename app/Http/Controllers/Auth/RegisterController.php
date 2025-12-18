@@ -89,7 +89,7 @@ final class RegisterController extends AbstractController
      */
     public function create(array $data): ?User
     {
-        if (is_null($data['institution'])) {
+        if (null === $data['institution']) {
             $data['institution'] = '';
         }
         return User::create([

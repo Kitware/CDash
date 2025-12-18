@@ -4,7 +4,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 use App\Utils\DatabaseCleanupUtils;
 use CDash\Database;
@@ -17,7 +17,7 @@ class NoBackupTestCase extends KWWebTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->ConfigFile = dirname(__FILE__) . '/../../../.env';
+        $this->ConfigFile = __DIR__ . '/../../../.env';
         $this->Original = file_get_contents($this->ConfigFile);
     }
 
@@ -32,7 +32,7 @@ class NoBackupTestCase extends KWWebTestCase
         file_put_contents($this->ConfigFile, "BACKUP_TIMEFRAME=0\n", FILE_APPEND | LOCK_EX);
 
         // Submit XML file.
-        $xml = dirname(__FILE__) . '/data/nobackup/Build.xml';
+        $xml = __DIR__ . '/data/nobackup/Build.xml';
         if (!$this->submission('InsightExample', $xml)) {
             $this->fail('failed to submit Build.xml');
             return 1;
@@ -63,7 +63,7 @@ class NoBackupTestCase extends KWWebTestCase
             return 1;
         }
         $puturl = $this->url . "/submit.php?type=GcovTar&md5=5454e16948a1d58d897e174b75cc5633&filename=gcov.tar&buildid=$buildid";
-        $filename = dirname(__FILE__) . '/data/gcov.tar';
+        $filename = __DIR__ . '/data/gcov.tar';
         $put_result = $this->uploadfile($puturl, $filename);
         if (!str_contains($put_result, '{"status":0}')) {
             $this->fail(

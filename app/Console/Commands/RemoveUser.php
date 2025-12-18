@@ -37,7 +37,7 @@ class RemoveUser extends Command
     public function handle(): void
     {
         $email = $this->option('email');
-        if (is_null($email)) {
+        if (null === $email) {
             $this->error('You must specify the --email option');
             return;
         }

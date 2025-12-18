@@ -4,7 +4,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 use App\Utils\SubmissionUtils;
 use Illuminate\Support\Facades\Storage;
@@ -24,7 +24,7 @@ class UploadFileTestCase extends KWWebTestCase
     public function testSubmitUploadXML(): void
     {
         $this->deleteLog($this->logfilename);
-        $rep = dirname(__FILE__) . '/data/EmailProjectExample';
+        $rep = __DIR__ . '/data/EmailProjectExample';
         $file = "$rep/1_upload.xml";
         if (!$this->submission('EmailProjectExample', $file)) {
             $this->fail('Failed to submit Upload.xml');

@@ -106,11 +106,11 @@ class BuildFailure
                              SELECT id FROM buildfailuredetails WHERE crc32=?
                          ', [$crc32]);
         if ($detailsResult && array_key_exists('id', $detailsResult)) {
-            $detailsId = intval($detailsResult['id']);
+            $detailsId = (int) $detailsResult['id'];
         } else {
             $detailsId = DB::table('buildfailuredetails')
                 ->insertGetId([
-                    'type' => intval($this->Type),
+                    'type' => (int) $this->Type,
                     'stdoutput' => $stdOutput,
                     'stderror' => $stdError,
                     'exitcondition' => $exitCondition,
@@ -124,7 +124,7 @@ class BuildFailure
 
         $id = DB::table('buildfailure')
             ->insertGetId([
-                'buildid' => intval($this->BuildId),
+                'buildid' => (int) $this->BuildId,
                 'detailsid' => $detailsId,
                 'workingdirectory' => $workingDirectory,
                 'sourcefile' => $sourceFile,
@@ -147,7 +147,7 @@ class BuildFailure
             }
 
             if (!empty($query)) {
-                $argumentids[] = intval($query['id']);
+                $argumentids[] = (int) $query['id'];
             } else {
                 $argumentids[] = DB::table('buildfailureargument')->insertGetId([
                     'argument' => $argumentescaped,
@@ -161,8 +161,8 @@ class BuildFailure
         $i = 0;
         foreach ($argumentids as $argumentid) {
             $query .= '(?, ?, ?),';
-            $params[] = intval($id);
-            $params[] = intval($argumentid);
+            $params[] = (int) $id;
+            $params[] = (int) $argumentid;
             $params[] = $i;
             $i++;
         }

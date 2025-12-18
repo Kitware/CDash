@@ -16,7 +16,7 @@ final class BuildNoteController extends AbstractBuildController
 {
     public function apiViewNotes(): JsonResponse
     {
-        $this->setBuildById(intval($_GET['buildid'] ?? 0));
+        $this->setBuildById((int) ($_GET['buildid'] ?? 0));
 
         $pageTimer = new PageTimer();
 

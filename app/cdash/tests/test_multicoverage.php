@@ -4,7 +4,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 use App\Utils\DatabaseCleanupUtils;
 
@@ -55,7 +55,7 @@ class MultiCoverageTestCase extends KWWebTestCase
     public function submitXML()
     {
         $filesToSubmit = ['Coverage.xml', 'CoverageLog-0.xml'];
-        $dir = dirname(__FILE__) . '/data/MultiCoverage';
+        $dir = __DIR__ . '/data/MultiCoverage';
         foreach ($filesToSubmit as $file) {
             if (!$this->submission('TrilinosDriver', "$dir/$file")) {
                 $this->fail("Failed to submit $file");
@@ -94,7 +94,7 @@ class MultiCoverageTestCase extends KWWebTestCase
 
         // Do the PUT submission to actually upload our data.
         $puturl = $this->url . "/submit.php?type=GcovTar&md5=65f385dd8d360e78a35453144c0919ab&filename=gcov.tar&buildid=$this->BuildId";
-        $filename = dirname(__FILE__) . '/data/MultiCoverage/gcov.tar';
+        $filename = __DIR__ . '/data/MultiCoverage/gcov.tar';
 
         $put_result = $this->uploadfile($puturl, $filename);
         if (!str_contains($put_result, '{"status":0}')) {

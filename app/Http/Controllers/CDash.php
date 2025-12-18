@@ -102,7 +102,7 @@ final class CDash extends AbstractController
         // Possible values of $redirect are null, 0, 1 and a ResponseRedirect.
         // Clearly we want to ignore when null or int, otherwise $redirect should
         // be returned
-        return is_numeric($redirect) || is_null($redirect) ? $content : $redirect;
+        return is_numeric($redirect) || null === $redirect ? $content : $redirect;
     }
 
     /**

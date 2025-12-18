@@ -17,8 +17,8 @@ use Tests\Traits\CreatesUsers;
 class FilterTest extends TestCase
 {
     use CreatesProjects;
-    use CreatesUsers;
     use CreatesSites;
+    use CreatesUsers;
     use DatabaseTruncation;
 
     /**

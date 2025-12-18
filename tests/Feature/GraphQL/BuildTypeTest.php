@@ -17,8 +17,8 @@ use Tests\Traits\CreatesUsers;
 
 class BuildTypeTest extends TestCase
 {
-    use CreatesUsers;
     use CreatesProjects;
+    use CreatesUsers;
 
     private Project $project;
     private Project $project2;

@@ -188,7 +188,7 @@ class Build
         // Add this subproject as a label on the parent build.
         $this->SetParentId($this->LookupParentBuildId());
         if ($this->ParentId > 0) {
-            $parent = new Build();
+            $parent = new self();
             $parent->Id = $this->ParentId;
             $parent->AddLabel($label);
             $parent->InsertLabelAssociations();
@@ -267,7 +267,7 @@ class Build
         // to the parent's value.
         $this->SetParentId($this->LookupParentBuildId());
         if ($this->ParentId > 0) {
-            $parent = new Build();
+            $parent = new self();
             $parent->Id = $this->ParentId;
             $parent->UpdateBuildTestTime($total_proc_time);
         }
@@ -374,7 +374,7 @@ class Build
         $this->Filled = true;
     }
 
-    public static function MarshalResponseArray(Build $build, array $optional_values = []): array
+    public static function MarshalResponseArray(self $build, array $optional_values = []): array
     {
         $response = [
             'id' => $build->Id,
@@ -468,7 +468,7 @@ class Build
             $stmt = $this->PDO->prepare(
                 "SELECT id FROM build
                 $related_build_criteria
-                AND build.parentid = " . Build::PARENT_BUILD . "
+                AND build.parentid = " . self::PARENT_BUILD . "
                 AND build.id != :parentid
                 $which_build_criteria
                 LIMIT 1");
@@ -501,9 +501,9 @@ class Build
                 'AND subprojectid = :subprojectid';
             $values_to_bind['subprojectid'] = $this->SubProjectId;
         }
-        if ($this->ParentId === Build::PARENT_BUILD) {
+        if ($this->ParentId === self::PARENT_BUILD) {
             // Only search for other parents.
-            $parent_criteria = 'AND build.parentid = ' . Build::PARENT_BUILD;
+            $parent_criteria = 'AND build.parentid = ' . self::PARENT_BUILD;
         }
 
         $stmt = $this->PDO->prepare("
@@ -715,7 +715,7 @@ class Build
                 return $stmt;
             }
         }
-        if (is_null($stmt)) {
+        if (null === $stmt) {
             $stmt = $this->PDO->prepare('
                 SELECT c.*, b.configureerrors, b.configurewarnings
                 FROM configure c
@@ -1533,7 +1533,7 @@ class Build
         // This would be a standalone build with no subproject that matches
         // our name, site, stamp, and projectid.
         $existing_build = EloquentBuild::firstWhere([
-            'parentid' => Build::STANDALONE_BUILD,
+            'parentid' => self::STANDALONE_BUILD,
             'name' => $this->Name,
             'siteid' => $this->SiteId,
             'stamp' => $this->Stamp,
@@ -1545,13 +1545,13 @@ class Build
             $this->SetParentId($existing_build->id);
 
             // Mark it as a parent (parentid of -1).
-            $existing_build->parentid = Build::PARENT_BUILD;
+            $existing_build->parentid = self::PARENT_BUILD;
             $existing_build->save();
         } else {
             // Otherwise create a new build to be the parent.
             $parent = clone $this;
             $parent->Id = null;
-            $parent->ParentId = Build::PARENT_BUILD;
+            $parent->ParentId = self::PARENT_BUILD;
             $parent->SubProjectId = null;
             $parent->SubProjectName = '';
             $parent->Uuid = '';
@@ -1565,7 +1565,7 @@ class Build
         // Give the parent a label for this build's subproject.
         $label = new Label();
         $label->Text = $this->SubProjectName;
-        $parent = new Build();
+        $parent = new self();
         $parent->Id = $this->ParentId;
         $parent->AddLabel($label);
         $parent->InsertLabelAssociations();
@@ -1576,7 +1576,7 @@ class Build
         // contain info about what subproject it came from.
         // TODO: maybe we don't need this any more?
         return EloquentBuild::where([
-            'parentid' => Build::STANDALONE_BUILD,
+            'parentid' => self::STANDALONE_BUILD,
             'siteid' => $this->SiteId,
             'name' => $this->Name,
             'stamp' => $this->Stamp,
@@ -2068,7 +2068,7 @@ class Build
             return null;
         }
 
-        $build = new Build();
+        $build = new self();
         $build->Id = $eloquent_model->id;
         $build->FillFromId($eloquent_model->id);
         return $build;
@@ -2212,7 +2212,7 @@ class Build
         } elseif ($this->ParentId > 0) {
             // If we just created a child build, associate it with
             // the parent's updates (if any).
-            BuildUpdate::AssignUpdateToChild(intval($this->Id), intval($this->ParentId));
+            BuildUpdate::AssignUpdateToChild((int) $this->Id, (int) $this->ParentId);
         }
 
         return true;

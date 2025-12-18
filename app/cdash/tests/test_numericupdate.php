@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 use App\Models\Project;
 use Tests\Traits\CreatesProjects;
@@ -27,7 +27,7 @@ class NumericUpdateTestCase extends KWWebTestCase
     public function testNumericUpdate(): void
     {
         // Submit our testing data.
-        $this->submission($this->project->name, dirname(__FILE__) . '/data/UpdateNumeric.xml');
+        $this->submission($this->project->name, __DIR__ . '/data/UpdateNumeric.xml');
 
         // Check index.php, make sure it shows the expected revision.
         $this->get($this->url . '/api/v1/index.php?project=' . $this->project->name . '&date=2020-06-01');

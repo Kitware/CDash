@@ -19,7 +19,7 @@
 //
 use Illuminate\Support\Facades\DB;
 
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 class AggregateCoverageTestCase extends KWWebTestCase
 {
@@ -156,7 +156,7 @@ class AggregateCoverageTestCase extends KWWebTestCase
     public function submitTestingFile($filename)
     {
         $file_to_submit =
-            dirname(__FILE__) . '/data/AggregateCoverage/' . $filename;
+            __DIR__ . '/data/AggregateCoverage/' . $filename;
         return $this->submission('InsightExample', $file_to_submit);
     }
 }

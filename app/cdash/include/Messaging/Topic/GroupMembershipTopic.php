@@ -13,7 +13,7 @@ class GroupMembershipTopic extends Topic
 
     public function subscribesToBuild(Build $build): bool
     {
-        $parentTopic = is_null($this->topic) ? true : $this->topic->subscribesToBuild($build);
+        $parentTopic = null === $this->topic ? true : $this->topic->subscribesToBuild($build);
         $subscribe = $parentTopic && $this->group === $build->GetBuildType();
         return $subscribe;
     }

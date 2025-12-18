@@ -192,7 +192,7 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
                             if ($existing_config_results) {
                                 // Combine these with the data we just parsed out of the XML.
                                 $this->Configure->Log = $existing_config_results->log . "\n" . $this->Configure->Log;
-                                $this->Configure->Status = intval($existing_config_results->status) + intval($this->Configure->Status);
+                                $this->Configure->Status = (int) $existing_config_results->status + (int) $this->Configure->Status;
 
                                 // Also reuse the prior start time for this configure step.
                                 $existing_start_timestamp = strtotime($existing_config_results->starttime . ' UTC');

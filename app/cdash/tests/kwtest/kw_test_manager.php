@@ -17,11 +17,11 @@
 
 use Illuminate\Support\Facades\Artisan;
 
-require_once dirname(__FILE__) . '/simpletest/unit_tester.php';
-require_once dirname(__FILE__) . '/simpletest/mock_objects.php';
-require_once dirname(__FILE__) . '/simpletest/web_tester.php';
-require_once dirname(__FILE__) . '/kw_db.php';
-require_once dirname(__FILE__) . '/kw_unlink.php';
+require_once __DIR__ . '/simpletest/unit_tester.php';
+require_once __DIR__ . '/simpletest/mock_objects.php';
+require_once __DIR__ . '/simpletest/web_tester.php';
+require_once __DIR__ . '/kw_db.php';
+require_once __DIR__ . '/kw_unlink.php';
 
 /**
  * The test manager interface kw tests with simpletest test.

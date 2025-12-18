@@ -64,7 +64,7 @@ class IssueCreationTestCase extends KWWebTestCase
             'Insight_Experimental_DynamicAnalysis.xml',
             'Insight_Experimental_Test.xml'];
         foreach ($filenames as $filename) {
-            $file = dirname(__FILE__) . "/data/InsightExperimentalExample/$filename";
+            $file = __DIR__ . "/data/InsightExperimentalExample/$filename";
             if (!$this->submission('IssueCreationProject', $file)) {
                 $this->fail("Failed to submit $file");
             }
@@ -103,7 +103,7 @@ class IssueCreationTestCase extends KWWebTestCase
             ]);
 
         // Setup subprojects.
-        $file = dirname(__FILE__) . '/data/GithubPR/Project.xml';
+        $file = __DIR__ . '/data/GithubPR/Project.xml';
         if (!$this->submission('CDash', $file)) {
             $this->fail("Failed to submit $file");
         }
@@ -116,7 +116,7 @@ class IssueCreationTestCase extends KWWebTestCase
         }
 
         // Submit subproject XML file.
-        $file = dirname(__FILE__) . '/data/GithubPR/Test.xml';
+        $file = __DIR__ . '/data/GithubPR/Test.xml';
         if (!$this->submission('CDash', $file)) {
             $this->fail("Failed to submit $file");
         }

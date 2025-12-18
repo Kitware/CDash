@@ -13,8 +13,8 @@ use Tests\Traits\CreatesUsers;
 
 class ProjectInvitationAcceptanceTest extends TestCase
 {
-    use CreatesUsers;
     use CreatesProjects;
+    use CreatesUsers;
 
     protected Project $project;
 

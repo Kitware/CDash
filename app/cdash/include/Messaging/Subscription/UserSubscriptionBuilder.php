@@ -52,7 +52,7 @@ class UserSubscriptionBuilder implements SubscriptionBuilderInterface
      */
     protected function getSubscriptionFactory(): SubscriptionFactory
     {
-        if (is_null($this->subscriptionFactory)) {
+        if (null === $this->subscriptionFactory) {
             $this->subscriptionFactory = new SubscriptionFactory();
         }
         return $this->subscriptionFactory;

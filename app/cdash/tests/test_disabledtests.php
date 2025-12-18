@@ -4,7 +4,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 use App\Utils\DatabaseCleanupUtils;
 use CDash\Database;
@@ -21,7 +21,7 @@ class DisabledTestsTestCase extends KWWebTestCase
         $this->deleteLog($this->logfilename);
 
         // Submit testing data.
-        $rep = dirname(__FILE__) . '/data/DisabledTests';
+        $rep = __DIR__ . '/data/DisabledTests';
         $file = "$rep/Test.xml";
         if (!$this->submission('EmailProjectExample', $file)) {
             return;

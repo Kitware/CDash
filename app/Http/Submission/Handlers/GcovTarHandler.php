@@ -72,7 +72,7 @@ class GcovTarHandler extends AbstractSubmissionHandler
             if ($fileinfo->getFilename() === 'data.json') {
                 $jsonContents = file_get_contents($fileinfo->getPath() . DIRECTORY_SEPARATOR . $fileinfo->getFilename());
                 $jsonDecoded = json_decode($jsonContents, true);
-                if (is_null($jsonDecoded) || !array_key_exists('Source', $jsonDecoded)
+                if (null === $jsonDecoded || !array_key_exists('Source', $jsonDecoded)
                     || !array_key_exists('Binary', $jsonDecoded)
                 ) {
                     DeleteDirectory($dirName);
@@ -197,7 +197,7 @@ class GcovTarHandler extends AbstractSubmissionHandler
         ) {
             // Find the SubProject that corresponds to this path.
             $subproject = SubProject::GetSubProjectFromPath($path, $this->GetProject()->Id);
-            if (is_null($subproject)) {
+            if (null === $subproject) {
                 // Error already logged.
                 return;
             }
@@ -205,7 +205,7 @@ class GcovTarHandler extends AbstractSubmissionHandler
 
             // Find the sibling build that performed this SubProject.
             $siblingBuild = Build::GetSubProjectBuild($this->Build->GetParentId(), $subprojectid);
-            if (is_null($siblingBuild)) {
+            if (null === $siblingBuild) {
                 // Build doesn't exist yet, add it here.
                 $siblingBuild = new Build();
                 $siblingBuild->Name = $this->Build->Name;
@@ -397,7 +397,7 @@ class GcovTarHandler extends AbstractSubmissionHandler
         // read the file & decode the JSON.
         $jsonContents = file_get_contents($fileinfo->getPath() . DIRECTORY_SEPARATOR . $fileinfo->getFilename());
         $jsonDecoded = json_decode($jsonContents, true);
-        if (is_null($jsonDecoded) || !array_key_exists('sources', $jsonDecoded)) {
+        if (null === $jsonDecoded || !array_key_exists('sources', $jsonDecoded)) {
             return;
         }
 

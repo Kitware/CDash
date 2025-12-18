@@ -101,7 +101,7 @@ class SubProject
 
         // Regardless of whether or not we're performing a "soft delete",
         // we should remove any dependencies on this subproject.
-        DB::delete('DELETE FROM subproject2subproject WHERE dependsonid=?', [intval($this->Id)]);
+        DB::delete('DELETE FROM subproject2subproject WHERE dependsonid=?', [(int) $this->Id]);
 
         if (!$keephistory) {
             Build::where('subprojectid', $this->Id)->update(['subprojectid' => null]);
@@ -359,7 +359,7 @@ class SubProject
                 b.starttime > ? AND
                 b.starttime <= ? AND
                 bg.includesubprojectotal = 1";
-        $params = array_merge($params, [intval($this->ProjectId), $startUTCdate, $endUTCdate]);
+        $params = array_merge($params, [(int) $this->ProjectId, $startUTCdate, $endUTCdate]);
         if ($allSubProjects) {
             $query .= ' GROUP BY subprojectid';
         }
@@ -373,7 +373,7 @@ class SubProject
         if ($allSubProjects) {
             $project_array = [];
             foreach ($project as $row) {
-                $project_array[intval($row['subprojectid'])] = $row;
+                $project_array[(int) $row['subprojectid']] = $row;
             }
             return $project_array;
         } else {
@@ -455,7 +455,7 @@ class SubProject
      *
      * TODO: Move this somewhere else...
      */
-    public static function GetSubProjectFromPath(string $path, int $projectid): ?SubProject
+    public static function GetSubProjectFromPath(string $path, int $projectid): ?self
     {
         $query = DB::select("
             SELECT id
@@ -474,7 +474,7 @@ class SubProject
             ]);
             return null;
         }
-        $subproject = new SubProject();
+        $subproject = new self();
         $subproject->SetId((int) $query[0]->id);
         return $subproject;
     }

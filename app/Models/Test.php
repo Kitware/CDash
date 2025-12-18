@@ -134,7 +134,7 @@ class Test extends Model
      **/
     public function addLabel(Label $label): void
     {
-        if (is_null($this->labels)) {
+        if (null === $this->labels) {
             $this->labels = collect();
         }
         $this->labels->put($label->Text, $label);
@@ -147,7 +147,7 @@ class Test extends Model
      **/
     public function getLabels(): Collection
     {
-        if (is_null($this->labels)) {
+        if (null === $this->labels) {
             $this->labels = collect();
             foreach ($this->labels()->get() as $eloquent_label) {
                 $label = new Label();

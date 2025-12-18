@@ -148,7 +148,7 @@ class TestingJUnitHandler extends AbstractXmlHandler
             $this->TestCreator->testStatus = 'passed';
             if (array_key_exists('STATUS', $attributes)) {
                 $status = $attributes['STATUS'];
-                if (stripos($status, 'fail') !== false) {
+                if (str_contains(strtolower($status), strtolower('fail'))) {
                     $this->TestCreator->testStatus = 'failed';
                 }
                 if (strcasecmp($status, 'notrun') === 0) {

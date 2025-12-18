@@ -18,7 +18,7 @@
 use App\Utils\DatabaseCleanupUtils;
 use Illuminate\Support\Facades\DB;
 
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 class DynamicAnalysisSummaryTestCase extends KWWebTestCase
 {
@@ -31,7 +31,7 @@ class DynamicAnalysisSummaryTestCase extends KWWebTestCase
     {
         parent::__construct();
         $this->deleteLog($this->logfilename);
-        $this->DataDir = dirname(__FILE__) . '/data/DynamicAnalysisSummary';
+        $this->DataDir = __DIR__ . '/data/DynamicAnalysisSummary';
         $this->ParentId = 0;
         $this->StandaloneBuildId = 0;
         $this->ChildIds = [];
@@ -41,7 +41,7 @@ class DynamicAnalysisSummaryTestCase extends KWWebTestCase
     {
         // Submit our testing file.  This should have already been submitted
         // by an earlier test, but it doesn't hurt to send it up a second time.
-        $file = dirname(__FILE__) . '/data/InsightExperimentalExample/Insight_Experimental_DynamicAnalysis.xml';
+        $file = __DIR__ . '/data/InsightExperimentalExample/Insight_Experimental_DynamicAnalysis.xml';
         if (!$this->submission('InsightExample', $file)) {
             $this->fail("Failed to submit $file");
             return 1;
@@ -54,7 +54,7 @@ class DynamicAnalysisSummaryTestCase extends KWWebTestCase
     {
         // Submit our testing files.
         for ($i = 1; $i < 4; $i++) {
-            $file = dirname(__FILE__) . "/data/SubProjectDynamicAnalysis/DynamicAnalysis_$i.xml";
+            $file = __DIR__ . "/data/SubProjectDynamicAnalysis/DynamicAnalysis_$i.xml";
             if (!$this->submission('CrossSubProjectExample', $file)) {
                 $this->fail("Failed to submit $file");
                 return 1;

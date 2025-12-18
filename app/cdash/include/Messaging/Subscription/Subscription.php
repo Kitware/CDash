@@ -100,7 +100,7 @@ class Subscription implements SubscriptionInterface
         $descriptions = [];
         foreach ($this->subscriber->getTopics() as $topic) {
             $description = $topic->getTopicDescription();
-            if (!is_null($case)) {
+            if (null !== $case) {
                 $description = $case === CASE_UPPER ? strtoupper($description) : strtolower($description);
             }
             $descriptions[] = $description;
@@ -169,11 +169,11 @@ class Subscription implements SubscriptionInterface
                         $summary['build_type'] = $build->Type;
                     }
 
-                    if (is_null($summary['build_parent_id'])) {
+                    if (null === $summary['build_parent_id']) {
                         $summary['build_parent_id'] = $build->GetParentId();
                     }
 
-                    if (is_null($summary['build_summary_url'])) {
+                    if (null === $summary['build_summary_url']) {
                         $id = (int) $summary['build_parent_id'] ?: $build->Id;
                         $summary['build_summary_url'] = url("/builds/{$id}");
                     }

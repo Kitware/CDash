@@ -4,7 +4,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 use App\Utils\DatabaseCleanupUtils;
 use CDash\Database;
@@ -39,7 +39,7 @@ class FilterBuildErrorsTestCase extends KWWebTestCase
         $project->Id = $projectid;
 
         // Submit our test data.
-        $rep = dirname(__FILE__) . '/data/BuildFailureDetails';
+        $rep = __DIR__ . '/data/BuildFailureDetails';
         if (!$this->submission('FilterErrors', "$rep/Build_1.xml")) {
             $this->fail('failed to submit Build_1.xml');
             return 1;

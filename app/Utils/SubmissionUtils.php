@@ -134,7 +134,7 @@ class SubmissionUtils
         if (isset($build->SubProjectName) && $build->SubProjectName != '') {
             $BuildUpdate = new BuildUpdate();
             $BuildUpdate->BuildId = $build->Id;
-            $BuildUpdate->AssociateBuild(intval($build->SiteId), $build->Name, $build->GetStamp());
+            $BuildUpdate->AssociateBuild((int) $build->SiteId, $build->Name, $build->GetStamp());
         }
 
         return $build->Id;

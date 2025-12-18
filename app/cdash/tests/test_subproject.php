@@ -36,7 +36,7 @@ class SubProjectTestCase extends KWWebTestCase
     public function testSubmissionProjectDependencies(): void
     {
         $this->deleteLog($this->logfilename);
-        $rep = dirname(__FILE__) . '/data/SubProjectExample';
+        $rep = __DIR__ . '/data/SubProjectExample';
         $file = "$rep/Project_1.xml";
         if (!$this->submission('SubProjectExample', $file)) {
             return;
@@ -50,7 +50,7 @@ class SubProjectTestCase extends KWWebTestCase
     public function testSubmissionSubProjectBuild(): void
     {
         $this->deleteLog($this->logfilename);
-        $rep = dirname(__FILE__) . '/data/SubProjectExample';
+        $rep = __DIR__ . '/data/SubProjectExample';
         $file = "$rep/Build_1.xml";
         if (!$this->submission('SubProjectExample', $file)) {
             return;
@@ -92,7 +92,7 @@ class SubProjectTestCase extends KWWebTestCase
     public function testSubmissionSubProjectTest(): void
     {
         $this->deleteLog($this->logfilename);
-        $rep = dirname(__FILE__) . '/data/SubProjectExample';
+        $rep = __DIR__ . '/data/SubProjectExample';
         $file = "$rep/Test_1.xml";
         if (!$this->submission('SubProjectExample', $file)) {
             return;

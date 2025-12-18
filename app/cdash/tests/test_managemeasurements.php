@@ -5,7 +5,7 @@
 // relative to the top of the CDash source tree
 //
 
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 use App\Models\Measurement;
 use App\Utils\DatabaseCleanupUtils;
@@ -34,10 +34,10 @@ class ManageMeasurementsTestCase extends KWWebTestCase
 
     public function __destruct()
     {
-        if (!is_null($this->BuildId)) {
+        if (null !== $this->BuildId) {
             DatabaseCleanupUtils::removeBuild($this->BuildId);
         }
-        if (!is_null($this->SubProjectBuildId)) {
+        if (null !== $this->SubProjectBuildId) {
             DatabaseCleanupUtils::removeBuild($this->SubProjectBuildId);
         }
 
@@ -116,7 +116,7 @@ class ManageMeasurementsTestCase extends KWWebTestCase
     public function testManageMeasurements()
     {
         // Submit a test file with a named measurement.
-        $testDataFile = dirname(__FILE__) . '/data/TestMeasurements/Test.xml';
+        $testDataFile = __DIR__ . '/data/TestMeasurements/Test.xml';
         if (!$this->submission('InsightExample', $testDataFile)) {
             $this->fail('Failed to submit Test.xml');
             return false;
@@ -131,12 +131,12 @@ class ManageMeasurementsTestCase extends KWWebTestCase
         }
 
         // Submit subproject test data too.
-        $projectFile = dirname(__FILE__) . '/data/MultipleSubprojects/Project.xml';
+        $projectFile = __DIR__ . '/data/MultipleSubprojects/Project.xml';
         if (!$this->submission('SubProjectExample', $projectFile)) {
             $this->fail('Failed to submit Project.xml');
             return false;
         }
-        $testDataFile = dirname(__FILE__) . '/data/TestMeasurements/Test_subproj.xml';
+        $testDataFile = __DIR__ . '/data/TestMeasurements/Test_subproj.xml';
         if (!$this->submission('SubProjectExample', $testDataFile)) {
             $this->fail('Failed to submit Test_subproj.xml');
             return false;

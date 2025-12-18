@@ -198,25 +198,25 @@ class TestUseCase extends UseCase
 
     public function createTestPassed(string $name, array $labels = []): self
     {
-        $this->createTest([$name, TestUseCase::PASSED, 'Labels' => $labels]);
+        $this->createTest([$name, self::PASSED, 'Labels' => $labels]);
         return $this;
     }
 
     public function createTestFailed(string $name, array $labels = []): self
     {
-        $this->createTest([$name, TestUseCase::FAILED, 'Labels' => $labels]);
+        $this->createTest([$name, self::FAILED, 'Labels' => $labels]);
         return $this;
     }
 
     public function createTestNotRun(string $name, array $labels = []): self
     {
-        $this->createTest([$name, TestUseCase::NOTRUN, 'Labels' => $labels]);
+        $this->createTest([$name, self::NOTRUN, 'Labels' => $labels]);
         return $this;
     }
 
     public function createTestTimedout(string $name, array $labels = []): self
     {
-        $this->createTest([$name, TestUseCase::TIMEOUT, 'Labels' => $labels]);
+        $this->createTest([$name, self::TIMEOUT, 'Labels' => $labels]);
         return $this;
     }
 }

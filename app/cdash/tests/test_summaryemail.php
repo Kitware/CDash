@@ -3,7 +3,7 @@
 use CDash\Model\BuildGroup;
 use CDash\Model\Project;
 
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 class SummaryEmailTestCase extends KWWebTestCase
 {
@@ -36,7 +36,7 @@ class SummaryEmailTestCase extends KWWebTestCase
         // Resubmit a previous build to this new project.
         $parts = ['build', 'update', 'test', 'dynamicanalysis'];
         foreach ($parts as $part) {
-            $file = dirname(__FILE__) . "/data/EmailProjectExample/2_$part.xml";
+            $file = __DIR__ . "/data/EmailProjectExample/2_$part.xml";
             $this->submission('SummaryEmailProject', $file);
         }
 

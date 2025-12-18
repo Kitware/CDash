@@ -12,8 +12,8 @@ use Tests\Traits\CreatesUsers;
 
 class NoteTypeTest extends TestCase
 {
-    use CreatesUsers;
     use CreatesProjects;
+    use CreatesUsers;
 
     private Project $public_project;
     private Project $private_project;

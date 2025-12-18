@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 use CDash\Model\Project;
 use Illuminate\Support\Facades\DB;
@@ -36,7 +36,7 @@ class QueryTestsFilterLabelsTestCase extends KWWebTestCase
         $this->project->Fill();
 
         // Submit our testing data.
-        $dir = dirname(__FILE__) . '/data/QueryTestsFilterLabels';
+        $dir = __DIR__ . '/data/QueryTestsFilterLabels';
         $files = ['Test_1.xml', 'Test_2.xml'];
         foreach ($files as $file) {
             if (!$this->submission('QueryTestsFilterLabels', "{$dir}/{$file}")) {

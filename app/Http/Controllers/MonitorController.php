@@ -33,7 +33,7 @@ final class MonitorController extends AbstractController
         }
 
         // Choose colors for the chart based on user preferences.
-        if (array_key_exists('colorblind', $_COOKIE) && intval($_COOKIE['colorblind']) === 1) {
+        if (array_key_exists('colorblind', $_COOKIE) && (int) $_COOKIE['colorblind'] === 1) {
             $palette = HighContrastPalette::class;
         } else {
             $palette = ClassicPalette::class;

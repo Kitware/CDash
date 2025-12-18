@@ -7,7 +7,7 @@
 use App\Utils\DatabaseCleanupUtils;
 use Illuminate\Support\Facades\DB;
 
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 class SubProjectNextPreviousTestCase extends KWWebTestCase
 {
@@ -31,7 +31,7 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
             ['Build_1.xml', 'Configure_1.xml', 'Notes_1.xml', 'Test_1.xml',
                 'Build_3.xml', 'Build_2.xml', 'Configure_2.xml', 'Notes_2.xml',
                 'Test_2.xml'];
-        $dir = dirname(__FILE__) . '/data/SubProjectNextPrevious';
+        $dir = __DIR__ . '/data/SubProjectNextPrevious';
         foreach ($filesToSubmit as $file) {
             if (!$this->submission('Trilinos', "$dir/$file")) {
                 $this->fail("Failed to submit $file");

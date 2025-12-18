@@ -40,12 +40,12 @@ class AuthTokenUtil
         $now = time();
         $params['created'] = gmdate(FMT_DATETIME, $now);
 
-        if (!is_numeric($duration) || intval($duration) < 0) {
+        if (!is_numeric($duration) || (int) $duration < 0) {
             Log::error("Invalid token_duration configuration {$duration}");
             throw new InvalidArgumentException('Invalid token_duration configuration');
         }
 
-        if (intval($duration) === 0) {
+        if ((int) $duration === 0) {
             // this token "never" expires
             $params['expires'] = '9999-01-01 00:00:00';
         } else {

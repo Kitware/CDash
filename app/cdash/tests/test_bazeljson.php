@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 use App\Utils\DatabaseCleanupUtils;
 use CDash\Database;
@@ -23,7 +23,7 @@ class BazelJSONTestCase extends KWWebTestCase
         // Submit testing data.
         $buildid = $this->submit_data('InsightExample', 'BazelJSON',
             '0a9b0aeeb73618cd10d6e1bee221fd71',
-            dirname(__FILE__) . '/data/Bazel/bazel_BEP.json');
+            __DIR__ . '/data/Bazel/bazel_BEP.json');
         if (!$buildid) {
             return false;
         }
@@ -73,7 +73,7 @@ class BazelJSONTestCase extends KWWebTestCase
         // Submit the same data again to verify that no testdiff is recorded.
         $buildid2 = $this->submit_data('InsightExample', 'BazelJSON',
             '0a9b0aeeb73618cd10d6e1bee221fd71',
-            dirname(__FILE__) . '/data/Bazel/bazel_BEP.json',
+            __DIR__ . '/data/Bazel/bazel_BEP.json',
             '20170824-1835-Experimental', '1503599755');
         $this->assertTrue($buildid2 > 1);
         $testdiff_stmt = $this->PDO->prepare(
@@ -105,7 +105,7 @@ class BazelJSONTestCase extends KWWebTestCase
         // Submit testing data.
         $buildid = $this->submit_data('Bazel', 'BazelJSON',
             '0a9b0aeeb73618cd10d6e1bee221fd71',
-            dirname(__FILE__) . '/data/Bazel/bazel_BEP.json');
+            __DIR__ . '/data/Bazel/bazel_BEP.json');
         if (!$buildid) {
             return false;
         }
@@ -155,7 +155,7 @@ class BazelJSONTestCase extends KWWebTestCase
         // Setup subprojects.
         $parentid = $this->submit_data('BazelSubProj', 'SubProjectDirectories',
             '9e909746b706562eb263262a1496f202',
-            dirname(__FILE__) . '/data/Bazel/subproj/subproj_list.txt');
+            __DIR__ . '/data/Bazel/subproj/subproj_list.txt');
         if (!$parentid) {
             return false;
         }
@@ -163,14 +163,14 @@ class BazelJSONTestCase extends KWWebTestCase
         // Submit build and test data.
         $parentid2 = $this->submit_data('BazelSubProj', 'BazelJSON',
             'a860786f23529d62472ba363525cd2f3',
-            dirname(__FILE__) . '/data/Bazel/subproj/subproj_build.json');
+            __DIR__ . '/data/Bazel/subproj/subproj_build.json');
         if (!$parentid2 || $parentid !== $parentid2) {
             $this->fail("parentid mismatch $parentid vs $parentid2");
             return false;
         }
         $parentid3 = $this->submit_data('BazelSubProj', 'BazelJSON',
             'c261e5014fddb72b372b85449be3301e',
-            dirname(__FILE__) . '/data/Bazel/subproj/subproj_test.json');
+            __DIR__ . '/data/Bazel/subproj/subproj_test.json');
         if (!$parentid3 || $parentid !== $parentid3) {
             $this->fail("parentid mismatch $parentid vs $parentid3");
             return false;
@@ -251,7 +251,7 @@ class BazelJSONTestCase extends KWWebTestCase
         // Submit testing data.
         $buildid = $this->submit_data('InsightExample', 'BazelJSON',
             'abc62be615c3f2a469fe6b6ada556b75',
-            dirname(__FILE__) . '/data/Bazel/bazel_testFailed.json');
+            __DIR__ . '/data/Bazel/bazel_testFailed.json');
         if (!$buildid) {
             return false;
         }
@@ -307,7 +307,7 @@ class BazelJSONTestCase extends KWWebTestCase
         // Submit testing data.
         $buildid = $this->submit_data('InsightExample', 'BazelJSON',
             '73817c7f786ff65ce14af7c34a6850ba',
-            dirname(__FILE__) . '/data/Bazel/bazel_timeout.json');
+            __DIR__ . '/data/Bazel/bazel_timeout.json');
         if (!$buildid) {
             return false;
         }
@@ -363,7 +363,7 @@ class BazelJSONTestCase extends KWWebTestCase
         // Submit testing data.
         $buildid = $this->submit_data('InsightExample', 'BazelJSON',
             'e2b864cc0c5308148aea0d143df6d2ba',
-            dirname(__FILE__) . '/data/Bazel/bazel_configure.json');
+            __DIR__ . '/data/Bazel/bazel_configure.json');
         if (!$buildid) {
             return false;
         }
@@ -399,7 +399,7 @@ class BazelJSONTestCase extends KWWebTestCase
         // Submit testing data.
         $buildid = $this->submit_data('InsightExample', 'BazelJSON',
             '4a42c09a1751848dc5b806c4bc701fd6',
-            dirname(__FILE__) . '/data/Bazel/automotive_test.json');
+            __DIR__ . '/data/Bazel/automotive_test.json');
         if (!$buildid) {
             return false;
         }
@@ -435,7 +435,7 @@ class BazelJSONTestCase extends KWWebTestCase
         // Submit testing data.
         $buildid = $this->submit_data('InsightExample', 'BazelJSON',
             '131eabf91e183359d4b3e1ef24482741',
-            dirname(__FILE__) . '/data/Bazel/bazel_multiple_line_error.json');
+            __DIR__ . '/data/Bazel/bazel_multiple_line_error.json');
         if (!$buildid) {
             return false;
         }
@@ -480,7 +480,7 @@ class BazelJSONTestCase extends KWWebTestCase
         // Submit testing data.
         $buildid = $this->submit_data('InsightExample', 'BazelJSON',
             'cb99fa74feaf55a6777f3087becbce04',
-            dirname(__FILE__) . '/data/Bazel/bazel_shard_test.json');
+            __DIR__ . '/data/Bazel/bazel_shard_test.json');
         if (!$buildid) {
             return false;
         }
@@ -535,7 +535,7 @@ class BazelJSONTestCase extends KWWebTestCase
         // Submit testing data.
         $buildid = $this->submit_data('InsightExample', 'BazelJSON',
             '74df5d4af1b22097caf2304b301fe4d0',
-            dirname(__FILE__) . '/data/Bazel/bazel_shard_test_failures.json');
+            __DIR__ . '/data/Bazel/bazel_shard_test_failures.json');
         if (!$buildid) {
             return false;
         }
@@ -630,7 +630,7 @@ class BazelJSONTestCase extends KWWebTestCase
         // Submit testing data.
         $buildid = $this->submit_data('InsightExample', 'BazelJSON',
             'aa689b38ea361e5ccdc6b59755fbec64',
-            dirname(__FILE__) . '/data/Bazel/bazel_shard_test_timeout.json');
+            __DIR__ . '/data/Bazel/bazel_shard_test_timeout.json');
         if (!$buildid) {
             return false;
         }

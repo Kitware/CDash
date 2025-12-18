@@ -4,7 +4,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 class IndexFiltersTestCase extends KWWebTestCase
 {
@@ -43,7 +43,7 @@ class IndexFiltersTestCase extends KWWebTestCase
 
     public function filter($field, $compare, $value, $expected, $url = null)
     {
-        if (is_null($url)) {
+        if (null === $url) {
             $url = $this->InsightUrl;
         }
         $filter_string = "filtercount=1&showfilters=1&field1=$field&compare1=$compare&value1=$value";

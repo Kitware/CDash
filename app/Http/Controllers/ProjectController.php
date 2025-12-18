@@ -23,7 +23,7 @@ final class ProjectController extends AbstractProjectController
 
         if (isset($_GET['projectid'])) {
             // We're editing a project if a projectid was specified
-            $this->setProjectById(intval($_GET['projectid']));
+            $this->setProjectById((int) $_GET['projectid']);
         } else {
             // We're going to create a new project
             $this->project = new Project();
@@ -118,7 +118,7 @@ final class ProjectController extends AbstractProjectController
             $project_response['TestTimeMaxStatus'] = 3;
             $project_response['TestTimeStd'] = 4.0;
             $project_response['TestTimeStdThreshold'] = 1.0;
-            if (!boolval(config('cdash.user_create_projects')) || $User->admin) {
+            if (!(bool) config('cdash.user_create_projects') || $User->admin) {
                 $project_response['UploadQuota'] = 1;
             }
             $project_response['WarningsFilter'] = '';

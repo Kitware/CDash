@@ -4,7 +4,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 class ViewSubProjectsTestCase extends KWWebTestCase
 {
@@ -18,7 +18,7 @@ class ViewSubProjectsTestCase extends KWWebTestCase
         $this->get($this->url . '/api/v1/viewSubProjects.php?project=Trilinos&date=2011-07-22');
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
-        if (is_null($jsonobj)) {
+        if (null === $jsonobj) {
             $this->fail("API response could be not be decoded to JSON:\n$content");
             return 1;
         }

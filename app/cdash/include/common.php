@@ -392,7 +392,7 @@ function get_project_id($projectname): int
     $project = $service->get(Project::class);
     $project->Name = $projectname;
     if ($project->GetIdByName()) {
-        return intval($project->Id);
+        return (int) $project->Id;
     }
     return -1;
 }
@@ -407,7 +407,7 @@ function get_project_name($projectid): string
     }
 
     $db = Database::getInstance();
-    $project = $db->executePreparedSingleRow('SELECT name FROM project WHERE id=?', [intval($projectid)]);
+    $project = $db->executePreparedSingleRow('SELECT name FROM project WHERE id=?', [(int) $projectid]);
     if (!empty($project)) {
         return $project['name'];
     }
@@ -423,7 +423,7 @@ function remove_project_builds($projectid): void
         return;
     }
 
-    $build = DB::select('SELECT id FROM build WHERE projectid=?', [intval($projectid)]);
+    $build = DB::select('SELECT id FROM build WHERE projectid=?', [(int) $projectid]);
 
     $buildids = [];
     foreach ($build as $build_array) {
@@ -467,9 +467,9 @@ function get_dates($date, $nightlytime): array
     $date = date(FMT_DATE, strtotime($date));
 
     $nightlytime = strtotime($nightlytime, strtotime($date));
-    $nightlyhour = intval(date('H', $nightlytime));
-    $nightlyminute = intval(date('i', $nightlytime));
-    $nightlysecond = intval(date('s', $nightlytime));
+    $nightlyhour = (int) date('H', $nightlytime);
+    $nightlyminute = (int) date('i', $nightlytime);
+    $nightlysecond = (int) date('s', $nightlytime);
 
     if (strlen($date) === 0) {
         $date = date(FMT_DATE); // the date is always the date of the server
@@ -484,14 +484,14 @@ function get_dates($date, $nightlytime): array
         }
     }
 
-    $today = mktime($nightlyhour, $nightlyminute, $nightlysecond, intval(date2month($date)), intval(date2day($date)), intval(date2year($date))) - 3600 * 24; // starting time
+    $today = mktime($nightlyhour, $nightlyminute, $nightlysecond, (int) date2month($date), (int) date2day($date), (int) date2year($date)) - 3600 * 24; // starting time
 
     // If the $nightlytime is in the morning it's actually the day after
     if (date(FMT_TIME, $nightlytime) < '12:00:00') {
         $date = date(FMT_DATE, strtotime($date) - 3600 * 24); // previous date
     }
 
-    $todaydate = mktime(0, 0, 0, intval(date2month($date)), intval(date2day($date)), intval(date2year($date)));
+    $todaydate = mktime(0, 0, 0, (int) date2month($date), (int) date2day($date), (int) date2year($date));
     $previousdate = date(FMT_DATE, $todaydate - 3600 * 24);
     $nextdate = date(FMT_DATE, $todaydate + 3600 * 24);
     return [$previousdate, $today, $nextdate, $date];
@@ -582,7 +582,7 @@ function get_dashboard_JSON($projectname, $date, &$response): void
     $project_array['name'] = $projectname;
     $project_array['nightlytime'] = $project->Id ? $project->NightlyTime : '00:00:00';
 
-    if (is_null($date)) {
+    if (null === $date) {
         $date = date(FMT_DATE);
     }
     [$previousdate, $currentstarttime, $nextdate] = get_dates($date, $project_array['nightlytime']);
@@ -699,7 +699,7 @@ function cast_data_for_JSON($value)
     }
     // Do not support E notation for numbers (ie 6.02e23).
     // This can cause checksums (such as git commits) to be converted to 0.
-    if (is_numeric($value) && stripos($value, 'e') === false) {
+    if (is_numeric($value) && !str_contains(strtolower($value), strtolower('e'))) {
         if (is_nan($value) || is_infinite($value)) {
             // Special handling for values that are not supported by JSON.
             return 0;
@@ -747,7 +747,7 @@ function get_aggregate_build(Build $build): Build
     $subproj_where_params = [];
     if ($build->SubProjectId) {
         $subproj_where = 'AND subprojectid=?';
-        $subproj_where_params[] = intval($build->SubProjectId);
+        $subproj_where_params[] = (int) $build->SubProjectId;
     }
 
     $db = Database::getInstance();
@@ -765,8 +765,8 @@ function get_aggregate_build(Build $build): Build
                    AND starttime >= ?
                $subproj_where
            ", array_merge([
-        intval($siteid),
-        intval($build->ProjectId),
+        (int) $siteid,
+        (int) $build->ProjectId,
         $build->EndOfDay,
         $build->BeginningOfDay],
         $subproj_where_params
@@ -785,7 +785,7 @@ function get_aggregate_build(Build $build): Build
 
 function create_aggregate_build($build, $siteid = null): Build
 {
-    if (is_null($siteid)) {
+    if (null === $siteid) {
         $siteid = get_server_siteid();
     }
 

@@ -196,7 +196,7 @@ class BazelJSONHandler extends AbstractSubmissionHandler
     public function ParseLine($line)
     {
         $json_array = json_decode($line, true);
-        if (is_null($json_array)) {
+        if (null === $json_array) {
             Log::error('json_decode error: ' . json_last_error_msg(), [
                 'function' => 'BazelJSONHandler::ParseLine',
             ]);
@@ -216,7 +216,7 @@ class BazelJSONHandler extends AbstractSubmissionHandler
                 if ($this->HasSubProjects()) {
                     $target_name = $json_array['id']['pattern']['pattern'][0];
                     $subproject_name = self::GetSubProjectForPath(
-                        $target_name, intval($this->GetProject()->Id));
+                        $target_name, (int) $this->GetProject()->Id);
                     if (!empty($subproject_name)) {
                         $this->InitializeSubProjectBuild($subproject_name);
                     }
@@ -360,7 +360,7 @@ class BazelJSONHandler extends AbstractSubmissionHandler
                                 $subproject_name = '';
                                 if ($this->HasSubProjects()) {
                                     $subproject_name = self::GetSubProjectForPath(
-                                        $source_file, intval($this->GetProject()->Id));
+                                        $source_file, (int) $this->GetProject()->Id);
                                     // Skip this defect if we cannot deduce what SubProject
                                     // it belongs to.
                                     if (empty($subproject_name)) {
@@ -432,7 +432,7 @@ class BazelJSONHandler extends AbstractSubmissionHandler
                             if ($record_error) {
                                 // Record any existing build error before creating
                                 // a new one.
-                                if (!is_null($build_error)) {
+                                if (null !== $build_error) {
                                     $this->RecordError($build_error, $type, $subproject_name);
                                     $subproject_name = '';
                                     $build_error = null;
@@ -484,7 +484,7 @@ class BazelJSONHandler extends AbstractSubmissionHandler
                                     // Look up the subproject (if any) that contains
                                     // this source file.
                                     $subproject_name = self::GetSubProjectForPath(
-                                        $source_file, intval($this->GetProject()->Id));
+                                        $source_file, (int) $this->GetProject()->Id);
                                     // Skip this defect if we cannot deduce what SubProject
                                     // it belongs to.
                                     if (empty($subproject_name)) {
@@ -492,7 +492,7 @@ class BazelJSONHandler extends AbstractSubmissionHandler
                                     }
                                     $this->InitializeSubProjectBuild($subproject_name);
                                 }
-                            } elseif (!is_null($build_error)) {
+                            } elseif (null !== $build_error) {
                                 // Record lines following the error/warning
                                 // as post context.
                                 $build_error->PostContext .= "$line\n";
@@ -501,7 +501,7 @@ class BazelJSONHandler extends AbstractSubmissionHandler
                         $log_line_number++;
                     }
 
-                    if (!is_null($build_error)) {
+                    if (null !== $build_error) {
                         $this->RecordError($build_error, $type, $subproject_name);
                         $build_error = null;
                     }
@@ -529,14 +529,14 @@ class BazelJSONHandler extends AbstractSubmissionHandler
                         // builds instead.
                         $target_name = $json_array['id']['testResult']['label'];
                         $subproject_name = self::GetSubProjectForPath(
-                            $target_name, intval($this->GetProject()->Id));
+                            $target_name, (int) $this->GetProject()->Id);
                         // Skip this defect if we cannot deduce what SubProject
                         // it belongs to.
                         if (empty($subproject_name)) {
                             break;
                         }
                         $child_build = $this->InitializeSubProjectBuild($subproject_name);
-                        if (!is_null($child_build)) {
+                        if (null !== $child_build) {
                             $child_build->InsertErrors = false;
                             SubmissionUtils::add_build($child_build);
                             $buildid = $child_build->Id;
@@ -584,7 +584,7 @@ class BazelJSONHandler extends AbstractSubmissionHandler
                     // builds instead.
                     $target_name = $json_array['id']['testSummary']['label'];
                     $subproject_name = self::GetSubProjectForPath(
-                        $target_name, intval($this->GetProject()->Id));
+                        $target_name, (int) $this->GetProject()->Id);
                     // Skip this defect if we cannot deduce what SubProject
                     // it belongs to.
                     if (empty($subproject_name)) {

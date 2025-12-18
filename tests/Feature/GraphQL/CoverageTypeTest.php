@@ -14,8 +14,8 @@ use Tests\Traits\CreatesUsers;
 
 class CoverageTypeTest extends TestCase
 {
-    use CreatesUsers;
     use CreatesProjects;
+    use CreatesUsers;
 
     private Project $project;
 

@@ -58,7 +58,7 @@ final class UserController extends AbstractController
         $response['user_is_admin'] = $user->admin;
         $response['show_monitor'] = config('queue.default') === 'database';
 
-        if (boolval(config('cdash.user_create_projects'))) {
+        if ((bool) config('cdash.user_create_projects')) {
             $response['user_can_create_projects'] = 1;
         } else {
             $response['user_can_create_projects'] = 0;
@@ -143,7 +143,7 @@ final class UserController extends AbstractController
             pdo_execute($stmt, array_merge($query_params, [$userid]));
             while ($row = $stmt->fetch()) {
                 $Project = new Project();
-                $Project->Id = intval($row['projectid']);
+                $Project->Id = (int) $row['projectid'];
                 $Project->Fill();
 
                 $claimedproject = [];
@@ -162,13 +162,13 @@ final class UserController extends AbstractController
             $claimedsite_response['name'] = $site['name'];
             $claimedsite_response['outoforder'] = $site['outoforder'];
 
-            $siteid = intval($site['id']);
+            $siteid = (int) $site['id'];
 
             $siteprojects_response = [];
             foreach ($claimedsiteprojects as $project) {
                 $siteproject_response = [];
 
-                $projectid = intval($project['id']);
+                $projectid = (int) $project['id'];
                 $projectname = $project['name'];
                 $nightlytime = $project['nightlytime'];
 
@@ -226,7 +226,7 @@ final class UserController extends AbstractController
         }
         $first_build = $project[0]->starttime;
         $nb_days = strtotime($endUTCdate) - strtotime($first_build);
-        $nb_days = intval($nb_days / 86400) + 1;
+        $nb_days = (int) ($nb_days / 86400) + 1;
         $nbuilds = \App\Models\Project::findOrFail($projectid)
             ->builds()
             ->betweenDates(Carbon::parse($startUTCdate), Carbon::parse($endUTCdate))

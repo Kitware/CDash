@@ -481,7 +481,7 @@ class BuildGroup
         ", [$projectid, $begin, $begin]);
 
         foreach ($stmt as $row) {
-            $buildgroup = new BuildGroup();
+            $buildgroup = new self();
             $buildgroup->SetId((int) $row->id);
             $buildgroup->SetName($row->name);
             // TODO: Clean this up.  Position is a *private* member...

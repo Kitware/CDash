@@ -4,7 +4,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 use CDash\Model\Project;
 
@@ -34,7 +34,7 @@ class CoverageDirectoriesTestCase extends KWWebTestCase
         }
 
         $filesToSubmit = ['prefix-Coverage.xml', 'prefix-CoverageLog-0.xml', 'sort-Coverage.xml', 'sort-CoverageLog-0.xml', 'sort-CoverageLog-1.xml'];
-        $dir = dirname(__FILE__) . '/data/CoverageDirectories';
+        $dir = __DIR__ . '/data/CoverageDirectories';
         foreach ($filesToSubmit as $file) {
             if (!$this->submission('CoverageDirectories', "$dir/$file")) {
                 $this->fail("Failed to submit $file");

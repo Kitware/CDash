@@ -11,8 +11,8 @@ use Tests\Traits\CreatesUsers;
 
 class RemoveProjectUserTest extends TestCase
 {
-    use CreatesUsers;
     use CreatesProjects;
+    use CreatesUsers;
 
     private Project $project;
 

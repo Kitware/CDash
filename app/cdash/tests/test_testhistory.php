@@ -4,7 +4,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 use CDash\Model\Project;
 use Illuminate\Support\Facades\DB;
@@ -236,7 +236,7 @@ class TestHistoryTestCase extends KWWebTestCase
         $client = $this->getGuzzleClient();
         $response = $client->request('GET', $url, ['http_errors' => false]);
         $expected = '{"tests":[{"name":"fails","summary":"Broken","summaryclass":"error"},{"name":"flaky","summary":"Unstable","summaryclass":"warning"},{"name":"notrun","summary":"Inactive","summaryclass":"warning"},{"name":"passes","summary":"Stable","summaryclass":"normal"},{"name":"sporadic","summary":"Stable","summaryclass":"normal"}]}';
-        $this->assertEqual($expected, strval($response->getBody()));
+        $this->assertEqual($expected, (string) $response->getBody());
 
         // Verify that testing history matches what we expect.
         $previous_buildids = "{$buildids[4]},+{$buildids[3]},+{$buildids[2]},+{$buildids[1]}";

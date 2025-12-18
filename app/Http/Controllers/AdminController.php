@@ -14,12 +14,12 @@ final class AdminController extends AbstractController
     {
         @set_time_limit(0);
 
-        $projectid = intval($_GET['projectid'] ?? 0);
+        $projectid = (int) ($_GET['projectid'] ?? 0);
 
         $alert = '';
 
         // get date info here
-        @$dayTo = intval($_POST['dayFrom']);
+        @$dayTo = (int) $_POST['dayFrom'];
         if (empty($dayTo)) {
             $time = strtotime('2000-01-01 00:00:00');
 
@@ -43,12 +43,12 @@ final class AdminController extends AbstractController
             $yearTo = date('Y');
             $monthTo = date('m');
         } else {
-            $dayFrom = intval($_POST['dayFrom']);
-            $monthFrom = intval($_POST['monthFrom']);
-            $yearFrom = intval($_POST['yearFrom']);
-            $dayTo = intval($_POST['dayTo']);
-            $monthTo = intval($_POST['monthTo']);
-            $yearTo = intval($_POST['yearTo']);
+            $dayFrom = (int) $_POST['dayFrom'];
+            $monthFrom = (int) $_POST['monthFrom'];
+            $yearFrom = (int) $_POST['yearFrom'];
+            $dayTo = (int) $_POST['dayTo'];
+            $monthTo = (int) $_POST['monthTo'];
+            $yearTo = (int) $_POST['yearTo'];
         }
 
         // List the available projects

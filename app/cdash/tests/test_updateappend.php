@@ -4,7 +4,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 use App\Utils\DatabaseCleanupUtils;
 
@@ -23,7 +23,7 @@ class UppdateAppendTestCase extends KWWebTestCase
         echo "1. testUpdateAppend\n";
 
         // Submit our test data.
-        $rep = dirname(__FILE__) . '/data/UpdateAppend';
+        $rep = __DIR__ . '/data/UpdateAppend';
         if (!$this->submission('EmailProjectExample', "$rep/Update_1.xml")) {
             $this->fail('failed to submit Update_1.xml');
             return 1;

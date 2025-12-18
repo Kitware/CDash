@@ -7,7 +7,7 @@
 use App\Utils\DatabaseCleanupUtils;
 use Illuminate\Support\Facades\DB;
 
-require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once __DIR__ . '/cdash_test_case.php';
 
 class ExternalLinksFromTestsTestCase extends KWWebTestCase
 {
@@ -20,7 +20,7 @@ class ExternalLinksFromTestsTestCase extends KWWebTestCase
     {
         // Submit our testing data.
         $file_to_submit =
-            dirname(__FILE__) . '/data/ExternalLinksFromTests/Test.xml';
+            __DIR__ . '/data/ExternalLinksFromTests/Test.xml';
         if (!$this->submission('InsightExample', $file_to_submit)) {
             $this->fail("Failed to submit $file_to_submit");
             return 1;

@@ -90,7 +90,7 @@ abstract class Collection implements Iterator, Countable
         // a call to key may result in null, e.g. !isset. To prevent endless loop in the event
         // that collection was set with a key equal to an empty string, we must check for the null
         // type here.
-        if (is_null($key)) {
+        if (null === $key) {
             return false;
         }
 
@@ -111,7 +111,7 @@ abstract class Collection implements Iterator, Countable
     public function addItem($item, $name = null): self
     {
         $ptr = count($this->collection);
-        $key = is_null($name) ? $ptr : $name;
+        $key = null === $name ? $ptr : $name;
 
         if (!in_array($key, $this->keys) && !in_array($key, array_keys($this->collection))) {
             $this->keys[$ptr] = $key;
