@@ -455,7 +455,7 @@ class SubProject
      *
      * TODO: Move this somewhere else...
      */
-    public static function GetSubProjectFromPath(string $path, int $projectid): ?SubProject
+    public static function GetSubProjectFromPath(string $path, int $projectid): ?self
     {
         $query = DB::select("
             SELECT id
@@ -474,7 +474,7 @@ class SubProject
             ]);
             return null;
         }
-        $subproject = new SubProject();
+        $subproject = new self();
         $subproject->SetId((int) $query[0]->id);
         return $subproject;
     }

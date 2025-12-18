@@ -47,7 +47,7 @@ class BuildEmailCollection extends Collection
                     $sub = $collection->get($category);
                     $sub->add($email);
                 } else {
-                    $sub = new BuildEmailCollection();
+                    $sub = new self();
                     $sub->add($email);
                     $collection->addItem($sub, $category);
                 }

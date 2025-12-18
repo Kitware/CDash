@@ -61,7 +61,7 @@ class BuildEmail
         if ($build !== null) {
             /* @var \App\Models\BuildEmail $email */
             foreach ($build->emails as $sent_email) {
-                $email = new BuildEmail();
+                $email = new self();
                 $email
                     ->SetBuildId($buildId)
                     ->SetCategory($sent_email->category)

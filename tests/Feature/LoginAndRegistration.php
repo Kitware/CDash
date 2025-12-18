@@ -39,7 +39,7 @@ class LoginAndRegistration extends TestCase
 
     protected function tearDown(): void
     {
-        User::where('email', LoginAndRegistration::$email)->first()?->delete();
+        User::where('email', self::$email)->first()?->delete();
         $this->user?->delete();
 
         parent::tearDown();
@@ -59,9 +59,9 @@ class LoginAndRegistration extends TestCase
         $post_data = [
             'fname' => 'Test',
             'lname' => 'User',
-            'email' => LoginAndRegistration::$email,
-            'password' => LoginAndRegistration::$password,
-            'password_confirmation' => LoginAndRegistration::$password,
+            'email' => self::$email,
+            'password' => self::$password,
+            'password_confirmation' => self::$password,
             'institution' => 'home',
             'sent' => 'Register',
             'url' => 'catchbot',
@@ -69,7 +69,7 @@ class LoginAndRegistration extends TestCase
         $this->post(route('register'), $post_data);
 
         // Verify that it really landed in the database.
-        $this->assertDatabaseHas('users', ['email' => LoginAndRegistration::$email]);
+        $this->assertDatabaseHas('users', ['email' => self::$email]);
     }
 
     public function testUserCanLoginWithCorrectCredentials(): void
@@ -351,9 +351,9 @@ class LoginAndRegistration extends TestCase
         $post_data = [
             'fname' => 'Test',
             'lname' => 'User',
-            'email' => LoginAndRegistration::$blockedEmail,
-            'password' => LoginAndRegistration::$password,
-            'password_confirmation' => LoginAndRegistration::$password,
+            'email' => self::$blockedEmail,
+            'password' => self::$password,
+            'password_confirmation' => self::$password,
             'institution' => 'home',
             'sent' => 'Register',
             'url' => 'catchbot',
@@ -361,7 +361,7 @@ class LoginAndRegistration extends TestCase
         $this->post(route('register'), $post_data);
 
         // Verify that nothing was added to the database
-        $this->assertDatabaseMissing('users', ['email' => LoginAndRegistration::$blockedEmail]);
+        $this->assertDatabaseMissing('users', ['email' => self::$blockedEmail]);
     }
 
     public function testDisabledRegistrationForm(): void
