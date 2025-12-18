@@ -13,8 +13,8 @@ use Tests\Traits\CreatesUsers;
 
 class RevokeProjectInvitationTest extends TestCase
 {
-    use CreatesUsers;
     use CreatesProjects;
+    use CreatesUsers;
 
     private Project $project;
 

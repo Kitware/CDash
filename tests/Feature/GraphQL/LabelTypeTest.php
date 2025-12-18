@@ -12,8 +12,8 @@ use Tests\Traits\CreatesUsers;
 
 class LabelTypeTest extends TestCase
 {
-    use CreatesUsers;
     use CreatesProjects;
+    use CreatesUsers;
 
     private Project $project;
 

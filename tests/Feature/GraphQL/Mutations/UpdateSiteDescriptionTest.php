@@ -12,8 +12,8 @@ use Tests\Traits\CreatesUsers;
 
 class UpdateSiteDescriptionTest extends TestCase
 {
-    use CreatesUsers;
     use CreatesSites;
+    use CreatesUsers;
 
     private Site $site;
 

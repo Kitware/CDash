@@ -11,8 +11,8 @@ use Tests\Traits\CreatesUsers;
 
 class ChangeProjectRoleTest extends TestCase
 {
-    use CreatesUsers;
     use CreatesProjects;
+    use CreatesUsers;
 
     private Project $project;
 

@@ -10,8 +10,8 @@ use Tests\Traits\CreatesUsers;
 
 class JoinProjectTest extends TestCase
 {
-    use CreatesUsers;
     use CreatesProjects;
+    use CreatesUsers;
 
     private ?Project $project = null;
 

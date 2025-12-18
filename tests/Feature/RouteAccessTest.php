@@ -14,8 +14,8 @@ use Tests\Traits\CreatesUsers;
 
 class RouteAccessTest extends TestCase
 {
-    use CreatesUsers;
     use CreatesProjects;
+    use CreatesUsers;
 
     private User $normal_user;
     private User $admin_user;

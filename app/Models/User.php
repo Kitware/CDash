@@ -30,10 +30,10 @@ use LdapRecord\Laravel\Auth\LdapAuthenticatable;
  */
 class User extends Authenticatable implements MustVerifyEmail, LdapAuthenticatable
 {
+    use AuthenticatesWithLdap;
     /** @use HasFactory<UserFactory> */
     use HasFactory;
     use Notifiable;
-    use AuthenticatesWithLdap;
 
     protected $table = 'users';
 

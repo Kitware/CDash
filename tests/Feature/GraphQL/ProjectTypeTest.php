@@ -14,8 +14,8 @@ use Tests\Traits\CreatesUsers;
 
 class ProjectTypeTest extends TestCase
 {
-    use CreatesUsers;
     use CreatesProjects;
+    use CreatesUsers;
     use DatabaseTruncation;
 
     /**

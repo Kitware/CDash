@@ -10,8 +10,8 @@ use Tests\Traits\CreatesSubmissions;
 
 class SubmissionValidation extends TestCase
 {
-    use CreatesSubmissions;
     use CreatesProjects;
+    use CreatesSubmissions;
 
     protected string $ConfigFile = '';
     protected mixed $Original = '';

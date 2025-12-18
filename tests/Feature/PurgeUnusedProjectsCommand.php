@@ -11,8 +11,8 @@ use Tests\Traits\CreatesProjects;
 
 class PurgeUnusedProjectsCommand extends TestCase
 {
-    use DatabaseTruncation;
     use CreatesProjects;
+    use DatabaseTruncation;
 
     private \App\Models\Project $project1;
     private \App\Models\Project $project2;

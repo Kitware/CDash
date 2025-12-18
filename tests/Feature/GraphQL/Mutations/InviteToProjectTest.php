@@ -15,8 +15,8 @@ use Tests\Traits\CreatesUsers;
 
 class InviteToProjectTest extends TestCase
 {
-    use CreatesUsers;
     use CreatesProjects;
+    use CreatesUsers;
 
     private Project $project;
 

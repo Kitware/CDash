@@ -16,9 +16,9 @@ use Tests\Traits\CreatesUsers;
 
 class SiteTypeTest extends TestCase
 {
-    use CreatesUsers;
     use CreatesProjects;
     use CreatesSites;
+    use CreatesUsers;
     use DatabaseTruncation;
 
     /**

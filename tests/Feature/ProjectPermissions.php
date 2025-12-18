@@ -12,8 +12,8 @@ use Tests\Traits\CreatesUsers;
 
 class ProjectPermissions extends TestCase
 {
-    use CreatesUsers;
     use CreatesProjects;
+    use CreatesUsers;
 
     protected Project $public_project;
     protected Project $protected_project;
