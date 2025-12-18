@@ -46,4 +46,5 @@ return $config->setRules([
     'modernize_strpos' => ['modernize_stripos' => true],
     'modernize_types_casting' => true,
     'no_homoglyph_names' => true,
+    'no_useless_sprintf' => true,
 ])->setFinder($finder);
