@@ -52,7 +52,7 @@ class RetryHandler
         }
         $attributes = $xml->attributes();
         if (isset($attributes['retries'])) {
-            $this->Retries = intval($attributes['retries']) + 1;
+            $this->Retries = (int) $attributes['retries'] + 1;
         } else {
             $this->Retries = 1;
         }

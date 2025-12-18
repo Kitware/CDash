@@ -1023,10 +1023,10 @@ function get_filterdata_from_request($page_id = ''): array
     $pageSpecificFilters = createPageSpecificFilters($page_id);
     $filterdata['pageSpecificFilters'] = $pageSpecificFilters;
 
-    $filtercount = intval($_GET['filtercount'] ?? 0);
-    $showfilters = intval($_GET['showfilters'] ?? 0);
-    $showlimit = intval($_GET['showlimit'] ?? 0);
-    $limit = intval($_GET['limit'] ?? 0);
+    $filtercount = (int) ($_GET['filtercount'] ?? 0);
+    $showfilters = (int) ($_GET['showfilters'] ?? 0);
+    $showlimit = (int) ($_GET['showlimit'] ?? 0);
+    $limit = (int) ($_GET['limit'] ?? 0);
 
     $clear = $_GET['clear'] ?? '';
     if ($clear === 'Clear') {
@@ -1085,7 +1085,7 @@ function get_filterdata_from_request($page_id = ''): array
     }
 
     if (array_key_exists('colorblind', $_COOKIE)) {
-        $filterdata['colorblind'] = intval($_COOKIE['colorblind']);
+        $filterdata['colorblind'] = (int) $_COOKIE['colorblind'];
     } else {
         if (get_css_file() === 'assets/css/colorblind.css') {
             $filterdata['colorblind'] = 1;

@@ -107,27 +107,27 @@ class CoverageJUnitHandler extends AbstractXmlHandler
         } elseif ($parent === 'REPORT' && $name === 'COUNTER') {
             switch ($attributes['TYPE']) {
                 case 'COMPLEXITY':
-                    $this->CoverageSummary->BranchesTested = intval($attributes['COVERED']);
-                    $this->CoverageSummary->BranchesUntested = intval($attributes['MISSED']);
+                    $this->CoverageSummary->BranchesTested = (int) $attributes['COVERED'];
+                    $this->CoverageSummary->BranchesUntested = (int) $attributes['MISSED'];
                     break;
                 case 'METHOD':
-                    $this->CoverageSummary->FunctionsTested = intval($attributes['COVERED']);
-                    $this->CoverageSummary->FunctionsUntested = intval($attributes['MISSED']);
+                    $this->CoverageSummary->FunctionsTested = (int) $attributes['COVERED'];
+                    $this->CoverageSummary->FunctionsUntested = (int) $attributes['MISSED'];
                     break;
             }
         } elseif ($parent === 'SOURCEFILE' && $name === 'COUNTER') {
             switch ($attributes['TYPE']) {
                 case 'LINE':
-                    $this->Coverage->LocTested = intval($attributes['COVERED']);
-                    $this->Coverage->LocUntested = intval($attributes['MISSED']);
+                    $this->Coverage->LocTested = (int) $attributes['COVERED'];
+                    $this->Coverage->LocUntested = (int) $attributes['MISSED'];
                     break;
                 case 'COMPLEXITY':
-                    $this->Coverage->BranchesTested = intval($attributes['COVERED']);
-                    $this->Coverage->BranchesUntested = intval($attributes['MISSED']);
+                    $this->Coverage->BranchesTested = (int) $attributes['COVERED'];
+                    $this->Coverage->BranchesUntested = (int) $attributes['MISSED'];
                     break;
                 case 'METHOD':
-                    $this->Coverage->FunctionsTested = intval($attributes['COVERED']);
-                    $this->Coverage->FunctionsUntested = intval($attributes['MISSED']);
+                    $this->Coverage->FunctionsTested = (int) $attributes['COVERED'];
+                    $this->Coverage->FunctionsUntested = (int) $attributes['MISSED'];
                     break;
             }
         }

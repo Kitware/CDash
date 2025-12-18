@@ -47,7 +47,7 @@ final class AuthTokenController extends AbstractController
         }
 
         if ($request->input('scope') !== AuthToken::SCOPE_FULL_ACCESS) {
-            $projectid = intval($request->input('projectid'));
+            $projectid = (int) $request->input('projectid');
             if (!is_numeric($projectid)) {
                 return response()->json(['error' => 'Invalid projectid'], Response::HTTP_BAD_REQUEST);
             }

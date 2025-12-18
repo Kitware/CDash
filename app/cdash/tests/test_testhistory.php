@@ -236,7 +236,7 @@ class TestHistoryTestCase extends KWWebTestCase
         $client = $this->getGuzzleClient();
         $response = $client->request('GET', $url, ['http_errors' => false]);
         $expected = '{"tests":[{"name":"fails","summary":"Broken","summaryclass":"error"},{"name":"flaky","summary":"Unstable","summaryclass":"warning"},{"name":"notrun","summary":"Inactive","summaryclass":"warning"},{"name":"passes","summary":"Stable","summaryclass":"normal"},{"name":"sporadic","summary":"Stable","summaryclass":"normal"}]}';
-        $this->assertEqual($expected, strval($response->getBody()));
+        $this->assertEqual($expected, (string) $response->getBody());
 
         // Verify that testing history matches what we expect.
         $previous_buildids = "{$buildids[4]},+{$buildids[3]},+{$buildids[2]},+{$buildids[1]}";

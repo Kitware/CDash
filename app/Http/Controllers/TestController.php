@@ -109,7 +109,7 @@ final class TestController extends AbstractProjectController
         if (strlen($date) === 0) {
             abort(400, 'No date specified.');
         }
-        $this->setProjectById(intval($_GET['project'] ?? -1));
+        $this->setProjectById((int) ($_GET['project'] ?? -1));
 
         $testName = $_GET['name'] ?? '';
         if ($testName === '' || !is_string($testName)) {
@@ -160,7 +160,7 @@ final class TestController extends AbstractProjectController
                 AND build.starttime<?
                 AND build.projectid=?
             GROUP by testmeasurement.name
-        ', [$testName, $beginning_UTCDate, $end_UTCDate, intval($this->project->Id)]);
+        ', [$testName, $beginning_UTCDate, $end_UTCDate, (int) $this->project->Id]);
 
         $columns = [];
         $response['hasprocessors'] = false;
@@ -211,7 +211,7 @@ final class TestController extends AbstractProjectController
                 ORDER BY
                     build2test.buildid,
                     testmeasurement.name
-            ', [$testName, $beginning_UTCDate, $end_UTCDate, intval($this->project->Id)]);
+            ', [$testName, $beginning_UTCDate, $end_UTCDate, (int) $this->project->Id]);
         }
 
         $result = DB::select('
@@ -230,7 +230,7 @@ final class TestController extends AbstractProjectController
                 b2t.testname = ?
                 AND b.projectid = ?
                 AND b.starttime BETWEEN ? AND ?
-        ', [$testName, intval($this->project->Id), $beginning_UTCDate, $end_UTCDate]);
+        ', [$testName, (int) $this->project->Id, $beginning_UTCDate, $end_UTCDate]);
 
         // If user wants to export as CSV file.
         if (isset($_GET['export']) && $_GET['export'] === 'csv') {
@@ -353,7 +353,7 @@ final class TestController extends AbstractProjectController
             $build_response['site'] = $row->sitename;
             $build_response['buildName'] = $row->name;
             $build_response['buildStamp'] = $row->stamp;
-            $build_response['time'] = floatval($row->time);
+            $build_response['time'] = (float) $row->time;
 
             $buildLink = "builds/$buildid/tests";
             $build_response['buildid'] = $buildid;
@@ -416,7 +416,7 @@ final class TestController extends AbstractProjectController
                 ORDER BY
                     build2test.buildid,
                     testmeasurement.name
-            ', [$testName, $beginning_UTCDate, $end_UTCDate, intval($this->project->Id)]);
+            ', [$testName, $beginning_UTCDate, $end_UTCDate, (int) $this->project->Id]);
             if (is_array($etestquery)) {
                 foreach ($etestquery as $row) {
                     // Get the index of this measurement in the list of columns.
@@ -439,7 +439,7 @@ final class TestController extends AbstractProjectController
                 if (!$num_procs) {
                     $num_procs = 1;
                 }
-                $builds_response[$i]['proctime'] = floatval($builds_response[$i]['time'] * $num_procs);
+                $builds_response[$i]['proctime'] = (float) ($builds_response[$i]['time'] * $num_procs);
             }
         }
 

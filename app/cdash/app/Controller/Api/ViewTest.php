@@ -688,7 +688,7 @@ class ViewTest extends BuildApi
             'statusclass' => $marshaledStatus[1],
             'name' => $data['testname'],
             'execTime' => time_difference($data['time'], true, '', true),
-            'execTimeFull' => floatval($data['time']),
+            'execTimeFull' => (float) $data['time'],
             'details' => $data['details'],
             'summaryLink' => "queryTests.php?project={$projectname}&filtercount=1&showfilters=1&field1=testname&compare1=61&value1=" . urlencode($data['testname']) . "&date={$testdate}",
             'summary' => 'Summary', /* Default value later replaced by AJAX */

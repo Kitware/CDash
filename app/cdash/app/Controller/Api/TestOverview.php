@@ -57,7 +57,7 @@ class TestOverview extends ResultsApi
 
         // Handle optional "showpassed" argument.
         $showpassed = false;
-        if (isset($_GET['showpassed']) && intval($_GET['showpassed']) === 1) {
+        if (isset($_GET['showpassed']) && (int) $_GET['showpassed'] === 1) {
             $showpassed = true;
         }
         if ($showpassed) {

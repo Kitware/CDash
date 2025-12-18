@@ -136,7 +136,7 @@ class CoverageFileLog
             }
             [$line, $value] = explode(':', $log_entry);
             if (is_numeric($line)) {
-                $lines_retrieved[] = intval($line);
+                $lines_retrieved[] = (int) $line;
             } else {
                 $lines_retrieved[] = $line;
             }
@@ -235,9 +235,9 @@ class CoverageFileLog
                                AND projectid=?
                                AND b.subprojectid=?
                        ', [
-                    intval($this->AggregateBuildId),
-                    intval($this->Build->ProjectId),
-                    intval($this->Build->SubProjectId),
+                    (int) $this->AggregateBuildId,
+                    (int) $this->Build->ProjectId,
+                    (int) $this->Build->SubProjectId,
                 ]);
                 if (!$row || !array_key_exists('id', $row)) {
                     // An aggregate build for this SubProject doesn't exist yet.
@@ -245,12 +245,12 @@ class CoverageFileLog
                     $aggregateBuild = create_aggregate_build($this->Build);
                     $aggregateBuildId = $aggregateBuild->Id;
                 } else {
-                    $aggregateBuildId = intval($row['id']);
+                    $aggregateBuildId = (int) $row['id'];
                 }
             } else {
                 // For standalone builds AggregateBuildId is exactly what we're
                 // looking for.
-                $aggregateBuildId = intval($this->AggregateBuildId);
+                $aggregateBuildId = (int) $this->AggregateBuildId;
             }
             $aggregateBuild = new Build();
             $aggregateBuild->Id = $aggregateBuildId;
@@ -273,7 +273,7 @@ class CoverageFileLog
                        cfl.buildid=?
                        AND cf.fullpath=?
                ', [$aggregateBuildId, $path]);
-        if ($row && array_key_exists('id', $row) && intval($row['id']) !== intval($this->FileId)) {
+        if ($row && array_key_exists('id', $row) && (int) $row['id'] !== (int) $this->FileId) {
             Log::info("Not appending coverage of '$path' to aggregate as it already contains a different version of this file.", [
                 'function' => 'CoverageFileLog::UpdateAggregate',
                 'buildid' => $this->BuildId,

@@ -132,7 +132,7 @@ final class ProjectOverviewController extends AbstractProjectController
                 $coverage_category = [];
                 $coverage_category['name'] = 'Total';
                 $coverage_category['position'] = 0;
-                $threshold = intval($this->project->CoverageThreshold);
+                $threshold = (int) $this->project->CoverageThreshold;
                 $coverage_category['low'] = 0.7 * $threshold;
                 $coverage_category['medium'] = $threshold;
                 $coverage_category['satisfactory'] = 100;
@@ -258,7 +258,7 @@ final class ProjectOverviewController extends AbstractProjectController
             if ($static_name) {
                 foreach ($static_measurements as $measurement) {
                     if (!array_key_exists($measurement, $overview_data[$day][$static_name])) {
-                        $overview_data[$day][$static_name][$measurement] = intval($build_row->{"build_$measurement"});
+                        $overview_data[$day][$static_name][$measurement] = (int) $build_row->{"build_$measurement"};
                     } else {
                         $overview_data[$day][$static_name][$measurement] += $build_row->{"build_$measurement"};
                     }
@@ -286,7 +286,7 @@ final class ProjectOverviewController extends AbstractProjectController
                 foreach ($build_measurements as $measurement) {
                     $clean_measurement = $clean_measurements[$measurement];
                     if (!array_key_exists($measurement, $overview_data[$day][$group_name])) {
-                        $overview_data[$day][$group_name][$measurement] = intval($build_row->$clean_measurement);
+                        $overview_data[$day][$group_name][$measurement] = (int) $build_row->$clean_measurement;
                     } else {
                         $overview_data[$day][$group_name][$measurement] += $build_row->$clean_measurement;
                     }
@@ -325,10 +325,10 @@ final class ProjectOverviewController extends AbstractProjectController
                                               LEFT JOIN coveragesummary AS cs ON (cs.buildid=b.id)
                                               LEFT JOIN subproject as sp ON (b.subprojectid = sp.id)
                                               WHERE b.parentid=?
-                                          ', [intval($build_row->id)]);
+                                          ', [(int) $build_row->id]);
                     foreach ($child_builds_array as $child_build_row) {
-                        $loctested = intval($child_build_row->loctested);
-                        $locuntested = intval($child_build_row->locuntested);
+                        $loctested = (int) $child_build_row->loctested;
+                        $locuntested = (int) $child_build_row->locuntested;
                         if ($loctested + $locuntested === 0) {
                             continue;
                         }
@@ -361,9 +361,9 @@ final class ProjectOverviewController extends AbstractProjectController
                 // Record the number of defects for this day / checker / build group.
                 $dynamic_analysis_array = &$dynamic_analysis_data[$day][$group_name];
                 if (!array_key_exists($checker, $dynamic_analysis_array)) {
-                    $dynamic_analysis_array[$checker] = intval($build_row->numdefects);
+                    $dynamic_analysis_array[$checker] = (int) $build_row->numdefects;
                 } else {
-                    $dynamic_analysis_array[$checker] += intval($build_row->numdefects);
+                    $dynamic_analysis_array[$checker] += (int) $build_row->numdefects;
                 }
             }
         }
@@ -765,7 +765,7 @@ final class ProjectOverviewController extends AbstractProjectController
         $response['hidenav'] = 1;
 
         // Make sure the user has admin rights to this project.
-        $this->setProjectById(intval(request()->input('projectid')));
+        $this->setProjectById((int) request()->input('projectid'));
         Gate::authorize('edit-project', $this->project);
 
         get_dashboard_JSON($this->project->GetName(), null, $response);
@@ -775,7 +775,7 @@ final class ProjectOverviewController extends AbstractProjectController
             $inputRows = json_decode(request()->input('saveLayout'), true);
             if (null !== $inputRows) {
                 // Remove any old overview layout from this project.
-                DB::delete('DELETE FROM overview_components WHERE projectid=?', [intval($this->project->Id)]);
+                DB::delete('DELETE FROM overview_components WHERE projectid=?', [(int) $this->project->Id]);
 
                 if (count($inputRows) > 0) {
                     // Construct a query to insert the new layout.
@@ -783,9 +783,9 @@ final class ProjectOverviewController extends AbstractProjectController
                     $params = [];
                     foreach ($inputRows as $inputRow) {
                         $query .= '(?, ?, ?, ?),';
-                        $params[] = intval($this->project->Id);
-                        $params[] = intval($inputRow['id']);
-                        $params[] = intval($inputRow['position']);
+                        $params[] = (int) $this->project->Id;
+                        $params[] = (int) $inputRow['id'];
+                        $params[] = (int) $inputRow['position'];
                         $params[] = $inputRow['type'];
                     }
 
@@ -810,13 +810,13 @@ final class ProjectOverviewController extends AbstractProjectController
                      LEFT JOIN buildgroup AS bg ON (obg.buildgroupid = bg.id)
                      WHERE obg.projectid = ?
                      ORDER BY obg.position
-                 ', [intval($this->project->Id)]);
+                 ', [(int) $this->project->Id]);
 
         $build_response = [];
         $static_response = [];
         foreach ($query as $overviewgroup_row) {
             $group_response = [
-                'id' => intval($overviewgroup_row->id),
+                'id' => (int) $overviewgroup_row->id,
                 'name' => $overviewgroup_row->name,
             ];
             $type = $overviewgroup_row->type;
@@ -845,12 +845,12 @@ final class ProjectOverviewController extends AbstractProjectController
                                WHERE
                                    bg.projectid=?
                                    AND oc.buildgroupid IS NULL
-                           ', [intval($this->project->Id)]);
+                           ', [(int) $this->project->Id]);
 
         $availablegroups_response = [];
         foreach ($buildgroup_rows as $buildgroup_row) {
             $availablegroups_response[] = [
-                'id' => intval($buildgroup_row->id),
+                'id' => (int) $buildgroup_row->id,
                 'name' => $buildgroup_row->name,
             ];
         }

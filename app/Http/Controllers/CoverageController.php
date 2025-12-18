@@ -31,7 +31,7 @@ final class CoverageController extends AbstractBuildController
     {
         @set_time_limit(0);
 
-        $this->setBuildById(intval($_GET['buildid'] ?? -1));
+        $this->setBuildById((int) ($_GET['buildid'] ?? -1));
 
         @$date = $_GET['date'];
         if ($date != null) {
@@ -56,7 +56,7 @@ final class CoverageController extends AbstractBuildController
                             SELECT role
                             FROM user2project
                             WHERE userid=? AND projectid=?
-                        ', [intval($userid), intval($this->project->Id)]);
+                        ', [(int) $userid, (int) $this->project->Id]);
         if (!empty($user2project)) {
             $role = $user2project['role'];
         }
@@ -75,9 +75,9 @@ final class CoverageController extends AbstractBuildController
                        SELECT coveragethreshold
                        FROM subprojectgroup
                        WHERE projectid=? AND id=?
-                   ', [intval($this->project->Id), intval($this->build->GroupId)]);
+                   ', [(int) $this->project->Id, (int) $this->build->GroupId]);
             if (!empty($row) && isset($row['coveragethreshold'])) {
-                $threshold = intval($row['coveragethreshold']);
+                $threshold = (int) $row['coveragethreshold'];
             }
         }
 
@@ -97,7 +97,7 @@ final class CoverageController extends AbstractBuildController
                               FROM coverage
                               WHERE buildid=?
                               GROUP BY buildid
-                          ', [intval($this->build->Id)]);
+                          ', [(int) $this->build->Id]);
 
         $xml .= add_XML_value('starttime', date('l, F d Y', strtotime($this->build->StartTime)));
         $xml .= add_XML_value('loctested', $coverage_array['loctested']);
@@ -133,7 +133,7 @@ final class CoverageController extends AbstractBuildController
                                  label.id=label2coverage.labelid
                                  AND label2coverage.coverageid=coverage.id
                                  AND coverage.buildid=?
-                         ', [intval($this->build->Id)]);
+                         ', [(int) $this->build->Id]);
             foreach ($covlabels as $row) {
                 $labels[$row['id']] = $row['text'];
             }
@@ -154,10 +154,10 @@ final class CoverageController extends AbstractBuildController
                                    label2coverage.labelid=?
                                    AND coverage.buildid=?
                                    AND coverage.id=label2coverage.coverageid
-                           ', [intval($id), intval($this->build->Id)]);
+                           ', [(int) $id, (int) $this->build->Id]);
 
-                    $loctested = intval($row['loctested']);
-                    $locuntested = intval($row['locuntested']);
+                    $loctested = (int) $row['loctested'];
+                    $locuntested = (int) $row['locuntested'];
                     $percentcoverage = compute_percentcoverage($loctested, $locuntested);
 
                     $xml .= '<label>';
@@ -174,15 +174,15 @@ final class CoverageController extends AbstractBuildController
                             SELECT count(covered) AS c
                             FROM coverage
                             WHERE buildid=? AND covered='1'
-                        ", [intval($this->build->Id)]);
-        $ncoveredfiles = intval($coveredfiles['c']);
+                        ", [(int) $this->build->Id]);
+        $ncoveredfiles = (int) $coveredfiles['c'];
 
         $files = $db->executePreparedSingleRow('
                      SELECT count(covered) AS c
                      FROM coverage
                      WHERE buildid=?
-                 ', [intval($this->build->Id)]);
-        $nfiles = intval($files['c']);
+                 ', [(int) $this->build->Id]);
+        $nfiles = (int) $files['c'];
 
         $xml .= add_XML_value('totalcovered', $ncoveredfiles);
         $xml .= add_XML_value('totalfiles', $nfiles);
@@ -212,7 +212,7 @@ final class CoverageController extends AbstractBuildController
                                 c.buildid=?
                                 AND c.covered=1
                                 AND c.fileid=cf.id
-                        ', [intval($this->build->Id)]);
+                        ', [(int) $this->build->Id]);
 
         $directories = [];
         $covfile_array = [];
@@ -289,7 +289,7 @@ final class CoverageController extends AbstractBuildController
                     WHERE
                         c.buildid=?
                         AND c.covered=0
-                ', [intval($this->build->Id)]);
+                ', [(int) $this->build->Id]);
         foreach ($coveragefile as $coveragefile_array) {
             // TODO: (williamjallen) This loop doesn't really make sense...
             $covfile['covered'] = 0;
@@ -357,9 +357,9 @@ final class CoverageController extends AbstractBuildController
     {
         @set_time_limit(0);
 
-        $this->setBuildById(intval($_GET['buildid'] ?? -1));
+        $this->setBuildById((int) ($_GET['buildid'] ?? -1));
 
-        $userid = intval($_GET['userid'] ?? 0);
+        $userid = (int) ($_GET['userid'] ?? 0);
 
         $db = Database::getInstance();
 
@@ -394,15 +394,15 @@ final class CoverageController extends AbstractBuildController
                                  GROUP BY buildid
                              ', [$this->build->Id]);
         if (!empty($coverage_branches)) {
-            $total_branchesuntested = intval($coverage_branches['total_branchesuntested']);
-            $total_branchestested = intval($coverage_branches['total_branchestested']);
+            $total_branchesuntested = (int) $coverage_branches['total_branchesuntested'];
+            $total_branchestested = (int) $coverage_branches['total_branchestested'];
         }
 
         /* Sorting */
         $sortby = 'filename';
         if (isset($_GET['iSortCol_0'])) {
             if (($total_branchesuntested + $total_branchestested) > 0) {
-                switch (intval($_GET['iSortCol_0'])) {
+                switch ((int) $_GET['iSortCol_0']) {
                     case 0:
                         $sortby = 'filename';
                         break;
@@ -423,7 +423,7 @@ final class CoverageController extends AbstractBuildController
                         break;
                 }
             } else {
-                switch (intval($_GET['iSortCol_0'])) {
+                switch ((int) $_GET['iSortCol_0']) {
                     case 0:
                         $sortby = 'filename';
                         break;
@@ -655,7 +655,7 @@ final class CoverageController extends AbstractBuildController
 
         // Array to return to the datatable
         $output = [
-            'sEcho' => intval($_GET['sEcho']),
+            'sEcho' => (int) $_GET['sEcho'],
             'aaData' => [],
         ];
 
@@ -1065,7 +1065,7 @@ final class CoverageController extends AbstractBuildController
                                           AND coverage.fileid=?
                                           AND coverage.buildid=?
                                       ORDER BY text ASC
-                                  ', [intval($fileid), $this->build->Id]);
+                                  ', [(int) $fileid, $this->build->Id]);
                 foreach ($coveragelabels as $coveragelabels_array) {
                     if ($labels != '') {
                         $labels .= ', ';
@@ -1440,7 +1440,7 @@ final class CoverageController extends AbstractBuildController
     private static function apiCompareCoverage_get_build_label(int $buildid, array $build_array): string
     {
         // Figure out how many labels to report for this build.
-        if (!array_key_exists('numlabels', $build_array) || intval($build_array['numlabels']) === 0) {
+        if (!array_key_exists('numlabels', $build_array) || (int) $build_array['numlabels'] === 0) {
             $num_labels = 0;
         } else {
             $num_labels = $build_array['numlabels'];
@@ -1458,7 +1458,7 @@ final class CoverageController extends AbstractBuildController
                                 INNER JOIN label2build AS l2b ON (l.id=l2b.labelid)
                                 INNER JOIN build AS b ON (l2b.buildid=b.id)
                                 WHERE b.id=?
-                            ', [intval($buildid)]);
+                            ', [(int) $buildid]);
             $build_label = $label_result['text'];
         } else {
             // More than one label, just report the number.

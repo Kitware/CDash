@@ -216,7 +216,7 @@ class BazelJSONHandler extends AbstractSubmissionHandler
                 if ($this->HasSubProjects()) {
                     $target_name = $json_array['id']['pattern']['pattern'][0];
                     $subproject_name = self::GetSubProjectForPath(
-                        $target_name, intval($this->GetProject()->Id));
+                        $target_name, (int) $this->GetProject()->Id);
                     if (!empty($subproject_name)) {
                         $this->InitializeSubProjectBuild($subproject_name);
                     }
@@ -360,7 +360,7 @@ class BazelJSONHandler extends AbstractSubmissionHandler
                                 $subproject_name = '';
                                 if ($this->HasSubProjects()) {
                                     $subproject_name = self::GetSubProjectForPath(
-                                        $source_file, intval($this->GetProject()->Id));
+                                        $source_file, (int) $this->GetProject()->Id);
                                     // Skip this defect if we cannot deduce what SubProject
                                     // it belongs to.
                                     if (empty($subproject_name)) {
@@ -484,7 +484,7 @@ class BazelJSONHandler extends AbstractSubmissionHandler
                                     // Look up the subproject (if any) that contains
                                     // this source file.
                                     $subproject_name = self::GetSubProjectForPath(
-                                        $source_file, intval($this->GetProject()->Id));
+                                        $source_file, (int) $this->GetProject()->Id);
                                     // Skip this defect if we cannot deduce what SubProject
                                     // it belongs to.
                                     if (empty($subproject_name)) {
@@ -529,7 +529,7 @@ class BazelJSONHandler extends AbstractSubmissionHandler
                         // builds instead.
                         $target_name = $json_array['id']['testResult']['label'];
                         $subproject_name = self::GetSubProjectForPath(
-                            $target_name, intval($this->GetProject()->Id));
+                            $target_name, (int) $this->GetProject()->Id);
                         // Skip this defect if we cannot deduce what SubProject
                         // it belongs to.
                         if (empty($subproject_name)) {
@@ -584,7 +584,7 @@ class BazelJSONHandler extends AbstractSubmissionHandler
                     // builds instead.
                     $target_name = $json_array['id']['testSummary']['label'];
                     $subproject_name = self::GetSubProjectForPath(
-                        $target_name, intval($this->GetProject()->Id));
+                        $target_name, (int) $this->GetProject()->Id);
                     // Skip this defect if we cannot deduce what SubProject
                     // it belongs to.
                     if (empty($subproject_name)) {

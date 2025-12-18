@@ -214,7 +214,7 @@ class DynamicAnalysis
         if ($query === []) {
             return 0;
         }
-        return intval($query[0]->id);
+        return (int) $query[0]->id;
     }
 
     /** Get the previous id for this DA */

@@ -57,7 +57,7 @@ class BuildError
         BasicBuildAlert::create([
             'buildid' => (int) $this->BuildId,
             'type' => $this->Type,
-            'logline' => intval($this->LogLine),
+            'logline' => (int) $this->LogLine,
             'text' => $this->Text,
             'sourcefile' => $this->SourceFile ?? '',
             'sourceline' => (int) $this->SourceLine,

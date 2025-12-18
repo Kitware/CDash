@@ -42,9 +42,9 @@ class TestingDay
 
         // Extract hour, minute, and second from the project nightly start time.
         $current_nightly_timestamp = $project->NightlyDateTime->getTimestamp();
-        $hour = intval(date('H', $current_nightly_timestamp));
-        $minute = intval(date('i', $current_nightly_timestamp));
-        $second = intval(date('s', $current_nightly_timestamp));
+        $hour = (int) date('H', $current_nightly_timestamp);
+        $minute = (int) date('i', $current_nightly_timestamp);
+        $second = (int) date('s', $current_nightly_timestamp);
 
         // Get UNIX timestamp for input date (interpreted as UTC time).
         $build_datetime = new DateTime($date . ' UTC');
@@ -52,9 +52,9 @@ class TestingDay
 
         // Generate a DateTime object for our nightly starttime on the date
         // of the build and use it to get a corresponding UNIX timestamp.
-        $year = intval(date('Y', $build_start_timestamp));
-        $month = intval(date('n', $build_start_timestamp));
-        $day = intval(date('j', $build_start_timestamp));
+        $year = (int) date('Y', $build_start_timestamp);
+        $month = (int) date('n', $build_start_timestamp);
+        $day = (int) date('j', $build_start_timestamp);
 
         $nightly_datetime = new DateTime();
         $nightly_datetime->setTimezone($project->NightlyTimezone);

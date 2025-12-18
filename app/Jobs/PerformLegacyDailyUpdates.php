@@ -102,7 +102,7 @@ class PerformLegacyDailyUpdates implements ShouldQueue
             $builtype = $build2grouprule_array['buildtype'];
             $buildname = $build2grouprule_array['buildname'];
             $sitename = $build2grouprule_array['name'];
-            $siteid = intval($build2grouprule_array['siteid']);
+            $siteid = (int) $build2grouprule_array['siteid'];
             $summary .= '* ' . $sitename . ' - ' . $buildname . ' (' . $builtype . ")\n";
 
             // Find the site maintainers

@@ -196,7 +196,7 @@ class JSCoverTarHandler extends AbstractSubmissionHandler
                 } else {
                     // value in entry indicates total times hit,
                     // coerce the string to a number.
-                    $timesHit = intval($timesHit);
+                    $timesHit = (int) $timesHit;
                 }
                 $coverageFileLog->AddLine($i - 1, $timesHit);
             }

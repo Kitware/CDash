@@ -1299,7 +1299,7 @@ class Index extends ResultsApi
                         AND build2group.groupid=?
                     ORDER BY id DESC
                     LIMIT 5
-                ', [intval($siteid), $buildname, $buildtype, intval($groupid)]);
+                ', [(int) $siteid, $buildname, $buildtype, (int) $groupid]);
 
                 $time = 0;
                 foreach ($query as $query_array) {

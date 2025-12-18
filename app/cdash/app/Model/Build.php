@@ -2212,7 +2212,7 @@ class Build
         } elseif ($this->ParentId > 0) {
             // If we just created a child build, associate it with
             // the parent's updates (if any).
-            BuildUpdate::AssignUpdateToChild(intval($this->Id), intval($this->ParentId));
+            BuildUpdate::AssignUpdateToChild((int) $this->Id, (int) $this->ParentId);
         }
 
         return true;

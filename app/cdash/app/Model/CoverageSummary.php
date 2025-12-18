@@ -64,8 +64,8 @@ class CoverageSummary
         }
 
         $build->coverageResults()->delete();
-        DB::delete('DELETE FROM coveragefilelog WHERE buildid=?', [intval($this->BuildId)]);
-        DB::delete('DELETE FROM coveragesummary WHERE buildid=?', [intval($this->BuildId)]);
+        DB::delete('DELETE FROM coveragefilelog WHERE buildid=?', [(int) $this->BuildId]);
+        DB::delete('DELETE FROM coveragesummary WHERE buildid=?', [(int) $this->BuildId]);
     }
 
     /** Insert a new summary */
@@ -96,7 +96,7 @@ class CoverageSummary
                                         FROM coveragefile AS cf
                                         INNER JOIN coveragefilelog AS cfl ON (cfl.fileid=cf.id)
                                         WHERE cf.fullpath=? AND cfl.buildid=?
-                                   ', [$fullpath, intval($this->BuildId)]);
+                                   ', [$fullpath, (int) $this->BuildId]);
                     if (empty($coveragefile)) {
                         // Create an empty file if doesn't exist.
                         $fileid = CoverageFile::create([
@@ -104,7 +104,7 @@ class CoverageSummary
                             'crc32' => 0,
                         ])->id;
                     } else {
-                        $fileid = intval($coveragefile['id']);
+                        $fileid = (int) $coveragefile['id'];
                     }
                     $coverage->CoverageFile->Id = $fileid;
                 }
@@ -294,21 +294,21 @@ class CoverageSummary
                         SELECT loctested, locuntested, loctesteddiff, locuntesteddiff
                         FROM coveragesummary
                         WHERE buildid=?
-                    ', [intval($this->BuildId)]);
+                    ', [(int) $this->BuildId]);
         if (empty($coverage)) {
             return false;
         }
-        $loctested = intval($coverage['loctested']);
-        $locuntested = intval($coverage['locuntested']);
+        $loctested = (int) $coverage['loctested'];
+        $locuntested = (int) $coverage['locuntested'];
 
         $previouscoverage = $db->executePreparedSingleRow('
                                 SELECT loctested, locuntested
                                 FROM coveragesummary
                                 WHERE buildid=?
-                            ', [intval($previousBuildId)]);
+                            ', [(int) $previousBuildId]);
         if (!empty($previouscoverage)) {
-            $previousloctested = intval($previouscoverage['loctested']);
-            $previouslocuntested = intval($previouscoverage['locuntested']);
+            $previousloctested = (int) $previouscoverage['loctested'];
+            $previouslocuntested = (int) $previouscoverage['locuntested'];
 
             $loctesteddiff = $loctested - $previousloctested;
             $locuntesteddiff = $locuntested - $previouslocuntested;
@@ -322,7 +322,7 @@ class CoverageSummary
             ', [
                 $loctesteddiff,
                 $locuntesteddiff,
-                intval($this->BuildId),
+                (int) $this->BuildId,
             ]);
         }
 
@@ -341,7 +341,7 @@ class CoverageSummary
                              SELECT 1
                              FROM coveragesummary
                              WHERE buildid=?
-                         ', [intval($this->BuildId)]);
+                         ', [(int) $this->BuildId]);
 
         return !empty($exists_result);
     }

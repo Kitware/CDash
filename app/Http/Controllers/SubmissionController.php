@@ -160,7 +160,7 @@ final class SubmissionController extends AbstractProjectController
             Storage::delete("inbox/{$filename}");
             Log::info('Rejected submission with invalid authentication token');
             $this->failProcessing(null, Response::HTTP_FORBIDDEN, 'Invalid Token');
-        } elseif (intval($this->project->Id) < 1) {
+        } elseif ((int) $this->project->Id < 1) {
             Log::info("Rejected submission with invalid project name: $projectname");
             $this->failProcessing($filename, Response::HTTP_NOT_FOUND, 'The requested project does not exist.');
         }

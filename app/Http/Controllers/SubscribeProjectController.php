@@ -72,12 +72,12 @@ final class SubscribeProjectController extends AbstractProjectController
         }
 
         if ($UpdateSubscription) {
-            $emailcategory_update = intval($_POST['emailcategory_update'] ?? 0);
-            $emailcategory_configure = intval($_POST['emailcategory_configure'] ?? 0);
-            $emailcategory_warning = intval($_POST['emailcategory_warning'] ?? 0);
-            $emailcategory_error = intval($_POST['emailcategory_error'] ?? 0);
-            $emailcategory_test = intval($_POST['emailcategory_test'] ?? 0);
-            $emailcategory_dynamicanalysis = intval($_POST['emailcategory_dynamicanalysis'] ?? 0);
+            $emailcategory_update = (int) ($_POST['emailcategory_update'] ?? 0);
+            $emailcategory_configure = (int) ($_POST['emailcategory_configure'] ?? 0);
+            $emailcategory_warning = (int) ($_POST['emailcategory_warning'] ?? 0);
+            $emailcategory_error = (int) ($_POST['emailcategory_error'] ?? 0);
+            $emailcategory_test = (int) ($_POST['emailcategory_test'] ?? 0);
+            $emailcategory_dynamicanalysis = (int) ($_POST['emailcategory_dynamicanalysis'] ?? 0);
 
             $EmailCategory = $emailcategory_update + $emailcategory_configure + $emailcategory_warning + $emailcategory_error + $emailcategory_test + $emailcategory_dynamicanalysis;
             if (!empty($user2project)) {
@@ -116,7 +116,7 @@ final class SubscribeProjectController extends AbstractProjectController
             $xml .= '<availableproject>';
             $xml .= add_XML_value('id', $project->id);
             $xml .= add_XML_value('name', $project->name);
-            if (intval($project->id) === $this->project->Id) {
+            if ((int) $project->id === $this->project->Id) {
                 $xml .= add_XML_value('selected', '1');
             }
             $xml .= '</availableproject>';

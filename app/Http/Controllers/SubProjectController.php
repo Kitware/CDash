@@ -42,13 +42,13 @@ final class SubProjectController extends AbstractProjectController
         $user = Auth::user();
 
         // List the available projects that this user has admin rights to.
-        $projectid = intval($_GET['projectid'] ?? 0);
+        $projectid = (int) ($_GET['projectid'] ?? 0);
 
         $sql = 'SELECT id, name FROM project';
         $params = [];
         if (!$user->admin) {
             $sql .= ' WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid = ? AND role > 0)';
-            $params[] = intval(Auth::id());
+            $params[] = (int) Auth::id();
         }
 
         $projects = DB::select($sql, $params);
@@ -58,7 +58,7 @@ final class SubProjectController extends AbstractProjectController
                 'id' => $project_array->id,
                 'name' => $project_array->name,
             ];
-            if (intval($project_array->id) === $projectid) {
+            if ((int) $project_array->id === $projectid) {
                 $availableproject['selected'] = '1';
             }
             $availableprojects[] = $availableproject;

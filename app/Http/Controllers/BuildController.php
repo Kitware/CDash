@@ -114,7 +114,7 @@ final class BuildController extends AbstractBuildController
     {
         $pageTimer = new PageTimer();
 
-        $this->setBuildById(intval($_GET['buildid'] ?? -1));
+        $this->setBuildById((int) ($_GET['buildid'] ?? -1));
 
         $date = TestingDay::get($this->project, $this->build->StartTime);
 
@@ -504,7 +504,7 @@ final class BuildController extends AbstractBuildController
         $currentstarttime = get_dates($date, $this->project->NightlyTime)[1];
 
         // Return the available groups
-        $selected_group = intval($_POST['groupSelection'] ?? 0);
+        $selected_group = (int) ($_POST['groupSelection'] ?? 0);
 
         // Check the builds
         $beginning_timestamp = $currentstarttime;
@@ -580,7 +580,7 @@ final class BuildController extends AbstractBuildController
     {
         $pageTimer = new PageTimer();
 
-        $this->setBuildById(intval($_GET['buildid'] ?? -1));
+        $this->setBuildById((int) ($_GET['buildid'] ?? -1));
 
         $date = TestingDay::get($this->project, $this->build->StartTime);
         $response = begin_JSON_response();
@@ -821,13 +821,13 @@ final class BuildController extends AbstractBuildController
 
     public function ajaxBuildNote(): View
     {
-        $this->setBuildById(intval($_GET['buildid'] ?? -1));
+        $this->setBuildById((int) ($_GET['buildid'] ?? -1));
         Gate::authorize('edit-project', $this->project);
 
         $notes = DB::select('SELECT * FROM comments WHERE buildid=? ORDER BY timestamp ASC', [$this->build->Id]);
         foreach ($notes as $note) {
             /** @var User $user */
-            $user = User::where('id', intval($note->userid))->first();
+            $user = User::where('id', (int) $note->userid)->first();
             $note->user = $user;
         }
 
@@ -851,7 +851,7 @@ final class BuildController extends AbstractBuildController
         $response = begin_JSON_response();
         $response['title'] = $this->project->Name;
 
-        $type = intval($_GET['type'] ?? 0);
+        $type = (int) ($_GET['type'] ?? 0);
 
         $date = TestingDay::get($this->project, $this->build->StartTime);
         get_dashboard_JSON($this->project->Name, $date, $response);
@@ -928,7 +928,7 @@ final class BuildController extends AbstractBuildController
                             label.id=label2buildfailure.labelid
                             AND label2buildfailure.buildfailureid=?
                         ORDER BY text ASC
-                    ', [intval($resolvedBuildFailure['id'])], $marshaledResolvedBuildFailure);
+                    ', [(int) $resolvedBuildFailure['id']], $marshaledResolvedBuildFailure);
                 }
 
                 $marshaledResolvedBuildFailure = array_merge($marshaledResolvedBuildFailure, [
@@ -1077,7 +1077,7 @@ final class BuildController extends AbstractBuildController
 
     public function apiBuildUpdateGraph(): JsonResponse
     {
-        $this->setBuildById(intval($_GET['buildid'] ?? -1));
+        $this->setBuildById((int) ($_GET['buildid'] ?? -1));
 
         // Find previous submissions from this build.
         $query_result = DB::select('
@@ -1118,7 +1118,7 @@ final class BuildController extends AbstractBuildController
 
     public function apiGetPreviousBuilds(): JsonResponse
     {
-        $this->setBuildById(intval($_GET['buildid'] ?? -1));
+        $this->setBuildById((int) ($_GET['buildid'] ?? -1));
 
         // Take subproject into account, such that if there is one, then the
         // previous builds must be associated with the same subproject.
@@ -1190,7 +1190,7 @@ final class BuildController extends AbstractBuildController
      */
     public function apiBuildExpected(): JsonResponse
     {
-        $this->setBuildById(intval($_GET['buildid'] ?? -1));
+        $this->setBuildById((int) ($_GET['buildid'] ?? -1));
         $rule = new BuildGroupRule($this->build);
         return response()->json([
             'expected' => $rule->GetExpected(),

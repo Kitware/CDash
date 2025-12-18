@@ -109,11 +109,11 @@ class ProjectHandler extends AbstractXmlHandler
 
                     foreach ($removeids as $removeid) {
                         if (array_key_exists($removeid, $this->SubProjects)) {
-                            $subproject->RemoveDependency(intval($removeid));
+                            $subproject->RemoveDependency((int) $removeid);
                         } else {
                             // TODO: (williamjallen) Rewrite this loop to not make repetitive queries
-                            $dep = DB::select('SELECT name FROM subproject WHERE id=?', [intval($removeid)])[0] ?? [];
-                            $dep = $dep !== [] ? $dep->name : intval($removeid);
+                            $dep = DB::select('SELECT name FROM subproject WHERE id=?', [(int) $removeid])[0] ?? [];
+                            $dep = $dep !== [] ? $dep->name : (int) $removeid;
                             Log::warning("Not removing dependency $dep($removeid) from " . $subproject->GetName() .
                                 ' because it is not a SubProject element in this Project.xml file', [
                                     'function' => 'ProjectHandler:endElement',
@@ -128,7 +128,7 @@ class ProjectHandler extends AbstractXmlHandler
                 //
                 foreach ($this->Dependencies[$subproject->GetId()] as $addid) {
                     if (array_key_exists($addid, $this->SubProjects)) {
-                        $subproject->AddDependency(intval($addid));
+                        $subproject->AddDependency((int) $addid);
                     } else {
                         Log::warning('impossible condition: should NEVER see this: unknown DEPENDENCY clause should prevent this case', [
                             'function' => 'ProjectHandler:endElement',
