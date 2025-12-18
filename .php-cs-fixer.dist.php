@@ -50,4 +50,5 @@ return $config->setRules([
     'non_printable_character' => true,
     'ordered_traits' => true,
     'self_accessor' => true,
+    'set_type_to_cast' => true,
 ])->setFinder($finder);
