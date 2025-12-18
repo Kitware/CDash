@@ -19,8 +19,8 @@ $config = new Config();
 return $config->setRules([
     '@PSR12' => true,
     '@PSR12:risky' => true,
-    '@PHP82Migration' => true,
-    '@PHP82Migration:risky' => true,
+    '@PHP8x2Migration' => true,
+    '@PHP8x2Migration:risky' => true,
     '@Symfony' => true,
     'yoda_style' => false,
     'blank_line_before_statement' => false,
