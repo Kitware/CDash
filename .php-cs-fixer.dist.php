@@ -42,4 +42,5 @@ return $config->setRules([
     'implode_call' => true,
     'is_null' => true,
     'logical_operators' => true,
+    'long_to_shorthand_operator' => true,
 ])->setFinder($finder);
