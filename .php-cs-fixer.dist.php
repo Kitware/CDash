@@ -43,4 +43,5 @@ return $config->setRules([
     'is_null' => true,
     'logical_operators' => true,
     'long_to_shorthand_operator' => true,
+    'modernize_strpos' => ['modernize_stripos' => true],
 ])->setFinder($finder);
