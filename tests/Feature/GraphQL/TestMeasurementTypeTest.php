@@ -82,13 +82,9 @@ class TestMeasurementTypeTest extends TestCase
                                         node {
                                             name
                                             testMeasurements {
-                                                edges {
-                                                    node {
-                                                        name
-                                                        type
-                                                        value
-                                                    }
-                                                }
+                                                name
+                                                type
+                                                value
                                             }
                                         }
                                     }
@@ -114,21 +110,15 @@ class TestMeasurementTypeTest extends TestCase
                                                 'node' => [
                                                     'name' => 'test1',
                                                     'testMeasurements' => [
-                                                        'edges' => [
-                                                            [
-                                                                'node' => [
-                                                                    'name' => 'measurement 2',
-                                                                    'type' => 'numeric/double',
-                                                                    'value' => '6',
-                                                                ],
-                                                            ],
-                                                            [
-                                                                'node' => [
-                                                                    'name' => 'measurement 1',
-                                                                    'type' => 'text/string',
-                                                                    'value' => 'test',
-                                                                ],
-                                                            ],
+                                                        [
+                                                            'name' => 'measurement 2',
+                                                            'type' => 'numeric/double',
+                                                            'value' => '6',
+                                                        ],
+                                                        [
+                                                            'name' => 'measurement 1',
+                                                            'type' => 'text/string',
+                                                            'value' => 'test',
                                                         ],
                                                     ],
                                                 ],

@@ -9,6 +9,7 @@ use GraphQL\Language\AST\FieldDefinitionNode;
 use GraphQL\Language\AST\InputObjectTypeDefinitionNode;
 use GraphQL\Language\AST\InputValueDefinitionNode;
 use GraphQL\Language\AST\InterfaceTypeDefinitionNode;
+use GraphQL\Language\AST\ListTypeNode;
 use GraphQL\Language\AST\ObjectTypeDefinitionNode;
 use GraphQL\Language\Parser;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
@@ -47,8 +48,7 @@ final class FilterDirective extends BaseDirective implements ArgBuilderDirective
         FieldDefinitionNode &$parentField,
         ObjectTypeDefinitionNode|InterfaceTypeDefinitionNode &$parentType,
     ): void {
-        // A hack to get the return type, assuming all lists are paginated...
-        $returnType = Str::replaceEnd('Connection', '', $parentField->type->type->name->value);
+        $returnType = Str::replaceEnd('Connection', '', ASTHelper::getUnderlyingTypeName($parentField));
 
         $multiFilterName = ASTHelper::qualifiedArgType($argDefinition, $parentField, $parentType) . 'MultiFilterInput';
         $argDefinition->type = Parser::namedType($multiFilterName);
@@ -58,7 +58,10 @@ final class FilterDirective extends BaseDirective implements ArgBuilderDirective
 
         if (
             $this->getSubFilterableFieldsForType($argDefinition, $parentType) === []
-            || !str_ends_with($parentField->type->type->name->value, 'Connection')
+            || (
+                !($parentField->type instanceof ListTypeNode)
+                && Str::doesntEndWith(ASTHelper::getUnderlyingTypeName($parentField), 'Connection')
+            )
             || $this->getSubFilterableFieldsForType($argDefinition, $documentAST->types[$returnType]) === []
         ) {
             // Don't create a relationship filter input type because this type has no relationships
@@ -245,13 +248,12 @@ final class FilterDirective extends BaseDirective implements ArgBuilderDirective
         $subFilterableFieldNames = [];
         foreach ($type->fields as $field) {
             foreach ($field->arguments as $argument) {
-                foreach ($argument->directives as $directive) {
-                    // We abuse the fact that all list return values are paginated to exclude filterable fields which
-                    // cannot have subqueries.
-                    if ($directive->name->value === 'filter' && str_ends_with($field->type->type->name->value, 'Connection')) {
-                        $subFilterableFieldNames[(string) $field->name->value] = ASTHelper::qualifiedArgType($argDefinition, $field, $type) . 'MultiFilterInput';
-                        break 2;
-                    }
+                if (
+                    ASTHelper::hasDirective($argument, 'filter')
+                    && Str::endsWith(ASTHelper::getUnderlyingTypeName($field), 'Connection')
+                ) {
+                    $subFilterableFieldNames[(string) $field->name->value] = ASTHelper::qualifiedArgType($argDefinition, $field, $type) . 'MultiFilterInput';
+                    break;
                 }
             }
         }
