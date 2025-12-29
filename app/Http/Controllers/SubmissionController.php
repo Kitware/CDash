@@ -150,20 +150,22 @@ final class SubmissionController extends AbstractProjectController
         // We can't use the usual $this->setProjectByName() function here because the auth token we have might not allow
         // full access to the project.  E.g., it might be a submit-only token.
         $this->project = new Project();
-        $this->project->FindByName($projectname);
 
-        // Remove some old builds if the project has too many.
-        $this->project->CheckForTooManyBuilds();
+        if (!$this->project->FindByName($projectname)) {
+            Storage::delete("inbox/{$filename}");
+            Log::info("Rejected submission with invalid project name: $projectname");
+            $this->failProcessing($filename, Response::HTTP_NOT_FOUND, 'The requested project does not exist.');
+        }
 
         // Check for valid authentication token if this project requires one.
         if ($this->project->AuthenticateSubmissions && !AuthTokenUtil::checkToken($authtoken_hash, $this->project->Id)) {
             Storage::delete("inbox/{$filename}");
             Log::info('Rejected submission with invalid authentication token');
             $this->failProcessing(null, Response::HTTP_FORBIDDEN, 'Invalid Token');
-        } elseif ((int) $this->project->Id < 1) {
-            Log::info("Rejected submission with invalid project name: $projectname");
-            $this->failProcessing($filename, Response::HTTP_NOT_FOUND, 'The requested project does not exist.');
         }
+
+        // Remove some old builds if the project has too many.
+        $this->project->CheckForTooManyBuilds();
 
         // Figure out what type of XML file this is.
         $stored_filename = 'inbox/' . $filename;
