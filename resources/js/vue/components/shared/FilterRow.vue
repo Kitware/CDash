@@ -49,9 +49,10 @@
         <span v-else-if="typeCategory(selectedType.name) === 'BOOLEAN'">
           <!-- TODO: Implement -->
         </span>
-        <span v-else-if="typeCategory(selectedType.name) === 'DATE'">
-          <!-- TODO: Implement -->
-        </span>
+        <date-time-selector
+          v-else-if="typeCategory(selectedType.name) === 'DATE'"
+          v-model="selectedValue"
+        />
         <span v-else>ERROR: Unknown type</span>
       </template>
       <select
@@ -76,9 +77,11 @@ import gql from 'graphql-tag';
 import LoadingIndicator from './LoadingIndicator.vue';
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 import {faTrash} from '@fortawesome/free-solid-svg-icons';
+import DateTimeSelector from './DateTimeSelector.vue';
+import { DateTime } from 'luxon';
 
 export default {
-  components: {FontAwesomeIcon, LoadingIndicator},
+  components: {FontAwesomeIcon, LoadingIndicator, DateTimeSelector},
 
   props: {
     type: {
@@ -186,10 +189,16 @@ export default {
       handler(type) {
         if (this.selectedValue === null && this.initialValue !== null) {
           this.selectedValue = this.initialValue;
+          if (this.typeCategory(type.name) === 'DATE') {
+            this.selectedValue = DateTime.fromISO(this.selectedValue, {setZone: true});
+          }
         }
         else {
           if (type.kind === 'ENUM') {
             this.selectedValue = type.enumValues[0].name;
+          }
+          else if (this.typeCategory(type.name) === 'DATE') {
+            this.selectedValue = DateTime.now().toUTC();
           }
           else {
             this.selectedValue = '';
@@ -264,9 +273,13 @@ export default {
         return 'NUMBER';
       case 'NonNegativeSeconds':
         return 'NUMBER';
+      case 'NonNegativeIntegerMilliseconds':
+        return 'NUMBER';
       case 'String':
         return 'STRING';
       case 'DateTimeTz':
+        return 'DATE';
+      case 'DateTimeUtc':
         return 'DATE';
       case 'Boolean':
         return 'BOOLEAN';
