@@ -68,7 +68,6 @@ class Project
     public $TestTimeMaxStatus;
     public $EmailMaxItems = 5;
     public $EmailMaxChars = 255;
-    public $ShowIPAddresses = 0;
     public $DisplayLabels = 0;
     public $ShareLabelFilters = 0;
     public $ViewSubProjectsLink = 0;
@@ -130,7 +129,6 @@ class Project
             'emailtesttimingchanged' => (int) $this->EmailTestTimingChanged,
             'emailbrokensubmission' => (int) $this->EmailBrokenSubmission,
             'emailredundantfailures' => (int) $this->EmailRedundantFailures,
-            'showipaddresses' => (int) $this->ShowIPAddresses,
             'displaylabels' => (int) $this->DisplayLabels,
             'sharelabelfilters' => (int) $this->ShareLabelFilters,
             'viewsubprojectslink' => (int) $this->ViewSubProjectsLink,
@@ -219,7 +217,6 @@ class Project
             $this->EmailTestTimingChanged = $project->emailtesttimingchanged;
             $this->EmailBrokenSubmission = $project->emailbrokensubmission;
             $this->EmailRedundantFailures = $project->emailredundantfailures;
-            $this->ShowIPAddresses = $project->showipaddresses;
             $this->DisplayLabels = $project->displaylabels;
             $this->ShareLabelFilters = $project->sharelabelfilters;
             $this->ViewSubProjectsLink = $project->viewsubprojectslink;

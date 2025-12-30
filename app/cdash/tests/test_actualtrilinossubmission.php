@@ -22,7 +22,6 @@ class ActualTrilinosSubmissionTestCase extends TrilinosSubmissionTestCase
             'Name' => $project,
             'Description' => $project . ' project created by test code in file [' . __FILE__ . ']',
             'EmailBrokenSubmission' => '1',
-            'ShowIPAddresses' => '1',
             'DisplayLabels' => '1',
             'NightlyTime' => '21:00:00 America/New_York',
             'ShareLabelFilters' => '1'];
