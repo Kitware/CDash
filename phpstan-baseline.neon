@@ -11608,12 +11608,6 @@ parameters:
 			path: app/cdash/app/Model/Project.php
 
 		-
-			rawMessage: Property CDash\Model\Project::$ShowIPAddresses has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
 			rawMessage: Property CDash\Model\Project::$ShowTestTime has no type specified.
 			identifier: missingType.property
 			count: 1

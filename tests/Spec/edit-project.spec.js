@@ -69,7 +69,6 @@ beforeEach(() => {
       Public: 1,
       ShareLabelFilters: 0,
       ShowCoverageCode: 1,
-      ShowIPAddresses: 0,
       ShowTestTime: 0,
       TestTimeMaxStatus: 3,
       TestTimeStd: 4,

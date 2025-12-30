@@ -1650,44 +1650,6 @@
                     <td />
                     <td>
                       <div align="right">
-                        <strong>Show site IP addresses:</strong>
-                      </div>
-                    </td>
-                    <td>
-                      <input
-                        v-model="cdash.project.ShowIPAddresses"
-                        type="checkbox"
-                        name="showIPAddresses"
-                        true-value="1"
-                        false-value="0"
-                        @change="cdash.changesmade = true"
-                        @focus="showHelp('showSiteIPAddresses_help')"
-                      >
-                      <a
-                        href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
-                        target="blank"
-                      >
-                        <img
-                          :src="$baseURL + '/img/help.gif'"
-                          border="0"
-                          @mouseover="showHelp('showSiteIPAddresses_help')"
-                        >
-                      </a>
-                      <span
-                        id="showSiteIPAddresses_help"
-                        class="help_content"
-                      >
-                        <b>Show Site IP Addresses</b>
-                        <br>
-                        Enable/Disable the display of IP addresses of the sites
-                        submitting to this project.
-                      </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td />
-                    <td>
-                      <div align="right">
                         <strong>Display Labels:</strong>
                       </div>
                     </td>
