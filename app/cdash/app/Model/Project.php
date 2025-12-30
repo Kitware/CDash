@@ -50,7 +50,7 @@ class Project
     public $BugTrackerUrl;
     public $BugTrackerNewIssueUrl;
     public $BugTrackerType;
-    public $ImageId;
+    public ?int $ImageId = null;
     public $Public;
     public $CoverageThreshold;
     public $TestingDataUrl;
@@ -146,7 +146,7 @@ class Project
             'testtimemaxstatus' => (int) $this->TestTimeMaxStatus,
             'emailmaxitems' => (int) $this->EmailMaxItems,
             'emailmaxchars' => (int) $this->EmailMaxChars,
-            'imageid' => $this->ImageId ?? 0,
+            'imageid' => $this->ImageId,
             'ldapfilter' => $this->LdapFilter,
             'banner' => $this->Banner,
         ]);
@@ -180,13 +180,13 @@ class Project
     }
 
     /** Get the logo id */
-    private function GetLogoId(): int
+    private function GetLogoId(): ?int
     {
         if (!$this->Filled) {
             $this->Fill();
         }
 
-        return $this->Id > 0 ? $this->ImageId : 0;
+        return $this->Id > 0 ? $this->ImageId : null;
     }
 
     /** Fill in all the information from the database */
@@ -297,7 +297,7 @@ class Project
         $image->Extension = $filetype;
 
         $imgid = $this->GetLogoId();
-        if ($imgid > 0) {
+        if ($imgid !== null) {
             $image->Id = $imgid;
         }
 
