@@ -51,7 +51,7 @@ class UploadHandler extends AbstractXmlHandler
     private string $TmpFilename = '';
     private $Base64TmpFileWriteHandle = 0;
     private string $Base64TmpFilename = '';
-    private $Label;
+    private Label $Label;
     private int $Timestamp = 0;
     private bool $BuildInitialized = false;
     protected static ?string $schema_file = '/app/Validators/Schemas/Upload.xsd';
@@ -345,7 +345,7 @@ class UploadHandler extends AbstractXmlHandler
         $this->Build->GetIdFromName($this->SubProjectName);
         $this->Build->RemoveIfDone();
 
-        if ($this->Label) {
+        if (isset($this->Label)) {
             $this->Build->AddLabel($this->Label);
         }
 
@@ -355,7 +355,7 @@ class UploadHandler extends AbstractXmlHandler
             $this->Build->InsertErrors = false;
             SubmissionUtils::add_build($this->Build);
         } else {
-            if ($this->Label) {
+            if (isset($this->Label)) {
                 $this->Build->InsertLabelAssociations();
             }
 

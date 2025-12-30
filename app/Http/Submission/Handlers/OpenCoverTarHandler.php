@@ -38,7 +38,7 @@ class OpenCoverTarHandler extends AbstractXmlHandler
     protected bool $ParseCSFiles = true;
     protected $coverageFile;
     protected $coverageFileLog;
-    protected $currentModule;
+    protected array $currentModule;
     protected string $tarDir;
 
     public function __construct(Build $build)

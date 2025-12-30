@@ -35,8 +35,8 @@ use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 class GcovTarHandler extends AbstractSubmissionHandler
 {
     private CoverageSummary $CoverageSummary;
-    private $SourceDirectory = '';
-    private $BinaryDirectory = '';
+    private string $SourceDirectory = '';
+    private string $BinaryDirectory = '';
     private array $Labels = [];
     private ?string $SubProjectPath = null;
     private array $SubProjectSummaries = [];

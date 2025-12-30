@@ -47,28 +47,28 @@ use CDash\Model\SubscriberInterface;
 use CDash\Submission\CommitAuthorHandlerInterface;
 use CDash\Submission\CommitAuthorHandlerTrait;
 use Exception;
+use RuntimeException;
 
 class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterface, CommitAuthorHandlerInterface
 {
     use CommitAuthorHandlerTrait;
     use UpdatesSiteInformation;
 
-    private $StartTimeStamp;
-    private $EndTimeStamp;
-    private $Error;
-    private $Label;
-    private $Builds = [];
+    private int $StartTimeStamp = -1;
+    private int $EndTimeStamp = -1;
+    private BuildError|BuildFailure $Error;
+    private Label $Label;
+    private array $Builds = [];
     private array $BuildInformation;
-    private $BuildCommand = '';
-    private $BuildGroup;
-    private $Labels = [];
+    private string $BuildCommand = '';
+    private array $Labels = [];
     // Map SubProjects to Labels
-    private $SubProjects = [];
-    private $ErrorSubProjectName;
+    private array $SubProjects = [];
+    private string $ErrorSubProjectName = '';
     private string $BuildName;
     private string $BuildStamp;
     private string $Generator;
-    private $PullRequest;
+    private string $PullRequest = '';
     private ?BuildErrorFilter $BuildErrorFilter = null;
     protected static ?string $schema_file = '/app/Validators/Schemas/Build.xsd';
 
@@ -137,7 +137,6 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
             $this->BuildStamp = '';
             $this->SubProjectName = '';
             $this->Generator = '';
-            $this->PullRequest = '';
 
             // Fill in the attribute
             foreach ($attributes as $key => $value) {
@@ -359,11 +358,11 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
                 SubmissionUtils::add_build($build);
 
                 $duration = $this->EndTimeStamp - $this->StartTimeStamp;
-                $build->UpdateBuildDuration((int) $duration, !$all_at_once);
+                $build->UpdateBuildDuration($duration, !$all_at_once);
                 if ($all_at_once && !$parent_duration_set) {
                     $parent_build = new Build();
                     $parent_build->Id = $build->GetParentId();
-                    $parent_build->UpdateBuildDuration((int) $duration, false);
+                    $parent_build->UpdateBuildDuration($duration, false);
                     $parent_duration_set = true;
                 }
 
@@ -452,6 +451,9 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
             if ($threshold > 0) {
                 $chunk_size = $threshold / 2;
                 foreach (['StdOutput', 'StdError'] as $field) {
+                    if (!($this->Error instanceof BuildFailure)) {
+                        throw new RuntimeException('Field "Error" is not instance of BuildFailure.');
+                    }
                     if (isset($this->Error->$field)) {
                         $outlen = strlen($this->Error->$field);
                         if ($outlen > $threshold) {
@@ -491,6 +493,9 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
                     if (!$hasLabel) {
                         $label = $factory->create(Label::class);
                         $label->Text = $this->SubProjectName;
+                        if (!($this->Error instanceof BuildFailure)) {
+                            throw new RuntimeException('Field "Error" is not instance of BuildFailure.');
+                        }
                         $this->Error->AddLabel($label);
                     }
                 }
@@ -556,16 +561,20 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
         if ($this->getParent() === 'BUILD') {
             switch ($element) {
                 case 'STARTBUILDTIME':
-                    $this->StartTimeStamp = $data;
+                    $this->StartTimeStamp = (int) $data;
                     break;
                 case 'ENDBUILDTIME':
-                    $this->EndTimeStamp = $data;
+                    $this->EndTimeStamp = (int) $data;
                     break;
                 case 'BUILDCOMMAND':
                     $this->BuildCommand = htmlspecialchars_decode($data);
                     break;
             }
         } elseif ($this->getParent() === 'ACTION') {
+            if (!($this->Error instanceof BuildFailure)) {
+                throw new RuntimeException('Field "Error" is not instance of BuildFailure.');
+            }
+
             switch ($element) {
                 case 'LANGUAGE':
                     $this->Error->Language .= $data;
@@ -584,6 +593,10 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
                     break;
             }
         } elseif ($this->getParent() === 'COMMAND') {
+            if (!($this->Error instanceof BuildFailure)) {
+                throw new RuntimeException('Field "Error" is not instance of BuildFailure.');
+            }
+
             switch ($element) {
                 case 'WORKINGDIRECTORY':
                     $this->Error->WorkingDirectory .= $data;
@@ -593,6 +606,10 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
                     break;
             }
         } elseif ($this->getParent() === 'RESULT') {
+            if (!($this->Error instanceof BuildFailure)) {
+                throw new RuntimeException('Field "Error" is not instance of BuildFailure.');
+            }
+
             switch ($element) {
                 case 'STDOUT':
                     $this->Error->StdOutput .= $data;
@@ -607,16 +624,31 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
                     break;
             }
         } elseif ($element === 'BUILDLOGLINE') {
+            if (!($this->Error instanceof BuildError)) {
+                throw new RuntimeException('Field "Error" is not instance of BuildError.');
+            }
             $this->Error->LogLine .= $data;
         } elseif ($element === 'TEXT') {
+            if (!($this->Error instanceof BuildError)) {
+                throw new RuntimeException('Field "Error" is not instance of BuildError.');
+            }
             $this->Error->Text .= $data;
         } elseif ($element === 'SOURCEFILE') {
             $this->Error->SourceFile .= $data;
         } elseif ($element === 'SOURCELINENUMBER') {
+            if (!($this->Error instanceof BuildError)) {
+                throw new RuntimeException('Field "Error" is not instance of BuildError.');
+            }
             $this->Error->SourceLine .= $data;
         } elseif ($element === 'PRECONTEXT') {
+            if (!($this->Error instanceof BuildError)) {
+                throw new RuntimeException('Field "Error" is not instance of BuildError.');
+            }
             $this->Error->PreContext .= $data;
         } elseif ($element === 'POSTCONTEXT') {
+            if (!($this->Error instanceof BuildError)) {
+                throw new RuntimeException('Field "Error" is not instance of BuildError.');
+            }
             $this->Error->PostContext .= $data;
         } elseif ($this->getParent() === 'SUBPROJECT' && $element === 'LABEL') {
             $this->SubProjects[$this->SubProjectName][] = $data;
@@ -636,7 +668,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
             // First, check if this label belongs to a SubProject
             foreach ($this->SubProjects as $subproject => $labels) {
                 if (in_array($data, $labels)) {
-                    $this->ErrorSubProjectName = $subproject;
+                    $this->ErrorSubProjectName = (string) $subproject;
                     break;
                 }
             }

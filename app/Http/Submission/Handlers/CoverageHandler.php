@@ -34,8 +34,8 @@ class CoverageHandler extends AbstractXmlHandler
 {
     use UpdatesSiteInformation;
 
-    private $StartTimeStamp;
-    private $EndTimeStamp;
+    private int $StartTimeStamp;
+    private int $EndTimeStamp;
 
     private Coverage $Coverage;
     private array $Coverages = [];
@@ -200,10 +200,10 @@ class CoverageHandler extends AbstractXmlHandler
         if ($parent === 'COVERAGE') {
             switch ($element) {
                 case 'STARTTIME':
-                    $this->StartTimeStamp = $data;
+                    $this->StartTimeStamp = (int) $data;
                     break;
                 case 'ENDTIME':
-                    $this->EndTimeStamp = $data;
+                    $this->EndTimeStamp = (int) $data;
                     break;
             }
         } elseif ($parent === 'FILE') {
