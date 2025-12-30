@@ -31,13 +31,12 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
     use UpdatesSiteInformation;
 
     protected static ?string $schema_file = '/app/Validators/Schemas/Test.xsd';
-    private $StartTimeStamp = 0;
-    private $EndTimeStamp = 0;
+    private int $StartTimeStamp = 0;
+    private int $EndTimeStamp = 0;
 
-    private $TestMeasurement;
-    private $Label;
+    private TestMeasurement $TestMeasurement;
+    private Label $Label;
 
-    // TODO: Evaluate whether this is needed
     private array $Labels;
 
     private TestCreator $TestCreator;
@@ -245,7 +244,7 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
                 if ($this->StartTimeStamp > 0 && $this->EndTimeStamp > 0) {
                     // Update test duration in the Build table.
                     $duration = $this->EndTimeStamp - $this->StartTimeStamp;
-                    $build->UpdateTestDuration((int) $duration, !$all_at_once);
+                    $build->UpdateTestDuration($duration, !$all_at_once);
                     if ($all_at_once && !$parent_duration_set) {
                         $parent_build = $factory->create(Build::class);
                         $parent_build->Id = $build->GetParentId();
@@ -269,10 +268,10 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
         if ($parent === 'TESTING') {
             switch ($element) {
                 case 'STARTTESTTIME':
-                    $this->StartTimeStamp = $data;
+                    $this->StartTimeStamp = (int) $data;
                     break;
                 case 'ENDTESTTIME':
-                    $this->EndTimeStamp = $data;
+                    $this->EndTimeStamp = (int) $data;
                     break;
             }
         } elseif ($parent === 'TEST') {
@@ -305,10 +304,8 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
                     break;
                 }
             }
-            if (is_a($this->Label, Label::class)) {
-                $this->Label->Text = $data;
-                $this->Labels[] = $this->Label;
-            }
+            $this->Label->Text = $data;
+            $this->Labels[] = $this->Label;
         }
     }
 

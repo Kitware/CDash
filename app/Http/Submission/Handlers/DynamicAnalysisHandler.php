@@ -40,23 +40,23 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
 {
     use UpdatesSiteInformation;
 
-    private $StartTimeStamp;
-    private $EndTimeStamp;
-    private $Checker;
+    private int $StartTimeStamp;
+    private int $EndTimeStamp;
+    private string $Checker;
 
     private DynamicAnalysis $DynamicAnalysis;
     private DynamicAnalysisDefect $DynamicAnalysisDefect;
-    private $DynamicAnalysisSummaries = [];
-    private $Label;
+    private array $DynamicAnalysisSummaries = [];
+    private Label $Label;
 
-    private $Builds = [];
+    private array $Builds = [];
     private array $BuildInformation;
 
     protected static ?string $schema_file = '/app/Validators/Schemas/DynamicAnalysis.xsd';
 
     // Map SubProjects to Labels
-    private $SubProjects = [];
-    private $TestSubProjectName;
+    private array $SubProjects = [];
+    private string $TestSubProjectName = '';
 
     /** Constructor */
     public function __construct(Project $project)
@@ -222,10 +222,10 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
         if ($parent === 'DYNAMICANALYSIS') {
             switch ($element) {
                 case 'STARTTESTTIME':
-                    $this->StartTimeStamp = $data;
+                    $this->StartTimeStamp = (int) $data;
                     break;
                 case 'ENDTESTTIME':
-                    $this->EndTimeStamp = $data;
+                    $this->EndTimeStamp = (int) $data;
                     break;
             }
         } elseif ($parent === 'TEST') {

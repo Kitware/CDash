@@ -33,29 +33,30 @@ use stdClass;
 
 class BazelJSONHandler extends AbstractSubmissionHandler
 {
-    private $Builds = [];
-    private $BuildErrors = [
+    /** @var array<string,Build> */
+    private array $Builds = [];
+    private array $BuildErrors = [
         '' => [],
     ];
-    private $CommandLine = '';
+    private string $CommandLine = '';
     private array $Configures = [];
     private ?bool $_HasSubProjects = null;
-    private $NumTestsPassed = [
+    private array $NumTestsPassed = [
         '' => 0,
     ];
-    private $NumTestsFailed = [
+    private array $NumTestsFailed = [
         '' => 0,
     ];
-    private $NumTestsNotRun = [
+    private array $NumTestsNotRun = [
         '' => 0,
     ];
-    private $ParentBuild;
-    private $RecordingTestOutput = false;
-    private $RecordingTestSummary = false;
-    private $Tests = [];
-    private $TestsOutput = [];
-    private $TestName = '';
-    private $ParseConfigure = true;
+    private Build $ParentBuild;
+    private bool $RecordingTestOutput = false;
+    private bool $RecordingTestSummary = false;
+    private array $Tests = [];
+    private array $TestsOutput = [];
+    private string $TestName = '';
+    private bool $ParseConfigure = true;
     private ?BuildErrorFilter $BuildErrorFilter = null;
 
     public function __construct(Build $build)
@@ -661,7 +662,7 @@ class BazelJSONHandler extends AbstractSubmissionHandler
         // Initialize the child build.
         $child_build = new Build();
         $child_build->Generator = $this->ParentBuild->Generator;
-        $child_build->GroupId = (int) $this->ParentBuild->GroupId;
+        $child_build->GroupId = $this->ParentBuild->GroupId;
         $child_build->Name = $this->ParentBuild->Name;
         $child_build->ProjectId = $this->ParentBuild->ProjectId;
         $child_build->SiteId = $this->ParentBuild->SiteId;

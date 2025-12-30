@@ -32,7 +32,7 @@ class NoteHandler extends AbstractXmlHandler
     private bool $AdjustStartTime = false;
     private NoteCreator $NoteCreator;
     protected static ?string $schema_file = '/app/Validators/Schemas/Notes.xsd';
-    protected $Timestamp = 0;
+    protected int $Timestamp = 0;
 
     /** Constructor */
     public function __construct(Project $project)
@@ -159,7 +159,7 @@ class NoteHandler extends AbstractXmlHandler
                     // Prefer the <Time> element if it wasn't specified in
                     // scientific notation (CTest v3.11.0 or newer).
                     if (!str_contains($data, 'e+')) {
-                        $this->Timestamp = $data;
+                        $this->Timestamp = (int) $data;
                         $this->AdjustStartTime = false;
                     }
                     break;

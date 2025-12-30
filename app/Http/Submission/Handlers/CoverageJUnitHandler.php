@@ -31,8 +31,8 @@ class CoverageJUnitHandler extends AbstractXmlHandler
 {
     use UpdatesSiteInformation;
 
-    private $StartTimeStamp;
-    private $EndTimeStamp;
+    private int $StartTimeStamp;
+    private int $EndTimeStamp;
 
     private Coverage $Coverage;
     private CoverageFile $CoverageFile;
@@ -102,8 +102,8 @@ class CoverageJUnitHandler extends AbstractXmlHandler
             $this->Label = new Label();
         } elseif ($parent === 'REPORT' && $name === 'SESSIONINFO') {
             // timestamp are in miliseconds
-            $this->StartTimeStamp = substr($attributes['START'], 0, -3);
-            $this->EndTimeStamp = substr($attributes['DUMP'], 0, -3);
+            $this->StartTimeStamp = (int) substr($attributes['START'], 0, -3);
+            $this->EndTimeStamp = (int) substr($attributes['DUMP'], 0, -3);
         } elseif ($parent === 'REPORT' && $name === 'COUNTER') {
             switch ($attributes['TYPE']) {
                 case 'COMPLEXITY':

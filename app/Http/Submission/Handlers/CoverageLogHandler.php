@@ -28,8 +28,8 @@ use CDash\Model\SubProject;
 
 class CoverageLogHandler extends AbstractXmlHandler
 {
-    private $StartTimeStamp;
-    private $EndTimeStamp;
+    private int $StartTimeStamp;
+    private int $EndTimeStamp;
 
     private CoverageFile $CurrentCoverageFile;
     private CoverageFileLog $CurrentCoverageFileLog;
@@ -164,10 +164,10 @@ class CoverageLogHandler extends AbstractXmlHandler
                 $this->CurrentLine .= $data;
                 break;
             case 'STARTTIME':
-                $this->StartTimeStamp = $data;
+                $this->StartTimeStamp = (int) $data;
                 break;
             case 'ENDTIME':
-                $this->EndTimeStamp = $data;
+                $this->EndTimeStamp = (int) $data;
                 break;
         }
     }

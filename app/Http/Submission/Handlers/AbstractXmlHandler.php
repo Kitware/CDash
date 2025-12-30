@@ -35,9 +35,9 @@ abstract class AbstractXmlHandler extends AbstractSubmissionHandler
     private Stack $stack;
     protected bool $Append = false;
     protected Site $Site;
-    protected $SubProjectName;
+    protected string $SubProjectName = '';
 
-    private $ModelFactory;
+    private ServiceContainer $ModelFactory;
 
     protected static ?string $schema_file = null;
 
@@ -46,6 +46,7 @@ abstract class AbstractXmlHandler extends AbstractSubmissionHandler
         parent::__construct($init);
 
         $this->stack = new Stack();
+        $this->ModelFactory = ServiceContainer::getInstance();
     }
 
     /**
@@ -186,9 +187,6 @@ abstract class AbstractXmlHandler extends AbstractSubmissionHandler
 
     protected function getModelFactory(): ServiceContainer
     {
-        if (!$this->ModelFactory) {
-            $this->ModelFactory = ServiceContainer::getInstance();
-        }
         return $this->ModelFactory;
     }
 

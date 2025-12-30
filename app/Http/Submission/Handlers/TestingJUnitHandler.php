@@ -28,8 +28,8 @@ class TestingJUnitHandler extends AbstractXmlHandler
 {
     use UpdatesSiteInformation;
 
-    private $StartTimeStamp;
-    private $EndTimeStamp;
+    private int $StartTimeStamp;
+    private int $EndTimeStamp;
     // Should we update the end time of the build?
     private bool $UpdateEndTime = false;
     // The buildgroup to submit to (defaults to Nightly).
@@ -43,7 +43,7 @@ class TestingJUnitHandler extends AbstractXmlHandler
     private string $TestProperties = '';
     private bool $HasSiteTag = false;
     private bool $BuildAdded = false;
-    private $TotalTestDuration = 0;
+    private int $TotalTestDuration = 0;
     protected TestCreator $TestCreator;
 
     /** Constructor */
@@ -189,8 +189,8 @@ class TestingJUnitHandler extends AbstractXmlHandler
             }
 
             $this->StartTimeStamp = $timestamp;
-            $this->EndTimeStamp = $this->StartTimeStamp + $attributes['TIME'];
-            $this->TotalTestDuration += $attributes['TIME'];
+            $this->EndTimeStamp = $this->StartTimeStamp + (int) $attributes['TIME'];
+            $this->TotalTestDuration += (int) $attributes['TIME'];
         }
     }
 
@@ -218,7 +218,7 @@ class TestingJUnitHandler extends AbstractXmlHandler
             // Record this test in the database.
             $this->TestCreator->create($this->Build);
         } elseif ($name === 'SITE' || ($this->HasSiteTag == false && $name === 'TESTSUITE')) {
-            if (strlen($this->EndTimeStamp) > 0 && $this->UpdateEndTime) {
+            if (isset($this->EndTimeStamp) && $this->UpdateEndTime) {
                 $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp); // The EndTimeStamp
                 $this->Build->UpdateEndTime($end_time);
             }
