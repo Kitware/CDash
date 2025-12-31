@@ -569,11 +569,11 @@
                       <div valign="top">
                         <strong>Current logo:</strong>
                       </div>
-                      <span v-if="cdash.project.ImageId == 0">
+                      <span v-if="cdash.project.ImageId == null">
                         [none]
                       </span>
                       <img
-                        v-if="cdash.project.ImageId != 0"
+                        v-if="cdash.project.ImageId != null"
                         id="projectlogo"
                         border="0"
                         :alt="cdash.project_name"
@@ -2356,7 +2356,7 @@ export default {
         this.$axios
           .post('/api/v1/project.php', data, config)
           .then(response => {
-            if (response.data.imageid > 0) {
+            if (response.data.imageid !== null) {
               this.previewLogo = null;
               this.uploadedLogo = null;
               // Use a decache to force the logo to refresh even if the imageid didn't change.

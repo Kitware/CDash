@@ -62,7 +62,7 @@ beforeEach(() => {
       ErrorsFilter: '',
       Filled: true,
       Id: 1,
-      ImageId: 0,
+      ImageId: 1,
       MaxUploadQuota: 10,
       Name: 'MyTestingProject',
       NightlyTime: '01:00:00 UTC',
