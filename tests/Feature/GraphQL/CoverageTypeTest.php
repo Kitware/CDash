@@ -362,7 +362,7 @@ class CoverageTypeTest extends TestCase
 
     public function testCodeNotShownWhenShowCoverageCodeIsFalse(): void
     {
-        $this->project->showcoveragecode = 0;
+        $this->project->showcoveragecode = false;
         $this->project->save();
 
         $coverageFile = CoverageFile::create([

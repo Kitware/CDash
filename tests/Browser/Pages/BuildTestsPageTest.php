@@ -220,7 +220,7 @@ class BuildTestsPageTest extends BrowserTestCase
     public function testConfigurableTimeStatusColumn(): void
     {
         // This should be the default...
-        $this->project->showtesttime = 0;
+        $this->project->showtesttime = false;
         $this->project->save();
 
         /** @var Build $build */
@@ -249,7 +249,7 @@ class BuildTestsPageTest extends BrowserTestCase
         });
 
         // Check that failed time status displays properly
-        $this->project->showtesttime = 1;
+        $this->project->showtesttime = true;
         $this->project->save();
         $this->browse(function (Browser $browser) use ($test, $build): void {
             $browser->visit("/builds/{$build->id}/tests")
