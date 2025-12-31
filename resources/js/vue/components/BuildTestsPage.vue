@@ -123,14 +123,10 @@ export default {
                   details
                   runningTime
                   timeStatusCategory
-                  testMeasurements(filters: $measurementFilters, first: 100) {
-                    edges {
-                      node {
-                        id
-                        name
-                        value
-                      }
-                    }
+                  testMeasurements(filters: $measurementFilters) {
+                    id
+                    name
+                    value
                   }
                 }
               }
@@ -148,14 +144,10 @@ export default {
                         details
                         runningTime
                         timeStatusCategory
-                        testMeasurements(filters: $measurementFilters, first: 100) {
-                          edges {
-                            node {
-                              id
-                              name
-                              value
-                            }
-                          }
+                        testMeasurements(filters: $measurementFilters) {
+                          id
+                          name
+                          value
                         }
                       }
                     }
@@ -254,7 +246,7 @@ export default {
           },
           ...this.pinnedMeasurements.reduce((acc, name) => ({
             ...acc,
-            [name]: edge.node.testMeasurements.edges.find((measurementEdge) => measurementEdge.node.name === name)?.node.value ?? '',
+            [name]: edge.node.testMeasurements.find((measurementEdge) => measurementEdge.name === name)?.value ?? '',
           }), {}),
         };
       });

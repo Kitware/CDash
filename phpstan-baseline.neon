@@ -159,13 +159,13 @@ parameters:
 		-
 			rawMessage: Access to an undefined property GraphQL\Language\AST\ListTypeNode|GraphQL\Language\AST\NamedTypeNode|GraphQL\Language\AST\NonNullTypeNode::$name.
 			identifier: property.notFound
-			count: 4
+			count: 1
 			path: app/GraphQL/Directives/FilterDirective.php
 
 		-
 			rawMessage: Access to an undefined property GraphQL\Language\AST\ListTypeNode|GraphQL\Language\AST\NamedTypeNode|GraphQL\Language\AST\NonNullTypeNode::$type.
 			identifier: property.notFound
-			count: 4
+			count: 1
 			path: app/GraphQL/Directives/FilterDirective.php
 
 		-
