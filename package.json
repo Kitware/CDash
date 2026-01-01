@@ -58,7 +58,7 @@
     "vue-echarts": "^8.0.1",
     "vue-loader": "^17.4.2",
     "vuedraggable": "^4.1.0",
-    "webpack": "^5.103.0"
+    "webpack": "^5.104.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
