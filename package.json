@@ -61,7 +61,7 @@
     "webpack": "^5.103.0"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.1",
+    "@eslint/js": "^9.39.2",
     "@vue/test-utils": "^2.4.6",
     "@vue/vue3-jest": "^29.2.6",
     "axios-mock-adapter": "^2.1.0",
