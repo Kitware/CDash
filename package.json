@@ -54,7 +54,7 @@
     "sass-loader": "^16.0.6",
     "tailwindcss": "^3.4.17",
     "tiny-emitter": "^2.1.0",
-    "vue": "^3.5.25",
+    "vue": "^3.5.26",
     "vue-echarts": "^8.0.1",
     "vue-loader": "^17.4.2",
     "vuedraggable": "^4.1.0",
