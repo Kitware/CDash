@@ -735,7 +735,7 @@ parameters:
 		-
 			rawMessage: 'Parameter #1 $json of function json_decode expects string, (array|string|null) given.'
 			identifier: argument.type
-			count: 3
+			count: 4
 			path: app/Http/Controllers/BuildController.php
 
 		-
@@ -27131,6 +27131,15 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: server.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method coverageResults() of class App\Models\Build:
+				07/27/2025 Use this relation only to edit the underlying coverage table.  Use coverage() instead.
+			'''
+			identifier: method.deprecated
+			count: 1
+			path: tests/Browser/Pages/BuildCoveragePageTest.php
 
 		-
 			rawMessage: 'Method Tests\Browser\Pages\ProjectMembersPageTest::testFullInvitationWorkflow() throws checked exception OverflowException but it''s missing from the PHPDoc @throws tag.'

@@ -31,6 +31,7 @@ const BuildFilesPage = Vue.defineAsyncComponent(() => import('./components/Build
 const BuildTargetsPage = Vue.defineAsyncComponent(() => import('./components/BuildTargetsPage.vue'));
 const BuildCommandsPage = Vue.defineAsyncComponent(() => import('./components/BuildCommandsPage.vue'));
 const CoverageFilePage = Vue.defineAsyncComponent(() => import('./components/CoverageFilePage.vue'));
+const BuildCoveragePage = Vue.defineAsyncComponent(() => import('./components/BuildCoveragePage.vue'));
 
 const cdash_components = {
   BuildConfigure,
@@ -57,6 +58,7 @@ const cdash_components = {
   BuildTargetsPage,
   BuildCommandsPage,
   CoverageFilePage,
+  BuildCoveragePage,
 };
 
 const app = Vue.createApp({
