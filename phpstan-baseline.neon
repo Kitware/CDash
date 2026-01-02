@@ -27754,18 +27754,6 @@ parameters:
 			path: tests/Feature/RouteAccessTest.php
 
 		-
-			rawMessage: 'Method Tests\Feature\RouteAccessTest::adminRoutes() return type has no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: tests/Feature/RouteAccessTest.php
-
-		-
-			rawMessage: 'Method Tests\Feature\RouteAccessTest::protectedRoutes() return type has no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: tests/Feature/RouteAccessTest.php
-
-		-
 			rawMessage: 'You should use assertSame() instead of assertEquals(), because both values are scalars of the same type'
 			identifier: phpunit.assertEquals
 			count: 6
