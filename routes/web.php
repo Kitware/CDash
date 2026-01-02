@@ -143,6 +143,9 @@ Route::get('/builds/{build_id}/files/{file_id}', 'BuildController@build_file')
     ->whereNumber('file_id');
 Route::permanentRedirect('/build/{build_id}/file/{file_id}', url('/builds/{build_id}/files/{file_id}'));
 
+Route::get('/builds/{build_id}/coverage', 'BuildController@coverage')
+    ->whereNumber('build_id');
+
 Route::get('/builds/{build_id}/coverage/{file_id}', CoverageFileController::class)
     ->whereNumber('build_id')
     ->whereNumber('file_id');
