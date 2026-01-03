@@ -6,6 +6,7 @@
 //
 require_once __DIR__ . '/cdash_test_case.php';
 
+use App\Models\Build;
 use App\Utils\DatabaseCleanupUtils;
 
 class MultiCoverageTestCase extends KWWebTestCase
@@ -108,11 +109,8 @@ class MultiCoverageTestCase extends KWWebTestCase
     public function verifyResults()
     {
         // Make sure that it recorded the source file's label in our submission.
-        $content = $this->get($this->url . "/viewCoverage.php?buildid=$this->BuildId");
-        if (!str_contains($content, '<td align="right">aggro</td>')) {
-            $this->fail('\"<td align="right">aggro</td>\" not found when expected');
-            return 1;
-        }
+        $labels = Build::findOrFail((int) $this->BuildId)->coverage->flatMap->labels->unique('text');
+        $this->assertEqual($labels->first()->text, 'aggro');
 
         // Verify details about our covered files.
         $result = pdo_query(

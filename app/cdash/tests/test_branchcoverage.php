@@ -6,6 +6,7 @@
 //
 require_once __DIR__ . '/cdash_test_case.php';
 
+use App\Models\Build;
 use App\Models\PendingSubmissions;
 use App\Utils\DatabaseCleanupUtils;
 use CDash\Database;
@@ -114,16 +115,10 @@ class BranchCoverageTestCase extends KWWebTestCase
 
     protected function verifyResults()
     {
-        $url = "{$this->url}/viewCoverage.php?buildid={$this->buildid}";
-
         // Make sure that it recorded the source file's label in our submission.
-        $content = $this->get($url);
-        if (!str_contains($content, '<td align="right">Foo</td>')) {
-            $msg = '\"<td align="right">Foo</td>\" not found when expected'
-                . PHP_EOL . 'URL: ' . $url;
-            $this->fail($msg);
-            return 1;
-        }
+        $labels = Build::findOrFail((int) $this->buildid)->coverage->flatMap->labels->unique('text');
+        $this->assertEqual($labels->first()->text, 'Foo');
+
         // Look up the ID of one of the coverage files that we just submitted.
         $fileid_result = DB::select("
             SELECT c.fileid FROM coverage AS c

@@ -60,7 +60,7 @@
             </td>
 
             <td align="center" ng-repeat="build in cdash.builds" ng-class="{'normal': coverage[build.key] >= group.thresholdgreen, 'warning': coverage[build.key] < group.thresholdgreen && coverage[build.key] >= group.thresholdyellow, 'error': coverage[build.key] < group.thresholdyellow}">
-              <a class="cdash-link" ng-if="coverage[build.key] >= 0 && build.key != 'aggregate'" ng-href="viewCoverage.php?buildid={{coverage[build.key +'id']}}">
+              <a class="cdash-link" ng-if="coverage[build.key] >= 0 && build.key != 'aggregate'" ng-href="builds/{{coverage[build.key +'id']}}/coverage">
                 {{coverage[build.key]}}%
               </a>
                <a class="cdash-link" ng-if="coverage[build.key] >= 0 && build.key == 'aggregate'">
@@ -81,7 +81,7 @@
             </td>
 
             <td align="center" ng-repeat="build in cdash.builds" ng-class="{'normal': coverage[build.key] >= cdash.thresholdgreen, 'warning': coverage[build.key] < cdash.thresholdgreen && coverage[build.key] >= cdash.thresholdyellow, 'error': coverage[build.key] < cdash.thresholdyellow}">
-              <a class="cdash-link" ng-if="coverage[build.key] >= 0 && build.key != 'aggregate'" ng-href="viewCoverage.php?buildid={{coverage[build.key+'id']}}">
+              <a class="cdash-link" ng-if="coverage[build.key] >= 0 && build.key != 'aggregate'" ng-href="builds/{{coverage[build.key+'id']}}/coverage">
                 {{coverage[build.key]}}%
               </a>
                <a class="cdash-link" ng-if="coverage[build.key] >= 0 && build.key == 'aggregate'">

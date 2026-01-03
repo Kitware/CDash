@@ -20,7 +20,6 @@ set_property(TEST deletesubproject PROPERTY DEPENDS
   cypress/e2e/colorblind
   cypress/e2e/daterange
   cypress/e2e/sites
-  cypress/e2e/view-coverage
   cypress/e2e/tests
   cypress/e2e/build-configure
 )
