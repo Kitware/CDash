@@ -6,6 +6,7 @@
 //
 require_once __DIR__ . '/cdash_test_case.php';
 
+use App\Models\Build;
 use App\Utils\DatabaseCleanupUtils;
 
 class OpenCoverCoverageTestCase extends KWWebTestCase
@@ -63,9 +64,10 @@ class OpenCoverCoverageTestCase extends KWWebTestCase
         }
 
         // Verify that the coverage data was successfully parsed.
-        $content = $this->get(
-            $this->url . "/viewCoverage.php?buildid=$buildid&status=6");
-        if (!str_contains($content, '47.37')) {
+        $loctested = Build::findOrFail((int) $buildid)->coverage()->sum('loctested');
+        $locuntested = Build::findOrFail((int) $buildid)->coverage()->sum('locuntested');
+        $content = (string) round(($loctested / ($loctested + $locuntested)) * 100, 2);
+        if ($content !== '47.37') {
             $this->fail('\"47.37\" not found when expected');
             return 1;
         }
@@ -115,9 +117,10 @@ class OpenCoverCoverageTestCase extends KWWebTestCase
         }
 
         // Verify that the coverage data was successfully parsed.
-        $content = $this->get(
-            $this->url . "/viewCoverage.php?buildid=$buildid&status=6");
-        if (!str_contains($content, '69.23')) {
+        $loctested = Build::findOrFail((int) $buildid)->coverage()->sum('loctested');
+        $locuntested = Build::findOrFail((int) $buildid)->coverage()->sum('locuntested');
+        $content = (string) round(($loctested / ($loctested + $locuntested)) * 100, 2);
+        if ($content !== '69.23') {
             $this->fail('\"69.23\" not found when expected');
             return 1;
         }

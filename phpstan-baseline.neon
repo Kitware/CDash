@@ -1008,7 +1008,7 @@ parameters:
 		-
 			rawMessage: 'Argument of an invalid type array|false supplied for foreach, only iterables are supported.'
 			identifier: foreach.nonIterable
-			count: 6
+			count: 3
 			path: app/Http/Controllers/CoverageController.php
 
 		-
@@ -1020,7 +1020,7 @@ parameters:
 		-
 			rawMessage: 'Binary operation "+" between (array|float|int) and 10 results in an error.'
 			identifier: binaryOp.invalid
-			count: 2
+			count: 1
 			path: app/Http/Controllers/CoverageController.php
 
 		-
@@ -1041,7 +1041,7 @@ parameters:
 				04/22/2023  Use Laravel query builder or Eloquent instead
 			'''
 			identifier: method.deprecated
-			count: 7
+			count: 4
 			path: app/Http/Controllers/CoverageController.php
 
 		-
@@ -1050,7 +1050,7 @@ parameters:
 				04/22/2023  Use Laravel query builder or Eloquent instead
 			'''
 			identifier: method.deprecated
-			count: 9
+			count: 3
 			path: app/Http/Controllers/CoverageController.php
 
 		-
@@ -1069,24 +1069,6 @@ parameters:
 			'''
 			identifier: staticMethod.deprecated
 			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: Cannot access offset 'branchestested' on array|false|null.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: Cannot access offset 'branchesuntested' on array|false|null.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: Cannot access offset 'c' on array|false|null.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
 			path: app/Http/Controllers/CoverageController.php
 
 		-
@@ -1114,12 +1096,6 @@ parameters:
 			path: app/Http/Controllers/CoverageController.php
 
 		-
-			rawMessage: Cannot access offset 'loctested' on array|false|null.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 4
-			path: app/Http/Controllers/CoverageController.php
-
-		-
 			rawMessage: Cannot access offset 'loctested' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 4
@@ -1129,12 +1105,6 @@ parameters:
 			rawMessage: Cannot access offset 'loctesteddiff' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: Cannot access offset 'locuntested' on array|false|null.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 4
 			path: app/Http/Controllers/CoverageController.php
 
 		-
@@ -1188,7 +1158,7 @@ parameters:
 		-
 			rawMessage: Cannot cast mixed to int.
 			identifier: cast.int
-			count: 19
+			count: 18
 			path: app/Http/Controllers/CoverageController.php
 
 		-
@@ -1198,39 +1168,21 @@ parameters:
 			path: app/Http/Controllers/CoverageController.php
 
 		-
-			rawMessage: 'Casting to int something that''s already int<1, max>.'
-			identifier: cast.useless
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
 			rawMessage: 'Construct empty() is not allowed. Use more strict comparison.'
 			identifier: empty.notAllowed
-			count: 7
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: Implicit array creation is not allowed - variable $covfile might not exist.
-			identifier: variable.implicitArray
-			count: 2
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Loose comparison using == between 1 and 1 will always evaluate to true.'
-			identifier: equal.alwaysTrue
-			count: 4
+			count: 5
 			path: app/Http/Controllers/CoverageController.php
 
 		-
 			rawMessage: 'Loose comparison via "!=" is not allowed.'
 			identifier: notEqual.notAllowed
-			count: 9
+			count: 7
 			path: app/Http/Controllers/CoverageController.php
 
 		-
 			rawMessage: 'Loose comparison via "==" is not allowed.'
 			identifier: equal.notAllowed
-			count: 52
+			count: 43
 			path: app/Http/Controllers/CoverageController.php
 
 		-
@@ -1318,18 +1270,6 @@ parameters:
 			path: app/Http/Controllers/CoverageController.php
 
 		-
-			rawMessage: 'Method App\Http\Controllers\CoverageController::viewCoverage() never returns Illuminate\Http\RedirectResponse so it can be removed from the return type.'
-			identifier: return.unusedType
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Method App\Http\Controllers\CoverageController::viewCoverage() throws checked exception DivisionByZeroError but it''s missing from the PHPDoc @throws tag.'
-			identifier: missingType.checkedException
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
 			rawMessage: 'Offset ''branchcoveragemetric'' might not exist on array{directory: 1, covered: 1, fileid: 0, locuntested: (float|int), loctested: (float|int), branchesuntested: (float|int), branchestested: (float|int), functionsuntested: (float|int), ...}|array{filename: string, fullpath: mixed, fileid: 0, covered: 0, locuntested: 0, loctested: 0, branchesuntested: 0, branchestested: 0, ...}|array{filename: string, fullpath: mixed, fileid: mixed, locuntested: mixed, loctested: mixed, covered: 1, branchesuntested: mixed, branchestested: mixed, ...}.'
 			identifier: offsetAccess.notFound
 			count: 1
@@ -1398,7 +1338,7 @@ parameters:
 		-
 			rawMessage: 'Only numeric types are allowed in +, (array|float|int) given on the left side.'
 			identifier: plus.leftNonNumeric
-			count: 2
+			count: 1
 			path: app/Http/Controllers/CoverageController.php
 
 		-
@@ -1410,7 +1350,7 @@ parameters:
 		-
 			rawMessage: 'Only numeric types are allowed in /, (array|float|int<1, max>) given on the right side.'
 			identifier: div.rightNonNumeric
-			count: 5
+			count: 3
 			path: app/Http/Controllers/CoverageController.php
 
 		-
@@ -1446,23 +1386,17 @@ parameters:
 		-
 			rawMessage: 'Parameter #1 $string of function htmlspecialchars expects string, mixed given.'
 			identifier: argument.type
-			count: 5
+			count: 4
 			path: app/Http/Controllers/CoverageController.php
 
 		-
 			rawMessage: 'Parameter #1 $string of function strlen expects string, mixed given.'
 			identifier: argument.type
-			count: 2
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Parameter #2 $build_array of static method App\Http\Controllers\CoverageController::apiCompareCoverage_get_build_label() expects array<string, mixed>, mixed given.'
-			identifier: argument.type
 			count: 1
 			path: app/Http/Controllers/CoverageController.php
 
 		-
-			rawMessage: 'Parameter #2 $timestamp of function date expects int|null, int|false given.'
+			rawMessage: 'Parameter #2 $build_array of static method App\Http\Controllers\CoverageController::apiCompareCoverage_get_build_label() expects array<string, mixed>, mixed given.'
 			identifier: argument.type
 			count: 1
 			path: app/Http/Controllers/CoverageController.php
@@ -14518,12 +14452,6 @@ parameters:
 			path: app/cdash/include/filterdataFunctions.php
 
 		-
-			rawMessage: Access to an undefined property ViewCoveragePhpFilters::$TextConcat.
-			identifier: property.notFound
-			count: 1
-			path: app/cdash/include/filterdataFunctions.php
-
-		-
 			rawMessage: Access to an undefined property ViewTestPhpFilters::$TextConcat.
 			identifier: property.notFound
 			count: 1
@@ -14857,18 +14785,6 @@ parameters:
 			path: app/cdash/include/filterdataFunctions.php
 
 		-
-			rawMessage: 'Method ViewCoveragePhpFilters::getDefaultFilter() return type has no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/include/filterdataFunctions.php
-
-		-
-			rawMessage: 'Method ViewCoveragePhpFilters::getSqlField() has parameter $field with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/include/filterdataFunctions.php
-
-		-
 			rawMessage: 'Method ViewTestPhpFilters::getDefaultFilter() return type has no value type specified in iterable type array.'
 			identifier: missingType.iterableValue
 			count: 1
@@ -14931,7 +14847,7 @@ parameters:
 		-
 			rawMessage: Unreachable statement - code above always terminates.
 			identifier: deadCode.unreachable
-			count: 7
+			count: 6
 			path: app/cdash/include/filterdataFunctions.php
 
 		-
@@ -20785,12 +20701,6 @@ parameters:
 			path: app/cdash/tests/test_consistenttestingday.php
 
 		-
-			rawMessage: Binary operation "." between non-falsy-string and mixed results in an error.
-			identifier: binaryOp.invalid
-			count: 2
-			path: app/cdash/tests/test_coveragedirectories.php
-
-		-
 			rawMessage: '''
 				Call to deprecated method submission() of class KWWebTestCase:
 				12/09/2024  Use \Test\Traits\CreatesSubmissions instead
@@ -20800,51 +20710,27 @@ parameters:
 			path: app/cdash/tests/test_coveragedirectories.php
 
 		-
-			rawMessage: Cannot access offset 'aaData' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
-			path: app/cdash/tests/test_coveragedirectories.php
-
-		-
 			rawMessage: Cannot access offset 'buildid' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
+			count: 1
 			path: app/cdash/tests/test_coveragedirectories.php
 
 		-
 			rawMessage: Cannot access offset 'coverages' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 4
+			count: 3
 			path: app/cdash/tests/test_coveragedirectories.php
 
 		-
 			rawMessage: Cannot access offset 0 on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 5
-			path: app/cdash/tests/test_coveragedirectories.php
-
-		-
-			rawMessage: Cannot access offset 0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24 on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: app/cdash/tests/test_coveragedirectories.php
-
-		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
-			identifier: notEqual.notAllowed
-			count: 1
-			path: app/cdash/tests/test_coveragedirectories.php
-
-		-
-			rawMessage: 'Parameter #1 $haystack of function str_contains expects string, mixed given.'
-			identifier: argument.type
-			count: 2
 			path: app/cdash/tests/test_coveragedirectories.php
 
 		-
 			rawMessage: 'Parameter #1 $value of function count expects array|Countable, mixed given.'
 			identifier: argument.type
-			count: 3
+			count: 2
 			path: app/cdash/tests/test_coveragedirectories.php
 
 		-
@@ -22759,6 +22645,12 @@ parameters:
 			path: app/cdash/tests/test_javajsoncoverage.php
 
 		-
+			rawMessage: 'Method JavaJSONCoverageTestCase::testJavaJSONCoverage() throws checked exception DivisionByZeroError but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
+			count: 1
+			path: app/cdash/tests/test_javajsoncoverage.php
+
+		-
 			rawMessage: 'Part $buildid (mixed) of encapsed string cannot be cast to string.'
 			identifier: encapsedStringPart.nonString
 			count: 1
@@ -22812,6 +22704,12 @@ parameters:
 		-
 			rawMessage: 'Method JSCoverCoverageTestCase::testJSCoverCoverage() has no return type specified.'
 			identifier: missingType.return
+			count: 1
+			path: app/cdash/tests/test_jscovercoverage.php
+
+		-
+			rawMessage: 'Method JSCoverCoverageTestCase::testJSCoverCoverage() throws checked exception DivisionByZeroError but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
 			count: 1
 			path: app/cdash/tests/test_jscovercoverage.php
 
@@ -24430,8 +24328,20 @@ parameters:
 			path: app/cdash/tests/test_opencovercoverage.php
 
 		-
+			rawMessage: 'Method OpenCoverCoverageTestCase::testOpenCoverCoverage() throws checked exception DivisionByZeroError but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
+			count: 1
+			path: app/cdash/tests/test_opencovercoverage.php
+
+		-
 			rawMessage: 'Method OpenCoverCoverageTestCase::testOpenCoverCoverageWithDataJson() has no return type specified.'
 			identifier: missingType.return
+			count: 1
+			path: app/cdash/tests/test_opencovercoverage.php
+
+		-
+			rawMessage: 'Method OpenCoverCoverageTestCase::testOpenCoverCoverageWithDataJson() throws checked exception DivisionByZeroError but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
 			count: 1
 			path: app/cdash/tests/test_opencovercoverage.php
 
@@ -24625,12 +24535,6 @@ parameters:
 			path: app/cdash/tests/test_projectmodel.php
 
 		-
-			rawMessage: Binary operation "." between non-falsy-string and mixed results in an error.
-			identifier: binaryOp.invalid
-			count: 1
-			path: app/cdash/tests/test_projectwebpage.php
-
-		-
 			rawMessage: '''
 				Call to deprecated method submission() of class KWWebTestCase:
 				12/09/2024  Use \Test\Traits\CreatesSubmissions instead
@@ -24673,6 +24577,12 @@ parameters:
 			rawMessage: Cannot access offset 0 on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
+			path: app/cdash/tests/test_projectwebpage.php
+
+		-
+			rawMessage: Cannot cast mixed to int.
+			identifier: cast.int
+			count: 1
 			path: app/cdash/tests/test_projectwebpage.php
 
 		-
@@ -27105,7 +27015,7 @@ parameters:
 		-
 			rawMessage: 'Part $buildid (array|string|null) of encapsed string cannot be cast to string.'
 			identifier: encapsedStringPart.nonString
-			count: 6
+			count: 7
 			path: routes/web.php
 
 		-

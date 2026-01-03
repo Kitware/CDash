@@ -45,13 +45,6 @@
         <link rel="stylesheet" type="text/css" href="{{ asset(mix('assets/css/legacy.css')) }}"/>
         <link rel="stylesheet" type="text/css" href="{{ asset(mix(get_css_file())) }}"/>
         <script src="{{ asset(mix('assets/js/legacy.js')) }}"></script>
-        @if(str_contains(request()->url(), 'viewCoverage.php')) {{-- This last XSL page needs special treatment... --}}
-            <link rel="stylesheet" type="text/css" href="{{ asset(mix('assets/css/jquery.dataTables.css')) }}"/>
-            <script src="{{ asset(mix('assets/js/jquery.dataTables.min.js')) }}" defer></script>
-            <script src="{{ asset(mix('assets/js/angular/cdashCoverageGraph.js')) }}"></script>
-            <script src="{{ asset(mix('assets/js/angular/cdashFilters.js')) }}"></script>
-            <script src="{{ asset(mix('assets/js/angular/cdashViewCoverage.js')) }}"></script>
-        @endif
     @endif
 
     @yield('header_script')

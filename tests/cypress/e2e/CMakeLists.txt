@@ -45,9 +45,6 @@ set_tests_properties(cypress/e2e/sub-project-dependencies PROPERTIES DEPENDS sub
 add_cypress_e2e_test(filter-labels)
 set_tests_properties(cypress/e2e/filter-labels PROPERTIES DEPENDS actualtrilinossubmission)
 
-add_cypress_e2e_test(view-coverage)
-set_tests_properties(cypress/e2e/view-coverage PROPERTIES DEPENDS coveragedirectories)
-
 add_cypress_e2e_test(colorblind)
 set_tests_properties(cypress/e2e/colorblind PROPERTIES DEPENDS projectwebpage)
 
