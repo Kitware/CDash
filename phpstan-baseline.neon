@@ -427,12 +427,6 @@ parameters:
 			path: app/Http/Controllers/Auth/LoginController.php
 
 		-
-			rawMessage: Access to an undefined property object::$uuid.
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Controllers/Auth/LoginController.php
-
-		-
 			rawMessage: 'Method App\Http\Controllers\Auth\LoginController::redirectTo() should return string but returns mixed.'
 			identifier: return.type
 			count: 1
@@ -1520,24 +1514,6 @@ parameters:
 			identifier: variable.undefined
 			count: 1
 			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: Access to an undefined property object::$id.
-			identifier: property.notFound
-			count: 2
-			path: app/Http/Controllers/DynamicAnalysisController.php
-
-		-
-			rawMessage: Access to an undefined property object::$name.
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Controllers/DynamicAnalysisController.php
-
-		-
-			rawMessage: Access to an undefined property object::$status.
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Controllers/DynamicAnalysisController.php
 
 		-
 			rawMessage: Cannot access property $name on App\Models\Site|null.
@@ -7138,18 +7114,6 @@ parameters:
 			path: app/Utils/TestCreator.php
 
 		-
-			rawMessage: Access to an undefined property object::$difference_negative.
-			identifier: property.notFound
-			count: 1
-			path: app/Utils/TestDiffUtil.php
-
-		-
-			rawMessage: Access to an undefined property object::$difference_positive.
-			identifier: property.notFound
-			count: 1
-			path: app/Utils/TestDiffUtil.php
-
-		-
 			rawMessage: 'Argument of an invalid type array|false supplied for foreach, only iterables are supported.'
 			identifier: foreach.nonIterable
 			count: 2
@@ -7162,7 +7126,7 @@ parameters:
 			path: app/Utils/TestDiffUtil.php
 
 		-
-			rawMessage: 'Only booleans are allowed in an if condition, object|null given.'
+			rawMessage: 'Only booleans are allowed in an if condition, stdClass|null given.'
 			identifier: if.condNotBoolean
 			count: 1
 			path: app/Utils/TestDiffUtil.php
@@ -7190,18 +7154,6 @@ parameters:
 			identifier: missingType.checkedException
 			count: 1
 			path: app/Utils/TestingDay.php
-
-		-
-			rawMessage: Access to an undefined property object::$authenticatesubmissions.
-			identifier: property.notFound
-			count: 1
-			path: app/Utils/UnparsedSubmissionProcessor.php
-
-		-
-			rawMessage: Access to an undefined property object::$id.
-			identifier: property.notFound
-			count: 1
-			path: app/Utils/UnparsedSubmissionProcessor.php
 
 		-
 			rawMessage: Cannot access offset 'backupfilename' on mixed.
@@ -7312,7 +7264,7 @@ parameters:
 			path: app/Utils/UnparsedSubmissionProcessor.php
 
 		-
-			rawMessage: 'Only booleans are allowed in a negated boolean, object|null given.'
+			rawMessage: 'Only booleans are allowed in a negated boolean, stdClass|null given.'
 			identifier: booleanNot.exprNotBoolean
 			count: 1
 			path: app/Utils/UnparsedSubmissionProcessor.php
@@ -8590,7 +8542,7 @@ parameters:
 			path: app/cdash/app/Controller/Api/ViewTest.php
 
 		-
-			rawMessage: Cannot access property $projectid on object|null.
+			rawMessage: Cannot access property $projectid on stdClass|null.
 			identifier: property.nonObject
 			count: 1
 			path: app/cdash/app/Controller/Api/ViewTest.php
@@ -9154,24 +9106,6 @@ parameters:
 			path: app/cdash/app/Model/ActionableTypes.php
 
 		-
-			rawMessage: Access to an undefined property object::$difference.
-			identifier: property.notFound
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			rawMessage: Access to an undefined property object::$groupid.
-			identifier: property.notFound
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			rawMessage: Access to an undefined property object::$time.
-			identifier: property.notFound
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
 			rawMessage: '''
 				Call to deprecated function pdo_execute():
 				v2.5.0 01/22/2018
@@ -9556,7 +9490,7 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			rawMessage: 'Only booleans are allowed in a negated boolean, object|null given.'
+			rawMessage: 'Only booleans are allowed in a negated boolean, stdClass|null given.'
 			identifier: booleanNot.exprNotBoolean
 			count: 1
 			path: app/cdash/app/Model/Build.php
@@ -9568,7 +9502,7 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			rawMessage: 'Only booleans are allowed in an if condition, object|null given.'
+			rawMessage: 'Only booleans are allowed in an if condition, stdClass|null given.'
 			identifier: if.condNotBoolean
 			count: 3
 			path: app/cdash/app/Model/Build.php
@@ -10330,12 +10264,6 @@ parameters:
 			path: app/cdash/app/Model/BuildFailure.php
 
 		-
-			rawMessage: Access to an undefined property object::$groupid.
-			identifier: property.notFound
-			count: 2
-			path: app/cdash/app/Model/BuildGroup.php
-
-		-
 			rawMessage: 'Method CDash\Model\BuildGroup::GetBuildGroups() has parameter $begin with no type specified.'
 			identifier: missingType.parameter
 			count: 1
@@ -10819,12 +10747,6 @@ parameters:
 			path: app/cdash/app/Model/CoverageFile.php
 
 		-
-			rawMessage: Access to an undefined property object::$log.
-			identifier: property.notFound
-			count: 1
-			path: app/cdash/app/Model/CoverageFileLog.php
-
-		-
 			rawMessage: Binary operation "-" between string and string results in an error.
 			identifier: binaryOp.invalid
 			count: 1
@@ -10918,7 +10840,7 @@ parameters:
 			path: app/cdash/app/Model/CoverageFileLog.php
 
 		-
-			rawMessage: 'Only booleans are allowed in a negated boolean, object|null given.'
+			rawMessage: 'Only booleans are allowed in a negated boolean, stdClass|null given.'
 			identifier: booleanNot.exprNotBoolean
 			count: 1
 			path: app/cdash/app/Model/CoverageFileLog.php
@@ -10964,24 +10886,6 @@ parameters:
 			identifier: missingType.property
 			count: 1
 			path: app/cdash/app/Model/CoverageFileLog.php
-
-		-
-			rawMessage: Access to an undefined property object::$loctested.
-			identifier: property.notFound
-			count: 1
-			path: app/cdash/app/Model/CoverageSummary.php
-
-		-
-			rawMessage: Access to an undefined property object::$locuntested.
-			identifier: property.notFound
-			count: 1
-			path: app/cdash/app/Model/CoverageSummary.php
-
-		-
-			rawMessage: Access to an undefined property object::$parentid.
-			identifier: property.notFound
-			count: 1
-			path: app/cdash/app/Model/CoverageSummary.php
 
 		-
 			rawMessage: '''
@@ -11041,13 +10945,13 @@ parameters:
 			path: app/cdash/app/Model/CoverageSummary.php
 
 		-
-			rawMessage: 'Only booleans are allowed in a negated boolean, object|null given.'
+			rawMessage: 'Only booleans are allowed in a negated boolean, stdClass|null given.'
 			identifier: booleanNot.exprNotBoolean
 			count: 2
 			path: app/cdash/app/Model/CoverageSummary.php
 
 		-
-			rawMessage: 'Only booleans are allowed in an if condition, object|null given.'
+			rawMessage: 'Only booleans are allowed in an if condition, stdClass|null given.'
 			identifier: if.condNotBoolean
 			count: 1
 			path: app/cdash/app/Model/CoverageSummary.php
@@ -21292,12 +21196,6 @@ parameters:
 			path: app/cdash/tests/test_csvexport.php
 
 		-
-			rawMessage: Access to an undefined property object::$id.
-			identifier: property.notFound
-			count: 1
-			path: app/cdash/tests/test_deferredsubmissions.php
-
-		-
 			rawMessage: '''
 				Call to deprecated method submission() of class KWWebTestCase:
 				12/09/2024  Use \Test\Traits\CreatesSubmissions instead
@@ -21313,43 +21211,43 @@ parameters:
 			path: app/cdash/tests/test_deferredsubmissions.php
 
 		-
-			rawMessage: Cannot access property $builderrors on object|null.
+			rawMessage: Cannot access property $builderrors on stdClass|null.
 			identifier: property.nonObject
 			count: 1
 			path: app/cdash/tests/test_deferredsubmissions.php
 
 		-
-			rawMessage: Cannot access property $buildwarnings on object|null.
+			rawMessage: Cannot access property $buildwarnings on stdClass|null.
 			identifier: property.nonObject
 			count: 1
 			path: app/cdash/tests/test_deferredsubmissions.php
 
 		-
-			rawMessage: Cannot access property $id on object|null.
+			rawMessage: Cannot access property $id on stdClass|null.
 			identifier: property.nonObject
 			count: 3
 			path: app/cdash/tests/test_deferredsubmissions.php
 
 		-
-			rawMessage: Cannot access property $testfailed on object|null.
+			rawMessage: Cannot access property $testfailed on stdClass|null.
 			identifier: property.nonObject
 			count: 1
 			path: app/cdash/tests/test_deferredsubmissions.php
 
 		-
-			rawMessage: Cannot access property $testpassed on object|null.
+			rawMessage: Cannot access property $testpassed on stdClass|null.
 			identifier: property.nonObject
 			count: 1
 			path: app/cdash/tests/test_deferredsubmissions.php
 
 		-
-			rawMessage: 'Only booleans are allowed in a negated boolean, object|null given.'
+			rawMessage: 'Only booleans are allowed in a negated boolean, stdClass|null given.'
 			identifier: booleanNot.exprNotBoolean
 			count: 4
 			path: app/cdash/tests/test_deferredsubmissions.php
 
 		-
-			rawMessage: 'Only booleans are allowed in an if condition, object|null given.'
+			rawMessage: 'Only booleans are allowed in an if condition, stdClass|null given.'
 			identifier: if.condNotBoolean
 			count: 2
 			path: app/cdash/tests/test_deferredsubmissions.php
@@ -21679,15 +21577,9 @@ parameters:
 			path: app/cdash/tests/test_email.php
 
 		-
-			rawMessage: Cannot access property $id on object|null.
-			identifier: property.nonObject
-			count: 1
-			path: app/cdash/tests/test_email.php
-
-		-
 			rawMessage: Cannot access property $id on stdClass|null.
 			identifier: property.nonObject
-			count: 6
+			count: 7
 			path: app/cdash/tests/test_email.php
 
 		-
@@ -24625,13 +24517,7 @@ parameters:
 			path: app/cdash/tests/test_outputcolor.php
 
 		-
-			rawMessage: Access to an undefined property object::$id.
-			identifier: property.notFound
-			count: 1
-			path: app/cdash/tests/test_parallelsubmissions.php
-
-		-
-			rawMessage: 'Only booleans are allowed in an if condition, object|null given.'
+			rawMessage: 'Only booleans are allowed in an if condition, stdClass|null given.'
 			identifier: if.condNotBoolean
 			count: 1
 			path: app/cdash/tests/test_parallelsubmissions.php
