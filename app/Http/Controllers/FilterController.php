@@ -106,14 +106,6 @@ final class FilterController extends AbstractController
                 'testoutput',
                 'time',
             ],
-            'viewCoverage.php', 'getviewcoverage.php' => [
-                'coveredlines',
-                'filename',
-                'labels',
-                'priority',
-                'totallines',
-                'uncoveredlines',
-            ],
             'viewTest.php' => [
                 'details',
                 'label',
@@ -145,8 +137,6 @@ final class FilterController extends AbstractController
             case 'viewBuildGroup.php':
                 return true;
 
-            case 'getviewcoverage.php':
-            case 'viewCoverage.php':
             case 'viewTest.php':
             default:
                 return false;

@@ -1018,7 +1018,7 @@
         <a
           id="coverage_link"
           class="tw-link tw-link-hover"
-          :href="$baseURL + '/viewCoverage.php?buildid=' + cdash.build.id"
+          :href="$baseURL + '/builds/' + cdash.build.id + '/coverage'"
         >
           View Coverage Summary
         </a>

@@ -25,16 +25,10 @@ mix.copy('resources/js/angular/views/partials/*.html', 'public/assets/js/angular
 // Copy CSS files
 mix.css('resources/css/cdash.css', 'public/assets/css/cdash.css');
 mix.css('resources/css/colorblind.css', 'public/assets/css/colorblind.css');
-mix.css('resources/css/jquery.dataTables.css', 'public/assets/css/jquery.dataTables.css');
 
 mix.css('resources/css/legacy.css', 'public/assets/css/legacy.css');
 mix.css('resources/css/legacy_vue.css', 'public/assets/css/legacy_vue.css');
 mix.sass('resources/sass/app.scss', 'public/assets/css/app.css');
-
-mix.copy('resources/js/angular/jquery.dataTables.min.js', 'public/assets/js/jquery.dataTables.min.js');
-mix.copy('resources/js/angular/cdashCoverageGraph.js', 'public/assets/js/angular/cdashCoverageGraph.js');
-mix.copy('resources/js/angular/cdashFilters.js', 'public/assets/js/angular/cdashFilters.js');
-mix.copy('resources/js/angular/cdashViewCoverage.js', 'public/assets/js/angular/cdashViewCoverage.js');
 
 // Boilerplate.
 mix.js('resources/js/vue/app.js', 'public/assets/js').vue();

@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Build;
+
 //
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
@@ -104,7 +106,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
         $buildid = $jsonobj['coverages'][0]['buildid'];
 
         // Verify coverage log.
-        $this->connect($this->url . '/ajax/getviewcoverage.php?sEcho=1&iColumns=6&sColumns=&iDisplayStart=0&iDisplayLength=25&mDataProp_0=0&mDataProp_1=1&mDataProp_2=2&mDataProp_3=3&mDataProp_4=4&mDataProp_5=5&sSearch=&bRegex=false&sSearch_0=&bRegex_0=false&bSearchable_0=true&sSearch_1=&bRegex_1=false&bSearchable_1=true&sSearch_2=&bRegex_2=false&bSearchable_2=true&sSearch_3=&bRegex_3=false&bSearchable_3=true&sSearch_4=&bRegex_4=false&bSearchable_4=true&sSearch_5=&bRegex_5=false&bSearchable_5=true&iSortCol_0=2&sSortDir_0=asc&iSortingCols=1&bSortable_0=true&bSortable_1=true&bSortable_2=true&bSortable_3=true&bSortable_4=true&bSortable_5=true&buildid=' . $buildid . '&status=4&nlow=2&nmedium=3&nsatisfactory=43&ncomplete=32&metricerror=0.49&metricpass=0.7&userid=1&displaylabels=0');
+        $this->assertTrue(Build::findOrFail((int) $buildid)->coverage()->count() > 0);
 
         $this->assertTrue(true, "Submission of $file has succeeded");
     }
