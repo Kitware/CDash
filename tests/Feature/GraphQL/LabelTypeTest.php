@@ -200,4 +200,64 @@ class LabelTypeTest extends TestCase
             ],
         ]);
     }
+
+    public function testDynamicAnalysisRelationship(): void
+    {
+        $build = $this->project->builds()->create([
+            'name' => 'build1',
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        $da = $build->dynamicAnalyses()->create([
+            'log' => Str::uuid()->toString(),
+        ]);
+
+        $this->labels['label1'] = $da->labels()->create([
+            'text' => Str::uuid()->toString(),
+        ]);
+
+        $this->graphQL('
+            query build($id: ID) {
+                build(id: $id) {
+                    dynamicAnalyses {
+                        edges {
+                            node {
+                                labels {
+                                    edges {
+                                        node {
+                                            text
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        ', [
+            'id' => $build->id,
+        ])->assertExactJson([
+            'data' => [
+                'build' => [
+                    'dynamicAnalyses' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'labels' => [
+                                        'edges' => [
+                                            [
+                                                'node' => [
+                                                    'text' => $this->labels['label1']->text,
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+    }
 }

@@ -535,6 +535,10 @@ type Build {
   subProject: SubProject! @belongsTo
 
   configure: Configure @hasOneThrough
+
+  dynamicAnalyses(
+    filters: _ @filter
+  ): [DynamicAnalysis!]! @hasMany(type: CONNECTION) @orderBy(column: "id", direction: ASC)
 }
 
 
@@ -928,4 +932,39 @@ type SubProject {
   id: ID!
 
   name: String!
+}
+
+
+type DynamicAnalysis {
+  "Unique primary key."
+  id: ID!
+
+  status: String! @filterable
+
+  checker: String! @filterable
+
+  name: String! @filterable
+
+  path: String! @filterable
+
+  fullCommandLine: String! @rename(attribute: "fullcommandline") @filterable
+
+  log: String!
+
+  "This relationship is deliberately not paginated because we expect users to want all defects all the time."
+  defects: [DynamicAnalysisDefect!]! @hasMany @orderBy(column: "id", direction: DESC)
+
+  labels(
+    filters: _ @filter
+  ): [Label!]! @belongsToMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)
+}
+
+
+type DynamicAnalysisDefect {
+  "Unique primary key."
+  id: ID!
+
+  type: String!
+
+  value: Int!
 }
