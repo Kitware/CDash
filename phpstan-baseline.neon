@@ -2881,18 +2881,6 @@ parameters:
 			path: app/Http/Submission/Handlers/AbstractXmlHandler.php
 
 		-
-			rawMessage: Property App\Http\Submission\Handlers\AbstractXmlHandler::$ModelFactory has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/Http/Submission/Handlers/AbstractXmlHandler.php
-
-		-
-			rawMessage: Property App\Http\Submission\Handlers\AbstractXmlHandler::$SubProjectName has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/Http/Submission/Handlers/AbstractXmlHandler.php
-
-		-
 			rawMessage: Access to an undefined property object::$details.
 			identifier: property.notFound
 			count: 1
@@ -2976,6 +2964,12 @@ parameters:
 		-
 			rawMessage: 'Cannot access offset int<min, -1>|int<1, max>|non-falsy-string on mixed.'
 			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Http/Submission/Handlers/BazelJSONHandler.php
+
+		-
+			rawMessage: Class App\Http\Submission\Handlers\BazelJSONHandler has an uninitialized property $ParentBuild. Give it default value or assign it in the constructor.
+			identifier: property.uninitialized
 			count: 1
 			path: app/Http/Submission/Handlers/BazelJSONHandler.php
 
@@ -3112,6 +3106,12 @@ parameters:
 			path: app/Http/Submission/Handlers/BazelJSONHandler.php
 
 		-
+			rawMessage: 'Only numeric types are allowed in +, int|false given on the left side.'
+			identifier: plus.leftNonNumeric
+			count: 3
+			path: app/Http/Submission/Handlers/BazelJSONHandler.php
+
+		-
 			rawMessage: 'Parameter #1 $array of function array_keys expects array, mixed given.'
 			identifier: argument.type
 			count: 1
@@ -3148,20 +3148,14 @@ parameters:
 			path: app/Http/Submission/Handlers/BazelJSONHandler.php
 
 		-
-			rawMessage: Property App\Http\Submission\Handlers\BazelJSONHandler::$BuildErrors has no type specified.
-			identifier: missingType.property
+			rawMessage: Possibly invalid array key type mixed.
+			identifier: offsetAccess.invalidOffset
 			count: 1
 			path: app/Http/Submission/Handlers/BazelJSONHandler.php
 
 		-
-			rawMessage: Property App\Http\Submission\Handlers\BazelJSONHandler::$Builds has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/Http/Submission/Handlers/BazelJSONHandler.php
-
-		-
-			rawMessage: Property App\Http\Submission\Handlers\BazelJSONHandler::$CommandLine has no type specified.
-			identifier: missingType.property
+			rawMessage: Property App\Http\Submission\Handlers\BazelJSONHandler::$BuildErrors type has no value type specified in iterable type array.
+			identifier: missingType.iterableValue
 			count: 1
 			path: app/Http/Submission/Handlers/BazelJSONHandler.php
 
@@ -3172,62 +3166,32 @@ parameters:
 			path: app/Http/Submission/Handlers/BazelJSONHandler.php
 
 		-
-			rawMessage: Property App\Http\Submission\Handlers\BazelJSONHandler::$NumTestsFailed has no type specified.
-			identifier: missingType.property
+			rawMessage: Property App\Http\Submission\Handlers\BazelJSONHandler::$NumTestsFailed type has no value type specified in iterable type array.
+			identifier: missingType.iterableValue
 			count: 1
 			path: app/Http/Submission/Handlers/BazelJSONHandler.php
 
 		-
-			rawMessage: Property App\Http\Submission\Handlers\BazelJSONHandler::$NumTestsNotRun has no type specified.
-			identifier: missingType.property
+			rawMessage: Property App\Http\Submission\Handlers\BazelJSONHandler::$NumTestsNotRun type has no value type specified in iterable type array.
+			identifier: missingType.iterableValue
 			count: 1
 			path: app/Http/Submission/Handlers/BazelJSONHandler.php
 
 		-
-			rawMessage: Property App\Http\Submission\Handlers\BazelJSONHandler::$NumTestsPassed has no type specified.
-			identifier: missingType.property
+			rawMessage: Property App\Http\Submission\Handlers\BazelJSONHandler::$NumTestsPassed type has no value type specified in iterable type array.
+			identifier: missingType.iterableValue
 			count: 1
 			path: app/Http/Submission/Handlers/BazelJSONHandler.php
 
 		-
-			rawMessage: Property App\Http\Submission\Handlers\BazelJSONHandler::$ParentBuild has no type specified.
-			identifier: missingType.property
+			rawMessage: Property App\Http\Submission\Handlers\BazelJSONHandler::$Tests type has no value type specified in iterable type array.
+			identifier: missingType.iterableValue
 			count: 1
 			path: app/Http/Submission/Handlers/BazelJSONHandler.php
 
 		-
-			rawMessage: Property App\Http\Submission\Handlers\BazelJSONHandler::$ParseConfigure has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/Http/Submission/Handlers/BazelJSONHandler.php
-
-		-
-			rawMessage: Property App\Http\Submission\Handlers\BazelJSONHandler::$RecordingTestOutput has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/Http/Submission/Handlers/BazelJSONHandler.php
-
-		-
-			rawMessage: Property App\Http\Submission\Handlers\BazelJSONHandler::$RecordingTestSummary has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/Http/Submission/Handlers/BazelJSONHandler.php
-
-		-
-			rawMessage: Property App\Http\Submission\Handlers\BazelJSONHandler::$TestName has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/Http/Submission/Handlers/BazelJSONHandler.php
-
-		-
-			rawMessage: Property App\Http\Submission\Handlers\BazelJSONHandler::$Tests has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/Http/Submission/Handlers/BazelJSONHandler.php
-
-		-
-			rawMessage: Property App\Http\Submission\Handlers\BazelJSONHandler::$TestsOutput has no type specified.
-			identifier: missingType.property
+			rawMessage: Property App\Http\Submission\Handlers\BazelJSONHandler::$TestsOutput type has no value type specified in iterable type array.
+			identifier: missingType.iterableValue
 			count: 1
 			path: app/Http/Submission/Handlers/BazelJSONHandler.php
 
@@ -3250,20 +3214,8 @@ parameters:
 			path: app/Http/Submission/Handlers/BuildHandler.php
 
 		-
-			rawMessage: 'Call to an undefined method object::AddLabel().'
-			identifier: method.notFound
-			count: 1
-			path: app/Http/Submission/Handlers/BuildHandler.php
-
-		-
 			rawMessage: 'Call to function in_array() requires parameter #3 to be set.'
 			identifier: function.strict
-			count: 1
-			path: app/Http/Submission/Handlers/BuildHandler.php
-
-		-
-			rawMessage: 'Cannot access offset '''' on 0|0.0|''''|''0''|array{}|false|null.'
-			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: app/Http/Submission/Handlers/BuildHandler.php
 
@@ -3298,7 +3250,19 @@ parameters:
 			path: app/Http/Submission/Handlers/BuildHandler.php
 
 		-
+			rawMessage: Class App\Http\Submission\Handlers\BuildHandler has an uninitialized property $Error. Give it default value or assign it in the constructor.
+			identifier: property.uninitialized
+			count: 1
+			path: app/Http/Submission/Handlers/BuildHandler.php
+
+		-
 			rawMessage: Class App\Http\Submission\Handlers\BuildHandler has an uninitialized property $Generator. Give it default value or assign it in the constructor.
+			identifier: property.uninitialized
+			count: 1
+			path: app/Http/Submission/Handlers/BuildHandler.php
+
+		-
+			rawMessage: Class App\Http\Submission\Handlers\BuildHandler has an uninitialized property $Label. Give it default value or assign it in the constructor.
 			identifier: property.uninitialized
 			count: 1
 			path: app/Http/Submission/Handlers/BuildHandler.php
@@ -3382,87 +3346,39 @@ parameters:
 			path: app/Http/Submission/Handlers/BuildHandler.php
 
 		-
-			rawMessage: Property App\Http\Submission\Handlers\BuildHandler::$BuildCommand has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/Http/Submission/Handlers/BuildHandler.php
-
-		-
-			rawMessage: Property App\Http\Submission\Handlers\BuildHandler::$BuildGroup has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/Http/Submission/Handlers/BuildHandler.php
-
-		-
-			rawMessage: Property App\Http\Submission\Handlers\BuildHandler::$BuildGroup is unused.
-			identifier: property.unused
-			count: 1
-			path: app/Http/Submission/Handlers/BuildHandler.php
-
-		-
 			rawMessage: Property App\Http\Submission\Handlers\BuildHandler::$BuildInformation type has no value type specified in iterable type array.
 			identifier: missingType.iterableValue
 			count: 1
 			path: app/Http/Submission/Handlers/BuildHandler.php
 
 		-
-			rawMessage: Property App\Http\Submission\Handlers\BuildHandler::$Builds has no type specified.
-			identifier: missingType.property
+			rawMessage: Property App\Http\Submission\Handlers\BuildHandler::$Builds type has no value type specified in iterable type array.
+			identifier: missingType.iterableValue
 			count: 1
 			path: app/Http/Submission/Handlers/BuildHandler.php
 
 		-
-			rawMessage: Property App\Http\Submission\Handlers\BuildHandler::$EndTimeStamp has no type specified.
-			identifier: missingType.property
+			rawMessage: Property App\Http\Submission\Handlers\BuildHandler::$Labels type has no value type specified in iterable type array.
+			identifier: missingType.iterableValue
 			count: 1
 			path: app/Http/Submission/Handlers/BuildHandler.php
 
 		-
-			rawMessage: Property App\Http\Submission\Handlers\BuildHandler::$Error has no type specified.
-			identifier: missingType.property
+			rawMessage: Property App\Http\Submission\Handlers\BuildHandler::$SubProjects type has no value type specified in iterable type array.
+			identifier: missingType.iterableValue
 			count: 1
 			path: app/Http/Submission/Handlers/BuildHandler.php
 
 		-
-			rawMessage: Property App\Http\Submission\Handlers\BuildHandler::$ErrorSubProjectName has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/Http/Submission/Handlers/BuildHandler.php
-
-		-
-			rawMessage: Property App\Http\Submission\Handlers\BuildHandler::$Label has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/Http/Submission/Handlers/BuildHandler.php
-
-		-
-			rawMessage: Property App\Http\Submission\Handlers\BuildHandler::$Labels has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/Http/Submission/Handlers/BuildHandler.php
-
-		-
-			rawMessage: Property App\Http\Submission\Handlers\BuildHandler::$PullRequest has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/Http/Submission/Handlers/BuildHandler.php
-
-		-
-			rawMessage: Property App\Http\Submission\Handlers\BuildHandler::$StartTimeStamp has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/Http/Submission/Handlers/BuildHandler.php
-
-		-
-			rawMessage: Property App\Http\Submission\Handlers\BuildHandler::$SubProjects has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/Http/Submission/Handlers/BuildHandler.php
-
-		-
-			rawMessage: Variable property access on mixed.
+			rawMessage: Variable property access on CDash\Model\BuildError|CDash\Model\BuildFailure.
 			identifier: property.dynamicName
-			count: 12
+			count: 3
+			path: app/Http/Submission/Handlers/BuildHandler.php
+
+		-
+			rawMessage: Variable property access on CDash\Model\BuildFailure.
+			identifier: property.dynamicName
+			count: 9
 			path: app/Http/Submission/Handlers/BuildHandler.php
 
 		-
@@ -3520,7 +3436,19 @@ parameters:
 			path: app/Http/Submission/Handlers/ConfigureHandler.php
 
 		-
+			rawMessage: Class App\Http\Submission\Handlers\ConfigureHandler has an uninitialized property $Configure. Give it default value or assign it in the constructor.
+			identifier: property.uninitialized
+			count: 1
+			path: app/Http/Submission/Handlers/ConfigureHandler.php
+
+		-
 			rawMessage: Class App\Http\Submission\Handlers\ConfigureHandler has an uninitialized property $Generator. Give it default value or assign it in the constructor.
+			identifier: property.uninitialized
+			count: 1
+			path: app/Http/Submission/Handlers/ConfigureHandler.php
+
+		-
+			rawMessage: Class App\Http\Submission\Handlers\ConfigureHandler has an uninitialized property $Label. Give it default value or assign it in the constructor.
 			identifier: property.uninitialized
 			count: 1
 			path: app/Http/Submission/Handlers/ConfigureHandler.php
@@ -3604,18 +3532,6 @@ parameters:
 			path: app/Http/Submission/Handlers/ConfigureHandler.php
 
 		-
-			rawMessage: 'Parameter #1 $buildConfigure of method CDash\Model\Build::SetBuildConfigure() expects CDash\Model\BuildConfigure, object given.'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Submission/Handlers/ConfigureHandler.php
-
-		-
-			rawMessage: 'Parameter #1 $duration of method CDash\Model\Build::SetConfigureDuration() expects int, (float|int) given.'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Submission/Handlers/ConfigureHandler.php
-
-		-
 			rawMessage: Property App\Http\Submission\Handlers\ConfigureHandler::$BuildInformation type has no value type specified in iterable type array.
 			identifier: missingType.iterableValue
 			count: 1
@@ -3624,36 +3540,6 @@ parameters:
 		-
 			rawMessage: Property App\Http\Submission\Handlers\ConfigureHandler::$Builds type has no value type specified in iterable type array.
 			identifier: missingType.iterableValue
-			count: 1
-			path: app/Http/Submission/Handlers/ConfigureHandler.php
-
-		-
-			rawMessage: Property App\Http\Submission\Handlers\ConfigureHandler::$Configure has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/Http/Submission/Handlers/ConfigureHandler.php
-
-		-
-			rawMessage: Property App\Http\Submission\Handlers\ConfigureHandler::$EndTimeStamp has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/Http/Submission/Handlers/ConfigureHandler.php
-
-		-
-			rawMessage: Property App\Http\Submission\Handlers\ConfigureHandler::$Label has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/Http/Submission/Handlers/ConfigureHandler.php
-
-		-
-			rawMessage: Property App\Http\Submission\Handlers\ConfigureHandler::$PullRequest has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/Http/Submission/Handlers/ConfigureHandler.php
-
-		-
-			rawMessage: Property App\Http\Submission\Handlers\ConfigureHandler::$StartTimeStamp has no type specified.
-			identifier: missingType.property
 			count: 1
 			path: app/Http/Submission/Handlers/ConfigureHandler.php
 
@@ -3691,7 +3577,19 @@ parameters:
 			path: app/Http/Submission/Handlers/CoverageHandler.php
 
 		-
+			rawMessage: Class App\Http\Submission\Handlers\CoverageHandler has an uninitialized property $EndTimeStamp. Give it default value or assign it in the constructor.
+			identifier: property.uninitialized
+			count: 1
+			path: app/Http/Submission/Handlers/CoverageHandler.php
+
+		-
 			rawMessage: Class App\Http\Submission\Handlers\CoverageHandler has an uninitialized property $Label. Give it default value or assign it in the constructor.
+			identifier: property.uninitialized
+			count: 1
+			path: app/Http/Submission/Handlers/CoverageHandler.php
+
+		-
+			rawMessage: Class App\Http\Submission\Handlers\CoverageHandler has an uninitialized property $StartTimeStamp. Give it default value or assign it in the constructor.
 			identifier: property.uninitialized
 			count: 1
 			path: app/Http/Submission/Handlers/CoverageHandler.php
@@ -3763,18 +3661,6 @@ parameters:
 			path: app/Http/Submission/Handlers/CoverageHandler.php
 
 		-
-			rawMessage: Property App\Http\Submission\Handlers\CoverageHandler::$EndTimeStamp has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/Http/Submission/Handlers/CoverageHandler.php
-
-		-
-			rawMessage: Property App\Http\Submission\Handlers\CoverageHandler::$StartTimeStamp has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/Http/Submission/Handlers/CoverageHandler.php
-
-		-
 			rawMessage: Class App\Http\Submission\Handlers\CoverageJUnitHandler has an uninitialized property $Coverage. Give it default value or assign it in the constructor.
 			identifier: property.uninitialized
 			count: 1
@@ -3787,7 +3673,19 @@ parameters:
 			path: app/Http/Submission/Handlers/CoverageJUnitHandler.php
 
 		-
+			rawMessage: Class App\Http\Submission\Handlers\CoverageJUnitHandler has an uninitialized property $EndTimeStamp. Give it default value or assign it in the constructor.
+			identifier: property.uninitialized
+			count: 1
+			path: app/Http/Submission/Handlers/CoverageJUnitHandler.php
+
+		-
 			rawMessage: Class App\Http\Submission\Handlers\CoverageJUnitHandler has an uninitialized property $Label. Give it default value or assign it in the constructor.
+			identifier: property.uninitialized
+			count: 1
+			path: app/Http/Submission/Handlers/CoverageJUnitHandler.php
+
+		-
+			rawMessage: Class App\Http\Submission\Handlers\CoverageJUnitHandler has an uninitialized property $StartTimeStamp. Give it default value or assign it in the constructor.
 			identifier: property.uninitialized
 			count: 1
 			path: app/Http/Submission/Handlers/CoverageJUnitHandler.php
@@ -3847,18 +3745,6 @@ parameters:
 			path: app/Http/Submission/Handlers/CoverageJUnitHandler.php
 
 		-
-			rawMessage: Property App\Http\Submission\Handlers\CoverageJUnitHandler::$EndTimeStamp has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/Http/Submission/Handlers/CoverageJUnitHandler.php
-
-		-
-			rawMessage: Property App\Http\Submission\Handlers\CoverageJUnitHandler::$StartTimeStamp has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/Http/Submission/Handlers/CoverageJUnitHandler.php
-
-		-
 			rawMessage: Access to an undefined property object::$Id.
 			identifier: property.notFound
 			count: 1
@@ -3887,6 +3773,18 @@ parameters:
 
 		-
 			rawMessage: Class App\Http\Submission\Handlers\CoverageLogHandler has an uninitialized property $CurrentCoverageFileLog. Give it default value or assign it in the constructor.
+			identifier: property.uninitialized
+			count: 1
+			path: app/Http/Submission/Handlers/CoverageLogHandler.php
+
+		-
+			rawMessage: Class App\Http\Submission\Handlers\CoverageLogHandler has an uninitialized property $EndTimeStamp. Give it default value or assign it in the constructor.
+			identifier: property.uninitialized
+			count: 1
+			path: app/Http/Submission/Handlers/CoverageLogHandler.php
+
+		-
+			rawMessage: Class App\Http\Submission\Handlers\CoverageLogHandler has an uninitialized property $StartTimeStamp. Give it default value or assign it in the constructor.
 			identifier: property.uninitialized
 			count: 1
 			path: app/Http/Submission/Handlers/CoverageLogHandler.php
@@ -3948,18 +3846,6 @@ parameters:
 		-
 			rawMessage: Property App\Http\Submission\Handlers\CoverageLogHandler::$CoverageFiles type has no value type specified in iterable type array.
 			identifier: missingType.iterableValue
-			count: 1
-			path: app/Http/Submission/Handlers/CoverageLogHandler.php
-
-		-
-			rawMessage: Property App\Http\Submission\Handlers\CoverageLogHandler::$EndTimeStamp has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/Http/Submission/Handlers/CoverageLogHandler.php
-
-		-
-			rawMessage: Property App\Http\Submission\Handlers\CoverageLogHandler::$StartTimeStamp has no type specified.
-			identifier: missingType.property
 			count: 1
 			path: app/Http/Submission/Handlers/CoverageLogHandler.php
 
@@ -4066,13 +3952,13 @@ parameters:
 			path: app/Http/Submission/Handlers/DynamicAnalysisHandler.php
 
 		-
-			rawMessage: 'Cannot access offset mixed on 0|0.0|''''|''0''|array{}|false|null.'
-			identifier: offsetAccess.nonOffsetAccessible
+			rawMessage: Class App\Http\Submission\Handlers\DynamicAnalysisHandler has an uninitialized property $BuildInformation. Give it default value or assign it in the constructor.
+			identifier: property.uninitialized
 			count: 1
 			path: app/Http/Submission/Handlers/DynamicAnalysisHandler.php
 
 		-
-			rawMessage: Class App\Http\Submission\Handlers\DynamicAnalysisHandler has an uninitialized property $BuildInformation. Give it default value or assign it in the constructor.
+			rawMessage: Class App\Http\Submission\Handlers\DynamicAnalysisHandler has an uninitialized property $Checker. Give it default value or assign it in the constructor.
 			identifier: property.uninitialized
 			count: 1
 			path: app/Http/Submission/Handlers/DynamicAnalysisHandler.php
@@ -4085,6 +3971,24 @@ parameters:
 
 		-
 			rawMessage: Class App\Http\Submission\Handlers\DynamicAnalysisHandler has an uninitialized property $DynamicAnalysisDefect. Give it default value or assign it in the constructor.
+			identifier: property.uninitialized
+			count: 1
+			path: app/Http/Submission/Handlers/DynamicAnalysisHandler.php
+
+		-
+			rawMessage: Class App\Http\Submission\Handlers\DynamicAnalysisHandler has an uninitialized property $EndTimeStamp. Give it default value or assign it in the constructor.
+			identifier: property.uninitialized
+			count: 1
+			path: app/Http/Submission/Handlers/DynamicAnalysisHandler.php
+
+		-
+			rawMessage: Class App\Http\Submission\Handlers\DynamicAnalysisHandler has an uninitialized property $Label. Give it default value or assign it in the constructor.
+			identifier: property.uninitialized
+			count: 1
+			path: app/Http/Submission/Handlers/DynamicAnalysisHandler.php
+
+		-
+			rawMessage: Class App\Http\Submission\Handlers\DynamicAnalysisHandler has an uninitialized property $StartTimeStamp. Give it default value or assign it in the constructor.
 			identifier: property.uninitialized
 			count: 1
 			path: app/Http/Submission/Handlers/DynamicAnalysisHandler.php
@@ -4162,50 +4066,26 @@ parameters:
 			path: app/Http/Submission/Handlers/DynamicAnalysisHandler.php
 
 		-
-			rawMessage: Property App\Http\Submission\Handlers\DynamicAnalysisHandler::$Builds has no type specified.
-			identifier: missingType.property
+			rawMessage: Property App\Http\Submission\Handlers\DynamicAnalysisHandler::$Builds type has no value type specified in iterable type array.
+			identifier: missingType.iterableValue
 			count: 1
 			path: app/Http/Submission/Handlers/DynamicAnalysisHandler.php
 
 		-
-			rawMessage: Property App\Http\Submission\Handlers\DynamicAnalysisHandler::$Checker has no type specified.
-			identifier: missingType.property
+			rawMessage: Property App\Http\Submission\Handlers\DynamicAnalysisHandler::$DynamicAnalysisSummaries type has no value type specified in iterable type array.
+			identifier: missingType.iterableValue
 			count: 1
 			path: app/Http/Submission/Handlers/DynamicAnalysisHandler.php
 
 		-
-			rawMessage: Property App\Http\Submission\Handlers\DynamicAnalysisHandler::$DynamicAnalysisSummaries has no type specified.
-			identifier: missingType.property
+			rawMessage: Property App\Http\Submission\Handlers\DynamicAnalysisHandler::$SubProjects type has no value type specified in iterable type array.
+			identifier: missingType.iterableValue
 			count: 1
 			path: app/Http/Submission/Handlers/DynamicAnalysisHandler.php
 
 		-
-			rawMessage: Property App\Http\Submission\Handlers\DynamicAnalysisHandler::$EndTimeStamp has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/Http/Submission/Handlers/DynamicAnalysisHandler.php
-
-		-
-			rawMessage: Property App\Http\Submission\Handlers\DynamicAnalysisHandler::$Label has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/Http/Submission/Handlers/DynamicAnalysisHandler.php
-
-		-
-			rawMessage: Property App\Http\Submission\Handlers\DynamicAnalysisHandler::$StartTimeStamp has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/Http/Submission/Handlers/DynamicAnalysisHandler.php
-
-		-
-			rawMessage: Property App\Http\Submission\Handlers\DynamicAnalysisHandler::$SubProjects has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/Http/Submission/Handlers/DynamicAnalysisHandler.php
-
-		-
-			rawMessage: Property App\Http\Submission\Handlers\DynamicAnalysisHandler::$TestSubProjectName has no type specified.
-			identifier: missingType.property
+			rawMessage: 'Property App\Http\Submission\Handlers\DynamicAnalysisHandler::$TestSubProjectName (string) does not accept (int|string).'
+			identifier: assign.propertyType
 			count: 1
 			path: app/Http/Submission/Handlers/DynamicAnalysisHandler.php
 
@@ -4360,12 +4240,6 @@ parameters:
 			path: app/Http/Submission/Handlers/GcovTarHandler.php
 
 		-
-			rawMessage: Property App\Http\Submission\Handlers\GcovTarHandler::$BinaryDirectory has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/Http/Submission/Handlers/GcovTarHandler.php
-
-		-
 			rawMessage: Property App\Http\Submission\Handlers\GcovTarHandler::$Labels type has no value type specified in iterable type array.
 			identifier: missingType.iterableValue
 			count: 1
@@ -4373,12 +4247,6 @@ parameters:
 
 		-
 			rawMessage: Property App\Http\Submission\Handlers\GcovTarHandler::$PreviousAggregateParentId has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/Http/Submission/Handlers/GcovTarHandler.php
-
-		-
-			rawMessage: Property App\Http\Submission\Handlers\GcovTarHandler::$SourceDirectory has no type specified.
 			identifier: missingType.property
 			count: 1
 			path: app/Http/Submission/Handlers/GcovTarHandler.php
@@ -4690,12 +4558,6 @@ parameters:
 			path: app/Http/Submission/Handlers/NoteHandler.php
 
 		-
-			rawMessage: Property App\Http\Submission\Handlers\NoteHandler::$Timestamp has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/Http/Submission/Handlers/NoteHandler.php
-
-		-
 			rawMessage: 'Argument of an invalid type list<string>|false supplied for foreach, only iterables are supported.'
 			identifier: foreach.nonIterable
 			count: 1
@@ -4722,6 +4584,12 @@ parameters:
 		-
 			rawMessage: 'Cannot call method getPath() on mixed.'
 			identifier: method.nonObject
+			count: 1
+			path: app/Http/Submission/Handlers/OpenCoverTarHandler.php
+
+		-
+			rawMessage: Class App\Http\Submission\Handlers\OpenCoverTarHandler has an uninitialized property $currentModule. Give it default value or assign it in the constructor.
+			identifier: property.uninitialized
 			count: 1
 			path: app/Http/Submission/Handlers/OpenCoverTarHandler.php
 
@@ -4918,8 +4786,8 @@ parameters:
 			path: app/Http/Submission/Handlers/OpenCoverTarHandler.php
 
 		-
-			rawMessage: Property App\Http\Submission\Handlers\OpenCoverTarHandler::$currentModule has no type specified.
-			identifier: missingType.property
+			rawMessage: Property App\Http\Submission\Handlers\OpenCoverTarHandler::$currentModule type has no value type specified in iterable type array.
+			identifier: missingType.iterableValue
 			count: 1
 			path: app/Http/Submission/Handlers/OpenCoverTarHandler.php
 
@@ -5125,6 +4993,12 @@ parameters:
 			path: app/Http/Submission/Handlers/TestingHandler.php
 
 		-
+			rawMessage: Class App\Http\Submission\Handlers\TestingHandler has an uninitialized property $Label. Give it default value or assign it in the constructor.
+			identifier: property.uninitialized
+			count: 1
+			path: app/Http/Submission/Handlers/TestingHandler.php
+
+		-
 			rawMessage: Class App\Http\Submission\Handlers\TestingHandler has an uninitialized property $Labels. Give it default value or assign it in the constructor.
 			identifier: property.uninitialized
 			count: 1
@@ -5132,6 +5006,12 @@ parameters:
 
 		-
 			rawMessage: Class App\Http\Submission\Handlers\TestingHandler has an uninitialized property $TestCreator. Give it default value or assign it in the constructor.
+			identifier: property.uninitialized
+			count: 1
+			path: app/Http/Submission/Handlers/TestingHandler.php
+
+		-
+			rawMessage: Class App\Http\Submission\Handlers\TestingHandler has an uninitialized property $TestMeasurement. Give it default value or assign it in the constructor.
 			identifier: property.uninitialized
 			count: 1
 			path: app/Http/Submission/Handlers/TestingHandler.php
@@ -5203,6 +5083,18 @@ parameters:
 			path: app/Http/Submission/Handlers/TestingHandler.php
 
 		-
+			rawMessage: 'Only booleans are allowed in &&, string given on the right side.'
+			identifier: booleanAnd.rightNotBoolean
+			count: 1
+			path: app/Http/Submission/Handlers/TestingHandler.php
+
+		-
+			rawMessage: 'Only booleans are allowed in an elseif condition, string given.'
+			identifier: elseif.condNotBoolean
+			count: 1
+			path: app/Http/Submission/Handlers/TestingHandler.php
+
+		-
 			rawMessage: 'Only booleans are allowed in an if condition, array given.'
 			identifier: if.condNotBoolean
 			count: 1
@@ -5215,26 +5107,8 @@ parameters:
 			path: app/Http/Submission/Handlers/TestingHandler.php
 
 		-
-			rawMessage: 'Parameter #1 $duration of method CDash\Model\Build::UpdateTestDuration() expects int, (float|int) given.'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Submission/Handlers/TestingHandler.php
-
-		-
 			rawMessage: Property App\Http\Submission\Handlers\TestingHandler::$BuildInformation type has no value type specified in iterable type array.
 			identifier: missingType.iterableValue
-			count: 1
-			path: app/Http/Submission/Handlers/TestingHandler.php
-
-		-
-			rawMessage: Property App\Http\Submission\Handlers\TestingHandler::$EndTimeStamp has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/Http/Submission/Handlers/TestingHandler.php
-
-		-
-			rawMessage: Property App\Http\Submission\Handlers\TestingHandler::$Label has no type specified.
-			identifier: missingType.property
 			count: 1
 			path: app/Http/Submission/Handlers/TestingHandler.php
 
@@ -5269,19 +5143,7 @@ parameters:
 			path: app/Http/Submission/Handlers/TestingHandler.php
 
 		-
-			rawMessage: Property App\Http\Submission\Handlers\TestingHandler::$StartTimeStamp has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/Http/Submission/Handlers/TestingHandler.php
-
-		-
 			rawMessage: Property App\Http\Submission\Handlers\TestingHandler::$SubProjects has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/Http/Submission/Handlers/TestingHandler.php
-
-		-
-			rawMessage: Property App\Http\Submission\Handlers\TestingHandler::$TestMeasurement has no type specified.
 			identifier: missingType.property
 			count: 1
 			path: app/Http/Submission/Handlers/TestingHandler.php
@@ -5291,6 +5153,18 @@ parameters:
 			identifier: missingType.property
 			count: 1
 			path: app/Http/Submission/Handlers/TestingHandler.php
+
+		-
+			rawMessage: Class App\Http\Submission\Handlers\TestingJUnitHandler has an uninitialized property $EndTimeStamp. Give it default value or assign it in the constructor.
+			identifier: property.uninitialized
+			count: 1
+			path: app/Http/Submission/Handlers/TestingJUnitHandler.php
+
+		-
+			rawMessage: Class App\Http\Submission\Handlers\TestingJUnitHandler has an uninitialized property $StartTimeStamp. Give it default value or assign it in the constructor.
+			identifier: property.uninitialized
+			count: 1
+			path: app/Http/Submission/Handlers/TestingJUnitHandler.php
 
 		-
 			rawMessage: Class App\Http\Submission\Handlers\TestingJUnitHandler has an uninitialized property $TestCreator. Give it default value or assign it in the constructor.
@@ -5341,6 +5215,12 @@ parameters:
 			path: app/Http/Submission/Handlers/TestingJUnitHandler.php
 
 		-
+			rawMessage: 'Method App\Http\Submission\Handlers\TestingJUnitHandler::startElement() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
+			count: 1
+			path: app/Http/Submission/Handlers/TestingJUnitHandler.php
+
+		-
 			rawMessage: 'Method App\Http\Submission\Handlers\TestingJUnitHandler::text() has parameter $data with no type specified.'
 			identifier: missingType.parameter
 			count: 1
@@ -5349,12 +5229,6 @@ parameters:
 		-
 			rawMessage: 'Method App\Http\Submission\Handlers\TestingJUnitHandler::text() has parameter $parser with no type specified.'
 			identifier: missingType.parameter
-			count: 1
-			path: app/Http/Submission/Handlers/TestingJUnitHandler.php
-
-		-
-			rawMessage: 'Only numeric types are allowed in +, int|false given on the left side.'
-			identifier: plus.leftNonNumeric
 			count: 1
 			path: app/Http/Submission/Handlers/TestingJUnitHandler.php
 
@@ -5395,26 +5269,26 @@ parameters:
 			path: app/Http/Submission/Handlers/TestingJUnitHandler.php
 
 		-
-			rawMessage: Property App\Http\Submission\Handlers\TestingJUnitHandler::$EndTimeStamp has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/Http/Submission/Handlers/TestingJUnitHandler.php
-
-		-
-			rawMessage: Property App\Http\Submission\Handlers\TestingJUnitHandler::$StartTimeStamp has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/Http/Submission/Handlers/TestingJUnitHandler.php
-
-		-
-			rawMessage: Property App\Http\Submission\Handlers\TestingJUnitHandler::$TotalTestDuration has no type specified.
-			identifier: missingType.property
+			rawMessage: 'Property App\Http\Submission\Handlers\TestingJUnitHandler::$StartTimeStamp (int) does not accept int|false.'
+			identifier: assign.propertyType
 			count: 1
 			path: app/Http/Submission/Handlers/TestingJUnitHandler.php
 
 		-
 			rawMessage: 'Call to an undefined method CDash\Messaging\Preferences\NotificationPreferencesInterface::get().'
 			identifier: method.notFound
+			count: 1
+			path: app/Http/Submission/Handlers/UpdateHandler.php
+
+		-
+			rawMessage: Class App\Http\Submission\Handlers\UpdateHandler has an uninitialized property $EndTimeStamp. Give it default value or assign it in the constructor.
+			identifier: property.uninitialized
+			count: 1
+			path: app/Http/Submission/Handlers/UpdateHandler.php
+
+		-
+			rawMessage: Class App\Http\Submission\Handlers\UpdateHandler has an uninitialized property $StartTimeStamp. Give it default value or assign it in the constructor.
+			identifier: property.uninitialized
 			count: 1
 			path: app/Http/Submission/Handlers/UpdateHandler.php
 
@@ -5491,20 +5365,14 @@ parameters:
 			path: app/Http/Submission/Handlers/UpdateHandler.php
 
 		-
-			rawMessage: Property App\Http\Submission\Handlers\UpdateHandler::$EndTimeStamp has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/Http/Submission/Handlers/UpdateHandler.php
-
-		-
-			rawMessage: Property App\Http\Submission\Handlers\UpdateHandler::$StartTimeStamp has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/Http/Submission/Handlers/UpdateHandler.php
-
-		-
 			rawMessage: 'Call to function base64_decode() requires parameter #2 to be set.'
 			identifier: function.strict
+			count: 1
+			path: app/Http/Submission/Handlers/UploadHandler.php
+
+		-
+			rawMessage: Class App\Http\Submission\Handlers\UploadHandler has an uninitialized property $Label. Give it default value or assign it in the constructor.
+			identifier: property.uninitialized
 			count: 1
 			path: app/Http/Submission/Handlers/UploadHandler.php
 
@@ -5636,12 +5504,6 @@ parameters:
 
 		-
 			rawMessage: Property App\Http\Submission\Handlers\UploadHandler::$Base64TmpFileWriteHandle has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/Http/Submission/Handlers/UploadHandler.php
-
-		-
-			rawMessage: Property App\Http\Submission\Handlers\UploadHandler::$Label has no type specified.
 			identifier: missingType.property
 			count: 1
 			path: app/Http/Submission/Handlers/UploadHandler.php

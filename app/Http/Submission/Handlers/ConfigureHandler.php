@@ -38,19 +38,19 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
 {
     use UpdatesSiteInformation;
 
-    private $StartTimeStamp = 0;
-    private $EndTimeStamp = 0;
+    private int $StartTimeStamp = 0;
+    private int $EndTimeStamp = 0;
     private array $Builds = [];
     private array $BuildInformation;
     // Map SubProjects to Labels
     private array $SubProjects = [];
-    private $Configure;
-    private $Label;
+    private BuildConfigure $Configure;
+    private Label $Label;
     private bool $Notified = false;
     private string $BuildName;
     private string $BuildStamp;
     private string $Generator;
-    private $PullRequest;
+    private string $PullRequest = '';
     protected static ?string $schema_file = '/app/Validators/Schemas/Configure.xsd';
 
     public function __construct(Project $project)
@@ -75,7 +75,6 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
             $this->BuildStamp = '';
             $this->SubProjectName = '';
             $this->Generator = '';
-            $this->PullRequest = '';
 
             // Fill in the attribute
             foreach ($attributes as $key => $value) {
@@ -86,7 +85,7 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
                 } elseif ($key === 'GENERATOR') {
                     $this->Generator = $value;
                 } elseif ($key === 'CHANGEID') {
-                    $this->PullRequest = $value;
+                    $this->PullRequest = (string) $value;
                 } else {
                     $siteInformation->SetValue($key, $value);
                     switch ($key) {
@@ -226,7 +225,7 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
 
                 // Record configure duration with the build.
                 $duration = $this->EndTimeStamp - $this->StartTimeStamp;
-                $build->SetConfigureDuration((int) $duration, !$all_at_once);
+                $build->SetConfigureDuration($duration, !$all_at_once);
                 if ($all_at_once && !$parent_duration_set) {
                     $parent_build = $this->getModelFactory()->create(Build::class);
                     $parent_build->Id = $build->GetParentId();
@@ -261,10 +260,10 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
         if ($this->currentPathMatches('site.configure.*')) {
             switch ($element) {
                 case 'STARTCONFIGURETIME':
-                    $this->StartTimeStamp = $data;
+                    $this->StartTimeStamp = (int) $data;
                     break;
                 case 'ENDCONFIGURETIME':
-                    $this->EndTimeStamp = $data;
+                    $this->EndTimeStamp = (int) $data;
                     break;
                 case 'BUILDCOMMAND':
                     $this->Configure->Command .= $data;

@@ -41,8 +41,8 @@ use Illuminate\Support\Carbon;
  *  In case of a lot of updates this might take up some memory */
 class UpdateHandler extends AbstractXmlHandler implements ActionableBuildInterface, CommitAuthorHandlerInterface
 {
-    private $StartTimeStamp;
-    private $EndTimeStamp;
+    private int $StartTimeStamp;
+    private int $EndTimeStamp;
     private BuildUpdate $Update;
     private BuildUpdateFile $UpdateFile;
     protected static ?string $schema_file = '/app/Validators/Schemas/Update.xsd';
@@ -169,7 +169,7 @@ class UpdateHandler extends AbstractXmlHandler implements ActionableBuildInterfa
                     $this->Build->SetPullRequest($data);
                     break;
                 case 'ENDTIME':
-                    $this->EndTimeStamp = $data;
+                    $this->EndTimeStamp = (int) $data;
                     break;
                 case 'PATH':
                     $this->Update->Path = $data;
@@ -185,7 +185,7 @@ class UpdateHandler extends AbstractXmlHandler implements ActionableBuildInterfa
                     $this->Site = Site::firstOrCreate(['name' => $sitename], ['name' => $sitename]);
                     break;
                 case 'STARTTIME':
-                    $this->StartTimeStamp = $data;
+                    $this->StartTimeStamp = (int) $data;
                     break;
                 case 'UPDATECOMMAND':
                     $this->Update->Command .= $data;
