@@ -2322,7 +2322,7 @@ export default {
               this.previewLogo = null;
               this.uploadedLogo = null;
               // Use a decache to force the logo to refresh even if the imageid didn't change.
-              const imageid = `${response.data.imageid}&decache=${new Date().getTime()}`;
+              const imageid = `${response.data.imageid}?decache=${new Date().getTime()}`;
               this.cdash.project.ImageId = imageid;
               this.cdash.logoid = imageid;
             }
