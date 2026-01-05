@@ -11260,12 +11260,6 @@ parameters:
 			path: app/cdash/app/Model/Project.php
 
 		-
-			rawMessage: Property CDash\Model\Project::$ImageId has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
 			rawMessage: Property CDash\Model\Project::$Name has no type specified.
 			identifier: missingType.property
 			count: 1
