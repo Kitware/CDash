@@ -25,25 +25,25 @@ use Illuminate\Support\Facades\Auth;
  * @property int $coveragethreshold
  * @property string $testingdataurl
  * @property string $nightlytime
- * @property int $emaillowcoverage
- * @property int $emailtesttimingchanged
- * @property int $emailbrokensubmission
- * @property int $emailredundantfailures
+ * @property bool $emaillowcoverage
+ * @property bool $emailtesttimingchanged
+ * @property bool $emailbrokensubmission
+ * @property bool $emailredundantfailures
  * @property string $cvsviewertype
  * @property int $testtimestd
  * @property int $testtimestdthreshold
- * @property int $showtesttime
+ * @property bool $showtesttime
  * @property int $testtimemaxstatus
  * @property int $emailmaxitems
  * @property int $emailmaxchars
- * @property int $displaylabels
+ * @property bool $displaylabels
  * @property int $autoremovetimeframe
  * @property int $autoremovemaxbuilds
  * @property int $uploadquota Maximum sum of uploaded file sizes (in bytes)
- * @property int $showcoveragecode
- * @property int $sharelabelfilters
- * @property int $authenticatesubmissions
- * @property int $viewsubprojectslink
+ * @property bool $showcoveragecode
+ * @property bool $sharelabelfilters
+ * @property bool $authenticatesubmissions
+ * @property bool $viewsubprojectslink
  * @property ?string $ldapfilter
  * @property ?string $banner
  *
@@ -99,8 +99,17 @@ class Project extends Model
         'id' => 'integer',
         'imageid' => 'integer',
         'public' => 'integer',
+        'emaillowcoverage' => 'boolean',
+        'emailtesttimingchanged' => 'boolean',
+        'emailbrokensubmission' => 'boolean',
+        'emailredundantfailures' => 'boolean',
+        'showtesttime' => 'boolean',
+        'displaylabels' => 'boolean',
         'coveragethreshold' => 'integer',
-        // TODO: figure out boolean vs int issues with the rest of the variables...
+        'showcoveragecode' => 'boolean',
+        'sharelabelfilters' => 'boolean',
+        'authenticatesubmissions' => 'boolean',
+        'viewsubprojectslink' => 'boolean',
     ];
 
     public const PROJECT_ADMIN = 2;
