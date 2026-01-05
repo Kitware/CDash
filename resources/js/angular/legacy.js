@@ -2,9 +2,6 @@
 import './jquery-init.js';
 
 import 'jquery-ui-dist/jquery-ui.js';
-import 'flot/lib/jquery.event.drag.js';
-import 'flot/dist/es5/jquery.flot.js';
-import 'flot/source/jquery.flot.pie.js';
 import 'jquery.cookie/jquery.cookie.js';
 import './bootstrap.min.js';
 import './je_compare.js';
