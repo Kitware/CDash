@@ -303,9 +303,11 @@ export default {
     },
   },
 
-  mounted () {
+  async mounted () {
     // Ensure jQuery is globally available before loading plugins
     window.jQuery = $;
+    await import('flot/dist/es5/jquery.flot');
+    await import('../../angular/je_compare.js');
 
     this.buildtestid = window.location.pathname.split('/').pop();
     let endpoint_path = `/api/v1/testDetails.php?buildtestid=${this.buildtestid}`;
@@ -322,8 +324,6 @@ export default {
       if (this.jeCompareInitialized) {
         return;
       }
-      // eslint-disable-next-line no-undef
-      require('../../angular/je_compare.js');
       $('.je_compare').je_compare({caption: true});
       this.jeCompareInitialized = true;
     },
@@ -486,8 +486,6 @@ export default {
         }
       });
 
-      // eslint-disable-next-line no-undef
-      require('flot/dist/es5/jquery.flot');
       $.plot($('#graph_holder'), chart_data, options);
 
       // Show tooltip on hover.
