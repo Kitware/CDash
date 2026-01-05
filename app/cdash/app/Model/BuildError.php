@@ -47,13 +47,6 @@ class BuildError
             $this->RepeatCount = 0;
         }
 
-        // Compute the crc32
-        if ($this->SourceLine === 0) {
-            $crc32 = crc32($this->Text); // no need for precontext or postcontext, this doesn't work for parallel build
-        } else {
-            $crc32 = crc32($this->Text . $this->SourceFile . $this->SourceLine); // some warnings can be on the same line
-        }
-
         BasicBuildAlert::create([
             'buildid' => (int) $this->BuildId,
             'type' => $this->Type,
@@ -65,7 +58,6 @@ class BuildError
             'postcontext' => $this->PostContext,
             'repeatcount' => (int) $this->RepeatCount,
             'newstatus' => 0,
-            'crc32' => $crc32,
         ]);
     }
 

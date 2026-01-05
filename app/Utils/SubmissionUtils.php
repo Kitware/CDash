@@ -160,25 +160,17 @@ class SubmissionUtils
             UPDATE builderror
             SET newstatus=1
             WHERE
-                buildid=:buildid
-                AND type=:type
-                AND crc32 IN (
-                    SELECT crc32
-                    FROM (
-                        SELECT crc32
-                        FROM builderror
-                        WHERE
-                            buildid=:buildid
-                            AND type=:type
-                    ) AS builderrora
-                    LEFT JOIN (
-                        SELECT crc32 AS crc32b
-                        FROM builderror
-                        WHERE
-                            buildid=:previousbuildid
-                            AND type=:type
-                    ) AS builderrorb ON builderrora.crc32=builderrorb.crc32b
-                    WHERE builderrorb.crc32b IS NULL
+                buildid = :buildid
+                AND type = :type
+                AND NOT EXISTS(
+                    SELECT *
+                    FROM builderror builderror_previous
+                    WHERE
+                        builderror_previous.buildid = :previousbuildid
+                        AND builderror_previous.type = builderror.type
+                        AND builderror_previous.text = builderror.text
+                        AND builderror_previous.sourcefile = builderror.sourcefile
+                        AND builderror_previous.sourceline = builderror.sourceline
                 )
         ', [
             'buildid' => $buildid,
@@ -247,12 +239,23 @@ class SubmissionUtils
         $npositives += $positives_array[0];
 
         // Count how many build defects were fixed since the previous build.
-        $stmt = $pdo->prepare(
-            'SELECT COUNT(*) FROM
-        (SELECT crc32 FROM builderror WHERE buildid=:previousbuildid AND type=:type) AS builderrora
-        LEFT JOIN (SELECT crc32 as crc32b FROM builderror WHERE buildid=:buildid AND type=:type) AS builderrorb
-        ON builderrora.crc32=builderrorb.crc32b
-        WHERE builderrorb.crc32b IS NULL');
+        $stmt = $pdo->prepare('
+            SELECT COUNT(*)
+            FROM builderror builderror_previous
+            WHERE
+                builderror_previous.buildid = :previousbuildid
+                AND builderror_previous.type = :type
+                AND NOT EXISTS(
+                    SELECT *
+                    FROM builderror
+                    WHERE
+                        builderror.buildid = :buildid
+                        AND builderror_previous.type = builderror.type
+                        AND builderror_previous.text = builderror.text
+                        AND builderror_previous.sourcefile = builderror.sourcefile
+                        AND builderror_previous.sourceline = builderror.sourceline
+                )
+        ');
         $stmt->bindValue(':buildid', $buildid);
         $stmt->bindValue(':previousbuildid', $previousbuildid);
         $stmt->bindValue(':type', $warning);
