@@ -110,6 +110,22 @@ final class BuildController extends AbstractBuildController
         ]);
     }
 
+    public function coverage(int $build_id): View
+    {
+        $this->setBuildById($build_id);
+
+        $filters = json_decode(request()->query('filters')) ?? ['all' => []];
+
+        $eloquent_project = Project::findOrFail((int) $this->project->Id);
+
+        return $this->vue('build-coverage-page', 'Coverage', [
+            'build-id' => $build_id,
+            'initial-filters' => $filters,
+            'project-name' => $eloquent_project->name,
+            'coverage-percent-cutoff' => $eloquent_project->coveragethreshold,
+        ]);
+    }
+
     public function apiBuildSummary(): JsonResponse
     {
         $pageTimer = new PageTimer();
@@ -781,7 +797,7 @@ final class BuildController extends AbstractBuildController
         $this->setBuildById($build_id);
         return $this->vue('build-files-page', 'Uploads', [
             'build-id' => $build_id,
-        ], true);
+        ]);
     }
 
     public function build_file(int $build_id, int $file_id): StreamedResponse

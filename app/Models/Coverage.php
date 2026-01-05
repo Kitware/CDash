@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
+ * @property int $id
  * @property int $buildid
  * @property int $fileid
  * @property int $covered

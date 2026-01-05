@@ -265,7 +265,7 @@
               </td>
 
               <td align="center" ng-class="::{'normal': coverage.percentage >= group.thresholdgreen, 'warning': coverage.percentage < group.thresholdgreen && coverage.percentage >= group.thresholdyellow, 'error': coverage.percentage < group.thresholdyellow}">
-                <a class="cdash-link" ng-href="viewCoverage.php?buildid={{::coverage.buildid}}">
+                <a class="cdash-link" ng-href="builds/{{::coverage.buildid}}/coverage">
                   {{::coverage.percentage}}%
                 </a>
                 <sub ng-if="::coverage.percentagediff > 0">+{{::coverage.percentagediff}}%</sub>
@@ -315,7 +315,7 @@
                 <a class="cdash-link" ng-if="::coverage.childlink" ng-href="{{::coverage.childlink}}">
                   {{::coverage.percentage}}%
                 </a>
-                <a class="cdash-link" ng-if="::!coverage.childlink" ng-href="viewCoverage.php?buildid={{::coverage.buildid}}">
+                <a class="cdash-link" ng-if="::!coverage.childlink" ng-href="builds/{{::coverage.buildid}}/coverage">
                   {{::coverage.percentage}}%
                 </a>
                 <sub ng-if="::coverage.percentagediff > 0">+{{::coverage.percentagediff}}%</sub>

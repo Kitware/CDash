@@ -143,6 +143,13 @@ Route::get('/builds/{build_id}/files/{file_id}', 'BuildController@build_file')
     ->whereNumber('file_id');
 Route::permanentRedirect('/build/{build_id}/file/{file_id}', url('/builds/{build_id}/files/{file_id}'));
 
+Route::get('/builds/{build_id}/coverage', 'BuildController@coverage')
+    ->whereNumber('build_id');
+Route::match(['get', 'post'], '/viewCoverage.php', function (Request $request) {
+    $buildid = $request->query('buildid');
+    return redirect("/builds/{$buildid}/coverage", 301);
+});
+
 Route::get('/builds/{build_id}/coverage/{file_id}', CoverageFileController::class)
     ->whereNumber('build_id')
     ->whereNumber('file_id');
@@ -232,13 +239,9 @@ Route::get('/testSummary.php', function (Request $request) {
 
 Route::get('/testOverview.php', 'TestController@testOverview');
 
-Route::match(['get', 'post'], '/viewCoverage.php', 'CoverageController@viewCoverage');
-
 Route::get('/compareCoverage.php', 'CoverageController@compareCoverage');
 
 Route::any('/ajax/getviewcoverage.php', 'CoverageController@ajaxGetViewCoverage');
-
-Route::any('/ajax/showcoveragegraph.php', 'CoverageController@ajaxShowCoverageGraph');
 
 Route::match(['get', 'post'], '/buildOverview.php', 'BuildController@buildOverview');
 

@@ -353,6 +353,8 @@ add_browser_test(/Browser/Pages/BuildTestsPageTest)
 
 add_browser_test(/Browser/Pages/BuildConfigurePageTest)
 
+add_browser_test(/Browser/Pages/BuildCoveragePageTest)
+
 add_php_test(image)
 set_tests_properties(image PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 

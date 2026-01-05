@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Build;
+
 //
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
@@ -54,9 +56,10 @@ class JSCoverCoverageTestCase extends KWWebTestCase
         }
 
         // Verify that the coverage data was successfully parsed.
-        $content = $this->get(
-            $this->url . "/viewCoverage.php?buildid=$buildid&status=6");
-        if (!str_contains($content, '86.06')) {
+        $loctested = Build::findOrFail((int) $buildid)->coverage()->sum('loctested');
+        $locuntested = Build::findOrFail((int) $buildid)->coverage()->sum('locuntested');
+        $content = (string) round(($loctested / ($loctested + $locuntested)) * 100, 2);
+        if ($content !== '86.06') {
             $this->fail('\"86.06\" not found when expected');
             return 1;
         }

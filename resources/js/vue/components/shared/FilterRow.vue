@@ -269,6 +269,8 @@ export default {
         return 'NUMBER';
       case 'Integer':
         return 'NUMBER';
+      case 'Int':
+        return 'NUMBER';
       case 'Float':
         return 'NUMBER';
       case 'NonNegativeSeconds':
