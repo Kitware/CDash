@@ -3,8 +3,11 @@
 namespace Tests\Feature\GraphQL;
 
 use App\Enums\TargetType;
+use App\Models\Build;
 use App\Models\Project;
 use App\Models\Site;
+use App\Models\Test;
+use App\Models\TestOutput;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTruncation;
 use Illuminate\Support\Facades\DB;
@@ -36,6 +39,8 @@ class FilterTest extends TestCase
      */
     private array $sites = [];
 
+    private TestOutput $testOutput;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -54,6 +59,12 @@ class FilterTest extends TestCase
             'normal' => $this->makeNormalUser(),
             'admin' => $this->makeAdminUser(),
         ];
+
+        $this->testOutput = TestOutput::create([
+            'path' => 'a',
+            'command' => 'b',
+            'output' => 'c',
+        ]);
     }
 
     protected function tearDown(): void
@@ -72,6 +83,8 @@ class FilterTest extends TestCase
             $site->delete();
         }
         $this->sites = [];
+
+        $this->testOutput->delete();
 
         parent::tearDown();
     }
@@ -993,6 +1006,120 @@ class FilterTest extends TestCase
                         [
                             'node' => [
                                 'name' => $this->projects['public1']->name,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+    }
+
+    public function testFilterAggregateField(): void
+    {
+        $this->projects['public1']->builds()->create([
+            'name' => 'build1',
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        $this->projects['public1']->builds()->create([
+            'name' => 'build2',
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        $this->projects['public2']->builds()->create([
+            'name' => 'build1',
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        $this->actingAs($this->users['admin'])->graphQL('
+            query($projectid: ID!, $buildname: String!) {
+                project(id: $projectid) {
+                    countWithoutFilters: buildCount
+                    countWithFilters: buildCount(filters: {
+                        eq: {
+                            name: $buildname
+                        }
+                    })
+                }
+            }
+        ', [
+            'projectid' => $this->projects['public1']->id,
+            'buildname' => 'build1',
+        ])->assertExactJson([
+            'data' => [
+                'project' => [
+                    'countWithoutFilters' => 2,
+                    'countWithFilters' => 1,
+                ],
+            ],
+        ]);
+    }
+
+    public function testFilterNonPaginatedList(): void
+    {
+        /** @var Build $build */
+        $build = $this->projects['public1']->builds()->create([
+            'name' => 'build1',
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        /** @var Test $test */
+        $test = $build->tests()->create([
+            'testname' => Str::uuid()->toString(),
+            'status' => 'passed',
+            'outputid' => $this->testOutput->id,
+        ]);
+
+        $measurement1 = $test->testMeasurements()->create([
+            'name' => Str::uuid()->toString(),
+            'type' => 'text/string',
+            'value' => Str::uuid()->toString(),
+        ]);
+
+        $measurement2 = $test->testMeasurements()->create([
+            'name' => Str::uuid()->toString(),
+            'type' => 'text/string',
+            'value' => Str::uuid()->toString(),
+        ]);
+
+        $this->actingAs($this->users['admin'])->graphQL('
+            query($buildid: ID!, $measurementname: String!) {
+                build(id: $buildid) {
+                    tests {
+                        edges {
+                            node {
+                                testMeasurements(filters: {
+                                    eq: {
+                                        name: $measurementname
+                                    }
+                                }) {
+                                    name
+                                    type
+                                    value
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        ', [
+            'buildid' => $build->id,
+            'measurementname' => $measurement1->name,
+        ])->assertExactJson([
+            'data' => [
+                'build' => [
+                    'tests' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'testMeasurements' => [
+                                        [
+                                            'name' => $measurement1->name,
+                                            'type' => $measurement1->type,
+                                            'value' => $measurement1->value,
+                                        ],
+                                    ],
+                                ],
                             ],
                         ],
                     ],

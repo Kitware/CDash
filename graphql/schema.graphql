@@ -553,13 +553,9 @@ type Test {
 
   details: String! @filterable
 
-  """
-  Test measurements for this test, sorted in descending order so newer results
-  appear first when using paginated queries.
-  """
   testMeasurements(
     filters: _ @filter
-  ): [TestMeasurement!]! @hasMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)
+  ): [TestMeasurement!]! @hasMany @orderBy(column: "id", direction: DESC)
 
   labels(
     filters: _ @filter
