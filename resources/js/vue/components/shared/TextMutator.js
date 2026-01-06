@@ -1,4 +1,4 @@
-import AnsiUp from 'ansi_up';
+import { AnsiUp } from 'ansi_up';
 
 export default {
   ctestNonXmlCharEscape: function (input) {
@@ -6,11 +6,8 @@ export default {
     return input.replace(pattern, '\x1B');
   },
 
-  terminalColors: function (input, htmlEscape) {
+  terminalColors: function (input) {
     const ansiUp = new AnsiUp;
-    if (htmlEscape !== undefined) {
-      ansiUp.escape_for_html = htmlEscape;
-    }
     return ansiUp.ansi_to_html(input);
   },
 };

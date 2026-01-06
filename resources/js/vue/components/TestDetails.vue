@@ -330,11 +330,11 @@ export default {
 
     postSetup: function() {
       this.cdash.test.output = TextMutator.ctestNonXmlCharEscape(this.cdash.test.output);
-      this.cdash.test.output = TextMutator.terminalColors(this.cdash.test.output, true);
+      this.cdash.test.output = TextMutator.terminalColors(this.cdash.test.output);
 
       for (let i = 0; i < this.cdash.test.preformatted_measurements.length; i++) {
         this.cdash.test.preformatted_measurements[i].value = TextMutator.ctestNonXmlCharEscape(this.cdash.test.preformatted_measurements[i].value);
-        this.cdash.test.preformatted_measurements[i].value = TextMutator.terminalColors(this.cdash.test.preformatted_measurements[i].value, true);
+        this.cdash.test.preformatted_measurements[i].value = TextMutator.terminalColors(this.cdash.test.preformatted_measurements[i].value);
       }
 
       this.queryParams = QueryParams.get();
