@@ -12,7 +12,6 @@ import 'angular/angular.min.js';
 import 'angular-animate/angular-animate.min.js';
 import 'angular-ui-bootstrap/dist/ui-bootstrap.js';
 import 'angular-ui-sortable/dist/sortable.js';
-import 'ansi_up/ansi_up.js';
 import 'as-jqplot/dist/jquery.jqplot.js';
 import 'as-jqplot/dist/plugins/jqplot.dateAxisRenderer.js';
 import 'as-jqplot/dist/plugins/jqplot.highlighter.js';
