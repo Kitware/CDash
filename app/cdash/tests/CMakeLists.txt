@@ -222,6 +222,10 @@ add_feature_test(/Feature/GraphQL/NoteTypeTest)
 
 add_feature_test(/Feature/GraphQL/CoverageTypeTest)
 
+add_feature_test(/Feature/GraphQL/DynamicAnalysisTypeTest)
+
+add_feature_test(/Feature/GraphQL/DynamicAnalysisDefectTypeTest)
+
 add_feature_test(/Feature/GraphQL/ProjectInvitationTypeTest)
 
 add_feature_test(/Feature/GraphQL/LabelTypeTest)
