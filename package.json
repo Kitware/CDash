@@ -31,7 +31,7 @@
     "angular-animate": "^1.4.7",
     "angular-ui-bootstrap": "^2.0.0",
     "angular-ui-sortable": "^0.14.3",
-    "ansi_up": "^4.0.4",
+    "ansi_up": "^6.0.6",
     "as-jqplot": "^1.0.8",
     "autoprefixer": "^10.4.23",
     "axios": "^1.13",
