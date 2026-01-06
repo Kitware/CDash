@@ -1,4 +1,4 @@
-import AnsiUp from 'ansi_up';
+import { AnsiUp } from 'ansi_up';
 
 export function ctestNonXmlCharEscape() {
   return function(input) {
@@ -11,7 +11,7 @@ export function terminalColors() {
   return function(input, htmlEscape) {
     var ansiUp = new AnsiUp;
     if (htmlEscape !== undefined) {
-      ansiUp.escape_for_html = htmlEscape;
+      ansiUp.escape_html = htmlEscape;
     }
     return ansiUp.ansi_to_html(input);
   };
