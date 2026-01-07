@@ -1085,9 +1085,10 @@ export default {
     },
   },
 
-  mounted () {
+  async mounted () {
     // Ensure jQuery is globally available before loading plugins
     window.jQuery = $;
+    await import('flot/dist/es5/jquery.flot');
 
     const endpoint_path = `/api/v1/buildSummary.php?buildid=${this.buildId}`;
     ApiLoader.loadPageData(this, endpoint_path);
@@ -1206,8 +1207,6 @@ export default {
       }
 
       // Render the graph.
-      // eslint-disable-next-line no-undef
-      require('flot/dist/es5/jquery.flot');
       const plot = $.plot($(element), [{label: label, data: data}],
         options);
 

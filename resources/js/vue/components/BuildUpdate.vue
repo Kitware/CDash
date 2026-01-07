@@ -178,9 +178,10 @@ export default {
     };
   },
 
-  mounted() {
+  async mounted() {
     // Ensure jQuery is globally available before loading plugins
     window.jQuery = $;
+    await import('flot/dist/es5/jquery.flot');
 
     this.buildid = window.location.pathname.split('/').at(-2);
     const endpoint_path = `/api/v1/viewUpdate.php?buildid=${this.buildid}`;
@@ -226,8 +227,6 @@ export default {
         colors: ['#0000FF', '#dba255', '#919733'],
       };
 
-      // eslint-disable-next-line no-undef
-      require('flot/dist/es5/jquery.flot');
       let plot = $.plot($('#graph_holder'), [{label: 'Number of changed files', data: data.data}], options);
 
       $('#graph_holder').bind('selected', (event, area) => {
