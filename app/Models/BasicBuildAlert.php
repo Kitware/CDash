@@ -16,7 +16,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $precontext
  * @property string|null $postcontext
  * @property int $repeatcount
- * @property int $crc32
  * @property bool $newstatus
  *
  * @mixin Builder<BasicBuildAlert>
@@ -37,7 +36,6 @@ class BasicBuildAlert extends Model
         'precontext',
         'postcontext',
         'repeatcount',
-        'crc32',
         'newstatus',
     ];
 
@@ -48,7 +46,6 @@ class BasicBuildAlert extends Model
         'text' => 'string',
         'sourceline' => 'integer',
         'repeatcount' => 'integer',
-        'crc32' => 'integer',
         'newstatus' => 'boolean',
     ];
 }
