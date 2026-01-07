@@ -212,6 +212,14 @@ class Build extends Model
     }
 
     /**
+     * @return HasMany<RichBuildAlert, $this>
+     */
+    public function richAlerts(): HasMany
+    {
+        return $this->hasMany(RichBuildAlert::class, 'buildid');
+    }
+
+    /**
      * @return HasMany<Comment, $this>
      */
     public function comments(): HasMany

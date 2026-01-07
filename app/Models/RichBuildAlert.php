@@ -9,8 +9,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
+ * @property int $id
  * @property int $buildid
  * @property int $detailsid
+ * @property string $workingdirectory
  * @property string $sourcefile
  * @property int $newstatus
  *
@@ -25,11 +27,13 @@ class RichBuildAlert extends Model
     protected $fillable = [
         'buildid',
         'detailsid',
+        'workingdirectory',
         'sourcefile',
         'newstatus',
     ];
 
     protected $casts = [
+        'id' => 'integer',
         'buildid' => 'integer',
         'detailsid' => 'integer',
         'newstatus' => 'integer',

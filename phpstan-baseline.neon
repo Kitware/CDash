@@ -6631,18 +6631,12 @@ parameters:
 			path: app/Utils/RepositoryUtils.php
 
 		-
-			rawMessage: 'Binary operation "+=" between mixed and mixed results in an error.'
-			identifier: assignOp.invalid
-			count: 1
-			path: app/Utils/SubmissionUtils.php
-
-		-
 			rawMessage: '''
 				Call to deprecated function pdo_execute():
 				v2.5.0 01/22/2018
 			'''
 			identifier: function.deprecated
-			count: 6
+			count: 1
 			path: app/Utils/SubmissionUtils.php
 
 		-
@@ -6661,27 +6655,21 @@ parameters:
 			path: app/Utils/SubmissionUtils.php
 
 		-
-			rawMessage: Cannot access offset 'detailsid' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/Utils/SubmissionUtils.php
-
-		-
 			rawMessage: Cannot access offset 0 on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
+			count: 1
 			path: app/Utils/SubmissionUtils.php
 
 		-
 			rawMessage: 'Cannot call method bindValue() on PDOStatement|false.'
 			identifier: method.nonObject
-			count: 13
+			count: 3
 			path: app/Utils/SubmissionUtils.php
 
 		-
 			rawMessage: 'Cannot call method fetch() on PDOStatement|false.'
 			identifier: method.nonObject
-			count: 5
+			count: 1
 			path: app/Utils/SubmissionUtils.php
 
 		-
@@ -6739,12 +6727,6 @@ parameters:
 			path: app/Utils/SubmissionUtils.php
 
 		-
-			rawMessage: 'Only booleans are allowed in a while condition, mixed given.'
-			identifier: while.condNotBoolean
-			count: 2
-			path: app/Utils/SubmissionUtils.php
-
-		-
 			rawMessage: 'Only numeric types are allowed in +, int<0, max>|false given on the left side.'
 			identifier: plus.leftNonNumeric
 			count: 1
@@ -6753,7 +6735,7 @@ parameters:
 		-
 			rawMessage: 'Parameter #1 $stmt of function pdo_execute expects PDOStatement, (PDOStatement|false) given.'
 			identifier: argument.type
-			count: 6
+			count: 1
 			path: app/Utils/SubmissionUtils.php
 
 		-
@@ -9879,7 +9861,7 @@ parameters:
 				04/22/2023  Use Laravel query builder or Eloquent instead
 			'''
 			identifier: method.deprecated
-			count: 2
+			count: 1
 			path: app/cdash/app/Model/BuildFailure.php
 
 		-
@@ -9966,12 +9948,6 @@ parameters:
 		-
 			rawMessage: 'Method CDash\Model\BuildFailure::marshal() return type has no value type specified in iterable type array.'
 			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/app/Model/BuildFailure.php
-
-		-
-			rawMessage: 'Only booleans are allowed in &&, array|false|null given on the left side.'
-			identifier: booleanAnd.leftNotBoolean
 			count: 1
 			path: app/cdash/app/Model/BuildFailure.php
 
