@@ -1,3 +1,5 @@
+@use(App\Services\ProjectService)
+
 @extends('cdash', [
     'title' => 'Build Overview'
 ])
