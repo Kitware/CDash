@@ -1,3 +1,6 @@
+import d3 from 'd3';
+import nv from 'nvd3';
+
 var timelineController =
   function TimelineChartController($http, $scope) {
     $scope.loading = true;

@@ -1,3 +1,6 @@
+import d3 from 'd3';
+import nv from 'nvd3';
+
 function makeLineChart(elementName, inputData, project, anchor, sort) {
   jQuery(function(){
 
