@@ -12,8 +12,6 @@ import 'angular-ui-sortable/dist/sortable.js';
 import 'as-jqplot/dist/jquery.jqplot.js';
 import 'as-jqplot/dist/plugins/jqplot.dateAxisRenderer.js';
 import 'as-jqplot/dist/plugins/jqplot.highlighter.js';
-import 'd3/d3.js';
-import 'nvd3/build/nv.d3.js';
 import './ui-bootstrap-tpls-0.14.2.min.js';
 import './tabNavigation.js';
 import './jquery.tablesorter.js';
