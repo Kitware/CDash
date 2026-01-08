@@ -451,10 +451,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
             if ($threshold > 0) {
                 $chunk_size = $threshold / 2;
                 foreach (['StdOutput', 'StdError'] as $field) {
-                    if (!($this->Error instanceof BuildFailure)) {
-                        throw new RuntimeException('Field "Error" is not instance of BuildFailure.');
-                    }
-                    if (isset($this->Error->$field)) {
+                    if ($this->Error instanceof BuildFailure && isset($this->Error->$field)) {
                         $outlen = strlen($this->Error->$field);
                         if ($outlen > $threshold) {
                             // First try removing suppressed warnings to see
