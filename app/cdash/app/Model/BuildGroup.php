@@ -321,12 +321,11 @@ class BuildGroup
             // Insert the default position for this group
             // Find the position for this group
             $position = $this->GetNextPosition();
-            DB::insert('
-                INSERT INTO buildgroupposition
-                    (buildgroupid, position, starttime, endtime)
-                VALUES
-                    (?, ?, ?, ?)
-            ', [$this->eloquent_model->id, $position, $this->eloquent_model->starttime, $this->eloquent_model->endtime]);
+            $this->eloquent_model->positions()->create([
+                'position' => $position,
+                'starttime' => $this->eloquent_model->starttime,
+                'endtime' => $this->eloquent_model->endtime,
+            ]);
         }
         return true;
     }
@@ -341,47 +340,29 @@ class BuildGroup
         // We delete all the build2grouprule associated with the group
         $this->eloquent_model->rules()->delete();
 
+        // Restore the builds that were associated with this group
+        $oldbuilds = $this->eloquent_model->builds()->get();
+
+        /** @var \App\Models\Build $oldbuild */
+        foreach ($oldbuilds as $oldbuild) {
+            // Find the group corresponding to the build type
+
+            /** @var ?EloquentBuildGroup $newGroup */
+            $newGroup = $this->eloquent_model->project?->buildgroups()->where([
+                'name' => $oldbuild->type,
+            ])->first();
+
+            if ($newGroup === null) {
+                $newGroup = $this->eloquent_model->project?->buildgroups()->where([
+                    'name' => 'Experimental',
+                ])->first();
+            }
+
+            $newGroup?->builds()->attach($oldbuild);
+        }
+
         // We delete the buildgroup
         $this->eloquent_model->delete();
-
-        // Restore the builds that were associated with this group
-        $oldbuilds = DB::select('
-                         SELECT id, type
-                         FROM build
-                         WHERE id IN (
-                             SELECT buildid AS id
-                             FROM build2group
-                             WHERE groupid=?
-                         )
-                     ', [$this->eloquent_model->id]);
-
-        foreach ($oldbuilds as $oldbuilds_array) {
-            // Move the builds
-            $buildid = $oldbuilds_array->id;
-            $buildtype = $oldbuilds_array->type;
-
-            // Find the group corresponding to the build type
-            $query = DB::select('
-                         SELECT id
-                         FROM buildgroup
-                         WHERE name=? AND projectid=?
-                     ', [$buildtype, $this->eloquent_model->projectid])[0] ?? [];
-
-            if ($query === []) {
-                $query = DB::select("
-                             SELECT id
-                             FROM buildgroup
-                             WHERE name='Experimental' AND projectid=?
-                         ", [$this->eloquent_model->projectid])[0];
-            }
-            $grouptype = $query->id;
-
-            DB::update('
-                UPDATE build2group
-                SET groupid=?
-                WHERE buildid=?
-            ', [$grouptype, $buildid]);
-        }
 
         // Delete the buildgroupposition and update the position
         // of the other groups.

@@ -232,7 +232,7 @@ class Build extends Model
      */
     public function buildGroups(): BelongsToMany
     {
-        return $this->belongsToMany(BuildGroup::class, 'build2group', 'groupid', 'buildid');
+        return $this->belongsToMany(BuildGroup::class, 'build2group', 'buildid', 'groupid');
     }
 
     /**

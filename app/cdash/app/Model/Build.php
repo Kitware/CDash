@@ -370,7 +370,7 @@ class Build
             $this->SubProjectId = $subprojectid;
         }
 
-        $this->GroupId = (int) (DB::select('SELECT groupid FROM build2group WHERE buildid = ?', [$buildid])[0]->groupid ?? false);
+        $this->GroupId = $model->buildGroups()->first()->id ?? 0;
         $this->Filled = true;
     }
 
@@ -1475,12 +1475,15 @@ class Build
             ]);
             return false;
         }
-        $stmt = $this->PDO->prepare(
-            'SELECT groupid FROM build2group WHERE buildid = ?');
-        if (!pdo_execute($stmt, [$this->Id])) {
+
+        /** @var \App\Models\BuildGroup $buildgroup */
+        $buildgroup = EloquentBuild::findOrFail((int) $this->Id)->buildGroups()->first();
+
+        if ($buildgroup === null) {
             return false;
         }
-        return (int) $stmt->fetchColumn();
+
+        return $buildgroup->id;
     }
 
     /** Get the number of errors for a build */

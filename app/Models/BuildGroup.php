@@ -59,7 +59,7 @@ class BuildGroup extends Model
      */
     public function project(): BelongsTo
     {
-        return $this->belongsTo(Project::class, 'id', 'projectid');
+        return $this->belongsTo(Project::class, 'projectid');
     }
 
     /**
