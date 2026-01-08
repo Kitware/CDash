@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Build as EloquentBuild;
+use App\Models\BuildGroup;
 use App\Models\BuildUpdateFile;
 use App\Models\Comment;
 use App\Models\Project;
@@ -1421,14 +1422,16 @@ final class BuildController extends AbstractBuildController
             $expected = request()->input('expected');
             $newgroupid = request()->input('newgroupid');
 
-            // Remove the build from its previous group.
-            DB::delete('DELETE FROM build2group WHERE buildid = ?', [$this->build->Id]);
+            $eloquent_build = EloquentBuild::findOrFail((int) $this->build->Id);
 
+            if (BuildGroup::findOrFail((int) $newgroupid)->project()->isNot($eloquent_build->project)) {
+                abort(403, 'Requested build group is not associated with this project.');
+            }
+
+            // Remove the build from its previous group.
+            $eloquent_build->buildGroups()->detach();
             // Insert it into the new group.
-            DB::insert('
-                INSERT INTO build2group(groupid, buildid)
-                VALUES (?, ?)
-            ', [$newgroupid, $this->build->Id]);
+            $eloquent_build->buildGroups()->attach((int) $newgroupid);
 
             // Mark any previous buildgroup rule as finished as of this time.
             $now = gmdate(FMT_DATETIME);

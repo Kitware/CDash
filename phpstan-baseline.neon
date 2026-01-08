@@ -627,7 +627,7 @@ parameters:
 		-
 			rawMessage: Cannot cast mixed to int.
 			identifier: cast.int
-			count: 11
+			count: 13
 			path: app/Http/Controllers/BuildController.php
 
 		-
@@ -8907,7 +8907,7 @@ parameters:
 				v2.5.0 01/22/2018
 			'''
 			identifier: function.deprecated
-			count: 15
+			count: 14
 			path: app/cdash/app/Model/Build.php
 
 		-
@@ -9319,6 +9319,12 @@ parameters:
 			rawMessage: 'Only numeric types are allowed in -, int|false given on the right side.'
 			identifier: minus.rightNonNumeric
 			count: 3
+			path: app/cdash/app/Model/Build.php
+
+		-
+			rawMessage: 'PHPDoc tag @var with type App\Models\BuildGroup is not subtype of type (App\Models\BuildGroup&object{pivot: Illuminate\Database\Eloquent\Relations\Pivot})|null.'
+			identifier: varTag.type
+			count: 1
 			path: app/cdash/app/Model/Build.php
 
 		-
