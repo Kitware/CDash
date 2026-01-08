@@ -18,6 +18,7 @@ use App\Http\Submission\Handlers\TestingHandler;
 use App\Http\Submission\Handlers\TestingJUnitHandler;
 use App\Http\Submission\Handlers\UpdateHandler;
 use App\Http\Submission\Handlers\UploadHandler;
+use App\Models\RichBuildAlert;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildUpdate;
@@ -155,6 +156,9 @@ class SubmissionUtils
     {
         $pdo = Database::getInstance()->getPdo();
 
+        $build = \App\Models\Build::findOrFail((int) $buildid);
+        $previous_build = \App\Models\Build::findOrFail((int) $previousbuildid);
+
         // Look at the difference positive and negative test errors
         DB::update('
             UPDATE builderror
@@ -181,62 +185,37 @@ class SubmissionUtils
         // Recurring buildfailures are represented by the buildfailuredetails table.
         // Get a list of buildfailuredetails IDs for the current build and the
         // previous build.
-        $current_failures = [];
-        $previous_failures = [];
 
-        $stmt = $pdo->prepare(
-            'SELECT bf.detailsid FROM buildfailure AS bf
-        LEFT JOIN buildfailuredetails AS bfd ON (bf.detailsid=bfd.id)
-        WHERE bf.buildid=:buildid AND bfd.type=:type');
-        $stmt->bindValue(':buildid', $buildid);
-        $stmt->bindValue(':type', $warning);
-        pdo_execute($stmt);
-        while ($row = $stmt->fetch()) {
-            $current_failures[] = $row['detailsid'];
-        }
+        $current_failures = $build->richAlerts()
+            ->whereRelation('details', 'type', $warning)
+            ->pluck('detailsid')->toArray();
 
-        $stmt = $pdo->prepare(
-            'SELECT bf.detailsid FROM buildfailure AS bf
-        LEFT JOIN buildfailuredetails AS bfd ON (bf.detailsid=bfd.id)
-        WHERE bf.buildid=:previousbuildid AND bfd.type=:type');
-        $stmt->bindValue(':previousbuildid', $previousbuildid);
-        $stmt->bindValue(':type', $warning);
-        pdo_execute($stmt);
-        while ($row = $stmt->fetch()) {
-            $previous_failures[] = $row['detailsid'];
-        }
+        $previous_failures = $previous_build->richAlerts()
+            ->whereRelation('details', 'type', $warning)
+            ->pluck('detailsid')->toArray();
 
         // Check if any of these are new failures and mark them accordingly.
         foreach ($current_failures as $failure) {
             if (!in_array($failure, $previous_failures)) {
-                $stmt = $pdo->prepare(
-                    'UPDATE buildfailure SET newstatus=1
-                WHERE buildid=:buildid AND detailsid=:detailsid');
-                $stmt->bindValue(':buildid', $buildid);
-                $stmt->bindValue(':detailsid', $failure);
-                pdo_execute($stmt);
+                RichBuildAlert::where([
+                    'buildid' => $buildid,
+                    'detailsid' => $failure,
+                ])->update([
+                    'newstatus' => 1,
+                ]);
             }
         }
 
         // Maybe we can get that from the query (don't know).
-        $stmt = $pdo->prepare(
-            'SELECT COUNT(*) FROM builderror
-        WHERE buildid=:buildid AND type=:type AND newstatus=1');
-        $stmt->bindValue(':buildid', $buildid);
-        $stmt->bindValue(':type', $warning);
-        pdo_execute($stmt);
-        $positives_array = $stmt->fetch();
-        $npositives = $positives_array[0];
+        $npositives = $build->basicAlerts()
+            ->where('type', $warning)
+            ->where('newstatus', 1)
+            ->count();
 
-        $stmt = $pdo->prepare(
-            'SELECT COUNT(*) FROM buildfailure AS bf
-        LEFT JOIN buildfailuredetails AS bfd ON (bf.detailsid=bfd.id)
-        WHERE bf.buildid=:buildid AND bfd.type=:type AND bf.newstatus=1');
-        $stmt->bindValue(':buildid', $buildid);
-        $stmt->bindValue(':type', $warning);
-        pdo_execute($stmt);
-        $positives_array = $stmt->fetch();
-        $npositives += $positives_array[0];
+        $npositives += $build->richAlerts()
+            ->where('newstatus', 1)
+            ->whereRelation('details', 'type', $warning)
+            ->count();
 
         // Count how many build defects were fixed since the previous build.
         $stmt = $pdo->prepare('

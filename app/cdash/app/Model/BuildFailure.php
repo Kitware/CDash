@@ -17,6 +17,9 @@
 
 namespace CDash\Model;
 
+use App\Models\Build;
+use App\Models\RichBuildAlert;
+use App\Models\RichBuildAlertDetails;
 use App\Utils\RepositoryUtils;
 use CDash\Database;
 use Illuminate\Support\Facades\DB;
@@ -60,7 +63,7 @@ class BuildFailure
         $this->Arguments[] = $argument;
     }
 
-    public function InsertLabelAssociations($id): void
+    protected function InsertLabelAssociations($id): void
     {
         if (empty($this->Labels)) {
             return;
@@ -102,34 +105,26 @@ class BuildFailure
         $db = Database::getInstance();
 
         // Get details ID if it already exists, otherwise insert a new row.
-        $detailsResult = $db->executePreparedSingleRow('
-                             SELECT id FROM buildfailuredetails WHERE crc32=?
-                         ', [$crc32]);
-        if ($detailsResult && array_key_exists('id', $detailsResult)) {
-            $detailsId = (int) $detailsResult['id'];
-        } else {
-            $detailsId = DB::table('buildfailuredetails')
-                ->insertGetId([
-                    'type' => (int) $this->Type,
-                    'stdoutput' => $stdOutput,
-                    'stderror' => $stdError,
-                    'exitcondition' => $exitCondition,
-                    'language' => $language,
-                    'targetname' => $targetName,
-                    'outputfile' => $outputFile,
-                    'outputtype' => $outputType,
-                    'crc32' => $crc32,
-                ]);
-        }
+        $failureDetails = RichBuildAlertDetails::firstOrCreate([
+            'crc32' => $crc32,
+        ], [
+            'type' => (int) $this->Type,
+            'stdoutput' => $stdOutput,
+            'stderror' => $stdError,
+            'exitcondition' => $exitCondition,
+            'language' => $language,
+            'targetname' => $targetName,
+            'outputfile' => $outputFile,
+            'outputtype' => $outputType,
+        ]);
 
-        $id = DB::table('buildfailure')
-            ->insertGetId([
-                'buildid' => (int) $this->BuildId,
-                'detailsid' => $detailsId,
-                'workingdirectory' => $workingDirectory,
-                'sourcefile' => $sourceFile,
-                'newstatus' => 0,
-            ]);
+        /** @var RichBuildAlert $failure */
+        $failure = Build::findOrFail((int) $this->BuildId)->richAlerts()->create([
+            'detailsid' => $failureDetails->id,
+            'workingdirectory' => $workingDirectory,
+            'sourcefile' => $sourceFile,
+            'newstatus' => 0,
+        ]);
 
         // Insert the arguments
         $argumentids = [];
@@ -161,7 +156,7 @@ class BuildFailure
         $i = 0;
         foreach ($argumentids as $argumentid) {
             $query .= '(?, ?, ?),';
-            $params[] = (int) $id;
+            $params[] = $failure->id;
             $params[] = (int) $argumentid;
             $params[] = $i;
             $i++;
@@ -171,7 +166,7 @@ class BuildFailure
             return false;
         }
 
-        $this->InsertLabelAssociations($id);
+        $this->InsertLabelAssociations($failure->id);
         return true;
     }
 
