@@ -539,6 +539,10 @@ type Build {
   dynamicAnalyses(
     filters: _ @filter
   ): [DynamicAnalysis!]! @hasMany(type: CONNECTION) @orderBy(column: "id", direction: ASC)
+
+  updates(
+    filters: _ @filter
+  ): [Update!]! @belongsToMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)
 }
 
 
@@ -963,4 +967,50 @@ type DynamicAnalysisDefect {
   type: String!
 
   value: Int!
+}
+
+
+type Update @model(class: "App\\Models\\BuildUpdate")  {
+  "Unique primary key."
+  id: ID!
+
+  command: String!
+
+  type: String @filterable
+
+  status: String! @filterable
+
+  revision: String @filterable
+
+  priorRevision: String @rename(attribute: "priorrevision") @filterable
+
+  path: String @filterable
+
+  updateFiles(
+    filters: _ @filter
+  ): [UpdateFile!]! @hasMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)
+}
+
+
+type UpdateFile @model(class: "App\\Models\\BuildUpdateFile")  {
+  "Unique primary key."
+  id: ID!
+
+  fileName: String @rename(attribute: "filename") @filterable
+
+  authorName: String @rename(attribute: "author") @filterable
+
+  authorEmail: String @rename(attribute: "email") @filterable
+
+  committerName: String @rename(attribute: "committer") @filterable
+
+  committerEmail: String @rename(attribute: "committeremail") @filterable
+
+  log: String
+
+  revision: String @filterable
+
+  priorRevision: String @rename(attribute: "priorrevision") @filterable
+
+  status: String! @filterable
 }
