@@ -15,7 +15,7 @@
   <!-- Icon for build errors / test failing -->
   <a class="cdash-link" ng-if="::build.compilation.error > 0 || build.test.fail > 0" href=""
      ng-click="toggleBuildProblems(build)">
-    <img src="img/Info.png" alt="info" class="icon"></img>
+    <span class="glyphicon glyphicon-info-sign" style="color: #5bc0de;" title="Build information"></span>
   </a>
 
   <!-- Link to notes specific to this subproject build -->
@@ -24,14 +24,14 @@
      name="notesLink"
      ng-if="::build.notes > 0"
      ng-href="builds/{{::build.id}}/notes">
-    <img src="img/document.png" alt="Notes" class="icon"/>
+    <span class="glyphicon glyphicon-file" style="color: #f0ad4e;"></span>
   </a>
 </td>
 
 <!-- Otherwise, show build name & site on the row. -->
 <td ng-if="::cdash.childview != 1" align="left" class="paddt">
   <a class="cdash-link" ng-href="sites/{{::build.siteid}}?project={{::cdash.projectid}}&currenttime={{::cdash.unixtimestamp}}">{{::build.site}}</a>
-  <img ng-if="::build.siteoutoforder == 1" border="0" src="img/flag.png" title="flag"></img>
+  <span ng-if="::build.siteoutoforder == 1" class="glyphicon glyphicon-flag" style="color: #d9534f;" title="Site out of order"></span>
 </td>
 
 <td ng-if="::cdash.childview != 1" align="left">
@@ -60,7 +60,7 @@
        name="notesLink"
        ng-if="::build.notes > 0"
        ng-href="builds/{{::build.id}}/notes">
-      <img src="img/document.png" alt="Notes" class="icon"/>
+      <span class="glyphicon glyphicon-file" style="color: #f0ad4e; margin-right: 4px;"></span>
     </a>
 
     <a class="cdash-link"
@@ -68,7 +68,7 @@
        ng-if="::build.uploadfilecount > 0"
        ng-href="builds/{{::build.id}}/files"
        title="{{::build.uploadfilecount}} files uploaded with this build">
-      <img src="img/package.png" alt="Files" class="icon"/>
+      <span class="glyphicon glyphicon-compressed" style="color: #5cb85c; margin-right: 4px;"></span>
     </a>
 
     <!-- If the build has errors or test failing -->
@@ -76,7 +76,7 @@
        href="" style="float: left;"
        ng-if="::build.compilation.error > 0 || build.test.fail > 0"
        ng-click="toggleBuildProblems(build)">
-      <img src="img/Info.png" alt="info" class="icon"></img>
+      <span class="glyphicon glyphicon-info-sign" style="color: #5bc0de; margin-right: 4px;" title="Build information"></span>
     </a>
 
     <!-- If the build is expected and missing -->
@@ -84,22 +84,22 @@
        href="" style="float: left;"
        ng-if="::build.expectedandmissing == 1"
        ng-click="toggleExpectedInfo(build)">
-      <img src="img/Info.png" alt="info" class="icon"></img>
+      <span class="glyphicon glyphicon-info-sign" style="color: #5bc0de; margin-right: 4px;" title="Expected build information"></span>
     </a>
 
     <!-- Display the note icon -->
     <a class="cdash-link" name="Build Notes" id="buildnote_{{::build.id}}"
        ng-if="::build.buildnotes > 0"
        ng-href="ajax/buildnote.php?buildid={{::build.id}}">
-      <img src="img/note.png" alt="note" class="icon"></img>
+      <span class="glyphicon glyphicon-comment" style="color: #337ab7; margin-right: 4px;"></span>
     </a>
 
     <div style="float: left;" ng-if="::cdash.user.admin == 1">
-      <!-- Display folder icon to edit this build for administrative users -->
+      <!-- Display cog icon to edit this build for administrative users -->
       <a class="cdash-link" href="" ng-click="toggleAdminOptions(build)">
-        <img name="adminoptions" src="img/folder.png" class="icon"/>
+        <span name="adminoptions" class="glyphicon glyphicon-cog" style="color: #777; margin-right: 4px;"></span>
       </a>
-      <img src="img/loading.gif" ng-if="build.loading == 1"/>
+      <span class="glyphicon glyphicon-refresh glyphicon-spin" ng-if="build.loading == 1" style="color: #5bc0de;"></span>
     </div>
   </div>
 
@@ -176,31 +176,37 @@
 
   <!-- admin options table -->
   <div ng-if="::cdash.user.admin == 1">
-    <div ng-if="build.showAdminOptions == 1">
+    <div ng-if="build.showAdminOptions == 1" style="margin-top: 8px;">
       <table width="100%" border="0" class="animate-show">
         <!-- If user is admin of the project propose to group this build -->
         <tr ng-repeat="group in ::cdash.all_buildgroups">
-          <td width="35%">
+          <td width="35%" style="padding: 4px 0;">
             <b>{{::group.name}}</b>:
           </td>
-          <td ng-if="::group.name == buildgroup.name" colspan="2">
-            <a class="cdash-link" ng-if="build.expected == 0" href="" ng-click="toggleExpected(build, group.id)">
-              [mark as expected]
-            </a>
-            <a class="cdash-link" ng-if="build.expected == 1 || build.expectedandmissing == 1" href="" ng-click="toggleExpected(build, group.id)">
-              [mark as non expected]
-            </a>
+          <td ng-if="::group.name == buildgroup.name" colspan="2" style="padding: 4px 0;">
+            <button class="btn btn-xs btn-success" ng-if="build.expected == 0" ng-click="toggleExpected(build, group.id)">
+              <span class="glyphicon glyphicon-ok"></span> Mark as Expected
+            </button>
+            <button class="btn btn-xs btn-warning" ng-if="build.expected == 1 || build.expectedandmissing == 1" ng-click="toggleExpected(build, group.id)">
+              <span class="glyphicon glyphicon-remove"></span> Mark as Non Expected
+            </button>
           </td>
-          <td ng-if="::group.name != buildgroup.name" colspan="2">
-            <input type="checkbox" ng-model="build.expectedInGroup[group.id]" ng-true-value="true" ng-false-value="false"> expected</input>
+          <td ng-if="::group.name != buildgroup.name" colspan="2" style="padding: 4px 0;">
+            <label style="font-weight: normal; margin: 0;">
+              <input type="checkbox" ng-model="build.expectedInGroup[group.id]" ng-true-value="true" ng-false-value="false"> expected
+            </label>
           </td>
-          <td ng-if="::group.name != buildgroup.name" class="nob">
-            <a class="cdash-link" href="" ng-click="moveToGroup(build, group.id)"> [move to group] </a>
+          <td ng-if="::group.name != buildgroup.name" class="nob" style="padding: 4px 0;">
+            <button class="btn btn-xs btn-primary" ng-click="moveToGroup(build, group.id)">
+              <span class="glyphicon glyphicon-arrow-right"></span> Move to Group
+            </button>
           </td>
         </tr>
         <tr>
-          <td colspan="3" class="nob">
-            <a class="cdash-link" href="" ng-click="showModal(build)"> [remove this build] </a>
+          <td colspan="3" class="nob" style="padding: 8px 0;">
+            <button class="btn btn-xs btn-danger" ng-click="showModal(build)">
+              <span class="glyphicon glyphicon-trash"></span> Remove This Build
+            </button>
           </td>
         </tr>
       </table>
@@ -208,13 +214,13 @@
       <div tooltip-popup-delay="1500"
            tooltip-append-to-body="true"
            uib-tooltip="Done builds will be overwritten if a new one is submitted with the same site, build name, and timestamp."
-      >
-        <a class="cdash-link" ng-if="build.done == 0" href="" ng-click="toggleDone(build)">
-          [mark as done]
-        </a>
-        <a class="cdash-link" ng-if="build.done == 1" href="" ng-click="toggleDone(build)">
-          [mark as not done]
-        </a>
+           style="margin-top: 4px;">
+        <button class="btn btn-xs btn-info" ng-if="build.done == 0" ng-click="toggleDone(build)">
+          <span class="glyphicon glyphicon-ok-circle"></span> Mark as Done
+        </button>
+        <button class="btn btn-xs btn-default" ng-if="build.done == 1" ng-click="toggleDone(build)">
+          <span class="glyphicon glyphicon-ban-circle"></span> Mark as Not Done
+        </button>
       </div>
     </div>
   </div>

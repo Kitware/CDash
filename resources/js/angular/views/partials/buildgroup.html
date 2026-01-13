@@ -12,7 +12,7 @@
     <a class="btn btn-xs btn-default"
        ng-href="viewBuildGroup.php?project={{::cdash.projectname_encoded}}&buildgroup={{::buildgroup.linkname}}&date={{::cdash.date}}&{{::cdash.filterurl}}"
        style="text-decoration: none; font-size: 12px;">
-      <i class="fa fa-line-chart"></i> View Timeline
+      <span class="glyphicon glyphicon-stats"></span> View Timeline
     </a>
     
     <!-- Toggle selection mode button (admin only) -->
@@ -22,7 +22,7 @@
             ng-click="toggleSelectionMode(buildgroup)"
             title="Toggle bulk selection mode"
             style="font-size: 12px;">
-      <i class="fa" ng-class="buildgroup.selectionMode ? 'fa-check-square-o' : 'fa-square-o'"></i>
+      <span class="glyphicon" ng-class="buildgroup.selectionMode ? 'glyphicon-check' : 'glyphicon-unchecked'"></span>
       {{buildgroup.selectionMode ? 'Exit Selection' : 'Bulk Select'}}
     </button>
   </span>
@@ -33,7 +33,7 @@
   <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
     <div style="display: flex; align-items: center; gap: 10px;">
       <span style="font-weight: 600; color: #667eea; font-size: 14px;">
-        <i class="fa fa-check-square-o" style="margin-right: 5px;"></i>
+        <span class="glyphicon glyphicon-ok-sign" style="margin-right: 5px;"></span>
         {{buildgroup.selectedBuilds.length}} build(s) selected
       </span>
     </div>
@@ -45,22 +45,22 @@
         <option ng-repeat="group in ::cdash.all_buildgroups" value="{{group.id}}">{{group.name}}</option>
       </select>
       <button class="btn btn-sm btn-primary" ng-click="bulkMoveToGroup(buildgroup)" ng-disabled="!buildgroup.bulkTargetGroup">
-        <i class="fa fa-arrow-right"></i> Move
+        <span class="glyphicon glyphicon-arrow-right"></span> Move
       </button>
     </div>
     
     <div style="display: flex; align-items: center; gap: 8px;">
       <button class="btn btn-sm btn-success" ng-click="bulkMarkAsExpected(buildgroup, 1)">
-        <i class="fa fa-check"></i> Mark as Expected
+        <span class="glyphicon glyphicon-ok"></span> Mark as Expected
       </button>
       <button class="btn btn-sm btn-warning" ng-click="bulkMarkAsExpected(buildgroup, 0)">
-        <i class="fa fa-times"></i> Mark as Not Expected
+        <span class="glyphicon glyphicon-remove"></span> Mark as Not Expected
       </button>
     </div>
     
     <div style="margin-left: auto;">
       <button class="btn btn-sm btn-default" ng-click="clearBuildSelection(buildgroup)" style="border-color: #dc3545; color: #dc3545;">
-        <i class="fa fa-times-circle"></i> Clear Selection
+        <span class="glyphicon glyphicon-remove-circle"></span> Clear Selection
       </button>
     </div>
   </div>
