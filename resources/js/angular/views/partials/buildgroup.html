@@ -1,15 +1,75 @@
-<h3 class="buildgroupname">
-  <a href="#" class="grouptrigger cdash-link"
-     ng-click="jumpToAnchor(buildgroup.linkname)">
-    {{::buildgroup.name}}
-  </a>
-  <span class="buildnums" align="right">{{::buildgroup.numbuildslabel}}</span>
-  <a class="grouplink cdash-link"
-     ng-href="viewBuildGroup.php?project={{::cdash.projectname_encoded}}&buildgroup={{::buildgroup.linkname}}&date={{::cdash.date}}&{{::cdash.filterurl}}">[view timeline]</a>
+<h3 class="buildgroupname" style="display: flex; align-items: center; justify-content: space-between;">
+  <div>
+    <a href="#" class="grouptrigger cdash-link"
+       ng-click="jumpToAnchor(buildgroup.linkname)">
+      {{::buildgroup.name}}
+    </a>
+    <span class="buildnums" style="margin-left: 10px;">{{::buildgroup.numbuildslabel}}</span>
+  </div>
+  
+  <!-- Action buttons styled consistently and aligned to the right -->
+  <span style="display: inline-flex; gap: 8px; align-items: center; font-size: 12px;">
+    <a class="btn btn-xs btn-default"
+       ng-href="viewBuildGroup.php?project={{::cdash.projectname_encoded}}&buildgroup={{::buildgroup.linkname}}&date={{::cdash.date}}&{{::cdash.filterurl}}"
+       style="text-decoration: none; font-size: 12px;">
+      <i class="fa fa-line-chart"></i> View Timeline
+    </a>
+    
+    <!-- Toggle selection mode button (admin only) -->
+    <button ng-if="::cdash.user.admin == 1"
+            class="btn btn-xs" 
+            ng-class="buildgroup.selectionMode ? 'btn-info' : 'btn-default'"
+            ng-click="toggleSelectionMode(buildgroup)"
+            title="Toggle bulk selection mode"
+            style="font-size: 12px;">
+      <i class="fa" ng-class="buildgroup.selectionMode ? 'fa-check-square-o' : 'fa-square-o'"></i>
+      {{buildgroup.selectionMode ? 'Exit Selection' : 'Bulk Select'}}
+    </button>
+  </span>
 </h3>
+
+<!-- Bulk actions toolbar (visible only when builds are selected) -->
+<div ng-if="cdash.user.admin == 1 && buildgroup.selectedBuilds.length > 0" style="background: linear-gradient(135deg, #f0f8ff 0%, #e6f2ff 100%); border: 2px solid #667eea; border-radius: 8px; padding: 16px; margin-bottom: 10px; box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);">
+  <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <span style="font-weight: 600; color: #667eea; font-size: 14px;">
+        <i class="fa fa-check-square-o" style="margin-right: 5px;"></i>
+        {{buildgroup.selectedBuilds.length}} build(s) selected
+      </span>
+    </div>
+    
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <label style="margin: 0; font-weight: 500;">Move to:</label>
+      <select ng-model="buildgroup.bulkTargetGroup" style="padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;">
+        <option value="">-- Select Group --</option>
+        <option ng-repeat="group in ::cdash.all_buildgroups" value="{{group.id}}">{{group.name}}</option>
+      </select>
+      <button class="btn btn-sm btn-primary" ng-click="bulkMoveToGroup(buildgroup)" ng-disabled="!buildgroup.bulkTargetGroup">
+        <i class="fa fa-arrow-right"></i> Move
+      </button>
+    </div>
+    
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <button class="btn btn-sm btn-success" ng-click="bulkMarkAsExpected(buildgroup, 1)">
+        <i class="fa fa-check"></i> Mark as Expected
+      </button>
+      <button class="btn btn-sm btn-warning" ng-click="bulkMarkAsExpected(buildgroup, 0)">
+        <i class="fa fa-times"></i> Mark as Not Expected
+      </button>
+    </div>
+    
+    <div style="margin-left: auto;">
+      <button class="btn btn-sm btn-default" ng-click="clearBuildSelection(buildgroup)" style="border-color: #dc3545; color: #dc3545;">
+        <i class="fa fa-times-circle"></i> Clear Selection
+      </button>
+    </div>
+  </div>
+</div>
+
 <table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb" id="project_{{::cdash.projectid}}_{{::buildgroup.id}}">
   <thead>
     <tr class="table-heading1" >
+      <td ng-if="cdash.user.admin == 1 && buildgroup.selectionMode" class="nob"></td>
       <td colspan="2" class="nob"></td>
       <td ng-if="::buildgroup.hasupdatedata" colspan="{{::1 + cdash.showtimecolumns}}" class="center-text botl">Update</td>
       <td ng-if="::buildgroup.hasconfiguredata" colspan="{{::2 + cdash.showtimecolumns}}" class="center-text botl">Configure</td>
@@ -19,6 +79,13 @@
     </tr>
 
     <tr class="table-heading">
+
+      <th ng-if="cdash.user.admin == 1 && buildgroup.selectionMode" rowspan="2" class="column-header" style="width: 30px;">
+        <input type="checkbox" 
+               ng-model="buildgroup.selectAll" 
+               ng-change="toggleSelectAll(buildgroup)"
+               title="Select all builds">
+      </th>
 
       <th ng-if="::cdash.childview == 1"
           ng-click="updateOrderByFields(buildgroup, 'label', $event)"

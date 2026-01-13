@@ -1,3 +1,11 @@
+<!-- Selection checkbox for bulk actions (admin only) -->
+<td ng-if="cdash.user.admin == 1 && buildgroup.selectionMode" align="center" class="paddt">
+  <input type="checkbox" 
+         ng-if="::build.id"
+         ng-model="build.selected" 
+         ng-change="toggleBuildSelection(build, buildgroup)">
+</td>
+
 <!-- For child view, display the label(s) as a link to the build summary -->
 <td ng-if="::cdash.childview == 1" align="left" class="paddt" colspan="2">
   <a class="cdash-link" ng-href="builds/{{::build.id}}">
@@ -184,7 +192,7 @@
             </a>
           </td>
           <td ng-if="::group.name != buildgroup.name" colspan="2">
-            <input type="checkbox" ng-model="build.expected" ng-true-value="'1'" ng-false-value="'0'"> expected</input>
+            <input type="checkbox" ng-model="build.expectedInGroup[group.id]" ng-true-value="true" ng-false-value="false"> expected</input>
           </td>
           <td ng-if="::group.name != buildgroup.name" class="nob">
             <a class="cdash-link" href="" ng-click="moveToGroup(build, group.id)"> [move to group] </a>
