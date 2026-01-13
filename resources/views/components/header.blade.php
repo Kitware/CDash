@@ -50,7 +50,7 @@ $userInProject = isset($project) && auth()->user() !== null && \App\Models\Proje
                     href="{{ url('/')}}"
                 @endif
             >
-                @if(isset($project) && $logoid !== null)
+                @if(isset($project) && $logoid !== null && $logoid > 0)
                     <img id="projectlogo" height="50px" alt="" src="{{ url('/image/' . $logoid) }}" />
                 @else
                     <img id="projectlogo" height="50px" alt="" src="{{ asset('img/cdash.svg') }}" />
