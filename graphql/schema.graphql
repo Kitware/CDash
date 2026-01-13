@@ -206,7 +206,7 @@ enum ProjectVisibility {
 
 input CreateProjectInput {
   "Unique name."
-  name: String! @rules(apply: ["App\\Rules\\ProjectVisibilityRule"])
+  name: String! @rules(apply: ["App\\Rules\\ProjectNameRule"])
 
   "Description."
   description: String!
