@@ -27,7 +27,7 @@ docker compose -f docker/docker-compose.yml \
 If you choose not to use an external OAuth2 or SAML authentication provider with CDash, you may want to create users
 manually.  Use the following command to create a user from the command line:
 ```bash
-docker exec --user www-data cdash bash -c "php artisan user:save --email=<email> --password=<password> --firstname=<first name> --lastname=<last name> --institution=<institution> --admin=<1/0>"
+docker exec --user www-data cdash-website-1 bash -c "php artisan user:save --email=<email> --password=<password> --firstname=<first name> --lastname=<last name> --institution=<institution> --admin=<1/0>"
 ```
 
 Once a user with administrative privileges has been created, you can use that user to create other users via the web interface.
