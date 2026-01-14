@@ -1,13 +1,12 @@
 <div id="div_showfilters" ng-controller="FiltersController">
 
   <div ng-hide="showfilters == 0">
-    <div class="table-heading0">
-      <a class="cdash-link"
-         
-         
-         style="float: right;">Help</a>
-      <h3>Filters</h3>
+    <div class="filter-header" style="background: #5775b9; padding: 15px 20px; border-radius: 8px 8px 0 0; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+      <h3 style="color: white; margin: 0; font-size: 18px; font-weight: 600;">
+        <span class="glyphicon glyphicon-filter"></span> Filters
+      </h3>
     </div>
+    <div style="background: white; padding: 20px; border-radius: 0 0 8px 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;">
     <ul>
       <li ng-repeat="filter in filterdata.filters"
           ng-init="currentFilter = filter; group = filterdata; availablefilters = filterdata.availablefilters"
@@ -42,39 +41,46 @@
       </li>
     </ul>
 
-    <div>
+    <div style="margin-top: 15px;">
       <div ng-if="filterdata.showlimit == 0">
         <input type="hidden" id="id_limit" name="limit" value="{{filterdata.limit}}">
         </input>
       </div>
-      <div ng-if="filterdata.showlimit == 1">
-        Limit results to
-        <input type="text" size="3" id="id_limit" name="limit" align="center" value="{{filterdata.limit}}">
-        </input>
-        rows (0 for unlimited)
+      <div ng-if="filterdata.showlimit == 1" style="padding: 12px; background: #f8f9fa; border-radius: 6px; display: inline-block;">
+        <label style="margin: 0; font-weight: 500; color: #555;">
+          Limit results to
+          <input type="text" size="3" id="id_limit" name="limit" align="center" value="{{filterdata.limit}}" style="margin: 0 5px; padding: 4px 8px; border: 1px solid #ddd; border-radius: 4px; text-align: center;">
+          </input>
+          rows (0 for unlimited)
+        </label>
       </div>
     </div>
 
     <!-- date range selector -->
-    <div ng-if="filterdata.showdaterange" class="form-group" daterange></div>
+    <div ng-if="filterdata.showdaterange" class="form-group" daterange style="margin-top: 15px;"></div>
 
-    <div>
-      <div>
+    <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid #e0e0e0;">
+      <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
         <input type="hidden" name="filtercount" id="id_filtercount" value="{{filterdata.filters.length}}">
         </input>
         <input type="hidden" name="showfilters" id="id_showfilters" value="1" />
-        <input type="button" ng-click="applyFilters()" name="apply" value="Apply" />
-        &nbsp;
-        <input type="button" ng-click="clearFilters()" name="clear" value="Clear" />
-        &nbsp;
-        <input type="button" ng-click="displayHyperlink()" name="create_hyperlink" value="Create Hyperlink"/>
+        <button class="btn btn-primary" ng-click="applyFilters()" name="apply" style="background: #5775b9; border: none; padding: 8px 20px; font-weight: 500; box-shadow: 0 2px 4px rgba(87, 117, 185, 0.3);">
+          <span class="glyphicon glyphicon-ok"></span> Apply
+        </button>
+        <button class="btn btn-default" ng-click="clearFilters()" name="clear" style="padding: 8px 20px; font-weight: 500; border: 2px solid #ddd; background: white;">
+          <span class="glyphicon glyphicon-remove"></span> Clear
+        </button>
+        <button class="btn btn-info" ng-click="displayHyperlink()" name="create_hyperlink" style="padding: 8px 20px; font-weight: 500; border: none; box-shadow: 0 2px 4px rgba(91, 192, 222, 0.3);">
+          <span class="glyphicon glyphicon-link"></span> Create Hyperlink
+        </button>
       </div>
     </div>
 
-    <div>
+    <div style="margin-top: 15px;">
       <div>
         <div id="div_filtersAsUrl"/>
       </div>
+    </div>
     </div>
   </div>
 </div>
