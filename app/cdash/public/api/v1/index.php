@@ -209,7 +209,17 @@ if (isset($_GET['parentid'])) {
     } else {
         $base_url = "index.php?project={$projectname_encoded}";
     }
-    $response['menu']['current'] = "$base_url";
+    
+    // Only show 'current' button if we're not already on the current date
+    // Check if a date was explicitly provided in the URL
+    $date_specified = isset($_GET['date']);
+    
+    if ($date_specified && $response['date'] !== $response['currentdate']) {
+        $response['menu']['current'] = "$base_url";
+    } else {
+        $response['menu']['current'] = false;
+    }
+    
     $controller->determineNextPrevious($response, $base_url);
 }
 $response['childview'] = $controller->childView ? 1 : 0;
