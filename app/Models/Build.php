@@ -134,7 +134,7 @@ class Build extends Model
      */
     public function project(): BelongsTo
     {
-        return $this->belongsTo(Project::class, 'projectid', 'id');
+        return $this->belongsTo(Project::class, 'projectid');
     }
 
     /**

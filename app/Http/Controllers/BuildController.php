@@ -1424,7 +1424,7 @@ final class BuildController extends AbstractBuildController
 
             $eloquent_build = EloquentBuild::findOrFail((int) $this->build->Id);
 
-            if (BuildGroup::findOrFail((int) $newgroupid)->project->isNot($eloquent_build->project)) {
+            if (BuildGroup::findOrFail((int) $newgroupid)->project()->isNot($eloquent_build->project)) {
                 abort(403, 'Requested build group is not associated with this project.');
             }
 
