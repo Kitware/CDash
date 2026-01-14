@@ -160,6 +160,9 @@ type Project {
   "A LDAP group users must be a member of to access the project."
   ldapFilter: String @rename(attribute: "ldapfilter")
 
+  "A full URL string pointing to the location of the project's logo."
+  logoUrl: String
+
   builds(
     filters: _ @filter
   ): [Build!]! @hasMany(type: CONNECTION) @orderBy(column: "id")

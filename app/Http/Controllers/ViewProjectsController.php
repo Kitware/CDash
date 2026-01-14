@@ -6,21 +6,12 @@ use App\Models\Project;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
 final class ViewProjectsController extends AbstractController
 {
-    public function viewAllProjects(): View|RedirectResponse
-    {
-        return $this->viewProjects(true);
-    }
-
-    public function viewActiveProjects(): View|RedirectResponse
-    {
-        return $this->viewProjects();
-    }
-
-    private function viewProjects(bool $all = false): View|RedirectResponse
+    public function viewProjects(): View|RedirectResponse
     {
         $num_public_projects = (int) DB::select('
                                      SELECT COUNT(*) AS c FROM project WHERE public=?
@@ -31,8 +22,8 @@ final class ViewProjectsController extends AbstractController
             return $this->redirectToLogin();
         }
 
-        return $this->vue('all-projects', 'Projects', [
-            'show-all' => $all,
-        ], false);
+        return $this->vue('projects-page', 'Projects', [
+            'can-create-projects' => Gate::allows('create', Project::class),
+        ]);
     }
 }

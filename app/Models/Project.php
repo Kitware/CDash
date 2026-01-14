@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -46,6 +47,7 @@ use Illuminate\Support\Facades\Auth;
  * @property bool $viewsubprojectslink
  * @property ?string $ldapfilter
  * @property ?string $banner
+ * @property ?string $logoUrl
  *
  * @method Builder<Project> forUser()
  * @method Builder<Project> administeredByUser()
@@ -118,6 +120,22 @@ class Project extends Model
     public const ACCESS_PRIVATE = 0;
     public const ACCESS_PUBLIC = 1;
     public const ACCESS_PROTECTED = 2;
+
+    /**
+     * @return Attribute<?string,void>
+     */
+    protected function logoUrl(): Attribute
+    {
+        return Attribute::make(
+            get: function (mixed $value, array $attributes): ?string {
+                if ((int) $attributes['imageid'] === 0) {
+                    return null;
+                }
+
+                return url('/image/' . $attributes['imageid']);
+            },
+        );
+    }
 
     /**
      * Get the users who have been added to this project.  Note that this selects users with all roles.
