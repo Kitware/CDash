@@ -150,6 +150,35 @@ $userInProject = isset($project) && auth()->user() !== null && \App\Models\Proje
                         <span id="date_now" style="display:none;">@{{::cdash.date}}</span>
                     </li>
                     <li ng-if="!cdash.hidenav && cdash.projectname_encoded !== undefined">
+                        <a class="cdash-link" href="#" style="cursor: pointer;">View</a>
+                        <ul>
+                            <li>
+                                <a class="cdash-link" id="header_advancedview" ng-click="toggleAdvancedView()">
+                                    <span ng-if="cdash.advancedview == 0">Advanced View</span>
+                                    <span ng-if="cdash.advancedview != 0">Simple View</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="cdash-link autorefresh" ng-click="toggleAutoRefresh()">
+                                    <span ng-if="!autoRefresh">Auto-refresh</span>
+                                    <span ng-if="autoRefresh">Stop auto-refresh</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="cdash-link" id="header_colorblind" href="" ng-click="cdash.filterdata.colorblind=!cdash.filterdata.colorblind; colorblind_toggle()">
+                                    <span ng-show="cdash.filterdata.colorblind == 0">Colorblind palette</span>
+                                    <span ng-show="cdash.filterdata.colorblind != 0">Classic palette</span>
+                                </a>
+                            </li>
+                            <li class="endsubmenu">
+                                <a class="cdash-link" id="header_showfilters" ng-click="showfilters_toggle()">
+                                    <span ng-show="showfilters == 0">Show Filters</span>
+                                    <span ng-show="showfilters != 0">Hide Filters</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li ng-if="!cdash.hidenav && cdash.projectname_encoded !== undefined">
                         <a class="cdash-link" href="#">Project</a>
                         <ul>
                             <li>

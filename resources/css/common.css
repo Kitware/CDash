@@ -737,6 +737,7 @@ div#headertop {
 #headermenu #navigation li a:active,
 #headermenu #navigation li a:visited {
   color:#666666;
+  cursor:pointer;
   display:block;
   font-size:16px;
   height:100%;
@@ -900,61 +901,7 @@ div#main_content {
   padding: 1em 2em;
 }
 
-#settings {
-  cursor: pointer;
-  float: right;
-  height: 20px;
-  margin-right:0;
-  margin-top:20px;
-  position:relative;
-  width: 20px;
-}
-
-#settings ul{
-  -webkit-box-shadow: 0px 20px 27px -2px rgba(0,0,0,0.3);
-  -moz-box-shadow: 0px 20px 27px -2px rgba(0,0,0,0.3);
-  box-shadow: 0px 20px 27px -2px rgba(0,0,0,0.3);
-  list-style: none;
-  margin:0;
-  padding:0;
-  position:absolute;
-  right:27px;
-  top:0;
-  width:130px;
-  z-index:5000;
-}
-
-#settings ul li {
-  background:#e0e0e0;
-  border-bottom:1px solid #bbbbbb;
-  display: block;
-  transition:all .15s ease-in-out;
-}
-
-#settings ul li a {
-  color: #666666;
-  display: block;
-  height: 100%;
-  padding-left: 10px;
-  position: relative;
-  text-decoration: none;
-  transition:all .15s ease-in-out;
-  width: 100%;
-}
-
-#settings ul li:hover {
-  background:#efefef;
-  border-left:4px solid #5775b9;
-}
-
-#settings ul li:hover a {
-  color:#000000;
-  text-decoration: none;
-}
-
-#settings ul.visible {
-  display: block;
-}
+/* #settings styles removed - now using header navigation menu */
 
 /* Table Styles */
 

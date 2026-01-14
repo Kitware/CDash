@@ -8,40 +8,6 @@
           {{::banner}}
         </div>
 
-        <div id="settings" data-cy="settings-dropdown" ng-click="showsettings = ! showsettings">
-          <span class="glyphicon glyphicon-filter"
-                tooltip-popup-delay="1000"
-                tooltip-append-to-body="true"
-                tooltip-placement="left"
-                uib-tooltip="More display options"></span>
-          <ul ng-show="showsettings">
-            <li>
-              <a class="cdash-link" id="label_advancedview" ng-click="toggleAdvancedView()">
-                <span ng-if="::cdash.advancedview == 0">Advanced View</span>
-                <span ng-if="::cdash.advancedview != 0">Simple View</span>
-              </a>
-            </li>
-            <li>
-              <a class="autorefresh cdash-link" ng-click="toggleAutoRefresh()">
-                <span ng-if="::!autoRefresh">Auto-refresh</span>
-                <span ng-if="::autoRefresh">Stop auto-refresh</span>
-              </a>
-            </li>
-            <li>
-              <a class="cdash-link" id="label_colorblind" href="" ng-click="cdash.filterdata.colorblind=!cdash.filterdata.colorblind; colorblind_toggle()">
-                <span ng-show="cdash.filterdata.colorblind == 0" data-cy="color-mode-colorblind">Colorblind palette</span>
-                <span ng-show="cdash.filterdata.colorblind != 0" data-cy="color-mode-classic">Classic palette</span>
-              </a>
-            </li>
-            <li>
-              <a class="cdash-link" id="label_showfilters" ng-click="showfilters_toggle()">
-                <span ng-show="showfilters == 0">Show Filters</span>
-                <span ng-show="showfilters != 0">Hide Filters</span>
-              </a>
-            </li>
-          </ul>
-        </div>
-
         <!-- Filters -->
         <ng-include src="'assets/js/angular/views/partials/filterdataTemplate.html?id=' + VERSION"></ng-include>
       </div> <!-- End index-top -->
