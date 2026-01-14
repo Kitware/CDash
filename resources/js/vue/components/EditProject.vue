@@ -312,16 +312,11 @@
                             {{ type }}
                           </option>
                         </select>
-                        <a
-                          href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
-                          target="blank"
+                        <img
+                          :src="$baseURL + '/img/help.gif'"
+                          border="0"
+                          @mouseover="showHelp('issuecreation_help')"
                         >
-                          <img
-                            :src="$baseURL + '/img/help.gif'"
-                            border="0"
-                            @mouseover="showHelp('issuecreation_help')"
-                          >
-                        </a>
                       </td>
                     </tr>
                   </transition>
@@ -409,16 +404,11 @@
                           Protected
                         </option>
                       </select>
-                      <a
-                        href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
-                        target="blank"
-                      >
-                        <img
+                      <img
                           :src="$baseURL + '/img/help.gif'"
                           border="0"
                           @mouseover="showHelp('public_help')"
                         >
-                      </a>
                       <span
                         id="public_help"
                         class="help_content"
@@ -551,16 +541,11 @@
                         a transparent background.  The logo's height should be no
                         more than 100 pixels.
                       </span>
-                      <a
-                        href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
-                        target="blank"
+                      <img
+                        :src="$baseURL + '/img/help.gif'"
+                        border="0"
                         @mouseover="showHelp('logo_help')"
                       >
-                        <img
-                          :src="$baseURL + '/img/help.gif'"
-                          border="0"
-                        >
-                      </a>
                     </td>
                   </tr>
                   <tr v-if="cdash.edit == 1">
@@ -635,16 +620,11 @@
                         @change="changeViewerType()"
                         @focus="showHelp('svnViewer_help')"
                       >
-                      <a
-                        href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
-                        target="blank"
-                      >
-                        <img
+                      <img
                           :src="$baseURL + '/img/help.gif'"
                           border="0"
                           @mouseover="showHelp('svnViewer_help')"
                         >
-                      </a>
                       <span
                         id="svnViewer_help"
                         class="help_content"
@@ -692,16 +672,11 @@
                           {{ viewer.description }}
                         </option>
                       </select>
-                      <a
-                        href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
-                        target="blank"
-                      >
-                        <img
+                      <img
                           :src="$baseURL + '/img/help.gif'"
                           border="0"
                           @mouseover="showHelp('svnViewerType_help')"
                         >
-                      </a>
                       <span
                         id="svnViewerType_help"
                         class="help_content"
@@ -770,16 +745,11 @@
                           @change="cdash.changesmade = true"
                           @focus="showHelp('svnRepository_help')"
                         >
-                        <a
-                          href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
-                          target="blank"
-                        >
-                          <img
+                        <img
                             :src="$baseURL + '/img/help.gif'"
                             border="0"
                             @mouseover="showHelp('svnRepository_help')"
                           >
-                        </a>
                       </td>
                     </tr>
                     <tr>
@@ -815,15 +785,11 @@
                           @change="cdash.changesmade = true"
                           @focus="showHelp('svnUsername_help')"
                         >
-                        <a
-                          href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
-                          target="blank"
-                        >
-                          <img
+                        <img
                             :src="$baseURL + '/img/help.gif'"
                             border="0"
                             @mouseover="showHelp('svnUsername_help')"
-                          ></a>
+                          >
                       </td>
                     </tr>
                     <tr>
@@ -842,15 +808,11 @@
                           @change="cdash.changesmade = true"
                           @focus="showHelp('svnPassword_help')"
                         >
-                        <a
-                          href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
-                          target="blank"
-                        >
-                          <img
+                        <img
                             :src="$baseURL + '/img/help.gif'"
                             border="0"
                             @mouseover="showHelp('svnPassword_help')"
-                          ></a>
+                          >
                       </td>
                     </tr>
                   </template>
@@ -914,16 +876,11 @@
                         @change="cdash.changesmade = true"
                         @focus="showHelp('TestingDataUrl_help')"
                       >
-                      <a
-                        href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
-                        target="blank"
-                      >
-                        <img
+                      <img
                           :src="$baseURL + '/img/help.gif'"
                           border="0"
                           @mouseover="showHelp('TestingDataUrl_help')"
                         >
-                      </a>
                       <span
                         id="TestingDataUrl_help"
                         class="help_content"
@@ -952,16 +909,11 @@
                         @change="cdash.changesmade = true"
                         @focus="showHelp('NightlyStart_help')"
                       >
-                      <a
-                        href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
-                        target="blank"
-                      >
-                        <img
+                      <img
                           :src="$baseURL + '/img/help.gif'"
                           border="0"
                           @mouseover="showHelp('NightlyStart_help')"
                         >
-                      </a>
                       <span
                         id="NightlyStart_help"
                         class="help_content"
@@ -1000,16 +952,11 @@
                         @change="cdash.changesmade = true"
                         @focus="showHelp('CoverageThres_help')"
                       >
-                      <a
-                        href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
-                        target="blank"
-                      >
-                        <img
+                      <img
                           :src="$baseURL + '/img/help.gif'"
                           border="0"
                           @mouseover="showHelp('CoverageThres_help')"
                         >
-                      </a>
                       <span
                         id="CoverageThres_help"
                         class="help_content"
@@ -1041,16 +988,11 @@
                         @change="cdash.changesmade = true"
                         @focus="showHelp('EnableTestTiming_help')"
                       >
-                      <a
-                        href="https://public.kitware.com/Wiki/CDash:Design#Test_Timing"
-                        target="blank"
-                      >
-                        <img
+                      <img
                           :src="$baseURL + '/img/help.gif'"
                           border="0"
                           @mouseover="showHelp('EnableTestTiming_help')"
                         >
-                      </a>
                       <span
                         id="EnableTestTiming_help"
                         class="help_content"
@@ -1078,16 +1020,11 @@
                         @change="cdash.changesmade = true"
                         @focus="showHelp('TimeDeviation_help')"
                       >
-                      <a
-                        href="https://public.kitware.com/Wiki/CDash:Design#Test_Timing"
-                        target="blank"
-                      >
-                        <img
+                      <img
                           :src="$baseURL + '/img/help.gif'"
                           border="0"
                           @mouseover="showHelp('TimeDeviation_help')"
                         >
-                      </a>
                       <span
                         id="TimeDeviation_help"
                         class="help_content"
@@ -1121,16 +1058,11 @@
                         @change="cdash.changesmade = true"
                         @focus="showHelp('TimeDeviationThreshold_help')"
                       >
-                      <a
-                        href="https://public.kitware.com/Wiki/CDash:Design#Test_Timing"
-                        target="blank"
-                      >
-                        <img
+                      <img
                           :src="$baseURL + '/img/help.gif'"
                           border="0"
                           @mouseover="showHelp('TimeDeviationThreshold_help')"
                         >
-                      </a>
                       <span
                         id="TimeDeviationThreshold_help"
                         class="help_content"
@@ -1166,16 +1098,11 @@
                         @change="cdash.changesmade = true"
                         @focus="showHelp('TimeMaxStatus_help')"
                       >
-                      <a
-                        href="https://public.kitware.com/Wiki/CDash:Design#Test_Timing"
-                        target="blank"
-                      >
-                        <img
+                      <img
                           :src="$baseURL + '/img/help.gif'"
                           border="0"
                           @mouseover="showHelp('TimeMaxStatus_help')"
                         >
-                      </a>
                       <span
                         id="TimeMaxStatus_help"
                         class="help_content"
@@ -1237,16 +1164,11 @@
                         @change="cdash.changesmade = true"
                         @focus="showHelp('emailBroken_help')"
                       >
-                      <a
-                        href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
-                        target="blank"
-                      >
-                        <img
+                      <img
                           :src="$baseURL + '/img/help.gif'"
                           border="0"
                           @mouseover="showHelp('emailBroken_help')"
                         >
-                      </a>
                       <span
                         id="emailBroken_help"
                         class="help_content"
@@ -1275,16 +1197,11 @@
                         @change="cdash.changesmade = true"
                         @focus="showHelp('emailRedundant_help')"
                       >
-                      <a
-                        href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
-                        target="blank"
-                      >
-                        <img
+                      <img
                           :src="$baseURL + '/img/help.gif'"
                           border="0"
                           @mouseover="showHelp('emailRedundant_help')"
                         >
-                      </a>
                       <span
                         id="emailRedundant_help"
                         class="help_content"
@@ -1314,16 +1231,11 @@
                         @change="cdash.changesmade = true"
                         @focus="showHelp('emailCoverage_help')"
                       >
-                      <a
-                        href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
-                        target="blank"
-                      >
-                        <img
+                      <img
                           :src="$baseURL + '/img/help.gif'"
                           border="0"
                           @mouseover="showHelp('emailCoverage_help')"
                         >
-                      </a>
                       <span
                         id="emailCoverage_help"
                         class="help_content"
@@ -1353,16 +1265,11 @@
                         @change="cdash.changesmade = true"
                         @focus="showHelp('emailTiming_help')"
                       >
-                      <a
-                        href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
-                        target="blank"
-                      >
-                        <img
+                      <img
                           :src="$baseURL + '/img/help.gif'"
                           border="0"
                           @mouseover="showHelp('emailTiming_help')"
                         >
-                      </a>
                       <span
                         id="emailTiming_help"
                         class="help_content"
@@ -1454,16 +1361,11 @@
                       <div align="right">
                         <strong>
                           Block List
-                          <a
-                            href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
-                            target="blank"
-                          >
-                            <img
+                          <img
                               :src="$baseURL + '/img/help.gif'"
                               border="0"
                               @mouseover="showHelp('blockList_help')"
                             >
-                          </a>
                         </strong>
                       </div>
                     </td>
@@ -1623,16 +1525,11 @@
                       >
                         CTestConfig.cmake
                       </a>
-                      <a
-                        href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
-                        target="blank"
-                      >
-                        <img
+                      <img
                           :src="$baseURL + '/img/help.gif'"
                           border="0"
                           @mouseover="showHelp('ctestConfig_help')"
                         >
-                      </a>
                       <span
                         id="ctestConfig_help"
                         class="help_content"
@@ -1663,16 +1560,11 @@
                         @change="cdash.changesmade = true"
                         @focus="showHelp('displayLabels_help')"
                       >
-                      <a
-                        href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
-                        target="blank"
-                      >
-                        <img
+                      <img
                           :src="$baseURL + '/img/help.gif'"
                           border="0"
                           @mouseover="showHelp('displayLabels_help')"
                         >
-                      </a>
                       <span
                         id="displayLabels_help"
                         class="help_content"
@@ -1702,16 +1594,11 @@
                         @change="cdash.changesmade = true"
                         @focus="showHelp('shareLabelFilters_help')"
                       >
-                      <a
-                        href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
-                        target="blank"
-                      >
-                        <img
+                      <img
                           :src="$baseURL + '/img/help.gif'"
                           border="0"
                           @mouseover="showHelp('shareLabelFilters_help')"
                         >
-                      </a>
                       <span
                         id="shareLabelFilters_help"
                         class="help_content"
@@ -1740,16 +1627,11 @@
                         @change="cdash.changesmade = true"
                         @focus="showHelp('viewSubProjectsLink_help')"
                       >
-                      <a
-                        href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
-                        target="blank"
-                      >
-                        <img
+                      <img
                           :src="$baseURL + '/img/help.gif'"
                           border="0"
                           @mouseover="showHelp('viewSubProjectsLink_help')"
                         >
-                      </a>
                       <span
                         id="viewSubProjectsLink_help"
                         class="help_content"
@@ -1779,16 +1661,11 @@
                         @change="cdash.changesmade = true"
                         @focus="showHelp('showCoverageCode_help')"
                       >
-                      <a
-                        href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
-                        target="blank"
-                      >
-                        <img
+                      <img
                           :src="$baseURL + '/img/help.gif'"
                           border="0"
                           @mouseover="showHelp('showCoverageCode_help')"
                         >
-                      </a>
                       <span
                         id="showCoverageCode_help"
                         class="help_content"
@@ -1817,16 +1694,11 @@
                         @change="cdash.changesmade = true"
                         @focus="showHelp('autoremoveTimeframe_help')"
                       >
-                      <a
-                        href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
-                        target="blank"
-                      >
-                        <img
+                      <img
                           :src="$baseURL + '/img/help.gif'"
                           border="0"
                           @mouseover="showHelp('autoremoveTimeframe_help')"
                         >
-                      </a>
                       <span
                         id="autoremoveTimeframe_help"
                         class="help_content"
@@ -1856,16 +1728,11 @@
                         @change="cdash.changesmade = true"
                         @focus="showHelp('autoremoveMaxBuilds_help')"
                       >
-                      <a
-                        href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
-                        target="blank"
-                      >
-                        <img
+                      <img
                           :src="$baseURL + '/img/help.gif'"
                           border="0"
                           @mouseover="showHelp('autoremoveMaxBuilds_help')"
                         >
-                      </a>
                       <span
                         id="autoremoveMaxBuilds_help"
                         class="help_content"
@@ -1895,16 +1762,11 @@
                         @change="cdash.changesmade = true"
                         @focus="showHelp('uploadQuota_help')"
                       >
-                      <a
-                        href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
-                        target="blank"
-                      >
-                        <img
+                      <img
                           :src="$baseURL + '/img/help.gif'"
                           border="0"
                           @mouseover="showHelp('uploadQuota_help')"
                         >
-                      </a>
                       <span
                         id="uploadQuota_help"
                         class="help_content"

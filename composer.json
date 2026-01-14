@@ -7,7 +7,6 @@
     "email": "kitware@kitware.com",
     "issues": "https://github.com/Kitware/CDash/issues",
     "source": "https://github.com/Kitware/CDash",
-    "wiki": "http://public.kitware.com/Wiki/CDash"
   },
   "require": {
     "php": "^8.3",
