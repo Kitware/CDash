@@ -18,57 +18,7 @@
        style="text-decoration: none; font-size: 12px; background: rgba(255,255,255,0.95); border: none;">
       <span class="glyphicon glyphicon-stats"></span> View Timeline
     </a>
-    
-    <!-- Toggle selection mode button (admin only) -->
-    <button ng-if="::cdash.user.admin == 1"
-            class="btn btn-xs" 
-            ng-class="buildgroup.selectionMode ? 'btn-info' : 'btn-default'"
-            ng-click="toggleSelectionMode(buildgroup)"
-            title="Toggle bulk selection mode"
-            style="font-size: 12px; background: rgba(255,255,255,0.95); border: none;"
-            ng-style="buildgroup.selectionMode && {'background': '#5bc0de', 'color': 'white'}">
-      <span class="glyphicon" ng-class="buildgroup.selectionMode ? 'glyphicon-check' : 'glyphicon-unchecked'"></span>
-      {{buildgroup.selectionMode ? 'Exit Selection' : 'Bulk Select'}}
-    </button>
   </span>
-</div>
-
-<!-- Bulk actions toolbar (visible only when builds are selected) -->
-<div ng-if="cdash.user.admin == 1 && buildgroup.selectedBuilds.length > 0" style="background: linear-gradient(135deg, #f0f8ff 0%, #e6f2ff 100%); border: 2px solid #667eea; border-radius: 8px; padding: 16px; margin-bottom: 10px; box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);">
-  <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
-    <div style="display: flex; align-items: center; gap: 10px;">
-      <span style="font-weight: 600; color: #667eea; font-size: 14px;">
-        <span class="glyphicon glyphicon-ok-sign" style="margin-right: 5px;"></span>
-        {{buildgroup.selectedBuilds.length}} build(s) selected
-      </span>
-    </div>
-    
-    <div style="display: flex; align-items: center; gap: 8px;">
-      <label style="margin: 0; font-weight: 500;">Move to:</label>
-      <select ng-model="buildgroup.bulkTargetGroup" style="padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;">
-        <option value="">-- Select Group --</option>
-        <option ng-repeat="group in ::cdash.all_buildgroups" value="{{group.id}}">{{group.name}}</option>
-      </select>
-      <button class="btn btn-sm btn-primary" ng-click="bulkMoveToGroup(buildgroup)" ng-disabled="!buildgroup.bulkTargetGroup">
-        <span class="glyphicon glyphicon-arrow-right"></span> Move
-      </button>
-    </div>
-    
-    <div style="display: flex; align-items: center; gap: 8px;">
-      <button class="btn btn-sm btn-success" ng-click="bulkMarkAsExpected(buildgroup, 1)">
-        <span class="glyphicon glyphicon-ok"></span> Mark as Expected
-      </button>
-      <button class="btn btn-sm btn-warning" ng-click="bulkMarkAsExpected(buildgroup, 0)">
-        <span class="glyphicon glyphicon-remove"></span> Mark as Not Expected
-      </button>
-    </div>
-    
-    <div style="margin-left: auto;">
-      <button class="btn btn-sm btn-default" ng-click="clearBuildSelection(buildgroup)" style="border-color: #dc3545; color: #dc3545;">
-        <span class="glyphicon glyphicon-remove-circle"></span> Clear Selection
-      </button>
-    </div>
-  </div>
 </div>
 
 <table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb" id="project_{{::cdash.projectid}}_{{::buildgroup.id}}" style="border-radius: 0 0 8px 8px; margin-top: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden;">
