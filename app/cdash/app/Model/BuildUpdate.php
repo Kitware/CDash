@@ -20,6 +20,7 @@ namespace CDash\Model;
 use App\Models\Build;
 use App\Models\BuildUpdate as EloquentBuildUpdate;
 use App\Models\BuildUpdateFile;
+use Exception;
 use Illuminate\Support\Facades\DB;
 
 class BuildUpdate
@@ -56,7 +57,8 @@ class BuildUpdate
             $build = Build::findOrFail((int) $this->BuildId);
 
             // Check if this update already exists.
-            $update = $build->updates()->first();
+            /** @var ?EloquentBuildUpdate $update */
+            $update = $build->updateStep;
             $exists = false;
             if ($update !== null) {
                 $exists = true;
@@ -66,11 +68,11 @@ class BuildUpdate
             // Remove previous updates
             if ($exists && !$this->Append) {
                 // Parent builds share updates with their children.
-                // So if this is a parent build remove any build2update rows
+                // So if this is a parent build remove any associations
                 // from the children here.
                 /** @var Build $child_build */
                 foreach ($build->children as $child_build) {
-                    $child_build->updates()->detach();
+                    $child_build->updateStep()->dissociate();
                 }
 
                 // If the buildupdate and updatefile are not shared
@@ -78,7 +80,7 @@ class BuildUpdate
                 if ($update->builds()->count() === 1) {
                     $update->delete();
                 }
-                $build->updates()->detach();
+                $build->updateStep()->dissociate();
                 $exists = false;
                 $this->UpdateId = '';
             }
@@ -109,13 +111,13 @@ class BuildUpdate
                     'priorrevision' => $this->PriorRevision ?? '',
                     'path' => $this->Path ?? '',
                 ]);
-                $update_model->builds()->attach((int) $this->BuildId);
+                $update_model->builds()->save($build);
                 $this->UpdateId = $update_model->id;
 
                 // If this is a parent build, make sure that all of its children
                 // are also associated with a buildupdate.
-                $children_needing_buildupdates = $build->children()->whereDoesntHave('updates')->pluck('id');
-                $update_model->builds()->attach($children_needing_buildupdates);
+                $children_needing_buildupdates = $build->children()->whereDoesntHave('updateStep')->get();
+                $update_model->builds()->saveMany($children_needing_buildupdates);
             } else {
                 $update_model = EloquentBuildUpdate::findOrFail((int) $this->UpdateId);
                 $update_model->update([
@@ -148,7 +150,7 @@ class BuildUpdate
         }
 
         // If we already have something in the database we return
-        if ($build->updates()->exists()) {
+        if ($build->updateStep()->exists()) {
             return true;
         }
 
@@ -157,19 +159,24 @@ class BuildUpdate
             'stamp' => $stamp,
             'name' => $name,
             'siteid' => $siteid,
-        ])->whereNot('id', (int) $this->BuildId)->whereHas('updates')->first();
+        ])->whereNot('id', (int) $this->BuildId)
+            ->whereHas('updateStep')
+            ->first();
 
         if ($similar_build === null) {
             return true;
         }
 
-        $this->UpdateId = $similar_build->updates()->firstOrFail()->id;
+        $this->UpdateId = $similar_build->updateStep?->id;
+        if ($this->UpdateId === null) {
+            throw new Exception('BuildUpdate::AssociateBuild(): UpdateId not set');
+        }
 
-        $build->updates()->attach($this->UpdateId);
+        $build->updateStep()->associate($this->UpdateId)->save();
 
         // check if this build's parent also needs to be associated with
         // this update.
-        $build->parent?->updates()->syncWithoutDetaching((int) $this->UpdateId);
+        $build->parent?->updateStep()->associate((int) $this->UpdateId)->save();
         return true;
     }
 
@@ -182,17 +189,17 @@ class BuildUpdate
         $parentBuild = Build::findOrFail($parentid);
 
         // Make sure the child does not already have an update.
-        if ($childBuild->updates()->exists()) {
+        if ($childBuild->updateStep()->exists()) {
             return;
         }
 
         // Get the parent's update.
-        $updateid = $parentBuild->updates()->first()?->id;
+        $updateid = $parentBuild->updateStep?->id;
         if ($updateid === null) {
             return;
         }
 
         // Assign the parent's update to the child.
-        $childBuild->updates()->attach($updateid);
+        $childBuild->updateStep()->associate($updateid)->save();
     }
 }

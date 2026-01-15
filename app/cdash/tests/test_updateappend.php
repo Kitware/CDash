@@ -55,7 +55,7 @@ class UppdateAppendTestCase extends KWWebTestCase
         $buildid = $buildids[0];
 
         // Get the updateid associated with the build id
-        $query = pdo_query('SELECT updateid FROM build2update WHERE buildid=' . qnum($buildid));
+        $query = pdo_query('SELECT updateid FROM build WHERE id=' . qnum($buildid));
         $query_array = pdo_fetch_array($query);
         $updateid = $query_array['updateid'];
         $build_query = pdo_query('SELECT * FROM buildupdate WHERE id=' . qnum($updateid));

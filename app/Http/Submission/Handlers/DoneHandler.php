@@ -66,7 +66,7 @@ class DoneHandler extends AbstractXmlHandler
             // Should we re-run any checks that were previously marked
             // as pending?
             if ($pendingSubmissionsModel !== null && $pendingSubmissionsModel->recheck) {
-                $revision = \App\Models\Build::findOrFail((int) $this->Build->Id)->updates()->first()->revision ?? '';
+                $revision = \App\Models\Build::findOrFail((int) $this->Build->Id)->updateStep->revision ?? '';
                 Repository::createOrUpdateCheck($revision);
             }
 

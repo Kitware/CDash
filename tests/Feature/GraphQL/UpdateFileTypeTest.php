@@ -51,7 +51,7 @@ class UpdateFileTypeTest extends TestCase
         ]);
 
         /** @var BuildUpdate $update */
-        $update = $build->updates()->create([
+        $update = BuildUpdate::create([
             'command' => Str::uuid()->toString(),
             'type' => 'GIT',
             'status' => Str::uuid()->toString(),
@@ -59,6 +59,7 @@ class UpdateFileTypeTest extends TestCase
             'priorrevision' => Str::uuid()->toString(),
             'path' => Str::uuid()->toString(),
         ]);
+        $build->updateStep()->associate($update)->save();
 
         /** @var BuildUpdateFile $updateFile */
         $updateFile = $update->updateFiles()->create([
@@ -76,23 +77,19 @@ class UpdateFileTypeTest extends TestCase
         $this->graphQL('
             query build($id: ID) {
                 build(id: $id) {
-                    updates {
-                        edges {
-                            node {
-                                updateFiles {
-                                    edges {
-                                        node {
-                                            fileName
-                                            authorName
-                                            authorEmail
-                                            committerName
-                                            committerEmail
-                                            log
-                                            revision
-                                            priorRevision
-                                            status
-                                        }
-                                    }
+                    updateStep {
+                        updateFiles {
+                            edges {
+                                node {
+                                    fileName
+                                    authorName
+                                    authorEmail
+                                    committerName
+                                    committerEmail
+                                    log
+                                    revision
+                                    priorRevision
+                                    status
                                 }
                             }
                         }
@@ -104,26 +101,20 @@ class UpdateFileTypeTest extends TestCase
         ])->assertExactJson([
             'data' => [
                 'build' => [
-                    'updates' => [
-                        'edges' => [
-                            [
-                                'node' => [
-                                    'updateFiles' => [
-                                        'edges' => [
-                                            [
-                                                'node' => [
-                                                    'fileName' => $updateFile->filename,
-                                                    'authorName' => $updateFile->author,
-                                                    'authorEmail' => $updateFile->email,
-                                                    'committerName' => $updateFile->committer,
-                                                    'committerEmail' => $updateFile->committeremail,
-                                                    'log' => $updateFile->log,
-                                                    'revision' => $updateFile->revision,
-                                                    'priorRevision' => $updateFile->priorrevision,
-                                                    'status' => $updateFile->status,
-                                                ],
-                                            ],
-                                        ],
+                    'updateStep' => [
+                        'updateFiles' => [
+                            'edges' => [
+                                [
+                                    'node' => [
+                                        'fileName' => $updateFile->filename,
+                                        'authorName' => $updateFile->author,
+                                        'authorEmail' => $updateFile->email,
+                                        'committerName' => $updateFile->committer,
+                                        'committerEmail' => $updateFile->committeremail,
+                                        'log' => $updateFile->log,
+                                        'revision' => $updateFile->revision,
+                                        'priorRevision' => $updateFile->priorrevision,
+                                        'status' => $updateFile->status,
                                     ],
                                 ],
                             ],

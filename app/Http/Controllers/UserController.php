@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BuildUpdate;
 use App\Models\Site;
 use App\Models\User;
 use App\Utils\AuthTokenUtil;
@@ -293,7 +294,8 @@ final class UserController extends AbstractController
             }
 
             // Update
-            $BuildUpdate = $build->updates()->first();
+            /** @var ?BuildUpdate $BuildUpdate */
+            $BuildUpdate = $build->updateStep;
             $response['update'] = $BuildUpdate->nfiles ?? 0;
             $response['updateclass'] = $BuildUpdate !== null && $BuildUpdate->warnings > 0 ? 'error' : 'normal';
 

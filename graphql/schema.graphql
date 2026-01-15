@@ -543,9 +543,7 @@ type Build {
     filters: _ @filter
   ): [DynamicAnalysis!]! @hasMany(type: CONNECTION) @orderBy(column: "id", direction: ASC)
 
-  updates(
-    filters: _ @filter
-  ): [Update!]! @belongsToMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)
+  updateStep: Update @belongsTo
 }
 
 

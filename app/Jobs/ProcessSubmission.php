@@ -629,7 +629,7 @@ class ProcessSubmission implements ShouldQueue
 
                 $body = "$sitename has encountered errors during the Update step and you have been identified as the maintainer of this site.\n\n";
                 $body .= "*Update Errors*\n";
-                $body .= 'Status: ' . $eloquentBuild->updates()->firstOrFail()->status . ' (' . url('/builds/' . $buildid . '/update') . ")\n";
+                $body .= 'Status: ' . $eloquentBuild->updateStep?->status . ' (' . url('/builds/' . $buildid . '/update') . ")\n";
 
                 Mail::raw($body, function ($message) use ($subject, $recipients): void {
                     $message->subject($subject)
@@ -642,7 +642,7 @@ class ProcessSubmission implements ShouldQueue
     /** Check for update errors for a given build. */
     private static function check_email_update_errors(int $buildid): array
     {
-        $num_errors = \App\Models\Build::findOrFail($buildid)->updates()->first()->errors ?? 0;
+        $num_errors = \App\Models\Build::findOrFail($buildid)->updateStep->errors ?? 0;
 
         return [
             'hasfixes' => false,

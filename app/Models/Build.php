@@ -310,13 +310,11 @@ class Build extends Model
     }
 
     /**
-     * TODO: Perhaps rename this function in the future to make it less similar to Laravel's update()?
-     *
-     * @return BelongsToMany<BuildUpdate, $this>
+     * @return BelongsTo<BuildUpdate, $this>
      */
-    public function updates(): BelongsToMany
+    public function updateStep(): BelongsTo
     {
-        return $this->belongsToMany(BuildUpdate::class, 'build2update', 'buildid', 'updateid');
+        return $this->belongsTo(BuildUpdate::class, 'updateid');
     }
 
     /**

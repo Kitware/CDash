@@ -321,8 +321,7 @@ class QueryTests extends ResultsApi
         }
         if ($this->filterOnRevision) {
             $filter_joins .= '
-                LEFT JOIN build2update b2u ON b2u.buildid = b.id
-                LEFT JOIN buildupdate bu ON bu.id = b2u.updateid';
+                LEFT JOIN buildupdate bu ON bu.id = b.updateid';
         }
 
         // Select extra data if we are filtering on test output.
