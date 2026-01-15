@@ -64,8 +64,9 @@ type Query {
 
 
 type Mutation {
+  # TODO: Change the return type to be a payload type instead of a project
   "Create a new project."
-  createProject(input: CreateProjectInput! @spread): Project @create @canModel(ability: "create")
+  createProject(input: CreateProjectInput! @spread): Project @field(resolver: "CreateProject")
 
   "Subscribe the current user to the specified site."
   claimSite(input: ClaimSiteInput! @spread): ClaimSiteMutationPayload! @field(resolver: "ClaimSite")
