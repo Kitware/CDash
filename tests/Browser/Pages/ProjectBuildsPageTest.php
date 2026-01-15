@@ -8,7 +8,7 @@ use Laravel\Dusk\Browser;
 use Tests\BrowserTestCase;
 use Tests\Traits\CreatesProjects;
 
-class ProjectPageTest extends BrowserTestCase
+class ProjectBuildsPageTest extends BrowserTestCase
 {
     use CreatesProjects;
 

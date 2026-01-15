@@ -20,7 +20,7 @@ const TestDetails = Vue.defineAsyncComponent(() => import('./components/TestDeta
 const HeaderNav = Vue.defineAsyncComponent(() => import('./components/page-header/HeaderNav.vue'));
 const ViewDynamicAnalysis = Vue.defineAsyncComponent(() => import('./components/ViewDynamicAnalysis.vue'));
 const ViewDynamicAnalysisFile = Vue.defineAsyncComponent(() => import('./components/ViewDynamicAnalysisFile.vue'));
-const AllProjects = Vue.defineAsyncComponent(() => import('./components/AllProjects.vue'));
+const ProjectsPage = Vue.defineAsyncComponent(() => import('./components/ProjectsPage.vue'));
 const SubProjectDependencies = Vue.defineAsyncComponent(() => import('./components/SubProjectDependencies.vue'));
 const BuildTestsPage = Vue.defineAsyncComponent(() => import('./components/BuildTestsPage.vue'));
 const ProjectSitesPage = Vue.defineAsyncComponent(() => import('./components/ProjectSitesPage.vue'));
@@ -47,7 +47,7 @@ const cdash_components = {
   HeaderNav,
   ViewDynamicAnalysis,
   ViewDynamicAnalysisFile,
-  AllProjects,
+  ProjectsPage,
   SubProjectDependencies,
   BuildTestsPage,
   ProjectSitesPage,

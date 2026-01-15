@@ -260,7 +260,10 @@ add_browser_test(/Browser/Pages/ProjectSitesPageTest)
 
 add_browser_test(/Browser/Pages/ProjectMembersPageTest)
 
-add_browser_test(/Browser/Pages/ProjectPageTest)
+add_browser_test(/Browser/Pages/ProjectBuildsPageTest)
+
+add_browser_test(/Browser/Pages/ProjectsPageTest)
+set_property(TEST /Browser/Pages/ProjectsPageTest APPEND PROPERTY RUN_SERIAL TRUE)
 
 add_feature_test(/Feature/PurgeUnusedProjectsCommand)
 set_property(TEST /Feature/PurgeUnusedProjectsCommand APPEND PROPERTY RUN_SERIAL TRUE)

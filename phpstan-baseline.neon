@@ -5836,6 +5836,18 @@ parameters:
 			path: app/Models/CoverageView.php
 
 		-
+			rawMessage: Binary operation "." between '/image/' and mixed results in an error.
+			identifier: binaryOp.invalid
+			count: 1
+			path: app/Models/Project.php
+
+		-
+			rawMessage: Cannot cast mixed to int.
+			identifier: cast.int
+			count: 1
+			path: app/Models/Project.php
+
+		-
 			rawMessage: Binary operation "." between non-falsy-string and mixed results in an error.
 			identifier: binaryOp.invalid
 			count: 1
