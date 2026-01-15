@@ -15,7 +15,7 @@ return [
         'min' => env('MINIMUM_PASSWORD_LENGTH', 5),
         'expires' => env('PASSWORD_EXPIRATION', 0),
     ],
-    'version' => '4.7.0',
+    'version' => '4.8.0',
     'registration' => [
         'email' => [
             'verify' => env('REGISTRATION_EMAIL_VERIFY', true),
