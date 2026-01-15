@@ -210,8 +210,7 @@ class Timeline extends Index
                     FROM build b
                     JOIN build2group b2g ON b2g.buildid = b.id
                     JOIN buildgroup bg ON bg.id = b2g.groupid
-                    LEFT JOIN build2update b2u ON b2u.buildid = b.id
-                    LEFT JOIN buildupdate bu ON bu.id = b2u.updateid
+                    LEFT JOIN buildupdate bu ON bu.id = b.updateid
                     WHERE b.projectid = :projectid AND b.parentid IN (0, -1) AND
                     bg.name = :buildgroupname
                     ORDER BY starttime');

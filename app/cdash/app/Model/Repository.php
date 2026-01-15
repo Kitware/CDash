@@ -72,8 +72,7 @@ class Repository
         $db->getPdo();
         $stmt = $db->prepare('
 			SELECT projectid FROM build b
-			JOIN build2update b2u ON b2u.buildid = b.id
-			JOIN buildupdate bu ON bu.id = b2u.updateid
+			JOIN buildupdate bu ON bu.id = b.updateid
 			WHERE bu.revision = :sha
 			LIMIT 1');
         $db->execute($stmt, ['sha' => $sha]);

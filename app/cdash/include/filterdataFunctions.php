@@ -285,7 +285,7 @@ class IndexPhpFilters extends DefaultFilters
                 break;
 
             case 'updatedfiles':
-                $sql_field = '(SELECT COUNT(uf.updateid) FROM updatefile AS uf, build2update AS b2u WHERE b2u.updateid=uf.updateid AND b2u.buildid=b.id)';
+                $sql_field = '(SELECT COUNT(uf.updateid) FROM updatefile AS uf WHERE uf.updateid=b.updateid)';
 
                 break;
 

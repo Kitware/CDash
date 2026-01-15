@@ -166,8 +166,8 @@ class TestDetails extends BuildTestApi
         $stmt = $this->db->prepare(
             'SELECT status, revision, priorrevision, path
                 FROM buildupdate bu
-                JOIN build2update b2u ON (b2u.updateid = bu.id)
-                WHERE b2u.buildid = :buildid');
+                JOIN build b ON (b.updateid = bu.id)
+                WHERE b.id = :buildid');
         $this->db->execute($stmt, [':buildid' => $this->build->Id]);
         $status_array = $stmt->fetch();
         if (is_array($status_array)) {

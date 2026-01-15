@@ -507,7 +507,7 @@ class RepositoryUtils
         if ($errorkey === 'update_errors') {
             $information = "\n\n*Update*\n";
 
-            $update = $eloquentBuild->updates()->firstOrFail();
+            $update = $eloquentBuild->updateStep()->firstOrFail();
             $information .= "Status: {$update->status} ({$serverURI}/builds/{$buildid}/update)\n";
             $information .= 'Command: ';
             $information .= substr($update->command, 0, $maxchars);

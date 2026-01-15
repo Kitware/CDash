@@ -9310,12 +9310,6 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			rawMessage: PHPDoc tag @var with type App\Models\BuildUpdateFile is not subtype of type TValue.
-			identifier: varTag.type
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
 			rawMessage: Property CDash\Model\Build::$BuildConfigure has no type specified.
 			identifier: missingType.property
 			count: 1
@@ -27215,18 +27209,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: tests/Feature/GraphQL/SiteTypeTest.php
-
-		-
-			rawMessage: 'PHPDoc tag @var with type App\Models\BuildUpdate is not subtype of type App\Models\BuildUpdate&object{pivot: Illuminate\Database\Eloquent\Relations\Pivot}.'
-			identifier: varTag.type
-			count: 1
-			path: tests/Feature/GraphQL/UpdateFileTypeTest.php
-
-		-
-			rawMessage: 'PHPDoc tag @var with type App\Models\BuildUpdate is not subtype of type App\Models\BuildUpdate&object{pivot: Illuminate\Database\Eloquent\Relations\Pivot}.'
-			identifier: varTag.type
-			count: 1
-			path: tests/Feature/GraphQL/UpdateTypeTest.php
 
 		-
 			rawMessage: Cannot access offset 0 on mixed.

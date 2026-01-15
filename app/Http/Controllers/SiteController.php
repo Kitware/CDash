@@ -26,14 +26,12 @@ final class SiteController extends AbstractController
                     AVG(submittime - buildupdate.starttime) AS elapsed
                 FROM
                     build,
-                    build2update,
                     buildupdate,
                     project,
                     site
                 WHERE
                     submittime > NOW() - interval '168 hours'
-                    AND build2update.buildid = build.id
-                    AND buildupdate.id = build2update.updateid
+                    AND buildupdate.id = build.updateid
                     AND site.id = build.siteid
                     AND build.projectid = project.id
                 GROUP BY

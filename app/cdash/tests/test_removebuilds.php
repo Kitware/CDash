@@ -163,8 +163,7 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $update->Command = 'git fetch';
         $update->Insert();
 
-        DB::insert("INSERT INTO build2update (buildid, updateid)
-            VALUES ($existing_build->Id, $update->UpdateId)");
+        App\Models\Build::findOrFail((int) $existing_build->Id)->updateStep()->associate((int) $update->UpdateId)->save();
 
         // Coverage
         $file1 = new CoverageFile();
@@ -465,8 +464,7 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $imgids = $this->verify_get_rows('test2image', 'imgid', 'testid', 'IN', $testids, 2);
         $this->verify('image', 'id', 'IN', $imgids, 2);
 
-        $updateid =
-            $this->verify_get_rows('build2update', 'updateid', 'buildid', '=', $build->Id, 1);
+        $updateid = $this->verify_get_rows('build', 'updateid', 'id', '=', $build->Id, 1);
         $this->verify('buildupdate', 'id', '=', $updateid, 1);
         $this->verify('updatefile', 'updateid', '=', $updateid, 1);
 
@@ -493,7 +491,6 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $this->verify('build2group', 'buildid', '=', $build->Id, 0, $extra_msg);
         $this->verify('build2note', 'buildid', '=', $build->Id, 0, $extra_msg);
         $this->verify('build2test', 'buildid', '=', $build->Id, 0, $extra_msg);
-        $this->verify('build2update', 'buildid', '=', $build->Id, 0, $extra_msg);
         $this->verify('build2uploadfile', 'buildid', '=', $build->Id, 0, $extra_msg);
         $this->verify('buildemail', 'buildid', '=', $build->Id, 0, $extra_msg);
         $this->verify('builderror', 'buildid', '=', $build->Id, 0, $extra_msg);
@@ -536,7 +533,6 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $this->verify('build2group', 'buildid', '=', $existing_build->Id, 0, $extra_msg);
         $this->verify('build2note', 'buildid', '=', $existing_build->Id, 0, $extra_msg);
         $this->verify('build2test', 'buildid', '=', $existing_build->Id, 0, $extra_msg);
-        $this->verify('build2update', 'buildid', '=', $existing_build->Id, 0, $extra_msg);
         $this->verify('build2uploadfile', 'buildid', '=', $existing_build->Id, 0, $extra_msg);
         $this->verify('buildemail', 'buildid', '=', $existing_build->Id, 0, $extra_msg);
         $this->verify('builderror', 'buildid', '=', $existing_build->Id, 0, $extra_msg);

@@ -227,8 +227,7 @@ class GitHub implements RepositoryInterface
             SELECT b.id, b.name, b.builderrors, b.configureerrors, b.testfailed,
                    b.done, b.starttime, bp.properties
             FROM build b
-            JOIN build2update b2u ON b2u.buildid = b.id
-            JOIN buildupdate bu ON bu.id = b2u.updateid
+            JOIN buildupdate bu ON bu.id = b.updateid
             LEFT JOIN buildproperties bp ON bp.buildid = b.id
             WHERE bu.revision = :sha');
         $this->db->execute($stmt, [':sha' => $head_sha]);
@@ -481,7 +480,7 @@ class GitHub implements RepositoryInterface
         if ($previous_buildid < 1) {
             return false;
         }
-        $previous_update = \App\Models\Build::findOrFail($previous_buildid)->updates()->first();
+        $previous_update = \App\Models\Build::findOrFail($previous_buildid)->updateStep;
         if ($previous_update === null) {
             return false;
         }

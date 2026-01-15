@@ -1365,8 +1365,8 @@ class Build
         // Record user statistics for each updated file.
         $updatefiles_stmt = $this->PDO->prepare(
             "SELECT author,email,checkindate,filename FROM updatefile AS uf
-            JOIN build2update AS b2u ON b2u.updateid=uf.updateid
-            WHERE b2u.buildid=? AND checkindate>'1980-01-01T00:00:00'
+            JOIN build AS b ON b.updateid=uf.updateid
+            WHERE b.id=? AND checkindate>'1980-01-01T00:00:00'
             ORDER BY author ASC, checkindate ASC");
         pdo_execute($updatefiles_stmt, [$this->Id]);
 
@@ -2345,11 +2345,10 @@ class Build
         // file submission.
 
         if ($this->CommitAuthors === []) {
-            $update_files = EloquentBuild::with('updates.updateFiles')
+            $update_files = EloquentBuild::with('updateStep.updateFiles')
                 ->findOrFail((int) $this->Id)
-                ->updates
-                ->pluck('updateFiles')
-                ->flatten();
+                ->updateStep
+                ->updateFiles ?? [];
 
             $authors = [];
             /** @var BuildUpdateFile $row */

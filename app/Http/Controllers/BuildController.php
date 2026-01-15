@@ -319,10 +319,10 @@ final class BuildController extends AbstractBuildController
             SELECT *
             FROM
                 buildupdate AS u,
-                build2update AS b2u
+                build AS b
             WHERE
-                b2u.updateid = u.id
-                AND b2u.buildid = ?
+                b.updateid = u.id
+                AND b.id = ?
         ', [$this->build->Id])[0] ?? [];
 
         // TODO: (williamjallen) Determine what $buildupdate was supposed to be.  It is currently undefined.
@@ -334,10 +334,10 @@ final class BuildController extends AbstractBuildController
                 SELECT count(*) AS c
                 FROM
                     updatefile,
-                    build2update AS b2u
+                    build
                 WHERE
-                    updatefile.updateid=b2u.updateid
-                    AND b2u.buildid = ?
+                    updatefile.updateid=build.updateid
+                    AND build.id = ?
                     AND author = 'Local User'
             ", [$this->build->Id])[0]->c;
 
@@ -352,8 +352,8 @@ final class BuildController extends AbstractBuildController
 
             $nupdates = (int) DB::select('
                 SELECT count(*) AS c
-                FROM updatefile, build2update AS b2u
-                WHERE updatefile.updateid=b2u.updateid AND b2u.buildid=?
+                FROM updatefile, build
+                WHERE updatefile.updateid=build.updateid AND build.id=?
             ', [$this->build->Id])[0]->c;
             $update_response['nupdates'] = $nupdates;
 
@@ -436,7 +436,7 @@ final class BuildController extends AbstractBuildController
 
         // Previous build
         if ($previous_buildid > 0 && isset($previous_build)) {
-            $previous_build_update = EloquentBuild::findOrFail($previous_buildid)->updates()->first();
+            $previous_build_update = EloquentBuild::findOrFail($previous_buildid)->updateStep;
 
             $response['previousbuild'] = [
                 'buildid' => $previous_buildid,
@@ -460,7 +460,7 @@ final class BuildController extends AbstractBuildController
             $next_build = new Build();
             $next_build->Id = $next_buildid;
             $next_build->FillFromId($next_build->Id);
-            $next_build_update = EloquentBuild::findOrFail($next_buildid)->updates()->first();
+            $next_build_update = EloquentBuild::findOrFail($next_buildid)->updateStep;
 
             $response['nextbuild'] = [
                 'buildid' => $next_buildid,
@@ -642,7 +642,7 @@ final class BuildController extends AbstractBuildController
         $response['build'] = $build_response;
 
         // Update
-        $update = EloquentBuild::findOrFail((int) $this->build->Id)->updates()->first();
+        $update = EloquentBuild::findOrFail((int) $this->build->Id)->updateStep;
 
         $update_response = [];
         if ($update !== null) {
@@ -896,8 +896,8 @@ final class BuildController extends AbstractBuildController
         ];
 
         // Update
-        if ($eloquentBuild->updates()->exists()) {
-            $revision = $eloquentBuild->updates()->firstOrFail()->revision;
+        if ($eloquentBuild->updateStep !== null) {
+            $revision = $eloquentBuild->updateStep->revision;
             $extra_build_fields['revision'] = $revision;
         } else {
             $revision = null;
@@ -1103,8 +1103,7 @@ final class BuildController extends AbstractBuildController
                 b.starttime,
                 bu.nfiles
             FROM build as b
-            JOIN build2update AS b2u ON b2u.buildid = b.id
-            JOIN buildupdate AS bu ON bu.id = b2u.updateid
+            JOIN buildupdate AS bu ON bu.id = b.updateid
             WHERE
                 b.siteid = ?
                 AND b.type = ?
@@ -1161,8 +1160,7 @@ final class BuildController extends AbstractBuildController
                                 b.starttime,
                                 b.endtime
                             FROM build AS b
-                            LEFT JOIN build2update AS b2u ON (b2u.buildid=b.id)
-                            LEFT JOIN buildupdate AS bu ON (b2u.updateid=bu.id)
+                            LEFT JOIN buildupdate AS bu ON (bu.updateid=b.id)
                             WHERE
                                 siteid = ?
                                 AND b.type = ?

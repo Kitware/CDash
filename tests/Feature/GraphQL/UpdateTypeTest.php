@@ -50,7 +50,7 @@ class UpdateTypeTest extends TestCase
         ]);
 
         /** @var BuildUpdate $update */
-        $update = $build->updates()->create([
+        $update = BuildUpdate::create([
             'command' => Str::uuid()->toString(),
             'type' => 'GIT',
             'status' => Str::uuid()->toString(),
@@ -58,22 +58,19 @@ class UpdateTypeTest extends TestCase
             'priorrevision' => Str::uuid()->toString(),
             'path' => Str::uuid()->toString(),
         ]);
+        $build->updateStep()->associate($update)->save();
 
         $this->graphQL('
             query build($id: ID) {
                 build(id: $id) {
-                    updates {
-                        edges {
-                            node {
-                                id
-                                command
-                                type
-                                status
-                                revision
-                                priorRevision
-                                path
-                            }
-                        }
+                    updateStep {
+                        id
+                        command
+                        type
+                        status
+                        revision
+                        priorRevision
+                        path
                     }
                 }
             }
@@ -82,20 +79,14 @@ class UpdateTypeTest extends TestCase
         ])->assertExactJson([
             'data' => [
                 'build' => [
-                    'updates' => [
-                        'edges' => [
-                            [
-                                'node' => [
-                                    'id' => (string) $update->id,
-                                    'command' => $update->command,
-                                    'type' => $update->type,
-                                    'status' => $update->status,
-                                    'revision' => $update->revision,
-                                    'priorRevision' => $update->priorrevision,
-                                    'path' => $update->path,
-                                ],
-                            ],
-                        ],
+                    'updateStep' => [
+                        'id' => (string) $update->id,
+                        'command' => $update->command,
+                        'type' => $update->type,
+                        'status' => $update->status,
+                        'revision' => $update->revision,
+                        'priorRevision' => $update->priorrevision,
+                        'path' => $update->path,
                     ],
                 ],
             ],

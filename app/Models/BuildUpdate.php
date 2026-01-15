@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
@@ -63,11 +62,11 @@ class BuildUpdate extends Model
     }
 
     /**
-     * @return BelongsToMany<Build, $this>
+     * @return HasMany<Build, $this>
      */
-    public function builds(): BelongsToMany
+    public function builds(): HasMany
     {
-        return $this->belongsToMany(Build::class, 'build2update', 'updateid', 'buildid');
+        return $this->hasMany(Build::class, 'updateid');
     }
 
     /**

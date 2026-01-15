@@ -336,8 +336,8 @@ class SequenceIndependenceTestCase extends KWWebTestCase
         $update_query =
             "SELECT bu.nfiles
             FROM buildupdate AS bu
-            INNER JOIN build2update AS b2u ON (b2u.updateid=bu.id)
-            WHERE b2u.buildid='$buildid'";
+            INNER JOIN build AS b ON (b.updateid=bu.id)
+            WHERE b.id='$buildid'";
         $update_result = DB::select($update_query);
         if ($update_result === []) {
             $this->fail('update query returned false');
