@@ -54,8 +54,6 @@ class BuildNotesPageTest extends BrowserTestCase
 
     public function tearDown(): void
     {
-        parent::tearDown();
-
         $this->project->delete();
         $this->site->delete();
 
@@ -63,6 +61,8 @@ class BuildNotesPageTest extends BrowserTestCase
             $note->delete();
         }
         $this->notes = collect();
+
+        parent::tearDown();
     }
 
     private function addNote(): Note

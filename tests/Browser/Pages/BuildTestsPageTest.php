@@ -46,11 +46,11 @@ class BuildTestsPageTest extends BrowserTestCase
 
     public function tearDown(): void
     {
-        parent::tearDown();
-
         $this->project->delete();
         $this->testOutput->delete();
         $this->site->delete();
+
+        parent::tearDown();
     }
 
     public function testShowsBuildName(): void

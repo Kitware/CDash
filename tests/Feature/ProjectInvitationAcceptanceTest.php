@@ -35,13 +35,13 @@ class ProjectInvitationAcceptanceTest extends TestCase
 
     protected function tearDown(): void
     {
-        parent::tearDown();
-
         $this->project->delete();
 
         foreach ($this->users as $user) {
             $user->delete();
         }
+
+        parent::tearDown();
     }
 
     private function createInvitation(): ProjectInvitation

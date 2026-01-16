@@ -47,10 +47,10 @@ class BuildTargetsPageTest extends BrowserTestCase
 
     public function tearDown(): void
     {
-        parent::tearDown();
-
         $this->project->delete();
         $this->site->delete();
+
+        parent::tearDown();
     }
 
     private function addTarget(TargetType $type = TargetType::UNKNOWN): Target

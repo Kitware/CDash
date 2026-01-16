@@ -51,8 +51,6 @@ class BuildFilesPageTest extends BrowserTestCase
 
     public function tearDown(): void
     {
-        parent::tearDown();
-
         $this->project->delete();
         $this->site->delete();
 
@@ -60,6 +58,8 @@ class BuildFilesPageTest extends BrowserTestCase
             $file->delete();
         }
         $this->files = [];
+
+        parent::tearDown();
     }
 
     private function addUploadedFile(bool $url = false): UploadFile

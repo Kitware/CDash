@@ -18,9 +18,9 @@ class ProjectServiceTest extends TestCase
 
     protected function tearDown(): void
     {
-        parent::tearDown();
-
         $this->project?->delete();
+
+        parent::tearDown();
     }
 
     public function testCreatesDefaultBuildGroups(): void
