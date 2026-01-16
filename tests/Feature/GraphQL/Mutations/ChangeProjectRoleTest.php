@@ -5,6 +5,7 @@ namespace Tests\Feature\GraphQL\Mutations;
 use App\Enums\ProjectRole;
 use App\Models\Project;
 use App\Models\User;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
 use Tests\Traits\CreatesUsers;
@@ -13,6 +14,7 @@ class ChangeProjectRoleTest extends TestCase
 {
     use CreatesProjects;
     use CreatesUsers;
+    use DatabaseTransactions;
 
     private Project $project;
 

@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Listeners\Saml2Login as Saml2LoginListener;
 use App\Models\User;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -23,6 +24,7 @@ use Throwable;
 class LoginAndRegistration extends TestCase
 {
     use CreatesUsers;
+    use DatabaseTransactions;
 
     protected static string $email = 'logintest@user.com';
     protected static string $password = '54321';

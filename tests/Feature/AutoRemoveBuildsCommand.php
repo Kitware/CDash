@@ -8,10 +8,13 @@ use CDash\Database;
 use CDash\Model\Build;
 use DateTime;
 use DateTimeZone;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
 class AutoRemoveBuildsCommand extends TestCase
 {
+    use DatabaseTransactions;
+
     protected Project $project;
 
     public function setUp(): void

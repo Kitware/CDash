@@ -5,7 +5,7 @@ namespace Tests\Feature\GraphQL;
 use App\Models\Project;
 use App\Models\Site;
 use App\Models\User;
-use Illuminate\Foundation\Testing\DatabaseTruncation;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -19,7 +19,7 @@ class SiteTypeTest extends TestCase
     use CreatesProjects;
     use CreatesSites;
     use CreatesUsers;
-    use DatabaseTruncation;
+    use DatabaseTransactions;
 
     /**
      * @var array<Project>
@@ -526,15 +526,18 @@ class SiteTypeTest extends TestCase
             'name' => 'site1',
         ]);
 
-        $this->sites['site1']->information()->createMany([
+        $this->sites['site1']->information()->forceCreateMany([
             [
                 'description' => 'site 1 information 1',
+                'timestamp' => Carbon::now()->subHour(),
             ],
             [
                 'description' => 'site 1 information 2',
+                'timestamp' => Carbon::now()->subMinute(),
             ],
             [
                 'description' => 'site 1 information 3',
+                'timestamp' => Carbon::now(),
             ],
         ]);
 

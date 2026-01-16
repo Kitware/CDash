@@ -4,11 +4,14 @@ namespace Tests\Feature\Services;
 
 use App\Models\Project;
 use App\Services\ProjectService;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class ProjectServiceTest extends TestCase
 {
+    use DatabaseTransactions;
+
     protected ?Project $project = null;
 
     protected function setUp(): void

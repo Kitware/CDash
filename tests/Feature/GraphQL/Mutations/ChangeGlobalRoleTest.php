@@ -4,12 +4,14 @@ namespace Tests\Feature\GraphQL\Mutations;
 
 use App\Enums\GlobalRole;
 use App\Models\User;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 use Tests\Traits\CreatesUsers;
 
 class ChangeGlobalRoleTest extends TestCase
 {
     use CreatesUsers;
+    use DatabaseTransactions;
 
     /**
      * @var array<User>

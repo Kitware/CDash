@@ -170,19 +170,128 @@ add_legacy_unit_test(/CDash/XmlHandler/UpdateHandler)
 set_tests_properties(/CDash/XmlHandler/UpdateHandler PROPERTIES DEPENDS /CDash/XmlHandler/TestingHandler)
 
 ###################################################################################################
+# Tests in this section are expected to run against the testing_clean database in transactions,
+# such that the database is empty at any given point.
+
+add_feature_test_in_transaction(/Feature/LoginAndRegistration)
+
+add_feature_test_in_transaction(/Feature/ProjectPermissions)
+
+add_feature_test_in_transaction(/Feature/SlowPageTest)
+
+add_feature_test_in_transaction(/Feature/GitHubWebhook)
+
+add_feature_test_in_transaction(/Feature/GlobalBannerTest)
+
+add_feature_test_in_transaction(/Feature/GraphQL/BuildTypeTest)
+
+add_feature_test_in_transaction(/Feature/ProjectInvitationAcceptanceTest)
+
+add_feature_test_in_transaction(/Feature/GraphQL/FilterTest)
+
+add_feature_test_in_transaction(/Feature/GraphQL/QueryTypeTest)
+
+add_feature_test_in_transaction(/Feature/GraphQL/UserTypeTest)
+
+add_feature_test_in_transaction(/Feature/GraphQL/ProjectTypeTest)
+
+add_feature_test_in_transaction(/Feature/GraphQL/SiteTypeTest)
+
+add_feature_test_in_transaction(/Feature/GraphQL/ConfigureTypeTest)
+
+add_feature_test_in_transaction(/Feature/GraphQL/TestTypeTest)
+
+add_feature_test_in_transaction(/Feature/GraphQL/TestMeasurementTypeTest)
+
+add_feature_test_in_transaction(/Feature/GraphQL/NoteTypeTest)
+
+add_feature_test_in_transaction(/Feature/GraphQL/CoverageTypeTest)
+
+add_feature_test_in_transaction(/Feature/GraphQL/DynamicAnalysisTypeTest)
+
+add_feature_test_in_transaction(/Feature/GraphQL/DynamicAnalysisDefectTypeTest)
+
+add_feature_test_in_transaction(/Feature/GraphQL/ProjectInvitationTypeTest)
+
+add_feature_test_in_transaction(/Feature/GraphQL/LabelTypeTest)
+
+add_feature_test_in_transaction(/Feature/GraphQL/TargetTypeTest)
+
+add_feature_test_in_transaction(/Feature/GraphQL/BuildCommandTypeTest)
+
+add_feature_test_in_transaction(/Feature/GraphQL/BuildCommandOutputTypeTest)
+
+add_feature_test_in_transaction(/Feature/GraphQL/UpdateTypeTest)
+
+add_feature_test_in_transaction(/Feature/GraphQL/UpdateFileTypeTest)
+
+add_feature_test_in_transaction(/Feature/RouteAccessTest)
+
+add_feature_test_in_transaction(/Feature/Monitor)
+
+add_feature_test_in_transaction(/Feature/PasswordRotation)
+
+add_feature_test_in_transaction(/Feature/PurgeUnusedProjectsCommand)
+
+add_feature_test_in_transaction(/Feature/Jobs/PruneJobsTest)
+
+add_feature_test_in_transaction(/Feature/Jobs/PruneAuthTokensTest)
+
+add_feature_test_in_transaction(/Feature/UserCommand)
+
+add_feature_test_in_transaction(/Feature/RemoteWorkers)
+set_property(TEST /Feature/RemoteWorkers APPEND PROPERTY
+    DISABLED "$<NOT:$<STREQUAL:${CDASH_STORAGE_TYPE},local>>"
+)
+
+add_feature_test_in_transaction(/Feature/Jobs/NotifyExpiringAuthTokensTest)
+
+add_feature_test_in_transaction(/Feature/Jobs/PruneUploadsTest)
+
+add_feature_test_in_transaction(/Feature/Mail/AuthTokenExpiringTest)
+
+add_feature_test_in_transaction(/Feature/Mail/AuthTokenExpiredTest)
+
+add_feature_test_in_transaction(/Feature/GraphQL/Mutations/CreateProjectTest)
+
+add_feature_test_in_transaction(/Feature/GraphQL/Mutations/UpdateSiteDescriptionTest)
+
+add_feature_test_in_transaction(/Feature/GraphQL/Mutations/InviteToProjectTest)
+
+add_feature_test_in_transaction(/Feature/GraphQL/Mutations/RevokeProjectInvitationTest)
+
+add_feature_test_in_transaction(/Feature/GraphQL/Mutations/ChangeProjectRoleTest)
+
+add_feature_test_in_transaction(/Feature/GraphQL/Mutations/RemoveProjectUserTest)
+
+add_feature_test_in_transaction(/Feature/Traits/UpdatesSiteInformationTest)
+
+add_feature_test_in_transaction(/Feature/GraphQL/Mutations/ChangeGlobalRoleTest)
+
+add_feature_test_in_transaction(/Feature/GraphQL/Mutations/JoinProjectTest)
+
+add_feature_test_in_transaction(/Feature/GraphQL/Mutations/CreateGlobalInvitationTest)
+
+add_feature_test_in_transaction(/Feature/GraphQL/Mutations/RevokeGlobalInvitationTest)
+
+add_feature_test_in_transaction(/Feature/GlobalInvitationAcceptanceTest)
+
+add_feature_test_in_transaction(/Feature/GraphQL/GlobalInvitationTypeTest)
+
+add_feature_test_in_transaction(/Feature/GraphQL/Mutations/RemoveUserTest)
+
+add_feature_test_in_transaction(/Feature/Jobs/PruneBuildsTest)
+
+add_feature_test_in_transaction(/Feature/Jobs/PruneEmailsTest)
+
+add_feature_test_in_transaction(/Feature/Services/ProjectServiceTest)
+
+add_feature_test_in_transaction(/Feature/AutoRemoveBuildsCommand)
+
+###################################################################################################
 # Tests from this point to the next cdash_install() are expected to be completely independent.
 # Tests may wipe the database, provided that they use RUN_SERIAL. All tests in this section should
 # depend upon the last test prior to this section.
-
-add_feature_test(/Feature/LoginAndRegistration)
-
-add_feature_test(/Feature/ProjectPermissions)
-
-add_feature_test(/Feature/SlowPageTest)
-
-add_feature_test(/Feature/GitHubWebhook)
-
-add_feature_test(/Feature/GlobalBannerTest)
 
 add_legacy_unit_test(/CDash/Lib/Repository/GitHub)
 set_tests_properties(/CDash/Lib/Repository/GitHub PROPERTIES
@@ -207,55 +316,15 @@ set_tests_properties(/CDash/Service/RepositoryService PROPERTIES DEPENDS /CDash/
 add_feature_test(/Feature/SubmissionValidation)
 set_property(TEST /Feature/SubmissionValidation APPEND PROPERTY RUN_SERIAL TRUE)
 
-add_feature_test(/Feature/GraphQL/ProjectTypeTest)
-set_property(TEST /Feature/GraphQL/ProjectTypeTest APPEND PROPERTY RUN_SERIAL TRUE)
-
-add_feature_test(/Feature/GraphQL/SiteTypeTest)
-set_property(TEST /Feature/GraphQL/SiteTypeTest APPEND PROPERTY RUN_SERIAL TRUE)
-
-add_feature_test(/Feature/GraphQL/ConfigureTypeTest)
-
-add_feature_test(/Feature/GraphQL/TestTypeTest)
-
-add_feature_test(/Feature/GraphQL/TestMeasurementTypeTest)
-
-add_feature_test(/Feature/GraphQL/NoteTypeTest)
-
-add_feature_test(/Feature/GraphQL/CoverageTypeTest)
-
-add_feature_test(/Feature/GraphQL/DynamicAnalysisTypeTest)
-
-add_feature_test(/Feature/GraphQL/DynamicAnalysisDefectTypeTest)
-
-add_feature_test(/Feature/GraphQL/ProjectInvitationTypeTest)
-
-add_feature_test(/Feature/GraphQL/LabelTypeTest)
-
-add_feature_test(/Feature/GraphQL/TargetTypeTest)
-
-add_feature_test(/Feature/GraphQL/BuildCommandTypeTest)
-
-add_feature_test(/Feature/GraphQL/BuildCommandOutputTypeTest)
-
-add_feature_test(/Feature/GraphQL/UpdateTypeTest)
-
-add_feature_test(/Feature/GraphQL/UpdateFileTypeTest)
-
-add_feature_test(/Feature/Submission/Instrumentation/BuildInstrumentationTest)
-add_feature_test(/Feature/Submission/Tests/TestXMLTest)
-
-add_feature_test(/Feature/RouteAccessTest)
-
-add_feature_test(/Feature/Monitor)
-set_property(TEST /Feature/Monitor APPEND PROPERTY RUN_SERIAL TRUE)
-
-add_feature_test(/Feature/PasswordRotation)
-
-add_browser_test(/Browser/Pages/SitesIdPageTest)
-
 # Technically this test doesn't have to run serially.  It just needs to have exclusive access to the .env
 add_feature_test(/Feature/LdapIntegration)
 set_property(TEST /Feature/LdapIntegration APPEND PROPERTY RUN_SERIAL TRUE)
+
+add_feature_test(/Feature/Submission/Instrumentation/BuildInstrumentationTest)
+
+add_feature_test(/Feature/Submission/Tests/TestXMLTest)
+
+add_browser_test(/Browser/Pages/SitesIdPageTest)
 
 add_browser_test(/Browser/Pages/ProjectSitesPageTest)
 
@@ -265,17 +334,6 @@ add_browser_test(/Browser/Pages/ProjectBuildsPageTest)
 
 add_browser_test(/Browser/Pages/ProjectsPageTest)
 set_property(TEST /Browser/Pages/ProjectsPageTest APPEND PROPERTY RUN_SERIAL TRUE)
-
-add_feature_test(/Feature/PurgeUnusedProjectsCommand)
-set_property(TEST /Feature/PurgeUnusedProjectsCommand APPEND PROPERTY RUN_SERIAL TRUE)
-
-# This could theoretically conflict with another test removing jobs from the submission tables in the future
-add_feature_test(/Feature/Jobs/PruneJobsTest)
-
-add_feature_test(/Feature/Jobs/PruneAuthTokensTest)
-set_property(TEST /Feature/Jobs/PruneAuthTokensTest APPEND PROPERTY RUN_SERIAL TRUE)
-
-add_feature_test(/Feature/UserCommand)
 
 add_legacy_unit_test(/CDash/Database)
 set_tests_properties(/CDash/Database PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
@@ -306,54 +364,6 @@ set_tests_properties(/CDash/Messaging/Topic/TestFailureTopic PROPERTIES DEPENDS 
 
 add_legacy_unit_test(/CDash/Messaging/Topic/TopicDecorator)
 set_tests_properties(/CDash/Messaging/Topic/TopicDecorator PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
-
-add_feature_test(/Feature/RemoteWorkers)
-set_property(TEST /Feature/RemoteWorkers APPEND PROPERTY
-    DISABLED "$<NOT:$<STREQUAL:${CDASH_STORAGE_TYPE},local>>"
-)
-
-add_feature_test(/Feature/Jobs/NotifyExpiringAuthTokensTest)
-set_property(TEST /Feature/Jobs/NotifyExpiringAuthTokensTest APPEND PROPERTY RUN_SERIAL TRUE)
-
-add_feature_test(/Feature/Jobs/PruneUploadsTest)
-
-add_feature_test(/Feature/Mail/AuthTokenExpiringTest)
-
-add_feature_test(/Feature/Mail/AuthTokenExpiredTest)
-
-add_feature_test(/Feature/GraphQL/Mutations/CreateProjectTest)
-
-add_feature_test(/Feature/GraphQL/Mutations/UpdateSiteDescriptionTest)
-
-add_feature_test(/Feature/GraphQL/Mutations/InviteToProjectTest)
-
-add_feature_test(/Feature/GraphQL/Mutations/RevokeProjectInvitationTest)
-
-add_feature_test(/Feature/GraphQL/Mutations/ChangeProjectRoleTest)
-
-add_feature_test(/Feature/GraphQL/Mutations/RemoveProjectUserTest)
-
-add_feature_test(/Feature/Traits/UpdatesSiteInformationTest)
-
-add_feature_test(/Feature/GraphQL/Mutations/ChangeGlobalRoleTest)
-
-add_feature_test(/Feature/GraphQL/Mutations/JoinProjectTest)
-
-# Needs RUN_SERIAL to verify that no unexpected invitations are created
-add_feature_test(/Feature/GraphQL/Mutations/CreateGlobalInvitationTest)
-set_property(TEST /Feature/GraphQL/Mutations/CreateGlobalInvitationTest APPEND PROPERTY RUN_SERIAL TRUE)
-
-add_feature_test(/Feature/GraphQL/Mutations/RevokeGlobalInvitationTest)
-
-# Needs RUN_SERIAL to verify that only the expected users are created
-add_feature_test(/Feature/GlobalInvitationAcceptanceTest)
-set_property(TEST /Feature/GlobalInvitationAcceptanceTest APPEND PROPERTY RUN_SERIAL TRUE)
-
-# Requires exclusive access to the global_invitations table
-add_feature_test(/Feature/GraphQL/GlobalInvitationTypeTest)
-set_property(TEST /Feature/GraphQL/GlobalInvitationTypeTest APPEND PROPERTY RUN_SERIAL TRUE)
-
-add_feature_test(/Feature/GraphQL/Mutations/RemoveUserTest)
 
 add_browser_test(/Browser/Pages/UsersPageTest)
 
@@ -413,19 +423,6 @@ set_tests_properties(configurewarnings PROPERTIES DEPENDS /CDash/XmlHandler/Upda
 
 add_php_test(lotsofsubprojects)
 set_tests_properties(lotsofsubprojects PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
-
-add_feature_test(/Feature/AutoRemoveBuildsCommand)
-
-# Must run serially since it can delete builds other than the ones it creates.
-add_feature_test(/Feature/Jobs/PruneBuildsTest)
-set_property(TEST /Feature/Jobs/PruneBuildsTest APPEND PROPERTY RUN_SERIAL TRUE)
-
-# Theoretically it's possible for this test to conflict with other tests because this test can
-# delete email history records other than the ones it creates.  The odds of such a conflict
-# occurring are too low to justify running serially.
-add_feature_test(/Feature/Jobs/PruneEmailsTest)
-
-add_feature_test(/Feature/Services/ProjectServiceTest)
 
 ###################################################################################################
 

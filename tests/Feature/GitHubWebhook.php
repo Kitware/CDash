@@ -2,10 +2,13 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
 class GitHubWebhook extends TestCase
 {
+    use DatabaseTransactions;
+
     protected string $endpoint = '/api/v1/GitHub/webhook.php';
 
     public function setUp(): void

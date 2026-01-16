@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use Mockery;
@@ -9,6 +10,8 @@ use Tests\TestCase;
 
 class SlowPageTest extends TestCase
 {
+    use DatabaseTransactions;
+
     public function testSlowPageLogsWarning(): void
     {
         Log::shouldReceive('warning')

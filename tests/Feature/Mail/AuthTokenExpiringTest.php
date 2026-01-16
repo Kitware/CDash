@@ -5,6 +5,7 @@ namespace Tests\Feature\Mail;
 use App\Mail\AuthTokenExpiring;
 use App\Models\AuthToken;
 use App\Models\User;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Tests\TestCase;
@@ -13,6 +14,7 @@ use Tests\Traits\CreatesUsers;
 class AuthTokenExpiringTest extends TestCase
 {
     use CreatesUsers;
+    use DatabaseTransactions;
 
     protected User $user;
 

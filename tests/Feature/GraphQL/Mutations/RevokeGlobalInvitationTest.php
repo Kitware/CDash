@@ -5,6 +5,7 @@ namespace Tests\Feature\GraphQL\Mutations;
 use App\Enums\GlobalRole;
 use App\Models\GlobalInvitation;
 use App\Models\User;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -14,6 +15,7 @@ use Tests\Traits\CreatesUsers;
 class RevokeGlobalInvitationTest extends TestCase
 {
     use CreatesUsers;
+    use DatabaseTransactions;
 
     /**
      * @var array<User>

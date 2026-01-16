@@ -3,12 +3,14 @@
 namespace Tests\Feature\GraphQL;
 
 use App\Models\User;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 use Tests\Traits\CreatesUsers;
 
 class QueryTypeTest extends TestCase
 {
     use CreatesUsers;
+    use DatabaseTransactions;
 
     /** @var array<User> */
     private array $users = [];

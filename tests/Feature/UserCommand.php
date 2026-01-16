@@ -3,11 +3,14 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Artisan;
 use Tests\TestCase;
 
 class UserCommand extends TestCase
 {
+    use DatabaseTransactions;
+
     protected $user;
 
     /**

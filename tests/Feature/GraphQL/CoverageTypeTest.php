@@ -6,6 +6,7 @@ use App\Models\Build;
 use App\Models\CoverageFile;
 use App\Models\Label;
 use App\Models\Project;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Tests\TestCase;
@@ -16,6 +17,7 @@ class CoverageTypeTest extends TestCase
 {
     use CreatesProjects;
     use CreatesUsers;
+    use DatabaseTransactions;
 
     private Project $project;
 

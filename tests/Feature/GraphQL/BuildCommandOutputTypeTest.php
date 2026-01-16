@@ -7,6 +7,7 @@ use App\Models\Build;
 use App\Models\BuildCommand;
 use App\Models\BuildCommandOutput;
 use App\Models\Project;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Tests\TestCase;
@@ -15,6 +16,7 @@ use Tests\Traits\CreatesProjects;
 class BuildCommandOutputTypeTest extends TestCase
 {
     use CreatesProjects;
+    use DatabaseTransactions;
 
     private Project $project;
 

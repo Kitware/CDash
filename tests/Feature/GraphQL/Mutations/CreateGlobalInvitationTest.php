@@ -6,7 +6,7 @@ use App\Enums\GlobalRole;
 use App\Mail\InvitedToCdash;
 use App\Models\GlobalInvitation;
 use App\Models\User;
-use Illuminate\Foundation\Testing\DatabaseTruncation;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Mail;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -16,7 +16,7 @@ use Tests\Traits\CreatesUsers;
 class CreateGlobalInvitationTest extends TestCase
 {
     use CreatesUsers;
-    use DatabaseTruncation;
+    use DatabaseTransactions;
 
     /**
      * @var array<User>

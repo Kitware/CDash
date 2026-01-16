@@ -5,6 +5,7 @@ namespace Tests\Feature\GraphQL;
 use App\Enums\TargetType;
 use App\Models\Label;
 use App\Models\Project;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
@@ -14,6 +15,7 @@ class LabelTypeTest extends TestCase
 {
     use CreatesProjects;
     use CreatesUsers;
+    use DatabaseTransactions;
 
     private Project $project;
 

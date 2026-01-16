@@ -5,7 +5,7 @@ namespace Tests\Feature\GraphQL;
 use App\Enums\GlobalRole;
 use App\Models\GlobalInvitation;
 use App\Models\User;
-use Illuminate\Foundation\Testing\DatabaseTruncation;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -15,7 +15,7 @@ use Tests\Traits\CreatesUsers;
 class GlobalInvitationTypeTest extends TestCase
 {
     use CreatesUsers;
-    use DatabaseTruncation;
+    use DatabaseTransactions;
 
     private User $normalUser;
     private User $adminUser;

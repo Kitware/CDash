@@ -5,6 +5,7 @@ namespace Tests\Feature\Jobs;
 use App\Jobs\PruneEmails;
 use App\Models\Project;
 use App\Models\User;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Tests\TestCase;
@@ -15,6 +16,7 @@ class PruneEmailsTest extends TestCase
 {
     use CreatesProjects;
     use CreatesUsers;
+    use DatabaseTransactions;
 
     protected Project $project;
     protected User $user;
