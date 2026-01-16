@@ -19,12 +19,6 @@ class InstallTestCase extends KWWebTestCase
 
     public function testInstall()
     {
-        // double check that it's the testing database before doing anything hasty...
-        if ($this->databaseName !== 'cdash4simpletest') {
-            $this->fail("can only test on a database named 'cdash4simpletest'");
-            return 1;
-        }
-
         // drop any old testing database before testing install
         $success = $this->db->drop($this->databaseName);
         if (!$success) {
@@ -36,14 +30,17 @@ class InstallTestCase extends KWWebTestCase
 
         Artisan::call('migrate', ['--force' => true]);
 
-        Artisan::call('user:save', [
-            '--email' => 'simpletest@localhost',
-            '--firstname' => 'administrator',
-            '--lastname' => '',
-            '--password' => 'simpletest',
-            '--institution' => 'Kitware Inc.',
-            '--admin' => 1,
-        ]);
+        // A hack to ensure that only the legacy testing database has this user.
+        if ($this->databaseName === 'cdash4simpletest') {
+            Artisan::call('user:save', [
+                '--email' => 'simpletest@localhost',
+                '--firstname' => 'administrator',
+                '--lastname' => '',
+                '--password' => 'simpletest',
+                '--institution' => 'Kitware Inc.',
+                '--admin' => 1,
+            ]);
+        }
 
         $this->pass('Passed');
     }

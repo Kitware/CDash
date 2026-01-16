@@ -1,6 +1,7 @@
 # We define these here so they can be referenced in functions below.
-cdash_install(install_1)
-cdash_install(install_2)
+cdash_install(install_1 "")
+cdash_install(install_2 "")
+cdash_install(install_clean_database testing_clean)
 
 # function to add a new PHP based coverage test to CDash
 function(add_php_test TestName)
@@ -62,6 +63,17 @@ function(add_feature_test TestName)
   set_tests_properties(
     ${TestName} PROPERTIES
     ATTACHED_FILES_ON_FAIL "${CDash_SOURCE_DIR}/storage/logs/cdash.log"
+  )
+endfunction()
+
+# Tests which run entirely within a transaction, leaving no trace in the database.
+function(add_feature_test_in_transaction TestName)
+  add_laravel_test(${TestName})
+  set_property(TEST ${TestName} APPEND PROPERTY DEPENDS install_clean_database)
+  set_tests_properties(
+    ${TestName} PROPERTIES
+    ATTACHED_FILES_ON_FAIL "${CDash_SOURCE_DIR}/storage/logs/cdash.log"
+    ENVIRONMENT "DB_DATABASE=testing_clean"
   )
 endfunction()
 
@@ -195,22 +207,11 @@ set_tests_properties(/CDash/Service/RepositoryService PROPERTIES DEPENDS /CDash/
 add_feature_test(/Feature/SubmissionValidation)
 set_property(TEST /Feature/SubmissionValidation APPEND PROPERTY RUN_SERIAL TRUE)
 
-add_feature_test(/Feature/ProjectInvitationAcceptanceTest)
-
-add_feature_test(/Feature/GraphQL/FilterTest)
-set_property(TEST /Feature/GraphQL/FilterTest APPEND PROPERTY RUN_SERIAL TRUE)
-
-add_feature_test(/Feature/GraphQL/QueryTypeTest)
-
-add_feature_test(/Feature/GraphQL/UserTypeTest)
-
 add_feature_test(/Feature/GraphQL/ProjectTypeTest)
 set_property(TEST /Feature/GraphQL/ProjectTypeTest APPEND PROPERTY RUN_SERIAL TRUE)
 
 add_feature_test(/Feature/GraphQL/SiteTypeTest)
 set_property(TEST /Feature/GraphQL/SiteTypeTest APPEND PROPERTY RUN_SERIAL TRUE)
-
-add_feature_test(/Feature/GraphQL/BuildTypeTest)
 
 add_feature_test(/Feature/GraphQL/ConfigureTypeTest)
 

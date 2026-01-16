@@ -59,7 +59,7 @@ find_program(NPX_EXE NAMES npx PATHS c:/usr/bin/npx /usr/bin/npx REQUIRED)
 set(PHPUNIT "${CDash_SOURCE_DIR}/vendor/bin/phpunit")
 
 set_property(GLOBAL PROPERTY INSTALL_CDASH_COUNT "0")
-function(cdash_install TestName)
+function(cdash_install TestName DatabaseName)
   add_test(
     NAME ${TestName}
     COMMAND ${PHP_EXE} ${testing_dir}/singletest.php ${testing_dir}/test_install.php
@@ -69,6 +69,13 @@ function(cdash_install TestName)
     FAIL_REGULAR_EXPRESSION ".*Failures: [1-9]+.*;.*Exceptions: [1-9]+.*"
     ATTACHED_FILES_ON_FAIL "${CDash_SOURCE_DIR}/storage/logs/cdash.log"
   )
+
+  if(DatabaseName)
+    set_tests_properties(
+        ${TestName} PROPERTIES
+        ENVIRONMENT "DB_DATABASE=${DatabaseName}"
+      )
+  endif()
 endfunction()
 
 # add the new tests directory
