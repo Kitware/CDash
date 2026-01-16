@@ -220,7 +220,7 @@ class ProjectsPageTest extends BrowserTestCase
             'siteid' => $this->site->id,
             'name' => Str::uuid()->toString(),
             'uuid' => Str::uuid()->toString(),
-            'submittime' => Carbon::now()->subWeek(),
+            'submittime' => Carbon::now()->subWeek()->subHour(),
         ]);
 
         $this->browse(function (Browser $browser): void {
