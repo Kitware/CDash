@@ -3,12 +3,15 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\URL;
 use Tests\TestCase;
 
 class PasswordRotation extends TestCase
 {
+    use DatabaseTransactions;
+
     protected ?User $user;
 
     protected function setUp(): void

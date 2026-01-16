@@ -46,10 +46,10 @@ class BuildCoveragePageTest extends BrowserTestCase
 
     public function tearDown(): void
     {
-        parent::tearDown();
-
         $this->project->delete();
         $this->site->delete();
+
+        parent::tearDown();
     }
 
     private function createCoverage(

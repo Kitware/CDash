@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Project;
 use App\Models\User;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use Tests\TestCase;
@@ -14,6 +15,7 @@ class ProjectPermissions extends TestCase
 {
     use CreatesProjects;
     use CreatesUsers;
+    use DatabaseTransactions;
 
     protected Project $public_project;
     protected Project $protected_project;

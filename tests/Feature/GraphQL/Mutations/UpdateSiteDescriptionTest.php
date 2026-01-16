@@ -4,6 +4,7 @@ namespace Tests\Feature\GraphQL\Mutations;
 
 use App\Models\Site;
 use App\Models\User;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Tests\TestCase;
@@ -14,6 +15,7 @@ class UpdateSiteDescriptionTest extends TestCase
 {
     use CreatesSites;
     use CreatesUsers;
+    use DatabaseTransactions;
 
     private Site $site;
 

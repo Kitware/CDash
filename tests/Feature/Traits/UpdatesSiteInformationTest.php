@@ -5,6 +5,7 @@ namespace Tests\Feature\Traits;
 use App\Http\Submission\Traits\UpdatesSiteInformation;
 use App\Models\Site;
 use App\Models\SiteInformation;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Carbon;
 use Tests\TestCase;
 use Tests\Traits\CreatesSites;
@@ -12,6 +13,7 @@ use Tests\Traits\CreatesSites;
 class UpdatesSiteInformationTest extends TestCase
 {
     use CreatesSites;
+    use DatabaseTransactions;
     use UpdatesSiteInformation;
 
     private Site $site;

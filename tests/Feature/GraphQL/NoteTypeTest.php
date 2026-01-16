@@ -4,6 +4,7 @@ namespace Tests\Feature\GraphQL;
 
 use App\Models\Note;
 use App\Models\Project;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
 use Random\RandomException;
 use Tests\TestCase;
@@ -14,6 +15,7 @@ class NoteTypeTest extends TestCase
 {
     use CreatesProjects;
     use CreatesUsers;
+    use DatabaseTransactions;
 
     private Project $public_project;
     private Project $private_project;

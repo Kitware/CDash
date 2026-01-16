@@ -4,6 +4,7 @@ namespace Tests\Feature\GraphQL\Mutations;
 
 use App\Models\Project;
 use App\Models\User;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -13,6 +14,7 @@ use Tests\Traits\CreatesUsers;
 class CreateProjectTest extends TestCase
 {
     use CreatesUsers;
+    use DatabaseTransactions;
 
     /**
      * @var array<Project>

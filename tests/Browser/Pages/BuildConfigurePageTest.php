@@ -64,14 +64,14 @@ class BuildConfigurePageTest extends BrowserTestCase
 
     public function tearDown(): void
     {
-        parent::tearDown();
-
         $this->project->delete();
         $this->site->delete();
 
         foreach ($this->configures as $configure) {
             $configure->delete();
         }
+
+        parent::tearDown();
     }
 
     public function testShowsBuildName(): void

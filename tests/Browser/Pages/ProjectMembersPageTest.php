@@ -32,14 +32,14 @@ class ProjectMembersPageTest extends BrowserTestCase
 
     public function tearDown(): void
     {
-        parent::tearDown();
-
         $this->project->delete();
 
         foreach ($this->users as $users) {
             $users->delete();
         }
         $this->users = [];
+
+        parent::tearDown();
     }
 
     private function addUserToProject(bool $admin = false): User

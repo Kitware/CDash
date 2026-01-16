@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Project;
 use App\Models\User;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\URL;
 use LogicException;
 use Mockery\Exception\InvalidCountException;
@@ -16,6 +17,7 @@ class RouteAccessTest extends TestCase
 {
     use CreatesProjects;
     use CreatesUsers;
+    use DatabaseTransactions;
 
     private User $normal_user;
     private User $admin_user;

@@ -6,6 +6,7 @@ use App\Models\Build;
 use App\Models\BuildConfigure;
 use App\Models\Configure;
 use App\Models\Project;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
@@ -15,6 +16,7 @@ class ConfigureTypeTest extends TestCase
 {
     use CreatesProjects;
     use CreatesUsers;
+    use DatabaseTransactions;
 
     private Project $project;
 

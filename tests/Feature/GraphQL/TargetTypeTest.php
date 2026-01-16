@@ -8,6 +8,7 @@ use App\Models\Build;
 use App\Models\BuildCommand;
 use App\Models\Project;
 use App\Models\Target;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -19,6 +20,7 @@ class TargetTypeTest extends TestCase
 {
     use CreatesProjects;
     use CreatesUsers;
+    use DatabaseTransactions;
 
     private Project $project;
 

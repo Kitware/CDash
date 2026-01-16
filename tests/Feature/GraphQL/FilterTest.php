@@ -9,7 +9,7 @@ use App\Models\Site;
 use App\Models\Test;
 use App\Models\TestOutput;
 use App\Models\User;
-use Illuminate\Foundation\Testing\DatabaseTruncation;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Tests\TestCase;
@@ -22,7 +22,7 @@ class FilterTest extends TestCase
     use CreatesProjects;
     use CreatesSites;
     use CreatesUsers;
-    use DatabaseTruncation;
+    use DatabaseTransactions;
 
     /**
      * @var array<Project>

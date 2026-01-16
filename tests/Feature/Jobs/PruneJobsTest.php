@@ -4,12 +4,15 @@ namespace Tests\Feature\Jobs;
 
 use App\Jobs\PruneJobs;
 use App\Models\SuccessfulJob;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class PruneJobsTest extends TestCase
 {
+    use DatabaseTransactions;
+
     /**
      * Changing the config is difficult since multiple processes are involved.
      * Instead, we just rely upon the default value of 48 hours.

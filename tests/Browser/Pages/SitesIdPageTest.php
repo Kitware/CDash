@@ -36,8 +36,6 @@ class SitesIdPageTest extends BrowserTestCase
 
     public function tearDown(): void
     {
-        parent::tearDown();
-
         foreach ($this->projects as $project) {
             $project->delete();
         }
@@ -52,6 +50,8 @@ class SitesIdPageTest extends BrowserTestCase
             $users->delete();
         }
         $this->users = [];
+
+        parent::tearDown();
     }
 
     public function testMostRecentSiteDetails(): void

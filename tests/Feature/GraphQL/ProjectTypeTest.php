@@ -4,7 +4,7 @@ namespace Tests\Feature\GraphQL;
 
 use App\Models\Project;
 use App\Models\User;
-use Illuminate\Foundation\Testing\DatabaseTruncation;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
@@ -15,7 +15,7 @@ class ProjectTypeTest extends TestCase
 {
     use CreatesProjects;
     use CreatesUsers;
-    use DatabaseTruncation;
+    use DatabaseTransactions;
 
     /**
      * @var array<Project>

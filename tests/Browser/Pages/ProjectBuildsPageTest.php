@@ -23,9 +23,9 @@ class ProjectBuildsPageTest extends BrowserTestCase
 
     public function tearDown(): void
     {
-        parent::tearDown();
-
         $this->project->delete();
+
+        parent::tearDown();
     }
 
     public function testProjectPageDisplaysBanner(): void

@@ -5,7 +5,7 @@ namespace Tests\Feature\Jobs;
 use App\Jobs\NotifyExpiringAuthTokens;
 use App\Mail\AuthTokenExpiring;
 use App\Models\User;
-use Illuminate\Foundation\Testing\DatabaseTruncation;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -15,7 +15,7 @@ use Tests\Traits\CreatesUsers;
 class NotifyExpiringAuthTokensTest extends TestCase
 {
     use CreatesUsers;
-    use DatabaseTruncation;
+    use DatabaseTransactions;
 
     protected User $user;
 

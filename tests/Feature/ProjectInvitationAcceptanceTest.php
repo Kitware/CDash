@@ -6,6 +6,7 @@ use App\Enums\ProjectRole;
 use App\Models\Project;
 use App\Models\ProjectInvitation;
 use App\Models\User;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Carbon;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
@@ -15,6 +16,7 @@ class ProjectInvitationAcceptanceTest extends TestCase
 {
     use CreatesProjects;
     use CreatesUsers;
+    use DatabaseTransactions;
 
     protected Project $project;
 
@@ -35,13 +37,13 @@ class ProjectInvitationAcceptanceTest extends TestCase
 
     protected function tearDown(): void
     {
-        parent::tearDown();
-
         $this->project->delete();
 
         foreach ($this->users as $user) {
             $user->delete();
         }
+
+        parent::tearDown();
     }
 
     private function createInvitation(): ProjectInvitation

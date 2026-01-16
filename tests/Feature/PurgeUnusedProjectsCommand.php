@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use CDash\Model\Build;
 use CDash\Model\Project;
-use Illuminate\Foundation\Testing\DatabaseTruncation;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
@@ -12,7 +12,7 @@ use Tests\Traits\CreatesProjects;
 class PurgeUnusedProjectsCommand extends TestCase
 {
     use CreatesProjects;
-    use DatabaseTruncation;
+    use DatabaseTransactions;
 
     private \App\Models\Project $project1;
     private \App\Models\Project $project2;

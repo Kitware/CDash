@@ -6,6 +6,7 @@ use App\Jobs\PruneUploads;
 use App\Models\Build;
 use App\Models\Project;
 use App\Models\UploadFile;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -19,6 +20,7 @@ use Tests\Traits\CreatesProjects;
 class PruneUploadsTest extends TestCase
 {
     use CreatesProjects;
+    use DatabaseTransactions;
 
     private Project $project;
 

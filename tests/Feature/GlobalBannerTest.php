@@ -2,11 +2,14 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class GlobalBannerTest extends TestCase
 {
+    use DatabaseTransactions;
+
     public function testGlobalBannerAppearsWhenSet(): void
     {
         $bannerText = Str::uuid()->toString();

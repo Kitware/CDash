@@ -6,6 +6,7 @@ use App\Enums\ProjectRole;
 use App\Models\Project;
 use App\Models\ProjectInvitation;
 use App\Models\User;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Carbon;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
@@ -15,6 +16,7 @@ class ProjectInvitationTypeTest extends TestCase
 {
     use CreatesProjects;
     use CreatesUsers;
+    use DatabaseTransactions;
 
     private Project $project;
     private User $normalUser;
