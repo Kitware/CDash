@@ -320,6 +320,8 @@ add_feature_test(/Feature/Mail/AuthTokenExpiringTest)
 
 add_feature_test(/Feature/Mail/AuthTokenExpiredTest)
 
+add_feature_test(/Feature/GraphQL/Mutations/CreateProjectTest)
+
 add_feature_test(/Feature/GraphQL/Mutations/UpdateSiteDescriptionTest)
 
 add_feature_test(/Feature/GraphQL/Mutations/InviteToProjectTest)
