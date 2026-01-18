@@ -16,7 +16,7 @@ describe('remove_build', () => {
 
     // refresh the page to make sure this build is gone now
     cy.reload();
-    
+
     cy.get('tbody').contains('tr', 'CDash-CTest-simple_async').should('not.exist');
   });
 });
