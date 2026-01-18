@@ -332,6 +332,8 @@ add_browser_test(/Browser/Pages/ProjectMembersPageTest)
 
 add_browser_test(/Browser/Pages/ProjectBuildsPageTest)
 
+add_browser_test(/Browser/Pages/CreateProjectPageTest)
+
 add_browser_test(/Browser/Pages/ProjectsPageTest)
 set_property(TEST /Browser/Pages/ProjectsPageTest APPEND PROPERTY RUN_SERIAL TRUE)
 

@@ -12,6 +12,7 @@
 */
 
 use App\Http\Controllers\CoverageFileController;
+use App\Http\Controllers\CreateProjectController;
 use App\Http\Controllers\GlobalInvitationController;
 use App\Http\Controllers\ProjectInvitationController;
 use App\Models\DynamicAnalysis;
@@ -163,7 +164,7 @@ Route::get('/projects/{id}/edit', 'EditProjectController@edit')
     ->whereNumber('id');
 Route::permanentRedirect('/project/{id}/edit', url('/projects/{id}/edit'));
 
-Route::get('/projects/new', 'EditProjectController@create');
+Route::get('/projects/new', CreateProjectController::class);
 Route::permanentRedirect('/project/new', url('/projects/new'));
 
 Route::get('/projects/{id}/testmeasurements', 'ManageMeasurementsController@show')
