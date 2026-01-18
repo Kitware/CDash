@@ -553,16 +553,22 @@
       </div>
       <a
         class="tw-link tw-link-hover"
-        :href="$baseURL + '/builds/' + cdash.build.id + '/targets'"
-      >
-        View Targets
-      </a>
-      <br>
-      <a
-        class="tw-link tw-link-hover"
         :href="$baseURL + '/builds/' + cdash.build.id + '/commands'"
       >
         View Commands
+      </a>
+      <br>
+      <br>
+
+      <!-- Targets section -->
+      <div class="title-divider">
+        Targets
+      </div>
+      <a
+        class="tw-link tw-link-hover"
+        :href="$baseURL + '/builds/' + cdash.build.id + '/targets'"
+      >
+        View Targets
       </a>
       <br>
       <br>
