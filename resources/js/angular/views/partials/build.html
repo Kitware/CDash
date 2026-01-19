@@ -3,7 +3,8 @@
   <input type="checkbox" 
          ng-if="::build.id"
          ng-model="build.selected" 
-         ng-change="toggleBuildSelection(build, buildgroup)">
+         ng-change="toggleBuildSelection(build, buildgroup)"
+         data-cy="build-selection-checkbox">
 </td>
 
 <!-- For child view, display the label(s) as a link to the build summary -->
@@ -97,7 +98,7 @@
     <div style="float: left;" ng-if="::cdash.user.admin == 1">
       <!-- Display cog icon to edit this build for administrative users -->
       <a class="cdash-link" href="" ng-click="toggleAdminOptions(build)">
-        <span name="adminoptions" class="glyphicon glyphicon-cog" style="color: #777; margin-right: 4px;"></span>
+        <span name="adminoptions" class="glyphicon glyphicon-cog" style="color: #777; margin-right: 4px;" data-cy="build-admin-options"></span>
       </a>
       <span class="glyphicon glyphicon-refresh glyphicon-spin" ng-if="build.loading == 1" style="color: #5bc0de;"></span>
     </div>
@@ -184,10 +185,10 @@
             <b>{{::group.name}}</b>:
           </td>
           <td ng-if="::group.name == buildgroup.name" colspan="2" style="padding: 4px 0;">
-            <button class="btn btn-xs btn-success" ng-if="build.expected == 0" ng-click="toggleExpected(build, group.id)">
+            <button class="btn btn-xs btn-success" ng-if="build.expected == 0" ng-click="toggleExpected(build, group.id)" data-cy="mark-as-expected-btn">
               <span class="glyphicon glyphicon-ok"></span> Mark as Expected
             </button>
-            <button class="btn btn-xs btn-warning" ng-if="build.expected == 1 || build.expectedandmissing == 1" ng-click="toggleExpected(build, group.id)">
+            <button class="btn btn-xs btn-warning" ng-if="build.expected == 1 || build.expectedandmissing == 1" ng-click="toggleExpected(build, group.id)" data-cy="mark-as-non-expected-btn">
               <span class="glyphicon glyphicon-remove"></span> Mark as Non Expected
             </button>
           </td>
