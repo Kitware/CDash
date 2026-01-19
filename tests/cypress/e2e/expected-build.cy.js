@@ -66,7 +66,7 @@ describe('expected_build', () => {
       // select the first two builds
       cy.get('#project_5_13').find('tbody').find('tr').eq(0).find('[data-cy="build-selection-checkbox"]').check();
       cy.get('#project_5_13').find('tbody').find('tr').eq(1).find('[data-cy="build-selection-checkbox"]').check();
-      cy.contains(`2 build(s) selected`).should('be.visible');
+      cy.contains('2 build(s) selected').should('be.visible');
 
       // click the "Mark as Expected" button in the bulk actions toolbar
       cy.get('[data-cy="bulk-mark-expected-btn"]').click();
