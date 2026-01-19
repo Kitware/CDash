@@ -400,7 +400,7 @@ export function IndexController($scope, $rootScope, $location, $http, $filter, $
   };
 
   $scope.showModal = function (buildid) {
-    modalSvc.showModal(buildid, $scope.removeBuild, 'modal-template');
+    modalSvc.showModal(buildid, $scope.removeBuild, 'modal-template', null, 'sm', null, null, false);
   }
 
   $scope.removeBuild = function(build) {

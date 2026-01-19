@@ -16,7 +16,7 @@
   <!-- Icon for build errors / test failing -->
   <a class="cdash-link" ng-if="::build.compilation.error > 0 || build.test.fail > 0" href=""
      ng-click="toggleBuildProblems(build)">
-    <span class="glyphicon glyphicon-info-sign" style="color: #5bc0de;" title="Build information"></span>
+    <span class="glyphicon glyphicon-info-sign" style="color: #777;" title="Build information"></span>
   </a>
 
   <!-- Link to notes specific to this subproject build -->
@@ -25,7 +25,7 @@
      name="notesLink"
      ng-if="::build.notes > 0"
      ng-href="builds/{{::build.id}}/notes">
-    <span class="glyphicon glyphicon-file" style="color: #f0ad4e;"></span>
+    <span class="glyphicon glyphicon-file" style="color: #777;"></span>
   </a>
 </td>
 
@@ -61,7 +61,7 @@
        name="notesLink"
        ng-if="::build.notes > 0"
        ng-href="builds/{{::build.id}}/notes">
-      <span class="glyphicon glyphicon-file" style="color: #f0ad4e; margin-right: 4px;"></span>
+      <span class="glyphicon glyphicon-file" style="color: #777; margin-right: 4px;"></span>
     </a>
 
     <a class="cdash-link"
@@ -77,7 +77,7 @@
        href="" style="float: left;"
        ng-if="::build.compilation.error > 0 || build.test.fail > 0"
        ng-click="toggleBuildProblems(build)">
-      <span class="glyphicon glyphicon-info-sign" style="color: #5bc0de; margin-right: 4px;" title="Build information"></span>
+      <span class="glyphicon glyphicon-info-sign" style="color: #777; margin-right: 4px;" title="Build information"></span>
     </a>
 
     <!-- If the build is expected and missing -->
@@ -85,7 +85,7 @@
        href="" style="float: left;"
        ng-if="::build.expectedandmissing == 1"
        ng-click="toggleExpectedInfo(build)">
-      <span class="glyphicon glyphicon-info-sign" style="color: #5bc0de; margin-right: 4px;" title="Expected build information"></span>
+      <span class="glyphicon glyphicon-info-sign" style="color: #777; margin-right: 4px;" title="Expected build information"></span>
     </a>
 
     <!-- Display the note icon -->
@@ -185,11 +185,17 @@
             <b>{{::group.name}}</b>:
           </td>
           <td ng-if="::group.name == buildgroup.name" colspan="2" style="padding: 4px 0;">
-            <button class="btn btn-xs btn-success" ng-if="build.expected == 0" ng-click="toggleExpected(build, group.id)" data-cy="mark-as-expected-btn">
-              <span class="glyphicon glyphicon-ok"></span> Mark as Expected
-            </button>
-            <button class="btn btn-xs btn-warning" ng-if="build.expected == 1 || build.expectedandmissing == 1" ng-click="toggleExpected(build, group.id)" data-cy="mark-as-non-expected-btn">
-              <span class="glyphicon glyphicon-remove"></span> Mark as Non Expected
+            <button class="btn btn-xs" 
+                    ng-class="(build.expected == 1 || build.expectedandmissing == 1) ? 'btn-warning' : 'btn-success'" 
+                    ng-click="toggleExpected(build, group.id)" 
+                    ng-disabled="build.expectedLoading"
+                    data-cy="{{(build.expected == 1 || build.expectedandmissing == 1) ? 'mark-as-non-expected-btn' : 'mark-as-expected-btn'}}">
+              <span class="glyphicon" ng-class="{
+                'glyphicon-ok': !build.expectedLoading && (build.expected != 1 && build.expectedandmissing != 1),
+                'glyphicon-remove': !build.expectedLoading && (build.expected == 1 || build.expectedandmissing == 1)
+              }"></span>
+              <span ng-if="!build.expectedLoading && (build.expected != 1 && build.expectedandmissing != 1)">Mark as Expected</span>
+              <span ng-if="!build.expectedLoading && (build.expected == 1 || build.expectedandmissing == 1)">Mark as Non Expected</span>
             </button>
           </td>
           <td ng-if="::group.name != buildgroup.name" colspan="2" style="padding: 4px 0;">
@@ -215,12 +221,18 @@
       <div tooltip-popup-delay="1500"
            tooltip-append-to-body="true"
            uib-tooltip="Done builds will be overwritten if a new one is submitted with the same site, build name, and timestamp."
-           style="margin-top: 4px;">
-        <button class="btn btn-xs btn-info" ng-if="build.done == 0" ng-click="toggleDone(build)">
-          <span class="glyphicon glyphicon-ok-circle"></span> Mark as Done
-        </button>
-        <button class="btn btn-xs btn-default" ng-if="build.done == 1" ng-click="toggleDone(build)">
-          <span class="glyphicon glyphicon-ban-circle"></span> Mark as Not Done
+           style="margin-top: 4px;"
+           ng-if="build.id && !build.expectedandmissing">
+        <button class="btn btn-xs" 
+                ng-class="build.done == 1 ? 'btn-default' : 'btn-info'" 
+                ng-click="toggleDone(build)" 
+                ng-disabled="build.doneLoading">
+          <span class="glyphicon" ng-class="{
+            'glyphicon-ok-circle': !build.doneLoading && build.done != 1,
+            'glyphicon-ban-circle': !build.doneLoading && build.done == 1
+          }"></span>
+          <span ng-if="!build.doneLoading && build.done != 1">Mark as Done</span>
+          <span ng-if="!build.doneLoading && build.done == 1">Mark as Not Done</span>
         </button>
       </div>
     </div>
