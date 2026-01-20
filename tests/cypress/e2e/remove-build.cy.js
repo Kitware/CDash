@@ -12,7 +12,6 @@ describe('remove_build', () => {
 
     // confirm deletion in popup
     cy.get('button#modal-delete-build-button').click();
-    cy.get('button').contains('cancel').click();
 
     // refresh the page to make sure this build is gone now
     cy.reload();
