@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -10,11 +11,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $buildid
  * @property int $type
  * @property int $logline
- * @property string $text
+ * @property string $stdoutput
+ * @property string $stderror
  * @property string $sourcefile
  * @property int $sourceline
- * @property string|null $precontext
- * @property string|null $postcontext
  * @property int $repeatcount
  * @property bool $newstatus
  *
@@ -30,11 +30,10 @@ class BasicBuildAlert extends Model
         'buildid',
         'type',
         'logline',
-        'text',
+        'stdoutput',
+        'stderror',
         'sourcefile',
         'sourceline',
-        'precontext',
-        'postcontext',
         'repeatcount',
         'newstatus',
     ];
@@ -43,9 +42,30 @@ class BasicBuildAlert extends Model
         'buildid' => 'integer',
         'type' => 'integer', // TODO: Convert this to an enum
         'logline' => 'integer',
-        'text' => 'string',
+        'stdoutput' => 'string',
+        'stderror' => 'string',
         'sourceline' => 'integer',
         'repeatcount' => 'integer',
         'newstatus' => 'boolean',
     ];
+
+    /**
+     * @return Attribute<string,void>
+     */
+    protected function precontext(): Attribute
+    {
+        return Attribute::make(
+            get: fn (mixed $value, array $attributes): null => null,
+        );
+    }
+
+    /**
+     * @return Attribute<string,void>
+     */
+    protected function postcontext(): Attribute
+    {
+        return Attribute::make(
+            get: fn (mixed $value, array $attributes): null => null,
+        );
+    }
 }

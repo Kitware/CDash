@@ -51,13 +51,12 @@ class BuildError
             'buildid' => (int) $this->BuildId,
             'type' => $this->Type,
             'logline' => (int) $this->LogLine,
-            'text' => $this->Text,
             'sourcefile' => $this->SourceFile ?? '',
             'sourceline' => (int) $this->SourceLine,
-            'precontext' => $this->PreContext,
-            'postcontext' => $this->PostContext,
             'repeatcount' => (int) $this->RepeatCount,
             'newstatus' => 0,
+            'stdoutput' => $this->PreContext . $this->Text . $this->PostContext,
+            'stderror' => $this->Text,
         ]);
     }
 
@@ -74,7 +73,7 @@ class BuildError
         // Detect if the source directory has already been replaced by CTest
         // with /.../.  If so, sourcefile is already a relative path from the
         // root of the source tree.
-        if (str_contains($data['text'], '/.../')) {
+        if (str_contains($data['stdoutput'], '/.../')) {
             $parts = explode('/', $data['sourcefile']);
             $sourceFile['file'] = array_pop($parts);
             $sourceFile['directory'] = implode('/', $parts);
@@ -110,9 +109,9 @@ class BuildError
             'new' => (int) ($data['newstatus'] ?? -1),
             'logline' => (int) $data['logline'],
             'cvsurl' => RepositoryUtils::get_diff_url($project->Id, $project->CvsUrl, $sourceFile['directory'], $sourceFile['file'], $revision),
-            'precontext' => RepositoryUtils::linkify_compiler_output($project->CvsUrl, $source_dir, $revision, $data['precontext']),
-            'text' => RepositoryUtils::linkify_compiler_output($project->CvsUrl, $source_dir, $revision, $data['text']),
-            'postcontext' => RepositoryUtils::linkify_compiler_output($project->CvsUrl, $source_dir, $revision, $data['postcontext']),
+            'precontext' => '',
+            'text' => RepositoryUtils::linkify_compiler_output($project->CvsUrl, $source_dir, $revision, $data['stdoutput']),
+            'postcontext' => '',
             'sourcefile' => $data['sourcefile'],
             'sourceline' => $data['sourceline'],
         ];

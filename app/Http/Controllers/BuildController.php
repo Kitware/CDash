@@ -266,11 +266,11 @@ final class BuildController extends AbstractBuildController
         foreach ($e_errors as $error_array) {
             $error_response = [];
             $error_response['logline'] = $error_array['logline'];
-            $error_response['text'] = $error_array['text'];
+            $error_response['text'] = $error_array['stdoutput'];
             $error_response['sourcefile'] = $error_array['sourcefile'];
             $error_response['sourceline'] = $error_array['sourceline'];
-            $error_response['precontext'] = $error_array['precontext'];
-            $error_response['postcontext'] = $error_array['postcontext'];
+            $error_response['precontext'] = '';
+            $error_response['postcontext'] = '';
             $errors_response[] = $error_response;
         }
 
@@ -292,11 +292,11 @@ final class BuildController extends AbstractBuildController
         foreach ($e_warnings as $error_array) {
             $warning_response = [];
             $warning_response['logline'] = $error_array['logline'];
-            $warning_response['text'] = $error_array['text'];
+            $warning_response['text'] = $error_array['stdoutput'];
             $warning_response['sourcefile'] = $error_array['sourcefile'];
             $warning_response['sourceline'] = $error_array['sourceline'];
-            $warning_response['precontext'] = $error_array['precontext'];
-            $warning_response['postcontext'] = $error_array['postcontext'];
+            $warning_response['precontext'] = '';
+            $warning_response['postcontext'] = '';
             $warnings_response[] = $warning_response;
         }
 

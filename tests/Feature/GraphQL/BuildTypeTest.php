@@ -233,11 +233,10 @@ class BuildTypeTest extends TestCase
         $build->basicAlerts()->create([
             'type' => Build::TYPE_WARN,
             'logline' => 5,
-            'text' => 'def',
+            'stdoutput' => 'abc',
+            'stderror' => 'def',
             'sourcefile' => '/a/b/c',
             'sourceline' => 7,
-            'precontext' => 'ghi',
-            'postcontext' => 'jlk',
         ]);
 
         $this->graphQL('
@@ -286,11 +285,11 @@ class BuildTypeTest extends TestCase
                                             [
                                                 'node' => [
                                                     'logLine' => 5,
-                                                    'text' => 'def',
+                                                    'text' => 'abc',
                                                     'sourceFile' => '/a/b/c',
                                                     'sourceLine' => 7,
-                                                    'preContext' => 'ghi',
-                                                    'postContext' => 'jlk',
+                                                    'preContext' => null,
+                                                    'postContext' => null,
                                                 ],
                                             ],
                                         ],
@@ -316,11 +315,10 @@ class BuildTypeTest extends TestCase
         $build->basicAlerts()->create([
             'type' => Build::TYPE_ERROR,
             'logline' => 5,
-            'text' => 'def',
+            'stdoutput' => 'abc',
+            'stderror' => 'def',
             'sourcefile' => '/a/b/c',
             'sourceline' => 7,
-            'precontext' => 'ghi',
-            'postcontext' => 'jlk',
         ]);
 
         $this->graphQL('
@@ -372,11 +370,11 @@ class BuildTypeTest extends TestCase
                                             [
                                                 'node' => [
                                                     'logLine' => 5,
-                                                    'text' => 'def',
+                                                    'text' => 'abc',
                                                     'sourceFile' => '/a/b/c',
                                                     'sourceLine' => 7,
-                                                    'preContext' => 'ghi',
-                                                    'postContext' => 'jlk',
+                                                    'preContext' => null,
+                                                    'postContext' => null,
                                                 ],
                                             ],
                                         ],
@@ -401,20 +399,26 @@ class BuildTypeTest extends TestCase
         $errors = [];
         for ($i = 0; $i < 10; $i++) {
             $warning = [
-                'text' => Str::uuid()->toString(),
+                'stdoutput' => Str::uuid()->toString(),
+                'stderror' => Str::uuid()->toString(),
             ];
             $error = [
-                'text' => Str::uuid()->toString(),
+                'stdoutput' => Str::uuid()->toString(),
+                'stderror' => Str::uuid()->toString(),
             ];
 
             $build->basicAlerts()->create(array_merge($warning, ['type' => Build::TYPE_WARN]));
             $build->basicAlerts()->create(array_merge($error, ['type' => Build::TYPE_ERROR]));
 
             $warnings[] = [
-                'node' => $warning,
+                'node' => [
+                    'text' => $warning['stdoutput'],
+                ],
             ];
             $errors[] = [
-                'node' => $error,
+                'node' => [
+                    'text' => $error['stdoutput'],
+                ],
             ];
         }
 
