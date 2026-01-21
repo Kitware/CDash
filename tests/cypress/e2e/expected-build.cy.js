@@ -111,15 +111,12 @@ describe('expected_build', () => {
       // close admin options
       cy.get('#project_5_13').find('tbody').find('tr').eq(0).find('[data-cy="build-admin-options"]').click();
 
-      // if there was a second build, verify it too
-      if (rowCount > 1) {
-        cy.get('#project_5_13').find('tbody').find('tr').eq(1).find('[data-cy="build-admin-options"]').click();
-        cy.get('#project_5_13').find('tbody').find('tr').eq(1).find('table.animate-show').should('be.visible');
-        cy.get('[data-cy="mark-as-expected-btn"]').should('exist');
-        cy.get('[data-cy="mark-as-non-expected-btn"]').should('not.exist');
-        // close admin options
-        cy.get('#project_5_13').find('tbody').find('tr').eq(1).find('[data-cy="build-admin-options"]').click();
-      }
+      cy.get('#project_5_13').find('tbody').find('tr').eq(1).find('[data-cy="build-admin-options"]').click();
+      cy.get('#project_5_13').find('tbody').find('tr').eq(1).find('table.animate-show').should('be.visible');
+      cy.get('[data-cy="mark-as-expected-btn"]').should('exist');
+      cy.get('[data-cy="mark-as-non-expected-btn"]').should('not.exist');
+      // close admin options
+      cy.get('#project_5_13').find('tbody').find('tr').eq(1).find('[data-cy="build-admin-options"]').click();
 
       // re-enable bulk selection mode to test clear selection
       cy.get('[data-cy="bulk-select-toggle-btn"]').click();
