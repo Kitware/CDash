@@ -264,4 +264,45 @@ describe('Data table component tests', () => {
     cy.get('@table-cell-0').should('contain.html', '<p>Test 2 Prop static text</p>');
     cy.get('@table-cell-1').should('contain.html', '<p>Test 1 Prop static text</p>');
   });
+
+  it('Does not show empty table message when not empty', () => {
+    cy.mount(DataTable, {
+      props: {
+        columns: [
+          {
+            displayName: 'Test',
+            name: 'test',
+          },
+        ],
+        rows: [
+          {
+            test: {
+              value: 'test1',
+              myprop: 'Test 1 Prop',
+            },
+          },
+        ],
+        emptyTableText: 'empty table text',
+      },
+    });
+
+    cy.get('[data-cy="data-table"]').should('not.contain.text', 'empty table text');
+  });
+
+  it('Shows empty table message when empty', () => {
+    cy.mount(DataTable, {
+      props: {
+        columns: [
+          {
+            displayName: 'Test',
+            name: 'test',
+          },
+        ],
+        rows: [],
+        emptyTableText: 'empty table text',
+      },
+    });
+
+    cy.get('[data-cy="data-table"]').should('contain.text', 'empty table text');
+  });
 });

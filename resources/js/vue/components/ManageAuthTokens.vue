@@ -3,108 +3,76 @@
     <p>{{ cdash.error }}</p>
   </section>
   <section v-else>
-    <table
-      class="tabb"
-      style="width: 100%;"
+    <data-table
+      :column-groups="[
+        {
+          displayName: 'Authentication Tokens',
+          width: 100,
+        }
+      ]"
+      :columns="[
+        {
+          name: 'owner',
+          displayName: 'Owner',
+        },
+        {
+          name: 'description',
+          displayName: 'Description',
+          expand: true,
+        },
+        {
+          name: 'scope',
+          displayName: 'Scope',
+        },
+        {
+          name: 'expires',
+          displayName: 'Expires',
+        },
+        {
+          name: 'actions',
+          displayName: 'Actions',
+        },
+      ]"
+      :rows="formattedAuthTokenRows"
+      :full-width="true"
+      empty-table-text="No authentication tokens have been created yet."
     >
-      <!-- We abuse HTML table syntax a little bit here, but we want to maintain consistency with other CDash tables -->
-      <thead>
-        <tr class="table-heading1">
-          <td colspan="5">
-            <h3>Manage Authentication Tokens</h3>
-          </td>
-        </tr>
-        <tr class="table-heading">
-          <td
-            align="center"
-            class="botl"
-          >
-            Owner
-          </td>
-          <td
-            align="center"
-            class="botl"
-          >
-            Description
-          </td>
-          <td
-            align="center"
-            class="botl"
-          >
-            Scope
-          </td>
-          <td
-            align="center"
-            class="botl"
-          >
-            Expires
-          </td>
-          <td
-            align="center"
-            class="botl"
-          >
-            Revoke
-          </td>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-if="cdash.tokens === undefined || Object.keys(cdash.tokens).length === 0">
-          <td
-            align="center"
-            colspan="5"
-          >
-            No authentication tokens have been created yet.
-          </td>
-        </tr>
-        <tr
-          v-for="(token, hash, index) in cdash.tokens"
-          :class="{'treven': index % 2 === 0, 'trodd': index % 2 !== 0}"
+      <template #scope="{ props: { scope: scope, projectname: projectname } }">
+        <template v-if="scope === 'submit_only' && projectname !== null && projectname.length > 0">
+          Submit Only (<a
+            class="cdash-link"
+            :href="$baseURL + '/index.php?project=' + projectname"
+          >{{ projectname }}</a>)
+        </template>
+        <template v-else-if="scope === 'submit_only'">
+          Submit Only
+        </template>
+        <template v-else>
+          Full Access
+        </template>
+      </template>
+      <template #actions="{ props: { token: token } }">
+        <button
+          class="tw-btn tw-btn-sm tw-btn-outline tw-flex-nowrap tw-items-center tw-gap-1"
+          @click="revokeToken(token)"
         >
-          <td align="center">
-            {{ token.owner_firstname }}&nbsp;{{ token.owner_lastname }}
-          </td>
-          <td align="center">
-            {{ token.description }}
-          </td>
-          <td
-            v-if="token.scope === 'submit_only' && token.projectname !== null && token.projectname.length > 0"
-            align="center"
-          >
-            Submit Only (<a
-              class="cdash-link"
-              :href="$baseURL + '/index.php?project=' + token.projectname"
-            >{{ token.projectname }}</a>)
-          </td>
-          <td
-            v-else-if="token.scope === 'submit_only'"
-            align="center"
-          >
-            Submit Only
-          </td>
-          <td
-            v-else
-            align="center"
-          >
-            Full Access
-          </td>
-          <td align="center">
-            {{ token.expires }}
-          </td>
-          <td align="center">
-            <span
-              class="glyphicon glyphicon-trash"
-              @click="revokeToken(token)"
-            />
-          </td>
-        </tr>
-      </tbody>
-    </table>
+          Revoke Token
+          <font-awesome-icon :icon="FA.faTrash" />
+        </button>
+      </template>
+    </data-table>
   </section>
 </template>
 <script>
+
 import ApiLoader from './shared/ApiLoader';
+import DataTable from './shared/DataTable.vue';
+import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
+import {faTrash} from '@fortawesome/free-solid-svg-icons';
+
 export default {
   name: 'ManageAuthTokens',
+  components: {FontAwesomeIcon, DataTable},
 
   data () {
     return {
@@ -113,6 +81,31 @@ export default {
       loading: true,
       errored: false,
     };
+  },
+
+  computed: {
+    FA() {
+      return {
+        faTrash,
+      };
+    },
+
+    formattedAuthTokenRows() {
+      return Object.values(this.cdash?.tokens ?? {}).map(token => {
+        return {
+          owner: `${token.owner_firstname} ${token.owner_lastname}`,
+          description: token.description,
+          scope: {
+            scope: token.scope,
+            projectname: token.projectname,
+          },
+          expires: token.expires,
+          actions: {
+            token: token,
+          },
+        };
+      }) ?? [];
+    },
   },
 
   mounted () {
