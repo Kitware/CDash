@@ -1,9 +1,10 @@
 export function modalSvc ($uibModal) {
-  const showModal = function(modelId, okFn, template, parent_scope, size, success, error) {
+  const showModal = function(modelId, okFn, template, parent_scope, size, success, error, animation) {
     parent_scope = typeof parent_scope !== 'undefined' ? parent_scope : null;
     size = typeof size !== 'undefined' ? size : 'sm';
+    animation = typeof animation !== 'undefined' ? animation : true;
     var $modal = $uibModal.open({
-      animation: true,
+      animation: animation,
       backdrop: true,
       controller: function () {
         var $ctrl = this;

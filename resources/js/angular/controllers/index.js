@@ -47,7 +47,7 @@ export function showEmptyBuildsLast() {
   };
 }
 
-export function IndexController($scope, $rootScope, $location, $http, $filter, $timeout, anchors, apiLoader, filters, multisort, modalSvc) {
+export function IndexController($scope, $rootScope, $location, $http, $filter, $timeout, $q, anchors, apiLoader, filters, multisort, modalSvc) {
   // Show spinner while page is loading.
   $scope.loading = true;
 
@@ -200,6 +200,17 @@ export function IndexController($scope, $rootScope, $location, $http, $filter, $
       // Initialize paginated results.
       $scope.cdash.buildgroups[i].builds = $filter('orderBy')($scope.cdash.buildgroups[i].builds, $scope.cdash.buildgroups[i].orderByFields);
       $scope.cdash.buildgroups[i].builds = $filter('showEmptyBuildsLast')($scope.cdash.buildgroups[i].builds, $scope.cdash.buildgroups[i].orderByFields);
+
+      // Initialize expectedInGroup property for each build to avoid checkbox binding conflicts
+      for (var j = 0; j < $scope.cdash.buildgroups[i].builds.length; j++) {
+        $scope.cdash.buildgroups[i].builds[j].expectedInGroup = {};
+      }
+
+      // Initialize bulk selection properties
+      $scope.cdash.buildgroups[i].selectedBuilds = [];
+      $scope.cdash.buildgroups[i].selectAll = false;
+      $scope.cdash.buildgroups[i].bulkTargetGroup = '';
+      $scope.cdash.buildgroups[i].selectionMode = false;
 
       // Mark this group has having "normal" builds if it only contains missing & expected builds.
       if (!$scope.cdash.buildgroups[i].hasnormalbuilds && !$scope.cdash.buildgroups[i].hasparentbuilds && $scope.cdash.buildgroups[i].builds.length > 0) {
@@ -389,7 +400,7 @@ export function IndexController($scope, $rootScope, $location, $http, $filter, $
   };
 
   $scope.showModal = function (buildid) {
-    modalSvc.showModal(buildid, $scope.removeBuild, 'modal-template');
+    modalSvc.showModal(buildid, $scope.removeBuild, 'modal-template', null, 'sm', null, null, false);
   }
 
   $scope.removeBuild = function(build) {
@@ -498,18 +509,131 @@ export function IndexController($scope, $rootScope, $location, $http, $filter, $
       $http.post('api/v1/expectedbuild.php', parameters)
       .then(function success() {
         window.location.reload();
+      }).catch(function(error) {
+        console.error('Error moving expected build:', error);
+        alert('An error occurred while moving the build. Please try again.');
       });
     } else {
+      // Use the checkbox value for this specific group, default to current expected value
+      var expectedInNewGroup = build.expectedInGroup && build.expectedInGroup[groupid] !== undefined 
+        ? (build.expectedInGroup[groupid] ? 1 : 0)
+        : build.expected;
+      
+      // Use the build API with the correct parameters
       var parameters = {
         buildid: build.id,
         newgroupid: groupid,
-        expected: build.expected
+        expected: expectedInNewGroup
       };
       $http.post('api/v1/build.php', parameters)
       .then(function success() {
         window.location.reload();
+      }).catch(function(error) {
+        console.error('Error moving build:', error);
+        alert('Error moving build: ' + (error.data && error.data.error ? error.data.error : 'Unknown error'));
       });
     }
+  };
+
+  // Bulk selection functions
+  $scope.toggleBuildSelection = function(build, buildgroup) {
+    if (build.selected) {
+      buildgroup.selectedBuilds.push(build);
+    } else {
+      var index = buildgroup.selectedBuilds.indexOf(build);
+      if (index > -1) {
+        buildgroup.selectedBuilds.splice(index, 1);
+      }
+      buildgroup.selectAll = false;
+    }
+  };
+
+  $scope.toggleSelectAll = function(buildgroup) {
+    buildgroup.selectedBuilds = [];
+    for (var i = 0; i < buildgroup.pagination.filteredBuilds.length; i++) {
+      var build = buildgroup.pagination.filteredBuilds[i];
+      if (build.id) { // Only select builds that have IDs (not expected missing builds)
+        build.selected = buildgroup.selectAll;
+        if (buildgroup.selectAll) {
+          buildgroup.selectedBuilds.push(build);
+        }
+      }
+    }
+  };
+
+  $scope.clearBuildSelection = function(buildgroup) {
+    buildgroup.selectAll = false;
+    buildgroup.selectedBuilds = [];
+    for (var i = 0; i < buildgroup.builds.length; i++) {
+      buildgroup.builds[i].selected = false;
+    }
+  };
+
+  $scope.toggleSelectionMode = function(buildgroup) {
+    buildgroup.selectionMode = !buildgroup.selectionMode;
+    // Clear selection when exiting selection mode
+    if (!buildgroup.selectionMode) {
+      $scope.clearBuildSelection(buildgroup);
+    }
+  };
+
+  $scope.bulkMoveToGroup = function(buildgroup) {
+    if (!buildgroup.bulkTargetGroup || buildgroup.selectedBuilds.length === 0) {
+      return;
+    }
+
+    var targetGroupId = parseInt(buildgroup.bulkTargetGroup, 10);
+    var movePromises = [];
+
+    // Move each selected build using the build API
+    for (var i = 0; i < buildgroup.selectedBuilds.length; i++) {
+      var build = buildgroup.selectedBuilds[i];
+      var expectedInNewGroup = build.expectedInGroup && build.expectedInGroup[targetGroupId] !== undefined 
+        ? (build.expectedInGroup[targetGroupId] ? 1 : 0)
+        : (build.expected || 0);
+      
+      var parameters = {
+        buildid: build.id,
+        newgroupid: targetGroupId,
+        expected: expectedInNewGroup
+      };
+      movePromises.push($http.post('api/v1/build.php', parameters));
+    }
+
+    // Wait for all moves to complete, then reload
+    $q.all(movePromises).then(function() {
+      window.location.reload();
+    }).catch(function(error) {
+      console.error('Error moving builds:', error);
+      alert('An error occurred while moving builds. Please try again.');
+    });
+  };
+
+  $scope.bulkMarkAsExpected = function(buildgroup, expectedValue) {
+    if (buildgroup.selectedBuilds.length === 0) {
+      return;
+    }
+
+    var updatePromises = [];
+
+    // Update expected status for each selected build using the build API
+    for (var i = 0; i < buildgroup.selectedBuilds.length; i++) {
+      var build = buildgroup.selectedBuilds[i];
+      var parameters = {
+        buildid: build.id,
+        groupid: parseInt(buildgroup.id, 10),
+        expected: expectedValue
+      };
+      updatePromises.push($http.post('api/v1/build.php', parameters));
+    }
+
+    // Wait for all updates to complete, then reload
+    $q.all(updatePromises).then(function() {
+      window.location.reload();
+    }).catch(function(error) {
+      console.error('Error updating builds:', error);
+      alert('An error occurred while updating builds. Please try again.');
+    });
   };
 
   $scope.colorblind_toggle = function() {

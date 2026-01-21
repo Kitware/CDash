@@ -55,7 +55,7 @@ import { HeadController } from "./controllers/head";
 CDash.controller('HeadController', ["$rootScope", "$document", HeadController]);
 
 import { IndexController, showEmptyBuildsLast } from "./controllers/index";
-CDash.controller('IndexController', ["$scope", "$rootScope", "$location", "$http", "$filter", "$timeout", "anchors", "apiLoader", "filters", "multisort", "modalSvc", IndexController]);
+CDash.controller('IndexController', ["$scope", "$rootScope", "$location", "$http", "$filter", "$timeout", "$q", "anchors", "apiLoader", "filters", "multisort", "modalSvc", IndexController]);
 CDash.filter('showEmptyBuildsLast', showEmptyBuildsLast);
 
 import { SubProjectController } from "./controllers/subproject";
