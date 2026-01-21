@@ -61,76 +61,73 @@ describe('expected_build', () => {
     // verify checkboxes are now visible
     cy.get('[data-cy="build-selection-checkbox"]').should('exist');
 
-    // count how many builds are available
-    cy.get('#project_5_13').find('tbody').find('tr').its('length').then((rowCount) => {
-      // select the first two builds
-      cy.get('#project_5_13').find('tbody').find('tr').eq(0).find('[data-cy="build-selection-checkbox"]').check();
-      cy.get('#project_5_13').find('tbody').find('tr').eq(1).find('[data-cy="build-selection-checkbox"]').check();
-      cy.contains('2 build(s) selected').should('be.visible');
+    // select the first two builds
+    cy.get('#project_5_13').find('tbody').find('tr').eq(0).find('[data-cy="build-selection-checkbox"]').check();
+    cy.get('#project_5_13').find('tbody').find('tr').eq(1).find('[data-cy="build-selection-checkbox"]').check();
+    cy.contains('2 build(s) selected').should('be.visible');
 
-      // click the "Mark as Expected" button in the bulk actions toolbar
-      cy.get('[data-cy="bulk-mark-expected-btn"]').click();
+    // click the "Mark as Expected" button in the bulk actions toolbar
+    cy.get('[data-cy="bulk-mark-expected-btn"]').click();
 
-      // wait for page reload
-      cy.url().should('contain', 'index.php?project=InsightExample&date=2010-07-07');
+    // wait for page reload
+    cy.url().should('contain', 'index.php?project=InsightExample&date=2010-07-07');
 
-      // verify first build is now expected
-      cy.get('#project_5_13').find('tbody').find('tr').eq(0).find('[data-cy="build-admin-options"]').click();
-      cy.get('#project_5_13').find('tbody').find('tr').eq(0).find('table.animate-show').should('be.visible');
-      cy.get('[data-cy="mark-as-non-expected-btn"]').first().should('exist');
-      cy.get('[data-cy="mark-as-expected-btn"]').should('not.exist');
-      // close admin options
-      cy.get('#project_5_13').find('tbody').find('tr').eq(0).find('[data-cy="build-admin-options"]').click();
+    // verify first build is now expected
+    cy.get('#project_5_13').find('tbody').find('tr').eq(0).find('[data-cy="build-admin-options"]').click();
+    cy.get('#project_5_13').find('tbody').find('tr').eq(0).find('table.animate-show').should('be.visible');
+    cy.get('[data-cy="mark-as-non-expected-btn"]').first().should('exist');
+    cy.get('[data-cy="mark-as-expected-btn"]').should('not.exist');
+    // close admin options
+    cy.get('#project_5_13').find('tbody').find('tr').eq(0).find('[data-cy="build-admin-options"]').click();
 
-      // Check second build
-      cy.get('#project_5_13').find('tbody').find('tr').eq(1).find('[data-cy="build-admin-options"]').click();
-      cy.get('#project_5_13').find('tbody').find('tr').eq(1).find('table.animate-show').should('be.visible');
-      cy.get('[data-cy="mark-as-non-expected-btn"]').should('exist');
-      cy.get('[data-cy="mark-as-expected-btn"]').should('not.exist');
-      // close admin options
-      cy.get('#project_5_13').find('tbody').find('tr').eq(1).find('[data-cy="build-admin-options"]').click();
+    // Check second build
+    cy.get('#project_5_13').find('tbody').find('tr').eq(1).find('[data-cy="build-admin-options"]').click();
+    cy.get('#project_5_13').find('tbody').find('tr').eq(1).find('table.animate-show').should('be.visible');
+    cy.get('[data-cy="mark-as-non-expected-btn"]').should('exist');
+    cy.get('[data-cy="mark-as-expected-btn"]').should('not.exist');
+    // close admin options
+    cy.get('#project_5_13').find('tbody').find('tr').eq(1).find('[data-cy="build-admin-options"]').click();
 
-      // re-enable bulk selection mode to mark them back as not expected
-      cy.get('[data-cy="bulk-select-toggle-btn"]').click();
+    // re-enable bulk selection mode to mark them back as not expected
+    cy.get('[data-cy="bulk-select-toggle-btn"]').click();
 
-      // select the same builds again
-      cy.get('#project_5_13').find('tbody').find('tr').eq(0).find('[data-cy="build-selection-checkbox"]').check();
-      cy.get('#project_5_13').find('tbody').find('tr').eq(1).find('[data-cy="build-selection-checkbox"]').check();
+    // select the same builds again
+    cy.get('#project_5_13').find('tbody').find('tr').eq(0).find('[data-cy="build-selection-checkbox"]').check();
+    cy.get('#project_5_13').find('tbody').find('tr').eq(1).find('[data-cy="build-selection-checkbox"]').check();
 
-      // mark them as not expected
-      cy.get('[data-cy="bulk-mark-not-expected-btn"]').click();
+    // mark them as not expected
+    cy.get('[data-cy="bulk-mark-not-expected-btn"]').click();
 
-      // wait for page reload
-      cy.url().should('contain', 'index.php?project=InsightExample&date=2010-07-07');
+    // wait for page reload
+    cy.url().should('contain', 'index.php?project=InsightExample&date=2010-07-07');
 
-      // verify first build is now not expected
-      cy.get('#project_5_13').find('tbody').find('tr').eq(0).find('[data-cy="build-admin-options"]').click();
-      cy.get('#project_5_13').find('tbody').find('tr').eq(0).find('table.animate-show').should('be.visible');
-      cy.get('[data-cy="mark-as-expected-btn"]').first().should('exist');
-      cy.get('[data-cy="mark-as-non-expected-btn"]').should('not.exist');
-      // close admin options
-      cy.get('#project_5_13').find('tbody').find('tr').eq(0).find('[data-cy="build-admin-options"]').click();
+    // verify first build is now not expected
+    cy.get('#project_5_13').find('tbody').find('tr').eq(0).find('[data-cy="build-admin-options"]').click();
+    cy.get('#project_5_13').find('tbody').find('tr').eq(0).find('table.animate-show').should('be.visible');
+    cy.get('[data-cy="mark-as-expected-btn"]').first().should('exist');
+    cy.get('[data-cy="mark-as-non-expected-btn"]').should('not.exist');
+    // close admin options
+    cy.get('#project_5_13').find('tbody').find('tr').eq(0).find('[data-cy="build-admin-options"]').click();
 
-      cy.get('#project_5_13').find('tbody').find('tr').eq(1).find('[data-cy="build-admin-options"]').click();
-      cy.get('#project_5_13').find('tbody').find('tr').eq(1).find('table.animate-show').should('be.visible');
-      cy.get('[data-cy="mark-as-expected-btn"]').should('exist');
-      cy.get('[data-cy="mark-as-non-expected-btn"]').should('not.exist');
-      // close admin options
-      cy.get('#project_5_13').find('tbody').find('tr').eq(1).find('[data-cy="build-admin-options"]').click();
+    cy.get('#project_5_13').find('tbody').find('tr').eq(1).find('[data-cy="build-admin-options"]').click();
+    cy.get('#project_5_13').find('tbody').find('tr').eq(1).find('table.animate-show').should('be.visible');
+    cy.get('[data-cy="mark-as-expected-btn"]').should('exist');
+    cy.get('[data-cy="mark-as-non-expected-btn"]').should('not.exist');
+    // close admin options
+    cy.get('#project_5_13').find('tbody').find('tr').eq(1).find('[data-cy="build-admin-options"]').click();
 
-      // re-enable bulk selection mode to test clear selection
-      cy.get('[data-cy="bulk-select-toggle-btn"]').click();
+    // re-enable bulk selection mode to test clear selection
+    cy.get('[data-cy="bulk-select-toggle-btn"]').click();
 
-      // test "Clear Selection" button
-      cy.get('#project_5_13').find('tbody').find('tr').eq(0).find('[data-cy="build-selection-checkbox"]').check();
-      cy.contains('1 build(s) selected').should('be.visible');
-      cy.get('[data-cy="clear-selection-btn"]').click();
-      cy.contains('build(s) selected').should('not.exist');
+    // test "Clear Selection" button
+    cy.get('#project_5_13').find('tbody').find('tr').eq(0).find('[data-cy="build-selection-checkbox"]').check();
+    cy.contains('1 build(s) selected').should('be.visible');
+    cy.get('[data-cy="clear-selection-btn"]').click();
+    cy.contains('build(s) selected').should('not.exist');
 
-      // exit selection mode
-      cy.get('[data-cy="bulk-select-toggle-btn"]').click();
-      cy.get('[data-cy="bulk-select-toggle-btn"]').should('contain', 'Bulk Select');
-      cy.get('[data-cy="build-selection-checkbox"]').should('not.exist');
-    });
+    // exit selection mode
+    cy.get('[data-cy="bulk-select-toggle-btn"]').click();
+    cy.get('[data-cy="bulk-select-toggle-btn"]').should('contain', 'Bulk Select');
+    cy.get('[data-cy="build-selection-checkbox"]').should('not.exist');
   });
 });
