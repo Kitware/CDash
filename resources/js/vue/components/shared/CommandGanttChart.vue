@@ -210,6 +210,7 @@ export default {
           show: false,
           type: 'category',
           data: this.processedChartData.tracks,
+          inverse: true,
         },
         dataZoom: [
           {
