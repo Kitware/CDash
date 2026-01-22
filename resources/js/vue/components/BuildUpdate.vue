@@ -2,68 +2,60 @@
   <section v-if="errored">
     <p>{{ cdash.error }}</p>
   </section>
-  <section v-else>
-    <div v-if="loading">
-      <img :src="$baseURL + '/img/loading.gif'">
-    </div>
-    <div v-else>
-      <h4 v-if="cdash.build.site">
-        Files changed on <a
-          class="cdash-link"
-          :href="$baseURL + '/sites/' + cdash.build.siteid"
-        >{{ cdash.build.site }}</a>
-        ({{ cdash.build.buildname }}) as of {{ cdash.build.buildtime }}
-      </h4>
+  <section
+    v-else
+    class="tw-flex tw-flex-col tw-w-full tw-gap-4"
+  >
+    <loading-indicator :is-loading="loading">
+      <build-summary-card :build-id="cdash.build.buildid" />
 
-      <div v-if="cdash.update.revision">
-        <b>Revision: </b>
-        <tt>
-          <a
-            v-if="cdash.update.revisionurl.length > 0"
-            :href="cdash.update.revisionurl"
-          >{{ cdash.update.revision }}</a>
-        </tt>
-        <tt v-if="cdash.update.revisionurl.length === 0">
-          {{ cdash.update.revision }}
-        </tt>
-      </div>
-      <div v-if="cdash.update.priorrevision">
-        <b>Prior Revision: </b>
-        <tt>
-          <a
-            v-if="cdash.update.revisiondiff.length > 0"
-            :href="cdash.update.revisiondiff"
-          >{{ cdash.update.priorrevision }}</a>
-        </tt>
-        <tt
-          v-if="cdash.update.revisiondiff.length === 0"
-          :href="cdash.update.revisiondiff"
-        >
-          {{ cdash.update.priorrevision }}
-        </tt>
-      </div>
+      <div>
+        <div v-if="cdash.update.revision">
+          <b>Revision: </b>
+          <tt v-if="cdash.update.revisionurl.length > 0">
+            <a
+              class="tw-link tw-link-hover tw-link-info"
+              :href="cdash.update.revisionurl"
+            >{{ cdash.update.revision }}</a>
+          </tt>
+          <tt v-else>
+            {{ cdash.update.revision }}
+          </tt>
+        </div>
+        <div v-if="cdash.update.priorrevision">
+          <b>Prior Revision: </b>
+          <tt v-if="cdash.update.revisiondiff.length > 0">
+            <a
+              class="tw-link tw-link-hover tw-link-info"
+              :href="cdash.update.revisiondiff"
+            >{{ cdash.update.priorrevision }}</a>
+          </tt>
+          <tt v-else>
+            {{ cdash.update.priorrevision }}
+          </tt>
+        </div>
 
-      <a
-        class="cdash-link"
-        @click="toggleGraph()"
-      >
-        <span v-text="showGraph ? 'Hide Activity Graph' : 'Show Activity Graph'" />
-      </a>
-      <div v-if="graphLoading">
-        <img
-          id="spinner"
-          :src="$baseURL + '/img/loading.gif'"
+        <a
+          class="tw-link tw-link-hover tw-link-info"
+          @click="toggleGraph()"
         >
+          <span v-text="showGraph ? 'Hide Activity Graph' : 'Show Activity Graph'" />
+        </a>
+        <div v-if="graphLoading">
+          <img
+            id="spinner"
+            :src="$baseURL + '/img/loading.gif'"
+          >
+        </div>
+        <div v-show="graphLoaded && showGraph">
+          <div id="graphoptions" />
+          <div id="graph" />
+          <div
+            id="graph_holder"
+            class="center-text"
+          />
+        </div>
       </div>
-      <div v-show="graphLoaded && showGraph">
-        <div id="graphoptions" />
-        <div id="graph" />
-        <div
-          id="graph_holder"
-          class="center-text"
-        />
-      </div>
-      <br>
 
       <h3
         v-if="cdash.update.status"
@@ -73,86 +65,76 @@
       </h3>
 
       <div v-for="group in cdash.updategroups">
-        <div class="container-fluid">
-          <div class="row">
-            <div
-              class="col-md-12"
-              @click="group.hidden = !group.hidden; $forceUpdate()"
-            >
-              <span
-                class="glyphicon"
-                :class="group.hidden ? 'glyphicon-chevron-right' : 'glyphicon-chevron-down'"
-              />
-              <b>{{ group.description }}</b>
-            </div>
+        <div class="tw-w-full">
+          <div @click="group.hidden = !group.hidden; $forceUpdate()">
+            <font-awesome-icon :icon="group.hidden ? FA.faChevronRight : FA.faChevronDown" />
+            <b>{{ group.description }}</b>
           </div>
-          <div
-            v-for="directory in group.directories"
-            v-show="!group.hidden"
-            class="animate-show"
-          >
-            <div class="row">
+          <div class="tw-flex tw-flex-col tw-gap-4 tw-ml-8">
+            <div
+              v-for="directory in group.directories"
+              v-show="!group.hidden"
+            >
               <div
-                class="col-md-12 col-md-offset-1"
                 @click="directory.hidden = !directory.hidden; $forceUpdate()"
               >
-                <span
-                  class="glyphicon"
-                  :class="directory.hidden ? 'glyphicon-chevron-right' : 'glyphicon-chevron-down'"
-                />
+                <font-awesome-icon :icon="directory.hidden ? FA.faChevronRight : FA.faChevronDown" />
                 <tt>{{ directory.name }}</tt>
               </div>
-            </div>
-            <div
-              v-for="file in directory.files"
-              v-show="!directory.hidden"
-              class="animate-show"
-            >
-              <div class="row">
-                <div class="col-md-12 col-md-offset-2">
-                  <a
-                    v-if="file.diffurl"
-                    :href="file.diffurl"
-                  >
-                    <tt>{{ file.filename }}</tt> Revision: <tt>{{ file.revision }}</tt>
-                  </a>
-                  <span v-else>
-                    <tt>{{ file.filename }}</tt> Revision: <tt>{{ file.revision }}</tt>
-                  </span>
-                  <span v-if="file.author">
-                    by
+              <div class="tw-flex tw-flex-col tw-gap-4 tw-ml-8">
+                <div
+                  v-for="file in directory.files"
+                  v-show="!directory.hidden"
+                >
+                  <div>
+                    <tt>{{ file.filename }}</tt> Revision:
                     <a
-                      v-if="file.email"
-                      :href="'mailto:' + file.email"
+                      v-if="file.diffurl"
+                      class="tw-link tw-link-hover tw-link-info"
+                      :href="file.diffurl"
                     >
-                      {{ file.author }}
+                      <tt>{{ file.revision }}</tt>
                     </a>
-                    <span v-else>
-                      {{ file.author }}
+                    <tt v-else>
+                      {{ file.revision }}
+                    </tt>
+                    <span v-if="file.author">
+                      by
+                      <a
+                        v-if="file.email"
+                        class="tw-link tw-link-hover tw-link-info"
+                        :href="'mailto:' + file.email"
+                      >
+                        {{ file.author }}
+                      </a>
+                      <span v-else>
+                        {{ file.author }}
+                      </span>
                     </span>
-                  </span>
+                  </div>
+                  <code-box :text="file.log" />
                 </div>
-              </div>
-              <div class="row spacer-bottom">
-                <pre
-                  class="col-md-10 col-md-offset-2"
-                  style="white-space: pre-wrap;"
-                >{{ file.log }}</pre>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </loading-indicator>
   </section>
 </template>
 
 <script>
 import $ from 'jquery';
 import ApiLoader from './shared/ApiLoader';
+import BuildSummaryCard from './shared/BuildSummaryCard.vue';
+import LoadingIndicator from './shared/LoadingIndicator.vue';
+import CodeBox from './shared/CodeBox.vue';
+import {faChevronDown, faChevronRight} from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 
 export default {
   name: 'BuildUpdate',
+  components: {FontAwesomeIcon, CodeBox, LoadingIndicator, BuildSummaryCard},
 
   data() {
     return {
@@ -176,6 +158,15 @@ export default {
         'tests': false,
       },
     };
+  },
+
+  computed: {
+    FA() {
+      return {
+        faChevronDown,
+        faChevronRight,
+      };
+    },
   },
 
   async mounted() {
@@ -243,11 +234,6 @@ export default {
           window.location = `${baseURL}/builds/${data.buildids[item.datapoint[0]]}`;
         }
       });
-    },
-
-    toggleGroup: function(group_index) {
-      this.cdash.updategroups[group_index].hidden = !this.cdash.updategroups[group_index].hidden;
-      console.log(this.cdash.updategroups[group_index].hidden);
     },
   },
 };

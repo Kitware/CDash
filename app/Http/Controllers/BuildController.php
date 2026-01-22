@@ -90,7 +90,7 @@ final class BuildController extends AbstractBuildController
     {
         $this->setBuildById($build_id);
 
-        return $this->vue('build-update', 'Files Updated', [], false);
+        return $this->vue('build-update', 'Files Updated');
     }
 
     public function tests(int $build_id): View
