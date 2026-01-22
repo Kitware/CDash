@@ -49,7 +49,7 @@
               :id="note.node.id"
               :key="note.node.id"
               :ref="r => noteRefs.push(r)"
-              class="tw-border tw-border-base-300 tw-bg-base-100 tw-rounded-box tw-scroll-mt-28"
+              class="tw-border tw-border-base-300 tw-bg-base-100 tw-rounded-box tw-scroll-mt-28 tw-overflow-hidden"
               data-test="notes-content-item"
             >
               <h3 class="tw-p-4 tw-text-xl tw-font-bold tw-break-words">

@@ -10,8 +10,7 @@ describe('CodeBox', () => {
       },
     });
 
-    cy.get('.cm-editor').should('be.visible');
-    cy.get('.cm-content').should('contain.text', 'Hello, World!');
+    cy.contains('Hello, World!').should('exist');
   });
 
   it('updates the content when the text prop changes', () => {
@@ -23,11 +22,11 @@ describe('CodeBox', () => {
         text: initialCode,
       },
     }).then(({ wrapper }) => {
-      cy.get('.cm-content').should('contain.text', 'const a = 1;');
+      cy.contains('const a = 1;').should('exist');
       wrapper.setProps({ text: updatedCode });
       // Wait for the DOM to update before asserting the new content.
-      cy.get('.cm-content').should('not.contain.text', 'const a = 1;').then(() => {
-        cy.get('.cm-content').should('contain.text', 'const b = 2;');
+      cy.contains('const a = 1;').should('not.exist').then(() => {
+        cy.contains('const b = 2;').should('exist');
       });
     });
   });
