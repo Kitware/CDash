@@ -7,8 +7,8 @@
 </template>
 
 <script>
-import { Duration } from 'luxon';
 import VChart from 'vue-echarts';
+import Utils from './Utils';
 
 export default {
   name: 'LineChart',
@@ -69,7 +69,7 @@ export default {
             ...baseOption.xAxis,
             axisLabel: {
               formatter: (value) => {
-                return this.formatDuration(value);
+                return Utils.formatDuration(value);
               },
             },
           },
@@ -116,19 +116,6 @@ export default {
       }
 
       return baseOption;
-    },
-  },
-
-  methods: {
-    formatDuration(ms) {
-      if (ms < 1000) {
-        return `${ms}ms`;
-      }
-      if (ms < 60000) {
-        return `${(ms / 1000).toFixed(2)}s`;
-      }
-      const duration = Duration.fromMillis(ms);
-      return duration.toFormat("m'm' ss's'");
     },
   },
 };

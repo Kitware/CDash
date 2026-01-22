@@ -229,6 +229,7 @@ export default {
       return commands?.map(edge => {
         const targetId = edge.node.target?.id;
         return {
+          id: edge.node.id,
           startTime: DateTime.fromISO(edge.node.startTime),
           duration: Duration.fromMillis(edge.node.duration),
           type: edge.node.type,

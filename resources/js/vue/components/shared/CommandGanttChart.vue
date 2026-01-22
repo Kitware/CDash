@@ -20,18 +20,25 @@
       ref="chartContainerRef"
       class="tw-w-full tw-p-0 tw-flex-grow"
     />
+    <template v-if="selectedCommandId">
+      <div class="tw-divider" />
+      <command-info-card :command-id="selectedCommandId" />
+    </template>
   </div>
 </template>
 
 <script>
-import { Duration } from 'luxon';
 import * as echarts from 'echarts';
+import CommandInfoCard from './CommandInfoCard.vue';
+import Utils from './Utils';
 
 export default {
+  components: {CommandInfoCard},
   props: {
     /**
      * An array of command objects. Each object is expected to have the following properties:
      * {
+     *     id: Number,
      *     startTime: Object, // A Luxon DateTime object
      *     duration: Object,  // A Luxon Duration object.
      *     type: String,
@@ -63,6 +70,7 @@ export default {
       commandBarSpacing: 5,
       processedChartData: {},
       overallStartTime: 0,
+      selectedCommandId: null,
     };
   },
   watch: {
@@ -145,6 +153,7 @@ export default {
             command.source,
             command.language,
             command.config,
+            command.id,
           ],
         };
         processedData.push(processedCommand);
@@ -161,6 +170,7 @@ export default {
         return;
       }
       this.chart = echarts.init(this.$refs.chartContainerRef);
+      this.chart.on('click', this.onCellClick);
     },
 
     renderChart(commands) {
@@ -202,7 +212,7 @@ export default {
           axisLabel: {
             formatter: val => {
               const relativeTime = val - this.overallStartTime;
-              return this.formatDuration(relativeTime);
+              return Utils.formatDuration(relativeTime);
             },
           },
         },
@@ -283,7 +293,7 @@ export default {
       }
       const data = params.data.value;
       const type = data[5];
-      const duration = this.formatDuration(data[3]);
+      const duration = Utils.formatDuration(data[3]);
       const targetName = data[7];
       const source = data[8];
       const language = data[9];
@@ -332,16 +342,12 @@ export default {
       }
     },
 
-    formatDuration(ms) {
-      if (ms < 1000) {
-        return `${ms}ms`;
+    onCellClick(params) {
+      if (!params.data.value || !Array.isArray(params.data.value)) {
+        return;
       }
-      if (ms < 60000) {
-        return `${(ms / 1000).toFixed(2)}s`;
-      }
-      const duration = Duration.fromMillis(ms);
-      // Use Luxon's toFormat which intelligently omits larger units if they are zero.
-      return duration.toFormat("m'm' ss's'");
+
+      this.selectedCommandId = parseInt(params.data.value[11]);
     },
   },
 };
