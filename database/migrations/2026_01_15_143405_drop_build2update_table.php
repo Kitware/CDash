@@ -5,6 +5,8 @@ use Illuminate\Database\Migrations\Migration;
 return new class extends Migration {
     public function up(): void
     {
+        DB::delete('DELETE FROM build2update WHERE NOT EXISTS (SELECT 1 FROM buildupdate WHERE build2update.updateid = buildupdate.id)');
+
         DB::statement('ALTER TABLE build ADD COLUMN updateid bigint');
         DB::statement('ALTER TABLE build ADD FOREIGN KEY (updateid) REFERENCES buildupdate(id) ON DELETE SET NULL');
 
