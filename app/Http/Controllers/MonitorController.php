@@ -150,6 +150,7 @@ final class MonitorController extends AbstractController
               COUNT(1) AS n_jobs
             "))
             ->groupBy('truncated_time')
+            ->orderBy('truncated_time')
             ->get();
     }
 }
