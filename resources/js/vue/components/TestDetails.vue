@@ -229,6 +229,7 @@
         :project-id="cdash.projectid"
         :project-name="cdash.projectname"
         :test-name="cdash.test.test"
+        :build-name="cdash.test.build"
       />
 
       <br>

@@ -83,6 +83,10 @@ export default {
       type: String,
       required: true,
     },
+    buildName: {
+      type: String,
+      required: true,
+    },
   },
 
   data() {
@@ -95,29 +99,38 @@ export default {
   apollo: {
     testStatuses: {
       query: gql`
-        query($projectid: ID, $testname: String!) {
+        query($projectid: ID, $testname: String!, $buildname: String!) {
           testStatuses: project(id: $projectid) {
             id
             name
             buildsWhereTestPassed: builds(filters: {
               any: [
                 {
-                  has: {
-                    tests: {
-                      all: [
-                        {
-                          eq: {
-                            status: PASSED
-                          }
-                        },
-                        {
-                          eq: {
-                            name: $testname
-                          }
-                        },
-                      ]
+                  all: [
+                    {
+                      has: {
+                        tests: {
+                          all: [
+                            {
+                              eq: {
+                                status: PASSED
+                              }
+                            },
+                            {
+                              eq: {
+                                name: $testname
+                              }
+                            },
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      eq: {
+                        name: $buildname
+                      }
                     }
-                  }
+                  ]
                 }
                 {
                   has: {
@@ -139,6 +152,11 @@ export default {
                                 },
                               ]
                             }
+                          }
+                        },
+                        {
+                          eq: {
+                            name: $buildname
                           }
                         }
                       ]
@@ -216,6 +234,7 @@ export default {
         return {
           projectid: this.projectId,
           testname: this.testName,
+          buildname: this.buildName,
         };
       },
     },
