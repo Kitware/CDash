@@ -144,7 +144,7 @@ type Project {
   name: String! @filterable
 
   "Description."
-  description: String!
+  description: String
 
   "Homepage for this project."
   homeurl: Url @deprecated(reason: "Use 'homeUrl' instead.")
@@ -213,7 +213,7 @@ input CreateProjectInput {
   name: String! @rules(apply: ["App\\Rules\\ProjectNameRule"])
 
   "Description."
-  description: String!
+  description: String
 
   "Project homepage"
   homeurl: Url @deprecated(reason: "Use 'homeUrl' instead.") @rules(apply: ["prohibits:homeUrl"])

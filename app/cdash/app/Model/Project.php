@@ -114,7 +114,7 @@ class Project
         $project = EloquentProject::findOrNew($this->Id);
         $project->fill([
             'name' => $this->Name ?? '',
-            'description' => $this->Description ?? '',
+            'description' => $this->Description,
             'homeurl' => $this->HomeUrl ?? '',
             'cvsurl' => $this->CvsUrl ?? '',
             'documentationurl' => $this->DocumentationUrl ?? '',

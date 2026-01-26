@@ -59,6 +59,7 @@ return [
     'allow_submit_only_tokens' => env('ALLOW_SUBMIT_ONLY_TOKENS', true),
     'unlimited_projects' => $unlimited_projects,
     'user_create_projects' => env('USER_CREATE_PROJECTS', false),
+    // Options: PUBLIC, PROTECTED, PRIVATE
     // Defaults to public.  Only meaningful if USER_CREATE_PROJECT=true.
     'max_project_visibility' => env('MAX_PROJECT_VISIBILITY', 'PUBLIC'),
     'require_authenticated_submissions' => env('REQUIRE_AUTHENTICATED_SUBMISSIONS', false),
