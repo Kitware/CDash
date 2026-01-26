@@ -107,6 +107,9 @@ it('handles API response', async () => {
   const component = mount(TestDetails, {
     global: {
       stubs: {
+        BuildSummaryCard: {
+          template: '<div />',
+        },
         transition: false,
       },
     },
@@ -116,13 +119,12 @@ it('handles API response', async () => {
 
   // Verify some expected content.
   const html = component.html();
-  expect(html).toContain('my build');
   expect(html).toContain('my-test');
   expect(html).toContain('Completed (OTHER_FAULT)');
   expect(html).toContain('label1, label2, label3');
   expect(html).toContain('Custom Output');
-  expect(html).toContain(`<pre>multiple
-lines</pre>`);
+  expect(html).toContain(`multiple
+lines`);
 
   // Verify colorized/escaped output.
   const test_output = component.find('#test_output');
@@ -138,14 +140,6 @@ lines</pre>`);
   expect(summary_link.text()).toBe('my-test');
   expect(summary_link.attributes('href')).toMatch('/queryTests.php?project=TimeStatus&filtercount=1&showfilters=1&field1=testname&compare1=61&value1=nap&date=2018-01-25');
 
-  const build_link = component.find('#build_link');
-  expect(build_link.text()).toBe('my build');
-  expect(build_link.attributes('href')).toMatch('/builds/1');
-
-  const site_link = component.find('#site_link');
-  expect(site_link.text()).toBe('(my site)');
-  expect(site_link.attributes('href')).toMatch('/sites/1');
-
   const revision_link = component.find('#revision_link');
   expect(revision_link.text()).toBe('asdf');
   expect(revision_link.attributes('href')).toBe('https://github.com/asdf');
@@ -160,6 +154,9 @@ it('can toggle command line', async () => {
   const component = mount(TestDetails, {
     global: {
       stubs: {
+        BuildSummaryCard: {
+          template: '<div />',
+        },
         transition: false,
       },
     },
@@ -167,7 +164,7 @@ it('can toggle command line', async () => {
   await new Promise(process.nextTick);
 
   // Command line hidden by default.
-  expect(component.find('#commandline').element.style.display).toBe('none');
+  expect(component.find('#commandline').exists()).toBe(false);
 
   // Toggle it on.
   const commandlinelink = component.find('#commandlinelink');
@@ -181,6 +178,9 @@ it('can toggle environment', async () => {
   const component = mount(TestDetails, {
     global: {
       stubs: {
+        BuildSummaryCard: {
+          template: '<div />',
+        },
         transition: false,
       },
     },
@@ -190,7 +190,7 @@ it('can toggle environment', async () => {
   // We have an environment but it's hidden by default.
   expect(component.vm.hasenvironment).toBe(true);
   expect(component.vm.showenvironment).toBe(false);
-  expect(component.find('#environment').element.style.display).toBe('none');
+  expect(component.find('#environment').exists()).toBe(false);
 
   // Toggle it on.
   const environmentlink = component.find('#environmentlink');
@@ -205,6 +205,9 @@ it('"Show Environment" toggle is conditionally rendered', async () => {
   const component = mount(TestDetails, {
     global: {
       stubs: {
+        BuildSummaryCard: {
+          template: '<div />',
+        },
         transition: false,
       },
     },
@@ -218,6 +221,9 @@ it('can toggle the graphs', async () => {
   const component = mount(TestDetails, {
     global: {
       stubs: {
+        BuildSummaryCard: {
+          template: '<div />',
+        },
         transition: false,
       },
     },
@@ -261,6 +267,9 @@ it('can load the graphs by default', async () => {
   const component = mount(TestDetails, {
     global: {
       stubs: {
+        BuildSummaryCard: {
+          template: '<div />',
+        },
         transition: false,
       },
     },

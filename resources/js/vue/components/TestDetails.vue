@@ -3,11 +3,13 @@
     <p>{{ cdash.error }}</p>
   </section>
   <section v-else>
-    <div v-if="loading">
-      <img :src="$baseURL + '/img/loading.gif'">
-    </div>
-    <div v-else>
-      <div id="executiontime">
+    <loading-indicator :is-loading="loading">
+      <build-summary-card :build-id="cdash.test.buildid" />
+
+      <div
+        id="executiontime"
+        class="tw-flex tw-flex-row tw-gap-1"
+      >
         <img
           :src="$baseURL + '/img/clock.png'"
           :title="'Average: ' + cdash.test.timemean + ', SD: ' + cdash.test.timestd"
@@ -21,6 +23,7 @@
       <b>Test: </b>
       <a
         id="summary_link"
+        class="tw-link tw-link-hover"
         :href="$baseURL + '/' + cdash.test.summaryLink"
       >
         {{ cdash.test.test }}
@@ -30,26 +33,11 @@
       </b>
       <br>
 
-      <b>Build: </b>
-      <a
-        id="build_link"
-        :href="$baseURL + '/builds/' + cdash.test.buildid"
-      >
-        {{ cdash.test.build }}
-      </a>
-      <a
-        id="site_link"
-        :href="$baseURL + '/sites/' + cdash.test.siteid"
-      >
-        ({{ cdash.test.site }})
-      </a>
-      on {{ cdash.test.buildstarttime }}
-      <br>
-
       <div v-if="cdash.test.update.revision">
         <b>Repository revision: </b>
         <a
           id="revision_link"
+          class="tw-link tw-link-hover"
           :href="cdash.test.update.revisionurl"
         >
           {{ cdash.test.update.revision }}
@@ -146,67 +134,86 @@
       <br>
 
       <!-- Show command line -->
-      <img :src="$baseURL + '/img/console.png'">
-      <a
-        id="commandlinelink"
-        href="#"
-        @click="showcommandline = !showcommandline"
-      >
-        <span v-show="!showcommandline">Show Command Line</span>
-        <span v-show="showcommandline">Hide Command Line</span>
-      </a>
-      <transition name="fade">
-        <pre
-          v-show="showcommandline"
+      <div class="tw-flex tw-flex-row tw-gap-1">
+        <img
+          width="20"
+          height="20"
+          :src="$baseURL + '/img/console.png'"
+        >
+        <a
+          id="commandlinelink"
+          href="#"
+          class="tw-link tw-link-hover"
+          @click="showcommandline = !showcommandline"
+        >
+          <span v-show="!showcommandline">Show Command Line</span>
+          <span v-show="showcommandline">Hide Command Line</span>
+        </a>
+      </div>
+      <div v-if="showcommandline">
+        <code-box
           id="commandline"
-          style="white-space: pre-wrap;"
-        >{{ cdash.test.command }}</pre>
-      </transition>
-      <br>
+          :text="cdash.test.command"
+        />
+        <br>
+      </div>
 
       <!-- Show environment variables -->
-      <div v-if="hasenvironment">
-        <img :src="$baseURL + '/img/console.png'">
+      <div
+        v-if="hasenvironment"
+        class="tw-flex tw-flex-row tw-gap-1"
+      >
+        <img
+          width="20"
+          height="20"
+          :src="$baseURL + '/img/console.png'"
+        >
         <a
           id="environmentlink"
           href="#"
+          class="tw-link tw-link-hover"
           @click="showenvironment = !showenvironment"
         >
           <span v-show="!showenvironment">Show Environment</span>
           <span v-show="showenvironment">Hide Environment</span>
         </a>
-        <transition name="fade">
-          <pre
-            v-show="showenvironment"
-            id="environment"
-            style="white-space: pre-wrap;"
-          >{{ cdash.test.environment }}</pre>
-        </transition>
+      </div>
+      <div v-if="showenvironment">
+        <code-box
+          id="environment"
+          :text="cdash.test.environment"
+        />
         <br>
       </div>
 
       <!-- Pull down menu to see the graphs -->
-      <img :src="$baseURL + '/img/graph.png'">
-      Display graphs:
-      <select
-        id="GraphSelection"
-        v-model="graphSelection"
-        @change="displayGraph()"
-      >
-        <option value="">
-          Select...
-        </option>
-        <option value="time">
-          Test Time
-        </option>
-        <option value="status">
-          Failing/Passing
-        </option>
-        <option v-for="measurement in numericMeasurements">
-          {{ measurement.name }}
-        </option>
-      </select>
-      <br>
+      <div class="tw-flex tw-flex-row tw-gap-1">
+        <img
+          width="20"
+          height="20"
+          :src="$baseURL + '/img/graph.png'"
+        >
+        <span>Display graphs:</span>
+        <select
+          id="GraphSelection"
+          v-model="graphSelection"
+          class="tw-select tw-select-bordered tw-select-xs"
+          @change="displayGraph()"
+        >
+          <option value="">
+            Select...
+          </option>
+          <option value="time">
+            Test Time
+          </option>
+          <option value="status">
+            Failing/Passing
+          </option>
+          <option v-for="measurement in numericMeasurements">
+            {{ measurement.name }}
+          </option>
+        </select>
+      </div>
 
       <a
         v-show="rawdatalink != ''"
@@ -232,18 +239,19 @@
       />
 
       <br>
-      <b>Test output</b>
-      <pre
+      <b>Test Output</b>
+      <code-box
         id="test_output"
-        v-html="cdash.test.output"
+        :text="cdash.test.output"
       />
+      <br>
 
       <div v-for="preformatted_measurement in cdash.test.preformatted_measurements">
         <b>{{ preformatted_measurement.name }}</b>
-        <pre v-html="preformatted_measurement.value" />
+        <code-box :text="preformatted_measurement.value" />
         <br>
       </div>
-    </div>
+    </loading-indicator>
   </section>
 </template>
 
@@ -251,14 +259,19 @@
 import $ from 'jquery';
 import ApiLoader from './shared/ApiLoader';
 import QueryParams from './shared/QueryParams';
-import TextMutator from './shared/TextMutator';
 import {DateTime} from 'luxon';
 import TestHistoryPlot from './shared/TestHistoryPlot.vue';
+import CodeBox from './shared/CodeBox.vue';
+import BuildSummaryCard from './shared/BuildSummaryCard.vue';
+import LoadingIndicator from './shared/LoadingIndicator.vue';
 
 export default {
   name: 'TestDetails',
 
   components: {
+    LoadingIndicator,
+    BuildSummaryCard,
+    CodeBox,
     TestHistoryPlot,
   },
 
@@ -329,14 +342,6 @@ export default {
     },
 
     postSetup: function() {
-      this.cdash.test.output = TextMutator.ctestNonXmlCharEscape(this.cdash.test.output);
-      this.cdash.test.output = TextMutator.terminalColors(this.cdash.test.output);
-
-      for (let i = 0; i < this.cdash.test.preformatted_measurements.length; i++) {
-        this.cdash.test.preformatted_measurements[i].value = TextMutator.ctestNonXmlCharEscape(this.cdash.test.preformatted_measurements[i].value);
-        this.cdash.test.preformatted_measurements[i].value = TextMutator.terminalColors(this.cdash.test.preformatted_measurements[i].value);
-      }
-
       this.queryParams = QueryParams.get();
       if (this.graphSelection) {
         this.displayGraph();
