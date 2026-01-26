@@ -473,8 +473,6 @@
                         v-model="cdash.project.AuthenticateSubmissions"
                         type="checkbox"
                         name="authenticateSubmissions"
-                        true-value="1"
-                        false-value="0"
                         @change="cdash.changesmade = true"
                         @focus="showHelp('authenticateSubmissions_help')"
                       >
