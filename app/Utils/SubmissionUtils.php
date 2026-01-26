@@ -172,7 +172,7 @@ class SubmissionUtils
                     WHERE
                         builderror_previous.buildid = :previousbuildid
                         AND builderror_previous.type = builderror.type
-                        AND builderror_previous.text = builderror.text
+                        AND builderror_previous.stderror = builderror.stderror
                         AND builderror_previous.sourcefile = builderror.sourcefile
                         AND builderror_previous.sourceline = builderror.sourceline
                 )
@@ -230,7 +230,7 @@ class SubmissionUtils
                     WHERE
                         builderror.buildid = :buildid
                         AND builderror_previous.type = builderror.type
-                        AND builderror_previous.text = builderror.text
+                        AND builderror_previous.stderror = builderror.stderror
                         AND builderror_previous.sourcefile = builderror.sourcefile
                         AND builderror_previous.sourceline = builderror.sourceline
                 )

@@ -547,9 +547,9 @@ class RepositoryUtils
                 $info = '';
                 if (strlen($error->sourcefile) > 0) {
                     $info .= "{$error->sourcefile} line {$error->sourceline} ({$serverURI}/viewBuildError.php?buildid={$buildid})";
-                    $info .= "{$error->text}\n";
+                    $info .= "{$error->stderror}\n";
                 } else {
-                    $info .= "{$error->text}\n{$error->postcontext}\n";
+                    $info .= "{$error->stderror}\n";
                 }
                 $information .= mb_substr($info, 0, $maxchars);
             }
@@ -595,9 +595,9 @@ class RepositoryUtils
                 $info = '';
                 if (strlen($warning->sourcefile) > 0) {
                     $info .= "{$warning->sourcefile} line {$warning->sourceline} ({$serverURI}/viewBuildError.php?type=1&buildid={$buildid})\n";
-                    $info .= "{$warning->text}\n";
+                    $info .= "{$warning->stderror}\n";
                 } else {
-                    $info .= "{$warning->text}\n{$warning->postcontext}\n";
+                    $info .= "{$warning->stderror}\n";
                 }
                 $information .= substr($info, 0, $maxchars);
             }

@@ -227,7 +227,7 @@ final class BuildPropertiesController extends AbstractBuildController
                 $valid_defect = true;
                 // Query builderror table.
                 $sql =
-                    "SELECT buildid, text AS descr
+                    "SELECT buildid, stderror AS descr
                     FROM builderror
                     WHERE type = $type AND
                     buildid IN $placeholder_str";

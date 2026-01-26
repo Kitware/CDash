@@ -46,11 +46,7 @@
       <span class="nobr"> {{cdash.errortypename}} </span>
     </th>
     <td ng-if="error.text">
-      <pre ng-if="error.precontext" class="compiler-output" ng-bind-html="error.precontext | ctestNonXmlCharEscape | terminalColors:false | trustAsHtml"></pre>
-      <b>
-        <pre class="compiler-output" ng-bind-html="error.text | ctestNonXmlCharEscape | terminalColors:false | trustAsHtml"></pre>
-      </b>
-      <pre ng-if="error.postcontext" class="compiler-output" ng-bind-html="error.postcontext | ctestNonXmlCharEscape | terminalColors:false | trustAsHtml"></pre>
+      <pre class="compiler-output" ng-bind-html="error.text | ctestNonXmlCharEscape | terminalColors:false | trustAsHtml"></pre>
     </td>
   </tr>
 

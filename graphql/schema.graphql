@@ -692,7 +692,7 @@ https://cmake.org/cmake/help/latest/manual/ctest.1.html#ctest-build-step
 type BasicBuildAlert {
   logLine: Int! @rename(attribute: "logline")
 
-  text: String!
+  text: String! @rename(attribute: "stdoutput")
 
   sourceFile: String! @rename(attribute: "sourcefile")
 

@@ -907,16 +907,8 @@
           Line: <b>{{ error.sourceline }}</b>
         </div>
         <code-box
-          v-if="error?.precontext?.trim()"
-          :text="error.precontext"
-        />
-        <code-box
           v-if="error?.text?.trim()"
           :text="error.text"
-        />
-        <code-box
-          v-if="error?.postcontext?.trim()"
-          :text="error.postcontext"
         />
 
         <div v-if="error?.stdoutput?.trim() || error?.stderror?.trim()">
@@ -959,16 +951,8 @@
           Line: <b>{{ warning.sourceline }}</b>
         </div>
         <code-box
-          v-if="warning?.precontext?.trim()"
-          :text="warning.precontext"
-        />
-        <code-box
           v-if="warning?.text?.trim()"
           :text="warning.text"
-        />
-        <code-box
-          v-if="warning?.postcontext?.trim()"
-          :text="warning.postcontext"
         />
 
         <div v-if="warning?.stdoutput?.trim() || warning?.stderror?.trim()">
