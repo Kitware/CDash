@@ -36,6 +36,14 @@
       </tr>
     </thead>
     <tbody>
+      <tr v-if="rows.length === 0">
+        <td
+          colspan="100"
+          class="empty-table-message"
+        >
+          {{ emptyTableText }}
+        </td>
+      </tr>
       <tr
         v-for="row in (sortable ? sortedRows : rows)"
         data-cy="data-table-row"
@@ -196,6 +204,15 @@ export default {
       default: 'data-table',
       required: false,
     },
+
+    /**
+     * Optional text displayed when the table is empty.
+     */
+    emptyTableText: {
+      type: String,
+      default: '',
+      required: false,
+    },
   },
 
   data() {
@@ -275,6 +292,12 @@ export default {
 
 .table-cell {
   overflow-wrap: anywhere;
+}
+
+.empty-table-message {
+  background: white;
+  text-align: center;
+  padding: 1em;
 }
 
 </style>

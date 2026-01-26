@@ -17,7 +17,7 @@ final class AuthTokenController extends AbstractController
 {
     public function manage(): View
     {
-        return $this->vue('manage-auth-tokens', 'Authentication Tokens', [], false);
+        return $this->vue('manage-auth-tokens', 'Authentication Tokens');
     }
 
     /**
