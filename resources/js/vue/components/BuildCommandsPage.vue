@@ -22,9 +22,13 @@
       </h3>
 
       <LineChart
+        v-if="memoryChartData.length > 0"
         y-label="Memory (GB)"
         :data="memoryChartData"
       />
+      <div v-else>
+        No data available.
+      </div>
     </div>
   </div>
 </template>
