@@ -18,7 +18,6 @@ use App\Http\Submission\Handlers\TestingHandler;
 use App\Http\Submission\Handlers\TestingJUnitHandler;
 use App\Http\Submission\Handlers\UpdateHandler;
 use App\Http\Submission\Handlers\UploadHandler;
-use App\Models\RichBuildAlert;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildUpdate;
@@ -157,7 +156,6 @@ class SubmissionUtils
         $pdo = Database::getInstance()->getPdo();
 
         $build = \App\Models\Build::findOrFail((int) $buildid);
-        $previous_build = \App\Models\Build::findOrFail((int) $previousbuildid);
 
         // Look at the difference positive and negative test errors
         DB::update('
@@ -182,29 +180,30 @@ class SubmissionUtils
             'previousbuildid' => $previousbuildid,
         ]);
 
-        // Recurring buildfailures are represented by the buildfailuredetails table.
-        // Get a list of buildfailuredetails IDs for the current build and the
-        // previous build.
-
-        $current_failures = $build->richAlerts()
-            ->whereRelation('details', 'type', $warning)
-            ->pluck('detailsid')->toArray();
-
-        $previous_failures = $previous_build->richAlerts()
-            ->whereRelation('details', 'type', $warning)
-            ->pluck('detailsid')->toArray();
-
-        // Check if any of these are new failures and mark them accordingly.
-        foreach ($current_failures as $failure) {
-            if (!in_array($failure, $previous_failures)) {
-                RichBuildAlert::where([
-                    'buildid' => $buildid,
-                    'detailsid' => $failure,
-                ])->update([
-                    'newstatus' => 1,
-                ]);
-            }
-        }
+        DB::update('
+            UPDATE buildfailure
+            SET newstatus=1
+            WHERE
+                buildid = :buildid
+                AND type = :type
+                AND NOT EXISTS(
+                    SELECT *
+                    FROM buildfailure buildfailure_previous
+                    WHERE
+                        buildfailure_previous.buildid = :previousbuildid
+                        AND buildfailure_previous.type = buildfailure.type
+                        AND buildfailure_previous.stderror = buildfailure.stderror
+                        AND buildfailure_previous.sourcefile = buildfailure.sourcefile
+                        AND buildfailure_previous.targetname = buildfailure.targetname
+                        AND buildfailure_previous.language = buildfailure.language
+                        AND buildfailure_previous.outputfile = buildfailure.outputfile
+                        AND buildfailure_previous.outputtype = buildfailure.outputtype
+                )
+        ', [
+            'buildid' => $buildid,
+            'type' => $warning,
+            'previousbuildid' => $previousbuildid,
+        ]);
 
         // Maybe we can get that from the query (don't know).
         $npositives = $build->basicAlerts()
@@ -213,13 +212,13 @@ class SubmissionUtils
             ->count();
 
         $npositives += $build->richAlerts()
+            ->where('type', $warning)
             ->where('newstatus', 1)
-            ->whereRelation('details', 'type', $warning)
             ->count();
 
         // Count how many build defects were fixed since the previous build.
-        $stmt = $pdo->prepare('
-            SELECT COUNT(*)
+        $nnegatives = DB::select('
+            SELECT COUNT(*) AS c
             FROM builderror builderror_previous
             WHERE
                 builderror_previous.buildid = :previousbuildid
@@ -234,19 +233,36 @@ class SubmissionUtils
                         AND builderror_previous.sourcefile = builderror.sourcefile
                         AND builderror_previous.sourceline = builderror.sourceline
                 )
-        ');
-        $stmt->bindValue(':buildid', $buildid);
-        $stmt->bindValue(':previousbuildid', $previousbuildid);
-        $stmt->bindValue(':type', $warning);
-        pdo_execute($stmt);
-        $negatives_array = $stmt->fetch();
-        $nnegatives = $negatives_array[0];
+        ', [
+            'buildid' => $buildid,
+            'type' => $warning,
+            'previousbuildid' => $previousbuildid,
+        ])[0]->c;
 
-        foreach ($previous_failures as $failure) {
-            if (!in_array($failure, $current_failures)) {
-                $nnegatives++;
-            }
-        }
+        $nnegatives += DB::select('
+            SELECT COUNT(*) AS c
+            FROM buildfailure buildfailure_previous
+            WHERE
+                buildfailure_previous.buildid = :previousbuildid
+                AND buildfailure_previous.type = :type
+                AND NOT EXISTS(
+                    SELECT *
+                    FROM buildfailure
+                    WHERE
+                        buildfailure.buildid = :buildid
+                        AND buildfailure_previous.type = buildfailure.type
+                        AND buildfailure_previous.stderror = buildfailure.stderror
+                        AND buildfailure_previous.sourcefile = buildfailure.sourcefile
+                        AND buildfailure_previous.targetname = buildfailure.targetname
+                        AND buildfailure_previous.language = buildfailure.language
+                        AND buildfailure_previous.outputfile = buildfailure.outputfile
+                        AND buildfailure_previous.outputtype = buildfailure.outputtype
+                )
+        ', [
+            'buildid' => $buildid,
+            'type' => $warning,
+            'previousbuildid' => $previousbuildid,
+        ])[0]->c;
 
         // Check if a diff already exists for this build.
         DB::beginTransaction();

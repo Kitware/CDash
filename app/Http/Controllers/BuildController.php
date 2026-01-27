@@ -934,7 +934,7 @@ final class BuildController extends AbstractBuildController
 
             // Build failure table
             $resolvedBuildFailures = $this->build->GetResolvedBuildFailures($type);
-            while ($resolvedBuildFailure = $resolvedBuildFailures->fetch()) {
+            foreach ($resolvedBuildFailures as $resolvedBuildFailure) {
                 $marshaledResolvedBuildFailure = BuildFailure::marshal($resolvedBuildFailure, $this->project, $revision, false, $buildfailure);
 
                 if ($this->project->DisplayLabels) {

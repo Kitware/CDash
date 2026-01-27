@@ -27,7 +27,6 @@ class CleanDatabase extends Command
         // Reconfigure laravel to log to stderr for the rest of this command.
         config(['logging.default' => 'stderr']);
 
-        DatabaseCleanupUtils::deleteUnusedRows('buildfailuredetails', 'id', 'buildfailure', 'detailsid');
         DatabaseCleanupUtils::deleteUnusedRows('configure', 'id', 'build2configure', 'configureid');
         DatabaseCleanupUtils::deleteUnusedRows('coveragefile', 'id', 'coverage', 'fileid');
         DatabaseCleanupUtils::deleteUnusedRows('note', 'id', 'build2note', 'noteid');

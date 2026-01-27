@@ -45,8 +45,7 @@ class BuildFailureDetailsTestCase extends KWWebTestCase
         // Verify 4 buildfailures, 2 builds, and 2 details.
         $count_query = "
       SELECT COUNT(DISTINCT bf.id) AS numfails,
-             COUNT(DISTINCT bf.buildid) AS numbuilds,
-             COUNT(DISTINCT bf.detailsid) AS numdetails
+             COUNT(DISTINCT bf.buildid) AS numbuilds
       FROM buildfailure AS bf
       LEFT JOIN build AS b ON (b.id=bf.buildid)
       WHERE b.name='test_buildfailure'";
@@ -59,11 +58,6 @@ class BuildFailureDetailsTestCase extends KWWebTestCase
         if ((int) $count_results->numbuilds !== 2) {
             $this->fail(
                 'Expected 2 builds, found ' . $count_results->numbuilds);
-            return 1;
-        }
-        if ((int) $count_results->numdetails !== 2) {
-            $this->fail(
-                'Expected 2 buildfailuredetails, found ' . $count_results->numdetails);
             return 1;
         }
 
@@ -82,11 +76,6 @@ class BuildFailureDetailsTestCase extends KWWebTestCase
                 'Expected 1 build, found ' . $count_results->numbuilds);
             return 1;
         }
-        if ((int) $count_results->numdetails !== 2) {
-            $this->fail(
-                'Expected 2 buildfailuredetails, found ' . $count_results->numdetails);
-            return 1;
-        }
 
         // Delete the other build.
         DatabaseCleanupUtils::removeBuild($buildids[1]);
@@ -101,11 +90,6 @@ class BuildFailureDetailsTestCase extends KWWebTestCase
         if ((int) $count_results->numbuilds !== 0) {
             $this->fail(
                 'Expected 0 builds, found ' . $count_results->numbuilds);
-            return 1;
-        }
-        if ((int) $count_results->numdetails !== 0) {
-            $this->fail(
-                'Expected 0 buildfailuredetails, found ' . $count_results->numdetails);
             return 1;
         }
 
