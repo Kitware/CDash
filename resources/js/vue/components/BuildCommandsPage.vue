@@ -225,6 +225,7 @@ export default {
 
       return this.allCommands?.map(edge => {
         return {
+          id: edge.node.id,
           startTime: DateTime.fromISO(edge.node.startTime),
           duration: Duration.fromMillis(edge.node.duration),
           type: edge.node.type,

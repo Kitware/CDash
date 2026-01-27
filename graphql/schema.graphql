@@ -60,6 +60,12 @@ type Query {
   ): Site @find
 
   invitations: [GlobalInvitation!]! @canResolved(ability: "viewInvitations") @paginate(type: CONNECTION) @orderBy(column: "id")
+
+  "Find a single build command by ID."
+  buildCommand(
+    "Search by primary key."
+    id: ID @eq
+  ): BuildCommand @find @canResolved(ability: "view", action: RETURN_VALUE, returnValue: null)
 }
 
 
