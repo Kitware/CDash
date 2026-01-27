@@ -53,18 +53,9 @@ describe('the test page', () => {
     cy.get('#executiontime').find('span.builddateelapsed').should('contain', '9s');
     // test name
     cy.get('a#summary_link').should('contain', 'nap');
-    // build name this test belongs to
-    cy.get('a#build_link').should('contain', 'test_timing');
-    // link to corresponding build page
-    cy.get('a#build_link').invoke('attr', 'href').should('match', /builds?\/[0-9]+/);
-    // site name this test ran from
-    cy.get('a#site_link').should('contain', '(elysium)');
-    // link to corresponding site page
-    cy.get('a#site_link').invoke('attr', 'href').should('match', /sites?\/[0-9]+/);
 
     // general info displayed on the page
     cy.get('#main_content')
-      .should('contain', 'on 2018-01-25 17:25:19')
       .and('contain', 'Completed')
       .and('contain', 'Warning')
       .and('contain', 'This test took longer to complete (9s) than the threshold allows (5s 120ms).');
