@@ -50,7 +50,7 @@ class PruneUploads implements ShouldQueue
                 // We're over the limit, so delete references to files from oldest to newest until we're
                 // under the limit.  We're probably not over the limit by very much, so we load in relatively
                 // small chunks to minimize the amount of data being loaded.
-                $project->builds()->with('uploadedFiles')->chunk(100, function (Collection $builds) use (&$total_size, &$project, &$uploaded_files_to_check) {
+                $project->builds()->orderBy('starttime')->with('uploadedFiles')->chunk(100, function (Collection $builds) use (&$total_size, &$project, &$uploaded_files_to_check) {
                     /** @var Build $build */
                     foreach ($builds as $build) {
                         Log::debug("Removing references to uploaded files for build {$build->id}");
