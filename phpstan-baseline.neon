@@ -12889,6 +12889,15 @@ parameters:
 			path: app/cdash/include/Submission/CommitAuthorHandlerInterface.php
 
 		-
+			rawMessage: '''
+				Call to deprecated method any() of class PHPUnit\Framework\TestCase:
+				https://github.com/sebastianbergmann/phpunit/issues/6461
+			'''
+			identifier: method.deprecated
+			count: 3
+			path: app/cdash/include/Test/CDashTestCase.php
+
+		-
 			rawMessage: 'Method CDash\Test\CDashTestCase::createMockFromBuilder() has parameter $className with no type specified.'
 			identifier: missingType.parameter
 			count: 1
@@ -12934,6 +12943,15 @@ parameters:
 			rawMessage: Access to an undefined property PHPUnit\Framework\MockObject\MockObject::$SubProjectName.
 			identifier: property.notFound
 			count: 1
+			path: app/cdash/include/Test/CDashUseCaseTestCase.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method any() of class PHPUnit\Framework\TestCase:
+				https://github.com/sebastianbergmann/phpunit/issues/6461
+			'''
+			identifier: method.deprecated
+			count: 5
 			path: app/cdash/include/Test/CDashUseCaseTestCase.php
 
 		-
@@ -15883,6 +15901,15 @@ parameters:
 			path: app/cdash/tests/case/CDash/DynamicAnalysisUseCaseTest.php
 
 		-
+			rawMessage: '''
+				Call to deprecated method any() of class PHPUnit\Framework\TestCase:
+				https://github.com/sebastianbergmann/phpunit/issues/6461
+			'''
+			identifier: method.deprecated
+			count: 5
+			path: app/cdash/tests/case/CDash/Lib/Repository/GitHubTest.php
+
+		-
 			rawMessage: 'Method GitHubTest::setUp() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
 			identifier: missingType.checkedException
 			count: 1
@@ -15905,6 +15932,15 @@ parameters:
 			identifier: phpunit.assertEquals
 			count: 1
 			path: app/cdash/tests/case/CDash/LinkifyCompilerOutputTest.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method any() of class PHPUnit\Framework\TestCase:
+				https://github.com/sebastianbergmann/phpunit/issues/6461
+			'''
+			identifier: method.deprecated
+			count: 11
+			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
 
 		-
 			rawMessage: 'Call to function in_array() requires parameter #3 to be set.'
@@ -16069,6 +16105,15 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
 
 		-
+			rawMessage: '''
+				Call to deprecated method any() of class PHPUnit\Framework\TestCase:
+				https://github.com/sebastianbergmann/phpunit/issues/6461
+			'''
+			identifier: method.deprecated
+			count: 9
+			path: app/cdash/tests/case/CDash/Messaging/Subscription/UserSubscriptionBuilderTest.php
+
+		-
 			rawMessage: 'Call to function in_array() requires parameter #3 to be set.'
 			identifier: function.strict
 			count: 2
@@ -16159,6 +16204,15 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Subscription/UserSubscriptionBuilderTest.php
 
 		-
+			rawMessage: '''
+				Call to deprecated method any() of class PHPUnit\Framework\TestCase:
+				https://github.com/sebastianbergmann/phpunit/issues/6461
+			'''
+			identifier: method.deprecated
+			count: 1
+			path: app/cdash/tests/case/CDash/Messaging/Topic/AuthoredTopicTest.php
+
+		-
 			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertFalse().'
 			identifier: staticMethod.dynamicCall
 			count: 1
@@ -16169,6 +16223,15 @@ parameters:
 			identifier: staticMethod.dynamicCall
 			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/Topic/AuthoredTopicTest.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method any() of class PHPUnit\Framework\TestCase:
+				https://github.com/sebastianbergmann/phpunit/issues/6461
+			'''
+			identifier: method.deprecated
+			count: 6
+			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
 
 		-
 			rawMessage: 'Call to function in_array() requires parameter #3 to be set.'
@@ -16387,6 +16450,15 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Topic/DynamicAnalysisTopicTest.php
 
 		-
+			rawMessage: '''
+				Call to deprecated method any() of class PHPUnit\Framework\TestCase:
+				https://github.com/sebastianbergmann/phpunit/issues/6461
+			'''
+			identifier: method.deprecated
+			count: 1
+			path: app/cdash/tests/case/CDash/Messaging/Topic/EmailSentTopicTest.php
+
+		-
 			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertFalse().'
 			identifier: staticMethod.dynamicCall
 			count: 2
@@ -16397,6 +16469,15 @@ parameters:
 			identifier: staticMethod.dynamicCall
 			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/Topic/EmailSentTopicTest.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method any() of class PHPUnit\Framework\TestCase:
+				https://github.com/sebastianbergmann/phpunit/issues/6461
+			'''
+			identifier: method.deprecated
+			count: 2
+			path: app/cdash/tests/case/CDash/Messaging/Topic/FixedTopicTest.php
 
 		-
 			rawMessage: 'Call to function in_array() requires parameter #3 to be set.'
@@ -16477,6 +16558,15 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Topic/FixedTopicTest.php
 
 		-
+			rawMessage: '''
+				Call to deprecated method any() of class PHPUnit\Framework\TestCase:
+				https://github.com/sebastianbergmann/phpunit/issues/6461
+			'''
+			identifier: method.deprecated
+			count: 1
+			path: app/cdash/tests/case/CDash/Messaging/Topic/MissingTestTopicTest.php
+
+		-
 			rawMessage: 'Call to method PHPUnit\Framework\Assert::assertInstanceOf() with ''Illuminate\\Support\\Collection'' and Illuminate\Support\Collection will always evaluate to true.'
 			identifier: method.alreadyNarrowedType
 			count: 1
@@ -16531,6 +16621,15 @@ parameters:
 			'''
 			identifier: method.deprecated
 			count: 6
+			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method any() of class PHPUnit\Framework\TestCase:
+				https://github.com/sebastianbergmann/phpunit/issues/6461
+			'''
+			identifier: method.deprecated
+			count: 5
 			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
 
 		-
@@ -16636,6 +16735,15 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
 
 		-
+			rawMessage: '''
+				Call to deprecated method any() of class PHPUnit\Framework\TestCase:
+				https://github.com/sebastianbergmann/phpunit/issues/6461
+			'''
+			identifier: method.deprecated
+			count: 3
+			path: app/cdash/tests/case/CDash/Messaging/Topic/TopicDecoratorTest.php
+
+		-
 			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertInstanceOf().'
 			identifier: staticMethod.dynamicCall
 			count: 5
@@ -16682,6 +16790,15 @@ parameters:
 			identifier: missingType.parameter
 			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/Topic/TopicDecoratorTest.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method any() of class PHPUnit\Framework\TestCase:
+				https://github.com/sebastianbergmann/phpunit/issues/6461
+			'''
+			identifier: method.deprecated
+			count: 2
+			path: app/cdash/tests/case/CDash/Messaging/Topic/UpdateErrorTopicTest.php
 
 		-
 			rawMessage: 'Call to function in_array() requires parameter #3 to be set.'
@@ -17011,6 +17128,15 @@ parameters:
 			rawMessage: 'Call to an undefined method CDash\Test\UseCase\UseCase::setChecker().'
 			identifier: method.notFound
 			count: 1
+			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method any() of class PHPUnit\Framework\TestCase:
+				https://github.com/sebastianbergmann/phpunit/issues/6461
+			'''
+			identifier: method.deprecated
+			count: 4
 			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
 
 		-
