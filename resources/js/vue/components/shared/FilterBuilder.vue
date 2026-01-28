@@ -20,15 +20,6 @@
       >
         <font-awesome-icon :icon="FA.faMagnifyingGlass" /> Apply
       </a>
-      <a
-        role="button"
-        class="tw-btn tw-btn-xs"
-        :href="$baseURL + '/graphql/explorer'"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <font-awesome-icon :icon="FA.faTerminal" /> GraphQL
-      </a>
     </div>
   </div>
 </template>
