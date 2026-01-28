@@ -150,7 +150,7 @@
               <font-awesome-icon :icon="FA.faFile" /> {{ obj.path }}
             </a>
           </template>
-          <template #linePercentage="{ props: pct }">
+          <template #linePercentage="{ props: { text: pct } }">
             <progress
               class="tw-progress tw-w-24"
               :class="percentToProgressBarColorClass(pct)"
@@ -158,7 +158,7 @@
               max="100"
             /> {{ pct }}%
           </template>
-          <template #branchPercentage="{ props: pct }">
+          <template #branchPercentage="{ props: { text: pct } }">
             <progress
               class="tw-progress tw-w-24"
               :class="percentToProgressBarColorClass(pct)"
@@ -384,12 +384,27 @@ export default {
       });
 
       return Object.values(coverageByPrefix).map(obj => {
+        const linePct = this.computePercentage(obj.linesOfCodeTested, obj.linesOfCodeUntested);
+        const branchPct = this.computePercentage(obj.branchesTested, obj.branchesUntested);
+
         return {
           ...obj,
-          linePercentage: this.computePercentage(obj.linesOfCodeTested, obj.linesOfCodeUntested),
-          lines: `${obj.linesOfCodeTested} / ${obj.linesOfCodeTested + obj.linesOfCodeUntested}`,
-          branchPercentage: this.computePercentage(obj.branchesTested, obj.branchesUntested),
-          branches: `${obj.branchesTested} / ${obj.branchesTested + obj.branchesUntested}`,
+          linePercentage: {
+            text: linePct,
+            value: parseFloat(linePct),
+          },
+          lines: {
+            text: `${obj.linesOfCodeTested} / ${obj.linesOfCodeTested + obj.linesOfCodeUntested}`,
+            value: parseInt(obj.linesOfCodeTested),
+          },
+          branchPercentage: {
+            text: branchPct,
+            value: parseFloat(branchPct),
+          },
+          branches: {
+            text: `${obj.branchesTested} / ${obj.branchesTested + obj.branchesUntested}`,
+            value: parseInt(obj.branchesTested),
+          },
         };
       });
     },
