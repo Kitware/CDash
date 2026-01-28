@@ -1160,7 +1160,7 @@ final class BuildController extends AbstractBuildController
                                 b.starttime,
                                 b.endtime
                             FROM build AS b
-                            LEFT JOIN buildupdate AS bu ON (bu.updateid=b.id)
+                            LEFT JOIN buildupdate AS bu ON (b.updateid=bu.id)
                             WHERE
                                 siteid = ?
                                 AND b.type = ?
