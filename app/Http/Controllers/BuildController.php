@@ -544,7 +544,7 @@ final class BuildController extends AbstractBuildController
                   be.type,
                   be.sourcefile,
                   be.sourceline,
-                  be.text
+                  be.stderror as text
               FROM
                   build AS b,
                   builderror as be,
