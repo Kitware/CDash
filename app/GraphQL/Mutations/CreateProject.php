@@ -16,6 +16,17 @@ class CreateProject
     public function __invoke(null $_, array $args): Project
     {
         Gate::authorize('create', Project::class);
-        return ProjectService::create($args);
+
+        $project = ProjectService::create($args);
+
+        $project->users()->attach(auth()->user()?->id, [
+            'emailtype' => 0,
+            'emailcategory' => 62,
+            'emailsuccess' => false,
+            'emailmissingsites' => false,
+            'role' => Project::PROJECT_ADMIN,
+        ]);
+
+        return $project;
     }
 }

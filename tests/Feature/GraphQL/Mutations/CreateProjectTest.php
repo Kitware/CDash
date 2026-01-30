@@ -159,7 +159,7 @@ class CreateProjectTest extends TestCase
             ],
         ]);
 
-        $project->delete();
+        self::assertContains($this->users['normal']->id, $project->administrators()->pluck('id')->all());
     }
 
     public function testCreateProjectAdmin(): void
@@ -196,7 +196,7 @@ class CreateProjectTest extends TestCase
             ],
         ]);
 
-        $project->delete();
+        self::assertContains($this->users['admin']->id, $project->administrators()->pluck('id')->all());
     }
 
     /**
