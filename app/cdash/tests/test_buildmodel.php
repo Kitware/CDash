@@ -247,17 +247,17 @@ class BuildModelTestCase extends KWWebTestCase
     {
         // Make sure the first build returns no resolved build failures since it can't have any
         $build = $this->getBuildModel(0);
-        $this->assertTrue($build->GetResolvedBuildFailures(0)->fetchAll() === []);
+        $this->assertTrue($build->GetResolvedBuildFailures(0) === []);
 
         // The second build resolves the errored failure, but not the warning failure
         $build = $this->getBuildModel(1);
-        $this->assertTrue(count($build->GetResolvedBuildFailures(0)->fetchAll()) === 1);
-        $this->assertTrue($build->GetResolvedBuildFailures(1)->fetchAll() === []);
+        $this->assertTrue(count($build->GetResolvedBuildFailures(0)) === 1);
+        $this->assertTrue($build->GetResolvedBuildFailures(1) === []);
 
         // The third build has a resolved failure of type warning
         $build = $this->getBuildModel(2);
-        $this->assertTrue(count($build->GetResolvedBuildFailures(0)->fetchAll()) === 0);
-        $this->assertTrue(count($build->GetResolvedBuildFailures(1)->fetchAll()) === 1);
+        $this->assertTrue(count($build->GetResolvedBuildFailures(0)) === 0);
+        $this->assertTrue(count($build->GetResolvedBuildFailures(1)) === 1);
     }
 
     public function testBuildModelGetErrors(): void

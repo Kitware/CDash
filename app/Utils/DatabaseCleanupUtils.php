@@ -11,7 +11,6 @@ use App\Models\Configure;
 use App\Models\CoverageFile;
 use App\Models\Image;
 use App\Models\Note;
-use App\Models\RichBuildAlertDetails;
 use App\Models\Test;
 use App\Models\UploadFile;
 use CDash\Database;
@@ -133,14 +132,6 @@ class DatabaseCleanupUtils
 
         // Use Eloquent relationships to delete shared records that are only
         // used by builds that are about to be deleted.
-
-        // buildfailuredetails
-        RichBuildAlertDetails::whereHas('builds', function (Builder $query) use ($buildids): void {
-            $query->whereIn('build.id', $buildids);
-        })
-        ->whereDoesntHave('builds', function (Builder $query) use ($buildids): void {
-            $query->whereNotIn('build.id', $buildids);
-        })->delete();
 
         // configure
         Configure::whereHas('builds', function (Builder $query) use ($buildids): void {

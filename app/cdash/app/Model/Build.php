@@ -664,28 +664,32 @@ class Build
      *
      * @todo This doesn't support getting resolved build failures across parent builds.
      **/
-    public function GetResolvedBuildFailures(int $type): PDOStatement
+    public function GetResolvedBuildFailures(int $type): array
     {
-        $currentFailuresQuery =
-            'SELECT bf.detailsid FROM buildfailure AS bf
-             LEFT JOIN buildfailuredetails AS bfd ON (bf.detailsid=bfd.id)
-             WHERE bf.buildid = :id AND bfd.type = :type';
-
-        $stmt = $this->PDO->prepare(
-            "SELECT bf.id, bfd.language, bf.sourcefile, bfd.targetname,
-                    bfd.outputfile, bfd.outputtype, bf.workingdirectory,
-                    bfd.stderror, bfd.stdoutput, bfd.exitcondition
-            FROM buildfailure AS bf
-            LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid)
-            WHERE bf.buildid = :previousid
-            AND bfd.type = :type
-            AND bfd.id NOT IN ($currentFailuresQuery)"
-        );
-        $stmt->bindValue(':id', $this->Id);
-        $stmt->bindValue(':type', $type);
-        $stmt->bindValue(':previousid', $this->GetPreviousBuildId());
-        pdo_execute($stmt);
-        return $stmt;
+        return DB::select('
+            SELECT buildfailure_previous.*
+            FROM buildfailure buildfailure_previous
+            WHERE
+                buildfailure_previous.buildid = :previousbuildid
+                AND buildfailure_previous.type = :type
+                AND NOT EXISTS(
+                    SELECT *
+                    FROM buildfailure
+                    WHERE
+                        buildfailure.buildid = :buildid
+                        AND buildfailure_previous.type = buildfailure.type
+                        AND buildfailure_previous.stderror = buildfailure.stderror
+                        AND buildfailure_previous.sourcefile = buildfailure.sourcefile
+                        AND buildfailure_previous.targetname = buildfailure.targetname
+                        AND buildfailure_previous.language = buildfailure.language
+                        AND buildfailure_previous.outputfile = buildfailure.outputfile
+                        AND buildfailure_previous.outputtype = buildfailure.outputtype
+                )
+        ', [
+            'buildid' => $this->Id,
+            'type' => $type,
+            'previousbuildid' => $this->GetPreviousBuildId(),
+        ]);
     }
 
     public function GetConfigures(): PDOStatement|false
@@ -1431,8 +1435,7 @@ class Build
                     SELECT l2bf.labelid AS id
                     FROM label2buildfailure AS l2bf
                     LEFT JOIN buildfailure AS bf ON (bf.id=l2bf.buildfailureid)
-                    LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid)
-                    WHERE bfd.type='0' AND bf.buildid = :buildid)";
+                    WHERE bf.type='0' AND bf.buildid = :buildid)";
         }
         if (empty($labelarray) || isset($labelarray['build']['warnings'])) {
             $sql .=
@@ -1440,8 +1443,7 @@ class Build
                     SELECT l2bf.labelid AS id
                     FROM label2buildfailure AS l2bf
                     LEFT JOIN buildfailure AS bf ON (bf.id=l2bf.buildfailureid)
-                    LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid)
-                    WHERE bfd.type='1' AND bf.buildid = :buildid)";
+                    WHERE bf.type='1' AND bf.buildid = :buildid)";
         }
         if (empty($labelarray) || isset($labelarray['dynamicanalysis']['errors'])) {
             $sql .=
@@ -2038,23 +2040,20 @@ class Build
             SELECT
                 bf.id,
                 bf.sourcefile,
-                bfd.language,
-                bfd.targetname,
-                bfd.outputfile,
-                bfd.outputtype,
+                bf.language,
+                bf.targetname,
+                bf.outputfile,
+                bf.outputtype,
                 bf.workingdirectory,
-                bfd.stderror,
-                bfd.stdoutput,
-                bfd.type,
-                bfd.exitcondition,
+                bf.stderror,
+                bf.stdoutput,
+                bf.type,
+                bf.exitcondition,
                 b.subprojectid,
                 sp.name subprojectname
             FROM buildfailure AS bf
-            LEFT JOIN buildfailuredetails AS bfd
-                ON (bfd.id=bf.detailsid)
             JOIN build b ON bf.buildid = b.id
-            JOIN subproject AS sp
-                ON sp.id = b.subprojectid
+            JOIN subproject AS sp ON sp.id = b.subprojectid
             WHERE b.parentid = ?
         ';
 

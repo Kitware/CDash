@@ -367,17 +367,6 @@ class RemoveBuildsTestCase extends KWWebTestCase
         // Insert some unused records to make sure they get properly pruned by db:clean
         // without impacting the data created above.
         $crc32 = crc32('');
-        $buildfailuredetails_id = DB::table('buildfailuredetails')->insertGetId([
-            'type' => 0,
-            'stdoutput' => '',
-            'stderror' => '',
-            'exitcondition' => 'normal',
-            'language' => 'PHP',
-            'targetname' => 'test_removebuilds',
-            'outputfile' => 'test_removebuilds',
-            'outputtype' => 'test',
-            'crc32' => $crc32,
-        ]);
         $configure_id = DB::table('configure')->insertGetId([
             'command' => 'test_removebuilds',
             'log' => 'created by test_removebuilds',
@@ -414,7 +403,6 @@ class RemoveBuildsTestCase extends KWWebTestCase
         // Verify that db:clean works as expected.
         Artisan::call('db:clean');
         $extra_msg = 'after db:clean';
-        $this->verify('buildfailuredetails', 'id', '=', $buildfailuredetails_id, 0, $extra_msg);
         $this->verify('configure', 'id', '=', $configure_id, 0, $extra_msg);
         $this->verify('coveragefile', 'id', '=', $coveragefile_id, 0, $extra_msg);
         $this->verify('image', 'id', '=', $image_id, 0, $extra_msg);
@@ -437,10 +425,9 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $this->verify('summaryemail', 'buildid', '=', $build->Id, 1);
         $this->verify('testdiff', 'buildid', '=', $build->Id, 1);
 
-        [$buildfailureid, $detailsid] =
-            $this->verify_get_columns('buildfailure', ['id', 'detailsid'], 'buildid', '=', $build->Id, 1);
+        [$buildfailureid] =
+            $this->verify_get_columns('buildfailure', ['id'], 'buildid', '=', $build->Id, 1);
         $this->verify('buildfailure2argument', 'buildfailureid', '=', $buildfailureid, 1);
-        $this->verify('buildfailuredetails', 'id', '=', $detailsid, 1);
 
         $configureid =
             $this->verify_get_rows('build2configure', 'configureid', 'buildid', '=', $build->Id, 1);
@@ -497,7 +484,6 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $this->verify('builderrordiff', 'buildid', '=', $build->Id, 0, $extra_msg);
         $this->verify('buildfailure', 'buildid', '=', $build->Id, 0, $extra_msg);
         $this->verify('buildfailure2argument', 'buildfailureid', '=', $buildfailureid, 0, $extra_msg);
-        $this->verify('buildfailuredetails', 'id', '=', $detailsid, 1, $extra_msg);
         $this->verify('buildtesttime', 'buildid', '=', $build->Id, 0, $extra_msg);
         $this->verify('buildupdate', 'id', '=', $updateid, 1, $extra_msg);
         $this->verify('configure', 'id', '=', $configureid, 1, $extra_msg);
@@ -538,7 +524,6 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $this->verify('builderror', 'buildid', '=', $existing_build->Id, 0, $extra_msg);
         $this->verify('builderrordiff', 'buildid', '=', $existing_build->Id, 0, $extra_msg);
         $this->verify('buildfailure', 'buildid', '=', $existing_build->Id, 0, $extra_msg);
-        $this->verify('buildfailuredetails', 'id', '=', $detailsid, 0, $extra_msg);
         $this->verify('buildtesttime', 'buildid', '=', $existing_build->Id, 0, $extra_msg);
         $this->verify('buildupdate', 'id', '=', $updateid, 0, $extra_msg);
         $this->verify('configure', 'id', '=', $configureid, 0, $extra_msg);

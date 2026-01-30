@@ -19,7 +19,6 @@ namespace CDash\Model;
 
 use App\Models\Build;
 use App\Models\RichBuildAlert;
-use App\Models\RichBuildAlertDetails;
 use App\Utils\RepositoryUtils;
 use CDash\Database;
 use Illuminate\Support\Facades\DB;
@@ -99,15 +98,13 @@ class BuildFailure
         $outputType = $this->OutputType ?? '';
         $sourceFile = $this->SourceFile ?? '';
 
-        // Compute the crc32.
-        $crc32 = crc32($outputFile . $stdOutput . $stdError . $sourceFile);
-
         $db = Database::getInstance();
 
-        // Get details ID if it already exists, otherwise insert a new row.
-        $failureDetails = RichBuildAlertDetails::firstOrCreate([
-            'crc32' => $crc32,
-        ], [
+        /** @var RichBuildAlert $failure */
+        $failure = Build::findOrFail((int) $this->BuildId)->richAlerts()->create([
+            'workingdirectory' => $workingDirectory,
+            'sourcefile' => $sourceFile,
+            'newstatus' => 0,
             'type' => (int) $this->Type,
             'stdoutput' => $stdOutput,
             'stderror' => $stdError,
@@ -116,14 +113,6 @@ class BuildFailure
             'targetname' => $targetName,
             'outputfile' => $outputFile,
             'outputtype' => $outputType,
-        ]);
-
-        /** @var RichBuildAlert $failure */
-        $failure = Build::findOrFail((int) $this->BuildId)->richAlerts()->create([
-            'detailsid' => $failureDetails->id,
-            'workingdirectory' => $workingDirectory,
-            'sourcefile' => $sourceFile,
-            'newstatus' => 0,
         ]);
 
         // Insert the arguments
@@ -187,17 +176,15 @@ class BuildFailure
                 bf.workingdirectory,
                 bf.sourcefile,
                 bf.newstatus,
-                bfd.stdoutput,
-                bfd.stderror,
-                bfd.type,
-                bfd.exitcondition,
-                bfd.language,
-                bfd.targetname,
-                bfd.outputfile,
-                bfd.outputtype
-            FROM buildfailuredetails AS bfd
-            LEFT JOIN buildfailure AS bf
-                ON (bf.detailsid = bfd.id)
+                bf.stdoutput,
+                bf.stderror,
+                bf.type,
+                bf.exitcondition,
+                bf.language,
+                bf.targetname,
+                bf.outputfile,
+                bf.outputtype
+            FROM buildfailure AS bf
             WHERE bf.buildid=?
             ORDER BY bf.id
         ';

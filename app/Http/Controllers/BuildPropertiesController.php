@@ -233,10 +233,9 @@ final class BuildPropertiesController extends AbstractBuildController
                     buildid IN $placeholder_str";
                 // Query buildfailure table.
                 $sql2 =
-                    "SELECT bf.buildid, bfd.stderror AS descr
+                    "SELECT bf.buildid, bf.stderror AS descr
                     FROM buildfailure bf
-                    JOIN buildfailuredetails bfd ON bf.detailsid = bfd.id
-                    WHERE bfd.type = $type AND
+                    WHERE bf.type = $type AND
                     bf.buildid IN $placeholder_str";
             } elseif ($defect === 'testfailed') {
                 $valid_defect = true;

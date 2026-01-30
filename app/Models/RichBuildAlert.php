@@ -6,15 +6,21 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * @property int $id
  * @property int $buildid
- * @property int $detailsid
  * @property string $workingdirectory
  * @property string $sourcefile
  * @property int $newstatus
+ * @property int $type
+ * @property string $stdoutput
+ * @property string $stderror
+ * @property string $exitcondition
+ * @property string $language
+ * @property string $targetname
+ * @property string $outputfile
+ * @property string $outputtype
  *
  * @mixin Builder<RichBuildAlert>
  */
@@ -26,17 +32,24 @@ class RichBuildAlert extends Model
 
     protected $fillable = [
         'buildid',
-        'detailsid',
         'workingdirectory',
         'sourcefile',
         'newstatus',
+        'type',
+        'stdoutput',
+        'stderror',
+        'exitcondition',
+        'language',
+        'targetname',
+        'outputfile',
+        'outputtype',
     ];
 
     protected $casts = [
         'id' => 'integer',
         'buildid' => 'integer',
-        'detailsid' => 'integer',
         'newstatus' => 'integer',
+        'type' => 'integer',
     ];
 
     /**
@@ -45,14 +58,6 @@ class RichBuildAlert extends Model
     public function build(): BelongsTo
     {
         return $this->belongsTo(Build::class, 'buildid');
-    }
-
-    /**
-     * @return HasOne<RichBuildAlertDetails, $this>
-     */
-    public function details(): HasOne
-    {
-        return $this->hasOne(RichBuildAlertDetails::class, 'id', 'detailsid');
     }
 
     /**
