@@ -214,24 +214,24 @@ enum ProjectVisibility {
   PRIVATE @enum(value: 0)
 }
 
-input CreateProjectInput {
+input CreateProjectInput @validator {
   "Unique name."
-  name: String! @rules(apply: ["App\\Rules\\ProjectNameRule"])
+  name: String!
 
   "Description."
   description: String
 
   "Project homepage"
-  homeurl: Url @deprecated(reason: "Use 'homeUrl' instead.") @rules(apply: ["prohibits:homeUrl"])
+  homeurl: Url @deprecated(reason: "Use 'homeUrl' instead.")
 
   "Project homepage"
-  homeUrl: Url @rename(attribute: "homeurl") @rules(apply: ["prohibits:homeurl"])
+  homeUrl: Url @rename(attribute: "homeurl") @deprecated(reason: "This field will be removed in the next major version of CDash.")
 
   "Visibility."
-  visibility: ProjectVisibility! @rename(attribute: "public") @rules(attribute: "public", apply: ["App\\Rules\\ProjectVisibilityRule"])
+  visibility: ProjectVisibility! @rename(attribute: "public")
 
   "A boolean indicating whether authenticated submissions are required."
-  authenticateSubmissions: Boolean! @rename(attribute: "authenticatesubmissions") @rules(attribute: "authenticatesubmissions", apply: ["App\\Rules\\ProjectAuthenticateSubmissionsRule"])
+  authenticateSubmissions: Boolean! @rename(attribute: "authenticatesubmissions")
 
   "A LDAP group users must be a member of to access the project."
   ldapFilter: String @deprecated(reason: "This field will be removed in the next major version of CDash.") @rename(attribute: "ldapfilter")
