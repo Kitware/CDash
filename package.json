@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.13.9",
-    "@codemirror/state": "^6.5.3",
+    "@codemirror/state": "^6.5.4",
     "@codemirror/view": "^6.39.11",
     "@fortawesome/fontawesome-svg-core": "^7.1.0",
     "@fortawesome/free-brands-svg-icons": "^7.1.0",
