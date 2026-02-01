@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b83c67d628ae6020f0abc38d48167135",
+    "content-hash": "f131c62329d8a5a41d58924a85fb2dbf",
     "packages": [
         {
             "name": "24slides/laravel-saml2",
@@ -234,16 +234,16 @@
         },
         {
             "name": "brick/math",
-            "version": "0.14.2",
+            "version": "0.14.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/brick/math.git",
-                "reference": "55c950aa71a2cabc1d8f2bec1f8a7020bd244aa2"
+                "reference": "6af96b11de3f7d99730c118c200418c48274edb4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/brick/math/zipball/55c950aa71a2cabc1d8f2bec1f8a7020bd244aa2",
-                "reference": "55c950aa71a2cabc1d8f2bec1f8a7020bd244aa2",
+                "url": "https://api.github.com/repos/brick/math/zipball/6af96b11de3f7d99730c118c200418c48274edb4",
+                "reference": "6af96b11de3f7d99730c118c200418c48274edb4",
                 "shasum": ""
             },
             "require": {
@@ -282,7 +282,7 @@
             ],
             "support": {
                 "issues": "https://github.com/brick/math/issues",
-                "source": "https://github.com/brick/math/tree/0.14.2"
+                "source": "https://github.com/brick/math/tree/0.14.3"
             },
             "funding": [
                 {
@@ -290,7 +290,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-01-30T14:03:11+00:00"
+            "time": "2026-02-01T15:18:05+00:00"
         },
         {
             "name": "carbonphp/carbon-doctrine-types",
@@ -3561,16 +3561,16 @@
         },
         {
             "name": "nuwave/lighthouse",
-            "version": "v6.64.0",
+            "version": "v6.64.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nuwave/lighthouse.git",
-                "reference": "a7f2e1095aaff569ab84db5b291495ce903c9a9f"
+                "reference": "e3a8509fddc248740afe30022173a6fa8d78d585"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nuwave/lighthouse/zipball/a7f2e1095aaff569ab84db5b291495ce903c9a9f",
-                "reference": "a7f2e1095aaff569ab84db5b291495ce903c9a9f",
+                "url": "https://api.github.com/repos/nuwave/lighthouse/zipball/e3a8509fddc248740afe30022173a6fa8d78d585",
+                "reference": "e3a8509fddc248740afe30022173a6fa8d78d585",
                 "shasum": ""
             },
             "require": {
@@ -3687,7 +3687,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2025-12-16T15:34:38+00:00"
+            "time": "2026-01-13T16:06:47+00:00"
         },
         {
             "name": "onelogin/php-saml",
@@ -8852,16 +8852,16 @@
         },
         {
             "name": "webonyx/graphql-php",
-            "version": "v15.29.3",
+            "version": "v15.30.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webonyx/graphql-php.git",
-                "reference": "abe7cf760fd7d322e3e685b0b2fe14cedb73fafe"
+                "reference": "12175bc314f0adc1f3e77f7efd0c8cd24f69b483"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webonyx/graphql-php/zipball/abe7cf760fd7d322e3e685b0b2fe14cedb73fafe",
-                "reference": "abe7cf760fd7d322e3e685b0b2fe14cedb73fafe",
+                "url": "https://api.github.com/repos/webonyx/graphql-php/zipball/12175bc314f0adc1f3e77f7efd0c8cd24f69b483",
+                "reference": "12175bc314f0adc1f3e77f7efd0c8cd24f69b483",
                 "shasum": ""
             },
             "require": {
@@ -8874,14 +8874,14 @@
                 "amphp/http-server": "^2.1",
                 "dms/phpunit-arraysubset-asserts": "dev-master",
                 "ergebnis/composer-normalize": "^2.28",
-                "friendsofphp/php-cs-fixer": "3.92.3",
-                "mll-lab/php-cs-fixer-config": "5.11.0",
+                "friendsofphp/php-cs-fixer": "3.93.1",
+                "mll-lab/php-cs-fixer-config": "5.13.0",
                 "nyholm/psr7": "^1.5",
                 "phpbench/phpbench": "^1.2",
                 "phpstan/extension-installer": "^1.1",
-                "phpstan/phpstan": "2.1.33",
-                "phpstan/phpstan-phpunit": "2.0.11",
-                "phpstan/phpstan-strict-rules": "2.0.7",
+                "phpstan/phpstan": "2.1.37",
+                "phpstan/phpstan-phpunit": "2.0.12",
+                "phpstan/phpstan-strict-rules": "2.0.8",
                 "phpunit/phpunit": "^9.5 || ^10.5.21 || ^11",
                 "psr/http-message": "^1 || ^2",
                 "react/http": "^1.6",
@@ -8915,7 +8915,7 @@
             ],
             "support": {
                 "issues": "https://github.com/webonyx/graphql-php/issues",
-                "source": "https://github.com/webonyx/graphql-php/tree/v15.29.3"
+                "source": "https://github.com/webonyx/graphql-php/tree/v15.30.1"
             },
             "funding": [
                 {
@@ -8923,7 +8923,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2025-12-29T13:48:44+00:00"
+            "time": "2026-01-29T15:14:01+00:00"
         }
     ],
     "packages-dev": [
