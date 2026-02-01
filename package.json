@@ -16,7 +16,7 @@
     "eslint:fix": "eslint --fix \"**/*.js\" \"**/*.vue\""
   },
   "dependencies": {
-    "@apollo/client": "^3.13.9",
+    "@apollo/client": "^4.1.2",
     "@codemirror/state": "^6.5.4",
     "@codemirror/view": "^6.39.11",
     "@fortawesome/fontawesome-svg-core": "^7.1.0",
