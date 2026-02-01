@@ -82,6 +82,18 @@ export default {
       },
       deep: true,
     },
+    selectedCommandId: {
+      handler() {
+        // We only need to update the series data to apply the selection highlight.
+        // This avoids resetting the zoom level.
+        this.chart.setOption({
+          series: [{
+            id: 'command-series',
+            data: this.processedChartData.data,
+          }],
+        });
+      },
+    },
   },
   created() {
     this.chart = null;
@@ -253,6 +265,7 @@ export default {
             const height = this.commandBarHeight;
             const itemType = api.value(5);
             const isDisabled = api.value(6);
+            const commandId = api.value(11);
 
             const style = {
               fill: this.colors[itemType],
@@ -267,6 +280,14 @@ export default {
                 opacity: 0.4,
               });
             }
+
+            if (commandId === this.selectedCommandId) {
+              Object.assign(style, {
+                stroke: '#000000',
+                lineWidth: 2,
+              });
+            }
+
             return {
               type: 'rect',
               shape: {
@@ -348,7 +369,13 @@ export default {
         return;
       }
 
-      this.selectedCommandId = parseInt(params.data.value[11]);
+      const clickedCommandId = parseInt(params.data.value[11]);
+      if (this.selectedCommandId === clickedCommandId) {
+        this.selectedCommandId = null;
+      }
+      else {
+        this.selectedCommandId = clickedCommandId;
+      }
     },
   },
 };
