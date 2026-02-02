@@ -107,7 +107,7 @@ class Repository
 
     public static function getRepositoryInterface(Project $project): RepositoryInterface
     {
-        switch (strtolower($project->CvsViewerType)) {
+        switch (strtolower($project->CvsViewerType ?? '')) {
             case strtolower(self::VIEWER_GITHUB):
                 $service = new GitHub($project);
                 break;

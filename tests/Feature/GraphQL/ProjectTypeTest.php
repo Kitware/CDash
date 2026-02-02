@@ -95,6 +95,116 @@ class ProjectTypeTest extends TestCase
     /**
      * @return array{
      *     array{
+     *         string, mixed, string, mixed,
+     *     }
+     * }
+     */
+    public static function fieldValues(): array
+    {
+        // TODO: once VcsViewer is an enum, get cases dynamically.
+        $vcsViewerValues = [
+            ['cvsviewertype', 'github', 'vcsViewer', 'GITHUB'],
+            ['cvsviewertype', 'gitlab', 'vcsViewer', 'GITLAB'],
+            ['cvsviewertype', null, 'vcsViewer', null],
+        ];
+
+        // TODO: once BugTracker is an enum, get cases dynamically.
+        $bugTrackerValues = [
+            ['bugtrackertype', 'GitHub', 'bugTracker', 'GITHUB'],
+            ['bugtrackertype', 'Buganizer', 'bugTracker', 'BUGANIZER'],
+            ['bugtrackertype', 'JIRA', 'bugTracker', 'JIRA'],
+            ['bugtrackertype', null, 'bugTracker', null],
+        ];
+
+        return [
+            ['description', 'abc', 'description', 'abc'],
+            ['description', null, 'description', null],
+            ['homeurl', 'https://cdash.org', 'homeurl', 'https://cdash.org'],
+            ['homeurl', null, 'homeurl', null],
+            ['homeurl', 'https://cdash.org', 'homeUrl', 'https://cdash.org'],
+            ['homeurl', null, 'homeUrl', null],
+            ...$vcsViewerValues,
+            ['cvsurl', 'https://github.com/Kitware/CDash', 'vcsUrl', 'https://github.com/Kitware/CDash'],
+            ['cvsurl', null, 'vcsUrl', null],
+            ...$bugTrackerValues,
+            ['bugtrackerurl', 'https://github.com/Kitware/CDash/issues', 'bugTrackerUrl', 'https://github.com/Kitware/CDash/issues'],
+            ['bugtrackerurl', null, 'bugTrackerUrl', null],
+            ['bugtrackernewissueurl', 'https://github.com/Kitware/CDash/issues/new', 'bugTrackerNewIssueUrl', 'https://github.com/Kitware/CDash/issues/new'],
+            ['bugtrackernewissueurl', null, 'bugTrackerNewIssueUrl', null],
+            ['documentationurl', 'https://cmake.org/cmake/help/latest', 'documentationUrl', 'https://cmake.org/cmake/help/latest'],
+            ['documentationurl', null, 'documentationUrl', null],
+            ['testingdataurl', 'https://example.com', 'testDataUrl', 'https://example.com'],
+            ['testingdataurl', null, 'testDataUrl', null],
+            ['authenticatesubmissions', true, 'authenticateSubmissions', true],
+            ['authenticatesubmissions', false, 'authenticateSubmissions', false],
+            ['ldapfilter', '(uid=*group_1*)', 'ldapFilter', '(uid=*group_1*)'],
+            ['ldapfilter', null, 'ldapFilter', null],
+            ['coveragethreshold', 80, 'coverageThreshold', 80],
+            ['nightlytime', '00:00:00', 'nightlyTime', '00:00:00'],
+            ['nightlytime', '02:00:00 UTC', 'nightlyTime', '02:00:00 UTC'],
+            ['nightlytime', '22:00:00 EST', 'nightlyTime', '22:00:00 EST'],
+            ['nightlytime', '00:00:00 America/New_York', 'nightlyTime', '00:00:00 America/New_York'],
+            ['emaillowcoverage', true, 'emailLowCoverage', true],
+            ['emaillowcoverage', false, 'emailLowCoverage', false],
+            ['emailtesttimingchanged', true, 'emailTestTimingChanged', true],
+            ['emailtesttimingchanged', false, 'emailTestTimingChanged', false],
+            ['emailbrokensubmission', true, 'emailBrokenSubmissions', true],
+            ['emailbrokensubmission', false, 'emailBrokenSubmissions', false],
+            ['emailredundantfailures', true, 'emailRedundantFailures', true],
+            ['emailredundantfailures', false, 'emailRedundantFailures', false],
+            ['testtimestd', 10, 'testTimeStdMultiplier', 10],
+            ['testtimestdthreshold', 10, 'testTimeStdThreshold', 10],
+            ['showtesttime', true, 'enableTestTiming', true],
+            ['showtesttime', false, 'enableTestTiming', false],
+            ['testtimemaxstatus', 10, 'timeStatusFailureThreshold', 10],
+            ['emailmaxitems', 10, 'emailMaxItems', 10],
+            ['emailmaxchars', 10, 'emailMaxCharacters', 10],
+            ['displaylabels', true, 'displayLabels', true],
+            ['displaylabels', false, 'displayLabels', false],
+            ['autoremovemaxbuilds', 10, 'autoRemoveMaxBuilds', 10],
+            ['uploadquota', 10, 'fileUploadLimit', 10],
+            ['showcoveragecode', true, 'showCoverageCode', true],
+            ['showcoveragecode', false, 'showCoverageCode', false],
+            ['sharelabelfilters', true, 'shareLabelFilters', true],
+            ['sharelabelfilters', false, 'shareLabelFilters', false],
+            ['viewsubprojectslink', true, 'showViewSubProjectsLink', true],
+            ['viewsubprojectslink', false, 'showViewSubProjectsLink', false],
+            ['banner', 'test', 'banner', 'test'],
+            ['banner', null, 'banner', null],
+        ];
+    }
+
+    /**
+     * A basic test to ensure that each of the non-relationship fields works
+     */
+    #[DataProvider('fieldValues')]
+    public function testBasicFieldAccess(string $modelField, mixed $modelValue, string $graphqlField, mixed $graphqlValue): void
+    {
+        $project = $this->makePublicProject();
+        $project->setAttribute($modelField, $modelValue);
+        $project->save();
+        $this->projects['test'] = $project;
+
+        $this->graphQL("
+            query project(\$id: ID) {
+                project(id: \$id) {
+                    $graphqlField
+                }
+            }
+        ", [
+            'id' => $project->id,
+        ])->assertExactJson([
+            'data' => [
+                'project' => [
+                    $graphqlField => $graphqlValue,
+                ],
+            ],
+        ]);
+    }
+
+    /**
+     * @return array{
+     *     array{
      *         string|null, array<string>
      *     }
      * }

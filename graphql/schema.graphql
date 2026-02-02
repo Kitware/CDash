@@ -13,6 +13,8 @@ scalar NonNegativeIntegerMilliseconds @scalar(class: "App\\GraphQL\\Scalars\\Non
 
 scalar Url @scalar(class: "App\\GraphQL\\Scalars\\Url")
 
+scalar Time @scalar(class: "App\\GraphQL\\Scalars\\Time")
+
 
 "Indicates what fields are available at the top level of a query operation."
 type Query {
@@ -158,6 +160,24 @@ type Project {
   "Homepage for this project."
   homeUrl: Url @rename(attribute: "homeurl")
 
+  vcsViewer: VcsViewer @rename(attribute: "cvsviewertype")
+
+  "Example: https://github.com/Kitware/CDash"
+  vcsUrl: Url @rename(attribute: "cvsurl")
+
+  bugTracker: BugTracker @rename(attribute: "bugtrackertype")
+
+  "Example: https://github.com/Kitware/CDash/issues"
+  bugTrackerUrl: Url @rename(attribute: "bugtrackerurl")
+
+  "Example: https://github.com/Kitware/CDash/issues/new"
+  bugTrackerNewIssueUrl: Url @rename(attribute: "bugtrackernewissueurl")
+
+  "Example: https://cmake.org/cmake/help/latest"
+  documentationUrl: Url @rename(attribute: "documentationurl")
+
+  testDataUrl: Url @rename(attribute: "testingdataurl")
+
   "Visibility."
   visibility: ProjectVisibility! @rename(attribute: "public") @filterable
 
@@ -169,6 +189,91 @@ type Project {
 
   "A full URL string pointing to the location of the project's logo."
   logoUrl: String
+
+  "Coverage percentages above this threshold will be displayed in green."
+  coverageThreshold: Int! @rename(attribute: "coveragethreshold")
+
+  nightlyTime: Time! @rename(attribute: "nightlytime")
+
+  "Should emails be sent when the coverage for files is lower than the `coverageThreshold` value?"
+  emailLowCoverage: Boolean! @rename(attribute: "emaillowcoverage")
+
+  "Should emails be sent when the test time status changes?"
+  emailTestTimingChanged: Boolean! @rename(attribute: "emailtesttimingchanged")
+
+  "Should emails be sent for broken submissions?"
+  emailBrokenSubmissions: Boolean! @rename(attribute: "emailbrokensubmission")
+
+  "Send emails for all failures if true.  Otherwise, only send emails after the first failure."
+  emailRedundantFailures: Boolean! @rename(attribute: "emailredundantfailures")
+
+  """
+  Set a multiplier for the standard deviation for a test time. If the time for a test is higher
+  than mean+multiplier*standarddeviation, the test time status is marked as failed. Note that
+  changing this value doesn’t affect previous builds.
+  """
+  testTimeStdMultiplier: Float! @rename(attribute: "testtimestd")
+
+  """
+  Set a minimum standard deviation for a test time failure. If the current standard deviation for a
+  test is lower than this threshold then the threshold is used instead. This is particularly
+  important for tests that have a very low standard deviation but still some variability. Note that
+  changing this value doesn’t affect previous builds.
+  """
+  testTimeStdThreshold: Float! @rename(attribute: "testtimestdthreshold")
+
+  "Enable/Disable test timing for this project."
+  enableTestTiming: Boolean! @rename(attribute: "showtesttime")
+
+  """
+  The number of times a test must violate the time status check before it is flagged as a failure.
+  For example, if this is set to 2, then a test will need to run more slowly than expected twice
+  in a row before it is marked as having failed the time status check.
+  """
+  timeStatusFailureThreshold: Int! @rename(attribute: "testtimemaxstatus")
+
+  "Maximum number of items per email."
+  emailMaxItems: Int! @rename(attribute: "emailmaxitems")
+
+  "Maximum number of characters per email."
+  emailMaxCharacters: Int! @rename(attribute: "emailmaxchars")
+
+  "Enable/Disable the display of the label column throughout the project."
+  displayLabels: Boolean! @rename(attribute: "displaylabels")
+
+  """
+  Builds older than the configured number of days will be removed.  Builds will be retained for at
+  least two days regardless of this setting.
+  """
+  autoRemoveTimeFrame: Int! @rename(attribute: "autoremovetimeframe")
+
+  """
+  The maximum number of builds to be removed on any given day.
+  """
+  autoRemoveMaxBuilds: Int! @rename(attribute: "autoremovemaxbuilds")
+
+  """
+  Uploaded files exceeding this limit (in GB) will be deleted from oldest to newest.
+  """
+  fileUploadLimit: Int! @rename(attribute: "uploadquota")
+
+  """
+  Enable/Disable the display of source code for the project. Only administrators can see the source
+  code in the coverage section when this option is disabled.
+  """
+  showCoverageCode: Boolean! @rename(attribute: "showcoveragecode")
+
+  "Forward label filters from index.php to queryTests.php and viewTest.php."
+  shareLabelFilters: Boolean! @rename(attribute: "sharelabelfilters")
+
+  """
+  If true and this Project uses SubProjects, show a per-SubProject breakdown by default. If false,
+  CDash will show per-build results instead.
+  """
+  showViewSubProjectsLink: Boolean! @rename(attribute: "viewsubprojectslink")
+
+  "Custom text displayed at the top of a project's dashboard."
+  banner: String
 
   builds(
     filters: _ @filter
@@ -203,6 +308,7 @@ type Project {
   invitations: [ProjectInvitation!]! @canRoot(ability: "inviteUser") @hasMany(type: CONNECTION) @orderBy(column: "id")
 }
 
+
 enum ProjectVisibility {
   "Available to all users and guests."
   PUBLIC @enum(value: 1)
@@ -213,6 +319,20 @@ enum ProjectVisibility {
   "Only available to users added to the project."
   PRIVATE @enum(value: 0)
 }
+
+
+enum VcsViewer {
+  GITHUB @enum(value: "github")
+  GITLAB @enum(value: "gitlab")
+}
+
+
+enum BugTracker {
+  GITHUB @enum(value: "GitHub")
+  BUGANIZER @enum(value: "Buganizer")
+  JIRA @enum(value: "JIRA")
+}
+
 
 input CreateProjectInput @validator {
   "Unique name."

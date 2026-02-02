@@ -110,7 +110,7 @@ class BuildError
             'logline' => (int) $data['logline'],
             'cvsurl' => RepositoryUtils::get_diff_url($project->Id, $project->CvsUrl, $sourceFile['directory'], $sourceFile['file'], $revision),
             'precontext' => '',
-            'text' => RepositoryUtils::linkify_compiler_output($project->CvsUrl, $source_dir, $revision, $data['stdoutput']),
+            'text' => RepositoryUtils::linkify_compiler_output($project->CvsUrl ?? '', $source_dir, $revision, $data['stdoutput']),
             'postcontext' => '',
             'sourcefile' => $data['sourcefile'],
             'sourceline' => $data['sourceline'],

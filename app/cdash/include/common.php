@@ -572,10 +572,10 @@ function get_dashboard_JSON($projectname, $date, &$response): void
     $project->FindByName($projectname);
 
     $project_array = [];
-    $project_array['cvsurl'] = $project->Id ? $project->CvsUrl : 'unknown';
-    $project_array['bugtrackerurl'] = $project->Id ? $project->BugTrackerUrl : 'unknown';
-    $project_array['documentationurl'] = $project->Id ? $project->DocumentationUrl : 'unknown';
-    $project_array['homeurl'] = $project->Id ? $project->HomeUrl : 'unknown';
+    $project_array['cvsurl'] = $project->CvsUrl ?? '';
+    $project_array['bugtrackerurl'] = $project->BugTrackerUrl ?? '';
+    $project_array['documentationurl'] = $project->DocumentationUrl ?? '';
+    $project_array['homeurl'] = $project->HomeUrl ?? '';
     $project_array['name'] = $projectname;
     $project_array['nightlytime'] = $project->Id ? $project->NightlyTime : '00:00:00';
 

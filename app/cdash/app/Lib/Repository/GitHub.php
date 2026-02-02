@@ -664,7 +664,7 @@ class GitHub implements RepositoryInterface
 
     protected function getRepositoryInformation(): void
     {
-        $url = str_replace('//', '', $this->project->CvsUrl);
+        $url = str_replace('//', '', $this->project->CvsUrl ?? '');
         $parts = explode('/', $url);
         if (isset($parts[1])) {
             $this->owner = $parts[1];
