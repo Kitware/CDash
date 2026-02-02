@@ -133,9 +133,8 @@ abstract class AbstractXmlHandler extends AbstractSubmissionHandler
                 continue;
             } elseif (strtoupper($path[$i]) === strtoupper((string) $this->stack->at($i))) {  // Match the specified string
                 continue;
-            } else {
-                return false;
             }
+            return false;
         }
         return true;
     }

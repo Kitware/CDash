@@ -84,9 +84,8 @@ class ValidateXml extends Command
         } elseif ($has_skipped) {
             $this->error('FAILED: Some XML file checks were skipped!');
             return Command::FAILURE;
-        } else {
-            $this->line('SUCCESS: All XML file checks passed.');
-            return Command::SUCCESS;
         }
+        $this->line('SUCCESS: All XML file checks passed.');
+        return Command::SUCCESS;
     }
 }

@@ -206,11 +206,10 @@ class Project extends Model
 
         if ($user !== null && $user->admin) {
             return;
-        } else {
-            $query->whereHas('administrators', function ($subquery) use ($user): void {
-                $subquery->where('users.id', $user?->id);
-            });
         }
+        $query->whereHas('administrators', function ($subquery) use ($user): void {
+            $subquery->where('users.id', $user?->id);
+        });
     }
 
     /**

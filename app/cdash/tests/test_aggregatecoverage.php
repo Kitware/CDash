@@ -130,9 +130,8 @@ class AggregateCoverageTestCase extends KWWebTestCase
         if ($success) {
             $this->pass('Tests passed');
             return 0;
-        } else {
-            return 1;
         }
+        return 1;
     }
 
     public function checkCoverage($coverage, $expected_loctested,

@@ -145,7 +145,6 @@ class SubProjectGroup
         $this->Id = $model->id;
         $this->CoverageThreshold = $model->coveragetheshold;
         $this->IsDefault = $model->is_default;
-        return;
     }
 
     /** Delete a subproject group */

@@ -376,9 +376,8 @@ class SubProject
                 $project_array[(int) $row['subprojectid']] = $row;
             }
             return $project_array;
-        } else {
-            return $project[0];
         }
+        return $project[0];
     }
 
     /**

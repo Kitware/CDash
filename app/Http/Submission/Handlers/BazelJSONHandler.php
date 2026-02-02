@@ -749,9 +749,8 @@ class BazelJSONHandler extends AbstractSubmissionHandler
             $build = new Build();
             $build->Id = array_values($this->Builds)[0]->GetParentId();
             return $build;
-        } else {
-            return array_values($this->Builds)[0];
         }
+        return array_values($this->Builds)[0];
     }
 
     private function RecordError($build_error, $type, $subproject_name): void

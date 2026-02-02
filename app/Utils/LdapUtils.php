@@ -35,10 +35,9 @@ class LdapUtils
             if ($ldap_user === null) {
                 Log::debug('Unable to find LDAP GUID for user: ' . $user->email);
                 return;
-            } else {
-                $user->ldapguid = $ldap_user->getConvertedGuid();
-                $user->save();
             }
+            $user->ldapguid = $ldap_user->getConvertedGuid();
+            $user->save();
         }
 
         $projects = Project::with('users')->get();

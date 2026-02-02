@@ -26,7 +26,7 @@ class ConfiguredSendEmailVerificationNotification
         /** @var User|MustVerifyEmail $user */
         $user = $event->user;
 
-        if (!($user instanceof MustVerifyEmail)) {
+        if (!$user instanceof MustVerifyEmail) {
             return;
         }
 

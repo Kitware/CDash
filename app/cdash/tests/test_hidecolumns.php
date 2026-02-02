@@ -33,10 +33,9 @@ class HideColumnsTestCase extends KWWebTestCase
         if ($success) {
             $this->pass('Test passed');
             return 0;
-        } else {
-            $this->fail($error_message);
-            return 1;
         }
+        $this->fail($error_message);
+        return 1;
     }
 
     public function onlyColumn($method)

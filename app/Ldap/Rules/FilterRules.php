@@ -23,7 +23,7 @@ class FilterRules implements Rule
 
         $filter = (string) $filter;
 
-        if (!($model instanceof User)) {
+        if (!$model instanceof User) {
             return false;
         }
 

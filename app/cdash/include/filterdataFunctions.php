@@ -1336,16 +1336,14 @@ function build_survives_filters($build_response, $filters, $filtercombine): bool
 
     if ($matching_filters_found && $filtercombine === 'or') {
         return false;
-    } else {
-        return true;
     }
+    return true;
 }
 
 function get_othercombine($filtercombine): string
 {
     if (strtolower($filtercombine) === 'or') {
         return 'and';
-    } else {
-        return 'or';
     }
+    return 'or';
 }
