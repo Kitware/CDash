@@ -73,9 +73,8 @@ final class LoginController extends AbstractController
                 'password' => $request->post('password'),
                 'fallback' => $this->traitCredentials($request),
             ];
-        } else {
-            return $this->traitCredentials($request);
         }
+        return $this->traitCredentials($request);
     }
 
     /**

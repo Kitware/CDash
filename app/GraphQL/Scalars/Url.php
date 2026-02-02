@@ -63,7 +63,7 @@ final class Url extends ScalarType
      */
     public function parseLiteral(Node $valueNode, ?array $variables = null): string
     {
-        if (!($valueNode instanceof StringValueNode)) {
+        if (!$valueNode instanceof StringValueNode) {
             throw new Error("Query error: Can only parse Strings, got {$valueNode->kind}.", $valueNode);
         }
 

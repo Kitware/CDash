@@ -39,8 +39,7 @@ class CheckKey extends Command
             // so we generate a random key ourselves.
             echo Str::password(32, true, true, false) . PHP_EOL;
             return 1;
-        } else {
-            return 0;
         }
+        return 0;
     }
 }

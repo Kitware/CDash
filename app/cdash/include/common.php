@@ -78,9 +78,8 @@ function can_access_project($projectid): bool
     if ($logged_in) {
         Gate::authorize('view-project', $project);
         return false;
-    } else {
-        throw new AuthenticationException();
     }
+    throw new AuthenticationException();
 }
 
 // Return true if this user has administrative access to this project.
@@ -185,10 +184,9 @@ function generate_XSLT($xml, string $pageName, bool $return_html = false): strin
     unset($xh);
     if ($return_html) {
         return $html;
-    } else {
-        echo $html;
-        return '';
     }
+    echo $html;
+    return '';
 }
 
 /**
@@ -223,10 +221,9 @@ function time_difference($duration, bool $compact = false, string $suffix = '', 
         if ($duration > -300) {
             // For "close" (less than 5 minutes diff)
             return 'just now';
-        } else {
-            // For "larger" negative diffs (more than 5 minutes)
-            return 'Some time in the future';
         }
+        // For "larger" negative diffs (more than 5 minutes)
+        return 'Some time in the future';
     }
 
     $years = floor($duration / 31557600);
@@ -897,9 +894,8 @@ function pdo_fetch_array(PDOStatement|false $result, int $result_type = PDO::FET
 {
     if ($result === false) {
         return false;
-    } else {
-        return $result->fetch($result_type);
     }
+    return $result->fetch($result_type);
 }
 
 /**

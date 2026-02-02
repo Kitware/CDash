@@ -490,7 +490,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
                     if (!$hasLabel) {
                         $label = $factory->create(Label::class);
                         $label->Text = $this->SubProjectName;
-                        if (!($this->Error instanceof BuildFailure)) {
+                        if (!$this->Error instanceof BuildFailure) {
                             throw new RuntimeException('Field "Error" is not instance of BuildFailure.');
                         }
                         $this->Error->AddLabel($label);
@@ -568,7 +568,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
                     break;
             }
         } elseif ($this->getParent() === 'ACTION') {
-            if (!($this->Error instanceof BuildFailure)) {
+            if (!$this->Error instanceof BuildFailure) {
                 throw new RuntimeException('Field "Error" is not instance of BuildFailure.');
             }
 
@@ -590,7 +590,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
                     break;
             }
         } elseif ($this->getParent() === 'COMMAND') {
-            if (!($this->Error instanceof BuildFailure)) {
+            if (!$this->Error instanceof BuildFailure) {
                 throw new RuntimeException('Field "Error" is not instance of BuildFailure.');
             }
 
@@ -603,7 +603,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
                     break;
             }
         } elseif ($this->getParent() === 'RESULT') {
-            if (!($this->Error instanceof BuildFailure)) {
+            if (!$this->Error instanceof BuildFailure) {
                 throw new RuntimeException('Field "Error" is not instance of BuildFailure.');
             }
 
@@ -621,29 +621,29 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
                     break;
             }
         } elseif ($element === 'BUILDLOGLINE') {
-            if (!($this->Error instanceof BuildError)) {
+            if (!$this->Error instanceof BuildError) {
                 throw new RuntimeException('Field "Error" is not instance of BuildError.');
             }
             $this->Error->LogLine .= $data;
         } elseif ($element === 'TEXT') {
-            if (!($this->Error instanceof BuildError)) {
+            if (!$this->Error instanceof BuildError) {
                 throw new RuntimeException('Field "Error" is not instance of BuildError.');
             }
             $this->Error->Text .= $data;
         } elseif ($element === 'SOURCEFILE') {
             $this->Error->SourceFile .= $data;
         } elseif ($element === 'SOURCELINENUMBER') {
-            if (!($this->Error instanceof BuildError)) {
+            if (!$this->Error instanceof BuildError) {
                 throw new RuntimeException('Field "Error" is not instance of BuildError.');
             }
             $this->Error->SourceLine .= $data;
         } elseif ($element === 'PRECONTEXT') {
-            if (!($this->Error instanceof BuildError)) {
+            if (!$this->Error instanceof BuildError) {
                 throw new RuntimeException('Field "Error" is not instance of BuildError.');
             }
             $this->Error->PreContext .= $data;
         } elseif ($element === 'POSTCONTEXT') {
-            if (!($this->Error instanceof BuildError)) {
+            if (!$this->Error instanceof BuildError) {
                 throw new RuntimeException('Field "Error" is not instance of BuildError.');
             }
             $this->Error->PostContext .= $data;
@@ -705,9 +705,8 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
             $build = new Build();
             $build->Id = array_values($this->Builds)[0]->GetParentId();
             return $build;
-        } else {
-            return array_values($this->Builds)[0];
         }
+        return array_values($this->Builds)[0];
     }
 
     public function GetBuildCollection(): BuildCollection

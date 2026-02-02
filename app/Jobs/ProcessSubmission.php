@@ -87,9 +87,8 @@ class ProcessSubmission implements ShouldQueue
                 'filename' => $src,
                 'dest' => $dst,
             ])->ok();
-        } else {
-            return Storage::move($src, $dst);
         }
+        return Storage::move($src, $dst);
     }
 
     private function deleteSubmissionFile($filename): bool
@@ -100,9 +99,8 @@ class ProcessSubmission implements ShouldQueue
             return Http::withToken($app_key)->delete(url('/api/internal/deleteSubmissionFile'), [
                 'filename' => $filename,
             ])->ok();
-        } else {
-            return Storage::delete($filename);
         }
+        return Storage::delete($filename);
     }
 
     private function requeueSubmissionFile($buildid): bool
@@ -121,27 +119,26 @@ class ProcessSubmission implements ShouldQueue
                 $this->localFilename = '';
             }
             return $response->ok();
-        } else {
-            // Increment retry count.
-            $retry_handler = new RetryHandler("inprogress/{$this->filename}");
-            $retry_handler->increment();
-
-            // Move file back to inbox.
-            Storage::move("inprogress/{$this->filename}", "inbox/{$this->filename}");
-
-            // Requeue the file with exponential backoff.
-            PendingSubmissions::where('buildid', $this->buildid)->increment('numfiles');
-            $delay = ((int) config('cdash.retry_base')) ** $retry_handler->Retries;
-            if (config('queue.default') === 'sqs-fifo') {
-                // Special handling for sqs-fifo, which does not support per-message delays.
-                sleep(10);
-                self::dispatch($this->filename, $this->projectid, $buildid, $this->expected_md5);
-            } else {
-                self::dispatch($this->filename, $this->projectid, $buildid, $this->expected_md5)->delay(now()->addSeconds($delay));
-            }
-
-            return true;
         }
+        // Increment retry count.
+        $retry_handler = new RetryHandler("inprogress/{$this->filename}");
+        $retry_handler->increment();
+
+        // Move file back to inbox.
+        Storage::move("inprogress/{$this->filename}", "inbox/{$this->filename}");
+
+        // Requeue the file with exponential backoff.
+        PendingSubmissions::where('buildid', $this->buildid)->increment('numfiles');
+        $delay = ((int) config('cdash.retry_base')) ** $retry_handler->Retries;
+        if (config('queue.default') === 'sqs-fifo') {
+            // Special handling for sqs-fifo, which does not support per-message delays.
+            sleep(10);
+            self::dispatch($this->filename, $this->projectid, $buildid, $this->expected_md5);
+        } else {
+            self::dispatch($this->filename, $this->projectid, $buildid, $this->expected_md5)->delay(now()->addSeconds($delay));
+        }
+
+        return true;
     }
 
     /**
@@ -306,12 +303,11 @@ class ProcessSubmission implements ShouldQueue
             }
 
             return fopen($this->localFilename, 'r');
-        } else {
-            // Log the status code and requested filename.
-            // (404 status means it's already been processed).
-            Log::warning('Failed to retrieve a file handle from filename ' . $filename . '(' . $response->status() . ')');
-            return false;
         }
+        // Log the status code and requested filename.
+        // (404 status means it's already been processed).
+        Log::warning('Failed to retrieve a file handle from filename ' . $filename . '(' . $response->status() . ')');
+        return false;
     }
 
     private function getSubmissionFileHandle($filename)
@@ -320,10 +316,9 @@ class ProcessSubmission implements ShouldQueue
             return $this->getRemoteSubmissionFileHandle($filename);
         } elseif (Storage::exists($filename)) {
             return Storage::readStream($filename);
-        } else {
-            Log::error('Failed to get a file handle for submission (was type ' . gettype($filename) . ')');
-            return false;
         }
+        Log::error('Failed to get a file handle for submission (was type ' . gettype($filename) . ')');
+        return false;
     }
 
     /** Determine the descriptive filename for a submission file. */

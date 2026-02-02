@@ -335,9 +335,8 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
             $build = new Build();
             $build->Id = array_values($this->Builds)[0]->GetParentId();
             return $build;
-        } else {
-            return array_values($this->Builds)[0];
         }
+        return array_values($this->Builds)[0];
     }
 
     public function GetBuildCollection(): BuildCollection

@@ -31,9 +31,8 @@ final class RemoteProcessingController extends AbstractController
         $filename = Storage::path('inprogress') . '/' . basename(request()->string('filename'));
         if (!is_readable($filename)) {
             return response('Not found', Response::HTTP_NOT_FOUND);
-        } else {
-            return response()->file($filename);
         }
+        return response()->file($filename);
     }
 
     /**
@@ -65,19 +64,16 @@ final class RemoteProcessingController extends AbstractController
             // Delete the file.
             if (Storage::delete($filename)) {
                 return response('OK', Response::HTTP_OK);
-            } else {
-                return response('Deletion failed', Response::HTTP_INTERNAL_SERVER_ERROR);
             }
+            return response('Deletion failed', Response::HTTP_INTERNAL_SERVER_ERROR);
         } elseif (request()->has('dest')) {
             // Rename the file.
             if (Storage::move($filename, request()->string('dest'))) {
                 return response('OK', Response::HTTP_OK);
-            } else {
-                return response('Rename failed', Response::HTTP_INTERNAL_SERVER_ERROR);
             }
-        } else {
-            throw new Exception('Invalid request.');
+            return response('Rename failed', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+        throw new Exception('Invalid request.');
     }
 
     /**

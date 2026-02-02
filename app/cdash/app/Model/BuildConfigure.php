@@ -215,10 +215,9 @@ class BuildConfigure
                 // the last time we checked.
                 if ($this->ExistsByCrc32()) {
                     return true;
-                } else {
-                    report($e);
-                    return false;
                 }
+                report($e);
+                return false;
             }
         }
 

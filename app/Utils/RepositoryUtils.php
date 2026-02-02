@@ -107,10 +107,9 @@ class RepositoryUtils
 
         if (method_exists(self::class, $difffunction)) {
             return self::$difffunction($projecturl, $directory, $file, $revision);
-        } else {
-            // default is github
-            return self::get_github_diff_url($projecturl, $directory, $file, $revision);
         }
+        // default is github
+        return self::get_github_diff_url($projecturl, $directory, $file, $revision);
     }
 
     /** Return the GitHub revision URL */
@@ -151,10 +150,9 @@ class RepositoryUtils
 
         if (method_exists(self::class, $revisionfunction)) {
             return self::$revisionfunction($projecturl, $revision, $priorrevision);
-        } else {
-            // default is github
-            return self::get_github_revision_url($projecturl, $revision, $priorrevision);
         }
+        // default is github
+        return self::get_github_revision_url($projecturl, $revision, $priorrevision);
     }
 
     public static function linkify_compiler_output($projecturl, $source_dir, $revision, $compiler_output): string

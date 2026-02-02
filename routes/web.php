@@ -308,9 +308,8 @@ Route::middleware(['auth'])->group(function (): void {
         } elseif ($request->has('projectid')) {
             $projectid = $request->integer('projectid');
             return redirect("/projects/$projectid/sites", 301);
-        } else {
-            return redirect('/sites', 301);
         }
+        return redirect('/sites', 301);
     });
 
     Route::get('/ajax/buildnote.php', 'BuildController@ajaxBuildNote');

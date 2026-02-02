@@ -81,9 +81,8 @@ class ReplaceBuildTestCase extends KWWebTestCase
         if ($success) {
             $this->pass('Test passed');
             return 0;
-        } else {
-            $this->fail($error_msg);
-            return 1;
         }
+        $this->fail($error_msg);
+        return 1;
     }
 }

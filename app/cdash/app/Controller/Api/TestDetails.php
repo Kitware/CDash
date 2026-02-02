@@ -308,9 +308,8 @@ class TestDetails extends BuildTestApi
                 return -1;
             } elseif ($index_b !== false) {
                 return 1;
-            } else {
-                return strcmp($a['name'], $b['name']);
             }
+            return strcmp($a['name'], $b['name']);
         };
         usort($measurements_response, $sort_measurements);
         $test_response['measurements'] = $measurements_response;

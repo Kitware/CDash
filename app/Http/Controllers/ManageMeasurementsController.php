@@ -113,8 +113,7 @@ final class ManageMeasurementsController extends AbstractProjectController
 
         if ($deleted) {
             return response()->json();
-        } else {
-            return response()->json([], 404);
         }
+        return response()->json([], 404);
     }
 }

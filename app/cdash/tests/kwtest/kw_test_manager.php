@@ -104,9 +104,8 @@ class TestManager
             $database->setUser($user);
             $database->setPassword($password);
             return $database->drop($dbname);
-        } else {
-            exit("We cannot test cdash because test database is not cdash4simpletest\n");
         }
+        exit("We cannot test cdash because test database is not cdash4simpletest\n");
     }
 
     /**
@@ -139,9 +138,8 @@ class TestManager
                 Artisan::call('migrate');
             }
             return true;
-        } else {
-            exit("We cannot test cdash because test database is not cdash4simpletest\n");
         }
+        exit("We cannot test cdash because test database is not cdash4simpletest\n");
     }
 }
 

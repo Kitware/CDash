@@ -58,7 +58,7 @@ final class NonNegativeSeconds extends ScalarType
      */
     public function parseLiteral(Node $valueNode, ?array $variables = null): float
     {
-        if (!($valueNode instanceof FloatValueNode)) {
+        if (!$valueNode instanceof FloatValueNode) {
             throw new Error("Query error: Can only parse Floats, got {$valueNode->kind}.", $valueNode);
         }
 
