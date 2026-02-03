@@ -12604,6 +12604,12 @@ parameters:
 			path: app/cdash/include/Messaging/Topic/TestFailureTopic.php
 
 		-
+			rawMessage: 'Parameter #1 $key of method Illuminate\Support\Collection<(int|string),mixed>::put() expects (int|string), mixed given.'
+			identifier: argument.type
+			count: 2
+			path: app/cdash/include/Messaging/Topic/TestFailureTopic.php
+
+		-
 			rawMessage: 'Parameter #2 $item (App\Models\Test) of method CDash\Messaging\Topic\TestFailureTopic::itemHasTopicSubject() should be contravariant with parameter $item (mixed) of method CDash\Messaging\Topic\Topic::itemHasTopicSubject()'
 			identifier: method.childParameterType
 			count: 1
@@ -27524,3 +27530,9 @@ parameters:
 			identifier: phpunit.assertEquals
 			count: 1
 			path: tests/Unit/Middleware/InternalTest.php
+
+		-
+			rawMessage: 'Call to static method set() on an unknown class Config.'
+			identifier: class.notFound
+			count: 3
+			path: tests/Unit/Validators/PasswordTest.php
