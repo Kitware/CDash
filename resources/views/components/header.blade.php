@@ -1,6 +1,7 @@
 @php
 use Illuminate\Support\Str;
 use App\Services\ProjectService;
+use Illuminate\Support\Facades\Auth;
 
 if (isset($project)) {
     $logoid = $project->ImageId;
