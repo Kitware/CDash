@@ -18,10 +18,10 @@
 namespace CDash\Model;
 
 use App\Models\Build;
+use App\Models\Label;
 use App\Models\RichBuildAlert;
 use CDash\Database;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use PDO;
 
 /** BuildFailure */
@@ -59,25 +59,6 @@ class BuildFailure
     public function AddArgument($argument): void
     {
         $this->Arguments[] = $argument;
-    }
-
-    protected function InsertLabelAssociations($id): void
-    {
-        if (empty($this->Labels)) {
-            return;
-        }
-
-        if ($id) {
-            foreach ($this->Labels as $label) {
-                $label->BuildFailureId = $id;
-                $label->Insert();
-            }
-        } else {
-            Log::error('No BuildFailure id - cannot call $label->Insert...', [
-                'function' => 'BuildFailure::InsertLabelAssociations',
-                'buildid' => $this->BuildId,
-            ]);
-        }
     }
 
     // Insert in the database (no update possible)
@@ -154,7 +135,11 @@ class BuildFailure
             return false;
         }
 
-        $this->InsertLabelAssociations($failure->id);
+        // Insert the labels
+        foreach ($this->Labels as $label) {
+            $label = Label::firstOrCreate(['text' => $label->Text ?? '']);
+            $failure->labels()->syncWithoutDetaching([$label->id]);
+        }
         return true;
     }
 

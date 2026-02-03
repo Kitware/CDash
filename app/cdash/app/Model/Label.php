@@ -19,7 +19,6 @@ namespace CDash\Model;
 
 use App\Models\Build;
 use App\Models\Label as EloquentLabel;
-use App\Models\RichBuildAlert;
 use App\Models\Test;
 
 /** Label */
@@ -29,7 +28,6 @@ class Label
     public string $Text = '';
 
     public $BuildId;
-    public $BuildFailureId;
     public ?Test $Test = null;
 
     /**
@@ -45,10 +43,6 @@ class Label
 
         if (!empty($this->BuildId)) {
             Build::findOrFail((int) $this->BuildId)->labels()->syncWithoutDetaching([$this->Id]);
-        }
-
-        if (!empty($this->BuildFailureId)) {
-            RichBuildAlert::findOrFail((int) $this->BuildFailureId)->labels()->syncWithoutDetaching([$this->Id]);
         }
 
         $this->Test?->labels()->syncWithoutDetaching([$this->Id]);
