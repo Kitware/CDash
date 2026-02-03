@@ -1,3 +1,5 @@
+@use(Illuminate\Support\Facades\View)
+
 @php
     $oauthCollection = collect(config('services'))->where("oauth","true");
     $has_oauth_login = $oauthCollection->firstWhere('enable', true);

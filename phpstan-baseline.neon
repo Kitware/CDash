@@ -27530,9 +27530,3 @@ parameters:
 			identifier: phpunit.assertEquals
 			count: 1
 			path: tests/Unit/Middleware/InternalTest.php
-
-		-
-			rawMessage: 'Call to static method set() on an unknown class Config.'
-			identifier: class.notFound
-			count: 3
-			path: tests/Unit/Validators/PasswordTest.php

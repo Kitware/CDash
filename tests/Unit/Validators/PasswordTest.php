@@ -18,8 +18,8 @@
 namespace Tests\Unit\Validators;
 
 use App\Validators\Password as PasswordValidator;
-use Config;
 use Illuminate\Contracts\Translation\Translator;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Validation\Validator;
 use Mockery;
 use Tests\TestCase;
