@@ -4,6 +4,7 @@ namespace Tests\Browser\Pages;
 
 use App\Models\Project;
 use App\Models\User;
+use App\Services\ProjectService;
 use Illuminate\Support\Str;
 use Laravel\Dusk\Browser;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -75,6 +76,28 @@ class CreateProjectPageTest extends BrowserTestCase
                 ->click('@create-project-button')
                 ->waitFor('@project-name-validation-errors')
                 ->assertSeeIn('@project-name-validation-errors', 'Project name may only contain letters, numbers, dashes, and underscores.')
+            ;
+        });
+    }
+
+    public function testShowsErrorWhenProjectAlreadyExists(): void
+    {
+        $this->users['admin'] = $this->makeAdminUser();
+
+        $project_name = Str::uuid()->toString();
+
+        $this->projects[] = ProjectService::create([
+            'name' => $project_name,
+        ]);
+
+        $this->browse(function (Browser $browser) use ($project_name): void {
+            $browser->loginAs($this->users['admin'])
+                ->visit('/projects/new')
+                ->waitFor('@create-project-page')
+                ->type('@project-name-input', $project_name)
+                ->click('@create-project-button')
+                ->waitFor('@project-name-validation-errors')
+                ->assertSeeIn('@project-name-validation-errors', 'A project with this name already exists.')
             ;
         });
     }
