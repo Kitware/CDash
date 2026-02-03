@@ -12,9 +12,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $name
  * @property int $position
  *
- * @mixin Builder<Measurement>
+ * @mixin Builder<PinnedTestMeasurement>
  */
-class Measurement extends Model
+class PinnedTestMeasurement extends Model
 {
     protected $table = 'measurement';
 

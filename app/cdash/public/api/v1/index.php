@@ -634,7 +634,7 @@ if (count($coverage_groups) > 0) {
 // This is only shown if this project is setup to display
 // an extra test measurement called 'Processors'.
 $response['showProcTime'] = EloquentProject::findOrFail($Project->Id)
-    ->measurements()
+    ->pinnedTestMeasurements()
     ->where('name', 'Processors')
     ->exists();
 

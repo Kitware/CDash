@@ -17,7 +17,7 @@
 
 namespace CDash\Controller\Api;
 
-use App\Models\Measurement;
+use App\Models\PinnedTestMeasurement;
 use App\Models\Project as EloquentProject;
 use App\Models\TestMeasurement;
 use CDash\Database;
@@ -276,10 +276,10 @@ class QueryTests extends ResultsApi
         // Get the list of extra test measurements that should be displayed on this page.
         $this->extraMeasurements = [];
         $measurements = EloquentProject::findOrFail($this->project->Id)
-            ->measurements()
+            ->pinnedTestMeasurements()
             ->orderBy('position')
             ->get();
-        /** @var Measurement $measurement */
+        /** @var PinnedTestMeasurement $measurement */
         foreach ($measurements as $measurement) {
             // If we have the Processors measurement, then we should also
             // compute and display 'Proc Time'.

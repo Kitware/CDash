@@ -337,7 +337,7 @@ class BuildTestsPageTest extends BrowserTestCase
             'value' => Str::uuid()->toString(),
         ]);
 
-        $this->project->measurements()->create([
+        $this->project->pinnedTestMeasurements()->create([
             'name' => $measurement1->name,
             'position' => 1,
         ]);
@@ -362,17 +362,17 @@ class BuildTestsPageTest extends BrowserTestCase
             'uuid' => Str::uuid()->toString(),
         ]);
 
-        $measurement1 = $this->project->measurements()->create([
+        $measurement1 = $this->project->pinnedTestMeasurements()->create([
             'name' => Str::uuid()->toString(),
             'position' => 1,
         ]);
 
-        $measurement2 = $this->project->measurements()->create([
+        $measurement2 = $this->project->pinnedTestMeasurements()->create([
             'name' => Str::uuid()->toString(),
             'position' => 2,
         ]);
 
-        $measurement3 = $this->project->measurements()->create([
+        $measurement3 = $this->project->pinnedTestMeasurements()->create([
             'name' => Str::uuid()->toString(),
             'position' => 3,
         ]);

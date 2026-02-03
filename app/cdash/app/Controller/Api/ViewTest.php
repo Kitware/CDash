@@ -251,7 +251,7 @@ class ViewTest extends BuildApi
         $response['hasprocessors'] = false;
         $processors_idx = -1;
         $extra_measurements = EloquentProject::findOrFail($this->project->Id)
-            ->measurements()
+            ->pinnedTestMeasurements()
             ->orderBy('position')
             ->get();
         foreach ($extra_measurements as $extra_measurement) {
