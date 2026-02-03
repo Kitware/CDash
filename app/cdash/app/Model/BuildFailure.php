@@ -19,7 +19,6 @@ namespace CDash\Model;
 
 use App\Models\Build;
 use App\Models\RichBuildAlert;
-use App\Utils\RepositoryUtils;
 use CDash\Database;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -229,57 +228,6 @@ class BuildFailure
         }
 
         return $response;
-    }
-
-    /**
-     * Marshal a build failure, this includes the build failure arguments.
-     **/
-    public static function marshal($data, Project $project, $revision, $linkifyOutput, $buildfailure): array
-    {
-        deepEncodeHTMLEntities($data);
-
-        $marshaled = array_merge([
-            'language' => $data['language'],
-            'sourcefile' => $data['sourcefile'],
-            'targetname' => $data['targetname'],
-            'outputfile' => $data['outputfile'],
-            'outputtype' => $data['outputtype'],
-            'workingdirectory' => $data['workingdirectory'],
-            'exitcondition' => $data['exitcondition'],
-        ], $buildfailure->GetBuildFailureArguments($data['id']));
-
-        $marshaled['stderror'] = $data['stderror'];
-        $marshaled['stdoutput'] = $data['stdoutput'];
-
-        if (isset($data['sourcefile'])) {
-            $file = basename($data['sourcefile']);
-            $directory = dirname($data['sourcefile']);
-
-            $source_dir = RepositoryUtils::get_source_dir($project->Id, $project->CvsUrl ?? '', $directory);
-            if (str_starts_with($directory, $source_dir)) {
-                $directory = substr($directory, strlen($source_dir));
-            }
-
-            $marshaled['cvsurl'] = RepositoryUtils::get_diff_url($project->Id,
-                $project->CvsUrl,
-                $directory,
-                $file,
-                $revision);
-
-            if ($source_dir !== null && $linkifyOutput) {
-                $marshaled['stderror'] = RepositoryUtils::linkify_compiler_output($project->CvsUrl ?? '', $source_dir,
-                    $revision, $data['stderror']);
-                $marshaled['stdoutput'] = RepositoryUtils::linkify_compiler_output($project->CvsUrl ?? '', $source_dir,
-                    $revision, $data['stdoutput']);
-            }
-        }
-
-        if (isset($data['subprojectid'])) {
-            $marshaled['subprojectid'] = $data['subprojectid'];
-            $marshaled['subprojectname'] = $data['subprojectname'];
-        }
-
-        return $marshaled;
     }
 
     /** Returns a self referencing URI for a the current BuildFailure. */
