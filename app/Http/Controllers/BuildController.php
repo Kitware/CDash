@@ -1074,7 +1074,7 @@ final class BuildController extends AbstractBuildController
             'outputtype' => $data['outputtype'],
             'workingdirectory' => $data['workingdirectory'],
             'exitcondition' => $data['exitcondition'],
-        ], $buildfailure->GetBuildFailureArguments($data['id']));
+        ], $buildfailure->GetBuildFailureArguments((int) $data['id']));
 
         $marshaled['stderror'] = $data['stderror'];
         $marshaled['stdoutput'] = $data['stdoutput'];

@@ -29,24 +29,23 @@ class BuildFailure
 {
     public $BuildId;
     public $Type;
-    public $WorkingDirectory;
-    public $Arguments;
-    public $StdOutput;
-    public $StdError;
-    public $ExitCondition;
-    public $Language;
-    public $TargetName;
-    public $SourceFile;
-    public $OutputFile;
-    public $OutputType;
-    public $Labels;
+    public string $WorkingDirectory = '';
+    /** @var array<string> */
+    protected array $Arguments = [];
+    public string $StdOutput = '';
+    public string $StdError = '';
+    public string $ExitCondition = '';
+    public string $Language = '';
+    public string $TargetName = '';
+    public string $SourceFile = '';
+    public string $OutputFile = '';
+    public string $OutputType = '';
+    public array $Labels = [];
 
     private $PDO;
 
     public function __construct()
     {
-        $this->Arguments = [];
-        $this->Labels = [];
         $this->PDO = Database::getInstance()->getPdo();
     }
 
@@ -55,8 +54,7 @@ class BuildFailure
         $this->Labels[] = $label;
     }
 
-    // Add an argument to the buildfailure
-    public function AddArgument($argument): void
+    public function AddArgument(string $argument): void
     {
         $this->Arguments[] = $argument;
     }
@@ -68,31 +66,21 @@ class BuildFailure
             abort(500, 'BuildFailure::Insert(): BuildId not set.');
         }
 
-        $workingDirectory = $this->WorkingDirectory ?? '';
-        $stdOutput = $this->StdOutput ?? '';
-        $stdError = $this->StdError ?? '';
-        $exitCondition = $this->ExitCondition ?? '';
-        $language = $this->Language ?? '';
-        $targetName = $this->TargetName ?? '';
-        $outputFile = $this->OutputFile ?? '';
-        $outputType = $this->OutputType ?? '';
-        $sourceFile = $this->SourceFile ?? '';
-
         $db = Database::getInstance();
 
         /** @var RichBuildAlert $failure */
         $failure = Build::findOrFail((int) $this->BuildId)->richAlerts()->create([
-            'workingdirectory' => $workingDirectory,
-            'sourcefile' => $sourceFile,
+            'workingdirectory' => $this->WorkingDirectory,
+            'sourcefile' => $this->SourceFile,
             'newstatus' => 0,
             'type' => (int) $this->Type,
-            'stdoutput' => $stdOutput,
-            'stderror' => $stdError,
-            'exitcondition' => $exitCondition,
-            'language' => $language,
-            'targetname' => $targetName,
-            'outputfile' => $outputFile,
-            'outputtype' => $outputType,
+            'stdoutput' => $this->StdOutput,
+            'stderror' => $this->StdError,
+            'exitcondition' => $this->ExitCondition,
+            'language' => $this->Language,
+            'targetname' => $this->TargetName,
+            'outputfile' => $this->OutputFile,
+            'outputtype' => $this->OutputType,
         ]);
 
         // Insert the arguments
@@ -146,7 +134,7 @@ class BuildFailure
     /**
      * Retrieve the arguments from a build failure given its id.
      **/
-    public function GetBuildFailureArguments($buildFailureId): array
+    public function GetBuildFailureArguments(int $buildFailureId): array
     {
         $response = [
             'argumentfirst' => null,
