@@ -111,6 +111,9 @@ type Mutation {
 
   "Delete a user."
   removeUser(input: RemoveUserInput! @spread): RemoveUserMutationPayload! @field(resolver: "RemoveUser")
+
+  "Mark a test measurement as 'pinned' by name.  Position is set to the next available position."
+  createPinnedTestMeasurement(input: CreatePinnedTestMeasurementInput! @spread): CreatePinnedTestMeasurementMutationPayload! @field(resolver: "CreatePinnedTestMeasurement")
 }
 
 
@@ -508,6 +511,20 @@ input RemoveUserInput {
 type RemoveUserMutationPayload implements MutationPayloadInterface {
   "Optional error message."
   message: String
+}
+
+
+input CreatePinnedTestMeasurementInput {
+  projectId: ID!
+  name: String!
+}
+
+
+type CreatePinnedTestMeasurementMutationPayload implements MutationPayloadInterface {
+  "Optional error message."
+  message: String
+
+  pinnedTestMeasurement: PinnedTestMeasurement
 }
 
 

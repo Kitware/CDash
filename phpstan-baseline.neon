@@ -271,6 +271,18 @@ parameters:
 			path: app/GraphQL/Mutations/CreateGlobalInvitation.php
 
 		-
+			rawMessage: Cannot use ++ on mixed.
+			identifier: postInc.type
+			count: 1
+			path: app/GraphQL/Mutations/CreatePinnedTestMeasurement.php
+
+		-
+			rawMessage: 'Parameter #1 $args (array{projectId: int, name: string}) of method App\GraphQL\Mutations\CreatePinnedTestMeasurement::mutate() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::mutate()'
+			identifier: method.childParameterType
+			count: 1
+			path: app/GraphQL/Mutations/CreatePinnedTestMeasurement.php
+
+		-
 			rawMessage: 'Parameter #1 $args (array{email: string, projectId: int, role: App\Enums\ProjectRole}) of method App\GraphQL\Mutations\InviteToProject::mutate() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::mutate()'
 			identifier: method.childParameterType
 			count: 1
