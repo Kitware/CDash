@@ -158,42 +158,6 @@ class BuildFailure
         return true;
     }
 
-    /** Returns all failures, including warnings, for current build */
-    public function GetFailuresForBuild(int $fetchStyle = PDO::FETCH_ASSOC): array|false
-    {
-        if (!$this->BuildId) {
-            Log::warning('BuildId not set', [
-                'function' => 'BuildFailure::GetFailuresForBuild',
-            ]);
-            return false;
-        }
-
-        $sql = '
-            SELECT
-                bf.id,
-                bf.buildid,
-                bf.workingdirectory,
-                bf.sourcefile,
-                bf.newstatus,
-                bf.stdoutput,
-                bf.stderror,
-                bf.type,
-                bf.exitcondition,
-                bf.language,
-                bf.targetname,
-                bf.outputfile,
-                bf.outputtype
-            FROM buildfailure AS bf
-            WHERE bf.buildid=?
-            ORDER BY bf.id
-        ';
-        $query = $this->PDO->prepare($sql);
-
-        pdo_execute($query, [$this->BuildId]);
-
-        return $query->fetchAll($fetchStyle);
-    }
-
     /**
      * Retrieve the arguments from a build failure given its id.
      **/

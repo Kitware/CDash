@@ -609,9 +609,28 @@ class Build
             if ($this->IsParentBuild()) {
                 $failures = $this->GetFailuresForChildren($fetchStyle);
             } else {
-                $buildFailure = new BuildFailure();
-                $buildFailure->BuildId = $this->Id;
-                $failures = $buildFailure->GetFailuresForBuild($fetchStyle);
+                $sql = '
+                    SELECT
+                        bf.id,
+                        bf.buildid,
+                        bf.workingdirectory,
+                        bf.sourcefile,
+                        bf.newstatus,
+                        bf.stdoutput,
+                        bf.stderror,
+                        bf.type,
+                        bf.exitcondition,
+                        bf.language,
+                        bf.targetname,
+                        bf.outputfile,
+                        bf.outputtype
+                    FROM buildfailure AS bf
+                    WHERE bf.buildid=?
+                    ORDER BY bf.id
+                ';
+                $query = $this->PDO->prepare($sql);
+                pdo_execute($query, [$this->Id]);
+                $failures = $query->fetchAll($fetchStyle);
             }
 
             if ($failures !== false) {

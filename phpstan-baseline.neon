@@ -8904,7 +8904,7 @@ parameters:
 				v2.5.0 01/22/2018
 			'''
 			identifier: function.deprecated
-			count: 13
+			count: 14
 			path: app/cdash/app/Model/Build.php
 
 		-
@@ -9846,7 +9846,7 @@ parameters:
 				v2.5.0 01/22/2018
 			'''
 			identifier: function.deprecated
-			count: 2
+			count: 1
 			path: app/cdash/app/Model/BuildFailure.php
 
 		-
@@ -9908,12 +9908,6 @@ parameters:
 
 		-
 			rawMessage: 'Method CDash\Model\BuildFailure::GetBuildFailureArguments() return type has no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/app/Model/BuildFailure.php
-
-		-
-			rawMessage: 'Method CDash\Model\BuildFailure::GetFailuresForBuild() return type has no value type specified in iterable type array.'
 			identifier: missingType.iterableValue
 			count: 1
 			path: app/cdash/app/Model/BuildFailure.php
