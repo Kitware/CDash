@@ -1516,7 +1516,7 @@ parameters:
 			path: app/Http/Controllers/IndexController.php
 
 		-
-			rawMessage: 'Call to an undefined method App\Models\Project|Illuminate\Database\Eloquent\Collection<int, App\Models\Project>::measurements().'
+			rawMessage: 'Call to an undefined method App\Models\Project|Illuminate\Database\Eloquent\Collection<int, App\Models\Project>::pinnedTestMeasurements().'
 			identifier: method.notFound
 			count: 2
 			path: app/Http/Controllers/ManageMeasurementsController.php
@@ -1540,31 +1540,31 @@ parameters:
 			path: app/Http/Controllers/ManageMeasurementsController.php
 
 		-
-			rawMessage: Cannot access property $id on App\Models\Measurement|null.
+			rawMessage: Cannot access property $id on App\Models\PinnedTestMeasurement|null.
 			identifier: property.nonObject
 			count: 1
 			path: app/Http/Controllers/ManageMeasurementsController.php
 
 		-
-			rawMessage: Cannot access property $name on App\Models\Measurement|null.
+			rawMessage: Cannot access property $name on App\Models\PinnedTestMeasurement|null.
 			identifier: property.nonObject
 			count: 1
 			path: app/Http/Controllers/ManageMeasurementsController.php
 
 		-
-			rawMessage: Cannot access property $position on App\Models\Measurement|null.
+			rawMessage: Cannot access property $position on App\Models\PinnedTestMeasurement|null.
 			identifier: property.nonObject
 			count: 1
 			path: app/Http/Controllers/ManageMeasurementsController.php
 
 		-
-			rawMessage: Cannot access property $projectid on App\Models\Measurement|null.
+			rawMessage: Cannot access property $projectid on App\Models\PinnedTestMeasurement|null.
 			identifier: property.nonObject
 			count: 1
 			path: app/Http/Controllers/ManageMeasurementsController.php
 
 		-
-			rawMessage: 'Cannot call method save() on App\Models\Measurement|null.'
+			rawMessage: 'Cannot call method save() on App\Models\PinnedTestMeasurement|null.'
 			identifier: method.nonObject
 			count: 1
 			path: app/Http/Controllers/ManageMeasurementsController.php
@@ -7666,7 +7666,7 @@ parameters:
 			path: app/cdash/app/Controller/Api/QueryTests.php
 
 		-
-			rawMessage: 'Call to an undefined method App\Models\Project|Illuminate\Database\Eloquent\Collection<int, App\Models\Project>::measurements().'
+			rawMessage: 'Call to an undefined method App\Models\Project|Illuminate\Database\Eloquent\Collection<int, App\Models\Project>::pinnedTestMeasurements().'
 			identifier: method.notFound
 			count: 1
 			path: app/cdash/app/Controller/Api/QueryTests.php
@@ -7918,7 +7918,7 @@ parameters:
 			path: app/cdash/app/Controller/Api/TestDetails.php
 
 		-
-			rawMessage: 'Call to an undefined method App\Models\Project|Illuminate\Database\Eloquent\Collection<int, App\Models\Project>::measurements().'
+			rawMessage: 'Call to an undefined method App\Models\Project|Illuminate\Database\Eloquent\Collection<int, App\Models\Project>::pinnedTestMeasurements().'
 			identifier: method.notFound
 			count: 1
 			path: app/cdash/app/Controller/Api/TestDetails.php
@@ -8272,7 +8272,7 @@ parameters:
 			path: app/cdash/app/Controller/Api/ViewTest.php
 
 		-
-			rawMessage: 'Call to an undefined method App\Models\Project|Illuminate\Database\Eloquent\Collection<int, App\Models\Project>::measurements().'
+			rawMessage: 'Call to an undefined method App\Models\Project|Illuminate\Database\Eloquent\Collection<int, App\Models\Project>::pinnedTestMeasurements().'
 			identifier: method.notFound
 			count: 1
 			path: app/cdash/app/Controller/Api/ViewTest.php
@@ -14977,7 +14977,7 @@ parameters:
 			path: app/cdash/public/api/v1/computeClassifier.php
 
 		-
-			rawMessage: 'Call to an undefined method App\Models\Project|Illuminate\Database\Eloquent\Collection<int, App\Models\Project>::measurements().'
+			rawMessage: 'Call to an undefined method App\Models\Project|Illuminate\Database\Eloquent\Collection<int, App\Models\Project>::pinnedTestMeasurements().'
 			identifier: method.notFound
 			count: 1
 			path: app/cdash/public/api/v1/index.php

@@ -306,6 +306,12 @@ type Project {
   # Can't return null on authorization failure due to Lighthouse bug with connections and can* directives.
   "Invitations to this project which have not been accepted yet."
   invitations: [ProjectInvitation!]! @canRoot(ability: "inviteUser") @hasMany(type: CONNECTION) @orderBy(column: "id")
+
+  """
+  Pinned test measurements are test measurements, identified by name, which should be shown
+  alongside Test details throughout the site.
+  """
+  pinnedTestMeasurements: [PinnedTestMeasurement!]! @hasMany(type: CONNECTION) @orderBy(column: "position")
 }
 
 
@@ -1141,4 +1147,14 @@ type UpdateFile @model(class: "App\\Models\\BuildUpdateFile")  {
   priorRevision: String @rename(attribute: "priorrevision") @filterable
 
   status: String! @filterable
+}
+
+
+type PinnedTestMeasurement {
+  "Unique primary key."
+  id: ID!
+
+  name: String!
+
+  position: Int!
 }
