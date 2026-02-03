@@ -24,7 +24,7 @@ class BuildDetailsTestCase extends KWWebTestCase
 
         $this->createProject([
             'Name' => 'BuildDetails',
-            'CvsViewerType' => 'viewcvs',
+            'CvsViewerType' => null,
         ]);
 
         foreach ($this->testDataFiles as $testDataFile) {

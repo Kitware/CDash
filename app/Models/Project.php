@@ -14,23 +14,23 @@ use Illuminate\Support\Facades\Auth;
 /**
  * @property int $id
  * @property string $name
- * @property string $description
- * @property string $homeurl
- * @property string $cvsurl
- * @property string $bugtrackerurl
- * @property string $bugtrackernewissueurl
- * @property string $bugtrackertype
- * @property string $documentationurl
+ * @property ?string $description
+ * @property ?string $homeurl
+ * @property ?string $cvsurl
+ * @property ?string $bugtrackerurl
+ * @property ?string $bugtrackernewissueurl
+ * @property ?string $bugtrackertype
+ * @property ?string $documentationurl
  * @property int $imageid
  * @property int $public
  * @property int $coveragethreshold
- * @property string $testingdataurl
+ * @property ?string $testingdataurl
  * @property string $nightlytime
  * @property bool $emaillowcoverage
  * @property bool $emailtesttimingchanged
  * @property bool $emailbrokensubmission
  * @property bool $emailredundantfailures
- * @property string $cvsviewertype
+ * @property ?string $cvsviewertype
  * @property int $testtimestd
  * @property int $testtimestdthreshold
  * @property bool $showtesttime

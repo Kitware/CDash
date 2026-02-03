@@ -343,6 +343,30 @@ parameters:
 			path: app/GraphQL/Scalars/NonNegativeSeconds.php
 
 		-
+			rawMessage: 'Method App\GraphQL\Scalars\Time::parseValue() should return string but returns mixed.'
+			identifier: return.type
+			count: 1
+			path: app/GraphQL/Scalars/Time.php
+
+		-
+			rawMessage: 'Method App\GraphQL\Scalars\Time::serialize() should return string but returns mixed.'
+			identifier: return.type
+			count: 1
+			path: app/GraphQL/Scalars/Time.php
+
+		-
+			rawMessage: 'Parameter #1 $time of method App\GraphQL\Scalars\Time::validateTime() expects string, mixed given.'
+			identifier: argument.type
+			count: 1
+			path: app/GraphQL/Scalars/Time.php
+
+		-
+			rawMessage: 'Part $value (mixed) of encapsed string cannot be cast to string.'
+			identifier: encapsedStringPart.nonString
+			count: 1
+			path: app/GraphQL/Scalars/Time.php
+
+		-
 			rawMessage: Cannot cast mixed to string.
 			identifier: cast.string
 			count: 1
@@ -8749,12 +8773,6 @@ parameters:
 			path: app/cdash/app/Lib/Repository/GitHub.php
 
 		-
-			rawMessage: 'Parameter #2 $string of function explode expects string, (array<string>|string) given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
 			rawMessage: Possibly invalid array key type mixed.
 			identifier: offsetAccess.invalidOffset
 			count: 2
@@ -11083,55 +11101,13 @@ parameters:
 			path: app/cdash/app/Model/Project.php
 
 		-
-			rawMessage: Property CDash\Model\Project::$BugTrackerNewIssueUrl has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			rawMessage: Property CDash\Model\Project::$BugTrackerType has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			rawMessage: Property CDash\Model\Project::$BugTrackerUrl has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
 			rawMessage: Property CDash\Model\Project::$CoverageThreshold has no type specified.
 			identifier: missingType.property
 			count: 1
 			path: app/cdash/app/Model/Project.php
 
 		-
-			rawMessage: Property CDash\Model\Project::$CvsUrl has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			rawMessage: Property CDash\Model\Project::$CvsViewerType has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			rawMessage: Property CDash\Model\Project::$Description has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
 			rawMessage: Property CDash\Model\Project::$DisplayLabels has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			rawMessage: Property CDash\Model\Project::$DocumentationUrl has no type specified.
 			identifier: missingType.property
 			count: 1
 			path: app/cdash/app/Model/Project.php
@@ -11174,12 +11150,6 @@ parameters:
 
 		-
 			rawMessage: Property CDash\Model\Project::$ErrorsFilter has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			rawMessage: Property CDash\Model\Project::$HomeUrl has no type specified.
 			identifier: missingType.property
 			count: 1
 			path: app/cdash/app/Model/Project.php
@@ -11252,12 +11222,6 @@ parameters:
 
 		-
 			rawMessage: Property CDash\Model\Project::$TestTimeStdThreshold has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			rawMessage: Property CDash\Model\Project::$TestingDataUrl has no type specified.
 			identifier: missingType.property
 			count: 1
 			path: app/cdash/app/Model/Project.php

@@ -43,17 +43,17 @@ class Project
 {
     public $Name;
     public $Id;
-    public $Description;
-    public $HomeUrl;
-    public $CvsUrl;
-    public $DocumentationUrl;
-    public $BugTrackerUrl;
-    public $BugTrackerNewIssueUrl;
-    public $BugTrackerType;
+    public ?string $Description = null;
+    public ?string $HomeUrl = null;
+    public ?string $CvsUrl = null;
+    public ?string $DocumentationUrl = null;
+    public ?string $BugTrackerUrl = null;
+    public ?string $BugTrackerNewIssueUrl = null;
+    public ?string $BugTrackerType = null;
     public ?int $ImageId = null;
     public $Public;
     public $CoverageThreshold;
-    public $TestingDataUrl;
+    public ?string $TestingDataUrl = null;
     public $NightlyTime;
     public $NightlyDateTime;
     public $NightlyTimezone;
@@ -61,7 +61,7 @@ class Project
     public $EmailTestTimingChanged = 0;
     public $EmailBrokenSubmission = 0;
     public $EmailRedundantFailures = 0;
-    public $CvsViewerType;
+    public ?string $CvsViewerType = null;
     public $TestTimeStd;
     public $TestTimeStdThreshold;
     public $ShowTestTime = 0;
@@ -115,15 +115,15 @@ class Project
         $project->fill([
             'name' => $this->Name ?? '',
             'description' => $this->Description,
-            'homeurl' => $this->HomeUrl ?? '',
-            'cvsurl' => $this->CvsUrl ?? '',
-            'documentationurl' => $this->DocumentationUrl ?? '',
-            'bugtrackerurl' => $this->BugTrackerUrl ?? '',
-            'bugtrackernewissueurl' => $this->BugTrackerNewIssueUrl ?? '',
-            'bugtrackertype' => $this->BugTrackerType ?? '',
+            'homeurl' => $this->HomeUrl,
+            'cvsurl' => $this->CvsUrl,
+            'documentationurl' => $this->DocumentationUrl,
+            'bugtrackerurl' => $this->BugTrackerUrl,
+            'bugtrackernewissueurl' => $this->BugTrackerNewIssueUrl,
+            'bugtrackertype' => $this->BugTrackerType,
             'public' => (int) $this->Public,
             'coveragethreshold' => (int) $this->CoverageThreshold,
-            'testingdataurl' => $this->TestingDataUrl ?? '',
+            'testingdataurl' => $this->TestingDataUrl,
             'nightlytime' => $this->NightlyTime ?? '',
             'emaillowcoverage' => (bool) $this->EmailLowCoverage,
             'emailtesttimingchanged' => (bool) $this->EmailTestTimingChanged,
@@ -137,7 +137,7 @@ class Project
             'autoremovetimeframe' => (int) $this->AutoremoveTimeframe,
             'autoremovemaxbuilds' => (int) $this->AutoremoveMaxBuilds,
             'uploadquota' => (int) $this->UploadQuota,
-            'cvsviewertype' => $this->CvsViewerType ?? '',
+            'cvsviewertype' => $this->CvsViewerType,
             'testtimestd' => (int) $this->TestTimeStd,
             'testtimestdthreshold' => (int) $this->TestTimeStdThreshold,
             'showtesttime' => (bool) $this->ShowTestTime,

@@ -255,7 +255,7 @@ class BuildFailure
             $file = basename($data['sourcefile']);
             $directory = dirname($data['sourcefile']);
 
-            $source_dir = RepositoryUtils::get_source_dir($project->Id, $project->CvsUrl, $directory);
+            $source_dir = RepositoryUtils::get_source_dir($project->Id, $project->CvsUrl ?? '', $directory);
             if (str_starts_with($directory, $source_dir)) {
                 $directory = substr($directory, strlen($source_dir));
             }
@@ -267,9 +267,9 @@ class BuildFailure
                 $revision);
 
             if ($source_dir !== null && $linkifyOutput) {
-                $marshaled['stderror'] = RepositoryUtils::linkify_compiler_output($project->CvsUrl, $source_dir,
+                $marshaled['stderror'] = RepositoryUtils::linkify_compiler_output($project->CvsUrl ?? '', $source_dir,
                     $revision, $data['stderror']);
-                $marshaled['stdoutput'] = RepositoryUtils::linkify_compiler_output($project->CvsUrl, $source_dir,
+                $marshaled['stdoutput'] = RepositoryUtils::linkify_compiler_output($project->CvsUrl ?? '', $source_dir,
                     $revision, $data['stdoutput']);
             }
         }

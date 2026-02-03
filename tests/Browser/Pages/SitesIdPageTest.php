@@ -125,8 +125,8 @@ class SitesIdPageTest extends BrowserTestCase
                 ->whenAvailable('@site-projects-table', function (Browser $browser): void {
                     $browser->assertSee($this->projects['public1']->name);
                     $browser->assertSee($this->projects['public2']->name);
-                    $browser->assertSee($this->projects['public1']->description);
-                    $browser->assertSee($this->projects['public2']->description);
+                    $browser->assertSee((string) $this->projects['public1']->description);
+                    $browser->assertSee((string) $this->projects['public2']->description);
                 });
         });
     }
