@@ -21,7 +21,7 @@ final class CreatePinnedTestMeasurement extends AbstractMutation
     protected function mutate(array $args): void
     {
         $project = Project::find((int) $args['projectId']);
-        Gate::authorize('addPinnedTestMeasurement', $project);
+        Gate::authorize('createPinnedTestMeasurement', $project);
 
         $nextAvailablePosition = $project?->pinnedTestMeasurements()->max('position');
         if ($nextAvailablePosition === null) {

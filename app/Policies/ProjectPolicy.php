@@ -141,7 +141,12 @@ class ProjectPolicy
         return !$this->isLdapControlledMembership($project) && $project->users()->where('id', $currentUser->id)->exists();
     }
 
-    public function addPinnedTestMeasurement(User $currentUser, Project $project): bool
+    public function createPinnedTestMeasurement(User $currentUser, Project $project): bool
+    {
+        return $this->update($currentUser, $project);
+    }
+
+    public function deletePinnedTestMeasurement(User $currentUser, Project $project): bool
     {
         return $this->update($currentUser, $project);
     }

@@ -114,6 +114,9 @@ type Mutation {
 
   "Mark a test measurement as 'pinned' by name.  Position is set to the next available position."
   createPinnedTestMeasurement(input: CreatePinnedTestMeasurementInput! @spread): CreatePinnedTestMeasurementMutationPayload! @field(resolver: "CreatePinnedTestMeasurement")
+
+  "Remove a pinned test measurement.  Does not re-number positions."
+  deletePinnedTestMeasurement(input: DeletePinnedTestMeasurementInput! @spread): DeletePinnedTestMeasurementMutationPayload! @field(resolver: "DeletePinnedTestMeasurement")
 }
 
 
@@ -525,6 +528,17 @@ type CreatePinnedTestMeasurementMutationPayload implements MutationPayloadInterf
   message: String
 
   pinnedTestMeasurement: PinnedTestMeasurement
+}
+
+
+input DeletePinnedTestMeasurementInput {
+  id: ID!
+}
+
+
+type DeletePinnedTestMeasurementMutationPayload implements MutationPayloadInterface {
+  "Optional error message."
+  message: String
 }
 
 

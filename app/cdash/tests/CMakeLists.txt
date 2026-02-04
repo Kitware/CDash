@@ -278,6 +278,8 @@ add_feature_test_in_transaction(/Feature/GraphQL/Mutations/RevokeGlobalInvitatio
 
 add_feature_test_in_transaction(/Feature/GraphQL/Mutations/CreatePinnedTestMeasurementTest)
 
+add_feature_test_in_transaction(/Feature/GraphQL/Mutations/DeletePinnedTestMeasurementTest)
+
 add_feature_test_in_transaction(/Feature/GlobalInvitationAcceptanceTest)
 
 add_feature_test_in_transaction(/Feature/GraphQL/GlobalInvitationTypeTest)
