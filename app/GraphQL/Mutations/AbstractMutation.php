@@ -13,7 +13,7 @@ abstract class AbstractMutation
     /**
      * @param array<string,mixed> $args
      */
-    final public function __invoke(null $_, array $args): self
+    public function __invoke(null $_, array $args): self
     {
         try {
             $this->mutate($args);
@@ -30,5 +30,7 @@ abstract class AbstractMutation
      *
      * @param array<string,mixed> $args
      */
-    abstract protected function mutate(array $args): void;
+    protected function mutate(array $args): void
+    {
+    }
 }

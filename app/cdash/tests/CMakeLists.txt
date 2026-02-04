@@ -256,6 +256,8 @@ add_feature_test_in_transaction(/Feature/Mail/AuthTokenExpiredTest)
 
 add_feature_test_in_transaction(/Feature/GraphQL/Mutations/CreateProjectTest)
 
+add_feature_test_in_transaction(/Feature/GraphQL/Mutations/UpdateProjectTest)
+
 add_feature_test_in_transaction(/Feature/GraphQL/Mutations/UpdateSiteDescriptionTest)
 
 add_feature_test_in_transaction(/Feature/GraphQL/Mutations/InviteToProjectTest)
