@@ -292,7 +292,7 @@ class TestDetails extends BuildTestApi
 
         // Get the list of extra test measurements that have been explicitly added to this project.
         $extra_measurements = EloquentProject::findOrFail($this->project->Id)
-            ->measurements()
+            ->pinnedTestMeasurements()
             ->orderBy('position')
             ->pluck('name')
             ->toArray();

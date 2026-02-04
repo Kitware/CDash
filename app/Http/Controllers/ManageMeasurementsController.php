@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Measurement;
+use App\Models\PinnedTestMeasurement;
 use App\Models\Project as EloquentProject;
 use App\Utils\PageTimer;
 use Illuminate\Http\JsonResponse;
@@ -40,7 +40,7 @@ final class ManageMeasurementsController extends AbstractProjectController
         // Get any measurements associated with this project's tests.
         $measurements_response = [];
         $measurements = EloquentProject::findOrFail($this->project->Id)
-            ->measurements()
+            ->pinnedTestMeasurements()
             ->orderBy('position', 'asc')
             ->get();
 
@@ -71,9 +71,9 @@ final class ManageMeasurementsController extends AbstractProjectController
             $id = (int) $measurement_data['id'];
             if ($id > 0) {
                 // Update an existing measurement rather than creating a new one.
-                $measurement = Measurement::find($id);
+                $measurement = PinnedTestMeasurement::find($id);
             } else {
-                $measurement = new Measurement();
+                $measurement = new PinnedTestMeasurement();
             }
             $measurement->projectid = $this->project->Id;
             $measurement->name = $measurement_data['name'];
@@ -107,7 +107,7 @@ final class ManageMeasurementsController extends AbstractProjectController
         }
 
         $deleted = EloquentProject::findOrFail($this->project->Id)
-            ->measurements()
+            ->pinnedTestMeasurements()
             ->where('id', (int) request()->input('id'))
             ->delete();
 

@@ -225,6 +225,8 @@ add_feature_test_in_transaction(/Feature/GraphQL/UpdateTypeTest)
 
 add_feature_test_in_transaction(/Feature/GraphQL/UpdateFileTypeTest)
 
+add_feature_test_in_transaction(/Feature/GraphQL/PinnedTestMeasurementTypeTest)
+
 add_feature_test_in_transaction(/Feature/RouteAccessTest)
 
 add_feature_test_in_transaction(/Feature/Monitor)
@@ -273,6 +275,12 @@ add_feature_test_in_transaction(/Feature/GraphQL/Mutations/JoinProjectTest)
 add_feature_test_in_transaction(/Feature/GraphQL/Mutations/CreateGlobalInvitationTest)
 
 add_feature_test_in_transaction(/Feature/GraphQL/Mutations/RevokeGlobalInvitationTest)
+
+add_feature_test_in_transaction(/Feature/GraphQL/Mutations/CreatePinnedTestMeasurementTest)
+
+add_feature_test_in_transaction(/Feature/GraphQL/Mutations/DeletePinnedTestMeasurementTest)
+
+add_feature_test_in_transaction(/Feature/GraphQL/Mutations/UpdatePinnedTestMeasurementOrderTest)
 
 add_feature_test_in_transaction(/Feature/GlobalInvitationAcceptanceTest)
 

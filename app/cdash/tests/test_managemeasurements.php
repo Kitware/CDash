@@ -7,7 +7,7 @@
 
 require_once __DIR__ . '/cdash_test_case.php';
 
-use App\Models\Measurement;
+use App\Models\PinnedTestMeasurement;
 use App\Utils\DatabaseCleanupUtils;
 use CDash\Database;
 use GuzzleHttp\Exception\ClientException;
@@ -41,7 +41,7 @@ class ManageMeasurementsTestCase extends KWWebTestCase
             DatabaseCleanupUtils::removeBuild($this->SubProjectBuildId);
         }
 
-        Measurement::destroy($this->MeasurementIds);
+        PinnedTestMeasurement::destroy($this->MeasurementIds);
     }
 
     // function to validate test results returned by the API.

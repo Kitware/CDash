@@ -271,6 +271,24 @@ parameters:
 			path: app/GraphQL/Mutations/CreateGlobalInvitation.php
 
 		-
+			rawMessage: Cannot use ++ on mixed.
+			identifier: postInc.type
+			count: 1
+			path: app/GraphQL/Mutations/CreatePinnedTestMeasurement.php
+
+		-
+			rawMessage: 'Parameter #1 $args (array{projectId: int, name: string}) of method App\GraphQL\Mutations\CreatePinnedTestMeasurement::mutate() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::mutate()'
+			identifier: method.childParameterType
+			count: 1
+			path: app/GraphQL/Mutations/CreatePinnedTestMeasurement.php
+
+		-
+			rawMessage: 'Parameter #1 $args (array{id: int}) of method App\GraphQL\Mutations\DeletePinnedTestMeasurement::mutate() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::mutate()'
+			identifier: method.childParameterType
+			count: 1
+			path: app/GraphQL/Mutations/DeletePinnedTestMeasurement.php
+
+		-
 			rawMessage: 'Parameter #1 $args (array{email: string, projectId: int, role: App\Enums\ProjectRole}) of method App\GraphQL\Mutations\InviteToProject::mutate() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::mutate()'
 			identifier: method.childParameterType
 			count: 1
@@ -311,6 +329,36 @@ parameters:
 			identifier: method.childParameterType
 			count: 1
 			path: app/GraphQL/Mutations/UnclaimSite.php
+
+		-
+			rawMessage: 'Cannot call method count() on Illuminate\Support\Collection<(int|string), mixed>|null.'
+			identifier: method.nonObject
+			count: 1
+			path: app/GraphQL/Mutations/UpdatePinnedTestMeasurementOrder.php
+
+		-
+			rawMessage: 'Cannot call method diff() on Illuminate\Support\Collection<(int|string), mixed>|null.'
+			identifier: method.nonObject
+			count: 1
+			path: app/GraphQL/Mutations/UpdatePinnedTestMeasurementOrder.php
+
+		-
+			rawMessage: Cannot cast mixed to int.
+			identifier: cast.int
+			count: 1
+			path: app/GraphQL/Mutations/UpdatePinnedTestMeasurementOrder.php
+
+		-
+			rawMessage: 'Parameter #1 $args (array{projectId: int, pinnedTestMeasurementIds: array<int>}) of method App\GraphQL\Mutations\UpdatePinnedTestMeasurementOrder::mutate() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::mutate()'
+			identifier: method.childParameterType
+			count: 1
+			path: app/GraphQL/Mutations/UpdatePinnedTestMeasurementOrder.php
+
+		-
+			rawMessage: 'Property App\GraphQL\Mutations\UpdatePinnedTestMeasurementOrder::$pinnedTestMeasurements with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
+			identifier: missingType.generics
+			count: 1
+			path: app/GraphQL/Mutations/UpdatePinnedTestMeasurementOrder.php
 
 		-
 			rawMessage: 'Parameter #1 $args (array{siteId: int, description: string}) of method App\GraphQL\Mutations\UpdateSiteDescription::mutate() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::mutate()'
@@ -1516,7 +1564,7 @@ parameters:
 			path: app/Http/Controllers/IndexController.php
 
 		-
-			rawMessage: 'Call to an undefined method App\Models\Project|Illuminate\Database\Eloquent\Collection<int, App\Models\Project>::measurements().'
+			rawMessage: 'Call to an undefined method App\Models\Project|Illuminate\Database\Eloquent\Collection<int, App\Models\Project>::pinnedTestMeasurements().'
 			identifier: method.notFound
 			count: 2
 			path: app/Http/Controllers/ManageMeasurementsController.php
@@ -1540,31 +1588,31 @@ parameters:
 			path: app/Http/Controllers/ManageMeasurementsController.php
 
 		-
-			rawMessage: Cannot access property $id on App\Models\Measurement|null.
+			rawMessage: Cannot access property $id on App\Models\PinnedTestMeasurement|null.
 			identifier: property.nonObject
 			count: 1
 			path: app/Http/Controllers/ManageMeasurementsController.php
 
 		-
-			rawMessage: Cannot access property $name on App\Models\Measurement|null.
+			rawMessage: Cannot access property $name on App\Models\PinnedTestMeasurement|null.
 			identifier: property.nonObject
 			count: 1
 			path: app/Http/Controllers/ManageMeasurementsController.php
 
 		-
-			rawMessage: Cannot access property $position on App\Models\Measurement|null.
+			rawMessage: Cannot access property $position on App\Models\PinnedTestMeasurement|null.
 			identifier: property.nonObject
 			count: 1
 			path: app/Http/Controllers/ManageMeasurementsController.php
 
 		-
-			rawMessage: Cannot access property $projectid on App\Models\Measurement|null.
+			rawMessage: Cannot access property $projectid on App\Models\PinnedTestMeasurement|null.
 			identifier: property.nonObject
 			count: 1
 			path: app/Http/Controllers/ManageMeasurementsController.php
 
 		-
-			rawMessage: 'Cannot call method save() on App\Models\Measurement|null.'
+			rawMessage: 'Cannot call method save() on App\Models\PinnedTestMeasurement|null.'
 			identifier: method.nonObject
 			count: 1
 			path: app/Http/Controllers/ManageMeasurementsController.php
@@ -7666,7 +7714,7 @@ parameters:
 			path: app/cdash/app/Controller/Api/QueryTests.php
 
 		-
-			rawMessage: 'Call to an undefined method App\Models\Project|Illuminate\Database\Eloquent\Collection<int, App\Models\Project>::measurements().'
+			rawMessage: 'Call to an undefined method App\Models\Project|Illuminate\Database\Eloquent\Collection<int, App\Models\Project>::pinnedTestMeasurements().'
 			identifier: method.notFound
 			count: 1
 			path: app/cdash/app/Controller/Api/QueryTests.php
@@ -7918,7 +7966,7 @@ parameters:
 			path: app/cdash/app/Controller/Api/TestDetails.php
 
 		-
-			rawMessage: 'Call to an undefined method App\Models\Project|Illuminate\Database\Eloquent\Collection<int, App\Models\Project>::measurements().'
+			rawMessage: 'Call to an undefined method App\Models\Project|Illuminate\Database\Eloquent\Collection<int, App\Models\Project>::pinnedTestMeasurements().'
 			identifier: method.notFound
 			count: 1
 			path: app/cdash/app/Controller/Api/TestDetails.php
@@ -8272,7 +8320,7 @@ parameters:
 			path: app/cdash/app/Controller/Api/ViewTest.php
 
 		-
-			rawMessage: 'Call to an undefined method App\Models\Project|Illuminate\Database\Eloquent\Collection<int, App\Models\Project>::measurements().'
+			rawMessage: 'Call to an undefined method App\Models\Project|Illuminate\Database\Eloquent\Collection<int, App\Models\Project>::pinnedTestMeasurements().'
 			identifier: method.notFound
 			count: 1
 			path: app/cdash/app/Controller/Api/ViewTest.php
@@ -14977,7 +15025,7 @@ parameters:
 			path: app/cdash/public/api/v1/computeClassifier.php
 
 		-
-			rawMessage: 'Call to an undefined method App\Models\Project|Illuminate\Database\Eloquent\Collection<int, App\Models\Project>::measurements().'
+			rawMessage: 'Call to an undefined method App\Models\Project|Illuminate\Database\Eloquent\Collection<int, App\Models\Project>::pinnedTestMeasurements().'
 			identifier: method.notFound
 			count: 1
 			path: app/cdash/public/api/v1/index.php

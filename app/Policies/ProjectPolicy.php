@@ -141,6 +141,21 @@ class ProjectPolicy
         return !$this->isLdapControlledMembership($project) && $project->users()->where('id', $currentUser->id)->exists();
     }
 
+    public function createPinnedTestMeasurement(User $currentUser, Project $project): bool
+    {
+        return $this->update($currentUser, $project);
+    }
+
+    public function deletePinnedTestMeasurement(User $currentUser, Project $project): bool
+    {
+        return $this->update($currentUser, $project);
+    }
+
+    public function updatePinnedTestMeasurementOrder(User $currentUser, Project $project): bool
+    {
+        return $this->update($currentUser, $project);
+    }
+
     private function isLdapControlledMembership(Project $project): bool
     {
         // If a LDAP filter has been specified and LDAP is enabled, CDash controls the entire members list.

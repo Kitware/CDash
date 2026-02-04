@@ -12,9 +12,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $name
  * @property int $position
  *
- * @mixin Builder<Measurement>
+ * @mixin Builder<PinnedTestMeasurement>
  */
-class Measurement extends Model
+class PinnedTestMeasurement extends Model
 {
     protected $table = 'measurement';
 
@@ -37,6 +37,6 @@ class Measurement extends Model
      */
     public function project(): BelongsTo
     {
-        return $this->belongsTo(Project::class, 'id', 'projectid');
+        return $this->belongsTo(Project::class, 'projectid');
     }
 }

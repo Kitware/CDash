@@ -232,11 +232,11 @@ class Project extends Model
     }
 
     /**
-     * @return HasMany<Measurement, $this>
+     * @return HasMany<PinnedTestMeasurement, $this>
      */
-    public function measurements(): HasMany
+    public function pinnedTestMeasurements(): HasMany
     {
-        return $this->hasMany(Measurement::class, 'projectid', 'id');
+        return $this->hasMany(PinnedTestMeasurement::class, 'projectid', 'id');
     }
 
     /**
