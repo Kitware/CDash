@@ -151,6 +151,11 @@ class ProjectPolicy
         return $this->update($currentUser, $project);
     }
 
+    public function updatePinnedTestMeasurementOrder(User $currentUser, Project $project): bool
+    {
+        return $this->update($currentUser, $project);
+    }
+
     private function isLdapControlledMembership(Project $project): bool
     {
         // If a LDAP filter has been specified and LDAP is enabled, CDash controls the entire members list.

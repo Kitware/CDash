@@ -117,6 +117,12 @@ type Mutation {
 
   "Remove a pinned test measurement.  Does not re-number positions."
   deletePinnedTestMeasurement(input: DeletePinnedTestMeasurementInput! @spread): DeletePinnedTestMeasurementMutationPayload! @field(resolver: "DeletePinnedTestMeasurement")
+
+  """
+  Reorder the pinned measurements.  Note: positions will be sequential, starting at 1 + the
+  previous maximum position.  Only the relative order is guaranteed.
+  """
+  updatePinnedTestMeasurementOrder(input: UpdatePinnedTestMeasurementOrderInput! @spread): UpdatePinnedTestMeasurementOrderMutationPayload! @field(resolver: "UpdatePinnedTestMeasurementOrder")
 }
 
 
@@ -539,6 +545,23 @@ input DeletePinnedTestMeasurementInput {
 type DeletePinnedTestMeasurementMutationPayload implements MutationPayloadInterface {
   "Optional error message."
   message: String
+}
+
+
+input UpdatePinnedTestMeasurementOrderInput {
+  projectId: ID!
+
+  "A list of PinnedTestMeasurement IDs.  Relative position will be set based on position in the list."
+  pinnedTestMeasurementIds: [ID!]!
+}
+
+
+type UpdatePinnedTestMeasurementOrderMutationPayload implements MutationPayloadInterface {
+  "Optional error message."
+  message: String
+
+  "The new list of pinned measurements."
+  pinnedTestMeasurements: [PinnedTestMeasurement!]
 }
 
 
@@ -1187,5 +1210,6 @@ type PinnedTestMeasurement {
 
   name: String!
 
+  "Note: Only the relative positions of PinnedTestMeasurements are guaranteed."
   position: Int!
 }

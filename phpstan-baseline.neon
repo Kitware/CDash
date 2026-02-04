@@ -283,6 +283,12 @@ parameters:
 			path: app/GraphQL/Mutations/CreatePinnedTestMeasurement.php
 
 		-
+			rawMessage: 'Parameter #1 $args (array{id: int}) of method App\GraphQL\Mutations\DeletePinnedTestMeasurement::mutate() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::mutate()'
+			identifier: method.childParameterType
+			count: 1
+			path: app/GraphQL/Mutations/DeletePinnedTestMeasurement.php
+
+		-
 			rawMessage: 'Parameter #1 $args (array{email: string, projectId: int, role: App\Enums\ProjectRole}) of method App\GraphQL\Mutations\InviteToProject::mutate() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::mutate()'
 			identifier: method.childParameterType
 			count: 1
@@ -323,6 +329,36 @@ parameters:
 			identifier: method.childParameterType
 			count: 1
 			path: app/GraphQL/Mutations/UnclaimSite.php
+
+		-
+			rawMessage: 'Cannot call method count() on Illuminate\Support\Collection<(int|string), mixed>|null.'
+			identifier: method.nonObject
+			count: 1
+			path: app/GraphQL/Mutations/UpdatePinnedTestMeasurementOrder.php
+
+		-
+			rawMessage: 'Cannot call method diff() on Illuminate\Support\Collection<(int|string), mixed>|null.'
+			identifier: method.nonObject
+			count: 1
+			path: app/GraphQL/Mutations/UpdatePinnedTestMeasurementOrder.php
+
+		-
+			rawMessage: Cannot cast mixed to int.
+			identifier: cast.int
+			count: 1
+			path: app/GraphQL/Mutations/UpdatePinnedTestMeasurementOrder.php
+
+		-
+			rawMessage: 'Parameter #1 $args (array{projectId: int, pinnedTestMeasurementIds: array<int>}) of method App\GraphQL\Mutations\UpdatePinnedTestMeasurementOrder::mutate() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::mutate()'
+			identifier: method.childParameterType
+			count: 1
+			path: app/GraphQL/Mutations/UpdatePinnedTestMeasurementOrder.php
+
+		-
+			rawMessage: 'Property App\GraphQL\Mutations\UpdatePinnedTestMeasurementOrder::$pinnedTestMeasurements with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
+			identifier: missingType.generics
+			count: 1
+			path: app/GraphQL/Mutations/UpdatePinnedTestMeasurementOrder.php
 
 		-
 			rawMessage: 'Parameter #1 $args (array{siteId: int, description: string}) of method App\GraphQL\Mutations\UpdateSiteDescription::mutate() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::mutate()'

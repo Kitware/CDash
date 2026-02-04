@@ -20,6 +20,6 @@ final class DeletePinnedTestMeasurement extends AbstractMutation
 
         Gate::authorize('deletePinnedTestMeasurement', $measurement?->project);
 
-        $measurement->delete();
+        $measurement?->delete();
     }
 }
