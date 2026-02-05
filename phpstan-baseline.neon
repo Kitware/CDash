@@ -361,6 +361,12 @@ parameters:
 			path: app/GraphQL/Mutations/UpdatePinnedTestMeasurementOrder.php
 
 		-
+			rawMessage: Cannot cast mixed to int.
+			identifier: cast.int
+			count: 1
+			path: app/GraphQL/Mutations/UpdateProject.php
+
+		-
 			rawMessage: 'Parameter #1 $args (array{siteId: int, description: string}) of method App\GraphQL\Mutations\UpdateSiteDescription::mutate() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::mutate()'
 			identifier: method.childParameterType
 			count: 1
@@ -27152,6 +27158,12 @@ parameters:
 			identifier: missingType.checkedException
 			count: 1
 			path: tests/Feature/GraphQL/Mutations/RevokeProjectInvitationTest.php
+
+		-
+			rawMessage: 'Parameter #1 $user of method Illuminate\Foundation\Testing\TestCase::actingAs() expects Illuminate\Contracts\Auth\Authenticatable, App\Models\User|null given.'
+			identifier: argument.type
+			count: 2
+			path: tests/Feature/GraphQL/Mutations/UpdateProjectTest.php
 
 		-
 			rawMessage: 'Method Tests\Feature\GraphQL\ProjectInvitationTypeTest::testAdminCanViewInvitations() throws checked exception OverflowException but it''s missing from the PHPDoc @throws tag.'

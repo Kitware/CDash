@@ -76,6 +76,8 @@ type Mutation {
   "Create a new project."
   createProject(input: CreateProjectInput! @spread): Project @field(resolver: "CreateProject")
 
+  updateProject(input: UpdateProjectInput! @spread): UpdateProjectMutationPayload! @field(resolver: "UpdateProject")
+
   "Subscribe the current user to the specified site."
   claimSite(input: ClaimSiteInput! @spread): ClaimSiteMutationPayload! @field(resolver: "ClaimSite")
 
@@ -373,6 +375,77 @@ input CreateProjectInput @validator {
 
   "A LDAP group users must be a member of to access the project."
   ldapFilter: String @deprecated(reason: "This field will be removed in the next major version of CDash.") @rename(attribute: "ldapfilter")
+}
+
+
+input UpdateProjectInput @validator {
+  id: ID!
+
+  name: String
+
+  description: String
+
+  homeUrl: Url @rename(attribute: "homeurl")
+
+  vcsViewer: VcsViewer @rename(attribute: "cvsviewertype")
+
+  vcsUrl: Url @rename(attribute: "cvsurl")
+
+  bugTracker: BugTracker @rename(attribute: "bugtrackertype")
+
+  bugTrackerUrl: Url @rename(attribute: "bugtrackerurl")
+
+  bugTrackerNewIssueUrl: Url @rename(attribute: "bugtrackernewissueurl")
+
+  documentationUrl: Url @rename(attribute: "documentationurl")
+
+  testDataUrl: Url @rename(attribute: "testingdataurl")
+
+  visibility: ProjectVisibility @rename(attribute: "public")
+
+  authenticateSubmissions: Boolean @rename(attribute: "authenticatesubmissions")
+
+  ldapFilter: String @rename(attribute: "ldapfilter")
+
+  coverageThreshold: Int @rename(attribute: "coveragethreshold")
+
+  nightlyTime: Time @rename(attribute: "nightlytime")
+
+  emailLowCoverage: Boolean @rename(attribute: "emaillowcoverage")
+
+  emailTestTimingChanged: Boolean @rename(attribute: "emailtesttimingchanged")
+
+  emailBrokenSubmissions: Boolean @rename(attribute: "emailbrokensubmission")
+
+  emailRedundantFailures: Boolean @rename(attribute: "emailredundantfailures")
+
+  testTimeStdMultiplier: Float @rename(attribute: "testtimestd")
+
+  testTimeStdThreshold: Float @rename(attribute: "testtimestdthreshold")
+
+  enableTestTiming: Boolean @rename(attribute: "showtesttime")
+
+  timeStatusFailureThreshold: Int @rename(attribute: "testtimemaxstatus")
+
+  emailMaxItems: Int @rename(attribute: "emailmaxitems")
+
+  emailMaxCharacters: Int @rename(attribute: "emailmaxchars")
+
+  displayLabels: Boolean @rename(attribute: "displaylabels")
+
+  autoRemoveTimeFrame: Int @rename(attribute: "autoremovetimeframe")
+
+  autoRemoveMaxBuilds: Int @rename(attribute: "autoremovemaxbuilds")
+
+  fileUploadLimit: Int @rename(attribute: "uploadquota")
+
+  showCoverageCode: Boolean @rename(attribute: "showcoveragecode")
+
+  shareLabelFilters: Boolean @rename(attribute: "sharelabelfilters")
+
+  showViewSubProjectsLink: Boolean @rename(attribute: "viewsubprojectslink")
+
+  banner: String
 }
 
 
@@ -916,6 +989,15 @@ type Site {
     filters: _ @filter
   ): [User!]! @belongsToMany(type: CONNECTION) @orderBy(column: "id")
 }
+
+
+type UpdateProjectMutationPayload implements MutationPayloadInterface {
+  "Optional error message."
+  message: String
+
+  project: Project
+}
+
 
 input ClaimSiteInput {
   siteId: ID!
