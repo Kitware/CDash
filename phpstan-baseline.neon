@@ -721,6 +721,12 @@ parameters:
 			path: app/Http/Controllers/BuildController.php
 
 		-
+			rawMessage: 'Method App\Http\Controllers\BuildController::GetSourceFileFromBuildError() has parameter $data with no value type specified in iterable type array.'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Controllers/BuildController.php
+
+		-
 			rawMessage: 'Method App\Http\Controllers\BuildController::add_file() has parameter $file with no type specified.'
 			identifier: missingType.parameter
 			count: 1
@@ -735,6 +741,48 @@ parameters:
 		-
 			rawMessage: 'Method App\Http\Controllers\BuildController::buildOverview() never returns Illuminate\Http\RedirectResponse so it can be removed from the return type.'
 			identifier: return.unusedType
+			count: 1
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			rawMessage: 'Method App\Http\Controllers\BuildController::marshalBuildError() has parameter $data with no value type specified in iterable type array.'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			rawMessage: 'Method App\Http\Controllers\BuildController::marshalBuildError() has parameter $revision with no type specified.'
+			identifier: missingType.parameter
+			count: 1
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			rawMessage: 'Method App\Http\Controllers\BuildController::marshalBuildFailure() has parameter $buildfailure with no type specified.'
+			identifier: missingType.parameter
+			count: 1
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			rawMessage: 'Method App\Http\Controllers\BuildController::marshalBuildFailure() has parameter $data with no type specified.'
+			identifier: missingType.parameter
+			count: 1
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			rawMessage: 'Method App\Http\Controllers\BuildController::marshalBuildFailure() has parameter $linkifyOutput with no type specified.'
+			identifier: missingType.parameter
+			count: 1
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			rawMessage: 'Method App\Http\Controllers\BuildController::marshalBuildFailure() has parameter $revision with no type specified.'
+			identifier: missingType.parameter
+			count: 1
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			rawMessage: 'Method App\Http\Controllers\BuildController::marshalBuildFailure() return type has no value type specified in iterable type array.'
+			identifier: missingType.iterableValue
 			count: 1
 			path: app/Http/Controllers/BuildController.php
 
@@ -781,7 +829,7 @@ parameters:
 			path: app/Http/Controllers/BuildController.php
 
 		-
-			rawMessage: 'Parameter #1 $data of static method CDash\Model\BuildError::marshal() expects array, mixed given.'
+			rawMessage: 'Parameter #1 $data of static method App\Http\Controllers\BuildController::marshalBuildError() expects array, mixed given.'
 			identifier: argument.type
 			count: 1
 			path: app/Http/Controllers/BuildController.php
@@ -8904,7 +8952,7 @@ parameters:
 				v2.5.0 01/22/2018
 			'''
 			identifier: function.deprecated
-			count: 13
+			count: 14
 			path: app/cdash/app/Model/Build.php
 
 		-
@@ -9697,24 +9745,6 @@ parameters:
 			path: app/cdash/app/Model/BuildError.php
 
 		-
-			rawMessage: 'Method CDash\Model\BuildError::GetSourceFile() has parameter $data with no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/app/Model/BuildError.php
-
-		-
-			rawMessage: 'Method CDash\Model\BuildError::marshal() has parameter $data with no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/app/Model/BuildError.php
-
-		-
-			rawMessage: 'Method CDash\Model\BuildError::marshal() has parameter $revision with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Model/BuildError.php
-
-		-
 			rawMessage: Property CDash\Model\BuildError::$BuildId has no type specified.
 			identifier: missingType.property
 			count: 1
@@ -9864,7 +9894,7 @@ parameters:
 				v2.5.0 01/22/2018
 			'''
 			identifier: function.deprecated
-			count: 2
+			count: 1
 			path: app/cdash/app/Model/BuildFailure.php
 
 		-
@@ -9897,7 +9927,7 @@ parameters:
 		-
 			rawMessage: 'Construct empty() is not allowed. Use more strict comparison.'
 			identifier: empty.notAllowed
-			count: 2
+			count: 1
 			path: app/cdash/app/Model/BuildFailure.php
 
 		-
@@ -9907,19 +9937,7 @@ parameters:
 			path: app/cdash/app/Model/BuildFailure.php
 
 		-
-			rawMessage: 'Method CDash\Model\BuildFailure::AddArgument() has parameter $argument with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Model/BuildFailure.php
-
-		-
 			rawMessage: 'Method CDash\Model\BuildFailure::AddLabel() has parameter $label with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Model/BuildFailure.php
-
-		-
-			rawMessage: 'Method CDash\Model\BuildFailure::GetBuildFailureArguments() has parameter $buildFailureId with no type specified.'
 			identifier: missingType.parameter
 			count: 1
 			path: app/cdash/app/Model/BuildFailure.php
@@ -9931,86 +9949,14 @@ parameters:
 			path: app/cdash/app/Model/BuildFailure.php
 
 		-
-			rawMessage: 'Method CDash\Model\BuildFailure::GetFailuresForBuild() return type has no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/app/Model/BuildFailure.php
-
-		-
-			rawMessage: 'Method CDash\Model\BuildFailure::InsertLabelAssociations() has parameter $id with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Model/BuildFailure.php
-
-		-
-			rawMessage: 'Method CDash\Model\BuildFailure::marshal() has parameter $buildfailure with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Model/BuildFailure.php
-
-		-
-			rawMessage: 'Method CDash\Model\BuildFailure::marshal() has parameter $data with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Model/BuildFailure.php
-
-		-
-			rawMessage: 'Method CDash\Model\BuildFailure::marshal() has parameter $linkifyOutput with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Model/BuildFailure.php
-
-		-
-			rawMessage: 'Method CDash\Model\BuildFailure::marshal() has parameter $revision with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Model/BuildFailure.php
-
-		-
-			rawMessage: 'Method CDash\Model\BuildFailure::marshal() return type has no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/app/Model/BuildFailure.php
-
-		-
-			rawMessage: Property CDash\Model\BuildFailure::$Arguments has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/BuildFailure.php
-
-		-
 			rawMessage: Property CDash\Model\BuildFailure::$BuildId has no type specified.
 			identifier: missingType.property
 			count: 1
 			path: app/cdash/app/Model/BuildFailure.php
 
 		-
-			rawMessage: Property CDash\Model\BuildFailure::$ExitCondition has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/BuildFailure.php
-
-		-
-			rawMessage: Property CDash\Model\BuildFailure::$Labels has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/BuildFailure.php
-
-		-
-			rawMessage: Property CDash\Model\BuildFailure::$Language has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/BuildFailure.php
-
-		-
-			rawMessage: Property CDash\Model\BuildFailure::$OutputFile has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/BuildFailure.php
-
-		-
-			rawMessage: Property CDash\Model\BuildFailure::$OutputType has no type specified.
-			identifier: missingType.property
+			rawMessage: Property CDash\Model\BuildFailure::$Labels type has no value type specified in iterable type array.
+			identifier: missingType.iterableValue
 			count: 1
 			path: app/cdash/app/Model/BuildFailure.php
 
@@ -10021,37 +9967,7 @@ parameters:
 			path: app/cdash/app/Model/BuildFailure.php
 
 		-
-			rawMessage: Property CDash\Model\BuildFailure::$SourceFile has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/BuildFailure.php
-
-		-
-			rawMessage: Property CDash\Model\BuildFailure::$StdError has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/BuildFailure.php
-
-		-
-			rawMessage: Property CDash\Model\BuildFailure::$StdOutput has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/BuildFailure.php
-
-		-
-			rawMessage: Property CDash\Model\BuildFailure::$TargetName has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/BuildFailure.php
-
-		-
 			rawMessage: Property CDash\Model\BuildFailure::$Type has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/BuildFailure.php
-
-		-
-			rawMessage: Property CDash\Model\BuildFailure::$WorkingDirectory has no type specified.
 			identifier: missingType.property
 			count: 1
 			path: app/cdash/app/Model/BuildFailure.php
@@ -10962,18 +10878,12 @@ parameters:
 		-
 			rawMessage: 'Construct empty() is not allowed. Use more strict comparison.'
 			identifier: empty.notAllowed
-			count: 2
+			count: 1
 			path: app/cdash/app/Model/Label.php
 
 		-
 			rawMessage: 'Method CDash\Model\Label::Insert() has no return type specified.'
 			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Model/Label.php
-
-		-
-			rawMessage: Property CDash\Model\Label::$BuildFailureId has no type specified.
-			identifier: missingType.property
 			count: 1
 			path: app/cdash/app/Model/Label.php
 
@@ -16926,7 +16836,7 @@ parameters:
 		-
 			rawMessage: Access to an undefined property BuildFailureTest::$mock_buildfailure.
 			identifier: property.notFound
-			count: 4
+			count: 3
 			path: app/cdash/tests/case/CDash/Model/BuildFailureTest.php
 
 		-

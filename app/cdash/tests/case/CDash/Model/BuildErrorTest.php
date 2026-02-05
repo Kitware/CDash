@@ -13,7 +13,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-use CDash\Model\BuildError;
+use App\Http\Controllers\BuildController;
 use CDash\Model\Project;
 use CDash\ServiceContainer;
 use CDash\Test\CDashTestCase;
@@ -43,7 +43,7 @@ class BuildErrorTest extends CDashTestCase
         ];
 
         $this->mock_project->CvsUrl = 'https://github.com/FooCo/foo';
-        $marshaled = BuildError::marshal($input_data, $this->mock_project, '12');
+        $marshaled = BuildController::marshalBuildError($input_data, $this->mock_project, '12');
 
         $expected = [
             'new' => 1,

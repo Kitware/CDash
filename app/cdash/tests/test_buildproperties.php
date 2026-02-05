@@ -106,7 +106,7 @@ class BuildPropertiesTestCase extends KWWebTestCase
         $warning->WorkingDirectory = '/tmp';
         $warning->StdOutput = 'warning #1';
         $warning->StdError = 'this is a warning';
-        $warning->ExitCondition = 0;
+        $warning->ExitCondition = '0';
         $warning->Language = 'C';
         $warning->TargetName = 'foo';
         $warning->OutputFile = 'foo.lib';

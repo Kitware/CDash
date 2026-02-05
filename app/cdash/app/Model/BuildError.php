@@ -18,7 +18,6 @@
 namespace CDash\Model;
 
 use App\Models\BasicBuildAlert;
-use App\Utils\RepositoryUtils;
 
 /** BuildError */
 class BuildError
@@ -58,70 +57,6 @@ class BuildError
             'stdoutput' => $this->PreContext . $this->Text . $this->PostContext,
             'stderror' => $this->Text,
         ]);
-    }
-
-    /**
-     * @return array{
-     *     'file': string,
-     *     'directory': string,
-     * }
-     */
-    private static function GetSourceFile(array $data): array
-    {
-        $sourceFile = [];
-
-        // Detect if the source directory has already been replaced by CTest
-        // with /.../.  If so, sourcefile is already a relative path from the
-        // root of the source tree.
-        if (str_contains($data['stdoutput'], '/.../')) {
-            $parts = explode('/', $data['sourcefile']);
-            $sourceFile['file'] = array_pop($parts);
-            $sourceFile['directory'] = implode('/', $parts);
-        } else {
-            $sourceFile['file'] = basename($data['sourcefile']);
-            $sourceFile['directory'] = dirname($data['sourcefile']);
-        }
-
-        return $sourceFile;
-    }
-
-    // Ideally $data would be loaded into $this
-    // need an id field?
-    /**
-     * Marshals the data of a particular build error into a serializable
-     * friendly format.
-     *
-     * Requires the $data of a build error, the $project, and the buildupdate.revision.
-     *
-     * @return array<string,mixed>
-     **/
-    public static function marshal(array $data, Project $project, $revision): array
-    {
-        deepEncodeHTMLEntities($data);
-
-        $sourceFile = self::GetSourceFile($data);
-
-        // When building without launchers, CTest truncates the source dir to
-        // /.../<project-name>/.  Use this pattern to linkify compiler output.
-        $source_dir = "/\.\.\./[^/]+";
-
-        $marshaled = [
-            'new' => (int) ($data['newstatus'] ?? -1),
-            'logline' => (int) $data['logline'],
-            'cvsurl' => RepositoryUtils::get_diff_url($project->Id, $project->CvsUrl, $sourceFile['directory'], $sourceFile['file'], $revision),
-            'precontext' => '',
-            'text' => RepositoryUtils::linkify_compiler_output($project->CvsUrl ?? '', $source_dir, $revision, $data['stdoutput']),
-            'postcontext' => '',
-            'sourcefile' => $data['sourcefile'],
-            'sourceline' => $data['sourceline'],
-        ];
-
-        if (isset($data['subprojectid'])) {
-            $marshaled['subprojectid'] = $data['subprojectid'];
-            $marshaled['subprojectname'] = $data['subprojectname'];
-        }
-
-        return $marshaled;
     }
 
     /**

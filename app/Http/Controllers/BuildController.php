@@ -928,14 +928,14 @@ final class BuildController extends AbstractBuildController
             $resolvedBuildErrors = $this->build->GetResolvedBuildErrors($type);
             if ($resolvedBuildErrors !== false) {
                 while ($resolvedBuildError = $resolvedBuildErrors->fetch()) {
-                    $this->addErrorResponse(BuildError::marshal($resolvedBuildError, $this->project, $revision), $response);
+                    $this->addErrorResponse(self::marshalBuildError($resolvedBuildError, $this->project, $revision), $response);
                 }
             }
 
             // Build failure table
             $resolvedBuildFailures = $this->build->GetResolvedBuildFailures($type);
             foreach ($resolvedBuildFailures as $resolvedBuildFailure) {
-                $marshaledResolvedBuildFailure = BuildFailure::marshal($resolvedBuildFailure, $this->project, $revision, false, $buildfailure);
+                $marshaledResolvedBuildFailure = self::marshalBuildFailure($resolvedBuildFailure, $this->project, $revision, false, $buildfailure);
 
                 if ($this->project->DisplayLabels) {
                     get_labels_JSON_from_query_results('
@@ -968,14 +968,14 @@ final class BuildController extends AbstractBuildController
             $buildErrors = $this->build->GetErrors($filter_error_properties);
 
             foreach ($buildErrors as $error) {
-                $this->addErrorResponse(BuildError::marshal($error, $this->project, $revision), $response);
+                $this->addErrorResponse(self::marshalBuildError($error, $this->project, $revision), $response);
             }
 
             // Build failure table
             $buildFailures = $this->build->GetFailures(['type' => $type]);
 
             foreach ($buildFailures as $fail) {
-                $failure = BuildFailure::marshal($fail, $this->project, $revision, true, $buildfailure);
+                $failure = self::marshalBuildFailure($fail, $this->project, $revision, true, $buildfailure);
 
                 if ($this->project->DisplayLabels) {
                     $labels = RichBuildAlert::findOrFail((int) $fail['id'])->labels()->pluck('text');
@@ -993,6 +993,121 @@ final class BuildController extends AbstractBuildController
 
         $pageTimer->end($response);
         return response()->json(cast_data_for_JSON($response));
+    }
+
+    /**
+     * @return array{
+     *     'file': string,
+     *     'directory': string,
+     * }
+     */
+    private static function GetSourceFileFromBuildError(array $data): array
+    {
+        $sourceFile = [];
+
+        // Detect if the source directory has already been replaced by CTest
+        // with /.../.  If so, sourcefile is already a relative path from the
+        // root of the source tree.
+        if (str_contains($data['stdoutput'], '/.../')) {
+            $parts = explode('/', $data['sourcefile']);
+            $sourceFile['file'] = array_pop($parts);
+            $sourceFile['directory'] = implode('/', $parts);
+        } else {
+            $sourceFile['file'] = basename($data['sourcefile']);
+            $sourceFile['directory'] = dirname($data['sourcefile']);
+        }
+
+        return $sourceFile;
+    }
+
+    // Ideally $data would be loaded into $this
+    // need an id field?
+    /**
+     * Marshals the data of a particular build error into a serializable
+     * friendly format.
+     *
+     * Requires the $data of a build error, the $project, and the buildupdate.revision.
+     *
+     * @return array<string,mixed>
+     **/
+    public static function marshalBuildError(array $data, \CDash\Model\Project $project, $revision): array
+    {
+        deepEncodeHTMLEntities($data);
+
+        $sourceFile = self::GetSourceFileFromBuildError($data);
+
+        // When building without launchers, CTest truncates the source dir to
+        // /.../<project-name>/.  Use this pattern to linkify compiler output.
+        $source_dir = "/\.\.\./[^/]+";
+
+        $marshaled = [
+            'new' => (int) ($data['newstatus'] ?? -1),
+            'logline' => (int) $data['logline'],
+            'cvsurl' => RepositoryUtils::get_diff_url($project->Id, $project->CvsUrl ?? '', $sourceFile['directory'], $sourceFile['file'], $revision),
+            'precontext' => '',
+            'text' => RepositoryUtils::linkify_compiler_output($project->CvsUrl ?? '', $source_dir, $revision, $data['stdoutput']),
+            'postcontext' => '',
+            'sourcefile' => $data['sourcefile'],
+            'sourceline' => $data['sourceline'],
+        ];
+
+        if (isset($data['subprojectid'])) {
+            $marshaled['subprojectid'] = $data['subprojectid'];
+            $marshaled['subprojectname'] = $data['subprojectname'];
+        }
+
+        return $marshaled;
+    }
+
+    /**
+     * Marshal a build failure, this includes the build failure arguments.
+     **/
+    public static function marshalBuildFailure($data, \CDash\Model\Project $project, $revision, $linkifyOutput, $buildfailure): array
+    {
+        deepEncodeHTMLEntities($data);
+
+        $marshaled = array_merge([
+            'language' => $data['language'],
+            'sourcefile' => $data['sourcefile'],
+            'targetname' => $data['targetname'],
+            'outputfile' => $data['outputfile'],
+            'outputtype' => $data['outputtype'],
+            'workingdirectory' => $data['workingdirectory'],
+            'exitcondition' => $data['exitcondition'],
+        ], $buildfailure->GetBuildFailureArguments((int) $data['id']));
+
+        $marshaled['stderror'] = $data['stderror'];
+        $marshaled['stdoutput'] = $data['stdoutput'];
+
+        if (isset($data['sourcefile'])) {
+            $file = basename($data['sourcefile']);
+            $directory = dirname($data['sourcefile']);
+
+            $source_dir = RepositoryUtils::get_source_dir($project->Id, $project->CvsUrl ?? '', $directory);
+            if (str_starts_with($directory, $source_dir)) {
+                $directory = substr($directory, strlen($source_dir));
+            }
+
+            $marshaled['cvsurl'] = RepositoryUtils::get_diff_url($project->Id,
+                $project->CvsUrl ?? '',
+                $directory,
+                $file,
+                $revision);
+
+            if ($source_dir !== null && $linkifyOutput) {
+                $marshaled['stderror'] = RepositoryUtils::linkify_compiler_output($project->CvsUrl ?? '', $source_dir,
+                    $revision, $data['stderror']);
+                $marshaled['stdoutput'] = RepositoryUtils::linkify_compiler_output($project->CvsUrl ?? '', $source_dir,
+                    $revision, $data['stdoutput']);
+            }
+        }
+
+        if (isset($data['subprojectid'])) {
+            $marshaled['subprojectid'] = $data['subprojectid'];
+            $marshaled['subprojectname'] = $data['subprojectname'];
+        }
+
+        return $marshaled;
     }
 
     public function manageBuildGroup(): View

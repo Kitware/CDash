@@ -18,11 +18,10 @@
 namespace CDash\Model;
 
 use App\Models\Build;
+use App\Models\Label;
 use App\Models\RichBuildAlert;
-use App\Utils\RepositoryUtils;
 use CDash\Database;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use PDO;
 
 /** BuildFailure */
@@ -30,24 +29,23 @@ class BuildFailure
 {
     public $BuildId;
     public $Type;
-    public $WorkingDirectory;
-    public $Arguments;
-    public $StdOutput;
-    public $StdError;
-    public $ExitCondition;
-    public $Language;
-    public $TargetName;
-    public $SourceFile;
-    public $OutputFile;
-    public $OutputType;
-    public $Labels;
+    public string $WorkingDirectory = '';
+    /** @var array<string> */
+    protected array $Arguments = [];
+    public string $StdOutput = '';
+    public string $StdError = '';
+    public string $ExitCondition = '';
+    public string $Language = '';
+    public string $TargetName = '';
+    public string $SourceFile = '';
+    public string $OutputFile = '';
+    public string $OutputType = '';
+    public array $Labels = [];
 
     private $PDO;
 
     public function __construct()
     {
-        $this->Arguments = [];
-        $this->Labels = [];
         $this->PDO = Database::getInstance()->getPdo();
     }
 
@@ -56,29 +54,9 @@ class BuildFailure
         $this->Labels[] = $label;
     }
 
-    // Add an argument to the buildfailure
-    public function AddArgument($argument): void
+    public function AddArgument(string $argument): void
     {
         $this->Arguments[] = $argument;
-    }
-
-    protected function InsertLabelAssociations($id): void
-    {
-        if (empty($this->Labels)) {
-            return;
-        }
-
-        if ($id) {
-            foreach ($this->Labels as $label) {
-                $label->BuildFailureId = $id;
-                $label->Insert();
-            }
-        } else {
-            Log::error('No BuildFailure id - cannot call $label->Insert...', [
-                'function' => 'BuildFailure::InsertLabelAssociations',
-                'buildid' => $this->BuildId,
-            ]);
-        }
     }
 
     // Insert in the database (no update possible)
@@ -88,31 +66,21 @@ class BuildFailure
             abort(500, 'BuildFailure::Insert(): BuildId not set.');
         }
 
-        $workingDirectory = $this->WorkingDirectory ?? '';
-        $stdOutput = $this->StdOutput ?? '';
-        $stdError = $this->StdError ?? '';
-        $exitCondition = $this->ExitCondition ?? '';
-        $language = $this->Language ?? '';
-        $targetName = $this->TargetName ?? '';
-        $outputFile = $this->OutputFile ?? '';
-        $outputType = $this->OutputType ?? '';
-        $sourceFile = $this->SourceFile ?? '';
-
         $db = Database::getInstance();
 
         /** @var RichBuildAlert $failure */
         $failure = Build::findOrFail((int) $this->BuildId)->richAlerts()->create([
-            'workingdirectory' => $workingDirectory,
-            'sourcefile' => $sourceFile,
+            'workingdirectory' => $this->WorkingDirectory,
+            'sourcefile' => $this->SourceFile,
             'newstatus' => 0,
             'type' => (int) $this->Type,
-            'stdoutput' => $stdOutput,
-            'stderror' => $stdError,
-            'exitcondition' => $exitCondition,
-            'language' => $language,
-            'targetname' => $targetName,
-            'outputfile' => $outputFile,
-            'outputtype' => $outputType,
+            'stdoutput' => $this->StdOutput,
+            'stderror' => $this->StdError,
+            'exitcondition' => $this->ExitCondition,
+            'language' => $this->Language,
+            'targetname' => $this->TargetName,
+            'outputfile' => $this->OutputFile,
+            'outputtype' => $this->OutputType,
         ]);
 
         // Insert the arguments
@@ -155,50 +123,18 @@ class BuildFailure
             return false;
         }
 
-        $this->InsertLabelAssociations($failure->id);
-        return true;
-    }
-
-    /** Returns all failures, including warnings, for current build */
-    public function GetFailuresForBuild(int $fetchStyle = PDO::FETCH_ASSOC): array|false
-    {
-        if (!$this->BuildId) {
-            Log::warning('BuildId not set', [
-                'function' => 'BuildFailure::GetFailuresForBuild',
-            ]);
-            return false;
+        // Insert the labels
+        foreach ($this->Labels as $label) {
+            $label = Label::firstOrCreate(['text' => $label->Text ?? '']);
+            $failure->labels()->syncWithoutDetaching([$label->id]);
         }
-
-        $sql = '
-            SELECT
-                bf.id,
-                bf.buildid,
-                bf.workingdirectory,
-                bf.sourcefile,
-                bf.newstatus,
-                bf.stdoutput,
-                bf.stderror,
-                bf.type,
-                bf.exitcondition,
-                bf.language,
-                bf.targetname,
-                bf.outputfile,
-                bf.outputtype
-            FROM buildfailure AS bf
-            WHERE bf.buildid=?
-            ORDER BY bf.id
-        ';
-        $query = $this->PDO->prepare($sql);
-
-        pdo_execute($query, [$this->BuildId]);
-
-        return $query->fetchAll($fetchStyle);
+        return true;
     }
 
     /**
      * Retrieve the arguments from a build failure given its id.
      **/
-    public function GetBuildFailureArguments($buildFailureId): array
+    public function GetBuildFailureArguments(int $buildFailureId): array
     {
         $response = [
             'argumentfirst' => null,
@@ -229,57 +165,6 @@ class BuildFailure
         }
 
         return $response;
-    }
-
-    /**
-     * Marshal a build failure, this includes the build failure arguments.
-     **/
-    public static function marshal($data, Project $project, $revision, $linkifyOutput, $buildfailure): array
-    {
-        deepEncodeHTMLEntities($data);
-
-        $marshaled = array_merge([
-            'language' => $data['language'],
-            'sourcefile' => $data['sourcefile'],
-            'targetname' => $data['targetname'],
-            'outputfile' => $data['outputfile'],
-            'outputtype' => $data['outputtype'],
-            'workingdirectory' => $data['workingdirectory'],
-            'exitcondition' => $data['exitcondition'],
-        ], $buildfailure->GetBuildFailureArguments($data['id']));
-
-        $marshaled['stderror'] = $data['stderror'];
-        $marshaled['stdoutput'] = $data['stdoutput'];
-
-        if (isset($data['sourcefile'])) {
-            $file = basename($data['sourcefile']);
-            $directory = dirname($data['sourcefile']);
-
-            $source_dir = RepositoryUtils::get_source_dir($project->Id, $project->CvsUrl ?? '', $directory);
-            if (str_starts_with($directory, $source_dir)) {
-                $directory = substr($directory, strlen($source_dir));
-            }
-
-            $marshaled['cvsurl'] = RepositoryUtils::get_diff_url($project->Id,
-                $project->CvsUrl,
-                $directory,
-                $file,
-                $revision);
-
-            if ($source_dir !== null && $linkifyOutput) {
-                $marshaled['stderror'] = RepositoryUtils::linkify_compiler_output($project->CvsUrl ?? '', $source_dir,
-                    $revision, $data['stderror']);
-                $marshaled['stdoutput'] = RepositoryUtils::linkify_compiler_output($project->CvsUrl ?? '', $source_dir,
-                    $revision, $data['stdoutput']);
-            }
-        }
-
-        if (isset($data['subprojectid'])) {
-            $marshaled['subprojectid'] = $data['subprojectid'];
-            $marshaled['subprojectname'] = $data['subprojectname'];
-        }
-
-        return $marshaled;
     }
 
     /** Returns a self referencing URI for a the current BuildFailure. */

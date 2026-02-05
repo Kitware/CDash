@@ -13,6 +13,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use App\Http\Controllers\BuildController;
 use CDash\Model\BuildFailure;
 use CDash\Model\Project;
 use CDash\ServiceContainer;
@@ -58,7 +59,7 @@ class BuildFailureTest extends CDashTestCase
    asdf = 0;',
         ];
         $this->mock_project->CvsUrl = 'https://github.com/FooCo/foo';
-        $marshaled = $this->mock_buildfailure->marshal($input_data, $this->mock_project, '12', true, $this->mock_buildfailure);
+        $marshaled = BuildController::marshalBuildFailure($input_data, $this->mock_project, '12', true, $this->mock_buildfailure);
 
         $expected = [
             'language' => 'C++',
