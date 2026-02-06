@@ -8,7 +8,11 @@ use App\Models\BuildGroup;
 use App\Models\Project;
 use App\Models\SubProject;
 use App\Models\SubProjectGroup;
+use CDash\Model\Image;
+use Exception;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -26,6 +30,28 @@ class ProjectService extends AbstractService
         self::initializeBuildGroups($project);
 
         return $project;
+    }
+
+    /**
+     * TODO: Rewrite this to use a dedicated project logo workflow instead of sharing the image table.
+     *
+     * @throws FileNotFoundException
+     */
+    public static function setLogo(Project $project, UploadedFile $file): void
+    {
+        $contents = $file->get();
+        if ($contents === false) {
+            throw new Exception();
+        }
+
+        $image = new Image();
+        $image->Data = $contents;
+        $image->Checksum = crc32($contents);
+        $image->Extension = $file->extension();
+        $image->Save(true);
+
+        $project->imageid = (int) $image->Id;
+        $project->save();
     }
 
     /** This method is meant to be temporary, eventually only being called in create() */
