@@ -15,6 +15,7 @@ use App\Http\Controllers\CoverageFileController;
 use App\Http\Controllers\CreateProjectController;
 use App\Http\Controllers\GlobalInvitationController;
 use App\Http\Controllers\ProjectInvitationController;
+use App\Http\Controllers\UpdateProjectLogoController;
 use App\Models\DynamicAnalysis;
 use App\Models\Project;
 use App\Models\Test;
@@ -166,6 +167,9 @@ Route::get('/viewBuildError.php', function (Request $request) {
     $buildid = $request->integer('buildid');
     return redirect("/builds/{$buildid}/errors", 301);
 });
+
+Route::post('/projects/{project_id}/logo', UpdateProjectLogoController::class)
+    ->whereNumber('project_id');
 
 Route::get('/projects/{id}/edit', 'EditProjectController@edit')
     ->whereNumber('id');
