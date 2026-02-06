@@ -15,6 +15,7 @@ use App\Http\Controllers\CoverageFileController;
 use App\Http\Controllers\CreateProjectController;
 use App\Http\Controllers\GlobalInvitationController;
 use App\Http\Controllers\ProjectInvitationController;
+use App\Http\Controllers\ProjectSettingsController;
 use App\Http\Controllers\UpdateProjectLogoController;
 use App\Models\DynamicAnalysis;
 use App\Models\Project;
@@ -164,12 +165,13 @@ Route::get('/viewCoverageFile.php', function (Request $request) {
 Route::post('/projects/{project_id}/logo', UpdateProjectLogoController::class)
     ->whereNumber('project_id');
 
-Route::get('/projects/{id}/edit', 'EditProjectController@edit')
-    ->whereNumber('id');
-Route::permanentRedirect('/project/{id}/edit', url('/projects/{id}/edit'));
-
 Route::get('/projects/new', CreateProjectController::class);
 Route::permanentRedirect('/project/new', url('/projects/new'));
+
+Route::get('/projects/{project_id}/settings', ProjectSettingsController::class)
+    ->whereNumber('project_id');
+Route::permanentRedirect('/project/{id}/edit', url('/projects/{id}/settings'));
+Route::permanentRedirect('/projects/{id}/edit', url('/projects/{id}/settings'));
 
 Route::get('/projects/{id}/testmeasurements', 'ManageMeasurementsController@show')
     ->whereNumber('id');
