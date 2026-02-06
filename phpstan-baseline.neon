@@ -2473,6 +2473,12 @@ parameters:
 			path: app/Http/Controllers/TimelineController.php
 
 		-
+			rawMessage: 'Parameter #2 $file of static method App\Services\ProjectService::setLogo() expects Illuminate\Http\UploadedFile, (array<int, Illuminate\Http\UploadedFile>|Illuminate\Http\UploadedFile|null) given.'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/UpdateProjectLogoController.php
+
+		-
 			rawMessage: Access to an undefined property App\Models\Project::$pivot.
 			identifier: property.notFound
 			count: 1
