@@ -15,10 +15,13 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property int $covered
  * @property int $loctested
  * @property int $locuntested
+ * @property float $linepercentage
  * @property int $branchestested
  * @property int $branchesuntested
+ * @property float $branchpercentage
  * @property int $functionstested
  * @property int $functionsuntested
+ * @property float $functionpercentage
  *
  * @mixin Builder<Coverage>
  */
