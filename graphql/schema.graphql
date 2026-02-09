@@ -1107,13 +1107,19 @@ type Coverage @model(class: "App\\Models\\CoverageView") {
 
   linesOfCodeUntested: Int! @rename(attribute: "locuntested") @filterable
 
+  linePercentage: Float! @rename(attribute: "linepercentage") @filterable
+
   branchesTested: Int! @rename(attribute: "branchestested") @filterable
 
   branchesUntested: Int! @rename(attribute: "branchesuntested") @filterable
 
+  branchPercentage: Float! @rename(attribute: "branchpercentage") @filterable
+
   functionsTested: Int! @rename(attribute: "functionstested") @filterable
 
   functionsUntested: Int! @rename(attribute: "functionsuntested") @filterable
+
+  functionPercentage: Float! @rename(attribute: "functionpercentage") @filterable
 
   filePath: String @rename(attribute: "fullpath") @filterable
 

@@ -18,10 +18,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property int $covered
  * @property int $loctested
  * @property int $locuntested
+ * @property float $linepercentage
  * @property int $branchestested
  * @property int $branchesuntested
+ * @property float $branchpercentage
  * @property int $functionstested
  * @property int $functionsuntested
+ * @property float $functionpercentage
  * @property ?string $fullpath
  * @property ?string $file
  * @property ?string $log
