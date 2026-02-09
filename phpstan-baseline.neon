@@ -6752,8 +6752,26 @@ parameters:
 
 		-
 			rawMessage: '''
+				Call to deprecated method basicAlerts() of class App\Models\Build:
+				02/09/2026 Use buildErrors() instead
+			'''
+			identifier: method.deprecated
+			count: 1
+			path: app/Utils/SubmissionUtils.php
+
+		-
+			rawMessage: '''
 				Call to deprecated method getPdo() of class CDash\Database:
 				04/22/2023  Use Laravel query builder or Eloquent instead
+			'''
+			identifier: method.deprecated
+			count: 1
+			path: app/Utils/SubmissionUtils.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method richAlerts() of class App\Models\Build:
+				02/09/2026 Use buildErrors() instead
 			'''
 			identifier: method.deprecated
 			count: 1
@@ -9925,6 +9943,15 @@ parameters:
 			rawMessage: '''
 				Call to deprecated method getPdo() of class CDash\Database:
 				04/22/2023  Use Laravel query builder or Eloquent instead
+			'''
+			identifier: method.deprecated
+			count: 1
+			path: app/cdash/app/Model/BuildFailure.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method richAlerts() of class App\Models\Build:
+				02/09/2026 Use buildErrors() instead
 			'''
 			identifier: method.deprecated
 			count: 1
@@ -26996,6 +27023,15 @@ parameters:
 			identifier: phpunit.assertEquals
 			count: 4
 			path: tests/Feature/GlobalInvitationAcceptanceTest.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method basicAlerts() of class App\Models\Build:
+				02/09/2026 Use buildErrors() instead
+			'''
+			identifier: method.deprecated
+			count: 4
+			path: tests/Feature/GraphQL/BuildTypeTest.php
 
 		-
 			rawMessage: '''

@@ -726,17 +726,22 @@ type Build {
     filters: _ @filter
   ): [Test!]! @hasMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)
 
+  """
+  A list of warnings and errors submitted for this build.
+  """
+  buildErrors: [BuildError!]! @hasMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)
+
   # TODO: Make an "errors" field which returns the union of basic and rich errors
   """
   A list of "basic" errors submitted for this build.
   """
-  basicErrors: [BasicBuildAlert!]! @hasMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)
+  basicErrors: [BasicBuildAlert!]! @hasMany(type: CONNECTION) @orderBy(column: "id", direction: DESC) @deprecated(reason: "This field will be removed in the next major version of CDash.  Use buildErrors instead.")
 
   # TODO: Make a "warnings" field which returns the union of basic and rich warnings
   """
   A list of "basic" warnings submitted for this build.
   """
-  basicWarnings: [BasicBuildAlert!]! @hasMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)
+  basicWarnings: [BasicBuildAlert!]! @hasMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)  @deprecated(reason: "This field will be removed in the next major version of CDash.  Use buildErrors instead.")
 
   project: Project! @belongsTo
 
@@ -960,6 +965,42 @@ type BasicBuildAlert {
   preContext: String @rename(attribute: "precontext")
 
   postContext: String @rename(attribute: "postcontext")
+}
+
+
+type BuildError {
+  "Unique primary key."
+  id: ID! @filterable
+
+  type: BuildErrorType! @filterable
+
+  sourceFile: String! @rename(attribute: "sourcefile") @filterable
+
+  stdOutput: String! @rename(attribute: "stdoutput") @filterable
+
+  stdError: String! @rename(attribute: "stderror") @filterable
+
+  workingDirectory: String @rename(attribute: "workingdirectory") @filterable
+
+  exitCondition: String @rename(attribute: "exitcondition") @filterable
+
+  language: String @filterable
+
+  targetName: String @rename(attribute: "targetname") @filterable
+
+  outputFile: String @rename(attribute: "outputfile") @filterable
+
+  outputType: String @rename(attribute: "outputtype") @filterable
+
+  logLine: Int @rename(attribute: "logline") @filterable
+
+  sourceLine: Int @rename(attribute: "sourceline") @filterable
+}
+
+
+enum BuildErrorType {
+  ERROR @enum(value: "0")
+  WARNING @enum(value: "1")
 }
 
 

@@ -227,6 +227,8 @@ add_feature_test_in_transaction(/Feature/GraphQL/UpdateFileTypeTest)
 
 add_feature_test_in_transaction(/Feature/GraphQL/PinnedTestMeasurementTypeTest)
 
+add_feature_test_in_transaction(/Feature/GraphQL/BuildErrorTypeTest)
+
 add_feature_test_in_transaction(/Feature/RouteAccessTest)
 
 add_feature_test_in_transaction(/Feature/Monitor)
