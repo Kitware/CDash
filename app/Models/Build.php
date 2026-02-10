@@ -186,6 +186,16 @@ class Build extends Model
     }
 
     /**
+     * @return HasMany<BuildError, $this>
+     */
+    public function buildErrors(): HasMany
+    {
+        return $this->hasMany(BuildError::class, 'buildid');
+    }
+
+    /**
+     * @deprecated 02/09/2026 Use buildErrors() instead
+     *
      * @return HasMany<BasicBuildAlert, $this>
      */
     public function basicAlerts(): HasMany
@@ -194,6 +204,8 @@ class Build extends Model
     }
 
     /**
+     * @deprecated 02/09/2026 Use buildErrors() instead
+     *
      * @return HasMany<BasicBuildAlert, $this>
      */
     public function basicErrors(): HasMany
@@ -203,6 +215,8 @@ class Build extends Model
     }
 
     /**
+     * @deprecated 02/09/2026 Use buildErrors() instead
+     *
      * @return HasMany<BasicBuildAlert, $this>
      */
     public function basicWarnings(): HasMany
@@ -212,6 +226,8 @@ class Build extends Model
     }
 
     /**
+     * @deprecated 02/09/2026 Use buildErrors() instead
+     *
      * @return HasMany<RichBuildAlert, $this>
      */
     public function richAlerts(): HasMany
