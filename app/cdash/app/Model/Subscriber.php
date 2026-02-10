@@ -40,8 +40,9 @@ class Subscriber implements SubscriberInterface
     /** @var TopicCollection */
     private $topics;
 
-    /** @var User */
-    private $user;
+    private $UserId;
+    private $Email;
+    private Collection $LabelCollection;
 
     /**
      * Subscriber constructor.
@@ -49,11 +50,10 @@ class Subscriber implements SubscriberInterface
     public function __construct(
         NotificationPreferences $preferences,
         ?TopicCollection $topics = null,
-        ?User $user = null,
     ) {
         $this->preferences = $preferences;
         $this->topics = $topics;
-        $this->user = $user ? $user : new User();
+        $this->LabelCollection = collect();
     }
 
     public function hasBuildTopics(ActionableBuildInterface $submission): bool
@@ -94,24 +94,24 @@ class Subscriber implements SubscriberInterface
 
     public function getAddress(): string
     {
-        return $this->user->Email;
+        return $this->Email;
     }
 
     public function setAddress($address): static
     {
-        $this->user->Email = $address;
+        $this->Email = $address;
         return $this;
     }
 
     public function getLabels(): Collection
     {
-        return $this->user->GetLabelCollection();
+        return $this->LabelCollection;
     }
 
     public function setLabels(array $labels): static
     {
         foreach ($labels as $label) {
-            $this->user->AddLabel($label);
+            $this->LabelCollection->put($label->Text, $label);
         }
         return $this;
     }
@@ -123,12 +123,12 @@ class Subscriber implements SubscriberInterface
 
     public function setUserId($userId): static
     {
-        $this->user->Id = $userId;
+        $this->UserId = $userId;
         return $this;
     }
 
     public function getUserId()
     {
-        return $this->user->Id;
+        return $this->UserId;
     }
 }
