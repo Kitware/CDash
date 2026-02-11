@@ -8,7 +8,7 @@ use CDash\Collection\SubscriptionBuilderCollection;
 use CDash\Messaging\Topic\TopicCollection;
 use CDash\Model\BuildGroup;
 use CDash\Model\Project;
-use CDash\Model\SubscriberInterface;
+use CDash\Model\Subscriber;
 
 /**
  * ActionableHandler
@@ -21,7 +21,7 @@ interface ActionableBuildInterface
 
     public function GetSite(): Site;
 
-    public function GetTopicCollectionForSubscriber(SubscriberInterface $subscriber): TopicCollection;
+    public function GetTopicCollectionForSubscriber(Subscriber $subscriber): TopicCollection;
 
     public function GetSubscriptionBuilderCollection(): SubscriptionBuilderCollection;
 

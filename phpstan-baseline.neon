@@ -3430,12 +3430,6 @@ parameters:
 			path: app/Http/Submission/Handlers/BuildPropertiesJSONHandler.php
 
 		-
-			rawMessage: 'Call to an undefined method CDash\Messaging\Preferences\NotificationPreferencesInterface::get().'
-			identifier: method.notFound
-			count: 1
-			path: app/Http/Submission/Handlers/ConfigureHandler.php
-
-		-
 			rawMessage: 'Call to function in_array() requires parameter #3 to be set.'
 			identifier: function.strict
 			count: 1
@@ -3979,12 +3973,6 @@ parameters:
 			rawMessage: Access to an undefined property CDash\Model\DynamicAnalysisSummary::$Empty.
 			identifier: property.notFound
 			count: 2
-			path: app/Http/Submission/Handlers/DynamicAnalysisHandler.php
-
-		-
-			rawMessage: 'Call to an undefined method CDash\Messaging\Preferences\NotificationPreferencesInterface::get().'
-			identifier: method.notFound
-			count: 1
 			path: app/Http/Submission/Handlers/DynamicAnalysisHandler.php
 
 		-
@@ -4999,12 +4987,6 @@ parameters:
 			path: app/Http/Submission/Handlers/SubProjectDirectoriesHandler.php
 
 		-
-			rawMessage: 'Call to an undefined method CDash\Messaging\Preferences\NotificationPreferencesInterface::get().'
-			identifier: method.notFound
-			count: 1
-			path: app/Http/Submission/Handlers/TestingHandler.php
-
-		-
 			rawMessage: 'Call to function in_array() requires parameter #3 to be set.'
 			identifier: function.strict
 			count: 1
@@ -5315,12 +5297,6 @@ parameters:
 			identifier: assign.propertyType
 			count: 1
 			path: app/Http/Submission/Handlers/TestingJUnitHandler.php
-
-		-
-			rawMessage: 'Call to an undefined method CDash\Messaging\Preferences\NotificationPreferencesInterface::get().'
-			identifier: method.notFound
-			count: 1
-			path: app/Http/Submission/Handlers/UpdateHandler.php
 
 		-
 			rawMessage: Class App\Http\Submission\Handlers\UpdateHandler has an uninitialized property $EndTimeStamp. Give it default value or assign it in the constructor.
@@ -11476,18 +11452,6 @@ parameters:
 			path: app/cdash/app/Model/Subscriber.php
 
 		-
-			rawMessage: 'Method CDash\Model\SubscriberInterface::getLabels() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
-			identifier: missingType.generics
-			count: 1
-			path: app/cdash/app/Model/SubscriberInterface.php
-
-		-
-			rawMessage: 'Method CDash\Model\SubscriberInterface::setAddress() has parameter $address with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Model/SubscriberInterface.php
-
-		-
 			rawMessage: Cannot access property $Revision on CDash\Model\BuildUpdate|null.
 			identifier: property.nonObject
 			count: 2
@@ -11726,12 +11690,6 @@ parameters:
 			identifier: new.static
 			count: 1
 			path: app/cdash/include/Collection/Collection.php
-
-		-
-			rawMessage: 'Call to an undefined method CDash\Model\SubscriberInterface::getUserId().'
-			identifier: method.notFound
-			count: 1
-			path: app/cdash/include/Messaging/Notification/Email/EmailBuilder.php
 
 		-
 			rawMessage: Cannot access property $Id on mixed.
@@ -12070,12 +12028,6 @@ parameters:
 			path: app/cdash/include/Messaging/Topic/AuthoredTopic.php
 
 		-
-			rawMessage: 'Call to an undefined method CDash\Messaging\Preferences\NotificationPreferencesInterface::get().'
-			identifier: method.notFound
-			count: 4
-			path: app/cdash/include/Messaging/Topic/BuildErrorTopic.php
-
-		-
 			rawMessage: 'Loose comparison via "==" is not allowed.'
 			identifier: equal.notAllowed
 			count: 1
@@ -12112,7 +12064,7 @@ parameters:
 			path: app/cdash/include/Messaging/Topic/BuildErrorTopic.php
 
 		-
-			rawMessage: 'Only booleans are allowed in an if condition, CDash\Model\SubscriberInterface given.'
+			rawMessage: 'Only booleans are allowed in an if condition, CDash\Model\Subscriber given.'
 			identifier: if.condNotBoolean
 			count: 1
 			path: app/cdash/include/Messaging/Topic/BuildErrorTopic.php
@@ -12160,12 +12112,6 @@ parameters:
 			path: app/cdash/include/Messaging/Topic/BuildErrorTopic.php
 
 		-
-			rawMessage: 'Call to an undefined method CDash\Messaging\Preferences\NotificationPreferencesInterface::get().'
-			identifier: method.notFound
-			count: 1
-			path: app/cdash/include/Messaging/Topic/ConfigureTopic.php
-
-		-
 			rawMessage: Cannot access property $Text on mixed.
 			identifier: property.nonObject
 			count: 2
@@ -12200,12 +12146,6 @@ parameters:
 			identifier: missingType.property
 			count: 1
 			path: app/cdash/include/Messaging/Topic/ConfigureTopic.php
-
-		-
-			rawMessage: 'Call to an undefined method CDash\Messaging\Preferences\NotificationPreferencesInterface::get().'
-			identifier: method.notFound
-			count: 1
-			path: app/cdash/include/Messaging/Topic/DynamicAnalysisTopic.php
 
 		-
 			rawMessage: 'Call to function in_array() requires parameter #3 to be set.'
@@ -12394,12 +12334,6 @@ parameters:
 			path: app/cdash/include/Messaging/Topic/MissingTestTopic.php
 
 		-
-			rawMessage: 'Call to an undefined method CDash\Messaging\Preferences\NotificationPreferencesInterface::get().'
-			identifier: method.notFound
-			count: 3
-			path: app/cdash/include/Messaging/Topic/TestFailureTopic.php
-
-		-
 			rawMessage: '''
 				Call to deprecated method getLabels() of class App\Models\Test:
 				08/24/2024  The legacy Label class is deprecated.  Use the labels() Eloquent relationship instead.
@@ -12457,7 +12391,7 @@ parameters:
 			path: app/cdash/include/Messaging/Topic/TestFailureTopic.php
 
 		-
-			rawMessage: 'Only booleans are allowed in an if condition, CDash\Model\SubscriberInterface given.'
+			rawMessage: 'Only booleans are allowed in an if condition, CDash\Model\Subscriber given.'
 			identifier: if.condNotBoolean
 			count: 1
 			path: app/cdash/include/Messaging/Topic/TestFailureTopic.php
@@ -12671,12 +12605,6 @@ parameters:
 			identifier: missingType.parameter
 			count: 1
 			path: app/cdash/include/Messaging/Topic/TopicInterface.php
-
-		-
-			rawMessage: 'Call to an undefined method CDash\Messaging\Preferences\NotificationPreferencesInterface::get().'
-			identifier: method.notFound
-			count: 2
-			path: app/cdash/include/Messaging/Topic/UpdateErrorTopic.php
 
 		-
 			rawMessage: 'Method CDash\Messaging\Topic\UpdateErrorTopic::getFixes() return type has no value type specified in iterable type array.'

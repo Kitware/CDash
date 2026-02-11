@@ -3,7 +3,7 @@
 namespace CDash\Messaging\Topic;
 
 use CDash\Model\Build;
-use CDash\Model\SubscriberInterface;
+use CDash\Model\Subscriber;
 
 interface TopicInterface
 {
@@ -20,7 +20,7 @@ interface TopicInterface
     /**
      * @return $this
      */
-    public function setSubscriber(SubscriberInterface $subscriber);
+    public function setSubscriber(Subscriber $subscriber);
 
     /**
      * @return $this

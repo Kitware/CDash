@@ -2398,7 +2398,7 @@ class Build
      * Given a $subscriber this method returns true if the current Build has contains changes
      * authored by $subscriber and false if no such changes by the author exist.
      */
-    public function AuthoredBy(SubscriberInterface $subscriber): bool
+    public function AuthoredBy(Subscriber $subscriber): bool
     {
         return in_array($subscriber->getAddress(), $this->GetCommitAuthors());
     }

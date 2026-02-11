@@ -3,7 +3,7 @@
 namespace CDash\Messaging\Subscription;
 
 use App\Http\Submission\Handlers\ActionableBuildInterface;
-use CDash\Model\SubscriberInterface;
+use CDash\Model\Subscriber;
 
 class UserSubscriptionBuilder implements SubscriptionBuilderInterface
 {
@@ -33,7 +33,7 @@ class UserSubscriptionBuilder implements SubscriptionBuilderInterface
         Subscription::setMaxDisplayItems($project->EmailMaxItems);
 
         foreach ($subscribers as $subscriber) {
-            /** @var SubscriberInterface $subscriber */
+            /** @var Subscriber $subscriber */
             if ($subscriber->hasBuildTopics($this->submission)) {
                 $subscription = $factory->create();
                 $subscription

@@ -32,7 +32,7 @@ use Illuminate\Support\Collection;
  * specifically, a user's preference regarding notifications and the content of those
  * notifications.
  */
-class Subscriber implements SubscriberInterface
+class Subscriber
 {
     /** @var NotificationPreferences */
     private $preferences;

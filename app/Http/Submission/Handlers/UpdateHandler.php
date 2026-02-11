@@ -32,7 +32,7 @@ use CDash\Model\BuildGroup;
 use CDash\Model\BuildUpdate;
 use CDash\Model\Project;
 use CDash\Model\Repository;
-use CDash\Model\SubscriberInterface;
+use CDash\Model\Subscriber;
 use CDash\Submission\CommitAuthorHandlerInterface;
 use Exception;
 use Illuminate\Support\Carbon;
@@ -235,7 +235,7 @@ class UpdateHandler extends AbstractXmlHandler implements ActionableBuildInterfa
         return $collection;
     }
 
-    public function GetTopicCollectionForSubscriber(SubscriberInterface $subscriber): TopicCollection
+    public function GetTopicCollectionForSubscriber(Subscriber $subscriber): TopicCollection
     {
         $collection = new TopicCollection();
         $preferences = $subscriber->getNotificationPreferences();

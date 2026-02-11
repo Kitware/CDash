@@ -5,7 +5,7 @@ namespace CDash\Messaging\Topic;
 use CDash\Collection\BuildCollection;
 use CDash\Collection\Collection;
 use CDash\Model\Build;
-use CDash\Model\SubscriberInterface;
+use CDash\Model\Subscriber;
 
 abstract class Topic implements TopicInterface
 {
@@ -18,7 +18,7 @@ abstract class Topic implements TopicInterface
     public const TEST_MISSING = 'TestMissing';
     public const UPDATE_ERROR = 'UpdateError';
 
-    /** @var SubscriberInterface */
+    /** @var Subscriber */
     protected $subscriber;
 
     protected $topicData;
@@ -50,7 +50,7 @@ abstract class Topic implements TopicInterface
         return $this;
     }
 
-    public function setSubscriber(SubscriberInterface $subscriber): static
+    public function setSubscriber(Subscriber $subscriber): static
     {
         $this->subscriber = $subscriber;
         if ($this->topic) {

@@ -21,7 +21,7 @@ use CDash\Collection\ConfigureCollection;
 use CDash\Messaging\Notification\NotifyOn;
 use CDash\Model\Build;
 use CDash\Model\BuildConfigure;
-use CDash\Model\SubscriberInterface;
+use CDash\Model\Subscriber;
 use Illuminate\Support\Collection;
 
 class ConfigureTopic extends Topic implements Decoratable, Labelable
@@ -109,7 +109,7 @@ class ConfigureTopic extends Topic implements Decoratable, Labelable
         $collection->add($build->GetBuildConfigure());
     }
 
-    public function isSubscribedToBy(SubscriberInterface $subscriber): bool
+    public function isSubscribedToBy(Subscriber $subscriber): bool
     {
         $subscribes = false;
         $preferences = $subscriber->getNotificationPreferences();

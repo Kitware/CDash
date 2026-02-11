@@ -21,7 +21,7 @@ use App\Models\Test;
 use CDash\Messaging\Notification\NotifyOn;
 use CDash\Model\Build;
 use CDash\Model\Label;
-use CDash\Model\SubscriberInterface;
+use CDash\Model\Subscriber;
 use Illuminate\Support\Collection;
 
 /**
@@ -164,7 +164,7 @@ class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
         return $collection;
     }
 
-    public function isSubscribedToBy(SubscriberInterface $subscriber): bool
+    public function isSubscribedToBy(Subscriber $subscriber): bool
     {
         $subscribes = false;
         $preferences = $subscriber->getNotificationPreferences();

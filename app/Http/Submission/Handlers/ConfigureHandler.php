@@ -32,7 +32,7 @@ use CDash\Model\BuildConfigure;
 use CDash\Model\BuildGroup;
 use CDash\Model\Label;
 use CDash\Model\Project;
-use CDash\Model\SubscriberInterface;
+use CDash\Model\Subscriber;
 
 class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInterface
 {
@@ -342,7 +342,7 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
         return $collection;
     }
 
-    public function GetTopicCollectionForSubscriber(SubscriberInterface $subscriber): TopicCollection
+    public function GetTopicCollectionForSubscriber(Subscriber $subscriber): TopicCollection
     {
         $collection = new TopicCollection();
         $preferences = $subscriber->getNotificationPreferences();

@@ -4,7 +4,7 @@ namespace CDash\Messaging\Subscription;
 
 use CDash\Messaging\Topic\TopicCollection;
 use CDash\Model\Project;
-use CDash\Model\SubscriberInterface;
+use CDash\Model\Subscriber;
 
 interface SubscriptionInterface
 {
@@ -28,5 +28,5 @@ interface SubscriptionInterface
      */
     public function getProject();
 
-    public function getSubscriber(): SubscriberInterface;
+    public function getSubscriber(): Subscriber;
 }
