@@ -4,6 +4,7 @@ namespace Tests\Feature\GraphQL;
 
 use App\Models\Build;
 use App\Models\BuildError;
+use App\Models\BuildFailureArgument;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -100,6 +101,90 @@ class BuildErrorTypeTest extends TestCase
                                 'node' => [
                                     'id' => (string) $buildError->id,
                                     $graphqlField => $graphqlValue,
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+    }
+
+    public function testCommandField(): void
+    {
+        $project = $this->makePublicProject();
+
+        /** @var Build $build */
+        $build = $project->builds()->create([
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        /** @var BuildError $buildError */
+        $buildError = $build->buildErrors()->save(BuildError::factory()->make());
+
+        // Test with no arguments
+        $this->graphQL('
+            query build($id: ID) {
+                build(id: $id) {
+                    buildErrors {
+                        edges {
+                            node {
+                                command
+                            }
+                        }
+                    }
+                }
+            }
+        ', [
+            'id' => $build->id,
+        ])->assertExactJson([
+            'data' => [
+                'build' => [
+                    'buildErrors' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'command' => null,
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+
+        $arg1 = BuildFailureArgument::create(['argument' => Str::uuid()->toString()]);
+        $arg2 = BuildFailureArgument::create(['argument' => Str::uuid()->toString()]);
+        $arg3 = BuildFailureArgument::create(['argument' => Str::uuid()->toString()]);
+
+        $buildError->arguments()->attach($arg1->id, ['place' => 1]);
+        $buildError->arguments()->attach($arg3->id, ['place' => 2]);
+        $buildError->arguments()->attach($arg2->id, ['place' => 3]);
+
+        // Test with arguments
+        $this->graphQL('
+            query build($id: ID) {
+                build(id: $id) {
+                    buildErrors {
+                        edges {
+                            node {
+                                command
+                            }
+                        }
+                    }
+                }
+            }
+        ', [
+            'id' => $build->id,
+        ])->assertExactJson([
+            'data' => [
+                'build' => [
+                    'buildErrors' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'command' => $arg1->argument . ' ' . $arg3->argument . ' ' . $arg2->argument,
                                 ],
                             ],
                         ],

@@ -995,6 +995,8 @@ type BuildError {
   logLine: Int @rename(attribute: "logline") @filterable
 
   sourceLine: Int @rename(attribute: "sourceline") @filterable
+
+  command: String @with(relation: "arguments")
 }
 
 
