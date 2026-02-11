@@ -4,8 +4,10 @@ namespace App\Models;
 
 use Database\Factories\BuildErrorFactory;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * @property int $id
@@ -64,4 +66,23 @@ class BuildError extends Model
         'repeatcount' => 'integer',
         'newstatus' => 'boolean',
     ];
+
+    /**
+     * @return BelongsToMany<BuildFailureArgument, $this>
+     */
+    public function arguments(): BelongsToMany
+    {
+        return $this->belongsToMany(BuildFailureArgument::class, 'buildfailure2argument', 'buildfailureid', 'argumentid')
+            ->withPivot('place');
+    }
+
+    /**
+     * @return Attribute<?string,null>
+     */
+    protected function command(): Attribute
+    {
+        return Attribute::make(
+            get: fn (mixed $value, array $attributes): ?string => $this->arguments->isEmpty() ? null : $this->arguments->sortBy('pivot.place')->pluck('argument')->implode(' '),
+        );
+    }
 }
