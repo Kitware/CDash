@@ -295,6 +295,38 @@ class UpdateProjectTest extends TestCase
         self::assertSame($original_name, $project->fresh()?->name);
     }
 
+    public function testCanChangeNameToCurrentName(): void
+    {
+        $project = $this->makePublicProject();
+        $user = $this->makeAdminUser();
+
+        $this->actingAs($user)->graphQL('
+            mutation updateProject($input: UpdateProjectInput!) {
+                updateProject(input: $input) {
+                    project {
+                        name
+                    }
+                    message
+                }
+            }
+        ', [
+            'input' => [
+                'id' => $project->id,
+                'name' => $project->name,
+            ],
+        ])->assertExactJson([
+            'data' => [
+                'updateProject' => [
+                    'project' => [
+                        'name' => $project->name,
+                    ],
+                    'message' => null,
+                ],
+            ],
+        ]);
+        self::assertSame($project->name, $project->fresh()?->name);
+    }
+
     public static function visibilityRules(): array
     {
         return [
