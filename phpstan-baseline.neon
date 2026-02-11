@@ -11404,60 +11404,6 @@ parameters:
 			path: app/cdash/app/Model/SubProjectGroup.php
 
 		-
-			rawMessage: '''
-				Access to property $Email of deprecated class CDash\Model\User:
-				04/22/2025  Used only in the legacy notification system.  Use Eloquent for new work.
-			'''
-			identifier: property.deprecatedClass
-			count: 2
-			path: app/cdash/app/Model/Subscriber.php
-
-		-
-			rawMessage: '''
-				Access to property $Id of deprecated class CDash\Model\User:
-				04/22/2025  Used only in the legacy notification system.  Use Eloquent for new work.
-			'''
-			identifier: property.deprecatedClass
-			count: 2
-			path: app/cdash/app/Model/Subscriber.php
-
-		-
-			rawMessage: '''
-				Call to method AddLabel() of deprecated class CDash\Model\User:
-				04/22/2025  Used only in the legacy notification system.  Use Eloquent for new work.
-			'''
-			identifier: method.deprecatedClass
-			count: 1
-			path: app/cdash/app/Model/Subscriber.php
-
-		-
-			rawMessage: '''
-				Call to method GetLabelCollection() of deprecated class CDash\Model\User:
-				04/22/2025  Used only in the legacy notification system.  Use Eloquent for new work.
-			'''
-			identifier: method.deprecatedClass
-			count: 1
-			path: app/cdash/app/Model/Subscriber.php
-
-		-
-			rawMessage: '''
-				Call to method __construct() of deprecated class CDash\Model\User:
-				04/22/2025  Used only in the legacy notification system.  Use Eloquent for new work.
-			'''
-			identifier: method.deprecatedClass
-			count: 1
-			path: app/cdash/app/Model/Subscriber.php
-
-		-
-			rawMessage: '''
-				Instantiation of deprecated class CDash\Model\User:
-				04/22/2025  Used only in the legacy notification system.  Use Eloquent for new work.
-			'''
-			identifier: new.deprecatedClass
-			count: 1
-			path: app/cdash/app/Model/Subscriber.php
-
-		-
 			rawMessage: 'Loose comparison via "==" is not allowed.'
 			identifier: equal.notAllowed
 			count: 1
@@ -11494,12 +11440,6 @@ parameters:
 			path: app/cdash/app/Model/Subscriber.php
 
 		-
-			rawMessage: 'Only booleans are allowed in a ternary operator condition, CDash\Model\User|null given.'
-			identifier: ternary.condNotBoolean
-			count: 1
-			path: app/cdash/app/Model/Subscriber.php
-
-		-
 			rawMessage: 'Parameter #1 $build of method CDash\Messaging\Topic\Topic::addBuild() expects CDash\Model\Build, mixed given.'
 			identifier: argument.type
 			count: 1
@@ -11512,20 +11452,20 @@ parameters:
 			path: app/cdash/app/Model/Subscriber.php
 
 		-
-			rawMessage: '''
-				Parameter $user of method CDash\Model\Subscriber::__construct() has typehint with deprecated class CDash\Model\User:
-				04/22/2025  Used only in the legacy notification system.  Use Eloquent for new work.
-			'''
-			identifier: parameter.deprecatedClass
+			rawMessage: Property CDash\Model\Subscriber::$Email has no type specified.
+			identifier: missingType.property
 			count: 1
 			path: app/cdash/app/Model/Subscriber.php
 
 		-
-			rawMessage: '''
-				Property $user references deprecated class CDash\Model\User in its type:
-				04/22/2025  Used only in the legacy notification system.  Use Eloquent for new work.
-			'''
-			identifier: property.deprecatedClass
+			rawMessage: 'Property CDash\Model\Subscriber::$LabelCollection with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
+			identifier: missingType.generics
+			count: 1
+			path: app/cdash/app/Model/Subscriber.php
+
+		-
+			rawMessage: Property CDash\Model\Subscriber::$UserId has no type specified.
+			identifier: missingType.property
 			count: 1
 			path: app/cdash/app/Model/Subscriber.php
 
@@ -11546,30 +11486,6 @@ parameters:
 			identifier: missingType.parameter
 			count: 1
 			path: app/cdash/app/Model/SubscriberInterface.php
-
-		-
-			rawMessage: 'Method CDash\Model\User::GetLabelCollection() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
-			identifier: missingType.generics
-			count: 1
-			path: app/cdash/app/Model/User.php
-
-		-
-			rawMessage: Property CDash\Model\User::$Email has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/User.php
-
-		-
-			rawMessage: Property CDash\Model\User::$Id has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/User.php
-
-		-
-			rawMessage: 'Property CDash\Model\User::$LabelCollection with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
-			identifier: missingType.generics
-			count: 1
-			path: app/cdash/app/Model/User.php
 
 		-
 			rawMessage: Cannot access property $Revision on CDash\Model\BuildUpdate|null.
