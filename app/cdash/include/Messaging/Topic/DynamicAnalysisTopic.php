@@ -21,7 +21,7 @@ use CDash\Collection\DynamicAnalysisCollection;
 use CDash\Messaging\Notification\NotifyOn;
 use CDash\Model\Build;
 use CDash\Model\DynamicAnalysis;
-use CDash\Model\SubscriberInterface;
+use CDash\Model\Subscriber;
 
 class DynamicAnalysisTopic extends Topic implements Decoratable
 {
@@ -90,7 +90,7 @@ class DynamicAnalysisTopic extends Topic implements Decoratable
         return 'Dynamic analysis tests failing or not run';
     }
 
-    public function isSubscribedToBy(SubscriberInterface $subscriber): bool
+    public function isSubscribedToBy(Subscriber $subscriber): bool
     {
         $subscribes = false;
         $preferences = $subscriber->getNotificationPreferences();

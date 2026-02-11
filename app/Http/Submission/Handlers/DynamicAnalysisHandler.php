@@ -34,7 +34,7 @@ use CDash\Model\DynamicAnalysis;
 use CDash\Model\DynamicAnalysisSummary;
 use CDash\Model\Label;
 use CDash\Model\Project;
-use CDash\Model\SubscriberInterface;
+use CDash\Model\Subscriber;
 
 class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBuildInterface
 {
@@ -352,7 +352,7 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
         return $collection;
     }
 
-    public function GetTopicCollectionForSubscriber(SubscriberInterface $subscriber): TopicCollection
+    public function GetTopicCollectionForSubscriber(Subscriber $subscriber): TopicCollection
     {
         $collection = new TopicCollection();
         $preferences = $subscriber->getNotificationPreferences();

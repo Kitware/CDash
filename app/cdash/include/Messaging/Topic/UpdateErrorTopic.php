@@ -19,7 +19,7 @@ namespace CDash\Messaging\Topic;
 
 use CDash\Messaging\Notification\NotifyOn;
 use CDash\Model\Build;
-use CDash\Model\SubscriberInterface;
+use CDash\Model\Subscriber;
 
 class UpdateErrorTopic extends Topic implements Decoratable, Fixable
 {
@@ -59,7 +59,7 @@ class UpdateErrorTopic extends Topic implements Decoratable, Fixable
         return 'Update Errors';
     }
 
-    public function isSubscribedToBy(SubscriberInterface $subscriber): bool
+    public function isSubscribedToBy(Subscriber $subscriber): bool
     {
         $subscribes = false;
         $preferences = $subscriber->getNotificationPreferences();

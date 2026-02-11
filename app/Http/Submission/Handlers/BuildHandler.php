@@ -43,7 +43,7 @@ use CDash\Model\BuildFailure;
 use CDash\Model\BuildGroup;
 use CDash\Model\Label;
 use CDash\Model\Project;
-use CDash\Model\SubscriberInterface;
+use CDash\Model\Subscriber;
 use CDash\Submission\CommitAuthorHandlerInterface;
 use CDash\Submission\CommitAuthorHandlerTrait;
 use Exception;
@@ -722,7 +722,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
         return $collection;
     }
 
-    public function GetTopicCollectionForSubscriber(SubscriberInterface $subscriber): TopicCollection
+    public function GetTopicCollectionForSubscriber(Subscriber $subscriber): TopicCollection
     {
         $collection = new TopicCollection();
         $errors = new BuildErrorTopic();

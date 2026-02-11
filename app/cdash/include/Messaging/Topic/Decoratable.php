@@ -17,10 +17,10 @@
 
 namespace CDash\Messaging\Topic;
 
-use CDash\Model\SubscriberInterface;
+use CDash\Model\Subscriber;
 
 interface Decoratable
 {
     // TODO: consider changing param to NotificationsPreferences
-    public function isSubscribedToBy(SubscriberInterface $subscriber): bool;
+    public function isSubscribedToBy(Subscriber $subscriber): bool;
 }

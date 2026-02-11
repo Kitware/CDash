@@ -6,7 +6,7 @@ use CDash\Collection\BuildErrorCollection;
 use CDash\Messaging\Notification\NotifyOn;
 use CDash\Model\Build;
 use CDash\Model\BuildFailure;
-use CDash\Model\SubscriberInterface;
+use CDash\Model\Subscriber;
 use Illuminate\Support\Collection;
 
 class BuildErrorTopic extends Topic implements Decoratable, Fixable, Labelable
@@ -139,7 +139,7 @@ class BuildErrorTopic extends Topic implements Decoratable, Fixable, Labelable
         $this->setTopicData($build);
     }
 
-    public function isSubscribedToBy(SubscriberInterface $subscriber): bool
+    public function isSubscribedToBy(Subscriber $subscriber): bool
     {
         $subscribes = false;
         $preferences = $subscriber->getNotificationPreferences();

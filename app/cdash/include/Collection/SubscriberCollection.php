@@ -17,11 +17,11 @@
 
 namespace CDash\Collection;
 
-use CDash\Model\SubscriberInterface;
+use CDash\Model\Subscriber;
 
 class SubscriberCollection extends Collection
 {
-    public function add(SubscriberInterface $subscriber): static
+    public function add(Subscriber $subscriber): static
     {
         $this->addItem($subscriber, $subscriber->getAddress());
         return $this;

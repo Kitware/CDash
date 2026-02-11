@@ -7,13 +7,13 @@ use CDash\Messaging\Topic\TopicCollection;
 use CDash\Model\Build;
 use CDash\Model\BuildGroup;
 use CDash\Model\Project;
-use CDash\Model\SubscriberInterface;
+use CDash\Model\Subscriber;
 
 class Subscription implements SubscriptionInterface
 {
     protected static $max_display_items = 5;
 
-    /** @var SubscriberInterface */
+    /** @var Subscriber */
     private $subscriber;
 
     /** @var Project */
@@ -39,13 +39,13 @@ class Subscription implements SubscriptionInterface
         return $this;
     }
 
-    public function setSubscriber(SubscriberInterface $subscriber): static
+    public function setSubscriber(Subscriber $subscriber): static
     {
         $this->subscriber = $subscriber;
         return $this;
     }
 
-    public function getSubscriber(): SubscriberInterface
+    public function getSubscriber(): Subscriber
     {
         return $this->subscriber;
     }

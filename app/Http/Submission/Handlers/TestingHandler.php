@@ -21,7 +21,7 @@ use CDash\Model\BuildGroup;
 use CDash\Model\Image;
 use CDash\Model\Label;
 use CDash\Model\Project;
-use CDash\Model\SubscriberInterface;
+use CDash\Model\Subscriber;
 use CDash\Submission\CommitAuthorHandlerInterface;
 use CDash\Submission\CommitAuthorHandlerTrait;
 
@@ -404,7 +404,7 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
         return $collection;
     }
 
-    public function GetTopicCollectionForSubscriber(SubscriberInterface $subscriber): TopicCollection
+    public function GetTopicCollectionForSubscriber(Subscriber $subscriber): TopicCollection
     {
         $collection = new TopicCollection();
         $preferences = $subscriber->getNotificationPreferences();
