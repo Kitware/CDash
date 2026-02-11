@@ -42,7 +42,7 @@
     "flot": "^4.2.6",
     "graphql": "^16.12.0",
     "graphql-tag": "^2.12.6",
-    "jquery": "^3.7",
+    "jquery": "^4.0",
     "jquery-ui-dist": "^1.13.3",
     "jquery.cookie": "^1.4.1",
     "laravel-mix": "^6.0.49",
