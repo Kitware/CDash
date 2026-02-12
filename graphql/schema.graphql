@@ -997,6 +997,10 @@ type BuildError {
   sourceLine: Int @rename(attribute: "sourceline") @filterable
 
   command: String @with(relation: "arguments")
+
+  labels(
+    filters: _ @filter
+  ): [Label!]! @belongsToMany(type: CONNECTION) @orderBy(column: "id")
 }
 
 
