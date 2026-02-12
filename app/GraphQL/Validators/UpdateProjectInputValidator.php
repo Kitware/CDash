@@ -15,7 +15,8 @@ final class UpdateProjectInputValidator extends Validator
     {
         return [
             'name' => [
-                Rule::unique(Project::class, 'name'),
+                Rule::unique(Project::class, 'name')
+                    ->ignore($this->arg('id')),
                 new ProjectNameRule(),
             ],
             'visibility' => [
