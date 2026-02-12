@@ -5,6 +5,7 @@ namespace Tests\Feature\GraphQL;
 use App\Models\Build;
 use App\Models\BuildError;
 use App\Models\BuildFailureArgument;
+use App\Models\Label;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -185,6 +186,79 @@ class BuildErrorTypeTest extends TestCase
                             [
                                 'node' => [
                                     'command' => $arg1->argument . ' ' . $arg3->argument . ' ' . $arg2->argument,
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+    }
+
+    public function testLabelsRelationship(): void
+    {
+        $project = $this->makePublicProject();
+
+        /** @var Build $build */
+        $build = $project->builds()->create([
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        $label1 = Label::create([
+            'text' => Str::uuid()->toString(),
+        ]);
+        $label2 = Label::create([
+            'text' => Str::uuid()->toString(),
+        ]);
+
+        /** @var BuildError $buildError */
+        $buildError = $build->buildErrors()->save(BuildError::factory()->make());
+
+        $buildError->labels()->attach([$label1->id, $label2->id]);
+
+        // Test with no arguments
+        $this->graphQL('
+            query build($id: ID) {
+                build(id: $id) {
+                    buildErrors {
+                        edges {
+                            node {
+                                labels {
+                                    edges {
+                                        node {
+                                            text
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        ', [
+            'id' => $build->id,
+        ])->assertExactJson([
+            'data' => [
+                'build' => [
+                    'buildErrors' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'labels' => [
+                                        'edges' => [
+                                            [
+                                                'node' => [
+                                                    'text' => $label1->text,
+                                                ],
+                                            ],
+                                            [
+                                                'node' => [
+                                                    'text' => $label2->text,
+                                                ],
+                                            ],
+                                        ],
+                                    ],
                                 ],
                             ],
                         ],

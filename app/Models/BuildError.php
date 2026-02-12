@@ -85,4 +85,12 @@ class BuildError extends Model
             get: fn (mixed $value, array $attributes): ?string => $this->arguments->isEmpty() ? null : $this->arguments->sortBy('pivot.place')->pluck('argument')->implode(' '),
         );
     }
+
+    /**
+     * @return BelongsToMany<Label, $this>
+     */
+    public function labels(): BelongsToMany
+    {
+        return $this->belongsToMany(Label::class, 'label2buildfailure', 'buildfailureid', 'labelid');
+    }
 }
