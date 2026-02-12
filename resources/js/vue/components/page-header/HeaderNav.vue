@@ -1,15 +1,12 @@
 <template>
-  <ul
-    v-if="showNav"
-    class="projectnav_controls clearfix"
-  >
+  <ul class="projectnav_controls clearfix">
     <li
       id="header-nav-previous-btn"
       :class="previousClass"
     >
       <a
         class="cdash-link"
-        :href="previous"
+        :href="previousUrl"
       >
         <svg
           id="i-chevron-left"
@@ -30,11 +27,11 @@
     </li>
     <li
       id="header-nav-current-btn"
-      :class="currentClass"
+      :class="latestClass"
     >
       <a
         class="cdash-link"
-        :href="current"
+        :href="latestUrl"
       >LATEST</a>
     </li>
     <li
@@ -43,7 +40,7 @@
     >
       <a
         class="cdash-link"
-        :href="next"
+        :href="nextUrl"
       >
         NEXT
         <svg
@@ -66,54 +63,39 @@
 </template>
 
 <script>
-import ApiLoader from '../shared/ApiLoader';
 export default {
   name: 'HeaderNav',
 
-  data() {
-    return {
-      previous: null,
-      current: null,
-      next: null,
-      showNav: false,
-    };
+  props: {
+    previousUrl: {
+      type: [String, null],
+      default: null,
+    },
+
+    latestUrl: {
+      type: [String, null],
+      default: null,
+    },
+
+    nextUrl: {
+      type: [String, null],
+      default: null,
+    },
   },
 
   computed: {
     previousClass () {
-      return this.previous === null ? 'btn-disabled' : 'btn-enabled';
+      return this.previousUrl === null ? 'btn-disabled' : 'btn-enabled';
     },
 
-    currentClass () {
-      return this.current === null ? 'btn-disabled' : 'btn-enabled';
+    latestClass () {
+      return this.latestUrl === null ? 'btn-disabled' : 'btn-enabled';
     },
 
     nextClass () {
-      return this.next === null ? 'btn-disabled' : 'btn-enabled';
+      return this.nextUrl === null ? 'btn-disabled' : 'btn-enabled';
     },
   },
-
-  mounted() {
-    ApiLoader.$on('api-loaded', cdash => {
-      if (!cdash.menu) {
-        return;
-      }
-
-      if (cdash.menu.previous) {
-        this.previous = this.$baseURL + cdash.menu.previous;
-        this.showNav = true;
-      }
-      if (cdash.menu.current) {
-        this.current = this.$baseURL + cdash.menu.current;
-        this.showNav = true;
-      }
-      if (cdash.menu.next) {
-        this.next = this.$baseURL + cdash.menu.next;
-        this.showNav = true;
-      }
-    });
-  },
-
 };
 </script>
 

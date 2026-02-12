@@ -6,12 +6,10 @@ use App\Models\Test;
 use App\Utils\PageTimer;
 use App\Utils\RepositoryUtils;
 use CDash\Controller\Api\QueryTests as LegacyQueryTestsController;
-use CDash\Controller\Api\TestDetails as LegacyTestDetailsController;
 use CDash\Controller\Api\TestGraph as LegacyTestGraphController;
 use CDash\Controller\Api\TestOverview as LegacyTestOverviewController;
 use CDash\Database;
 use CDash\Model\Build;
-use CDash\Model\Project;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -20,51 +18,6 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 final class TestController extends AbstractProjectController
 {
-    // Render the test details page.
-    public function details(int $buildtest_id): View
-    {
-        $buildtest = Test::findOrFail($buildtest_id);
-        $projectid = $buildtest->build?->projectid;
-
-        if ($projectid === null) {
-            abort(500, "Unable to find build associated with test $buildtest->id.");
-        }
-
-        $this->setProjectById($projectid);
-        return $this->vue('test-details', 'Test Results');
-    }
-
-    public function apiTestDetails(): JsonResponse|StreamedResponse
-    {
-        $buildtestid = request()->input('buildtestid');
-        if (!is_numeric($buildtestid)) {
-            abort(400, 'A valid test was not specified.');
-        }
-
-        $buildtest = Test::where('id', '=', $buildtestid)->first();
-        if ($buildtest === null) {
-            // Create a dummy project object to prevent information leakage between different error cases
-            $project = new Project();
-            $project->Id = -1;
-        } else {
-            $build = new Build();
-            $build->Id = $buildtest->buildid;
-            $build->FillFromId($build->Id);
-            $project = $build->GetProject();
-        }
-
-        Gate::authorize('view-project', $project);
-
-        // This case should never occur since it should always be caught by the Gate::authorize check above.
-        // This is only here to satisfy PHPStan...
-        if ($buildtest === null) {
-            abort(500);
-        }
-
-        $controller = new LegacyTestDetailsController(Database::getInstance(), $buildtest);
-        return $controller->getResponse();
-    }
-
     public function queryTests(): View
     {
         $this->setProjectByName(request()->string('project'));
