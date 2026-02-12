@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Utils\TestingDay;
 use CDash\Model\Build;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 abstract class AbstractBuildController extends AbstractProjectController
@@ -17,8 +18,21 @@ abstract class AbstractBuildController extends AbstractProjectController
             return parent::view($view, $title);
         }
 
+        $previousBuildId = $this->build->GetPreviousBuildId();
+        $latestBuildId = $this->build->GetCurrentBuildId();
+        $nextBuildId = $this->build->GetNextBuildId();
+
+        $previousUrl = $previousBuildId > 0 ? Str::replace((string) $this->build->Id, (string) $previousBuildId, request()->fullUrl()) : null;
+        $latestUrl = $latestBuildId > 0 ? Str::replace((string) $this->build->Id, (string) $latestBuildId, request()->fullUrl()) : null;
+        $nextUrl = $nextBuildId > 0 ? Str::replace((string) $this->build->Id, (string) $nextBuildId, request()->fullUrl()) : null;
+
+        // We assume the first instance of the current build ID in the URL is the build ID.  Users
+        // of this method can override these values if the routing scheme is different.
         return parent::view($view, $title)
-            ->with('build', $this->build);
+            ->with('build', $this->build)
+            ->with('previousUrl', $previousUrl)
+            ->with('latestUrl', $latestUrl)
+            ->with('nextUrl', $nextUrl);
     }
 
     // Fetch data used by all build-specific pages in CDash.

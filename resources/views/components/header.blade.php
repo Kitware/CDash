@@ -12,6 +12,8 @@ $hideRegistration = config('auth.user_registration_form_enabled') === false;
 $currentDateString = now()->toDateString();
 
 $userInProject = isset($project) && auth()->user() !== null && \App\Models\Project::findOrFail($project->Id)->users()->where('id', auth()->user()->id)->exists();
+
+$showHeaderNav = isset($build);
 @endphp
 
 <div id="header">
@@ -87,8 +89,18 @@ $userInProject = isset($project) && auth()->user() !== null && \App\Models\Proje
                         </li>
                     </ul>
                 @endverbatim
-            @elseif(isset($vue) && $vue === true)
-                <header-nav></header-nav>
+            @elseif(isset($vue) && $vue === true && $showHeaderNav)
+                <header-nav
+                    @if($previousUrl)
+                        previous-url="{{ $previousUrl }}"
+                    @endif
+                    @if($latestUrl)
+                        latest-url="{{ $latestUrl }}"
+                    @endif
+                    @if($nextUrl)
+                        next-url="{{ $nextUrl }}"
+                    @endif
+                />
             @endif
         </nav>
 

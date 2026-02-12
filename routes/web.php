@@ -192,7 +192,7 @@ Route::get('/viewMap.php', function (Request $request) {
     return redirect("/projects/{$project->id}/sites", 301);
 });
 
-Route::get('/tests/{id}', 'TestController@details')
+Route::get('/tests/{id}', 'TestDetailsController@details')
     ->whereNumber('id');
 Route::permanentRedirect('/test/{id}', url('/tests/{id}'));
 Route::get('/testDetails.php', function (Request $request) {
