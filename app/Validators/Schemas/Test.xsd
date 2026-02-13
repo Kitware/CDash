@@ -36,6 +36,7 @@
                     <xs:element name="Path" type="xs:string" />
                     <xs:element name="FullName" type="xs:string" />
                     <xs:element name="FullCommandLine" type="xs:string" />
+                    <xs:element name="StartTestTime" type="xs:string" minOccurs="0" />
                     <xs:element name="Results">
                       <xs:complexType>
                         <xs:sequence>

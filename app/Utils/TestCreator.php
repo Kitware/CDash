@@ -20,6 +20,7 @@ namespace App\Utils;
 use App\Models\Test;
 use App\Models\TestImage;
 use App\Models\TestOutput;
+use Carbon\Carbon;
 use CDash\Model\Build;
 use CDash\Model\Image;
 use ErrorException;
@@ -46,6 +47,7 @@ class TestCreator
     public $testName;
     public $testPath;
     public $testStatus;
+    public ?Carbon $testStartTime;
 
     public function __construct()
     {
@@ -62,6 +64,7 @@ class TestCreator
         $this->testOutput = '';
         $this->testPath = '';
         $this->testStatus = '';
+        $this->testStartTime = null;
     }
 
     private function saveImage(Image $image, int $testid): void
@@ -147,6 +150,7 @@ class TestCreator
         $buildtest->details = $this->testDetails;
         $buildtest->time = "$this->buildTestTime";
         $buildtest->testname = $this->testName;
+        $buildtest->starttime = $this->testStartTime;
 
         // Note: the newstatus column is currently handled in
         // ctestparserutils::compute_test_difference. This gets updated when we call

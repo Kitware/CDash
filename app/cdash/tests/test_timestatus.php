@@ -96,7 +96,7 @@ class TimeStatusTestCase extends KWWebTestCase
             FROM build b
             JOIN build2test b2t ON (b.id = b2t.buildid)
             WHERE projectid = ?
-            ORDER BY starttime');
+            ORDER BY b.starttime');
         if (!pdo_execute($stmt, [$projectid])) {
             $this->fail('SELECT query failed');
         }

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\TestTimeStatusCategory;
+use Carbon\Carbon;
 use CDash\Model\Label;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -27,6 +28,7 @@ use Illuminate\Support\Facades\Config;
  * @property int $newstatus
  * @property string $details
  * @property string $testname
+ * @property ?Carbon $starttime
  * @property TestTimeStatusCategory $timestatuscategory
  *
  * @mixin Builder<Test>
@@ -65,6 +67,7 @@ class Test extends Model
         'newstatus',
         'details',
         'testname',
+        'starttime',
     ];
 
     protected $casts = [
@@ -77,6 +80,7 @@ class Test extends Model
         'timestatus' => 'integer',
         'newstatus' => 'integer',
         'timestatuscategory' => TestTimeStatusCategory::class,
+        'starttime' => 'datetime',
     ];
 
     /**
