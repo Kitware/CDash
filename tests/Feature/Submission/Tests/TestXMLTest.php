@@ -113,4 +113,49 @@ class TestXMLTest extends TestCase
             ],
         ]);
     }
+
+    /**
+     * Test parsing a valid Test.xml file that contains the StartTestTime
+     * attribute for each Test entry in the test output.
+     */
+    public function testStartTestTime(): void
+    {
+        $this->submitFiles($this->project->name, [
+            base_path(
+                'tests/Feature/Submission/Tests/data/with_starttesttime.xml'
+            ),
+        ]);
+
+        $this->graphQL('
+            query build($id: ID) {
+              build(id: $id) {
+                tests {
+                  edges {
+                    node {
+                      name
+                      startTime
+                    }
+                  }
+                }
+              }
+            }
+        ', [
+            'id' => $this->project->builds()->firstOrFail()->id,
+        ])->assertExactJson([
+            'data' => [
+                'build' => [
+                    'tests' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'name' => 'exec',
+                                    'startTime' => '2026-02-13T18:03:54+00:00',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+    }
 }

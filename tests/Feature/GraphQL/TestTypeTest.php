@@ -62,6 +62,7 @@ class TestTypeTest extends TestCase
             'details' => 'details text',
             'time' => 1.2,
             'outputid' => $this->test_output->id,
+            'starttime' => '2026-02-13T18:03:54+00:00',
         ]);
 
         $this->graphQL('
@@ -78,6 +79,7 @@ class TestTypeTest extends TestCase
                                             status
                                             details
                                             runningTime
+                                            startTime
                                         }
                                     }
                                 }
@@ -104,6 +106,7 @@ class TestTypeTest extends TestCase
                                                     'status' => 'FAILED',
                                                     'details' => 'details text',
                                                     'runningTime' => 1.2,
+                                                    'startTime' => '2026-02-13T18:03:54+00:00',
                                                 ],
                                             ],
                                         ],

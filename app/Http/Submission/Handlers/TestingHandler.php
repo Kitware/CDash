@@ -8,6 +8,7 @@ use App\Models\SiteInformation;
 use App\Models\TestMeasurement;
 use App\Utils\SubmissionUtils;
 use App\Utils\TestCreator;
+use Carbon\Carbon;
 use CDash\Collection\BuildCollection;
 use CDash\Collection\SubscriptionBuilderCollection;
 use CDash\Messaging\Notification\NotifyOn;
@@ -284,6 +285,9 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
                     break;
                 case 'FULLCOMMANDLINE':
                     $this->TestCreator->testCommand .= $data;
+                    break;
+                case 'STARTTESTTIME':
+                    $this->TestCreator->testStartTime = Carbon::createFromTimestampMsUTC($data);
                     break;
             }
         } elseif ($parent === 'NAMEDMEASUREMENT' && $element === 'VALUE') {
