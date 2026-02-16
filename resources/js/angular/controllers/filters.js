@@ -63,6 +63,11 @@ export function FiltersController($scope, $rootScope, $http, $timeout) {
       "type": "number",
       "defaultvalue": 0
     },
+    "ctestnotetext": {
+      "text": "CTest Note Text",
+      "type": "string",
+      "defaultvalue": ""
+    },
     "details": {
       "text": "Details",
       "type": "string",
