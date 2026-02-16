@@ -287,7 +287,7 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
                     $this->TestCreator->testCommand .= $data;
                     break;
                 case 'STARTTESTTIME':
-                    $this->TestCreator->testStartTime = Carbon::createFromTimestampMsUTC($data);
+                    $this->TestCreator->testStartTime = Carbon::createFromTimestampUTC($data);
                     break;
             }
         } elseif ($parent === 'NAMEDMEASUREMENT' && $element === 'VALUE') {
