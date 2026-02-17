@@ -20,12 +20,16 @@ final class DynamicAnalysisController extends AbstractBuildController
     public function viewDynamicAnalysisFile(int $buildid, int $fileid): View
     {
         $this->setBuildById($buildid);
+
+        $da = \App\Models\DynamicAnalysis::find($fileid);
+
         return $this->vue(
-            'view-dynamic-analysis-file',
+            'build-dynamic-analysis-id-page',
             'Dynamic Analysis',
             [
-                'buildid' => $buildid,
-                'fileid' => $fileid,
+                'build-id' => $buildid,
+                'dynamic-analysis-id' => $fileid,
+                'link' => url("queryTests.php?project={$this->project->Name}&filtercount=1&showfilters=1&field1=testname&compare1=61&value1={$da?->name}&date={$this->date}"),
             ],
         );
     }
@@ -233,6 +237,8 @@ final class DynamicAnalysisController extends AbstractBuildController
         $DA_response['log'] = substr($DA->Log, 0, 1024 * 1024);
         $DA_response['href'] = "queryTests.php?project={$this->project->Name}&filtercount=1&showfilters=1&field1=testname&compare1=61&value1={$DA->Name}&date={$this->date}";
         $response['dynamicanalysis'] = $DA_response;
+
+        $response['deprecated'] = 'This endpoint will be removed in the next major version of CDash.';
 
         $pageTimer->end($response);
         return response()->json(cast_data_for_JSON($response));
