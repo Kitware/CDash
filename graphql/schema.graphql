@@ -68,6 +68,12 @@ type Query {
     "Search by primary key."
     id: ID @eq
   ): BuildCommand @find @canResolved(ability: "view", action: RETURN_VALUE, returnValue: null)
+
+  "Find a single dynamic analysis by ID."
+  dynamicAnalysis(
+    "Search by primary key."
+    id: ID @eq
+  ): DynamicAnalysis @find @canResolved(ability: "view", action: RETURN_VALUE, returnValue: null)
 }
 
 

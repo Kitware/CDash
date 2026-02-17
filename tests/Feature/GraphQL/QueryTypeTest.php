@@ -4,6 +4,7 @@ namespace Tests\Feature\GraphQL;
 
 use App\Enums\BuildCommandType;
 use App\Models\BuildCommand;
+use App\Models\DynamicAnalysis;
 use App\Models\Project;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -239,6 +240,78 @@ class QueryTypeTest extends TestCase
         ])->assertExactJson([
             'data' => [
                 'buildCommand' => null,
+            ],
+        ]);
+    }
+
+    public function testDynamicAnalysisFieldRestrictsAccessByProject(): void
+    {
+        $user = $this->makeNormalUser();
+        $this->users[] = $user;
+
+        $project1 = $this->makePrivateProject();
+        $project1->users()
+            ->attach($user->id, [
+                'emailtype' => 0,
+                'emailcategory' => 0,
+                'emailsuccess' => true,
+                'emailmissingsites' => true,
+                'role' => Project::PROJECT_ADMIN,
+            ]);
+        /** @var DynamicAnalysis $da1 */
+        $da1 = $project1->builds()->create([
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+        ])->dynamicAnalyses()->create([
+            'status' => 'Passed',
+            'checker' => Str::uuid()->toString(),
+            'name' => Str::uuid()->toString(),
+            'path' => Str::uuid()->toString(),
+            'fullcommandline' => Str::uuid()->toString(),
+            'log' => Str::uuid()->toString(),
+        ]);
+
+        $project2 = $this->makePrivateProject();
+        /** @var DynamicAnalysis $da2 */
+        $da2 = $project2->builds()->create([
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+        ])->dynamicAnalyses()->create([
+            'status' => 'Passed',
+            'checker' => Str::uuid()->toString(),
+            'name' => Str::uuid()->toString(),
+            'path' => Str::uuid()->toString(),
+            'fullcommandline' => Str::uuid()->toString(),
+            'log' => Str::uuid()->toString(),
+        ]);
+
+        $this->actingAs($user)->graphQL('
+            query($id: ID!) {
+                dynamicAnalysis(id: $id) {
+                    id
+                }
+            }
+        ', [
+            'id' => $da1->id,
+        ])->assertExactJson([
+            'data' => [
+                'dynamicAnalysis' => [
+                    'id' => (string) $da1->id,
+                ],
+            ],
+        ]);
+
+        $this->actingAs($user)->graphQL('
+            query($id: ID!) {
+                dynamicAnalysis(id: $id) {
+                    id
+                }
+            }
+        ', [
+            'id' => $da2->id,
+        ])->assertExactJson([
+            'data' => [
+                'dynamicAnalysis' => null,
             ],
         ]);
     }
