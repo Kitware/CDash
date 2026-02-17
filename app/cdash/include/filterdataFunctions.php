@@ -210,6 +210,11 @@ class IndexPhpFilters extends DefaultFilters
 
                 break;
 
+            case 'ctestnotetext':
+                $sql_field = '(SELECT note.text FROM note INNER JOIN build2note ON note.id=build2note.noteid AND build2note.buildid=b.id)';
+
+                break;
+
             case 'expected':
                 $sql_field = 'IF((SELECT COUNT(expected) FROM build2grouprule WHERE groupid=b2g.groupid AND buildtype=b.type AND buildname=b.name AND siteid=b.siteid)>0,(SELECT COUNT(expected) FROM build2grouprule WHERE groupid=b2g.groupid AND buildtype=b.type AND buildname=b.name AND siteid=b.siteid),0)';
 
