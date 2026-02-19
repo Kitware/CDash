@@ -371,6 +371,7 @@ export default {
           coverageByPrefix[cleanedPath] = {
             subProject: !isDirectory && edge.subProject ? edge.subProject : '',
             path: {
+              value: cleanedPath,
               path: cleanedPath,
               isDirectory: isDirectory,
               fileId: !isDirectory ? edge.node.id : '',
