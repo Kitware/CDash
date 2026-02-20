@@ -323,87 +323,16 @@ function set_logo($Project): void
 
 function addRepositoriesToProject(int $projectid, array $repositories, array $usernames, array $passwords, array $branches): void
 {
-    // First we update/delete any registered repositories
-    $currentRepository = 0;
-    $repositories_query = DB::select('
-        SELECT repositoryid
-        FROM project2repositories
-        WHERE projectid=?
-        ORDER BY repositoryid
-    ', [$projectid]);
+    $project = \App\Models\Project::findOrFail($projectid);
 
-    foreach ($repositories_query as $repository_array) {
-        $repositoryid = intval($repository_array->repositoryid);
-        if (!isset($repositories[$currentRepository]) || strlen($repositories[$currentRepository]) === 0) {
-            // TODO: (wiliamjallen) This should be done with one query
-            $query = DB::select('
-                SELECT COUNT(*) AS c
-                FROM project2repositories
-                WHERE repositoryid=?
-            ', [$repositoryid]);
-            if ((int) $query[0]->c === 1) {
-                DB::delete('DELETE FROM repositories WHERE id=?', [$repositoryid]);
-            }
-            DB::delete('
-                DELETE FROM project2repositories
-                WHERE projectid=? AND repositoryid=?
-            ', [$projectid, $repositoryid]);
-        } else {
-            // If the repository is not shared by any other project we update
-            $count_array = DB::select('
-                                   SELECT count(*) as c
-                                   FROM project2repositories
-                                   WHERE repositoryid=?
-                               ', [$repositoryid]);
-            if ((int) $count_array[0]->c === 1) {
-                DB::table('repositories')->where('id', $repositoryid)->update([
-                    'url' => $repositories[$currentRepository],
-                    'username' => $usernames[$currentRepository],
-                    'password' => $passwords[$currentRepository],
-                    'branch' => $branches[$currentRepository],
-                ]);
-            } else {
-                // Otherwise we remove it from the current project and add it to the queue to be created
-                DB::delete('
-                    DELETE FROM project2repositories
-                    WHERE projectid=? AND repositoryid=?
-                ', [$projectid, $repositoryid]);
-
-                $repositories[] = $repositories[$currentRepository];
-                $usernames[] = $usernames[$currentRepository];
-                $passwords[] = $passwords[$currentRepository];
-                $branches[] = $branches[$currentRepository];
-            }
-        }
-        $currentRepository++;
-    }
-
-    //  Then we add new repositories
-    for ($i = $currentRepository; $i < count($repositories); $i++) {
-        $url = $repositories[$i];
-        $username = $usernames[$i];
-        $password = $passwords[$i];
-        $branch = $branches[$i];
-        if (strlen($url) === 0) {
-            continue;
-        }
-
-        // Insert into repositories if not any
-        $repositories_query = DB::select('SELECT id FROM repositories WHERE url=?', [$url]);
-
-        if ($repositories_query === []) {
-            $repositoryid = DB::table('repositories')->insertGetId([
-                'url' => $url,
-                'username' => $username,
-                'password' => $password,
-                'branch' => $branch,
-            ]);
-        } else {
-            $repositoryid = intval($repositories['id']);
-        }
-        DB::table('project2repositories')->insert([
-            'projectid' => $projectid,
-            'repositoryid' => $repositoryid,
+    // Delete and re-add all repositories
+    $project->repositories()->delete();
+    foreach ($repositories as $index => $url) {
+        $project->repositories()->create([
+            'url' => $url,
+            'username' => $usernames[$index],
+            'password' => $passwords[$index],
+            'branch' => $branches[$index],
         ]);
     }
 }

@@ -10978,12 +10978,6 @@ parameters:
 			path: app/cdash/app/Model/Project.php
 
 		-
-			rawMessage: Implicit array creation is not allowed - variable $rep might not exist.
-			identifier: variable.implicitArray
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
 			rawMessage: 'Loose comparison via "!=" is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 2
