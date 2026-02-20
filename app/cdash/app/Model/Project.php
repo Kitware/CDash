@@ -309,27 +309,13 @@ class Project
     /** Get the repositories */
     public function GetRepositories(): array
     {
-        $repository = DB::select('
-                          SELECT
-                              url,
-                              username,
-                              password,
-                              branch
-                          FROM repositories, project2repositories
-                          WHERE
-                              repositories.id=project2repositories.repositoryid
-                              AND project2repositories.projectid=?
-                      ', [(int) $this->Id]);
-
-        $repositories = [];
-        foreach ($repository as $repository_array) {
-            $rep['url'] = $repository_array->url;
-            $rep['username'] = $repository_array->username;
-            $rep['password'] = $repository_array->password;
-            $rep['branch'] = $repository_array->branch;
-            $repositories[] = $rep;
-        }
-        return $repositories;
+        $project = EloquentProject::findOrFail((int) $this->Id);
+        return $project->repositories()->select([
+            'url',
+            'username',
+            'password',
+            'branch',
+        ])->get()->toArray();
     }
 
     /** Get the Name of the project */

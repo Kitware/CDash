@@ -308,4 +308,12 @@ class Project extends Model
     {
         return $this->hasMany(SubProjectGroup::class, 'projectid');
     }
+
+    /**
+     * @return HasMany<Repository, $this>
+     */
+    public function repositories(): HasMany
+    {
+        return $this->hasMany(Repository::class, 'projectid');
+    }
 }
