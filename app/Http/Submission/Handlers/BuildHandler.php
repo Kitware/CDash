@@ -69,6 +69,8 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
     private string $BuildStamp;
     private string $Generator;
     private string $PullRequest = '';
+    private ?string $SourceDirectory = null;
+    private ?string $BinaryDirectory = null;
     private ?BuildErrorFilter $BuildErrorFilter = null;
     protected static ?string $schema_file = '/app/Validators/Schemas/Build.xsd';
 
@@ -344,6 +346,8 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
                 $build->StartTime = $start_time;
                 $build->EndTime = $end_time;
                 $build->SubmitTime = $submit_time;
+                $build->SourceDirectory = $this->SourceDirectory;
+                $build->BinaryDirectory = $this->BinaryDirectory;
                 if (empty($subproject)) {
                     $build->SetSubProject($this->SubProjectName);
                 } else {
@@ -565,6 +569,12 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
                     break;
                 case 'BUILDCOMMAND':
                     $this->BuildCommand = htmlspecialchars_decode($data);
+                    break;
+                case 'SOURCEDIRECTORY':
+                    $this->SourceDirectory = $data;
+                    break;
+                case 'BINARYDIRECTORY':
+                    $this->BinaryDirectory = $data;
                     break;
             }
         } elseif ($this->getParent() === 'ACTION') {

@@ -35,6 +35,8 @@
                   <xs:element name="Labels" type="LabelsType" />
                   <xs:element name="StartDateTime" type="xs:string" />
                   <xs:element name="StartBuildTime" type="xs:unsignedInt" />
+                  <xs:element name="SourceDirectory" type="xs:string" minOccurs="0" />
+                  <xs:element name="BinaryDirectory" type="xs:string" minOccurs="0" />
                   <xs:element name="BuildCommand" type="xs:string" />
                   <xs:element name="Error">
                     <xs:complexType>

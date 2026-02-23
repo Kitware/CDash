@@ -47,6 +47,8 @@ use Illuminate\Support\Str;
  * @property string $osversion
  * @property string $compilername
  * @property string $compilerversion
+ * @property ?string $sourcedirectory
+ * @property ?string $binarydirectory
  *
  * @method static Builder<Build> betweenDates(?Carbon $starttime, ?Carbon $endtime)
  *
@@ -95,6 +97,8 @@ class Build extends Model
         'osversion',
         'compilername',
         'compilerversion',
+        'sourcedirectory',
+        'binarydirectory',
     ];
 
     protected $casts = [
