@@ -30,7 +30,7 @@ export default {
     // Prevent a flicker if the page loads quickly
     setTimeout(() => {
       this.initialDelayComplete = true;
-    }, 500);
+    }, 200);
   },
 };
 </script>
