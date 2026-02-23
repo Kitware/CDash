@@ -831,7 +831,7 @@ type Test {
 
   runningTime: NonNegativeSeconds! @rename(attribute: "time") @filterable
 
-  startTime: DateTimeTz! @rename(attribute: "starttime") @filterable
+  startTime: DateTimeTz @rename(attribute: "starttime") @filterable
 
   details: String! @filterable
 
