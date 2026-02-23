@@ -11,7 +11,7 @@
         @change-filters="filters => changedFilters = filters"
       />
 
-      <loading-indicator :is-loading="!formattedChartCommands">
+      <loading-indicator :is-loading="!allCommands">
         <CommandGanttChart :commands="formattedChartCommands" />
       </loading-indicator>
     </div>
@@ -21,14 +21,16 @@
         Memory
       </h3>
 
-      <LineChart
-        v-if="memoryChartData.length > 0"
-        y-label="Memory (GB)"
-        :data="memoryChartData"
-      />
-      <div v-else>
-        No data available.
-      </div>
+      <loading-indicator :is-loading="!allCommands">
+        <LineChart
+          v-if="memoryChartData.length > 0"
+          y-label="Memory (GB)"
+          :data="memoryChartData"
+        />
+        <div v-else>
+          No data available.
+        </div>
+      </loading-indicator>
     </div>
   </div>
 </template>
