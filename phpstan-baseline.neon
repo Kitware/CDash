@@ -26758,6 +26758,12 @@ parameters:
 			path: tests/Browser/Pages/BuildCoveragePageTest.php
 
 		-
+			rawMessage: 'PHPDoc tag @var with type App\Models\Label is not subtype of type App\Models\Label&object{pivot: Illuminate\Database\Eloquent\Relations\Pivot}.'
+			identifier: varTag.type
+			count: 2
+			path: tests/Browser/Pages/BuildErrorsPageTest.php
+
+		-
 			rawMessage: 'Method Tests\Browser\Pages\ProjectMembersPageTest::testFullInvitationWorkflow() throws checked exception OverflowException but it''s missing from the PHPDoc @throws tag.'
 			identifier: missingType.checkedException
 			count: 1

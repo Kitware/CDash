@@ -123,7 +123,7 @@
                       <b>
                         <a
                           class="tw-link tw-link-hover"
-                          :href="$baseURL + '/viewBuildError.php?buildid=' + cdash.previousbuild.buildid"
+                          :href="$baseURL + '/builds/' + cdash.previousbuild.buildid + '/errors'"
                         >
                           {{ cdash.previousbuild.nerrors }}
                         </a>
@@ -136,7 +136,7 @@
                       <b>
                         <a
                           class="tw-link tw-link-hover"
-                          :href="$baseURL + '/viewBuildError.php?type=1&buildid=' + cdash.previousbuild.buildid"
+                          :href="$baseURL + '/builds/' + cdash.previousbuild.buildid + 'errors'"
                         >
                           {{ cdash.previousbuild.nwarnings }}
                         </a>
@@ -293,7 +293,7 @@
                       <b>
                         <a
                           class="tw-link tw-link-hover"
-                          :href="$baseURL + '/viewBuildError.php?buildid=' + cdash.build.id"
+                          :href="$baseURL + '/builds/' + cdash.build.id + '/errors'"
                         >
                           {{ cdash.build.nerrors }}
                         </a>
@@ -306,7 +306,7 @@
                       <b>
                         <a
                           class="tw-link tw-link-hover"
-                          :href="$baseURL + '/viewBuildError.php?type=1&buildid=' + cdash.build.id"
+                          :href="$baseURL + '/builds/' + cdash.build.id + '/errors'"
                         >
                           {{ cdash.build.nwarnings }}
                         </a>
@@ -457,7 +457,7 @@
                       <b>
                         <a
                           class="tw-link tw-link-hover"
-                          :href="$baseURL + '/viewBuildError.php?buildid=' + cdash.nextbuild.buildid"
+                          :href="$baseURL + '/builds/' + cdash.nextbuild.buildid + 'errors'"
                         >
                           {{ cdash.nextbuild.nerrors }}
                         </a>
@@ -470,7 +470,7 @@
                       <b>
                         <a
                           class="tw-link tw-link-hover"
-                          :href="$baseURL + '/viewBuildError.php?type=1&buildid=' + cdash.nextbuild.buildid"
+                          :href="$baseURL + '/builds/' + cdash.nextbuild.buildid + '/errors'"
                         >
                           {{ cdash.nextbuild.nwarnings }}
                         </a>
@@ -927,7 +927,7 @@
 
       <a
         class="tw-link tw-link-hover"
-        :href="$baseURL + '/viewBuildError.php?buildid=' + cdash.build.id"
+        :href="$baseURL + '/builds/' + cdash.build.id + '/errors'"
       >
         View Errors Summary
       </a>
@@ -973,7 +973,7 @@
       <a
         id="warnings_link"
         class="tw-link tw-link-hover"
-        :href="$baseURL + '/viewBuildError.php?type=1&buildid=' + cdash.build.id"
+        :href="$baseURL + '/builds/' + cdash.build.id + '/errors'"
       >
         View Warnings Summary
       </a>

@@ -41,10 +41,6 @@ CDash.filter('filter_buildgroups', filter_buildgroups);
 import { ViewSubProjectsController } from "./controllers/viewSubProjects";
 CDash.controller('ViewSubProjectsController', ["$scope", "multisort", "apiLoader", ViewSubProjectsController]);
 
-import { BuildErrorController, buildError } from "./controllers/viewBuildError";
-CDash.controller('ViewBuildErrorController', ["$scope", "$sce", "apiLoader", BuildErrorController]);
-CDash.directive('buildError', buildError);
-
 import { ManageOverviewController } from "./controllers/manageOverview";
 CDash.controller('ManageOverviewController', ["$scope", "$http", "apiLoader", ManageOverviewController]);
 

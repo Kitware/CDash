@@ -160,6 +160,13 @@ Route::get('/viewCoverageFile.php', function (Request $request) {
     return redirect("/builds/{$buildid}/coverage/{$fileid}", 301);
 });
 
+Route::get('/builds/{build_id}/errors', 'BuildController@errors')
+    ->whereNumber('build_id');
+Route::get('/viewBuildError.php', function (Request $request) {
+    $buildid = $request->integer('buildid');
+    return redirect("/builds/{$buildid}/errors", 301);
+});
+
 Route::get('/projects/{id}/edit', 'EditProjectController@edit')
     ->whereNumber('id');
 Route::permanentRedirect('/project/{id}/edit', url('/projects/{id}/edit'));
@@ -245,8 +252,6 @@ Route::get('/compareCoverage.php', 'CoverageController@compareCoverage');
 Route::any('/ajax/getviewcoverage.php', 'CoverageController@ajaxGetViewCoverage');
 
 Route::match(['get', 'post'], '/buildOverview.php', 'BuildController@buildOverview');
-
-Route::get('/viewBuildError.php', 'BuildController@viewBuildError');
 
 Route::get('/viewBuildGroup.php', 'BuildController@viewBuildGroup');
 

@@ -17,13 +17,13 @@ use App\Utils\TestingDay;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildConfigure;
-use CDash\Model\BuildError;
 use CDash\Model\BuildFailure;
 use CDash\Model\BuildGroupRule;
 use CDash\Model\BuildRelationship;
 use CDash\ServiceContainer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -35,6 +35,32 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 final class BuildController extends AbstractBuildController
 {
+    public function errors(Request $request, int $build_id): View
+    {
+        $this->setBuildById($build_id);
+
+        $params = [
+            'build-id' => $this->build->Id,
+        ];
+
+        $onlyNewErrors = $request->has('onlydeltap');
+        $onlyFixedErrors = $request->has('onlydeltan');
+        if ($onlyNewErrors || $onlyFixedErrors) {
+            $previousBuildId = $this->build->GetPreviousBuildId();
+            if ($previousBuildId > 0) {
+                $params['previous-build-id'] = $previousBuildId;
+            }
+            if ($onlyNewErrors) {
+                $params['show-new-errors'] = true;
+            }
+            if ($onlyFixedErrors) {
+                $params['show-fixed-errors'] = true;
+            }
+        }
+
+        return $this->vue('build-errors-page', 'Build Errors', $params);
+    }
+
     public function commands(int $build_id): View
     {
         $this->setBuildById($build_id);
@@ -1114,12 +1140,6 @@ final class BuildController extends AbstractBuildController
     {
         $this->setProjectById(request()->integer('projectid'));
         return $this->angular_view('manageBuildGroup', 'Manage Build Groups');
-    }
-
-    public function viewBuildError(): View
-    {
-        $this->setBuildById(request()->integer('buildid'));
-        return $this->angular_view('viewBuildError', 'Build Errors');
     }
 
     public function viewBuildGroup(): View

@@ -501,9 +501,9 @@ class Build
                 'AND subprojectid = :subprojectid';
             $values_to_bind['subprojectid'] = $this->SubProjectId;
         }
-        if ($this->ParentId === self::PARENT_BUILD) {
+        if ($this->ParentId === self::PARENT_BUILD || $this->ParentId === self::STANDALONE_BUILD) {
             // Only search for other parents.
-            $parent_criteria = 'AND build.parentid = ' . self::PARENT_BUILD;
+            $parent_criteria = 'AND build.parentid IN (' . self::PARENT_BUILD . ', ' . self::STANDALONE_BUILD . ')';
         }
 
         $stmt = $this->PDO->prepare("
@@ -893,7 +893,7 @@ class Build
 
             if ($hasErrors) {
                 $message = "$this->Name experienced errors";
-                $url = url('/viewBuildError.php') . "?buildid=$this->Id";
+                $url = url('/builds/' . $this->Id . '/errors');
                 $this->NotifyPullRequest($message, $url);
             }
         }
@@ -2286,7 +2286,7 @@ class Build
 
     public function GetBuildErrorUrl(): string
     {
-        return url('/viewBuildError.php') . "?buildid={$this->Id}";
+        return url('/builds/' . $this->Id . '/errors');
     }
 
     public function GetTestUrl(): string

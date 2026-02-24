@@ -425,7 +425,7 @@ class GitHub implements RepositoryInterface
                 // Pluralize.
                 $msg .= 's';
             }
-            $details_url = "$this->baseUrl/viewBuildError.php?buildid={$row['id']}";
+            $details_url = "$this->baseUrl/builds/{$row['id']}/errors";
             $icon = ':x:';
             $this->numFailed++;
             $this->foundBuildErrors = true;

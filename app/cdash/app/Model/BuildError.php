@@ -64,6 +64,6 @@ class BuildError
      */
     public function GetUrlForSelf(): string
     {
-        return url('/viewBuildError.php') . "?type={$this->Type}&buildid={$this->BuildId}";
+        return url('/builds/' . $this->BuildId . '/errors');
     }
 }
