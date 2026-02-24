@@ -30,6 +30,7 @@ const UsersPage = Vue.defineAsyncComponent(() => import('./components/UsersPage.
 const BuildFilesPage = Vue.defineAsyncComponent(() => import('./components/BuildFilesPage.vue'));
 const BuildTargetsPage = Vue.defineAsyncComponent(() => import('./components/BuildTargetsPage.vue'));
 const BuildCommandsPage = Vue.defineAsyncComponent(() => import('./components/BuildCommandsPage.vue'));
+const BuildErrorsPage = Vue.defineAsyncComponent(() => import('./components/BuildErrorsPage.vue'));
 const CoverageFilePage = Vue.defineAsyncComponent(() => import('./components/CoverageFilePage.vue'));
 const BuildCoveragePage = Vue.defineAsyncComponent(() => import('./components/BuildCoveragePage.vue'));
 const CreateProjectPage = Vue.defineAsyncComponent(() => import('./components/CreateProjectPage.vue'));
@@ -58,6 +59,7 @@ const cdash_components = {
   BuildFilesPage,
   BuildTargetsPage,
   BuildCommandsPage,
+  BuildErrorsPage,
   CoverageFilePage,
   BuildCoveragePage,
   CreateProjectPage,
@@ -107,6 +109,7 @@ const apolloClient = new ApolloClient({
           urls: relayStylePagination(),
           notes: relayStylePagination(),
           targets: relayStylePagination(),
+          errors: relayStylePagination(),
         },
       },
       Site: {

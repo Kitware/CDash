@@ -108,7 +108,7 @@ class GitHubTest extends TestCase
 
         // Single build error.
         $build_row['builderrors'] = 1;
-        $link = "$this->baseUrl/viewBuildError.php?buildid=99999";
+        $link = "$this->baseUrl/builds/99999/errors";
         $actual = $sut->getCheckSummaryForBuildRow($build_row);
         $expected = $common . ":x: | [1 build error]($link)";
         $this::assertEquals($expected, $actual);
@@ -224,7 +224,7 @@ class GitHubTest extends TestCase
         $expected['output']['text'] = "$table_header\n";
         $expected['output']['text'] .= "[a]($this->baseUrl/builds/99995) | :white_check_mark: | [success]($this->baseUrl/builds/99995)\n";
         $expected['output']['text'] .= "[b]($this->baseUrl/builds/99996) | :x: | [5 configure errors]($this->baseUrl/builds/99996/configure)\n";
-        $expected['output']['text'] .= "[c]($this->baseUrl/builds/99997) | :x: | [1 build error]($this->baseUrl/viewBuildError.php?buildid=99997)\n";
+        $expected['output']['text'] .= "[c]($this->baseUrl/builds/99997) | :x: | [1 build error]($this->baseUrl/builds/99997/errors)\n";
         $expected['output']['text'] .= "[d]($this->baseUrl/builds/99998) | :x: | [7 failed tests]($this->baseUrl/builds/99998/tests)";
         $build_rows[] = [
             'name' => 'b',

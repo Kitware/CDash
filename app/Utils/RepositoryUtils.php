@@ -544,7 +544,7 @@ class RepositoryUtils
             foreach ($errors as $error) {
                 $info = '';
                 if (strlen($error->sourcefile) > 0) {
-                    $info .= "{$error->sourcefile} line {$error->sourceline} ({$serverURI}/viewBuildError.php?buildid={$buildid})";
+                    $info .= "{$error->sourcefile} line {$error->sourceline} ({$serverURI}/builds/{$buildid}/errors)";
                     $info .= "{$error->stderror}\n";
                 } else {
                     $info .= "{$error->stderror}\n";
@@ -564,7 +564,7 @@ class RepositoryUtils
             foreach ($failures as $fail) {
                 $info = '';
                 if (strlen($fail->sourcefile) > 0) {
-                    $info .= "{$fail->sourcefile} ({$serverURI}/viewBuildError.php?type=0&buildid={$buildid})\n";
+                    $info .= "{$fail->sourcefile} ({$serverURI}/builds/{$buildid}/errors)\n";
                 }
                 if (strlen($fail->stdoutput) > 0) {
                     $info .= "{$fail->stdoutput}\n";
@@ -592,7 +592,7 @@ class RepositoryUtils
             foreach ($warnings as $warning) {
                 $info = '';
                 if (strlen($warning->sourcefile) > 0) {
-                    $info .= "{$warning->sourcefile} line {$warning->sourceline} ({$serverURI}/viewBuildError.php?type=1&buildid={$buildid})\n";
+                    $info .= "{$warning->sourcefile} line {$warning->sourceline} ({$serverURI}/builds/{$buildid}/errors)\n";
                     $info .= "{$warning->stderror}\n";
                 } else {
                     $info .= "{$warning->stderror}\n";
@@ -614,7 +614,7 @@ class RepositoryUtils
             foreach ($failures as $fail) {
                 $info = '';
                 if (strlen($fail->sourcefile) > 0) {
-                    $info .= "{$fail->sourcefile} ({$serverURI}/viewBuildError.php?type=1&buildid={$buildid})\n";
+                    $info .= "{$fail->sourcefile} ({$serverURI}/builds/{$buildid}/errors)\n";
                 }
                 if (strlen($fail->stdoutput) > 0) {
                     $info .= "{$fail->stdoutput}\n";

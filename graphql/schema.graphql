@@ -739,7 +739,9 @@ type Build {
   """
   A list of warnings and errors submitted for this build.
   """
-  buildErrors: [BuildError!]! @hasMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)
+  buildErrors(
+    filters: _ @filter
+  ): [BuildError!]! @hasMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)
 
   # TODO: Make an "errors" field which returns the union of basic and rich errors
   """

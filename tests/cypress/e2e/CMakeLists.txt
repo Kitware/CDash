@@ -64,9 +64,6 @@ set_tests_properties(cypress/e2e/manage-build-group PROPERTIES DEPENDS simple2_a
 add_cypress_e2e_test(manage-sub-project)
 set_tests_properties(cypress/e2e/manage-sub-project PROPERTIES DEPENDS simple2_async)
 
-add_cypress_e2e_test(view-build-error)
-set_tests_properties(cypress/e2e/view-build-error PROPERTIES DEPENDS simple2_async)
-
 add_cypress_e2e_test(sort-index)
 set_tests_properties(cypress/e2e/sort-index PROPERTIES DEPENDS simple2_async)
 

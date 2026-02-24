@@ -1,8 +1,8 @@
 <!-- Selection checkbox for bulk actions (admin only) -->
 <td ng-if="cdash.user.admin == 1 && buildgroup.selectionMode" align="center" class="paddt">
-  <input type="checkbox" 
+  <input type="checkbox"
          ng-if="::build.id"
-         ng-model="build.selected" 
+         ng-model="build.selected"
          ng-change="toggleBuildSelection(build, buildgroup)"
          data-cy="build-selection-checkbox">
 </td>
@@ -185,9 +185,9 @@
             <b>{{::group.name}}</b>:
           </td>
           <td ng-if="::group.name == buildgroup.name" colspan="2" style="padding: 4px 0;">
-            <button class="btn btn-xs" 
-                    ng-class="(build.expected == 1 || build.expectedandmissing == 1) ? 'btn-warning' : 'btn-success'" 
-                    ng-click="toggleExpected(build, group.id)" 
+            <button class="btn btn-xs"
+                    ng-class="(build.expected == 1 || build.expectedandmissing == 1) ? 'btn-warning' : 'btn-success'"
+                    ng-click="toggleExpected(build, group.id)"
                     ng-disabled="build.expectedLoading"
                     data-cy="{{(build.expected == 1 || build.expectedandmissing == 1) ? 'mark-as-non-expected-btn' : 'mark-as-expected-btn'}}">
               <span class="glyphicon" ng-class="{
@@ -223,9 +223,9 @@
            uib-tooltip="Done builds will be overwritten if a new one is submitted with the same site, build name, and timestamp."
            style="margin-top: 4px;"
            ng-if="build.id && !build.expectedandmissing">
-        <button class="btn btn-xs" 
-                ng-class="build.done == 1 ? 'btn-default' : 'btn-info'" 
-                ng-click="toggleDone(build)" 
+        <button class="btn btn-xs"
+                ng-class="build.done == 1 ? 'btn-default' : 'btn-info'"
+                ng-click="toggleDone(build)"
                 ng-disabled="build.doneLoading">
           <span class="glyphicon" ng-class="{
             'glyphicon-ok-circle': !build.doneLoading && build.done != 1,
@@ -293,14 +293,14 @@
 <td ng-if="::buildgroup.hascompilationdata" align="center" ng-class="::{'error': build.compilation.error > 0, 'normal': build.compilation.error == 0}">
   <div ng-if="::build.hascompilation"
        ng-class="::{'valuewithsub': build.compilation.nerrordiffp > 0 || build.compilation.nerrordiffn > 0}">
-    <a class="cdash-link" ng-href="viewBuildError.php?buildid={{::build.id}}">
+    <a class="cdash-link" ng-href="builds/{{::build.id}}/errors">
       {{::build.compilation.error}}
     </a>
-    <a ng-if="::build.compilation.nerrordiffp > 0" class="sup cdash-link" ng-href="viewBuildError.php?onlydeltap&buildid={{::build.id}}">
+    <a ng-if="::build.compilation.nerrordiffp > 0" class="sup cdash-link" ng-href="builds/{{::build.id}}/errors?onlydeltap">
       +{{::build.compilation.nerrordiffp}}
     </a>
 
-    <a class="cdash-link" ng-if="::build.compilation.nerrordiffn > 0" ng-href="viewBuildError.php?onlydeltan&buildid={{::build.id}}">
+    <a class="cdash-link" ng-if="::build.compilation.nerrordiffn > 0" ng-href="builds/{{::build.id}}/errors?onlydeltan">
       <span class="sub">-{{::build.compilation.nerrordiffn}}</span>
     </a>
   </div>
@@ -309,14 +309,14 @@
 <td ng-if="::buildgroup.hascompilationdata" align="center" ng-class="::{'warning': build.compilation.warning > 0, 'normal': build.compilation.warning == 0}">
   <div ng-if="::build.hascompilation"
        ng-class="::{'valuewithsub': build.compilation.nwarningdiffp > 0 || build.compilation.nwarningdiffn > 0}">
-    <a class="cdash-link" ng-href="viewBuildError.php?type=1&buildid={{::build.id}}">
+    <a class="cdash-link" ng-href="builds/{{::build.id}}/errors">
       {{::build.compilation.warning}}
     </a>
 
-    <a ng-if="::build.compilation.nwarningdiffp > 0" class="sup cdash-link" ng-href="viewBuildError.php?type=1&onlydeltap&buildid={{::build.id}}">
+    <a ng-if="::build.compilation.nwarningdiffp > 0" class="sup cdash-link" ng-href="builds/{{::build.id}}errors?onlydeltap">
       +{{::build.compilation.nwarningdiffp}}
     </a>
-    <a class="cdash-link" ng-if="::build.compilation.nwarningdiffn > 0" ng-href="viewBuildError.php?type=1&onlydeltan&buildid={{::build.id}}">
+    <a class="cdash-link" ng-if="::build.compilation.nwarningdiffn > 0" ng-href="builds/{{::build.id}}/errors?onlydeltan">
       <span class="sub">-{{::build.compilation.nwarningdiffn}}</span>
     </a>
   </div>

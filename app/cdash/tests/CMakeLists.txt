@@ -393,6 +393,8 @@ add_browser_test(/Browser/Pages/BuildTestsPageTest)
 
 add_browser_test(/Browser/Pages/BuildConfigurePageTest)
 
+add_browser_test(/Browser/Pages/BuildErrorsPageTest)
+
 add_browser_test(/Browser/Pages/BuildCoveragePageTest)
 
 add_browser_test(/Browser/Pages/BuildDynamicAnalysisIdPageTest)

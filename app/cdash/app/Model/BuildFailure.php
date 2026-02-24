@@ -167,9 +167,9 @@ class BuildFailure
         return $response;
     }
 
-    /** Returns a self referencing URI for a the current BuildFailure. */
+    /** Returns a self referencing URI for the current BuildFailure. */
     public function GetUrlForSelf(): string
     {
-        return url('/viewBuildError.php') . "?type={$this->Type}&buildid={$this->BuildId}";
+        return url('/builds/' . $this->BuildId . '/errors');
     }
 }

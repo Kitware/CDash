@@ -6,7 +6,6 @@ set_property(TEST deletesubproject PROPERTY DEPENDS
   cypress/e2e/sub-project-dependencies
   cypress/e2e/manage-build-group
   cypress/e2e/manage-sub-project
-  cypress/e2e/view-build-error
   cypress/e2e/view-test
   cypress/e2e/sort-index
   cypress/e2e/expected-build
