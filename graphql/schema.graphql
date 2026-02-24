@@ -691,6 +691,10 @@ type Build {
   "The command used to drive the build. Example: /usr/local/bin/cmake --build . --config Release"
   command: String! @filterable
 
+  sourceDirectory: String @filterable @rename(attribute: "sourcedirectory")
+
+  binaryDirectory: String @filterable @rename(attribute: "binarydirectory")
+
   "The number of errors generated during the configuration step."
   configureErrorsCount: Int @rename(attribute: "configureerrors")
 

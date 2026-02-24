@@ -66,6 +66,8 @@ class Build
     public ?string $OSVersion = null;
     public ?string $CompilerName = null;
     public ?string $CompilerVersion = null;
+    public ?string $SourceDirectory = null;
+    public ?string $BinaryDirectory = null;
     public int $BuildErrorCount;
     public int $TestFailedCount;
 
@@ -364,6 +366,8 @@ class Build
         $this->OSVersion = $model->osversion;
         $this->CompilerName = $model->compilername;
         $this->CompilerVersion = $model->compilerversion;
+        $this->SourceDirectory = $model->sourcedirectory;
+        $this->BinaryDirectory = $model->binarydirectory;
 
         $subprojectid = $this->QuerySubProjectId($buildid);
         if ($subprojectid) {
@@ -1715,7 +1719,12 @@ class Build
             if ($this->CompilerVersion !== null && $this->CompilerVersion !== $build->compilerversion) {
                 $fields_to_update['compilerversion'] = $this->CompilerVersion;
             }
-
+            if ($this->SourceDirectory !== null && $this->SourceDirectory !== $build->sourcedirectory) {
+                $fields_to_update['sourcedirectory'] = $this->SourceDirectory;
+            }
+            if ($this->BinaryDirectory !== null && $this->BinaryDirectory !== $build->binarydirectory) {
+                $fields_to_update['binarydirectory'] = $this->BinaryDirectory;
+            }
             if (!empty($fields_to_update)) {
                 $build->update($fields_to_update);
             }
@@ -2213,6 +2222,8 @@ class Build
                     'osversion' => $this->OSVersion,
                     'compilername' => $this->CompilerName,
                     'compilerversion' => $this->CompilerVersion,
+                    'sourcedirectory' => $this->SourceDirectory,
+                    'binarydirectory' => $this->BinaryDirectory,
                 ])->id;
                 $build_created = true;
                 $this->AssignToGroup();

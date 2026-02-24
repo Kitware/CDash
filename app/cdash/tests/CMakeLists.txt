@@ -336,6 +336,8 @@ add_feature_test(/Feature/Submission/Instrumentation/BuildInstrumentationTest)
 
 add_feature_test(/Feature/Submission/Tests/TestXMLTest)
 
+add_feature_test(/Feature/Submission/Tests/BuildXMLTest)
+
 add_browser_test(/Browser/Pages/SitesIdPageTest)
 
 add_browser_test(/Browser/Pages/ProjectSitesPageTest)
