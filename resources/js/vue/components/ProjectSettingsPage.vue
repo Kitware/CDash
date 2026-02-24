@@ -53,185 +53,241 @@
           </li>
         </ul>
 
-        <div class="tw-flex-grow">
+        <div class="tw-container tw-mx-auto lg:tw-w-3/5 tw-w-full">
           <div v-show="currentSection === 'details'">
-            <h2 class="tw-text-2xl tw-font-bold">
-              General
-            </h2>
-            <div class="tw-divider" />
-            <div class="tw-flex tw-items-center tw-gap-4">
-              <project-logo
-                v-if="project"
-                :project-name="form.name"
-                :image-url="project.logoUrl"
-                class="tw-w-16 tw-h-16"
-              />
-              <form
-                :action="`/projects/${projectId}/logo`"
-                method="post"
-                enctype="multipart/form-data"
-                class="tw-flex-grow tw-flex tw-items-center tw-gap-2"
-              >
-                <input
-                  type="hidden"
-                  name="_token"
-                  :value="csrfToken"
-                >
-                <input
-                  type="file"
-                  name="logo"
-                  class="tw-file-input tw-file-input-bordered tw-w-full"
-                >
-                <button
-                  type="submit"
-                  class="tw-btn tw-btn-primary"
-                >
-                  Upload
-                </button>
-              </form>
+            <div class="tw-border-b tw-border-neutral-200 tw-p-6">
+              <h1 class="tw-text-2xl tw-font-bold">
+                General
+              </h1>
             </div>
-            <label class="tw-form-control tw-w-full">
-              <span class="tw-label tw-label-text tw-font-bold">
-                Project Name
-              </span>
-              <input
-                v-model="form.name"
-                type="text"
-                class="tw-input tw-input-bordered tw-w-full"
-                :class="{'tw-input-error': validationErrors.name}"
-              >
-              <span
-                v-if="validationErrors.name"
-                class="tw-label tw-text-error"
-              >
-                {{ validationErrors.name[0] }}
-              </span>
-            </label>
-            <label class="tw-form-control tw-w-full">
-              <span class="tw-label tw-label-text tw-font-bold">
-                Description
-              </span>
-              <textarea
-                v-model="form.description"
-                class="tw-textarea tw-textarea-bordered tw-h-24 tw-w-full"
-                :class="{'tw-textarea-error': validationErrors.description}"
-              />
-              <span
-                v-if="validationErrors.description"
-                class="tw-label tw-text-error"
-              >
-                {{ validationErrors.description[0] }}
-              </span>
-            </label>
-            <label class="tw-form-control tw-w-full">
-              <span class="tw-label tw-label-text tw-font-bold">
-                Home URL
-              </span>
-              <input
-                v-model="form.homeUrl"
-                type="text"
-                class="tw-input tw-input-bordered tw-w-full"
-                placeholder="https://example.com"
-              >
-            </label>
-            <label class="tw-form-control tw-w-full">
-              <span class="tw-label tw-label-text tw-font-bold">
-                Documentation URL
-              </span>
-              <input
-                v-model="form.documentationUrl"
-                type="text"
-                class="tw-input tw-input-bordered tw-w-full"
-                placeholder="https://example.com"
-              >
-            </label>
-            <label class="tw-form-control tw-w-full">
-              <span class="tw-label tw-label-text tw-font-bold">
-                Test Data URL
-              </span>
-              <input
-                v-model="form.testDataUrl"
-                type="text"
-                class="tw-input tw-input-bordered tw-w-full"
-                placeholder="https://example.com"
-              >
-            </label>
-            <label class="tw-form-control tw-w-full">
-              <span class="tw-label tw-label-text tw-font-bold">
-                Nightly Time
-              </span>
-              <input
-                v-model="form.nightlyTime"
-                type="text"
-                class="tw-input tw-input-bordered tw-w-full"
-              >
-            </label>
-            <label class="tw-form-control tw-w-full">
-              <span class="tw-label tw-label-text tw-font-bold">
-                Build Retention (days)
-              </span>
-              <input
-                v-model="form.autoRemoveTimeFrame"
-                type="number"
-                class="tw-input tw-input-bordered tw-w-full"
-              >
-            </label>
-            <label class="tw-form-control tw-w-full">
-              <span class="tw-label tw-label-text tw-font-bold">
-                Maximum Builds Removed Per Day
-              </span>
-              <input
-                v-model="form.autoRemoveMaxBuilds"
-                type="number"
-                class="tw-input tw-input-bordered tw-w-full"
-              >
-            </label>
-            <label class="tw-form-control tw-w-full">
-              <span class="tw-label tw-label-text tw-font-bold">
-                File Upload Limit (GB)
-              </span>
-              <input
-                v-model="form.fileUploadLimit"
-                type="number"
-                class="tw-input tw-input-bordered tw-w-full"
-              >
-            </label>
-            <label class="tw-form-control tw-w-full">
-              <span class="tw-label tw-label-text tw-font-bold">
-                Banner Message
-              </span>
-              <textarea
-                v-model="form.banner"
-                class="tw-textarea tw-textarea-bordered tw-h-24 tw-w-full"
-              />
-            </label>
-            <div class="tw-form-control">
-              <label class="tw-cursor-pointer tw-label tw-justify-start tw-gap-2">
-                <input
-                  v-model="form.displayLabels"
-                  type="checkbox"
-                  class="tw-toggle"
+
+            <section class="tw-py-6 tw-pb-8 tw-border-b tw-border-neutral-200">
+              <div class="tw-flex tw-space-x-5 tw-mb-3 tw-items-center">
+                <font-awesome-icon :icon="FA.faInfo" class="tw-text-2xl tw-text-neutral-400" />
+                <div>
+                  <h4 class="tw-text-xl tw-font-bold">
+                    Project Information
+                  </h4>
+                  <span class="tw-text-neutral-500">Basic information about your project.</span>
+                </div>
+              </div>
+              <div class="tw-pl-12 tw-pt-2 tw-space-y-4">
+                <project-logo
+                  v-if="project"
+                  :project-name="form.name"
+                  :image-url="project.logoUrl"
+                  class="tw-w-16 tw-h-16"
+                />
+                <form
+                  :action="`/projects/${projectId}/logo`"
+                  method="post"
+                  enctype="multipart/form-data"
+                  class="tw-flex-grow tw-flex tw-items-center tw-gap-2"
                 >
-                <span class="tw-label-text">Display Labels</span>
-              </label>
-            </div>
-            <div class="tw-form-control">
-              <label class="tw-cursor-pointer tw-label tw-justify-start tw-gap-2">
-                <input
-                  v-model="form.showViewSubProjectsLink"
-                  type="checkbox"
-                  class="tw-toggle"
-                >
-                <span class="tw-label-text">Show View SubProjects Link</span>
-              </label>
-            </div>
+                  <input
+                    type="hidden"
+                    name="_token"
+                    :value="csrfToken"
+                  >
+                  <input
+                    type="file"
+                    name="logo"
+                    class="tw-file-input tw-file-input-bordered tw-file-input-accent"
+                  >
+                  <button
+                    type="submit"
+                    class="tw-btn tw-btn-primary"
+                  >
+                    Upload
+                  </button>
+                </form>
+
+                <label class="tw-form-control tw-w-full">
+                  <span class="tw-label tw-label-text tw-font-bold">
+                    Project Name
+                  </span>
+                  <input
+                    v-model="form.name"
+                    type="text"
+                    class="tw-input tw-input-bordered tw-w-full"
+                    :class="{'tw-input-error': validationErrors.name}"
+                  >
+                  <span
+                    v-if="validationErrors.name"
+                    class="tw-label tw-text-error"
+                  >
+                    {{ validationErrors.name[0] }}
+                  </span>
+                </label>
+                <label class="tw-form-control tw-w-full">
+                  <span class="tw-label tw-label-text tw-font-bold">
+                    Description
+                  </span>
+                  <textarea
+                    v-model="form.description"
+                    class="tw-textarea tw-textarea-bordered tw-h-24 tw-w-full"
+                    :class="{'tw-textarea-error': validationErrors.description}"
+                  />
+                  <span
+                    v-if="validationErrors.description"
+                    class="tw-label tw-text-error"
+                  >
+                    {{ validationErrors.description[0] }}
+                  </span>
+                </label>
+              </div>
+            </section>
+
+            <section class="tw-py-6 tw-pb-8 tw-border-b tw-border-neutral-200">
+              <div class="tw-flex tw-space-x-5 tw-mb-3 tw-items-center">
+                <font-awesome-icon :icon="FA.faLink" class="tw-text-2xl tw-text-neutral-400" />
+                <div>
+                  <h3 class="tw-text-xl tw-font-bold">
+                    URLs & Links
+                  </h3>
+                  <span class="tw-text-neutral-500">Configure external links and resources.</span>
+                </div>
+              </div>
+              <div class="tw-pl-12 tw-pt-2 lg:tw-flex lg:tw-space-y-0 tw-gap-4 tw-space-y-4">
+                <label class="tw-form-control tw-w-full">
+                  <span class="tw-label tw-label-text tw-font-bold">
+                    Home URL
+                  </span>
+                  <input
+                    v-model="form.homeUrl"
+                    type="text"
+                    class="tw-input tw-input-bordered tw-w-full"
+                    placeholder="https://example.com"
+                  >
+                </label>
+                <label class="tw-form-control tw-w-full">
+                  <span class="tw-label tw-label-text tw-font-bold">
+                    Documentation URL
+                  </span>
+                  <input
+                    v-model="form.documentationUrl"
+                    type="text"
+                    class="tw-input tw-input-bordered tw-w-full"
+                    placeholder="https://example.com"
+                  >
+                </label>
+                <label class="tw-form-control tw-w-full">
+                  <span class="tw-label tw-label-text tw-font-bold">
+                    Test Data URL
+                  </span>
+                  <input
+                    v-model="form.testDataUrl"
+                    type="text"
+                    class="tw-input tw-input-bordered tw-w-full"
+                    placeholder="https://example.com"
+                  >
+                </label>
+              </div>
+            </section>
+
+            <section class="tw-py-6 tw-pb-8 tw-border-b tw-border-neutral-200 tw-space-y-4">
+              <div class="tw-flex tw-space-x-5 tw-mb-3 tw-items-center">
+                <font-awesome-icon :icon="FA.faGears" class="tw-text-2xl tw-text-neutral-400" />
+                <div>
+                  <h4 class="tw-text-xl tw-font-bold">
+                    Build Configuration
+                  </h4>
+                  <span class="tw-text-neutral-500">Manage build schedules and retention policies.</span>
+                </div>
+              </div>
+              <div class="tw-pl-12 tw-pt-2 tw-space-y-4">
+                <label class="tw-form-control tw-w-full">
+                  <span class="tw-label tw-label-text tw-font-bold">
+                    Nightly Time
+                  </span>
+                  <input
+                    v-model="form.nightlyTime"
+                    type="text"
+                    class="tw-input tw-input-bordered tw-w-full"
+                  >
+                </label>
+                <label class="tw-form-control tw-w-full">
+                  <span class="tw-label tw-label-text tw-font-bold">
+                    Build Retention (days)
+                  </span>
+                  <input
+                    v-model="form.autoRemoveTimeFrame"
+                    type="number"
+                    class="tw-input tw-input-bordered tw-w-full"
+                  >
+                </label>
+                <label class="tw-form-control tw-w-full">
+                  <span class="tw-label tw-label-text tw-font-bold">
+                    Maximum Builds Removed Per Day
+                  </span>
+                  <input
+                    v-model="form.autoRemoveMaxBuilds"
+                    type="number"
+                    class="tw-input tw-input-bordered tw-w-full"
+                  >
+                </label>
+                <label class="tw-form-control tw-w-full">
+                  <span class="tw-label tw-label-text tw-font-bold">
+                    File Upload Limit (GB)
+                  </span>
+                  <input
+                    v-model="form.fileUploadLimit"
+                    type="number"
+                    class="tw-input tw-input-bordered tw-w-full"
+                  >
+                </label>
+              </div>
+            </section>
+
+            <section class="tw-py-6 tw-pb-8 tw-border-b tw-border-neutral-200 tw-space-y-4">
+              <div class="tw-flex tw-space-x-5 tw-mb-3 tw-items-center">
+                <font-awesome-icon :icon="FA.faDisplay" class="tw-text-2xl tw-text-neutral-400" />
+                <div>
+                  <h4 class="tw-text-xl tw-font-bold">
+                    Display Options
+                  </h4>
+                  <span class="tw-text-neutral-500">Customize the appearance and visibility of project elements</span>
+                </div>
+              </div>
+              <div class="tw-pl-12 tw-pt-2 tw-space-y-4">
+                <label class="tw-form-control tw-w-full">
+                  <span class="tw-label tw-label-text tw-font-bold">
+                    Banner Message
+                  </span>
+                  <textarea
+                    v-model="form.banner"
+                    class="tw-textarea tw-textarea-bordered tw-h-24 tw-w-full"
+                  />
+                </label>
+                <div class="tw-form-control">
+                  <label class="tw-cursor-pointer tw-label tw-justify-start tw-gap-2">
+                    <input
+                      v-model="form.displayLabels"
+                      type="checkbox"
+                      class="tw-toggle"
+                    >
+                    <span class="tw-label-text">Display Labels</span>
+                  </label>
+                </div>
+                <div class="tw-form-control">
+                  <label class="tw-cursor-pointer tw-label tw-justify-start tw-gap-2">
+                    <input
+                      v-model="form.showViewSubProjectsLink"
+                      type="checkbox"
+                      class="tw-toggle"
+                    >
+                    <span class="tw-label-text">Show View SubProjects Link</span>
+                  </label>
+                </div>
+              </div>
+            </section>
           </div>
 
           <div v-show="currentSection === 'access'">
             <h2 class="tw-text-2xl tw-font-bold">
               Access Control
             </h2>
-            <div class="tw-divider" />
+
             <div class="tw-form-control tw-w-full">
               <span class="tw-label tw-label-text tw-font-bold">
                 Visibility
@@ -552,10 +608,9 @@
             </div>
           </div>
 
-          <div class="tw-divider" />
-          <div class="tw-flex tw-justify-start tw-mt-4">
+          <div class="tw-flex tw-justify-end tw-py-6 tw-mt-4">
             <button
-              class="tw-btn tw-btn-primary"
+              class="tw-btn tw-btn-primary tw-min-w-32"
               @click="updateProject"
             >
               Save
@@ -574,6 +629,10 @@ import {
   faEarthAmericas,
   faShieldHalved,
   faLock,
+  faDisplay,
+  faInfo,
+  faGears,
+  faLink,
 } from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 import ProjectLogo from './shared/ProjectLogo.vue';
@@ -702,6 +761,10 @@ export default {
         faEarthAmericas,
         faShieldHalved,
         faLock,
+        faDisplay,
+        faInfo,
+        faGears,
+        faLink,
       };
     },
   },
