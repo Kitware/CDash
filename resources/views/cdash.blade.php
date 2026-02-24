@@ -59,6 +59,7 @@
     @if(isset($angular) && $angular === true)
         ng-controller="{{ $angular_controller }}"
     @endif
+    class="tw-base-100 tw-text-base-content"
 >
 {{-- This is a horrible hack which allows AngularJS to show the login page when prompted by the API --}}
 @if(isset($angular) && $angular === true)
