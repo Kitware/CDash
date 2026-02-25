@@ -821,6 +821,8 @@ type Build {
   ): [DynamicAnalysis!]! @hasMany(type: CONNECTION) @orderBy(column: "id", direction: ASC)
 
   updateStep: Update @belongsTo
+
+  comments: [Comment!]! @hasMany(type: CONNECTION) @orderBy(column: "timestamp", direction: DESC)
 }
 
 
@@ -1361,4 +1363,18 @@ type PinnedTestMeasurement {
 
   "Note: Only the relative positions of PinnedTestMeasurements are guaranteed."
   position: Int!
+}
+
+
+type Comment {
+  "Unique primary key."
+  id: ID!
+
+  "Comment body."
+  text: String!
+
+  "Creation timestamp."
+  timestamp: DateTimeTz!
+
+  user: User!
 }

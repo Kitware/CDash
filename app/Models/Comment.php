@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Carbon\Carbon;
+use Database\Factories\CommentFactory;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -21,6 +23,9 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  */
 class Comment extends Model
 {
+    /** @use HasFactory<CommentFactory> */
+    use HasFactory;
+
     public const STATUS_NORMAL = 0;
     public const STATUS_FIX_IN_PROGRESS = 1;
     public const STATUS_FIXED = 2;
@@ -35,6 +40,7 @@ class Comment extends Model
         'buildid',
         'text',
         'status',
+        'timestamp',
     ];
 
     protected $casts = [

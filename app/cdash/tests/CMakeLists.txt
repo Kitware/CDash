@@ -229,6 +229,8 @@ add_feature_test_in_transaction(/Feature/GraphQL/PinnedTestMeasurementTypeTest)
 
 add_feature_test_in_transaction(/Feature/GraphQL/BuildErrorTypeTest)
 
+add_feature_test_in_transaction(/Feature/GraphQL/CommentTypeTest)
+
 add_feature_test_in_transaction(/Feature/RouteAccessTest)
 
 add_feature_test_in_transaction(/Feature/Monitor)
@@ -398,6 +400,8 @@ add_browser_test(/Browser/Pages/BuildErrorsPageTest)
 add_browser_test(/Browser/Pages/BuildCoveragePageTest)
 
 add_browser_test(/Browser/Pages/BuildDynamicAnalysisIdPageTest)
+
+add_browser_test(/Browser/Pages/BuildSummaryPageTest)
 
 add_php_test(image)
 set_tests_properties(image PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
