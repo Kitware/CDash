@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\ValidationException;
+use Illuminate\View\View;
 use LdapRecord\Laravel\Auth\ListensForLdapBindFailure;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -27,6 +28,7 @@ final class LoginController extends AbstractController
     */
 
     use AuthenticatesUsers {
+        showLoginForm as traitShowLoginForm;
         login as traitLogin;
         credentials as traitCredentials;
     }
@@ -45,6 +47,22 @@ final class LoginController extends AbstractController
         $this->decayMinutes = config('cdash.login.lockout.duration', 1);
 
         $this->listenForLdapBindFailure();
+    }
+
+    public function showLoginForm(): View|Response|RedirectResponse
+    {
+        $hasOAuthLogin = collect(config('services'))->where('oauth', 'true')->firstWhere('enable', true) !== null;
+        $hasSAMLLogin = config('saml2.enabled') === true;
+
+        if (
+            config('cdash.username_password_authentication_enabled') === false
+            && !$hasOAuthLogin
+            && $hasSAMLLogin
+        ) {
+            return self::saml2Login();
+        }
+
+        return $this->traitShowLoginForm();
     }
 
     /**

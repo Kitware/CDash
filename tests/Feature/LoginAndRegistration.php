@@ -143,6 +143,30 @@ class LoginAndRegistration extends TestCase
         unlink($tmp_view_path);
     }
 
+    /** @return array<string, string|int> */
+    private function createSamlTenant(): array
+    {
+        $saml_uuid = (string) Str::uuid();
+        $saml2_tenant_name = 'saml2_client_for_testing';
+        $saml2_tenant_uri = 'https://cdash.org/fake-saml2-idp/asdf';
+        $params = [
+            'uuid' => $saml_uuid,
+            'key' => $saml2_tenant_name,
+            'idp_entity_id' => $saml2_tenant_uri,
+            'idp_login_url' => "$saml2_tenant_uri/login",
+            'idp_logout_url' => "$saml2_tenant_uri/logout",
+            'idp_x509_cert' => base64_encode('asdf'),
+            'metadata' => '{}',
+            'name_id_format' => 'persistent',
+        ];
+        $saml2_tenant_id = DB::table('saml2_tenants')->insertGetId($params);
+
+        return [
+            ...$params,
+            'saml2_tenant_id' => $saml2_tenant_id,
+        ];
+    }
+
     public function testSaml2(): void
     {
         // Verify that SAML2 login fails when disabled.
@@ -169,28 +193,33 @@ class LoginAndRegistration extends TestCase
         $response->assertStatus(500);
         $response->assertSeeText('SAML2 tenant not found');
 
-        // Create a SAML2 tenant.
-        $saml_uuid = (string) Str::uuid();
-        $saml2_tenant_name = 'saml2_client_for_testing';
-        $saml2_tenant_uri = 'https://cdash.org/fake-saml2-idp/asdf';
-        $params = [
-            'uuid' => $saml_uuid,
-            'key' => $saml2_tenant_name,
-            'idp_entity_id' => $saml2_tenant_uri,
-            'idp_login_url' => "$saml2_tenant_uri/login",
-            'idp_logout_url' => "$saml2_tenant_uri/logout",
-            'idp_x509_cert' => base64_encode('asdf'),
-            'metadata' => '{}',
-            'name_id_format' => 'persistent',
-        ];
-        $saml2_tenant_id = DB::table('saml2_tenants')->insertGetId($params);
+        $saml_tenant = $this->createSamlTenant();
 
         // Verify that SAML2 login redirects as expected.
         $response = $this->post('/saml2/login');
-        $response->assertRedirectContains("/saml2/{$saml_uuid}/login?returnTo=");
+        $response->assertRedirectContains("/saml2/{$saml_tenant['uuid']}/login?returnTo=");
 
         // Delete SAML2 tenant.
-        DB::table('saml2_tenants')->delete($saml2_tenant_id);
+        DB::table('saml2_tenants')->delete($saml_tenant['saml2_tenant_id']);
+    }
+
+    public function testRedirectsToSamlIfOnlyAuthProvider(): void
+    {
+        config(['saml2.enabled' => true]);
+        $saml_tenant = $this->createSamlTenant();
+
+        // Verify that we see the login page if username+password is enabled
+        $response = $this->get('/login');
+        $response->assertViewIs('auth.login');
+
+        config(['cdash.username_password_authentication_enabled' => false]);
+
+        // Verify that we get redirected to the SAML2 route if it's the only configured auth provider
+        $response = $this->get('/login');
+        $response->assertRedirectContains("/saml2/{$saml_tenant['uuid']}/login?returnTo=");
+
+        // Delete SAML2 tenant.
+        DB::table('saml2_tenants')->delete($saml_tenant['saml2_tenant_id']);
     }
 
     /**
