@@ -69,6 +69,8 @@ return [
     'project_admin_registration_form_enabled' => env('PROJECT_ADMIN_REGISTRATION_FORM_ENABLED', true),
     // Text displayed at the top of all pages.  Accepts inline markdown (links, bold, italics).
     'global_banner' => env('GLOBAL_BANNER'),
+    // Whether or not new CDash users can register email+password accounts
+    'user_registration_form_enabled' => env('USER_REGISTRATION_FORM_ENABLED', true),
     // Whether or not "normal" username+password authentication is enabled
     'username_password_authentication_enabled' => env('USERNAME_PASSWORD_AUTHENTICATION_ENABLED', true),
     'ldap_enabled' => env('CDASH_AUTHENTICATION_PROVIDER') === 'ldap',

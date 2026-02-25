@@ -48,7 +48,7 @@ final class RegisterController extends AbstractController
 
     public function showRegistrationForm(Request $request): View
     {
-        if (config('auth.user_registration_form_enabled') === false) {
+        if (config('cdash.user_registration_form_enabled') === false) {
             abort(404, 'Registration via form is disabled');
         }
         // We can route a user here with our form pre-populated
@@ -117,7 +117,7 @@ final class RegisterController extends AbstractController
      */
     public function register(Request $request): Response|RedirectResponse
     {
-        if (config('auth.user_registration_form_enabled') === false) {
+        if (config('cdash.user_registration_form_enabled') === false) {
             return response('Registration via form is disabled', 404);
         }
         try {

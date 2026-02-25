@@ -4,9 +4,6 @@ use App\Ldap\Rules\FilterRules;
 use App\Models\User;
 
 return [
-    // Whether or not "normal" username+password authentication is enabled
-    'user_registration_form_enabled' => env('USER_REGISTRATION_FORM_ENABLED', true),
-
     /*
     |--------------------------------------------------------------------------
     | Authentication Defaults

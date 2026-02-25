@@ -349,7 +349,7 @@ class LoginAndRegistration extends TestCase
     {
         // Create a user by sending proper data
 
-        config(['auth.user_registration_form_enabled' => false]);
+        config(['cdash.user_registration_form_enabled' => false]);
         $post_data = [
             'fname' => 'Test',
             'lname' => 'User',
@@ -370,7 +370,7 @@ class LoginAndRegistration extends TestCase
     {
         // Disable username+password authentication and verify that the
         // form is no longer displayed.
-        config(['auth.user_registration_form_enabled' => false]);
+        config(['cdash.user_registration_form_enabled' => false]);
         $response = $this->get('/register');
         $response->assertStatus(404);
     }

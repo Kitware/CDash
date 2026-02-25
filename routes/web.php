@@ -27,7 +27,7 @@ use Illuminate\Support\Facades\Route;
 
 $routeList = ['verify' => true];
 
-if (config('auth.user_registration_form_enabled') === false) {
+if (config('cdash.user_registration_form_enabled') === false) {
     $routeList['register'] = false;
 }
 Auth::routes($routeList);

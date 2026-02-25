@@ -7,7 +7,7 @@ if (isset($project)) {
     $logoid = $project->ImageId;
 }
 
-$hideRegistration = config('auth.user_registration_form_enabled') === false;
+$hideRegistration = config('cdash.user_registration_form_enabled') === false;
 
 $currentDateString = now()->toDateString();
 
