@@ -862,22 +862,6 @@ final class BuildController extends AbstractBuildController
         }, $filename, $headers, 'inline');
     }
 
-    public function ajaxBuildNote(): View
-    {
-        $this->setBuildById((int) ($_GET['buildid'] ?? -1));
-        Gate::authorize('edit-project', $this->project);
-
-        $notes = DB::select('SELECT * FROM comments WHERE buildid=? ORDER BY timestamp ASC', [$this->build->Id]);
-        foreach ($notes as $note) {
-            /** @var User $user */
-            $user = User::where('id', (int) $note->userid)->first();
-            $note->user = $user;
-        }
-
-        return $this->view('build.note', 'Notes')
-            ->with('notes', $notes);
-    }
-
     public function apiViewBuildError(): JsonResponse
     {
         $pageTimer = new PageTimer();

@@ -693,7 +693,7 @@ parameters:
 		-
 			rawMessage: Cannot cast mixed to int.
 			identifier: cast.int
-			count: 12
+			count: 11
 			path: app/Http/Controllers/BuildController.php
 
 		-
