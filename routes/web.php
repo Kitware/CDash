@@ -317,8 +317,6 @@ Route::middleware(['auth'])->group(function (): void {
         return redirect('/sites', 301);
     });
 
-    Route::get('/ajax/buildnote.php', 'BuildController@ajaxBuildNote');
-
     Route::get('/projects/{projectId}/invitations/{invitationId}', ProjectInvitationController::class)
         ->whereNumber('projectId')
         ->whereNumber('invitationId');

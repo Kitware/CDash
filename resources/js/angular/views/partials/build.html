@@ -91,7 +91,7 @@
     <!-- Display the note icon -->
     <a class="cdash-link" name="Build Notes" id="buildnote_{{::build.id}}"
        ng-if="::build.buildnotes > 0"
-       ng-href="ajax/buildnote.php?buildid={{::build.id}}">
+       ng-href="builds/{{::build.id}}">
       <span class="glyphicon glyphicon-comment" style="color: #337ab7; margin-right: 4px;"></span>
     </a>
 
