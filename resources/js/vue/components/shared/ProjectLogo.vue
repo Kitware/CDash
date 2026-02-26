@@ -1,18 +1,14 @@
 <template>
-  <div v-if="imageUrl">
-    <div class="tw-rounded tw-w-8">
-      <img
-        :alt="projectName + ' logo'"
-        :src="imageUrl"
-      >
-    </div>
-  </div>
-  <div
-    v-else
-    class="tw-avatar tw-placeholder"
-  >
+  <div class="tw-aspect-square tw-rounded tw-overflow-hidden">
+    <img
+      v-if="imageUrl"
+      :alt="projectName + ' logo'"
+      :src="imageUrl"
+      class="tw-w-full tw-h-full tw-object-cover"
+    >
     <div
-      class="tw-rounded tw-w-8"
+      v-else
+      class="tw-w-full tw-h-full tw-flex tw-items-center tw-justify-center"
       :class="placeholderColorClass"
     >
       <span>{{ projectName[0].toUpperCase() }}</span>
