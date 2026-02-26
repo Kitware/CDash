@@ -18,6 +18,7 @@
 namespace CDash\Model;
 
 use App\Models\BasicBuildAlert;
+use Illuminate\Support\Str;
 
 /** BuildError */
 class BuildError
@@ -54,7 +55,7 @@ class BuildError
             'sourceline' => (int) $this->SourceLine,
             'repeatcount' => (int) $this->RepeatCount,
             'newstatus' => 0,
-            'stdoutput' => $this->PreContext . $this->Text . $this->PostContext,
+            'stdoutput' => $this->PreContext . Str::rtrim($this->Text) . PHP_EOL . $this->PostContext,
             'stderror' => $this->Text,
         ]);
     }
