@@ -187,6 +187,8 @@ add_feature_test_in_transaction(/Feature/GraphQL/BuildTypeTest)
 
 add_feature_test_in_transaction(/Feature/ProjectInvitationAcceptanceTest)
 
+add_feature_test_in_transaction(/Feature/UpdateProjectLogoTest)
+
 add_feature_test_in_transaction(/Feature/GraphQL/FilterTest)
 
 add_feature_test_in_transaction(/Feature/GraphQL/QueryTypeTest)
