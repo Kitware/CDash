@@ -306,6 +306,7 @@ import {
   faLinux,
   faApple,
 } from '@fortawesome/free-brands-svg-icons';
+import Utils from './Utils';
 
 export default {
   components: {BuildSummaryCardStepSummary, LoadingIndicator, FontAwesomeIcon},
@@ -484,13 +485,7 @@ export default {
      * Otherwise, display a shortened version of the full date string.
      */
     humanReadableBuildStartTime() {
-      const startTime = DateTime.fromISO(this.build.startTime);
-      if (startTime < DateTime.now().minus({months: 1})) {
-        return startTime.toLocaleString(DateTime.DATE_MED);
-      }
-      else {
-        return startTime.toRelative();
-      }
+      return Utils.formatRelativeTimestamp(this.build.startTime);
     },
 
     humanReadableConfigureDuration() {

@@ -574,95 +574,77 @@
       <br>
 
       <!-- Display comments for this build -->
-      <div
-        v-if="cdash.notes.length > 0 || cdash.user.id > 0"
-        class="title-divider"
-      >
-        Comments ({{ cdash.notes.length }})
-      </div>
-
-      <div v-if="cdash.notes.length > 0">
-        <div v-for="note in cdash.notes">
-          <b>{{ note.status }}</b> by <b>{{ note.user }}</b> at {{ note.date }}
-          <code-box :text="note.text" />
-          <hr>
-        </div>
-      </div>
-
-
-      <div v-if="cdash.user.id > 0">
-        <!-- Add Comments -->
-        <div class="tw-flex tw-flex-row">
-          <img
-            width="20"
-            height="20"
-            :src="$baseURL + '/img/document.png'"
-            title="graph"
-          >
-          <a
-            id="toggle_note"
-            class="tw-link tw-link-hover"
-            @click="toggleNote()"
-          >
-            Add a comment to this Build
-          </a>
-        </div>
+      <loading-indicator :is-loading="!comments">
         <div
-          v-show="showNote"
-          id="new_note_div"
+          v-if="comments.length > 0 || cdash.user.id > 0"
+          class="title-divider"
         >
-          <table>
-            <tbody>
-              <tr>
-                <td><b>Comment:</b></td>
-                <td>
-                  <textarea
-                    id="note_text"
-                    v-model="cdash.noteText"
-                    class="tw-textarea tw-textarea-bordered"
-                    cols="50"
-                    rows="5"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td><b>Status:</b></td>
-                <td>
-                  <select
-                    id="note_status"
-                    v-model="cdash.noteStatus"
-                    class="tw-select tw-select-bordered"
-                  >
-                    <option value="0">
-                      Simple Note
-                    </option>
-                    <option value="1">
-                      Fix in progress
-                    </option>
-                    <option value="2">
-                      Fixed
-                    </option>
-                  </select>
-                </td>
-              </tr>
-              <tr>
-                <td />
-                <td>
-                  <button
-                    id="add_note"
-                    class="tw-btn"
-                    :disabled="!cdash.noteText"
-                    @click="addNote()"
-                  >
-                    Add Note
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          Comments ({{ comments.length }})
         </div>
-        <br>
-      </div>
+
+        <div v-if="comments.length > 0">
+          <div v-for="{node: comment} in comments">
+            <b>{{ comment.user.firstname }} {{ comment.user.lastname }}</b> {{ Utils.formatRelativeTimestamp(comment.timestamp) }}
+            <code-box :text="comment.text" />
+            <hr>
+          </div>
+          <br>
+        </div>
+
+        <div v-if="cdash.user.id > 0">
+          <!-- Add Comments -->
+          <div class="tw-flex tw-flex-row">
+            <img
+              width="20"
+              height="20"
+              :src="$baseURL + '/img/document.png'"
+              title="graph"
+            >
+            <a
+              id="toggle_note"
+              class="tw-link tw-link-hover"
+              @click="toggleNote()"
+            >
+              Add a comment to this Build
+            </a>
+          </div>
+          <div
+            v-show="showNote"
+            id="new_note_div"
+          >
+            <table>
+              <tbody>
+                <tr>
+                  <td><b>Comment:</b></td>
+                  <td>
+                    <textarea
+                      id="note_text"
+                      v-model="cdash.noteText"
+                      class="tw-textarea tw-textarea-bordered"
+                      cols="50"
+                      rows="5"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td />
+                  <td>
+                    <button
+                      id="add_note"
+                      class="tw-btn"
+                      :disabled="!cdash.noteText"
+                      @click="addNote()"
+                    >
+                      Add Note
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <br>
+        </div>
+      </loading-indicator>
 
       <!-- Graphs -->
       <div class="title-divider">
@@ -1029,6 +1011,9 @@ import {
 import CodeBox from './shared/CodeBox.vue';
 import LoadingIndicator from './shared/LoadingIndicator.vue';
 import BuildSummaryCard from './shared/BuildSummaryCard.vue';
+import gql from 'graphql-tag';
+import Utils from './shared/Utils';
+
 export default {
   name: 'BuildSummary',
   components: {BuildSummaryCard, LoadingIndicator, CodeBox, FontAwesomeIcon},
@@ -1067,11 +1052,47 @@ export default {
     };
   },
 
+  apollo: {
+    comments: {
+      query: gql`
+        query($buildId: ID) {
+          build(id: $buildId) {
+            id
+            comments {
+              edges {
+                node {
+                  id
+                  text
+                  timestamp
+                  user {
+                    id
+                    firstname
+                    lastname
+                  }
+                }
+              }
+            }
+          }
+        }
+      `,
+      update: data => data?.build?.comments?.edges,
+      variables() {
+        return {
+          buildId: this.buildId,
+        };
+      },
+    },
+  },
+
   computed: {
     FA() {
       return {
         faQuestionCircle,
       };
+    },
+
+    Utils() {
+      return Utils;
     },
   },
 
@@ -1302,9 +1323,9 @@ export default {
           Status: this.cdash.noteStatus,
           AddNote: this.cdash.noteText,
         })
-        .then(response => {
-        // Add the newly created note to our list.
-          this.cdash.notes.push(response.data.note);
+        .then(() => {
+          // Add the newly created note to our list.
+          this.$apollo.queries.comments.refetch();
         })
         .catch(error => {
         // Display the error.
@@ -1312,7 +1333,6 @@ export default {
           console.log(error);
         });
     },
-
   },
 };
 </script>
