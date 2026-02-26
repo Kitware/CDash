@@ -68,6 +68,7 @@
                 <project-logo
                   :image-url="project.logoUrl"
                   :project-name="project.name"
+                  class="tw-w-8"
                 />
               </td>
               <td class="tw-align-middle tw-w-full">
