@@ -6061,25 +6061,13 @@ parameters:
 			path: app/Utils/AuthTokenUtil.php
 
 		-
-			rawMessage: Implicit array creation is not allowed - variable $params does not exist.
-			identifier: variable.implicitArray
-			count: 1
-			path: app/Utils/AuthTokenUtil.php
-
-		-
 			rawMessage: 'Method App\Utils\AuthTokenUtil::getUserIdFromRequest() should return int|null but returns mixed.'
 			identifier: return.type
 			count: 1
 			path: app/Utils/AuthTokenUtil.php
 
 		-
-			rawMessage: 'Parameter #2 $timestamp of function gmdate expects int|null, float|int given.'
-			identifier: argument.type
-			count: 1
-			path: app/Utils/AuthTokenUtil.php
-
-		-
-			rawMessage: 'Part $duration (mixed) of encapsed string cannot be cast to string.'
+			rawMessage: 'Part $maxDuration (mixed) of encapsed string cannot be cast to string.'
 			identifier: encapsedStringPart.nonString
 			count: 1
 			path: app/Utils/AuthTokenUtil.php
@@ -26816,6 +26804,12 @@ parameters:
 			identifier: missingType.checkedException
 			count: 1
 			path: tests/Browser/Pages/UsersPageTest.php
+
+		-
+			rawMessage: 'Parameter #1 $time of static method Carbon\Carbon::parse() expects Carbon\Month|Carbon\WeekDay|DateTimeInterface|float|int|string|null, mixed given.'
+			identifier: argument.type
+			count: 1
+			path: tests/Feature/AuthTokenTest.php
 
 		-
 			rawMessage: Access to an undefined property CDash\Model\Build::$Endime.

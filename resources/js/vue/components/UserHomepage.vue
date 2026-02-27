@@ -470,7 +470,7 @@
                 Submit Only{{ authtoken.projectname && authtoken.projectname.length > 0 ? ' (' + authtoken.projectname + ')' : '' }}
               </td>
               <td align="center">
-                {{ authtoken.expires }}
+                {{ formatTokenExpiration(authtoken.expires) }}
               </td>
               <td align="center">
                 <span
@@ -523,7 +523,7 @@
               >New Token:</label>
               <input
                 id="tokenDescription"
-                v-model="cdash.tokendescription"
+                v-model="tokendescription"
                 type="text"
                 name="tokenDescription"
                 class="form-control"
@@ -555,11 +555,18 @@
                 </option>
               </select>
             </td>
-            <td />
+            <td>
+              <input
+                v-model="tokenexpiration"
+                type="date"
+                :min="minTokenExpiration"
+                :max="maxTokenExpiration"
+              >
+            </td>
             <td align="center">
               <button
                 class="btn btn-default"
-                :disabled="!cdash.tokendescription"
+                :disabled="!tokendescription"
                 @click="generateToken()"
               >
                 Generate Token
@@ -697,6 +704,7 @@
 <script>
 import ApiLoader from './shared/ApiLoader';
 import LoadingIndicator from './shared/LoadingIndicator.vue';
+import {DateTime} from 'luxon';
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 import {
   faBell,
@@ -718,6 +726,8 @@ export default {
       loading: true,
       errored: false,
       tokenscope: 'full_access',
+      tokendescription: null,
+      tokenexpiration: null,
     };
   },
 
@@ -732,6 +742,14 @@ export default {
         faUserPen,
       };
     },
+
+    minTokenExpiration() {
+      return DateTime.now().plus({ days: 1 }).toISODate();
+    },
+
+    maxTokenExpiration() {
+      return DateTime.fromISO(this.cdash.max_token_expiration).toISODate();
+    },
   },
 
   mounted () {
@@ -741,8 +759,9 @@ export default {
   methods: {
     generateToken: function () {
       const parameters = {
-        description: this.cdash.tokendescription,
+        description: this.tokendescription,
         scope: this.tokenscope === 'full_access' ? 'full_access' : 'submit_only',
+        expiration: DateTime.fromISO(this.tokenexpiration).toISO(),
         projectid: this.tokenscope === 'full_access' || this.tokenscope === 'submit_only' ? -1 : this.tokenscope,
       };
       this.$axios.post('/api/authtokens/create', parameters)
@@ -757,9 +776,6 @@ export default {
               authtoken.projectname = project.name;
             }
           });
-
-          // A terrible hack to format the date the same way the DB returns them on initial page load
-          authtoken.expires = authtoken.expires.replace('T', ' ');
 
           this.cdash.authtokens.push(authtoken);
         })
@@ -803,6 +819,10 @@ export default {
         this.errored = true;
         this.error = error.toString();
       }
+    },
+
+    formatTokenExpiration(timestampString) {
+      return DateTime.fromISO(timestampString, {setZone: true}).toFormat('yyyy-MM-dd');
     },
   },
 };
