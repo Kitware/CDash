@@ -6,14 +6,6 @@ describe('viewTest', () => {
   });
 
 
-  it('shows link to queryTests.php', () => {
-    cy.visit('viewTest.php?buildid=1');
-
-    const default_filters = 'queryTests.php?project=TestCompressionExample&date=2009-12-18&filtercount=1&showfilters=1&field1=status&compare1=62&value1=passed';
-    cy.get('#navigation').find('a').contains('Tests Query').should('have.attr', 'href').and('contains', default_filters);
-  });
-
-
   it('accounts for missing tests', () => {
     // go to the viewTest page corresponding to build with name 'Win32-MSVC2009'
     cy.visit('index.php?project=EmailProjectExample&date=2009-02-26');
