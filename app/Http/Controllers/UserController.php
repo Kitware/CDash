@@ -58,6 +58,7 @@ final class UserController extends AbstractController
         $response['user_name'] = $user->firstname;
         $response['user_is_admin'] = $user->admin;
         $response['show_monitor'] = config('queue.default') === 'database';
+        $response['max_token_expiration'] = AuthTokenUtil::getMaximumTokenExpiration()->toIso8601String();
 
         if ((bool) config('cdash.user_create_projects')) {
             $response['user_can_create_projects'] = 1;
