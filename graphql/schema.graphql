@@ -160,6 +160,10 @@ type User {
 
   "Whether or not the user is a global administrator."
   admin: Boolean! @filterable
+
+  projects(
+    filters: _ @filter
+  ): [Project!]! @hasMany(type: CONNECTION, scopes: ["forUser"]) @orderBy(column: "id")
 }
 
 
