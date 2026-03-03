@@ -15,7 +15,7 @@
           <tt v-if="cdash.update.revisionurl.length > 0">
             <a
               class="tw-link tw-link-hover tw-link-info"
-              :href="cdash.update.revisionurl"
+              :href="repository?.getComparisonUrl(cdash.update.revision, cdash.update.priorrevision) ?? ''"
             >{{ cdash.update.revision }}</a>
           </tt>
           <tt v-else>
@@ -27,7 +27,7 @@
           <tt v-if="cdash.update.revisiondiff.length > 0">
             <a
               class="tw-link tw-link-hover tw-link-info"
-              :href="cdash.update.revisiondiff"
+              :href="repository?.getCommitUrl(cdash.update.priorrevision) ?? ''"
             >{{ cdash.update.priorrevision }}</a>
           </tt>
           <tt v-else>
@@ -131,10 +131,23 @@ import LoadingIndicator from './shared/LoadingIndicator.vue';
 import CodeBox from './shared/CodeBox.vue';
 import {faChevronDown, faChevronRight} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
+import {getRepository} from './shared/RepositoryIntegrations';
 
 export default {
   name: 'BuildUpdate',
   components: {FontAwesomeIcon, CodeBox, LoadingIndicator, BuildSummaryCard},
+
+  props: {
+    repositoryType: {
+      type: String,
+      required: true,
+    },
+
+    repositoryUrl: {
+      type: String,
+      required: true,
+    },
+  },
 
   data() {
     return {
@@ -166,6 +179,10 @@ export default {
         faChevronDown,
         faChevronRight,
       };
+    },
+
+    repository() {
+      return getRepository(this.repositoryType, this.repositoryUrl);
     },
   },
 
