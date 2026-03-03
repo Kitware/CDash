@@ -44,7 +44,7 @@ describe('query tests', () => {
   it('displays the correct default filters', () => {
     cy.visit('index.php?project=Trilinos');
     const expected_url = 'queryTests.php?project=Trilinos&date=2011-07-22&filtercount=1&showfilters=1&field1=status&compare1=62&value1=passed';
-    cy.get('#navigation').find('a').contains('Tests Query').should('have.attr', 'href').and('contains', expected_url);
+    cy.get('#navigation').find('a').contains('Tests').should('have.attr', 'href').and('contains', expected_url);
 
     // load the page and verify the expected number of tests.
     cy.visit(expected_url);

@@ -1,4 +1,5 @@
 @php
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use App\Services\ProjectService;
 use Illuminate\Support\Facades\Auth;
@@ -9,9 +10,14 @@ if (isset($project)) {
 
 $hideRegistration = config('cdash.user_registration_form_enabled') === false;
 
-$currentDateString = now()->toDateString();
+$userInProject = false;
+if (isset($project)) {
+    $eloquentProject = \App\Models\Project::findOrFail((int) $project->Id);
 
-$userInProject = isset($project) && auth()->user() !== null && \App\Models\Project::findOrFail($project->Id)->users()->where('id', auth()->user()->id)->exists();
+    $currentDateString = Carbon::parse($eloquentProject->builds()->max('starttime'))->toDateString();
+
+    $userInProject = auth()->user() !== null && $eloquentProject->users()->where('id', auth()->user()->id)->exists();
+}
 
 $showHeaderNav = isset($build);
 @endphp
@@ -105,124 +111,9 @@ $showHeaderNav = isset($build);
         </nav>
 
 
-        @if(isset($angular) && $angular === true)
-            <div id="headermenu" style="float: right;">
-                <ul id="navigation">
-                    <li ng-if="!cdash.noproject && cdash.projectname_encoded !== undefined">
-                        <a class="cdash-link" ng-href="{{ url('/index.php') }}?project=@{{::cdash.projectname_encoded}}&date=@{{::cdash.date}}">
-                            Dashboard
-                        </a>
-                        <ul>
-                            <li ng-if="cdash.menu.subprojects == 1">
-                                <a class="cdash-link" ng-href="{{ url('/viewSubProjects.php') }}?project=@{{::cdash.projectname_encoded}}&date=@{{::cdash.date}}">
-                                    SubProjects
-                                </a>
-                            </li>
-                            <li>
-                                <a class="cdash-link" ng-href="{{ url('/overview.php') }}?project=@{{::cdash.projectname_encoded}}&date=@{{::cdash.date}}">
-                                    Overview
-                                </a>
-                            </li>
-                            <li>
-                                <a class="cdash-link" ng-href="{{ url('/buildOverview.php') }}?project=@{{::cdash.projectname_encoded}}&date=@{{::cdash.date}}@{{::cdash.extraurl}}">
-                                    Builds
-                                </a>
-                            </li>
-                            <li>
-                                <a class="cdash-link" ng-href="{{ url('/testOverview.php') }}?project=@{{::cdash.projectname_encoded}}&date=@{{::cdash.date}}@{{::cdash.extraurl}}">
-                                    Tests
-                                </a>
-                            </li>
-                            <li>
-                                <a class="cdash-link" ng-if="!cdash.parentid || cdash.parentid <= 0"
-                                   ng-href="{{ url('/queryTests.php') }}?project=@{{::cdash.projectname_encoded}}&date=@{{::cdash.date}}@{{::cdash.extraurl}}@{{::cdash.querytestfilters}}">
-                                    Tests Query
-                                </a>
-                                <a class="cdash-link" ng-if="cdash.parentid > 0"
-                                   ng-href="{{ url('/queryTests.php') }}?project=@{{::cdash.projectname_encoded}}&parentid=@{{::cdash.parentid}}@{{::cdash.extraurl}}@{{::cdash.extrafilterurl}}">
-                                    Tests Query
-                                </a>
-                            </li>
-                            <li class="endsubmenu">
-                                <a class="cdash-link" ng-href="{{ url('/projects') }}/@{{::cdash.projectid}}/sites@{{::cdash.extraurl}}">
-                                    Sites
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li id="Back" ng-if="cdash.menu.back">
-                        <a class="cdash-link"
-                           ng-href="@{{::cdash.menu.back}}@{{::cdash.extrafilterurl}}"
-                           tooltip-popup-delay="1500"
-                           tooltip-append-to-body="true"
-                           tooltip-placement="bottom"
-                           uib-tooltip="Go back up one level in the hierarchy of results">Up</a>
-                    </li>
-                    <li ng-if="cdash.showcalendar">
-                        <a class="cdash-link" id="cal" href="" ng-click="toggleCalendar()">Calendar</a>
-                        <span id="date_now" style="display:none;">@{{::cdash.date}}</span>
-                    </li>
-                    <li ng-if="!cdash.hidenav && cdash.projectname_encoded !== undefined">
-                        <a class="cdash-link" href="#">Project</a>
-                        <ul>
-                            <li>
-                                <a class="cdash-link" ng-href="@{{::cdash.home}}">Home</a>
-                            </li>
-                            <li ng-if="cdash.documentation.replace('https://', '').replace('http://', '').trim() !== ''">
-                                <a class="cdash-link" ng-href="@{{::cdash.documentation}}">Documentation</a>
-                            </li>
-                            <li ng-if="cdash.vcs.replace('https://', '').replace('http://', '').trim() !== ''">
-                                <a class="cdash-link" ng-href="@{{::cdash.vcs}}">Repository</a>
-                            </li>
-                            <li ng-if="cdash.bugtracker.replace('https://', '').replace('http://', '').trim() !== ''"
-                                ng-class="::{endsubmenu: cdash.projectrole}">
-                                <a class="cdash-link" ng-href="@{{::cdash.bugtracker}}"> Bug Tracker</a>
-                            </li>
-                            <li class="endsubmenu">
-                                <a class="cdash-link" ng-href="{{ url('/projects') }}/@{{::cdash.projectid}}/members">Members</a>
-                            </li>
-                            @if($userInProject)
-                                <li class="endsubmenu">
-                                    <a class="cdash-link" ng-href="{{ url('/subscribeProject.php') }}?projectid=@{{::cdash.projectid}}">Notifications</a>
-                                </li>
-                            @endif
-                        </ul>
-                    </li>
-                    <li ng-if="cdash.user.admin == 1 && !cdash.noproject && cdash.projectid !== undefined" id="admin">
-                        <a class="cdash-link" href="#">Settings</a>
-                        <ul>
-                            <li>
-                                <a class="cdash-link" ng-href="{{ url('/project') }}/@{{::cdash.projectid}}/edit">
-                                    Project
-                                </a>
-                            </li>
-                            <li>
-                                <a class="cdash-link" ng-href="{{ url('/manageBuildGroup.php') }}?projectid=@{{::cdash.projectid}}">
-                                    Groups
-                                </a>
-                            </li>
-                            <li>
-                                <a class="cdash-link" ng-href="{{ url('/project') }}/@{{::cdash.projectid}}/testmeasurements">
-                                    Measurements
-                                </a>
-                            </li>
-                            <li>
-                                <a class="cdash-link" ng-href="{{ url('/manageSubProject.php') }}?projectid=@{{::cdash.projectid}}">
-                                    SubProjects
-                                </a>
-                            </li>
-                            <li class="endsubmenu">
-                                <a class="cdash-link" ng-href="{{ url('/manageOverview.php') }}?projectid=@{{::cdash.projectid}}">
-                                    Overview
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        @elseif(isset($project))
-            <div id="headermenu">
-                <ul id="navigation">
+        <div id="headermenu">
+            <ul id="navigation">
+                @if(isset($project))
                     <li>
                         <a href="#">Dashboard</a>
                         <ul>
@@ -243,6 +134,11 @@ $showHeaderNav = isset($build);
                                 </a>
                             </li>
                             <li>
+                                <a href="{{ url('/testOverview.php') }}?project={{rawurlencode($project->Name)}}&date={{$currentDateString}}">
+                                    Test Overview
+                                </a>
+                            </li>
+                            <li>
                                 <a href="{{ url("/projects/$project->Id/sites") }}">
                                     Sites
                                 </a>
@@ -256,6 +152,14 @@ $showHeaderNav = isset($build);
                             @endif
                         </ul>
                     </li>
+                @endif
+                @if(isset($angular) && $angular === true)
+                    <li ng-if="cdash.showcalendar">
+                        <a class="cdash-link" id="cal" href="" ng-click="toggleCalendar()">Calendar</a>
+                        <span id="date_now" style="display:none;">@{{::cdash.date}}</span>
+                    </li>
+                @endif
+                @if(isset($project))
                     <li>
                         <a href="#">Project</a>
                         <ul>
@@ -335,9 +239,9 @@ $showHeaderNav = isset($build);
                             </ul>
                         </li>
                     @endcan
-                </ul>
-            </div>
-        @endif
+                @endif
+            </ul>
+        </div>
     </div>
 
     @if(isset($angular) && $angular === true)
