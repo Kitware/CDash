@@ -15517,39 +15517,9 @@ parameters:
 			path: app/cdash/tests/case/CDash/BuildUseCaseTest.php
 
 		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertCount().'
-			identifier: staticMethod.dynamicCall
-			count: 4
-			path: app/cdash/tests/case/CDash/BuildUseCaseTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertInstanceOf().'
-			identifier: staticMethod.dynamicCall
-			count: 5
-			path: app/cdash/tests/case/CDash/BuildUseCaseTest.php
-
-		-
 			rawMessage: 'Cannot call method GetBuildConfigure() on mixed.'
 			identifier: method.nonObject
 			count: 4
-			path: app/cdash/tests/case/CDash/ConfigUseCaseTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertCount().'
-			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/CDash/ConfigUseCaseTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertEquals().'
-			identifier: staticMethod.dynamicCall
-			count: 4
-			path: app/cdash/tests/case/CDash/ConfigUseCaseTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertInstanceOf().'
-			identifier: staticMethod.dynamicCall
-			count: 2
 			path: app/cdash/tests/case/CDash/ConfigUseCaseTest.php
 
 		-
@@ -15607,24 +15577,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/DatabaseTest.php
 
 		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertInstanceOf().'
-			identifier: staticMethod.dynamicCall
-			count: 3
-			path: app/cdash/tests/case/CDash/DatabaseTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertNotFalse().'
-			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/CDash/DatabaseTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertSame().'
-			identifier: staticMethod.dynamicCall
-			count: 2
-			path: app/cdash/tests/case/CDash/DatabaseTest.php
-
-		-
 			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::equalTo().'
 			identifier: staticMethod.dynamicCall
 			count: 1
@@ -15634,18 +15586,6 @@ parameters:
 			rawMessage: 'Call to an undefined method CDash\Test\UseCase\UseCase::setChecker().'
 			identifier: method.notFound
 			count: 1
-			path: app/cdash/tests/case/CDash/DynamicAnalysisUseCaseTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertCount().'
-			identifier: staticMethod.dynamicCall
-			count: 3
-			path: app/cdash/tests/case/CDash/DynamicAnalysisUseCaseTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertInstanceOf().'
-			identifier: staticMethod.dynamicCall
-			count: 4
 			path: app/cdash/tests/case/CDash/DynamicAnalysisUseCaseTest.php
 
 		-
@@ -15670,12 +15610,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Lib/Repository/GitHubTest.php
 
 		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertEquals().'
-			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/CDash/LinkifyCompilerOutputTest.php
-
-		-
 			rawMessage: 'You should use assertSame() instead of assertEquals(), because both values are scalars of the same type'
 			identifier: phpunit.assertEquals
 			count: 1
@@ -15694,30 +15628,6 @@ parameters:
 			rawMessage: 'Call to function in_array() requires parameter #3 to be set.'
 			identifier: function.strict
 			count: 2
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertCount().'
-			identifier: staticMethod.dynamicCall
-			count: 5
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertEmpty().'
-			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertFalse().'
-			identifier: staticMethod.dynamicCall
-			count: 2
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertTrue().'
-			identifier: staticMethod.dynamicCall
-			count: 4
 			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
 
 		-
@@ -15868,18 +15778,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Subscription/UserSubscriptionBuilderTest.php
 
 		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertCount().'
-			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/UserSubscriptionBuilderTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertTrue().'
-			identifier: staticMethod.dynamicCall
-			count: 2
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/UserSubscriptionBuilderTest.php
-
-		-
 			rawMessage: 'Method UserSubscriptionBuilderTest::createFixed() has parameter $key with no type specified.'
 			identifier: missingType.parameter
 			count: 1
@@ -15961,18 +15859,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Topic/AuthoredTopicTest.php
 
 		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertFalse().'
-			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/AuthoredTopicTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertTrue().'
-			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/AuthoredTopicTest.php
-
-		-
 			rawMessage: '''
 				Call to deprecated method any() of class PHPUnit\Framework\TestCase:
 				https://github.com/sebastianbergmann/phpunit/issues/6461
@@ -15991,36 +15877,6 @@ parameters:
 			rawMessage: 'Call to method PHPUnit\Framework\Assert::assertInstanceOf() with ''CDash\\Collection\\BuildErrorCollection'' and CDash\Collection\BuildErrorCollection will always evaluate to true.'
 			identifier: method.alreadyNarrowedType
 			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertEquals().'
-			identifier: staticMethod.dynamicCall
-			count: 6
-			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertFalse().'
-			identifier: staticMethod.dynamicCall
-			count: 10
-			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertInstanceOf().'
-			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertSame().'
-			identifier: staticMethod.dynamicCall
-			count: 2
-			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertTrue().'
-			identifier: staticMethod.dynamicCall
-			count: 9
 			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
 
 		-
@@ -16102,48 +15958,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Topic/ConfigureTopicTest.php
 
 		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertCount().'
-			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/ConfigureTopicTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertEmpty().'
-			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/ConfigureTopicTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertEquals().'
-			identifier: staticMethod.dynamicCall
-			count: 6
-			path: app/cdash/tests/case/CDash/Messaging/Topic/ConfigureTopicTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertFalse().'
-			identifier: staticMethod.dynamicCall
-			count: 7
-			path: app/cdash/tests/case/CDash/Messaging/Topic/ConfigureTopicTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertInstanceOf().'
-			identifier: staticMethod.dynamicCall
-			count: 2
-			path: app/cdash/tests/case/CDash/Messaging/Topic/ConfigureTopicTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertSame().'
-			identifier: staticMethod.dynamicCall
-			count: 2
-			path: app/cdash/tests/case/CDash/Messaging/Topic/ConfigureTopicTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertTrue().'
-			identifier: staticMethod.dynamicCall
-			count: 4
-			path: app/cdash/tests/case/CDash/Messaging/Topic/ConfigureTopicTest.php
-
-		-
 			rawMessage: 'You should use assertSame() instead of assertEquals(), because both values are scalars of the same type'
 			identifier: phpunit.assertEquals
 			count: 6
@@ -16153,42 +15967,6 @@ parameters:
 			rawMessage: 'Call to method PHPUnit\Framework\Assert::assertInstanceOf() with ''CDash\\Collection\\DynamicAnalysisCollection'' and CDash\Collection\DynamicAnalysisCollection will always evaluate to true.'
 			identifier: method.alreadyNarrowedType
 			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/DynamicAnalysisTopicTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertEquals().'
-			identifier: staticMethod.dynamicCall
-			count: 3
-			path: app/cdash/tests/case/CDash/Messaging/Topic/DynamicAnalysisTopicTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertFalse().'
-			identifier: staticMethod.dynamicCall
-			count: 6
-			path: app/cdash/tests/case/CDash/Messaging/Topic/DynamicAnalysisTopicTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertInstanceOf().'
-			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/DynamicAnalysisTopicTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertNull().'
-			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/DynamicAnalysisTopicTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertSame().'
-			identifier: staticMethod.dynamicCall
-			count: 2
-			path: app/cdash/tests/case/CDash/Messaging/Topic/DynamicAnalysisTopicTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertTrue().'
-			identifier: staticMethod.dynamicCall
-			count: 5
 			path: app/cdash/tests/case/CDash/Messaging/Topic/DynamicAnalysisTopicTest.php
 
 		-
@@ -16203,18 +15981,6 @@ parameters:
 				https://github.com/sebastianbergmann/phpunit/issues/6461
 			'''
 			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/EmailSentTopicTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertFalse().'
-			identifier: staticMethod.dynamicCall
-			count: 2
-			path: app/cdash/tests/case/CDash/Messaging/Topic/EmailSentTopicTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertTrue().'
-			identifier: staticMethod.dynamicCall
 			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/Topic/EmailSentTopicTest.php
 
@@ -16231,18 +15997,6 @@ parameters:
 			rawMessage: 'Call to function in_array() requires parameter #3 to be set.'
 			identifier: function.strict
 			count: 2
-			path: app/cdash/tests/case/CDash/Messaging/Topic/FixedTopicTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertFalse().'
-			identifier: staticMethod.dynamicCall
-			count: 3
-			path: app/cdash/tests/case/CDash/Messaging/Topic/FixedTopicTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertTrue().'
-			identifier: staticMethod.dynamicCall
-			count: 3
 			path: app/cdash/tests/case/CDash/Messaging/Topic/FixedTopicTest.php
 
 		-
@@ -16333,30 +16087,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Topic/MissingTestTopicTest.php
 
 		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertEquals().'
-			identifier: staticMethod.dynamicCall
-			count: 8
-			path: app/cdash/tests/case/CDash/Messaging/Topic/MissingTestTopicTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertFalse().'
-			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/MissingTestTopicTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertInstanceOf().'
-			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/MissingTestTopicTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertTrue().'
-			identifier: staticMethod.dynamicCall
-			count: 4
-			path: app/cdash/tests/case/CDash/Messaging/Topic/MissingTestTopicTest.php
-
-		-
 			rawMessage: 'You should use assertSame() instead of assertEquals(), because both values are scalars of the same type'
 			identifier: phpunit.assertEquals
 			count: 4
@@ -16384,36 +16114,6 @@ parameters:
 			rawMessage: 'Call to function in_array() requires parameter #3 to be set.'
 			identifier: function.strict
 			count: 2
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertArrayHasKey().'
-			identifier: staticMethod.dynamicCall
-			count: 9
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertEmpty().'
-			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertEquals().'
-			identifier: staticMethod.dynamicCall
-			count: 9
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertFalse().'
-			identifier: staticMethod.dynamicCall
-			count: 13
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertTrue().'
-			identifier: staticMethod.dynamicCall
-			count: 9
 			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
 
 		-
@@ -16492,18 +16192,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Topic/TopicDecoratorTest.php
 
 		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertInstanceOf().'
-			identifier: staticMethod.dynamicCall
-			count: 5
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TopicDecoratorTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertNotInstanceOf().'
-			identifier: staticMethod.dynamicCall
-			count: 3
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TopicDecoratorTest.php
-
-		-
 			rawMessage: 'Method TopicDecoratorTest::getMockTopic() has no return type specified.'
 			identifier: missingType.return
 			count: 1
@@ -16552,30 +16240,6 @@ parameters:
 			rawMessage: 'Call to function in_array() requires parameter #3 to be set.'
 			identifier: function.strict
 			count: 2
-			path: app/cdash/tests/case/CDash/Messaging/Topic/UpdateErrorTopicTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertEquals().'
-			identifier: staticMethod.dynamicCall
-			count: 7
-			path: app/cdash/tests/case/CDash/Messaging/Topic/UpdateErrorTopicTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertFalse().'
-			identifier: staticMethod.dynamicCall
-			count: 3
-			path: app/cdash/tests/case/CDash/Messaging/Topic/UpdateErrorTopicTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertSame().'
-			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/UpdateErrorTopicTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertTrue().'
-			identifier: staticMethod.dynamicCall
-			count: 6
 			path: app/cdash/tests/case/CDash/Messaging/Topic/UpdateErrorTopicTest.php
 
 		-
@@ -16663,18 +16327,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Model/BuildErrorFilterTest.php
 
 		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertFalse().'
-			identifier: staticMethod.dynamicCall
-			count: 4
-			path: app/cdash/tests/case/CDash/Model/BuildErrorFilterTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertTrue().'
-			identifier: staticMethod.dynamicCall
-			count: 2
-			path: app/cdash/tests/case/CDash/Model/BuildErrorFilterTest.php
-
-		-
 			rawMessage: 'Method BuildErrorFilterTest::setUp() throws checked exception DI\DependencyException but it''s missing from the PHPDoc @throws tag.'
 			identifier: missingType.checkedException
 			count: 1
@@ -16699,12 +16351,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Model/BuildErrorTest.php
 
 		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertEquals().'
-			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/CDash/Model/BuildErrorTest.php
-
-		-
 			rawMessage: 'Missing call to parent::setUp() method.'
 			identifier: phpunit.callParent
 			count: 1
@@ -16720,12 +16366,6 @@ parameters:
 			rawMessage: Access to an undefined property BuildFailureTest::$mock_project.
 			identifier: property.notFound
 			count: 3
-			path: app/cdash/tests/case/CDash/Model/BuildFailureTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertEquals().'
-			identifier: staticMethod.dynamicCall
-			count: 1
 			path: app/cdash/tests/case/CDash/Model/BuildFailureTest.php
 
 		-
@@ -16765,12 +16405,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Model/BuildRelationshipTest.php
 
 		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertEquals().'
-			identifier: staticMethod.dynamicCall
-			count: 11
-			path: app/cdash/tests/case/CDash/Model/BuildRelationshipTest.php
-
-		-
 			rawMessage: 'You should use assertSame() instead of assertEquals(), because both values are scalars of the same type'
 			identifier: phpunit.assertEquals
 			count: 9
@@ -16807,34 +16441,10 @@ parameters:
 			path: app/cdash/tests/case/CDash/Model/BuildTest.php
 
 		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertEquals().'
-			identifier: staticMethod.dynamicCall
-			count: 12
-			path: app/cdash/tests/case/CDash/Model/BuildTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertInstanceOf().'
-			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/CDash/Model/BuildTest.php
-
-		-
 			rawMessage: 'Missing call to parent::setUp() method.'
 			identifier: phpunit.callParent
 			count: 1
 			path: app/cdash/tests/case/CDash/Model/BuildTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertEquals().'
-			identifier: staticMethod.dynamicCall
-			count: 3
-			path: app/cdash/tests/case/CDash/Model/RepositoryTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertInstanceOf().'
-			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/CDash/Model/RepositoryTest.php
 
 		-
 			rawMessage: 'Missing call to parent::setUp() method.'
@@ -16897,30 +16507,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
 
 		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertCount().'
-			identifier: staticMethod.dynamicCall
-			count: 4
-			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertEquals().'
-			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertNotNull().'
-			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertTrue().'
-			identifier: staticMethod.dynamicCall
-			count: 9
-			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
-
-		-
 			rawMessage: 'Method MultipleSubprojectsEmailTest::getNotifications() has parameter $subscribers with no value type specified in iterable type array.'
 			identifier: missingType.iterableValue
 			count: 1
@@ -16963,12 +16549,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/NightlyTimeTest.php
 
 		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertEquals().'
-			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/CDash/NightlyTimeTest.php
-
-		-
 			rawMessage: 'Method NightlyTimeTest::validateTestingDay() has parameter $expected with no type specified.'
 			identifier: missingType.parameter
 			count: 1
@@ -16987,26 +16567,8 @@ parameters:
 			path: app/cdash/tests/case/CDash/Service/RepositoryServiceTest.php
 
 		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertInstanceOf().'
-			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/CDash/Service/RepositoryServiceTest.php
-
-		-
 			rawMessage: 'Call to method PHPUnit\Framework\Assert::assertInstanceOf() with ''CDash\\ServiceContainer'' and CDash\ServiceContainer will always evaluate to true.'
 			identifier: method.alreadyNarrowedType
-			count: 1
-			path: app/cdash/tests/case/CDash/ServiceContainerTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertInstanceOf().'
-			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/CDash/ServiceContainerTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertSame().'
-			identifier: staticMethod.dynamicCall
 			count: 1
 			path: app/cdash/tests/case/CDash/ServiceContainerTest.php
 
@@ -17083,42 +16645,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
 
 		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertArrayHasKey().'
-			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertCount().'
-			identifier: staticMethod.dynamicCall
-			count: 2
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertEmpty().'
-			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertEquals().'
-			identifier: staticMethod.dynamicCall
-			count: 29
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertInstanceOf().'
-			identifier: staticMethod.dynamicCall
-			count: 5
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertTrue().'
-			identifier: staticMethod.dynamicCall
-			count: 4
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
 			rawMessage: 'PHPDoc tag @var for variable $tests contains generic class Illuminate\Support\Collection but does not specify its types: TKey, TValue'
 			identifier: missingType.generics
 			count: 3
@@ -17143,18 +16669,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/UpdateUseCaseTest.php
 
 		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertEquals().'
-			identifier: staticMethod.dynamicCall
-			count: 2
-			path: app/cdash/tests/case/CDash/UpdateUseCaseTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertInstanceOf().'
-			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/CDash/UpdateUseCaseTest.php
-
-		-
 			rawMessage: 'You should use assertSame() instead of assertEquals(), because both values are scalars of the same type'
 			identifier: phpunit.assertEquals
 			count: 1
@@ -17167,51 +16681,9 @@ parameters:
 			path: app/cdash/tests/case/CDash/XmlHandler/BuildHandlerTest.php
 
 		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertCount().'
-			identifier: staticMethod.dynamicCall
-			count: 4
-			path: app/cdash/tests/case/CDash/XmlHandler/BuildHandlerTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertInstanceOf().'
-			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/CDash/XmlHandler/BuildHandlerTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertTrue().'
-			identifier: staticMethod.dynamicCall
-			count: 6
-			path: app/cdash/tests/case/CDash/XmlHandler/BuildHandlerTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertTrue().'
-			identifier: staticMethod.dynamicCall
-			count: 2
-			path: app/cdash/tests/case/CDash/XmlHandler/ConfigureHandlerTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertTrue().'
-			identifier: staticMethod.dynamicCall
-			count: 2
-			path: app/cdash/tests/case/CDash/XmlHandler/DynamicAnalysisHandlerTest.php
-
-		-
 			rawMessage: 'Call to method PHPUnit\Framework\Assert::assertInstanceOf() with ''CDash\\Submission\\CommitAuthorHandlerInterface'' and App\Http\Submission\Handlers\TestingHandler will always evaluate to true.'
 			identifier: method.alreadyNarrowedType
 			count: 1
-			path: app/cdash/tests/case/CDash/XmlHandler/TestingHandlerTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertInstanceOf().'
-			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/CDash/XmlHandler/TestingHandlerTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertTrue().'
-			identifier: staticMethod.dynamicCall
-			count: 4
 			path: app/cdash/tests/case/CDash/XmlHandler/TestingHandlerTest.php
 
 		-
@@ -17219,30 +16691,6 @@ parameters:
 			identifier: method.alreadyNarrowedType
 			count: 1
 			path: app/cdash/tests/case/CDash/XmlHandler/UpdateHandlerTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertInstanceOf().'
-			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/CDash/XmlHandler/UpdateHandlerTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertTrue().'
-			identifier: staticMethod.dynamicCall
-			count: 3
-			path: app/cdash/tests/case/CDash/XmlHandler/UpdateHandlerTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertFalse().'
-			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/PHPUnitTestTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::assertTrue().'
-			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/PHPUnitTestTest.php
 
 		-
 			rawMessage: 'Path in require_once() "tests/kwtest/kw_db.php" is not a file or it does not exist.'
