@@ -2911,6 +2911,12 @@ parameters:
 			path: app/Http/Submission/Handlers/AbstractXmlHandler.php
 
 		-
+			rawMessage: 'Method App\Http\Submission\Handlers\AbstractXmlHandler::startElement() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
+			count: 1
+			path: app/Http/Submission/Handlers/AbstractXmlHandler.php
+
+		-
 			rawMessage: 'Method App\Http\Submission\Handlers\AbstractXmlHandler::text() has no return type specified.'
 			identifier: missingType.return
 			count: 1
@@ -3376,6 +3382,12 @@ parameters:
 			path: app/Http/Submission/Handlers/BuildHandler.php
 
 		-
+			rawMessage: 'Method App\Http\Submission\Handlers\BuildHandler::startElement() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
+			count: 17
+			path: app/Http/Submission/Handlers/BuildHandler.php
+
+		-
 			rawMessage: 'Method App\Http\Submission\Handlers\BuildHandler::text() has parameter $data with no type specified.'
 			identifier: missingType.parameter
 			count: 1
@@ -3385,6 +3397,12 @@ parameters:
 			rawMessage: 'Method App\Http\Submission\Handlers\BuildHandler::text() has parameter $parser with no type specified.'
 			identifier: missingType.parameter
 			count: 1
+			path: app/Http/Submission/Handlers/BuildHandler.php
+
+		-
+			rawMessage: 'Method App\Http\Submission\Handlers\BuildHandler::text() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
+			count: 3
 			path: app/Http/Submission/Handlers/BuildHandler.php
 
 		-
@@ -3514,6 +3532,12 @@ parameters:
 			path: app/Http/Submission/Handlers/ConfigureHandler.php
 
 		-
+			rawMessage: 'Method App\Http\Submission\Handlers\ConfigureHandler::CreateBuild() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
+			count: 6
+			path: app/Http/Submission/Handlers/ConfigureHandler.php
+
+		-
 			rawMessage: 'Method App\Http\Submission\Handlers\ConfigureHandler::endElement() has parameter $name with no type specified.'
 			identifier: missingType.parameter
 			count: 1
@@ -3550,6 +3574,12 @@ parameters:
 			path: app/Http/Submission/Handlers/ConfigureHandler.php
 
 		-
+			rawMessage: 'Method App\Http\Submission\Handlers\ConfigureHandler::startElement() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
+			count: 4
+			path: app/Http/Submission/Handlers/ConfigureHandler.php
+
+		-
 			rawMessage: 'Method App\Http\Submission\Handlers\ConfigureHandler::text() has parameter $data with no type specified.'
 			identifier: missingType.parameter
 			count: 1
@@ -3559,6 +3589,12 @@ parameters:
 			rawMessage: 'Method App\Http\Submission\Handlers\ConfigureHandler::text() has parameter $parser with no type specified.'
 			identifier: missingType.parameter
 			count: 1
+			path: app/Http/Submission/Handlers/ConfigureHandler.php
+
+		-
+			rawMessage: 'Method App\Http\Submission\Handlers\ConfigureHandler::text() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
+			count: 2
 			path: app/Http/Submission/Handlers/ConfigureHandler.php
 
 		-
@@ -3679,6 +3715,12 @@ parameters:
 			path: app/Http/Submission/Handlers/CoverageHandler.php
 
 		-
+			rawMessage: 'Method App\Http\Submission\Handlers\CoverageHandler::startElement() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
+			count: 8
+			path: app/Http/Submission/Handlers/CoverageHandler.php
+
+		-
 			rawMessage: 'Method App\Http\Submission\Handlers\CoverageHandler::text() has parameter $data with no type specified.'
 			identifier: missingType.parameter
 			count: 1
@@ -3687,6 +3729,12 @@ parameters:
 		-
 			rawMessage: 'Method App\Http\Submission\Handlers\CoverageHandler::text() has parameter $parser with no type specified.'
 			identifier: missingType.parameter
+			count: 1
+			path: app/Http/Submission/Handlers/CoverageHandler.php
+
+		-
+			rawMessage: 'Method App\Http\Submission\Handlers\CoverageHandler::text() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
 			count: 1
 			path: app/Http/Submission/Handlers/CoverageHandler.php
 
@@ -3775,6 +3823,12 @@ parameters:
 			path: app/Http/Submission/Handlers/CoverageJUnitHandler.php
 
 		-
+			rawMessage: 'Method App\Http\Submission\Handlers\CoverageJUnitHandler::startElement() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
+			count: 8
+			path: app/Http/Submission/Handlers/CoverageJUnitHandler.php
+
+		-
 			rawMessage: 'Method App\Http\Submission\Handlers\CoverageJUnitHandler::text() has parameter $data with no type specified.'
 			identifier: missingType.parameter
 			count: 1
@@ -3783,6 +3837,12 @@ parameters:
 		-
 			rawMessage: 'Method App\Http\Submission\Handlers\CoverageJUnitHandler::text() has parameter $parser with no type specified.'
 			identifier: missingType.parameter
+			count: 1
+			path: app/Http/Submission/Handlers/CoverageJUnitHandler.php
+
+		-
+			rawMessage: 'Method App\Http\Submission\Handlers\CoverageJUnitHandler::text() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
 			count: 1
 			path: app/Http/Submission/Handlers/CoverageJUnitHandler.php
 
@@ -3871,6 +3931,12 @@ parameters:
 			rawMessage: 'Method App\Http\Submission\Handlers\CoverageLogHandler::startElement() has parameter $parser with no type specified.'
 			identifier: missingType.parameter
 			count: 1
+			path: app/Http/Submission/Handlers/CoverageLogHandler.php
+
+		-
+			rawMessage: 'Method App\Http\Submission\Handlers\CoverageLogHandler::startElement() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
+			count: 2
 			path: app/Http/Submission/Handlers/CoverageLogHandler.php
 
 		-
@@ -4048,6 +4114,12 @@ parameters:
 			path: app/Http/Submission/Handlers/DynamicAnalysisHandler.php
 
 		-
+			rawMessage: 'Method App\Http\Submission\Handlers\DynamicAnalysisHandler::createBuild() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
+			count: 8
+			path: app/Http/Submission/Handlers/DynamicAnalysisHandler.php
+
+		-
 			rawMessage: 'Method App\Http\Submission\Handlers\DynamicAnalysisHandler::endElement() has parameter $name with no type specified.'
 			identifier: missingType.parameter
 			count: 1
@@ -4084,6 +4156,12 @@ parameters:
 			path: app/Http/Submission/Handlers/DynamicAnalysisHandler.php
 
 		-
+			rawMessage: 'Method App\Http\Submission\Handlers\DynamicAnalysisHandler::startElement() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
+			count: 5
+			path: app/Http/Submission/Handlers/DynamicAnalysisHandler.php
+
+		-
 			rawMessage: 'Method App\Http\Submission\Handlers\DynamicAnalysisHandler::text() has parameter $data with no type specified.'
 			identifier: missingType.parameter
 			count: 1
@@ -4093,6 +4171,12 @@ parameters:
 			rawMessage: 'Method App\Http\Submission\Handlers\DynamicAnalysisHandler::text() has parameter $parser with no type specified.'
 			identifier: missingType.parameter
 			count: 1
+			path: app/Http/Submission/Handlers/DynamicAnalysisHandler.php
+
+		-
+			rawMessage: 'Method App\Http\Submission\Handlers\DynamicAnalysisHandler::text() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
+			count: 2
 			path: app/Http/Submission/Handlers/DynamicAnalysisHandler.php
 
 		-
@@ -4162,6 +4246,12 @@ parameters:
 			path: app/Http/Submission/Handlers/GcovTarHandler.php
 
 		-
+			rawMessage: 'Method App\Http\Submission\Handlers\GcovTarHandler::Parse() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
+			count: 2
+			path: app/Http/Submission/Handlers/GcovTarHandler.php
+
+		-
 			rawMessage: 'Method App\Http\Submission\Handlers\GcovTarHandler::Parse() throws checked exception UnexpectedValueException but it''s missing from the PHPDoc @throws tag.'
 			identifier: missingType.checkedException
 			count: 2
@@ -4170,6 +4260,12 @@ parameters:
 		-
 			rawMessage: 'Method App\Http\Submission\Handlers\GcovTarHandler::ParseGcovFile() has parameter $fileinfo with no type specified.'
 			identifier: missingType.parameter
+			count: 1
+			path: app/Http/Submission/Handlers/GcovTarHandler.php
+
+		-
+			rawMessage: 'Method App\Http\Submission\Handlers\GcovTarHandler::ParseGcovFile() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
 			count: 1
 			path: app/Http/Submission/Handlers/GcovTarHandler.php
 
@@ -4194,6 +4290,12 @@ parameters:
 		-
 			rawMessage: 'Method App\Http\Submission\Handlers\GcovTarHandler::ParseUncoveredSourceFile() has parameter $path with no type specified.'
 			identifier: missingType.parameter
+			count: 1
+			path: app/Http/Submission/Handlers/GcovTarHandler.php
+
+		-
+			rawMessage: 'Method App\Http\Submission\Handlers\GcovTarHandler::ParseUncoveredSourceFile() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
 			count: 1
 			path: app/Http/Submission/Handlers/GcovTarHandler.php
 
@@ -4540,6 +4642,12 @@ parameters:
 			path: app/Http/Submission/Handlers/NoteHandler.php
 
 		-
+			rawMessage: 'Method App\Http\Submission\Handlers\NoteHandler::startElement() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
+			count: 8
+			path: app/Http/Submission/Handlers/NoteHandler.php
+
+		-
 			rawMessage: 'Method App\Http\Submission\Handlers\NoteHandler::text() has parameter $data with no type specified.'
 			identifier: missingType.parameter
 			count: 1
@@ -4548,6 +4656,12 @@ parameters:
 		-
 			rawMessage: 'Method App\Http\Submission\Handlers\NoteHandler::text() has parameter $parser with no type specified.'
 			identifier: missingType.parameter
+			count: 1
+			path: app/Http/Submission/Handlers/NoteHandler.php
+
+		-
+			rawMessage: 'Method App\Http\Submission\Handlers\NoteHandler::text() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
 			count: 1
 			path: app/Http/Submission/Handlers/NoteHandler.php
 
@@ -5065,6 +5179,12 @@ parameters:
 			path: app/Http/Submission/Handlers/TestingHandler.php
 
 		-
+			rawMessage: 'Method App\Http\Submission\Handlers\TestingHandler::createBuild() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
+			count: 6
+			path: app/Http/Submission/Handlers/TestingHandler.php
+
+		-
 			rawMessage: 'Method App\Http\Submission\Handlers\TestingHandler::endElement() has parameter $name with no type specified.'
 			identifier: missingType.parameter
 			count: 1
@@ -5073,6 +5193,12 @@ parameters:
 		-
 			rawMessage: 'Method App\Http\Submission\Handlers\TestingHandler::endElement() has parameter $parser with no type specified.'
 			identifier: missingType.parameter
+			count: 1
+			path: app/Http/Submission/Handlers/TestingHandler.php
+
+		-
+			rawMessage: 'Method App\Http\Submission\Handlers\TestingHandler::endElement() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
 			count: 1
 			path: app/Http/Submission/Handlers/TestingHandler.php
 
@@ -5101,6 +5227,12 @@ parameters:
 			path: app/Http/Submission/Handlers/TestingHandler.php
 
 		-
+			rawMessage: 'Method App\Http\Submission\Handlers\TestingHandler::startElement() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
+			count: 4
+			path: app/Http/Submission/Handlers/TestingHandler.php
+
+		-
 			rawMessage: 'Method App\Http\Submission\Handlers\TestingHandler::text() has parameter $data with no type specified.'
 			identifier: missingType.parameter
 			count: 1
@@ -5109,6 +5241,12 @@ parameters:
 		-
 			rawMessage: 'Method App\Http\Submission\Handlers\TestingHandler::text() has parameter $parser with no type specified.'
 			identifier: missingType.parameter
+			count: 1
+			path: app/Http/Submission/Handlers/TestingHandler.php
+
+		-
+			rawMessage: 'Method App\Http\Submission\Handlers\TestingHandler::text() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
 			count: 1
 			path: app/Http/Submission/Handlers/TestingHandler.php
 
@@ -5247,7 +5385,7 @@ parameters:
 		-
 			rawMessage: 'Method App\Http\Submission\Handlers\TestingJUnitHandler::startElement() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
 			identifier: missingType.checkedException
-			count: 1
+			count: 15
 			path: app/Http/Submission/Handlers/TestingJUnitHandler.php
 
 		-
@@ -5377,6 +5515,12 @@ parameters:
 			path: app/Http/Submission/Handlers/UpdateHandler.php
 
 		-
+			rawMessage: 'Method App\Http\Submission\Handlers\UpdateHandler::startElement() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
+			count: 1
+			path: app/Http/Submission/Handlers/UpdateHandler.php
+
+		-
 			rawMessage: 'Method App\Http\Submission\Handlers\UpdateHandler::text() has parameter $data with no type specified.'
 			identifier: missingType.parameter
 			count: 1
@@ -5385,6 +5529,12 @@ parameters:
 		-
 			rawMessage: 'Method App\Http\Submission\Handlers\UpdateHandler::text() has parameter $parser with no type specified.'
 			identifier: missingType.parameter
+			count: 1
+			path: app/Http/Submission/Handlers/UpdateHandler.php
+
+		-
+			rawMessage: 'Method App\Http\Submission\Handlers\UpdateHandler::text() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
 			count: 1
 			path: app/Http/Submission/Handlers/UpdateHandler.php
 
@@ -5455,6 +5605,12 @@ parameters:
 			path: app/Http/Submission/Handlers/UploadHandler.php
 
 		-
+			rawMessage: 'Method App\Http\Submission\Handlers\UploadHandler::startElement() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
+			count: 8
+			path: app/Http/Submission/Handlers/UploadHandler.php
+
+		-
 			rawMessage: 'Method App\Http\Submission\Handlers\UploadHandler::text() has parameter $data with no type specified.'
 			identifier: missingType.parameter
 			count: 1
@@ -5463,6 +5619,12 @@ parameters:
 		-
 			rawMessage: 'Method App\Http\Submission\Handlers\UploadHandler::text() has parameter $parser with no type specified.'
 			identifier: missingType.parameter
+			count: 1
+			path: app/Http/Submission/Handlers/UploadHandler.php
+
+		-
+			rawMessage: 'Method App\Http\Submission\Handlers\UploadHandler::text() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
 			count: 1
 			path: app/Http/Submission/Handlers/UploadHandler.php
 
@@ -7108,6 +7270,12 @@ parameters:
 			rawMessage: 'Method App\Utils\UnparsedSubmissionProcessor::deserializeBuildMetadata() has parameter $fp with no type specified.'
 			identifier: missingType.parameter
 			count: 1
+			path: app/Utils/UnparsedSubmissionProcessor.php
+
+		-
+			rawMessage: 'Method App\Utils\UnparsedSubmissionProcessor::initializeBuild() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
+			count: 2
 			path: app/Utils/UnparsedSubmissionProcessor.php
 
 		-
@@ -8787,7 +8955,7 @@ parameters:
 		-
 			rawMessage: 'Method CDash\Lib\Repository\GitHub::__construct() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
 			identifier: missingType.checkedException
-			count: 1
+			count: 2
 			path: app/cdash/app/Lib/Repository/GitHub.php
 
 		-
@@ -9097,6 +9265,12 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
+			rawMessage: 'Method CDash\Model\Build::CreateParentBuild() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
+			count: 1
+			path: app/cdash/app/Model/Build.php
+
+		-
 			rawMessage: 'Method CDash\Model\Build::FillFromId() has parameter $buildid with no type specified.'
 			identifier: missingType.parameter
 			count: 1
@@ -9195,6 +9369,12 @@ parameters:
 		-
 			rawMessage: 'Method CDash\Model\Build::GetFailures() return type has no value type specified in iterable type array.'
 			identifier: missingType.iterableValue
+			count: 1
+			path: app/cdash/app/Model/Build.php
+
+		-
+			rawMessage: 'Method CDash\Model\Build::GetFailures() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -9309,6 +9489,12 @@ parameters:
 		-
 			rawMessage: 'Method CDash\Model\Build::SetSubProject() has parameter $subproject with no type specified.'
 			identifier: missingType.parameter
+			count: 1
+			path: app/cdash/app/Model/Build.php
+
+		-
+			rawMessage: 'Method CDash\Model\Build::SetSubProject() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -12409,12 +12595,6 @@ parameters:
 			path: app/cdash/include/Messaging/Topic/TestFailureTopic.php
 
 		-
-			rawMessage: 'Parameter #1 $key of method Illuminate\Support\Collection<(int|string),mixed>::put() expects (int|string), mixed given.'
-			identifier: argument.type
-			count: 2
-			path: app/cdash/include/Messaging/Topic/TestFailureTopic.php
-
-		-
 			rawMessage: 'Parameter #2 $item (App\Models\Test) of method CDash\Messaging\Topic\TestFailureTopic::itemHasTopicSubject() should be contravariant with parameter $item (mixed) of method CDash\Messaging\Topic\Topic::itemHasTopicSubject()'
 			identifier: method.childParameterType
 			count: 1
@@ -13681,6 +13861,12 @@ parameters:
 			rawMessage: 'Function create_aggregate_build() has parameter $siteid with no type specified.'
 			identifier: missingType.parameter
 			count: 1
+			path: app/cdash/include/common.php
+
+		-
+			rawMessage: 'Function create_aggregate_build() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
+			count: 2
 			path: app/cdash/include/common.php
 
 		-
@@ -16509,6 +16695,12 @@ parameters:
 		-
 			rawMessage: 'Method MultipleSubprojectsEmailTest::getNotifications() has parameter $subscribers with no value type specified in iterable type array.'
 			identifier: missingType.iterableValue
+			count: 1
+			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
+
+		-
+			rawMessage: 'Method MultipleSubprojectsEmailTest::getNotifications() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
 			count: 1
 			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
 
@@ -20452,6 +20644,12 @@ parameters:
 			path: app/cdash/tests/test_displayimage.php
 
 		-
+			rawMessage: 'Method DisplayImageTestCase::testDisplayImage() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
+			count: 1
+			path: app/cdash/tests/test_displayimage.php
+
+		-
 			rawMessage: '''
 				Call to deprecated method getPdo() of class CDash\Database:
 				04/22/2023  Use Laravel query builder or Eloquent instead
@@ -21988,12 +22186,6 @@ parameters:
 			path: app/cdash/tests/test_longbuildname.php
 
 		-
-			rawMessage: Cannot access property $Id on CDash\Model\Project|null.
-			identifier: property.nonObject
-			count: 1
-			path: app/cdash/tests/test_longbuildname.php
-
-		-
 			rawMessage: Cannot access property $log on App\Models\Configure|null.
 			identifier: property.nonObject
 			count: 1
@@ -22545,12 +22737,6 @@ parameters:
 		-
 			rawMessage: Cannot access offset 0 on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_multiplelabelsfortests.php
-
-		-
-			rawMessage: Cannot access property $Id on CDash\Model\Project|null.
-			identifier: property.nonObject
 			count: 1
 			path: app/cdash/tests/test_multiplelabelsfortests.php
 
@@ -25243,6 +25429,12 @@ parameters:
 			path: app/cdash/tests/test_timeoutsandmissingtests.php
 
 		-
+			rawMessage: Cannot access offset 'status' on mixed.
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 7
+			path: app/cdash/tests/test_timeoutsandmissingtests.php
+
+		-
 			rawMessage: Cannot access offset 'tests' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -26428,21 +26620,21 @@ parameters:
 			path: tests/Feature/GraphQL/Mutations/InviteToProjectTest.php
 
 		-
-			rawMessage: Cannot access property $id on App\Models\Project|null.
-			identifier: property.nonObject
-			count: 1
+			rawMessage: Using nullsafe method call on non-nullable type App\Models\Project. Use -> instead.
+			identifier: nullsafe.neverNull
+			count: 5
 			path: tests/Feature/GraphQL/Mutations/JoinProjectTest.php
 
 		-
-			rawMessage: 'Cannot call method users() on App\Models\Project|null.'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Feature/GraphQL/Mutations/JoinProjectTest.php
-
-		-
-			rawMessage: 'Parameter #1 $user of method Illuminate\Foundation\Testing\TestCase::actingAs() expects Illuminate\Contracts\Auth\Authenticatable, App\Models\User|null given.'
-			identifier: argument.type
+			rawMessage: Using nullsafe property access on non-nullable type App\Models\Project. Use -> instead.
+			identifier: nullsafe.neverNull
 			count: 3
+			path: tests/Feature/GraphQL/Mutations/JoinProjectTest.php
+
+		-
+			rawMessage: Using nullsafe property access on non-nullable type App\Models\User. Use -> instead.
+			identifier: nullsafe.neverNull
+			count: 2
 			path: tests/Feature/GraphQL/Mutations/JoinProjectTest.php
 
 		-
@@ -26607,13 +26799,19 @@ parameters:
 		-
 			rawMessage: 'Parameter #1 $model of method Illuminate\Foundation\Testing\TestCase::assertModelExists() expects Illuminate\Database\Eloquent\Model|iterable<Illuminate\Database\Eloquent\Model>|string, App\Models\User|null given.'
 			identifier: argument.type
-			count: 2
+			count: 1
 			path: tests/Feature/LoginAndRegistration.php
 
 		-
 			rawMessage: 'Parameter #1 $user of method Illuminate\Foundation\Testing\TestCase::assertAuthenticatedAs() expects Illuminate\Contracts\Auth\Authenticatable, App\Models\User|null given.'
 			identifier: argument.type
-			count: 3
+			count: 2
+			path: tests/Feature/LoginAndRegistration.php
+
+		-
+			rawMessage: Using nullsafe property access on non-nullable type App\Models\User. Use -> instead.
+			identifier: nullsafe.neverNull
+			count: 1
 			path: tests/Feature/LoginAndRegistration.php
 
 		-
