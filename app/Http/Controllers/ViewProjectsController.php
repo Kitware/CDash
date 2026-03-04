@@ -23,6 +23,7 @@ final class ViewProjectsController extends AbstractController
         }
 
         return $this->vue('projects-page', 'Projects', [
+            'is-logged-in' => Auth::check(),
             'can-create-projects' => Gate::allows('create', Project::class),
         ]);
     }
