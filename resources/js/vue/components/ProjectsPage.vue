@@ -10,6 +10,16 @@
           class="tw-tabs tw-tabs-bordered"
         >
           <a
+            v-if="isLoggedIn"
+            role="tab"
+            class="tw-tab"
+            :class="{'tw-tab-active': currentTab === 'MEMBER', 'tw-font-bold': currentTab === 'MEMBER' }"
+            data-test="member-tab"
+            @click="currentTab = 'MEMBER'"
+          >
+            Member
+          </a>
+          <a
             role="tab"
             class="tw-tab"
             :class="{'tw-tab-active': currentTab === 'ACTIVE', 'tw-font-bold': currentTab === 'ACTIVE' }"
@@ -41,18 +51,11 @@
       </div>
       <loading-indicator :is-loading="projects === null">
         <div
-          v-if="projects.length === 0 && currentTab === 'ACTIVE'"
-          class="tw-italic tw-font-medium tw-text-neutral-500"
-          data-test="no-active-projects-message"
-        >
-          No projects with builds in the last 24 hours...
-        </div>
-        <div
-          v-else-if="projects.length === 0 && currentTab === 'ALL'"
+          v-if="noProjectsMessage !== null"
           class="tw-italic tw-font-medium tw-text-neutral-500"
           data-test="no-projects-message"
         >
-          No projects to display...
+          {{ noProjectsMessage }}
         </div>
         <table
           v-else
@@ -122,9 +125,39 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 
+const PROJECT_LIST_QUERY = `
+  projects {
+    edges {
+      node {
+        id
+        name
+        description
+        logoUrl
+        visibility
+        buildCount(filters: {
+          gt: {
+            submissionTime: $countBuildsSince
+          }
+        })
+        mostRecentBuild {
+          id
+          startTime
+          submissionTime
+        }
+      }
+    }
+  }
+`;
+
 export default {
   components: {FontAwesomeIcon, ProjectLogo, LoadingIndicator},
+
   props: {
+    isLoggedIn: {
+      type: Boolean,
+      required: true,
+    },
+
     canCreateProjects: {
       type: Boolean,
       required: true,
@@ -133,7 +166,7 @@ export default {
 
   data() {
     return {
-      currentTab: 'ACTIVE', // Options: 'ACTIVE', 'ALL'
+      currentTab: this.isLoggedIn ? 'MEMBER' : 'ACTIVE', // Options: 'MEMBER', 'ACTIVE', 'ALL'
     };
   },
 
@@ -141,32 +174,29 @@ export default {
     allVisibleProjects: {
       query: gql`
         query allVisibleProjects($countBuildsSince: DateTimeTz!) {
-          allVisibleProjects: projects {
-            edges {
-              node {
-                id
-                name
-                description
-                logoUrl
-                visibility
-                buildCount(filters: {
-                  gt: {
-                    submissionTime: $countBuildsSince
-                  }
-                })
-                mostRecentBuild {
-                  id
-                  startTime
-                  submissionTime
-                }
-              }
-            }
-          }
+          allVisibleProjects: ${PROJECT_LIST_QUERY}
         }
       `,
       variables() {
         return {
-          countBuildsSince: DateTime.now().minus({days: 1}).startOf('second').toISO({suppressMilliseconds: true}),
+          countBuildsSince: this.oneDayAgo,
+        };
+      },
+    },
+
+    myProjects: {
+      query: gql`
+        query myProjects($countBuildsSince: DateTimeTz!) {
+          me {
+            id
+            ${PROJECT_LIST_QUERY}
+          }
+        }
+      `,
+      update: data => data?.me?.projects,
+      variables() {
+        return {
+          countBuildsSince: this.oneDayAgo,
         };
       },
     },
@@ -187,13 +217,44 @@ export default {
     },
 
     projects() {
-      const edges = this.allVisibleProjects?.edges.filter(({node: project}) => this.currentTab === 'ALL' || project.buildCount > 0);
+      let edges;
+      if (this.currentTab === 'MEMBER') {
+        edges = this.myProjects?.edges.map(x => x);
+      }
+      else if (this.currentTab === 'ACTIVE') {
+        edges = this.allVisibleProjects?.edges.filter(({node: project}) => project.buildCount > 0);
+      }
+      else {
+        edges = this.allVisibleProjects?.edges.map(x => x);
+      }
+
       if (edges === null || edges === undefined) {
         return null;
       }
 
       edges.sort((a, b) => b.node.buildCount - a.node.buildCount);
       return edges;
+    },
+
+    noProjectsMessage() {
+      if (this.projects.length > 0) {
+        return null;
+      }
+
+      switch (this.currentTab) {
+      case 'MEMBER':
+        return 'You are not a member of any projects yet...';
+      case 'ACTIVE':
+        return 'No projects with builds in the last 24 hours...';
+      case 'ALL':
+        return 'No projects to display...';
+      default:
+        return null;
+      }
+    },
+
+    oneDayAgo() {
+      return DateTime.now().minus({days: 1}).startOf('second').toISO({suppressMilliseconds: true});
     },
   },
 

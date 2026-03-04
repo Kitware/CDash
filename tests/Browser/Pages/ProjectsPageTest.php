@@ -97,6 +97,7 @@ class ProjectsPageTest extends BrowserTestCase
                     $browser->click('@all-tab')
                         ->waitFor('@no-projects-message')
                         ->assertVisible('@no-projects-message')
+                        ->assertSee('No projects to display')
                         ->assertMissing('@projects-table')
                     ;
                 });
@@ -109,6 +110,7 @@ class ProjectsPageTest extends BrowserTestCase
                     $browser->click('@all-tab')
                         ->waitFor('@projects-table')
                         ->assertMissing('@no-projects-message')
+                        ->assertDontSee('No projects to display')
                         ->assertSeeIn('@projects-table', $this->projects['project1']->name)
                     ;
                 });
@@ -129,8 +131,8 @@ class ProjectsPageTest extends BrowserTestCase
             $browser->visit('/projects')
                 ->whenAvailable('@projects-page', function (Browser $browser): void {
                     $browser->click('@active-tab')
-                        ->waitFor('@no-active-projects-message')
-                        ->assertVisible('@no-active-projects-message')
+                        ->waitFor('@no-projects-message')
+                        ->assertSee('No projects with builds in the last 24 hours')
                         ->assertMissing('@projects-table')
                     ;
                 });
@@ -142,9 +144,61 @@ class ProjectsPageTest extends BrowserTestCase
                 ->whenAvailable('@projects-page', function (Browser $browser): void {
                     $browser->click('@active-tab')
                         ->waitFor('@projects-table')
-                        ->assertMissing('@no-active-projects-message')
+                        ->assertMissing('@no-projects-message')
+                        ->assertDontSee('No projects with builds in the last 24 hours')
                         ->assertSeeIn('@projects-table', $this->projects['project1']->name)
                     ;
+                });
+        });
+    }
+
+    public function testShowsMessageWhenNoMemberProjects(): void
+    {
+        $this->users['admin'] = $this->makeAdminUser();
+        $this->projects['project1'] = $this->makePublicProject();
+
+        $this->browse(function (Browser $browser): void {
+            $browser->loginAs($this->users['admin'])
+                ->visit('/projects')
+                ->whenAvailable('@projects-page', function (Browser $browser): void {
+                    $browser->click('@member-tab')
+                        ->waitFor('@no-projects-message')
+                        ->assertVisible('@no-projects-message')
+                        ->assertSee('You are not a member of any projects yet')
+                        ->assertMissing('@projects-table')
+                    ;
+                });
+
+            $this->projects['project1']->users()->attach($this->users['admin'], ['role' => Project::PROJECT_USER]);
+
+            $browser->loginAs($this->users['admin'])
+                ->visit('/projects')
+                ->whenAvailable('@projects-page', function (Browser $browser): void {
+                    $browser->click('@member-tab')
+                        ->waitFor('@projects-table')
+                        ->assertMissing('@no-projects-message')
+                        ->assertDontSee('You are not a member of any projects yet')
+                        ->assertSeeIn('@projects-table', $this->projects['project1']->name)
+                    ;
+                });
+        });
+    }
+
+    public function testOnlyShowsMemberTabWhenLoggedIn(): void
+    {
+        $this->users['admin'] = $this->makeAdminUser();
+        $this->projects['project1'] = $this->makePublicProject();
+
+        $this->browse(function (Browser $browser): void {
+            $browser->visit('/projects')
+                ->whenAvailable('@projects-page', function (Browser $browser): void {
+                    $browser->assertMissing('@member-tab');
+                });
+
+            $browser->loginAs($this->users['admin'])
+                ->visit('/projects')
+                ->whenAvailable('@projects-page', function (Browser $browser): void {
+                    $browser->assertVisible('@member-tab');
                 });
         });
     }
