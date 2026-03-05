@@ -28,29 +28,29 @@ class AuthTokenUtil
      *
      * @throws InvalidArgumentException
      */
-    public static function generateToken(int $user_id, int $project_id, string $scope, string $description): array
+    public static function generateToken(int $user_id, int $project_id, string $scope, string $description, ?Carbon $expiration = null): array
     {
+        $params = [];
+
         // 86 characters generates more than 512 bits of entropy (and is thus limited by the entropy of the hash)
         $token = Str::password(86, true, true, false);
         $params['hash'] = hash('sha512', $token);
 
         $params['userid'] = $user_id;
 
-        $duration = Config::get('cdash.token_duration');
-        $now = time();
-        $params['created'] = gmdate(FMT_DATETIME, $now);
+        $now = Carbon::now();
+        $params['created'] = $now->toIso8601String();
 
-        if (!is_numeric($duration) || (int) $duration < 0) {
-            Log::error("Invalid token_duration configuration {$duration}");
-            throw new InvalidArgumentException('Invalid token_duration configuration');
+        // The default expiration date is 1 year in the future.
+        if ($expiration === null) {
+            $expiration = $now->addYear();
         }
 
-        if ((int) $duration === 0) {
-            // this token "never" expires
-            $params['expires'] = '9999-01-01 00:00:00';
-        } else {
-            $params['expires'] = gmdate(FMT_DATETIME, $now + $duration);
+        if ($expiration->isNowOrPast()) {
+            throw new InvalidArgumentException('Token expiration cannot be in the past.');
         }
+
+        $params['expires'] = $expiration->min(self::getMaximumTokenExpiration())->toIso8601String();
 
         $params['description'] = $description;
 
@@ -282,5 +282,20 @@ class AuthTokenUtil
     public static function getBearerToken(): ?string
     {
         return request()->bearerToken();
+    }
+
+    public static function getMaximumTokenExpiration(): Carbon
+    {
+        $maxDuration = Config::get('cdash.token_duration');
+        if (!is_numeric($maxDuration) || (int) $maxDuration < 0) {
+            Log::error("Invalid token_duration configuration {$maxDuration}");
+            throw new InvalidArgumentException('Invalid token_duration configuration');
+        }
+
+        // A maximum duration of 0 is equivalent to no limit.
+        if ((int) $maxDuration === 0) {
+            return (new Carbon())->endOfMillennium();
+        }
+        return Carbon::now()->addSeconds((int) $maxDuration);
     }
 }

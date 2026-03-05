@@ -61,6 +61,7 @@ final class AuthTokenController extends AbstractController
                 $projectid,
                 $request->input('scope'),
                 $request->input('description'),
+                $request->date('expiration'),
             );
         } catch (InvalidArgumentException $e) {
             return response()->json(['error' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
