@@ -233,6 +233,8 @@ add_feature_test_in_transaction(/Feature/GraphQL/BuildErrorTypeTest)
 
 add_feature_test_in_transaction(/Feature/GraphQL/CommentTypeTest)
 
+add_feature_test_in_transaction(/Feature/GraphQL/RepositoryTypeTest)
+
 add_feature_test_in_transaction(/Feature/RouteAccessTest)
 
 add_feature_test_in_transaction(/Feature/Monitor)
@@ -289,6 +291,10 @@ add_feature_test_in_transaction(/Feature/GraphQL/Mutations/CreatePinnedTestMeasu
 add_feature_test_in_transaction(/Feature/GraphQL/Mutations/DeletePinnedTestMeasurementTest)
 
 add_feature_test_in_transaction(/Feature/GraphQL/Mutations/UpdatePinnedTestMeasurementOrderTest)
+
+add_feature_test_in_transaction(/Feature/GraphQL/Mutations/CreateRepositoryTest)
+
+add_feature_test_in_transaction(/Feature/GraphQL/Mutations/DeleteRepositoryTest)
 
 add_feature_test_in_transaction(/Feature/GlobalInvitationAcceptanceTest)
 

@@ -131,6 +131,12 @@ type Mutation {
   previous maximum position.  Only the relative order is guaranteed.
   """
   updatePinnedTestMeasurementOrder(input: UpdatePinnedTestMeasurementOrderInput! @spread): UpdatePinnedTestMeasurementOrderMutationPayload! @field(resolver: "UpdatePinnedTestMeasurementOrder")
+
+  "Add a repository to a project.  Cannot retrieve password once set."
+  createRepository(input: CreateRepositoryInput! @spread): CreateRepositoryMutationPayload! @field(resolver: "CreateRepository")
+
+  "Delete a repository by ID."
+  deleteRepository(input: DeleteRepositoryInput! @spread): DeleteRepositoryMutationPayload! @field(resolver: "DeleteRepository")
 }
 
 
@@ -336,6 +342,9 @@ type Project {
   alongside Test details throughout the site.
   """
   pinnedTestMeasurements: [PinnedTestMeasurement!]! @hasMany(type: CONNECTION) @orderBy(column: "position")
+
+  "Repositories."
+  repositories: [Repository!]! @hasMany(type: CONNECTION) @orderBy(column: "id")
 }
 
 
@@ -645,6 +654,39 @@ type UpdatePinnedTestMeasurementOrderMutationPayload implements MutationPayloadI
 
   "The new list of pinned measurements."
   pinnedTestMeasurements: [PinnedTestMeasurement!]
+}
+
+
+input CreateRepositoryInput {
+  projectId: ID!
+
+  url: Url!
+
+  username: String!
+
+  password: String!
+
+  branch: String!
+}
+
+
+type CreateRepositoryMutationPayload implements MutationPayloadInterface {
+  "Optional error message."
+  message: String
+
+  "The newly created repository."
+  repository: Repository
+}
+
+
+input DeleteRepositoryInput {
+  repositoryId: ID!
+}
+
+
+type DeleteRepositoryMutationPayload implements MutationPayloadInterface {
+  "Optional error message."
+  message: String
 }
 
 
@@ -1381,4 +1423,16 @@ type Comment {
   timestamp: DateTimeTz!
 
   user: User!
+}
+
+
+type Repository {
+  "Unique primary key."
+  id: ID!
+
+  url: Url!
+
+  username: String!
+
+  branch: String!
 }
