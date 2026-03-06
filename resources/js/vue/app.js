@@ -7,66 +7,36 @@ import VueApolloComponents from '@vue/apollo-components';
 import { relayStylePagination } from '@apollo/client/utilities';
 import { DefaultApolloClient } from '@vue/apollo-composable';
 
-const BuildConfigure = Vue.defineAsyncComponent(() => import('./components/BuildConfigure'));
-const BuildNotesPage = Vue.defineAsyncComponent(() => import('./components/BuildNotesPage.vue'));
-const BuildSummary = Vue.defineAsyncComponent(() => import('./components/BuildSummary'));
-const BuildUpdate = Vue.defineAsyncComponent(() => import('./components/BuildUpdate'));
-const EditProject = Vue.defineAsyncComponent(() => import('./components/EditProject'));
-const UserHomepage = Vue.defineAsyncComponent(() => import('./components/UserHomepage'));
-const ManageAuthTokens = Vue.defineAsyncComponent(() => import('./components/ManageAuthTokens.vue'));
-const ManageMeasurements = Vue.defineAsyncComponent(() => import('./components/ManageMeasurements'));
-const Monitor = Vue.defineAsyncComponent(() => import('./components/Monitor'));
-const TestDetails = Vue.defineAsyncComponent(() => import('./components/TestDetails'));
-const HeaderNav = Vue.defineAsyncComponent(() => import('./components/page-header/HeaderNav.vue'));
-const ViewDynamicAnalysis = Vue.defineAsyncComponent(() => import('./components/ViewDynamicAnalysis.vue'));
-const BuildDynamicAnalysisIdPage = Vue.defineAsyncComponent(() => import('./components/BuildDynamicAnalysisIdPage.vue'));
-const ProjectsPage = Vue.defineAsyncComponent(() => import('./components/ProjectsPage.vue'));
-const SubProjectDependencies = Vue.defineAsyncComponent(() => import('./components/SubProjectDependencies.vue'));
-const BuildTestsPage = Vue.defineAsyncComponent(() => import('./components/BuildTestsPage.vue'));
-const ProjectSitesPage = Vue.defineAsyncComponent(() => import('./components/ProjectSitesPage.vue'));
-const SitesIdPage = Vue.defineAsyncComponent(() => import('./components/SitesIdPage.vue'));
-const ProjectMembersPage = Vue.defineAsyncComponent(() => import('./components/ProjectMembersPage.vue'));
-const UsersPage = Vue.defineAsyncComponent(() => import('./components/UsersPage.vue'));
-const BuildFilesPage = Vue.defineAsyncComponent(() => import('./components/BuildFilesPage.vue'));
-const BuildTargetsPage = Vue.defineAsyncComponent(() => import('./components/BuildTargetsPage.vue'));
-const BuildCommandsPage = Vue.defineAsyncComponent(() => import('./components/BuildCommandsPage.vue'));
-const BuildErrorsPage = Vue.defineAsyncComponent(() => import('./components/BuildErrorsPage.vue'));
-const CoverageFilePage = Vue.defineAsyncComponent(() => import('./components/CoverageFilePage.vue'));
-const BuildCoveragePage = Vue.defineAsyncComponent(() => import('./components/BuildCoveragePage.vue'));
-const CreateProjectPage = Vue.defineAsyncComponent(() => import('./components/CreateProjectPage.vue'));
-
-const cdash_components = {
-  BuildConfigure,
-  BuildNotesPage,
-  BuildSummary,
-  BuildUpdate,
-  EditProject,
-  UserHomepage,
-  ManageAuthTokens,
-  ManageMeasurements,
-  Monitor,
-  TestDetails,
-  HeaderNav,
-  ViewDynamicAnalysis,
-  BuildDynamicAnalysisIdPage,
-  ProjectsPage,
-  SubProjectDependencies,
-  BuildTestsPage,
-  ProjectSitesPage,
-  SitesIdPage,
-  ProjectMembersPage,
-  UsersPage,
-  BuildFilesPage,
-  BuildTargetsPage,
-  BuildCommandsPage,
-  BuildErrorsPage,
-  CoverageFilePage,
-  BuildCoveragePage,
-  CreateProjectPage,
-};
-
 const app = Vue.createApp({
-  components:  cdash_components,
+  components: {
+    BuildConfigure: Vue.defineAsyncComponent(() => import('./components/BuildConfigure')),
+    BuildNotesPage: Vue.defineAsyncComponent(() => import('./components/BuildNotesPage.vue')),
+    BuildSummary: Vue.defineAsyncComponent(() => import('./components/BuildSummary')),
+    BuildUpdate: Vue.defineAsyncComponent(() => import('./components/BuildUpdate')),
+    EditProject: Vue.defineAsyncComponent(() => import('./components/EditProject')),
+    UserHomepage: Vue.defineAsyncComponent(() => import('./components/UserHomepage')),
+    ManageAuthTokens: Vue.defineAsyncComponent(() => import('./components/ManageAuthTokens.vue')),
+    ManageMeasurements: Vue.defineAsyncComponent(() => import('./components/ManageMeasurements')),
+    Monitor: Vue.defineAsyncComponent(() => import('./components/Monitor')),
+    TestDetails: Vue.defineAsyncComponent(() => import('./components/TestDetails')),
+    HeaderNav: Vue.defineAsyncComponent(() => import('./components/page-header/HeaderNav.vue')),
+    ViewDynamicAnalysis: Vue.defineAsyncComponent(() => import('./components/ViewDynamicAnalysis.vue')),
+    BuildDynamicAnalysisIdPage: Vue.defineAsyncComponent(() => import('./components/BuildDynamicAnalysisIdPage.vue')),
+    ProjectsPage: Vue.defineAsyncComponent(() => import('./components/ProjectsPage.vue')),
+    SubProjectDependencies: Vue.defineAsyncComponent(() => import('./components/SubProjectDependencies.vue')),
+    BuildTestsPage: Vue.defineAsyncComponent(() => import('./components/BuildTestsPage.vue')),
+    ProjectSitesPage: Vue.defineAsyncComponent(() => import('./components/ProjectSitesPage.vue')),
+    SitesIdPage: Vue.defineAsyncComponent(() => import('./components/SitesIdPage.vue')),
+    ProjectMembersPage: Vue.defineAsyncComponent(() => import('./components/ProjectMembersPage.vue')),
+    UsersPage: Vue.defineAsyncComponent(() => import('./components/UsersPage.vue')),
+    BuildFilesPage: Vue.defineAsyncComponent(() => import('./components/BuildFilesPage.vue')),
+    BuildTargetsPage: Vue.defineAsyncComponent(() => import('./components/BuildTargetsPage.vue')),
+    BuildCommandsPage: Vue.defineAsyncComponent(() => import('./components/BuildCommandsPage.vue')),
+    BuildErrorsPage: Vue.defineAsyncComponent(() => import('./components/BuildErrorsPage.vue')),
+    CoverageFilePage: Vue.defineAsyncComponent(() => import('./components/CoverageFilePage.vue')),
+    BuildCoveragePage: Vue.defineAsyncComponent(() => import('./components/BuildCoveragePage.vue')),
+    CreateProjectPage: Vue.defineAsyncComponent(() => import('./components/CreateProjectPage.vue')),
+  },
 });
 
 app.config.globalProperties.$baseURL = $('#app').attr('data-app-url');
