@@ -144,20 +144,18 @@ class TestCreator
                 'output' => $this->testOutput,
             ])->id;
 
-            // build2test
-            $buildtest = new Test();
-            $buildtest->buildid = $build->Id;
-            $buildtest->outputid = $outputid;
-            $buildtest->status = $this->testStatus;
-            $buildtest->details = $this->testDetails;
-            $buildtest->time = "$this->buildTestTime";
-            $buildtest->testname = $this->testName;
-            $buildtest->starttime = $this->testStartTime;
-
             // Note: the newstatus column is currently handled in
             // ctestparserutils::compute_test_difference. This gets updated when we call
             // Build::ComputeTestTiming.
-            $buildtest->save();
+            $buildtest = Test::create([
+                'buildid' => $build->Id,
+                'outputid' => $outputid,
+                'status' => $this->testStatus,
+                'details' => $this->testDetails,
+                'time' => "$this->buildTestTime",
+                'testname' => $this->testName,
+                'starttime' => $this->testStartTime,
+            ]);
 
             foreach ($this->measurements as $measurement) {
                 $measurement->testid = $buildtest->id;
