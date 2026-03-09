@@ -283,10 +283,22 @@ parameters:
 			path: app/GraphQL/Mutations/CreatePinnedTestMeasurement.php
 
 		-
+			rawMessage: 'Parameter #2 $args (array{projectId: int, url: string, username: string, password: string, branch: string}) of method App\GraphQL\Mutations\CreateRepository::__invoke() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::__invoke()'
+			identifier: method.childParameterType
+			count: 1
+			path: app/GraphQL/Mutations/CreateRepository.php
+
+		-
 			rawMessage: 'Parameter #1 $args (array{id: int}) of method App\GraphQL\Mutations\DeletePinnedTestMeasurement::mutate() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::mutate()'
 			identifier: method.childParameterType
 			count: 1
 			path: app/GraphQL/Mutations/DeletePinnedTestMeasurement.php
+
+		-
+			rawMessage: 'Parameter #2 $args (array{repositoryId: int}) of method App\GraphQL\Mutations\DeleteRepository::__invoke() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::__invoke()'
+			identifier: method.childParameterType
+			count: 1
+			path: app/GraphQL/Mutations/DeleteRepository.php
 
 		-
 			rawMessage: 'Parameter #1 $args (array{email: string, projectId: int, role: App\Enums\ProjectRole}) of method App\GraphQL\Mutations\InviteToProject::mutate() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::mutate()'

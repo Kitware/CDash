@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
+use Database\Factories\RepositoryFactory;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property int $id
@@ -17,6 +20,9 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Repository extends Model
 {
+    /** @use HasFactory<RepositoryFactory> */
+    use HasFactory;
+
     protected $table = 'repositories';
 
     public $timestamps = false;
@@ -31,4 +37,12 @@ class Repository extends Model
     protected $casts = [
         'projectid' => 'integer',
     ];
+
+    /**
+     * @return BelongsTo<Project, $this>
+     */
+    public function project(): BelongsTo
+    {
+        return $this->belongsTo(Project::class, 'projectid');
+    }
 }
