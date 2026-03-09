@@ -137,7 +137,7 @@ class TestCreator
             }
         }
 
-        DB::transaction(function () use ($build) {
+        DB::transaction(function () use ($build): void {
             $outputid = TestOutput::select('id')->firstOrCreate([
                 'path' => $this->testPath,
                 'command' => $this->testCommand,
