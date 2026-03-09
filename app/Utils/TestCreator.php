@@ -136,7 +136,7 @@ class TestCreator
             }
         }
 
-        $outputid = TestOutput::firstOrCreate([
+        $outputid = TestOutput::select('id')->firstOrCreate([
             'path' => $this->testPath,
             'command' => $this->testCommand,
             'output' => $this->testOutput,
