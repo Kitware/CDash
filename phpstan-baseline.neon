@@ -7063,12 +7063,6 @@ parameters:
 			path: app/Utils/TestCreator.php
 
 		-
-			rawMessage: 'Property App\Models\Test::$time (float) does not accept string.'
-			identifier: assign.propertyType
-			count: 1
-			path: app/Utils/TestCreator.php
-
-		-
 			rawMessage: Property App\Utils\TestCreator::$alreadyCompressed has no type specified.
 			identifier: missingType.property
 			count: 1

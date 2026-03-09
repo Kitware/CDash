@@ -24,6 +24,7 @@ use Carbon\Carbon;
 use CDash\Model\Build;
 use CDash\Model\Image;
 use ErrorException;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -136,46 +137,46 @@ class TestCreator
             }
         }
 
-        $outputid = TestOutput::firstOrCreate([
-            'path' => $this->testPath,
-            'command' => $this->testCommand,
-            'output' => $this->testOutput,
-        ])->id;
+        DB::transaction(function () use ($build): void {
+            $outputid = TestOutput::select('id')->firstOrCreate([
+                'path' => $this->testPath,
+                'command' => $this->testCommand,
+                'output' => $this->testOutput,
+            ])->id;
 
-        // build2test
-        $buildtest = new Test();
-        $buildtest->buildid = $build->Id;
-        $buildtest->outputid = $outputid;
-        $buildtest->status = $this->testStatus;
-        $buildtest->details = $this->testDetails;
-        $buildtest->time = "$this->buildTestTime";
-        $buildtest->testname = $this->testName;
-        $buildtest->starttime = $this->testStartTime;
+            // Note: the newstatus column is currently handled in
+            // ctestparserutils::compute_test_difference. This gets updated when we call
+            // Build::ComputeTestTiming.
+            $buildtest = Test::create([
+                'buildid' => $build->Id,
+                'outputid' => $outputid,
+                'status' => $this->testStatus,
+                'details' => $this->testDetails,
+                'time' => "$this->buildTestTime",
+                'testname' => $this->testName,
+                'starttime' => $this->testStartTime,
+            ]);
 
-        // Note: the newstatus column is currently handled in
-        // ctestparserutils::compute_test_difference. This gets updated when we call
-        // Build::ComputeTestTiming.
-        $buildtest->save();
+            foreach ($this->measurements as $measurement) {
+                $measurement->testid = $buildtest->id;
+                $measurement->save();
+            }
 
-        foreach ($this->measurements as $measurement) {
-            $measurement->testid = $buildtest->id;
-            $measurement->save();
-        }
+            // Give measurements to the buildtest model so we can properly calculate
+            // proctime later on.
+            $buildtest->measurements = $this->measurements;
+            $build->AddTest($buildtest);
 
-        // Give measurements to the buildtest model so we can properly calculate
-        // proctime later on.
-        $buildtest->measurements = $this->measurements;
-        $build->AddTest($buildtest);
+            foreach ($this->labels as $label) {
+                $label->Test = $buildtest;
+                $label->Insert();
+                $buildtest->addLabel($label);
+            }
 
-        foreach ($this->labels as $label) {
-            $label->Test = $buildtest;
-            $label->Insert();
-            $buildtest->addLabel($label);
-        }
-
-        // test2image
-        foreach ($this->images as $image) {
-            $this->saveImage($image, $buildtest->id);
-        }
+            // test2image
+            foreach ($this->images as $image) {
+                $this->saveImage($image, $buildtest->id);
+            }
+        });
     }
 }
