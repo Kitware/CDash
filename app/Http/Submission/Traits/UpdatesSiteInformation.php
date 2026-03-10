@@ -13,7 +13,7 @@ trait UpdatesSiteInformation
      */
     protected function updateSiteInfoIfChanged(Site $site, SiteInformation $newInformation): void
     {
-        if ($site->information()->count() === 0) {
+        if ($site->information()->doesntExist()) {
             // No existing information, so save whatever we're given, regardless of whether it's all null.
             $site->information()->save($newInformation);
             return;
