@@ -6,6 +6,7 @@ use App\Enums\TestTimeStatusCategory;
 use Carbon\Carbon;
 use CDash\Model\Label;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -129,6 +130,36 @@ class Test extends Model
     public function testImages(): HasMany
     {
         return $this->hasMany(TestImage::class, 'testid');
+    }
+
+    /**
+     * @return Attribute<?string,null>
+     */
+    protected function path(): Attribute
+    {
+        return Attribute::make(
+            get: fn (mixed $value, array $attributes): ?string => $this->testOutput->path ?? null,
+        );
+    }
+
+    /**
+     * @return Attribute<?string,null>
+     */
+    protected function command(): Attribute
+    {
+        return Attribute::make(
+            get: fn (mixed $value, array $attributes): ?string => $this->testOutput->command ?? null,
+        );
+    }
+
+    /**
+     * @return Attribute<?string,null>
+     */
+    protected function output(): Attribute
+    {
+        return Attribute::make(
+            get: fn (mixed $value, array $attributes): ?string => $this->testOutput->output ?? null,
+        );
     }
 
     /**
