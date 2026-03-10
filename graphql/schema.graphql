@@ -889,6 +889,12 @@ type Test {
 
   details: String! @filterable
 
+  path: String @with(relation: "testOutput")
+
+  command: String @with(relation: "testOutput")
+
+  output: String @with(relation: "testOutput")
+
   testMeasurements(
     filters: _ @filter
   ): [TestMeasurement!]! @hasMany @orderBy(column: "id", direction: DESC)

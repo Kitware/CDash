@@ -3,6 +3,7 @@
 namespace Tests\Feature\GraphQL;
 
 use App\Models\Project;
+use App\Models\Test;
 use App\Models\TestOutput;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
@@ -80,6 +81,9 @@ class TestTypeTest extends TestCase
                                             details
                                             runningTime
                                             startTime
+                                            path
+                                            command
+                                            output
                                         }
                                     }
                                 }
@@ -107,6 +111,9 @@ class TestTypeTest extends TestCase
                                                     'details' => 'details text',
                                                     'runningTime' => 1.2,
                                                     'startTime' => '2026-02-13T18:03:54+00:00',
+                                                    'path' => 'a',
+                                                    'command' => 'b',
+                                                    'output' => 'c',
                                                 ],
                                             ],
                                         ],
