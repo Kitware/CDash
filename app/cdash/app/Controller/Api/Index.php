@@ -217,10 +217,16 @@ class Index extends ResultsApi
             $buildgroup_id = $rule->id;
             $buildgroup_position = $rule->position;
             if ($rule->type === 'Latest') {
-                $sql = $this->getIndexQuery();
-
                 $whereClauses = [];
                 $query_params = [];
+
+                $sql = $this->getIndexQuery();
+
+                // Add a projectid filter to help the planner choose a better execution plan, even
+                // though all the groups are already associated with the project.
+                $whereClauses[] = 'b.projectid=?';
+                $query_params[] = (int) $this->project->Id;
+
                 // optional fields: parentgroupid, site, and build name match.
                 // Use these to construct a WHERE clause for our query.
                 if (!empty($rule->parentgroupid)) {
