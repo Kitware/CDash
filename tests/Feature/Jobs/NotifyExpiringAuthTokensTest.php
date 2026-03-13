@@ -37,7 +37,7 @@ class NotifyExpiringAuthTokensTest extends TestCase
     {
         Mail::fake();
 
-        $this->user->authTokens()->create([
+        $this->user->authenticationTokens()->create([
             'hash' => Str::uuid()->toString(),
             'expires' => Carbon::now()->addDays(8),
             'scope' => 'test',
@@ -51,7 +51,7 @@ class NotifyExpiringAuthTokensTest extends TestCase
     {
         Mail::fake();
 
-        $this->user->authTokens()->create([
+        $this->user->authenticationTokens()->create([
             'hash' => Str::uuid()->toString(),
             'expires' => Carbon::now()->addDays(6),
             'scope' => 'test',
@@ -66,7 +66,7 @@ class NotifyExpiringAuthTokensTest extends TestCase
     {
         Mail::fake();
 
-        $this->user->authTokens()->create([
+        $this->user->authenticationTokens()->create([
             'hash' => Str::uuid()->toString(),
             'expires' => Carbon::now()->addHour(),
             'scope' => 'test',

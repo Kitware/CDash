@@ -63,4 +63,9 @@ class UserPolicy
 
         return false;
     }
+
+    public function viewAuthenticationTokens(User $currentUser, User $user): bool
+    {
+        return $currentUser->admin || $currentUser->id === $user->id;
+    }
 }

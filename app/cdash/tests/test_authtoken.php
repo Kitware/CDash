@@ -246,7 +246,7 @@ class AuthTokenTestCase extends KWWebTestCase
         $this->delete($this->url . "/api/authtokens/delete/$this->Hash");
 
         // Make sure the token is really gone.
-        if (AuthToken::find($this->Hash)) {
+        if (AuthToken::firstWhere('hash', $this->Hash)) {
             $this->fail('Token still exists after it was revoked');
         }
     }
@@ -268,7 +268,7 @@ class AuthTokenTestCase extends KWWebTestCase
         }
 
         // Make sure this token does not exist anymore.
-        if (AuthToken::find($this->Hash)) {
+        if (AuthToken::firstWhere('hash', $this->Hash)) {
             $this->fail('Expired token still exists after submission');
         }
     }

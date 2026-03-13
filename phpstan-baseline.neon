@@ -265,6 +265,18 @@ parameters:
 			path: app/GraphQL/Mutations/ClaimSite.php
 
 		-
+			rawMessage: 'Method App\GraphQL\Mutations\CreateAuthenticationToken::__invoke() throws checked exception Illuminate\Auth\AuthenticationException but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
+			count: 1
+			path: app/GraphQL/Mutations/CreateAuthenticationToken.php
+
+		-
+			rawMessage: 'Parameter #2 $args (array{projectId: int|null, scope: string, description: string|null, expiration: Illuminate\Support\Carbon}) of method App\GraphQL\Mutations\CreateAuthenticationToken::__invoke() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::__invoke()'
+			identifier: method.childParameterType
+			count: 1
+			path: app/GraphQL/Mutations/CreateAuthenticationToken.php
+
+		-
 			rawMessage: 'Parameter #1 $args (array{email: string, role: App\Enums\GlobalRole}) of method App\GraphQL\Mutations\CreateGlobalInvitation::mutate() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::mutate()'
 			identifier: method.childParameterType
 			count: 1
@@ -287,6 +299,18 @@ parameters:
 			identifier: method.childParameterType
 			count: 1
 			path: app/GraphQL/Mutations/CreateRepository.php
+
+		-
+			rawMessage: 'Method App\GraphQL\Mutations\DeleteAuthenticationToken::__invoke() throws checked exception Illuminate\Auth\AuthenticationException but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
+			count: 1
+			path: app/GraphQL/Mutations/DeleteAuthenticationToken.php
+
+		-
+			rawMessage: 'Parameter #2 $args (array{tokenId: int}) of method App\GraphQL\Mutations\DeleteAuthenticationToken::__invoke() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::__invoke()'
+			identifier: method.childParameterType
+			count: 1
+			path: app/GraphQL/Mutations/DeleteAuthenticationToken.php
 
 		-
 			rawMessage: 'Parameter #1 $args (array{id: int}) of method App\GraphQL\Mutations\DeletePinnedTestMeasurement::mutate() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::mutate()'
@@ -449,6 +473,12 @@ parameters:
 			identifier: encapsedStringPart.nonString
 			count: 2
 			path: app/GraphQL/Scalars/Url.php
+
+		-
+			rawMessage: Cannot cast mixed to int.
+			identifier: cast.int
+			count: 1
+			path: app/GraphQL/Validators/CreateAuthenticationTokenInputValidator.php
 
 		-
 			rawMessage: Class App\Http\Controllers\AbstractBuildController has an uninitialized property $build. Give it default value or assign it in the constructor.
@@ -6237,6 +6267,12 @@ parameters:
 		-
 			rawMessage: Implicit array creation is not allowed - variable $params does not exist.
 			identifier: variable.implicitArray
+			count: 1
+			path: app/Utils/AuthTokenUtil.php
+
+		-
+			rawMessage: 'Method App\Utils\AuthTokenUtil::deleteToken() throws checked exception Illuminate\Auth\AuthenticationException but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
 			count: 1
 			path: app/Utils/AuthTokenUtil.php
 
@@ -18616,7 +18652,7 @@ parameters:
 			path: app/cdash/tests/test_authtoken.php
 
 		-
-			rawMessage: 'Only booleans are allowed in an if condition, App\Models\AuthToken|Illuminate\Database\Eloquent\Collection<int, App\Models\AuthToken>|null given.'
+			rawMessage: 'Only booleans are allowed in an if condition, App\Models\AuthToken|null given.'
 			identifier: if.condNotBoolean
 			count: 2
 			path: app/cdash/tests/test_authtoken.php

@@ -296,6 +296,10 @@ add_feature_test_in_transaction(/Feature/GraphQL/Mutations/CreateRepositoryTest)
 
 add_feature_test_in_transaction(/Feature/GraphQL/Mutations/DeleteRepositoryTest)
 
+add_feature_test_in_transaction(/Feature/GraphQL/Mutations/CreateAuthenticationTokenTest)
+
+add_feature_test_in_transaction(/Feature/GraphQL/Mutations/DeleteAuthenticationTokenTest)
+
 add_feature_test_in_transaction(/Feature/GlobalInvitationAcceptanceTest)
 
 add_feature_test_in_transaction(/Feature/GraphQL/GlobalInvitationTypeTest)
