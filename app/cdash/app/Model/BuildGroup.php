@@ -31,6 +31,7 @@ class BuildGroup
     private int $Position = 0;
     /** @var EloquentBuildGroup */
     private $eloquent_model;
+    private bool $filled = false;
 
     public function __construct()
     {
@@ -63,11 +64,16 @@ class BuildGroup
             return false;
         }
 
+        if ((int) $id === $this->eloquent_model->id) {
+            return true;
+        }
+
         $model = EloquentBuildGroup::find((int) $id);
         if ($model === null) {
             return false;
         }
 
+        $this->filled = true;
         $this->eloquent_model = $model;
 
         return true;
@@ -246,6 +252,10 @@ class BuildGroup
             return false;
         }
 
+        if ($this->filled) {
+            return true;
+        }
+
         $model = EloquentBuildGroup::where([
             'projectid' => $this->eloquent_model->projectid,
             'name' => $this->eloquent_model->name,
@@ -256,6 +266,7 @@ class BuildGroup
         }
 
         $this->eloquent_model = $model;
+        $this->filled = true;
 
         return true;
     }
