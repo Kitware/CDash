@@ -9,7 +9,7 @@ class ProjectPolicy
 {
     public function view(?User $user, Project $project): bool
     {
-        if (!$project->exists()) {
+        if (!$project->exists) {
             return false;
         }
 
@@ -58,7 +58,7 @@ class ProjectPolicy
 
     public function update(User $user, Project $project): bool
     {
-        if (!$project->exists()) {
+        if (!$project->exists) {
             return false;
         }
 
