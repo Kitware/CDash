@@ -11,6 +11,7 @@
 |
 */
 
+use App\Http\Controllers\AdministrationController;
 use App\Http\Controllers\CoverageFileController;
 use App\Http\Controllers\CreateProjectController;
 use App\Http\Controllers\GlobalInvitationController;
@@ -326,6 +327,8 @@ Route::middleware(['auth'])->group(function (): void {
         ->whereNumber('invitationId');
 
     Route::middleware(['admin'])->group(function (): void {
+        Route::get('/administration', AdministrationController::class);
+
         Route::get('/authtokens/manage', 'AuthTokenController@manage');
 
         Route::get('/removeBuilds.php', 'AdminController@removeBuilds');

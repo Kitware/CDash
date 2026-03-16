@@ -36,6 +36,7 @@ const app = Vue.createApp({
     CoverageFilePage: Vue.defineAsyncComponent(() => import('./components/CoverageFilePage.vue')),
     BuildCoveragePage: Vue.defineAsyncComponent(() => import('./components/BuildCoveragePage.vue')),
     CreateProjectPage: Vue.defineAsyncComponent(() => import('./components/CreateProjectPage.vue')),
+    AdministrationPage: Vue.defineAsyncComponent(() => import('./components/AdministrationPage.vue')),
   },
 });
 
