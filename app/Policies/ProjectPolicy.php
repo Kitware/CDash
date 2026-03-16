@@ -166,6 +166,11 @@ class ProjectPolicy
         return $this->update($currentUser, $project);
     }
 
+    public function createAuthToken(User $currentUser, Project $project): bool
+    {
+        return $currentUser->admin || $project->users()->where('id', $currentUser->id)->exists();
+    }
+
     private function isLdapControlledMembership(Project $project): bool
     {
         // If a LDAP filter has been specified and LDAP is enabled, CDash controls the entire members list.

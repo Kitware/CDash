@@ -74,6 +74,9 @@ type Query {
     "Search by primary key."
     id: ID @eq
   ): DynamicAnalysis @find @canResolved(ability: "view", action: RETURN_VALUE, returnValue: null)
+
+  "All authentication tokens across the entire instance.  Only available to administrators."
+  authenticationTokens: [AuthToken!]! @canResolved(ability: "viewAll") @paginate(type: CONNECTION) @orderBy(column: "id")
 }
 
 
@@ -137,6 +140,23 @@ type Mutation {
 
   "Delete a repository by ID."
   deleteRepository(input: DeleteRepositoryInput! @spread): DeleteRepositoryMutationPayload! @field(resolver: "DeleteRepository")
+
+  "Add an authentication token.  The token cannot be retrieved again."
+  createAuthenticationToken(input: CreateAuthenticationTokenInput! @spread): CreateAuthenticationTokenMutationPayload! @field(resolver: "CreateAuthenticationToken")
+
+  """
+  Delete an authentication token by ID.
+
+  Project-scoped submit-only tokens can be deleted by:
+   1. The user who created them
+   2. A project administrator
+   3. A system administrator
+
+  Full-access and submit-only tokens not associated with a project can be deleted by:
+   1. The user who created them
+   2. A system administrator
+  """
+  deleteAuthenticationToken(input: DeleteAuthenticationTokenInput! @spread): DeleteAuthenticationTokenMutationPayload! @field(resolver: "DeleteAuthenticationToken")
 }
 
 
@@ -170,6 +190,8 @@ type User {
   projects(
     filters: _ @filter
   ): [Project!]! @hasMany(type: CONNECTION, scopes: ["forUser"]) @orderBy(column: "id")
+
+  authenticationTokens: [AuthToken!]! @canRoot(ability: "viewAuthenticationTokens") @hasMany(type: CONNECTION) @orderBy(column: "id")
 }
 
 
@@ -685,6 +707,41 @@ input DeleteRepositoryInput {
 
 
 type DeleteRepositoryMutationPayload implements MutationPayloadInterface {
+  "Optional error message."
+  message: String
+}
+
+
+input CreateAuthenticationTokenInput @validator {
+  "Optional project"
+  projectId: ID
+
+  scope: AuthTokenScope!
+
+  description: String
+
+  expiration: DateTimeTz!
+}
+
+
+type CreateAuthenticationTokenMutationPayload implements MutationPayloadInterface {
+  "Optional error message."
+  message: String
+
+  "The raw token.  This token cannot be retrieved again."
+  rawToken: String
+
+  "The new token model."
+  token: AuthToken
+}
+
+
+input DeleteAuthenticationTokenInput {
+  tokenId: ID!
+}
+
+
+type DeleteAuthenticationTokenMutationPayload implements MutationPayloadInterface {
   "Optional error message."
   message: String
 }
@@ -1441,4 +1498,31 @@ type Repository {
   username: String!
 
   branch: String!
+}
+
+
+type AuthToken {
+  "Unique primary key."
+  id: ID!
+
+  created: DateTimeTz!
+
+  expires: DateTimeTz!
+
+  description: String
+
+  scope: AuthTokenScope!
+
+  project: Project
+
+  user: User
+}
+
+
+enum AuthTokenScope {
+  "Provides full API access."
+  FULL_ACCESS @enum(value: "full_access")
+
+  "Only valid for authenticated submissions.  If associated with a project, only valid for that project."
+  SUBMIT_ONLY @enum(value: "submit_only")
 }

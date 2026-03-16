@@ -37,7 +37,7 @@ class AuthTokenExpiringTest extends TestCase
         /**
          * @var AuthToken $authtoken
          */
-        $authtoken = $this->user->authTokens()->create([
+        $authtoken = $this->user->authenticationTokens()->create([
             'hash' => Str::uuid()->toString(),
             'expires' => Carbon::create(2025, 3, 14),
             'scope' => 'test',
@@ -53,7 +53,7 @@ class AuthTokenExpiringTest extends TestCase
         /**
          * @var AuthToken $authtoken
          */
-        $authtoken = $this->user->authTokens()->create([
+        $authtoken = $this->user->authenticationTokens()->create([
             'hash' => Str::uuid()->toString(),
             'expires' => Carbon::now(),
             'scope' => 'test',
@@ -69,7 +69,7 @@ class AuthTokenExpiringTest extends TestCase
         /**
          * @var AuthToken $authtoken
          */
-        $authtoken = $this->user->authTokens()->create([
+        $authtoken = $this->user->authenticationTokens()->create([
             'hash' => Str::uuid()->toString(),
             'expires' => Carbon::now(),
             'scope' => 'test',
@@ -85,7 +85,7 @@ class AuthTokenExpiringTest extends TestCase
         /**
          * @var AuthToken $authtoken
          */
-        $authtoken = $this->user->authTokens()->create([
+        $authtoken = $this->user->authenticationTokens()->create([
             'hash' => Str::uuid()->toString(),
             'expires' => Carbon::now(),
             'scope' => 'test',

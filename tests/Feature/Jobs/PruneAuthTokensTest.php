@@ -46,11 +46,11 @@ class PruneAuthTokensTest extends TestCase
             'userid' => $this->user->id,
         ]);
 
-        self::assertNotNull(AuthToken::find($hash));
+        self::assertNotNull(AuthToken::firstWhere('hash', $hash));
 
         PruneAuthTokens::dispatch();
 
-        self::assertNull(AuthToken::find($hash));
+        self::assertNull(AuthToken::firstWhere('hash', $hash));
 
         Mail::assertQueuedCount(1);
         Mail::assertQueued(AuthTokenExpired::class);
@@ -66,10 +66,10 @@ class PruneAuthTokensTest extends TestCase
             'userid' => $this->user->id,
         ]);
 
-        self::assertNotNull(AuthToken::find($hash));
+        self::assertNotNull(AuthToken::firstWhere('hash', $hash));
 
         PruneAuthTokens::dispatch();
 
-        self::assertNotNull(AuthToken::find($hash));
+        self::assertNotNull(AuthToken::firstWhere('hash', $hash));
     }
 }

@@ -7,6 +7,7 @@ namespace App\Utils;
 use App\Models\AuthToken;
 use App\Models\User;
 use CDash\Model\Project;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -28,8 +29,13 @@ class AuthTokenUtil
      *
      * @throws InvalidArgumentException
      */
-    public static function generateToken(int $user_id, int $project_id, string $scope, string $description): array
-    {
+    public static function generateToken(
+        int $user_id,
+        int $project_id,
+        string $scope,
+        string $description,
+        ?Carbon $expiration = null,
+    ): array {
         // 86 characters generates more than 512 bits of entropy (and is thus limited by the entropy of the hash)
         $token = Str::password(86, true, true, false);
         $params['hash'] = hash('sha512', $token);
@@ -45,11 +51,18 @@ class AuthTokenUtil
             throw new InvalidArgumentException('Invalid token_duration configuration');
         }
 
-        if ((int) $duration === 0) {
-            // this token "never" expires
-            $params['expires'] = '9999-01-01 00:00:00';
+        // We trust the expiration to be pre-validated if one was provided.  If an expiration wasn't
+        // provided, we set the expiration to the maximum allowed.  In the future, the expiration
+        // argument should be mandatory.
+        if ($expiration !== null) {
+            $params['expires'] = $expiration;
         } else {
-            $params['expires'] = gmdate(FMT_DATETIME, $now + $duration);
+            if ((int) $duration === 0) {
+                // this token "never" expires
+                $params['expires'] = '9999-01-01 00:00:00';
+            } else {
+                $params['expires'] = gmdate(FMT_DATETIME, $now + $duration);
+            }
         }
 
         $params['description'] = $description;
@@ -92,7 +105,7 @@ class AuthTokenUtil
      */
     public static function checkToken(string $token_hash, int $project_id): bool
     {
-        $auth_token = AuthToken::find($token_hash);
+        $auth_token = AuthToken::firstWhere('hash', $token_hash);
         if ($auth_token === null) {
             Log::error('Invalid Token');
             return false;
@@ -151,10 +164,9 @@ class AuthTokenUtil
      */
     public static function deleteToken(string $token_hash, int $expected_user_id): bool
     {
-        $auth_token = AuthToken::find($token_hash);
+        $auth_token = AuthToken::firstWhere('hash', $token_hash);
         if ($auth_token === null) {
-            Log::error('Invalid Token');
-            return false;
+            throw new AuthenticationException('This action is unauthorized.');
         }
 
         /** @var User $user */
@@ -265,7 +277,7 @@ class AuthTokenUtil
             return null;
         }
 
-        $auth_token = AuthToken::find($token_hash);
+        $auth_token = AuthToken::firstWhere('hash', $token_hash);
         if ($auth_token === null
             || self::isTokenExpired($auth_token)
             || $auth_token['scope'] !== AuthToken::SCOPE_FULL_ACCESS

@@ -84,7 +84,7 @@ class User extends Authenticatable implements MustVerifyEmail, LdapAuthenticatab
     /**
      * @return HasMany<AuthToken, $this>
      */
-    public function authTokens(): HasMany
+    public function authenticationTokens(): HasMany
     {
         return $this->hasMany(AuthToken::class, 'userid');
     }

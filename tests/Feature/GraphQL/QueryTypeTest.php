@@ -3,13 +3,16 @@
 namespace Tests\Feature\GraphQL;
 
 use App\Enums\BuildCommandType;
+use App\Models\AuthToken;
 use App\Models\BuildCommand;
 use App\Models\DynamicAnalysis;
 use App\Models\Project;
 use App\Models\User;
+use Exception;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
 use Tests\Traits\CreatesUsers;
@@ -314,5 +317,72 @@ class QueryTypeTest extends TestCase
                 'dynamicAnalysis' => null,
             ],
         ]);
+    }
+
+    /**
+     * @return array<array<mixed>>
+     */
+    public static function authenticationTokensRelationshipVisibilityCases(): array
+    {
+        return [
+            [null, false],
+            ['normal', false],
+            ['self', false],
+            ['admin', true],
+        ];
+    }
+
+    #[DataProvider('authenticationTokensRelationshipVisibilityCases')]
+    public function testAuthenticationTokensRelationshipVisibility(
+        ?string $user,
+        bool $canSeeAuthToken,
+    ): void {
+        $tokenOwner = $this->makeNormalUser();
+        /** @var AuthToken $authToken */
+        $authToken = $tokenOwner->authenticationTokens()->save(AuthToken::factory()->make());
+
+        if ($user === 'normal') {
+            $user = $this->makeNormalUser();
+        } elseif ($user === 'self') {
+            $user = $tokenOwner;
+        } elseif ($user === 'admin') {
+            $user = $this->makeAdminUser();
+        } elseif ($user === null) {
+            $user = null;
+        } else {
+            throw new Exception('Invalid user.');
+        }
+
+        $response = ($user === null ? $this : $this->actingAs($user))->graphQL('
+            query {
+                authenticationTokens {
+                    edges {
+                        node {
+                            id
+                        }
+                    }
+                }
+            }
+        ', [
+            'userid' => $tokenOwner->id,
+        ]);
+
+        if ($canSeeAuthToken) {
+            $response->assertExactJson([
+                'data' => [
+                    'authenticationTokens' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'id' => (string) $authToken->id,
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ]);
+        } else {
+            $response->assertGraphQLErrorMessage('This action is unauthorized.');
+        }
     }
 }
