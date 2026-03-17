@@ -30,6 +30,9 @@ $showHeaderNav = isset($build);
                 @if(Auth::check())
                     <a class="cdash-link" href="{{ url('/user') }}">My CDash</a>
                 @endif
+                @if(Auth::user()?->admin)
+                    <a class="cdash-link" href="{{ url('/administration') }}">Administration</a>
+                @endif
             </span>
 
             @if(config('cdash.global_banner') !== null && strlen(config('cdash.global_banner')) > 0)
