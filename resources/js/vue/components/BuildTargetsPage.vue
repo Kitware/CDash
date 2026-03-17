@@ -1,52 +1,58 @@
 <template>
-  <div class="tw-flex tw-flex-col tw-w-full tw-gap-4">
-    <BuildSummaryCard :build-id="buildId" />
+  <BuildSidebar
+    :build-id="buildId"
+    active-tab="targets"
+  >
+    <div class="tw-flex tw-flex-col tw-w-full tw-gap-4">
+      <BuildSummaryCard :build-id="buildId" />
 
-    <FilterBuilder
-      filter-type="BuildTargetsFiltersMultiFilterInput"
-      primary-record-name="targets"
-      :initial-filters="initialFilters"
-      :execute-query-link="executeQueryLink"
-      @change-filters="filters => changedFilters = filters"
-    />
-
-    <loading-indicator :is-loading="!build || !targets">
-      <div class="tw-w-full tw-bg-base-100 tw-flex tw-flex-col tw-rounded-lg tw-border tw-border-gray-200 tw-p-4">
-        <CommandGanttChart :commands="formattedCommands" />
-      </div>
-    </loading-indicator>
-
-    <LoadingIndicator :is-loading="!targets">
-      <DataTable
-        v-if="targets.edges.length > 0"
-        :column-groups="[
-          {
-            displayName: 'Targets',
-            width: 100,
-          }
-        ]"
-        :columns="[
-          {
-            name: 'name',
-            displayName: 'Name',
-          },
-          {
-            name: 'type',
-            displayName: 'Type',
-          },
-        ]"
-        :rows="formattedTargetRows"
-        :full-width="true"
-        test-id="targets-table"
+      <FilterBuilder
+        filter-type="BuildTargetsFiltersMultiFilterInput"
+        primary-record-name="targets"
+        :initial-filters="initialFilters"
+        :execute-query-link="executeQueryLink"
+        @change-filters="filters => changedFilters = filters"
       />
-    </LoadingIndicator>
-  </div>
+
+      <loading-indicator :is-loading="!build || !targets">
+        <div class="tw-w-full tw-bg-base-100 tw-flex tw-flex-col tw-rounded-lg tw-border tw-border-gray-200 tw-p-4">
+          <CommandGanttChart :commands="formattedCommands" />
+        </div>
+      </loading-indicator>
+
+      <LoadingIndicator :is-loading="!targets">
+        <DataTable
+          v-if="targets.edges.length > 0"
+          :column-groups="[
+            {
+              displayName: 'Targets',
+              width: 100,
+            }
+          ]"
+          :columns="[
+            {
+              name: 'name',
+              displayName: 'Name',
+            },
+            {
+              name: 'type',
+              displayName: 'Type',
+            },
+          ]"
+          :rows="formattedTargetRows"
+          :full-width="true"
+          test-id="targets-table"
+        />
+      </LoadingIndicator>
+    </div>
+  </BuildSidebar>
 </template>
 
 <script>
 import BuildSummaryCard from './shared/BuildSummaryCard.vue';
 import DataTable from './shared/DataTable.vue';
 import LoadingIndicator from './shared/LoadingIndicator.vue';
+import BuildSidebar from './shared/BuildSidebar.vue';
 import gql from 'graphql-tag';
 import FilterBuilder from './shared/FilterBuilder.vue';
 import CommandGanttChart from './shared/CommandGanttChart.vue';
@@ -59,6 +65,7 @@ export default {
     LoadingIndicator,
     DataTable,
     BuildSummaryCard,
+    BuildSidebar,
   },
 
   props: {

@@ -40,6 +40,7 @@ parameters:
             - 'Illuminate\Http\Client\ConnectionException'
             - 'Illuminate\Http\Exceptions\HttpResponseException'
             - 'Symfony\Component\Console\Exception\CommandNotFoundException'
+            - 'Facebook\WebDriver\Exception\TimeoutException'
 
         check:
             tooWideThrowType: true

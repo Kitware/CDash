@@ -1,1004 +1,1009 @@
 <template>
-  <section v-if="errored">
-    <p>{{ cdash.error }}</p>
-  </section>
-  <section v-else>
-    <build-summary-card :build-id="buildId" />
+  <BuildSidebar
+    :build-id="buildId"
+    active-tab="summary"
+  >
+    <section v-if="errored">
+      <p>{{ cdash.error }}</p>
+    </section>
+    <section v-else>
+      <build-summary-card :build-id="buildId" />
 
-    <loading-indicator :is-loading="loading">
-      <!-- Display link to create bug tracker issue if supported. -->
-      <div v-if="cdash.newissueurl">
-        <a
-          class="tw-link tw-link-hover"
-          :href="cdash.newissueurl"
-        >
-          <b>Create {{ cdash.bugtracker }} issue for this build</b>
-        </a>
+      <loading-indicator :is-loading="loading">
+        <!-- Display link to create bug tracker issue if supported. -->
+        <div v-if="cdash.newissueurl">
+          <a
+            class="tw-link tw-link-hover"
+            :href="cdash.newissueurl"
+          >
+            <b>Create {{ cdash.bugtracker }} issue for this build</b>
+          </a>
+          <br>
+        </div>
         <br>
-      </div>
-      <br>
 
-      <table>
-        <tbody>
-          <tr>
-            <td>
-              <!-- Previous build -->
-              <table
-                v-if="cdash.previousbuild"
-                class="tabb striped"
-              >
-                <thead>
-                  <tr class="table-heading1">
-                    <th
-                      colspan="3"
-                      class="header"
-                    >
-                      <a
-                        class="tw-link tw-link-hover"
-                        :href="$baseURL + '/builds/' + cdash.previousbuild.buildid"
+        <table>
+          <tbody>
+            <tr>
+              <td>
+                <!-- Previous build -->
+                <table
+                  v-if="cdash.previousbuild"
+                  class="tabb striped"
+                >
+                  <thead>
+                    <tr class="table-heading1">
+                      <th
+                        colspan="3"
+                        class="header"
                       >
-                        <b>Previous Build</b>
-                      </a>
-                    </th>
-                  </tr>
-                  <tr class="table-heading">
-                    <th>Stage</th>
-                    <th>Errors</th>
-                    <th>Warnings</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <th>
-                      <b>Update</b>
-                    </th>
-                    <td
-                      align="right"
-                      :class="cdash.previousbuild.nupdateerrors > 0 ? 'error' : 'normal'"
-                    >
-                      <b>
                         <a
                           class="tw-link tw-link-hover"
-                          :href="$baseURL + '/builds/' + cdash.previousbuild.buildid + '/update'"
+                          :href="$baseURL + '/builds/' + cdash.previousbuild.buildid"
                         >
-                          {{ cdash.previousbuild.nupdateerrors }}
+                          <b>Previous Build</b>
                         </a>
-                      </b>
-                    </td>
-                    <td
-                      align="right"
-                      :class="cdash.previousbuild.nupdatewarnings > 0 ? 'warning' : 'normal'"
-                    >
-                      <b>
-                        <a
-                          class="tw-link tw-link-hover"
-                          :href="$baseURL + '/builds/' + cdash.previousbuild.buildid + '/update'"
-                        >
-                          {{ cdash.previousbuild.nupdatewarnings }}
-                        </a>
-                      </b>
-                    </td>
-                  </tr>
-
-                  <tr v-if="cdash.hasconfigure">
-                    <th>
-                      <b>Configure</b>
-                    </th>
-                    <td
-                      align="right"
-                      :class="cdash.previousbuild.nconfigureerrors > 0 ? 'error' : 'normal'"
-                    >
-                      <b>
-                        <a
-                          class="tw-link tw-link-hover"
-                          :href="$baseURL + '/builds/' + cdash.previousbuild.buildid + '/configure'"
-                        >
-                          {{ cdash.previousbuild.nconfigureerrors }}
-                        </a>
-                      </b>
-                    </td>
-                    <td
-                      align="right"
-                      :class="cdash.previousbuild.nconfigurewarnings > 0 ? 'warning' : 'normal'"
-                    >
-                      <b>
-                        <a
-                          class="tw-link tw-link-hover"
-                          :href="$baseURL + '/builds/' + cdash.previousbuild.buildid + '/configure'"
-                        >
-                          {{ cdash.previousbuild.nconfigurewarnings }}
-                        </a>
-                      </b>
-                    </td>
-                  </tr>
-
-                  <tr>
-                    <th>
-                      <b>Build</b>
-                    </th>
-                    <td
-                      align="right"
-                      :class="cdash.previousbuild.nerrors > 0 ? 'error' : 'normal'"
-                    >
-                      <b>
-                        <a
-                          class="tw-link tw-link-hover"
-                          :href="$baseURL + '/builds/' + cdash.previousbuild.buildid + '/errors'"
-                        >
-                          {{ cdash.previousbuild.nerrors }}
-                        </a>
-                      </b>
-                    </td>
-                    <td
-                      align="right"
-                      :class="cdash.previousbuild.nwarnings > 0 ? 'warning' : 'normal'"
-                    >
-                      <b>
-                        <a
-                          class="tw-link tw-link-hover"
-                          :href="$baseURL + '/builds/' + cdash.previousbuild.buildid + 'errors'"
-                        >
-                          {{ cdash.previousbuild.nwarnings }}
-                        </a>
-                      </b>
-                    </td>
-                  </tr>
-
-                  <tr>
-                    <th>
-                      <b>Test</b>
-                    </th>
-                    <td
-                      align="right"
-                      :class="cdash.previousbuild.ntestfailed > 0 ? 'error' : 'normal'"
-                    >
-                      <b>
-                        <a
-                          class="tw-link tw-link-hover"
-                          :href="$baseURL + '/builds/' + cdash.previousbuild.buildid + '/tests?filters=%7B%22all%22%3A%5B%7B%22eq%22%3A%7B%22status%22%3A%22FAILED%22%7D%7D%5D%7D'"
-                        >
-                          {{ cdash.previousbuild.ntestfailed }}
-                        </a>
-                      </b>
-                    </td>
-                    <td
-                      align="right"
-                      :class="cdash.previousbuild.ntestnotrun > 0 ? 'warning' : 'normal'"
-                    >
-                      <b>
-                        <a
-                          class="tw-link tw-link-hover"
-                          :href="$baseURL + '/builds/' + cdash.previousbuild.buildid + '/tests?filters=%7B%22all%22%3A%5B%7B%22eq%22%3A%7B%22status%22%3A%22NOT_RUN%22%7D%7D%5D%7D'"
-                        >
-                          {{ cdash.previousbuild.ntestnotrun }}
-                        </a>
-                      </b>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </td>
-
-            <!-- A horrible hack to put some space between these tables... -->
-            <!-- TODO: (williamjallen) Why do we have nested tables here to begin with??? -->
-            <td>&nbsp;</td>
-
-            <td>
-              <!-- Current build -->
-              <table class="tabb striped">
-                <thead>
-                  <tr class="table-heading1">
-                    <th
-                      colspan="3"
-                      class="header"
-                    >
-                      This Build
-                    </th>
-                  </tr>
-                  <tr class="table-heading">
-                    <th>Stage</th>
-                    <th>Errors</th>
-                    <th>Warnings</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <th>
-                      <a
-                        v-if="cdash.hasupdate"
-                        href="#Update"
-                      >
+                      </th>
+                    </tr>
+                    <tr class="table-heading">
+                      <th>Stage</th>
+                      <th>Errors</th>
+                      <th>Warnings</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>
                         <b>Update</b>
-                      </a>
-                      <span v-if="!cdash.hasupdate">
-                        Update
-                      </span>
-                    </th>
-                    <td
-                      align="right"
-                      :class="cdash.update.nerrors > 0 ? 'error' : 'normal'"
-                    >
-                      <b>
-                        <a
-                          class="tw-link tw-link-hover"
-                          :href="$baseURL + '/builds/' + cdash.build.id + '/update'"
-                        >
-                          {{ cdash.update.nerrors }}
-                        </a>
-                      </b>
-                    </td>
-                    <td
-                      align="right"
-                      :class="cdash.update.nwarnings > 0 ? 'warning' : 'normal'"
-                    >
-                      <b>
-                        <a
-                          class="tw-link tw-link-hover"
-                          :href="$baseURL + '/builds/' + cdash.build.id + '/update'"
-                        >
-                          {{ cdash.update.nwarnings }}
-                        </a>
-                      </b>
-                    </td>
-                  </tr>
-                  <tr v-if="cdash.hasconfigure">
-                    <th>
-                      <a
-                        class="tw-link tw-link-hover"
-                        href="#Configure"
+                      </th>
+                      <td
+                        align="right"
+                        :class="cdash.previousbuild.nupdateerrors > 0 ? 'error' : 'normal'"
                       >
+                        <b>
+                          <a
+                            class="tw-link tw-link-hover"
+                            :href="$baseURL + '/builds/' + cdash.previousbuild.buildid + '/update'"
+                          >
+                            {{ cdash.previousbuild.nupdateerrors }}
+                          </a>
+                        </b>
+                      </td>
+                      <td
+                        align="right"
+                        :class="cdash.previousbuild.nupdatewarnings > 0 ? 'warning' : 'normal'"
+                      >
+                        <b>
+                          <a
+                            class="tw-link tw-link-hover"
+                            :href="$baseURL + '/builds/' + cdash.previousbuild.buildid + '/update'"
+                          >
+                            {{ cdash.previousbuild.nupdatewarnings }}
+                          </a>
+                        </b>
+                      </td>
+                    </tr>
+
+                    <tr v-if="cdash.hasconfigure">
+                      <th>
                         <b>Configure</b>
-                      </a>
-                    </th>
-                    <td
-                      align="right"
-                      :class="cdash.configure.nerrors > 0 ? 'error' : 'normal'"
-                    >
-                      <b>
-                        <a
-                          class="tw-link tw-link-hover"
-                          :href="$baseURL + '/builds/' + cdash.build.id + '/configure'"
-                        >
-                          {{ cdash.configure.nerrors }}
-                        </a>
-                      </b>
-                    </td>
-                    <td
-                      align="right"
-                      :class="cdash.configure.nwarnings > 0 ? 'warning' : 'normal'"
-                    >
-                      <b>
-                        <a
-                          class="tw-link tw-link-hover"
-                          :href="$baseURL + '/builds/' + cdash.build.id + '/configure'"
-                        >
-                          {{ cdash.configure.nwarnings }}
-                        </a>
-                      </b>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>
-                      <a
-                        class="tw-link tw-link-hover"
-                        href="#Build"
+                      </th>
+                      <td
+                        align="right"
+                        :class="cdash.previousbuild.nconfigureerrors > 0 ? 'error' : 'normal'"
                       >
+                        <b>
+                          <a
+                            class="tw-link tw-link-hover"
+                            :href="$baseURL + '/builds/' + cdash.previousbuild.buildid + '/configure'"
+                          >
+                            {{ cdash.previousbuild.nconfigureerrors }}
+                          </a>
+                        </b>
+                      </td>
+                      <td
+                        align="right"
+                        :class="cdash.previousbuild.nconfigurewarnings > 0 ? 'warning' : 'normal'"
+                      >
+                        <b>
+                          <a
+                            class="tw-link tw-link-hover"
+                            :href="$baseURL + '/builds/' + cdash.previousbuild.buildid + '/configure'"
+                          >
+                            {{ cdash.previousbuild.nconfigurewarnings }}
+                          </a>
+                        </b>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <th>
                         <b>Build</b>
-                      </a>
-                    </th>
-                    <td
-                      align="right"
-                      :class="cdash.build.nerrors > 0 ? 'error' : 'normal'"
-                    >
-                      <b>
-                        <a
-                          class="tw-link tw-link-hover"
-                          :href="$baseURL + '/builds/' + cdash.build.id + '/errors'"
-                        >
-                          {{ cdash.build.nerrors }}
-                        </a>
-                      </b>
-                    </td>
-                    <td
-                      align="right"
-                      :class="cdash.build.nwarnings > 0 ? 'warning' : 'normal'"
-                    >
-                      <b>
-                        <a
-                          class="tw-link tw-link-hover"
-                          :href="$baseURL + '/builds/' + cdash.build.id + '/errors'"
-                        >
-                          {{ cdash.build.nwarnings }}
-                        </a>
-                      </b>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>
-                      <a
-                        class="tw-link tw-link-hover"
-                        href="#Test"
+                      </th>
+                      <td
+                        align="right"
+                        :class="cdash.previousbuild.nerrors > 0 ? 'error' : 'normal'"
                       >
+                        <b>
+                          <a
+                            class="tw-link tw-link-hover"
+                            :href="$baseURL + '/builds/' + cdash.previousbuild.buildid + '/errors'"
+                          >
+                            {{ cdash.previousbuild.nerrors }}
+                          </a>
+                        </b>
+                      </td>
+                      <td
+                        align="right"
+                        :class="cdash.previousbuild.nwarnings > 0 ? 'warning' : 'normal'"
+                      >
+                        <b>
+                          <a
+                            class="tw-link tw-link-hover"
+                            :href="$baseURL + '/builds/' + cdash.previousbuild.buildid + 'errors'"
+                          >
+                            {{ cdash.previousbuild.nwarnings }}
+                          </a>
+                        </b>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <th>
                         <b>Test</b>
-                      </a>
-                    </th>
-                    <td
-                      align="right"
-                      :class="cdash.test.nfailed > 0 ? 'error' : 'normal'"
-                    >
-                      <b>
-                        <a
-                          class="tw-link tw-link-hover"
-                          :href="$baseURL + '/builds/' + cdash.build.id + '/tests?filters=%7B%22all%22%3A%5B%7B%22eq%22%3A%7B%22status%22%3A%22FAILED%22%7D%7D%5D%7D'"
-                        >
-                          {{ cdash.test.nfailed }}
-                        </a>
-                      </b>
-                    </td>
-                    <td
-                      align="right"
-                      :class="cdash.test.nnotrun > 0 ? 'warning' : 'normal'"
-                    >
-                      <b>
-                        <a
-                          class="tw-link tw-link-hover"
-                          :href="$baseURL + '/builds/' + cdash.build.id + '/tests?filters=%7B%22all%22%3A%5B%7B%22eq%22%3A%7B%22status%22%3A%22NOT_RUN%22%7D%7D%5D%7D'"
-                        >
-                          {{ cdash.test.nnotrun }}
-                        </a>
-                      </b>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </td>
-
-            <td>&nbsp;</td>
-
-            <td>
-              <!-- Next build -->
-              <table
-                v-if="cdash.nextbuild"
-                class="tabb striped"
-              >
-                <thead>
-                  <tr class="table-heading1">
-                    <th
-                      colspan="3"
-                      class="header"
-                    >
-                      <a
-                        class="tw-link tw-link-hover"
-                        :href="$baseURL + '/builds/' + cdash.nextbuild.buildid"
+                      </th>
+                      <td
+                        align="right"
+                        :class="cdash.previousbuild.ntestfailed > 0 ? 'error' : 'normal'"
                       >
-                        <b>Next Build</b>
-                      </a>
-                    </th>
-                  </tr>
-                  <tr class="table-heading">
-                    <th>Stage</th>
-                    <th>Errors</th>
-                    <th>Warnings</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <th>
-                      <b>Update</b>
-                    </th>
-                    <td
-                      align="right"
-                      :class="cdash.nextbuild.nupdateerrors > 0 ? 'error' : 'normal'"
-                    >
-                      <b>
+                        <b>
+                          <a
+                            class="tw-link tw-link-hover"
+                            :href="$baseURL + '/builds/' + cdash.previousbuild.buildid + '/tests?filters=%7B%22all%22%3A%5B%7B%22eq%22%3A%7B%22status%22%3A%22FAILED%22%7D%7D%5D%7D'"
+                          >
+                            {{ cdash.previousbuild.ntestfailed }}
+                          </a>
+                        </b>
+                      </td>
+                      <td
+                        align="right"
+                        :class="cdash.previousbuild.ntestnotrun > 0 ? 'warning' : 'normal'"
+                      >
+                        <b>
+                          <a
+                            class="tw-link tw-link-hover"
+                            :href="$baseURL + '/builds/' + cdash.previousbuild.buildid + '/tests?filters=%7B%22all%22%3A%5B%7B%22eq%22%3A%7B%22status%22%3A%22NOT_RUN%22%7D%7D%5D%7D'"
+                          >
+                            {{ cdash.previousbuild.ntestnotrun }}
+                          </a>
+                        </b>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+
+              <!-- A horrible hack to put some space between these tables... -->
+              <!-- TODO: (williamjallen) Why do we have nested tables here to begin with??? -->
+              <td>&nbsp;</td>
+
+              <td>
+                <!-- Current build -->
+                <table class="tabb striped">
+                  <thead>
+                    <tr class="table-heading1">
+                      <th
+                        colspan="3"
+                        class="header"
+                      >
+                        This Build
+                      </th>
+                    </tr>
+                    <tr class="table-heading">
+                      <th>Stage</th>
+                      <th>Errors</th>
+                      <th>Warnings</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>
+                        <a
+                          v-if="cdash.hasupdate"
+                          href="#Update"
+                        >
+                          <b>Update</b>
+                        </a>
+                        <span v-if="!cdash.hasupdate">
+                          Update
+                        </span>
+                      </th>
+                      <td
+                        align="right"
+                        :class="cdash.update.nerrors > 0 ? 'error' : 'normal'"
+                      >
+                        <b>
+                          <a
+                            class="tw-link tw-link-hover"
+                            :href="$baseURL + '/builds/' + cdash.build.id + '/update'"
+                          >
+                            {{ cdash.update.nerrors }}
+                          </a>
+                        </b>
+                      </td>
+                      <td
+                        align="right"
+                        :class="cdash.update.nwarnings > 0 ? 'warning' : 'normal'"
+                      >
+                        <b>
+                          <a
+                            class="tw-link tw-link-hover"
+                            :href="$baseURL + '/builds/' + cdash.build.id + '/update'"
+                          >
+                            {{ cdash.update.nwarnings }}
+                          </a>
+                        </b>
+                      </td>
+                    </tr>
+                    <tr v-if="cdash.hasconfigure">
+                      <th>
                         <a
                           class="tw-link tw-link-hover"
-                          :href="$baseURL + '/builds/' + cdash.nextbuild.buildid + '/update'"
+                          href="#Configure"
                         >
-                          {{ cdash.nextbuild.nupdateerrors }}
+                          <b>Configure</b>
                         </a>
-                      </b>
-                    </td>
-                    <td
-                      align="right"
-                      :class="cdash.nextbuild.nupdatewarnings > 0 ? 'warning' : 'normal'"
-                    >
-                      <b>
+                      </th>
+                      <td
+                        align="right"
+                        :class="cdash.configure.nerrors > 0 ? 'error' : 'normal'"
+                      >
+                        <b>
+                          <a
+                            class="tw-link tw-link-hover"
+                            :href="$baseURL + '/builds/' + cdash.build.id + '/configure'"
+                          >
+                            {{ cdash.configure.nerrors }}
+                          </a>
+                        </b>
+                      </td>
+                      <td
+                        align="right"
+                        :class="cdash.configure.nwarnings > 0 ? 'warning' : 'normal'"
+                      >
+                        <b>
+                          <a
+                            class="tw-link tw-link-hover"
+                            :href="$baseURL + '/builds/' + cdash.build.id + '/configure'"
+                          >
+                            {{ cdash.configure.nwarnings }}
+                          </a>
+                        </b>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>
                         <a
                           class="tw-link tw-link-hover"
-                          :href="$baseURL + '/builds/' + cdash.nextbuild.buildid + '/update'"
+                          href="#Build"
                         >
-                          {{ cdash.nextbuild.nupdatewarnings }}
+                          <b>Build</b>
                         </a>
-                      </b>
-                    </td>
-                  </tr>
-
-                  <tr v-if="cdash.hasconfigure">
-                    <th>
-                      <b>Configure</b>
-                    </th>
-                    <td
-                      align="right"
-                      :class="cdash.nextbuild.nconfigureerrors > 0 ? 'error' : 'normal'"
-                    >
-                      <b>
+                      </th>
+                      <td
+                        align="right"
+                        :class="cdash.build.nerrors > 0 ? 'error' : 'normal'"
+                      >
+                        <b>
+                          <a
+                            class="tw-link tw-link-hover"
+                            :href="$baseURL + '/builds/' + cdash.build.id + '/errors'"
+                          >
+                            {{ cdash.build.nerrors }}
+                          </a>
+                        </b>
+                      </td>
+                      <td
+                        align="right"
+                        :class="cdash.build.nwarnings > 0 ? 'warning' : 'normal'"
+                      >
+                        <b>
+                          <a
+                            class="tw-link tw-link-hover"
+                            :href="$baseURL + '/builds/' + cdash.build.id + '/errors'"
+                          >
+                            {{ cdash.build.nwarnings }}
+                          </a>
+                        </b>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>
                         <a
                           class="tw-link tw-link-hover"
-                          :href="$baseURL + '/builds/' + cdash.nextbuild.buildid + '/configure'"
+                          href="#Test"
                         >
-                          {{ cdash.nextbuild.nconfigureerrors }}
+                          <b>Test</b>
                         </a>
-                      </b>
-                    </td>
-                    <td
-                      align="right"
-                      :class="cdash.nextbuild.nconfigurewarnings > 0 ? 'warning' : 'normal'"
-                    >
-                      <b>
+                      </th>
+                      <td
+                        align="right"
+                        :class="cdash.test.nfailed > 0 ? 'error' : 'normal'"
+                      >
+                        <b>
+                          <a
+                            class="tw-link tw-link-hover"
+                            :href="$baseURL + '/builds/' + cdash.build.id + '/tests?filters=%7B%22all%22%3A%5B%7B%22eq%22%3A%7B%22status%22%3A%22FAILED%22%7D%7D%5D%7D'"
+                          >
+                            {{ cdash.test.nfailed }}
+                          </a>
+                        </b>
+                      </td>
+                      <td
+                        align="right"
+                        :class="cdash.test.nnotrun > 0 ? 'warning' : 'normal'"
+                      >
+                        <b>
+                          <a
+                            class="tw-link tw-link-hover"
+                            :href="$baseURL + '/builds/' + cdash.build.id + '/tests?filters=%7B%22all%22%3A%5B%7B%22eq%22%3A%7B%22status%22%3A%22NOT_RUN%22%7D%7D%5D%7D'"
+                          >
+                            {{ cdash.test.nnotrun }}
+                          </a>
+                        </b>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+
+              <td>&nbsp;</td>
+
+              <td>
+                <!-- Next build -->
+                <table
+                  v-if="cdash.nextbuild"
+                  class="tabb striped"
+                >
+                  <thead>
+                    <tr class="table-heading1">
+                      <th
+                        colspan="3"
+                        class="header"
+                      >
                         <a
                           class="tw-link tw-link-hover"
-                          :href="$baseURL + '/builds/' + cdash.nextbuild.buildid + '/configure'"
+                          :href="$baseURL + '/builds/' + cdash.nextbuild.buildid"
                         >
-                          {{ cdash.nextbuild.nconfigurewarnings }}
+                          <b>Next Build</b>
                         </a>
-                      </b>
-                    </td>
-                  </tr>
+                      </th>
+                    </tr>
+                    <tr class="table-heading">
+                      <th>Stage</th>
+                      <th>Errors</th>
+                      <th>Warnings</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>
+                        <b>Update</b>
+                      </th>
+                      <td
+                        align="right"
+                        :class="cdash.nextbuild.nupdateerrors > 0 ? 'error' : 'normal'"
+                      >
+                        <b>
+                          <a
+                            class="tw-link tw-link-hover"
+                            :href="$baseURL + '/builds/' + cdash.nextbuild.buildid + '/update'"
+                          >
+                            {{ cdash.nextbuild.nupdateerrors }}
+                          </a>
+                        </b>
+                      </td>
+                      <td
+                        align="right"
+                        :class="cdash.nextbuild.nupdatewarnings > 0 ? 'warning' : 'normal'"
+                      >
+                        <b>
+                          <a
+                            class="tw-link tw-link-hover"
+                            :href="$baseURL + '/builds/' + cdash.nextbuild.buildid + '/update'"
+                          >
+                            {{ cdash.nextbuild.nupdatewarnings }}
+                          </a>
+                        </b>
+                      </td>
+                    </tr>
 
-                  <tr>
-                    <th>
-                      <b>Build</b>
-                    </th>
-                    <td
-                      align="right"
-                      :class="cdash.nextbuild.nerrors > 0 ? 'error' : 'normal'"
-                    >
-                      <b>
-                        <a
-                          class="tw-link tw-link-hover"
-                          :href="$baseURL + '/builds/' + cdash.nextbuild.buildid + 'errors'"
-                        >
-                          {{ cdash.nextbuild.nerrors }}
-                        </a>
-                      </b>
-                    </td>
-                    <td
-                      align="right"
-                      :class="cdash.nextbuild.nwarnings > 0 ? 'warning' : 'normal'"
-                    >
-                      <b>
-                        <a
-                          class="tw-link tw-link-hover"
-                          :href="$baseURL + '/builds/' + cdash.nextbuild.buildid + '/errors'"
-                        >
-                          {{ cdash.nextbuild.nwarnings }}
-                        </a>
-                      </b>
-                    </td>
-                  </tr>
+                    <tr v-if="cdash.hasconfigure">
+                      <th>
+                        <b>Configure</b>
+                      </th>
+                      <td
+                        align="right"
+                        :class="cdash.nextbuild.nconfigureerrors > 0 ? 'error' : 'normal'"
+                      >
+                        <b>
+                          <a
+                            class="tw-link tw-link-hover"
+                            :href="$baseURL + '/builds/' + cdash.nextbuild.buildid + '/configure'"
+                          >
+                            {{ cdash.nextbuild.nconfigureerrors }}
+                          </a>
+                        </b>
+                      </td>
+                      <td
+                        align="right"
+                        :class="cdash.nextbuild.nconfigurewarnings > 0 ? 'warning' : 'normal'"
+                      >
+                        <b>
+                          <a
+                            class="tw-link tw-link-hover"
+                            :href="$baseURL + '/builds/' + cdash.nextbuild.buildid + '/configure'"
+                          >
+                            {{ cdash.nextbuild.nconfigurewarnings }}
+                          </a>
+                        </b>
+                      </td>
+                    </tr>
 
-                  <tr>
-                    <th>
-                      <b>Test</b>
-                    </th>
-                    <td
-                      align="right"
-                      :class="cdash.nextbuild.ntestfailed > 0 ? 'error' : 'normal'"
-                    >
-                      <b>
-                        <a
-                          class="tw-link tw-link-hover"
-                          :href="$baseURL + '/builds/' + cdash.nextbuild.buildid + '/tests?filters=%7B%22all%22%3A%5B%7B%22eq%22%3A%7B%22status%22%3A%22FAILED%22%7D%7D%5D%7D'"
-                        >
-                          {{ cdash.nextbuild.ntestfailed }}
-                        </a>
-                      </b>
-                    </td>
-                    <td
-                      align="right"
-                      :class="cdash.nextbuild.ntestnotrun > 0 ? 'warning' : 'normal'"
-                    >
-                      <b>
-                        <a
-                          class="tw-link tw-link-hover"
-                          :href="$baseURL + '/builds/' + cdash.nextbuild.buildid + '/tests?filters=%7B%22all%22%3A%5B%7B%22eq%22%3A%7B%22status%22%3A%22NOT_RUN%22%7D%7D%5D%7D'"
-                        >
-                          {{ cdash.nextbuild.ntestnotrun }}
-                        </a>
-                      </b>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <br>
+                    <tr>
+                      <th>
+                        <b>Build</b>
+                      </th>
+                      <td
+                        align="right"
+                        :class="cdash.nextbuild.nerrors > 0 ? 'error' : 'normal'"
+                      >
+                        <b>
+                          <a
+                            class="tw-link tw-link-hover"
+                            :href="$baseURL + '/builds/' + cdash.nextbuild.buildid + 'errors'"
+                          >
+                            {{ cdash.nextbuild.nerrors }}
+                          </a>
+                        </b>
+                      </td>
+                      <td
+                        align="right"
+                        :class="cdash.nextbuild.nwarnings > 0 ? 'warning' : 'normal'"
+                      >
+                        <b>
+                          <a
+                            class="tw-link tw-link-hover"
+                            :href="$baseURL + '/builds/' + cdash.nextbuild.buildid + '/errors'"
+                          >
+                            {{ cdash.nextbuild.nwarnings }}
+                          </a>
+                        </b>
+                      </td>
+                    </tr>
 
-      <!-- Display the history table -->
-      <div class="title-divider">
-        History
-      </div>
+                    <tr>
+                      <th>
+                        <b>Test</b>
+                      </th>
+                      <td
+                        align="right"
+                        :class="cdash.nextbuild.ntestfailed > 0 ? 'error' : 'normal'"
+                      >
+                        <b>
+                          <a
+                            class="tw-link tw-link-hover"
+                            :href="$baseURL + '/builds/' + cdash.nextbuild.buildid + '/tests?filters=%7B%22all%22%3A%5B%7B%22eq%22%3A%7B%22status%22%3A%22FAILED%22%7D%7D%5D%7D'"
+                          >
+                            {{ cdash.nextbuild.ntestfailed }}
+                          </a>
+                        </b>
+                      </td>
+                      <td
+                        align="right"
+                        :class="cdash.nextbuild.ntestnotrun > 0 ? 'warning' : 'normal'"
+                      >
+                        <b>
+                          <a
+                            class="tw-link tw-link-hover"
+                            :href="$baseURL + '/builds/' + cdash.nextbuild.buildid + '/tests?filters=%7B%22all%22%3A%5B%7B%22eq%22%3A%7B%22status%22%3A%22NOT_RUN%22%7D%7D%5D%7D'"
+                          >
+                            {{ cdash.nextbuild.ntestnotrun }}
+                          </a>
+                        </b>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <br>
 
-      <a
-        class="tw-link tw-link-hover"
-        :href="$baseURL + '/index.php?project=' + cdash.projectname_encoded + '&filtercount=4&showfilters=1&filtercombine=and&field1=site&compare1=61&value1=' + cdash.build.sitename_encoded + '&field2=buildname&compare2=61&value2=' + cdash.build.name + '&field3=buildtype&compare3=61&value3=' + cdash.build.type + '&field4=buildstarttime&compare4=84&value4=' + cdash.build.starttime"
-      >
-        Show Build History
-      </a>
-      <br>
-      <br>
-
-      <!-- Notes section -->
-      <div class="title-divider">
-        Notes
-      </div>
-      <a
-        class="tw-link tw-link-hover"
-        :href="$baseURL + '/builds/' + cdash.build.id + '/notes'"
-      >
-        View Notes
-      </a>
-      <br>
-      <br>
-
-      <!-- Instrumentation section -->
-      <div class="title-divider">
-        Instrumentation
-        <a href="https://cmake.org/cmake/help/latest/manual/cmake-instrumentation.7.html">
-          <font-awesome-icon :icon="FA.faQuestionCircle" />
-        </a>
-      </div>
-      <a
-        class="tw-link tw-link-hover"
-        :href="$baseURL + '/builds/' + cdash.build.id + '/commands'"
-      >
-        View Commands
-      </a>
-      <br>
-      <br>
-
-      <!-- Targets section -->
-      <div class="title-divider">
-        Targets
-      </div>
-      <a
-        class="tw-link tw-link-hover"
-        :href="$baseURL + '/builds/' + cdash.build.id + '/targets'"
-      >
-        View Targets
-      </a>
-      <br>
-      <br>
-
-      <!-- Display comments for this build -->
-      <loading-indicator :is-loading="!comments">
-        <div
-          v-if="comments.length > 0 || cdash.user.id > 0"
-          class="title-divider"
-        >
-          Comments ({{ comments.length }})
+        <!-- Display the history table -->
+        <div class="title-divider">
+          History
         </div>
 
-        <div v-if="comments.length > 0">
-          <div v-for="{node: comment} in comments">
-            <b>{{ comment.user.firstname }} {{ comment.user.lastname }}</b> {{ Utils.formatRelativeTimestamp(comment.timestamp) }}
-            <code-box :text="comment.text" />
-            <hr>
+        <a
+          class="tw-link tw-link-hover"
+          :href="$baseURL + '/index.php?project=' + cdash.projectname_encoded + '&filtercount=4&showfilters=1&filtercombine=and&field1=site&compare1=61&value1=' + cdash.build.sitename_encoded + '&field2=buildname&compare2=61&value2=' + cdash.build.name + '&field3=buildtype&compare3=61&value3=' + cdash.build.type + '&field4=buildstarttime&compare4=84&value4=' + cdash.build.starttime"
+        >
+          Show Build History
+        </a>
+        <br>
+        <br>
+
+        <!-- Notes section -->
+        <div class="title-divider">
+          Notes
+        </div>
+        <a
+          class="tw-link tw-link-hover"
+          :href="$baseURL + '/builds/' + cdash.build.id + '/notes'"
+        >
+          View Notes
+        </a>
+        <br>
+        <br>
+
+        <!-- Instrumentation section -->
+        <div class="title-divider">
+          Instrumentation
+          <a href="https://cmake.org/cmake/help/latest/manual/cmake-instrumentation.7.html">
+            <font-awesome-icon :icon="FA.faQuestionCircle" />
+          </a>
+        </div>
+        <a
+          class="tw-link tw-link-hover"
+          :href="$baseURL + '/builds/' + cdash.build.id + '/commands'"
+        >
+          View Commands
+        </a>
+        <br>
+        <br>
+
+        <!-- Targets section -->
+        <div class="title-divider">
+          Targets
+        </div>
+        <a
+          class="tw-link tw-link-hover"
+          :href="$baseURL + '/builds/' + cdash.build.id + '/targets'"
+        >
+          View Targets
+        </a>
+        <br>
+        <br>
+
+        <!-- Display comments for this build -->
+        <loading-indicator :is-loading="!comments">
+          <div
+            v-if="comments.length > 0 || cdash.user.id > 0"
+            class="title-divider"
+          >
+            Comments ({{ comments.length }})
           </div>
+
+          <div v-if="comments.length > 0">
+            <div v-for="{node: comment} in comments">
+              <b>{{ comment.user.firstname }} {{ comment.user.lastname }}</b> {{ Utils.formatRelativeTimestamp(comment.timestamp) }}
+              <code-box :text="comment.text" />
+              <hr>
+            </div>
+            <br>
+          </div>
+
+          <div v-if="cdash.user.id > 0">
+            <!-- Add Comments -->
+            <div class="tw-flex tw-flex-row">
+              <img
+                width="20"
+                height="20"
+                :src="$baseURL + '/img/document.png'"
+                title="graph"
+              >
+              <a
+                id="toggle_note"
+                class="tw-link tw-link-hover"
+                @click="toggleNote()"
+              >
+                Add a comment to this Build
+              </a>
+            </div>
+            <div
+              v-show="showNote"
+              id="new_note_div"
+            >
+              <table>
+                <tbody>
+                  <tr>
+                    <td><b>Comment:</b></td>
+                    <td>
+                      <textarea
+                        id="note_text"
+                        v-model="cdash.noteText"
+                        class="tw-textarea tw-textarea-bordered"
+                        cols="50"
+                        rows="5"
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td />
+                    <td>
+                      <button
+                        id="add_note"
+                        class="tw-btn"
+                        :disabled="!cdash.noteText"
+                        @click="addNote()"
+                      >
+                        Add Note
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <br>
+          </div>
+        </loading-indicator>
+
+        <!-- Graphs -->
+        <div class="title-divider">
+          Graphs
+        </div>
+
+        <div class="tw-flex tw-flex-row">
+          <img
+            width="20"
+            height="20"
+            :src="$baseURL + '/img/graph.png'"
+            title="graph"
+          >
+          <a
+            id="toggle_time_graph"
+            class="tw-link tw-link-hover"
+            @click="toggleTimeGraph()"
+          >
+            Show Build Time Graph
+          </a>
+        </div>
+        <div style="text-align: center;">
+          <img
+            v-show="showTimeGraph && graphLoading"
+            :src="$baseURL + '/img/loading.gif'"
+          >
+          <div
+            v-show="showTimeGraph"
+            id="buildtimegrapholder"
+            class="graph_holder"
+          />
+        </div>
+
+        <div class="tw-flex tw-flex-row">
+          <img
+            width="20"
+            height="20"
+            :src="$baseURL + '/img/graph.png'"
+            title="graph"
+          >
+          <a
+            id="toggle_error_graph"
+            class="tw-link tw-link-hover"
+            @click="toggleErrorGraph()"
+          >
+            Show Build Errors Graph
+          </a>
+        </div>
+        <div style="text-align: center;">
+          <img
+            v-show="showErrorGraph && graphLoading"
+            :src="$baseURL + '/img/loading.gif'"
+          >
+          <div
+            v-show="showErrorGraph"
+            id="builderrorsgrapholder"
+            class="graph_holder"
+          />
+        </div>
+
+        <div class="tw-flex tw-flex-row">
+          <img
+            width="20"
+            height="20"
+            :src="$baseURL + '/img/graph.png'"
+            title="graph"
+          >
+          <a
+            id="toggle_warning_graph"
+            class="tw-link tw-link-hover"
+            @click="toggleWarningGraph()"
+          >
+            Show Build Warnings Graph
+          </a>
+        </div>
+        <div style="text-align: center;">
+          <img
+            v-show="showWarningGraph && graphLoading"
+            :src="$baseURL + '/img/loading.gif'"
+          >
+          <div
+            v-show="showWarningGraph"
+            id="buildwarningsgrapholder"
+            class="graph_holder"
+          />
+        </div>
+
+        <div class="tw-flex tw-flex-row">
+          <img
+            width="20"
+            height="20"
+            :src="$baseURL + '/img/graph.png'"
+            title="graph"
+          >
+          <a
+            id="toggle_test_graph"
+            class="tw-link tw-link-hover"
+            @click="toggleTestGraph()"
+          >
+            Show Build Tests Failed Graph
+          </a>
+        </div>
+        <div style="text-align: center;">
+          <img
+            v-show="showTestGraph && graphLoading"
+            :src="$baseURL + '/img/loading.gif'"
+          >
+          <div
+            v-show="showTestGraph"
+            id="buildtestsfailedgrapholder"
+            class="graph_holder"
+          />
+        </div>
+        <br>
+
+        <!-- Relationships -->
+        <div v-if="cdash.hasrelationships">
+          <div class="title-divider">
+            Relationships
+          </div>
+          <div
+            v-for="from in cdash.relationships_from"
+            :key="from.relatedid"
+          >
+            This build {{ from.relationship }} <a
+              class="tw-link tw-link-hover"
+              :href="$baseURL + '/builds/' + from.relatedid"
+            >{{ from.name }}</a>.
+          </div>
+          <div
+            v-for="to in cdash.relationships_to"
+            :key="to.buildid"
+          >
+            <a
+              class="tw-link tw-link-hover"
+              :href="$baseURL + '/builds/' + to.buildid"
+            >{{ to.name }}</a> {{ to.relationship }} this build.
+          </div>
+        </div>
+
+        <!-- Update -->
+        <div v-if="cdash.hasupdate">
+          <div
+            id="Update"
+            class="title-divider"
+          >
+            Stage: Update ({{ cdash.update.nerrors }} errors, {{ cdash.update.nwarnings }} warnings)
+          </div>
+          <br>
+
+          <b>Start Time: </b>{{ cdash.update.starttime }}
+          <br>
+
+          <b>End Time: </b>{{ cdash.update.endtime }}
+          <br>
+
+          <b>Update Command: </b> {{ cdash.update.command }}
+          <br>
+
+          <b>Update Type: </b> {{ cdash.update.type }}
+          <br>
+
+          <b>Number of Updates: </b>
+          <a
+            class="tw-link tw-link-hover"
+            :href="$baseURL + '/builds/' + cdash.build.id + '/update'"
+          >
+            {{ cdash.update.nupdates }}
+          </a>
+          <div v-if="cdash.update.status">
+            <br>
+            <b>Update Status: </b>{{ cdash.update.status }}
+          </div>
+          <br>
           <br>
         </div>
 
-        <div v-if="cdash.user.id > 0">
-          <!-- Add Comments -->
-          <div class="tw-flex tw-flex-row">
-            <img
-              width="20"
-              height="20"
-              :src="$baseURL + '/img/document.png'"
-              title="graph"
-            >
-            <a
-              id="toggle_note"
-              class="tw-link tw-link-hover"
-              @click="toggleNote()"
-            >
-              Add a comment to this Build
-            </a>
-          </div>
+        <!-- Configure -->
+        <div v-if="cdash.hasconfigure">
           <div
-            v-show="showNote"
-            id="new_note_div"
+            id="Configure"
+            class="title-divider"
           >
-            <table>
-              <tbody>
-                <tr>
-                  <td><b>Comment:</b></td>
-                  <td>
-                    <textarea
-                      id="note_text"
-                      v-model="cdash.noteText"
-                      class="tw-textarea tw-textarea-bordered"
-                      cols="50"
-                      rows="5"
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td />
-                  <td>
-                    <button
-                      id="add_note"
-                      class="tw-btn"
-                      :disabled="!cdash.noteText"
-                      @click="addNote()"
-                    >
-                      Add Note
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            Configure ({{ cdash.configure.nerrors }} errors, {{ cdash.configure.nwarnings }} warnings)
           </div>
+          <br>
+
+          <b>Start Time: </b>{{ cdash.configure.starttime }}
+          <br>
+
+          <b>End Time: </b>{{ cdash.configure.endtime }}
+          <br>
+
+          <b>Configure Command:</b>
+          <code-box :text="cdash.configure.command" />
+
+          <b>Configure Return Value:</b>
+          <code-box :text="cdash.configure.status" />
+
+          <b>Configure Output:</b>
+
+          <code-box :text="cdash.configure.output" />
+
+          <a
+            id="configure_link"
+            class="tw-link tw-link-hover"
+            :href="$baseURL + '/builds/' + cdash.build.id + '/configure'"
+          >
+            View Configure Summary
+          </a>
+          <br>
+          <br>
+        </div>
+
+        <!-- Build -->
+        <div
+          id="Build"
+          class="title-divider"
+        >
+          Build ({{ cdash.build.nerrors }} errors, {{ cdash.build.nwarnings }} warnings)
+        </div>
+        <br>
+
+        <b>Build command: </b><code-box :text="cdash.build.command" />
+
+        <b>Start Time: </b>{{ cdash.build.starttime }}
+        <br>
+
+        <b>End Time: </b>{{ cdash.build.endtime }}
+        <br>
+        <br>
+
+        <!-- Show the errors -->
+        <div v-for="error in cdash.build.errors">
+          <div v-if="error.sourceline > 0">
+            <hr>
+            <h3>
+              <a>Build Log line {{ error.logline }}</a>
+            </h3>
+            <br>
+            File: <b>{{ error.sourcefile }}</b>
+            Line: <b>{{ error.sourceline }}</b>
+          </div>
+          <code-box
+            v-if="error?.text?.trim()"
+            :text="error.text"
+          />
+
+          <div v-if="error?.stdoutput?.trim() || error?.stderror?.trim()">
+            <br>
+            <b>{{ error.sourcefile }}</b>
+            <code-box
+              v-if="error?.stdoutput?.trim()"
+              :text="error.stdoutput"
+            />
+            <code-box
+              v-if="error?.stderror?.trim()"
+              :text="error.stderror"
+            />
+          </div>
+        </div>
+
+        <a
+          class="tw-link tw-link-hover"
+          :href="$baseURL + '/builds/' + cdash.build.id + '/errors'"
+        >
+          View Errors Summary
+        </a>
+        <br>
+        <br>
+
+        <!--  Warnings -->
+        <div
+          id="Warnings"
+          class="title-divider"
+        >
+          Build Warnings ({{ cdash.build.nwarnings }})
+        </div>
+
+        <div v-for="warning in cdash.build.warnings">
+          <div v-if="warning.sourceline > 0">
+            <hr>
+            <h3><a>Build Log line {{ warning.logline }}</a></h3>
+            <br>
+            File: <b>{{ warning.sourcefile }}</b>
+            Line: <b>{{ warning.sourceline }}</b>
+          </div>
+          <code-box
+            v-if="warning?.text?.trim()"
+            :text="warning.text"
+          />
+
+          <div v-if="warning?.stdoutput?.trim() || warning?.stderror?.trim()">
+            <br>
+            <b>{{ warning.sourcefile }}</b>
+            <code-box
+              v-if="warning?.stdoutput?.trim()"
+              :text="warning.stdoutput"
+            />
+            <code-box
+              v-if="warning?.stderror?.trim()"
+              :text="warning.stderror"
+            />
+          </div>
+        </div>
+        <br>
+
+        <a
+          id="warnings_link"
+          class="tw-link tw-link-hover"
+          :href="$baseURL + '/builds/' + cdash.build.id + '/errors'"
+        >
+          View Warnings Summary
+        </a>
+        <br>
+        <br>
+
+        <!-- Test -->
+        <div
+          id="Test"
+          class="title-divider"
+        >
+          Test ({{ cdash.test.npassed }}  passed, {{ cdash.test.nfailed }} failed, {{ cdash.test.nnotrun }} not run)
+        </div>
+        <a
+          id="tests_link"
+          class="tw-link tw-link-hover"
+          :href="$baseURL + '/builds/' + cdash.build.id + '/tests'"
+        >
+          View Tests Summary
+        </a>
+        <br>
+        <br>
+
+        <!-- Coverage -->
+        <div v-if="cdash.hascoverage">
+          <div
+            id="Coverage"
+            class="title-divider"
+          >
+            Coverage ({{ cdash.coverage }}%)
+          </div>
+          <a
+            id="coverage_link"
+            class="tw-link tw-link-hover"
+            :href="$baseURL + '/builds/' + cdash.build.id + '/coverage'"
+          >
+            View Coverage Summary
+          </a>
+          <br>
           <br>
         </div>
       </loading-indicator>
-
-      <!-- Graphs -->
-      <div class="title-divider">
-        Graphs
-      </div>
-
-      <div class="tw-flex tw-flex-row">
-        <img
-          width="20"
-          height="20"
-          :src="$baseURL + '/img/graph.png'"
-          title="graph"
-        >
-        <a
-          id="toggle_time_graph"
-          class="tw-link tw-link-hover"
-          @click="toggleTimeGraph()"
-        >
-          Show Build Time Graph
-        </a>
-      </div>
-      <div style="text-align: center;">
-        <img
-          v-show="showTimeGraph && graphLoading"
-          :src="$baseURL + '/img/loading.gif'"
-        >
-        <div
-          v-show="showTimeGraph"
-          id="buildtimegrapholder"
-          class="graph_holder"
-        />
-      </div>
-
-      <div class="tw-flex tw-flex-row">
-        <img
-          width="20"
-          height="20"
-          :src="$baseURL + '/img/graph.png'"
-          title="graph"
-        >
-        <a
-          id="toggle_error_graph"
-          class="tw-link tw-link-hover"
-          @click="toggleErrorGraph()"
-        >
-          Show Build Errors Graph
-        </a>
-      </div>
-      <div style="text-align: center;">
-        <img
-          v-show="showErrorGraph && graphLoading"
-          :src="$baseURL + '/img/loading.gif'"
-        >
-        <div
-          v-show="showErrorGraph"
-          id="builderrorsgrapholder"
-          class="graph_holder"
-        />
-      </div>
-
-      <div class="tw-flex tw-flex-row">
-        <img
-          width="20"
-          height="20"
-          :src="$baseURL + '/img/graph.png'"
-          title="graph"
-        >
-        <a
-          id="toggle_warning_graph"
-          class="tw-link tw-link-hover"
-          @click="toggleWarningGraph()"
-        >
-          Show Build Warnings Graph
-        </a>
-      </div>
-      <div style="text-align: center;">
-        <img
-          v-show="showWarningGraph && graphLoading"
-          :src="$baseURL + '/img/loading.gif'"
-        >
-        <div
-          v-show="showWarningGraph"
-          id="buildwarningsgrapholder"
-          class="graph_holder"
-        />
-      </div>
-
-      <div class="tw-flex tw-flex-row">
-        <img
-          width="20"
-          height="20"
-          :src="$baseURL + '/img/graph.png'"
-          title="graph"
-        >
-        <a
-          id="toggle_test_graph"
-          class="tw-link tw-link-hover"
-          @click="toggleTestGraph()"
-        >
-          Show Build Tests Failed Graph
-        </a>
-      </div>
-      <div style="text-align: center;">
-        <img
-          v-show="showTestGraph && graphLoading"
-          :src="$baseURL + '/img/loading.gif'"
-        >
-        <div
-          v-show="showTestGraph"
-          id="buildtestsfailedgrapholder"
-          class="graph_holder"
-        />
-      </div>
-      <br>
-
-      <!-- Relationships -->
-      <div v-if="cdash.hasrelationships">
-        <div class="title-divider">
-          Relationships
-        </div>
-        <div
-          v-for="from in cdash.relationships_from"
-          :key="from.relatedid"
-        >
-          This build {{ from.relationship }} <a
-            class="tw-link tw-link-hover"
-            :href="$baseURL + '/builds/' + from.relatedid"
-          >{{ from.name }}</a>.
-        </div>
-        <div
-          v-for="to in cdash.relationships_to"
-          :key="to.buildid"
-        >
-          <a
-            class="tw-link tw-link-hover"
-            :href="$baseURL + '/builds/' + to.buildid"
-          >{{ to.name }}</a> {{ to.relationship }} this build.
-        </div>
-      </div>
-
-      <!-- Update -->
-      <div v-if="cdash.hasupdate">
-        <div
-          id="Update"
-          class="title-divider"
-        >
-          Stage: Update ({{ cdash.update.nerrors }} errors, {{ cdash.update.nwarnings }} warnings)
-        </div>
-        <br>
-
-        <b>Start Time: </b>{{ cdash.update.starttime }}
-        <br>
-
-        <b>End Time: </b>{{ cdash.update.endtime }}
-        <br>
-
-        <b>Update Command: </b> {{ cdash.update.command }}
-        <br>
-
-        <b>Update Type: </b> {{ cdash.update.type }}
-        <br>
-
-        <b>Number of Updates: </b>
-        <a
-          class="tw-link tw-link-hover"
-          :href="$baseURL + '/builds/' + cdash.build.id + '/update'"
-        >
-          {{ cdash.update.nupdates }}
-        </a>
-        <div v-if="cdash.update.status">
-          <br>
-          <b>Update Status: </b>{{ cdash.update.status }}
-        </div>
-        <br>
-        <br>
-      </div>
-
-      <!-- Configure -->
-      <div v-if="cdash.hasconfigure">
-        <div
-          id="Configure"
-          class="title-divider"
-        >
-          Configure ({{ cdash.configure.nerrors }} errors, {{ cdash.configure.nwarnings }} warnings)
-        </div>
-        <br>
-
-        <b>Start Time: </b>{{ cdash.configure.starttime }}
-        <br>
-
-        <b>End Time: </b>{{ cdash.configure.endtime }}
-        <br>
-
-        <b>Configure Command:</b>
-        <code-box :text="cdash.configure.command" />
-
-        <b>Configure Return Value:</b>
-        <code-box :text="cdash.configure.status" />
-
-        <b>Configure Output:</b>
-
-        <code-box :text="cdash.configure.output" />
-
-        <a
-          id="configure_link"
-          class="tw-link tw-link-hover"
-          :href="$baseURL + '/builds/' + cdash.build.id + '/configure'"
-        >
-          View Configure Summary
-        </a>
-        <br>
-        <br>
-      </div>
-
-      <!-- Build -->
-      <div
-        id="Build"
-        class="title-divider"
-      >
-        Build ({{ cdash.build.nerrors }} errors, {{ cdash.build.nwarnings }} warnings)
-      </div>
-      <br>
-
-      <b>Build command: </b><code-box :text="cdash.build.command" />
-
-      <b>Start Time: </b>{{ cdash.build.starttime }}
-      <br>
-
-      <b>End Time: </b>{{ cdash.build.endtime }}
-      <br>
-      <br>
-
-      <!-- Show the errors -->
-      <div v-for="error in cdash.build.errors">
-        <div v-if="error.sourceline > 0">
-          <hr>
-          <h3>
-            <a>Build Log line {{ error.logline }}</a>
-          </h3>
-          <br>
-          File: <b>{{ error.sourcefile }}</b>
-          Line: <b>{{ error.sourceline }}</b>
-        </div>
-        <code-box
-          v-if="error?.text?.trim()"
-          :text="error.text"
-        />
-
-        <div v-if="error?.stdoutput?.trim() || error?.stderror?.trim()">
-          <br>
-          <b>{{ error.sourcefile }}</b>
-          <code-box
-            v-if="error?.stdoutput?.trim()"
-            :text="error.stdoutput"
-          />
-          <code-box
-            v-if="error?.stderror?.trim()"
-            :text="error.stderror"
-          />
-        </div>
-      </div>
-
-      <a
-        class="tw-link tw-link-hover"
-        :href="$baseURL + '/builds/' + cdash.build.id + '/errors'"
-      >
-        View Errors Summary
-      </a>
-      <br>
-      <br>
-
-      <!--  Warnings -->
-      <div
-        id="Warnings"
-        class="title-divider"
-      >
-        Build Warnings ({{ cdash.build.nwarnings }})
-      </div>
-
-      <div v-for="warning in cdash.build.warnings">
-        <div v-if="warning.sourceline > 0">
-          <hr>
-          <h3><a>Build Log line {{ warning.logline }}</a></h3>
-          <br>
-          File: <b>{{ warning.sourcefile }}</b>
-          Line: <b>{{ warning.sourceline }}</b>
-        </div>
-        <code-box
-          v-if="warning?.text?.trim()"
-          :text="warning.text"
-        />
-
-        <div v-if="warning?.stdoutput?.trim() || warning?.stderror?.trim()">
-          <br>
-          <b>{{ warning.sourcefile }}</b>
-          <code-box
-            v-if="warning?.stdoutput?.trim()"
-            :text="warning.stdoutput"
-          />
-          <code-box
-            v-if="warning?.stderror?.trim()"
-            :text="warning.stderror"
-          />
-        </div>
-      </div>
-      <br>
-
-      <a
-        id="warnings_link"
-        class="tw-link tw-link-hover"
-        :href="$baseURL + '/builds/' + cdash.build.id + '/errors'"
-      >
-        View Warnings Summary
-      </a>
-      <br>
-      <br>
-
-      <!-- Test -->
-      <div
-        id="Test"
-        class="title-divider"
-      >
-        Test ({{ cdash.test.npassed }}  passed, {{ cdash.test.nfailed }} failed, {{ cdash.test.nnotrun }} not run)
-      </div>
-      <a
-        id="tests_link"
-        class="tw-link tw-link-hover"
-        :href="$baseURL + '/builds/' + cdash.build.id + '/tests'"
-      >
-        View Tests Summary
-      </a>
-      <br>
-      <br>
-
-      <!-- Coverage -->
-      <div v-if="cdash.hascoverage">
-        <div
-          id="Coverage"
-          class="title-divider"
-        >
-          Coverage ({{ cdash.coverage }}%)
-        </div>
-        <a
-          id="coverage_link"
-          class="tw-link tw-link-hover"
-          :href="$baseURL + '/builds/' + cdash.build.id + '/coverage'"
-        >
-          View Coverage Summary
-        </a>
-        <br>
-        <br>
-      </div>
-    </loading-indicator>
-  </section>
+    </section>
+  </BuildSidebar>
 </template>
 
 <script>
@@ -1011,12 +1016,13 @@ import {
 import CodeBox from './shared/CodeBox.vue';
 import LoadingIndicator from './shared/LoadingIndicator.vue';
 import BuildSummaryCard from './shared/BuildSummaryCard.vue';
+import BuildSidebar from './shared/BuildSidebar.vue';
 import gql from 'graphql-tag';
 import Utils from './shared/Utils';
 
 export default {
   name: 'BuildSummary',
-  components: {BuildSummaryCard, LoadingIndicator, CodeBox, FontAwesomeIcon},
+  components: {BuildSummaryCard, LoadingIndicator, CodeBox, FontAwesomeIcon, BuildSidebar},
 
   props: {
     buildId: {

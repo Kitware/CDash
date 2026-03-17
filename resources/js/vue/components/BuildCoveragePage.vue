@@ -1,181 +1,187 @@
 <template>
-  <div class="tw-flex tw-flex-col tw-w-full tw-gap-4">
-    <BuildSummaryCard :build-id="buildId" />
+  <BuildSidebar
+    :build-id="buildId"
+    active-tab="coverage"
+  >
+    <div class="tw-flex tw-flex-col tw-w-full tw-gap-4">
+      <BuildSummaryCard :build-id="buildId" />
 
-    <div>
-      <span class="tw-font-bold tw-text-xl">
-        Coverage Summary
-      </span>
-      <loading-indicator :is-loading="!coverage">
-        <table class="tw-table tw-table-sm tw-w-auto">
-          <tbody>
-            <tr>
-              <th>Line Coverage</th>
-              <td data-test="line-coverage-summary">
-                <progress
-                  class="tw-progress tw-w-24"
-                  :class="percentToProgressBarColorClass(totalPercentageOfLinesCovered)"
-                  :value="totalPercentageOfLinesCovered"
-                  max="100"
-                />
-                {{ totalPercentageOfLinesCovered }}% ({{ totalLinesCovered }} / {{ totalLinesCovered + totalLinesUncovered }})
-              </td>
-            </tr>
-            <tr v-if="hasBranchCoverage">
-              <th>Branch Coverage</th>
-              <td data-test="branch-coverage-summary">
-                <progress
-                  class="tw-progress tw-w-24"
-                  :class="percentToProgressBarColorClass(totalPercentageOfBranchesCovered)"
-                  :value="totalPercentageOfBranchesCovered"
-                  max="100"
-                />
-                {{ totalPercentageOfBranchesCovered }}% ({{ totalBranchesCovered }} / {{ totalBranchesCovered + totalBranchesUncovered }})
-              </td>
-            </tr>
-            <tr>
-              <th>File Coverage</th>
-              <td data-test="file-coverage-summary">
-                <progress
-                  class="tw-progress tw-w-24"
-                  :class="percentToProgressBarColorClass(totalPercentageOfFilesCovered)"
-                  :value="totalPercentageOfFilesCovered"
-                  max="100"
-                />
-                {{ totalPercentageOfFilesCovered }}% ({{ totalFilesCovered }} / {{ totalFilesCovered + totalFilesUncovered }})
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </loading-indicator>
-    </div>
-
-    <filter-builder
-      filter-type="BuildCoverageFiltersMultiFilterInput"
-      primary-record-name="coverage files"
-      :initial-filters="initialFilters"
-      :execute-query-link="executeQueryLink"
-      @change-filters="filters => changedFilters = filters"
-    />
-
-    <div>
-      <div class="tw-flex tw-flex-row tw-gap-2 tw-items-center">
-        <button
-          class="tw-btn tw-btn-xs"
-          :class="{ 'tw-btn-disabled': currentPrefix === '' }"
-          data-test="breadcrumbs-back-button"
-          @click="currentPrefix = directoryAbovePath(currentPrefix)"
-        >
-          <font-awesome-icon :icon="FA.faReply" />
-          Back
-        </button>
-        <div
-          class="tw-breadcrumbs"
-          data-test="breadcrumbs"
-        >
-          <ul>
-            <li>
-              <a
-                href=""
-                class="tw-italic"
-                @click.prevent="currentPrefix = ''"
-              >{{ projectName }}</a>
-            </li>
-            <li
-              v-for="[index, dir_segment] of currentPrefix.split('/').slice(0, -1).entries()"
-              :key="dir_segment"
-            >
-              <a
-                href=""
-                @click.prevent="currentPrefix = currentPrefix.split('/').slice(0, index + 1).join('/') + '/'"
-              >
-                <font-awesome-icon
-                  :icon="FA.faFolder"
-                  class="tw-mr-1"
-                />
-                {{ dir_segment }}
-              </a>
-            </li>
-          </ul>
-        </div>
+      <div>
+        <span class="tw-font-bold tw-text-xl">
+          Coverage Summary
+        </span>
+        <loading-indicator :is-loading="!coverage">
+          <table class="tw-table tw-table-sm tw-w-auto">
+            <tbody>
+              <tr>
+                <th>Line Coverage</th>
+                <td data-test="line-coverage-summary">
+                  <progress
+                    class="tw-progress tw-w-24"
+                    :class="percentToProgressBarColorClass(totalPercentageOfLinesCovered)"
+                    :value="totalPercentageOfLinesCovered"
+                    max="100"
+                  />
+                  {{ totalPercentageOfLinesCovered }}% ({{ totalLinesCovered }} / {{ totalLinesCovered + totalLinesUncovered }})
+                </td>
+              </tr>
+              <tr v-if="hasBranchCoverage">
+                <th>Branch Coverage</th>
+                <td data-test="branch-coverage-summary">
+                  <progress
+                    class="tw-progress tw-w-24"
+                    :class="percentToProgressBarColorClass(totalPercentageOfBranchesCovered)"
+                    :value="totalPercentageOfBranchesCovered"
+                    max="100"
+                  />
+                  {{ totalPercentageOfBranchesCovered }}% ({{ totalBranchesCovered }} / {{ totalBranchesCovered + totalBranchesUncovered }})
+                </td>
+              </tr>
+              <tr>
+                <th>File Coverage</th>
+                <td data-test="file-coverage-summary">
+                  <progress
+                    class="tw-progress tw-w-24"
+                    :class="percentToProgressBarColorClass(totalPercentageOfFilesCovered)"
+                    :value="totalPercentageOfFilesCovered"
+                    max="100"
+                  />
+                  {{ totalPercentageOfFilesCovered }}% ({{ totalFilesCovered }} / {{ totalFilesCovered + totalFilesUncovered }})
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </loading-indicator>
       </div>
-      <loading-indicator :is-loading="!coverage">
-        <data-table
-          :columns="[
-            ...(hasSubProjects ? [{
-              name: 'subProject',
-              displayName: 'SubProject',
-            }] : []),
-            {
-              name: 'path',
-              displayName: 'Name',
-              expand: true,
-            },
-            {
-              name: 'linePercentage',
-              displayName: 'Percentage',
-            },
-            {
-              name: 'lines',
-              displayName: 'Lines Tested',
-            },
-            ...(hasBranchCoverage ? [{
-              name: 'branchPercentage',
-              displayName: 'Branch Percentage',
-            }, {
-              name: 'branches',
-              displayName: 'Branches Tested',
-            }] : []),
-          ]"
-          :rows="formattedTableRows"
-          :full-width="true"
-          test-id="coverage-table"
-          initial-sort-column="linePercentage"
-          :initial-sort-asc="false"
-        >
-          <template #path="{ props: obj }">
-            <a
-              v-if="obj.isDirectory"
-              href=""
-              data-test="coverage-directory-link"
-              @click.prevent="currentPrefix += obj.path + '/';"
-            >
-              <font-awesome-icon :icon="FA.faFolder" /> {{ obj.path }}
-            </a>
-            <a
-              v-else
-              :href="`${$baseURL}/builds/${buildId}/coverage/${obj.fileId}`"
-              data-test="coverage-file-link"
-            >
-              <font-awesome-icon :icon="FA.faFile" /> {{ obj.path }}
-            </a>
-          </template>
-          <template #linePercentage="{ props: { text: pct } }">
-            <progress
-              class="tw-progress tw-w-24"
-              :class="percentToProgressBarColorClass(pct)"
-              :value="pct"
-              max="100"
-            /> {{ pct }}%
-          </template>
-          <template #branchPercentage="{ props: { text: pct } }">
-            <progress
-              class="tw-progress tw-w-24"
-              :class="percentToProgressBarColorClass(pct)"
-              :value="pct"
-              max="100"
-            /> {{ pct }}%
-          </template>
-        </data-table>
-      </loading-indicator>
+
+      <filter-builder
+        filter-type="BuildCoverageFiltersMultiFilterInput"
+        primary-record-name="coverage files"
+        :initial-filters="initialFilters"
+        :execute-query-link="executeQueryLink"
+        @change-filters="filters => changedFilters = filters"
+      />
+
+      <div>
+        <div class="tw-flex tw-flex-row tw-gap-2 tw-items-center">
+          <button
+            class="tw-btn tw-btn-xs"
+            :class="{ 'tw-btn-disabled': currentPrefix === '' }"
+            data-test="breadcrumbs-back-button"
+            @click="currentPrefix = directoryAbovePath(currentPrefix)"
+          >
+            <font-awesome-icon :icon="FA.faReply" />
+            Back
+          </button>
+          <div
+            class="tw-breadcrumbs"
+            data-test="breadcrumbs"
+          >
+            <ul>
+              <li>
+                <a
+                  href=""
+                  class="tw-italic"
+                  @click.prevent="currentPrefix = ''"
+                >{{ projectName }}</a>
+              </li>
+              <li
+                v-for="[index, dir_segment] of currentPrefix.split('/').slice(0, -1).entries()"
+                :key="dir_segment"
+              >
+                <a
+                  href=""
+                  @click.prevent="currentPrefix = currentPrefix.split('/').slice(0, index + 1).join('/') + '/'"
+                >
+                  <font-awesome-icon
+                    :icon="FA.faFolder"
+                    class="tw-mr-1"
+                  />
+                  {{ dir_segment }}
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <loading-indicator :is-loading="!coverage">
+          <data-table
+            :columns="[
+              ...(hasSubProjects ? [{
+                name: 'subProject',
+                displayName: 'SubProject',
+              }] : []),
+              {
+                name: 'path',
+                displayName: 'Name',
+                expand: true,
+              },
+              {
+                name: 'linePercentage',
+                displayName: 'Percentage',
+              },
+              {
+                name: 'lines',
+                displayName: 'Lines Tested',
+              },
+              ...(hasBranchCoverage ? [{
+                name: 'branchPercentage',
+                displayName: 'Branch Percentage',
+              }, {
+                name: 'branches',
+                displayName: 'Branches Tested',
+              }] : []),
+            ]"
+            :rows="formattedTableRows"
+            :full-width="true"
+            test-id="coverage-table"
+            initial-sort-column="linePercentage"
+            :initial-sort-asc="false"
+          >
+            <template #path="{ props: obj }">
+              <a
+                v-if="obj.isDirectory"
+                href=""
+                data-test="coverage-directory-link"
+                @click.prevent="currentPrefix += obj.path + '/';"
+              >
+                <font-awesome-icon :icon="FA.faFolder" /> {{ obj.path }}
+              </a>
+              <a
+                v-else
+                :href="`${$baseURL}/builds/${buildId}/coverage/${obj.fileId}`"
+                data-test="coverage-file-link"
+              >
+                <font-awesome-icon :icon="FA.faFile" /> {{ obj.path }}
+              </a>
+            </template>
+            <template #linePercentage="{ props: { text: pct } }">
+              <progress
+                class="tw-progress tw-w-24"
+                :class="percentToProgressBarColorClass(pct)"
+                :value="pct"
+                max="100"
+              /> {{ pct }}%
+            </template>
+            <template #branchPercentage="{ props: { text: pct } }">
+              <progress
+                class="tw-progress tw-w-24"
+                :class="percentToProgressBarColorClass(pct)"
+                :value="pct"
+                max="100"
+              /> {{ pct }}%
+            </template>
+          </data-table>
+        </loading-indicator>
+      </div>
     </div>
-  </div>
+  </BuildSidebar>
 </template>
 
 <script>
 import BuildSummaryCard from './shared/BuildSummaryCard.vue';
 import DataTable from './shared/DataTable.vue';
 import LoadingIndicator from './shared/LoadingIndicator.vue';
+import BuildSidebar from './shared/BuildSidebar.vue';
 import gql from 'graphql-tag';
 import FilterBuilder from './shared/FilterBuilder.vue';
 import {faFolder, faReply} from '@fortawesome/free-solid-svg-icons';
@@ -183,7 +189,7 @@ import {faFile} from '@fortawesome/free-regular-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 
 export default {
-  components: {FontAwesomeIcon, FilterBuilder, LoadingIndicator, DataTable, BuildSummaryCard},
+  components: {FontAwesomeIcon, FilterBuilder, LoadingIndicator, DataTable, BuildSummaryCard, BuildSidebar},
 
   props: {
     buildId: {

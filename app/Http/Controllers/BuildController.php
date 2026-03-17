@@ -117,6 +117,7 @@ final class BuildController extends AbstractBuildController
         $this->setBuildById($build_id);
 
         return $this->vue('build-update', 'Files Updated', [
+            'build-id' => $this->build->Id,
             'repository-type' => $this->project->CvsViewerType,
             'repository-url' => $this->project->CvsUrl,
         ]);

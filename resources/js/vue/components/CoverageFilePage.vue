@@ -1,27 +1,32 @@
 <template>
-  <div class="tw-flex tw-flex-col tw-w-full tw-gap-4">
-    <BuildSummaryCard :build-id="buildId" />
+  <BuildSidebar
+    :build-id="buildId"
+    active-tab="coverage"
+  >
+    <div class="tw-flex tw-flex-col tw-w-full tw-gap-4">
+      <BuildSummaryCard :build-id="buildId" />
 
-    <LoadingIndicator :is-loading="!coverage">
-      <div class="tw-border-base-300 tw-bg-base-200 tw-border tw-rounded tw-p-2 tw-flex tw-flex-row tw-w-full tw-gap-4">
-        <div class="tw-font-mono">
-          {{ coverage.filePath }}
+      <LoadingIndicator :is-loading="!coverage">
+        <div class="tw-border-base-300 tw-bg-base-200 tw-border tw-rounded tw-p-2 tw-flex tw-flex-row tw-w-full tw-gap-4">
+          <div class="tw-font-mono">
+            {{ coverage.filePath }}
+          </div>
+          <div class="tw-flex-grow" />
+          <div>
+            {{ coverage.linesOfCodeTested }} / {{ totalLines }} lines covered
+            <template v-if="!isNaN(percentLinesCovered)">
+              ({{ percentLinesCovered }}%)
+            </template>
+          </div>
         </div>
-        <div class="tw-flex-grow" />
-        <div>
-          {{ coverage.linesOfCodeTested }} / {{ totalLines }} lines covered
-          <template v-if="!isNaN(percentLinesCovered)">
-            ({{ percentLinesCovered }}%)
-          </template>
-        </div>
-      </div>
 
-      <CoverageViewer
-        :file="coverage.file"
-        :coverage-lines="coverage.coveredLines"
-      />
-    </LoadingIndicator>
-  </div>
+        <CoverageViewer
+          :file="coverage.file"
+          :coverage-lines="coverage.coveredLines"
+        />
+      </LoadingIndicator>
+    </div>
+  </BuildSidebar>
 </template>
 
 <script>
@@ -29,9 +34,10 @@ import BuildSummaryCard from './shared/BuildSummaryCard.vue';
 import LoadingIndicator from './shared/LoadingIndicator.vue';
 import gql from 'graphql-tag';
 import CoverageViewer from './shared/CoverageViewer.vue';
+import BuildSidebar from './shared/BuildSidebar.vue';
 
 export default {
-  components: {CoverageViewer, LoadingIndicator, BuildSummaryCard},
+  components: {BuildSidebar, CoverageViewer, LoadingIndicator, BuildSummaryCard},
 
   props: {
     buildId: {
