@@ -1,74 +1,80 @@
 <template>
-  <div class="tw-flex tw-flex-col tw-w-full tw-gap-4">
-    <BuildSummaryCard :build-id="buildId" />
+  <BuildSidebar
+    :build-id="buildId"
+    active-tab="files"
+  >
+    <div class="tw-flex tw-flex-col tw-w-full tw-gap-4">
+      <BuildSummaryCard :build-id="buildId" />
 
-    <div
-      v-if="urls && files && urls.edges.length === 0 && files.edges.length === 0"
-      data-test="no-urls-or-files-message"
-    >
-      No URLs or files were uploaded for this build.
+      <div
+        v-if="urls && files && urls.edges.length === 0 && files.edges.length === 0"
+        data-test="no-urls-or-files-message"
+      >
+        No URLs or files were uploaded for this build.
+      </div>
+
+      <loading-indicator :is-loading="!urls">
+        <data-table
+          v-if="urls.edges.length > 0"
+          :column-groups="[
+            {
+              displayName: 'URLs',
+              width: 100,
+            }
+          ]"
+          :columns="[
+            {
+              name: 'url',
+              displayName: 'URL',
+            },
+          ]"
+          :rows="formattedUrlRows"
+          :full-width="true"
+          test-id="urls-table"
+        />
+      </loading-indicator>
+
+      <loading-indicator :is-loading="!files">
+        <data-table
+          v-if="files.edges.length > 0"
+          :column-groups="[
+            {
+              displayName: 'Files',
+              width: 100,
+            }
+          ]"
+          :columns="[
+            {
+              name: 'name',
+              displayName: 'Name',
+            },
+            {
+              name: 'size',
+              displayName: 'Size',
+            },
+            {
+              name: 'hash',
+              displayName: 'SHA-1',
+            },
+          ]"
+          :rows="formattedFileRows"
+          :full-width="true"
+          test-id="files-table"
+        />
+      </loading-indicator>
     </div>
-
-    <loading-indicator :is-loading="!urls">
-      <data-table
-        v-if="urls.edges.length > 0"
-        :column-groups="[
-          {
-            displayName: 'URLs',
-            width: 100,
-          }
-        ]"
-        :columns="[
-          {
-            name: 'url',
-            displayName: 'URL',
-          },
-        ]"
-        :rows="formattedUrlRows"
-        :full-width="true"
-        test-id="urls-table"
-      />
-    </loading-indicator>
-
-    <loading-indicator :is-loading="!files">
-      <data-table
-        v-if="files.edges.length > 0"
-        :column-groups="[
-          {
-            displayName: 'Files',
-            width: 100,
-          }
-        ]"
-        :columns="[
-          {
-            name: 'name',
-            displayName: 'Name',
-          },
-          {
-            name: 'size',
-            displayName: 'Size',
-          },
-          {
-            name: 'hash',
-            displayName: 'SHA-1',
-          },
-        ]"
-        :rows="formattedFileRows"
-        :full-width="true"
-        test-id="files-table"
-      />
-    </loading-indicator>
-  </div>
+  </BuildSidebar>
 </template>
 
 <script>
 import BuildSummaryCard from './shared/BuildSummaryCard.vue';
 import DataTable from './shared/DataTable.vue';
 import LoadingIndicator from './shared/LoadingIndicator.vue';
+import BuildSidebar from './shared/BuildSidebar.vue';
 import gql from 'graphql-tag';
 
 export default {
-  components: {LoadingIndicator, DataTable, BuildSummaryCard},
+  components: {LoadingIndicator, DataTable, BuildSummaryCard, BuildSidebar},
 
   props: {
     buildId: {

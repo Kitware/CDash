@@ -1,31 +1,37 @@
 <template>
-  <div class="tw-flex tw-flex-col tw-w-full tw-gap-4">
-    <build-summary-card :build-id="buildId" />
+  <BuildSidebar
+    :build-id="buildId"
+    active-tab="dynamic_analysis"
+  >
+    <div class="tw-flex tw-flex-col tw-w-full tw-gap-4">
+      <build-summary-card :build-id="buildId" />
 
-    <loading-indicator :is-loading="!dynamicAnalysis">
-      <div class="tw-border-base-300 tw-bg-base-200 tw-border tw-rounded tw-p-2 tw-flex tw-flex-row tw-w-full tw-gap-1">
-        <div class="tw-font-mono tw-link tw-link-hover">
-          <a :href="link">
-            {{ dynamicAnalysis.name }}
-          </a>
+      <loading-indicator :is-loading="!dynamicAnalysis">
+        <div class="tw-border-base-300 tw-bg-base-200 tw-border tw-rounded tw-p-2 tw-flex tw-flex-row tw-w-full tw-gap-1">
+          <div class="tw-font-mono tw-link tw-link-hover">
+            <a :href="link">
+              {{ dynamicAnalysis.name }}
+            </a>
+          </div>
+          <div class="tw-flex-grow" />
+          <span
+            class="tw-badge"
+            :class="statusColor"
+          />
+          <span>{{ status }}</span>
         </div>
-        <div class="tw-flex-grow" />
-        <span
-          class="tw-badge"
-          :class="statusColor"
-        />
-        <span>{{ status }}</span>
-      </div>
 
-      <code-box :text="dynamicAnalysis.log" />
-    </loading-indicator>
-  </div>
+        <code-box :text="dynamicAnalysis.log" />
+      </loading-indicator>
+    </div>
+  </BuildSidebar>
 </template>
 
 <script>
 import gql from 'graphql-tag';
 import BuildSummaryCard from './shared/BuildSummaryCard.vue';
 import LoadingIndicator from './shared/LoadingIndicator.vue';
+import BuildSidebar from './shared/BuildSidebar.vue';
 import {
   faCircleExclamation,
   faTriangleExclamation,
@@ -33,7 +39,7 @@ import {
 import CodeBox from './shared/CodeBox.vue';
 
 export default {
-  components: {CodeBox, LoadingIndicator, BuildSummaryCard},
+  components: {CodeBox, LoadingIndicator, BuildSummaryCard, BuildSidebar},
   props: {
     buildId: {
       type: Number,

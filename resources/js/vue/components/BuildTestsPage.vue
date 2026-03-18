@@ -1,55 +1,60 @@
 <template>
-  <div class="tw-flex tw-flex-col tw-w-full tw-gap-4">
-    <BuildSummaryCard :build-id="buildId" />
+  <BuildSidebar
+    :build-id="buildId"
+    active-tab="tests"
+  >
+    <div class="tw-flex tw-flex-col tw-w-full tw-gap-4">
+      <BuildSummaryCard :build-id="buildId" />
 
-    <filter-builder
-      filter-type="BuildTestsFiltersMultiFilterInput"
-      primary-record-name="tests"
-      :initial-filters="initialFilters"
-      :execute-query-link="executeQueryLink"
-      @change-filters="filters => changedFilters = filters"
-    />
-    <loading-indicator :is-loading="!tests">
-      <data-table
-        :columns="[
-          ...(hasSubProjects ? [{
-            name: 'subProject',
-            displayName: 'SubProject',
-          }] : []),
-          {
-            name: 'name',
-            displayName: 'Name',
-            expand: true,
-          },
-          {
-            name: 'time',
-            displayName: 'Time',
-          },
-          ...pinnedMeasurementColumns,
-          {
-            name: 'details',
-            displayName: 'Details',
-          },
-          {
-            name: 'status',
-            displayName: 'Status',
-          },
-          ...(showTestTimeStatus ? [{
-            name: 'timeStatus',
-            displayName: 'Time Status',
-          }] : []),
-          {
-            name: 'history',
-            displayName: 'History',
-          },
-        ]"
-        :rows="formattedTestRows"
-        :full-width="true"
-        initial-sort-column="status"
-        test-id="tests-table"
+      <filter-builder
+        filter-type="BuildTestsFiltersMultiFilterInput"
+        primary-record-name="tests"
+        :initial-filters="initialFilters"
+        :execute-query-link="executeQueryLink"
+        @change-filters="filters => changedFilters = filters"
       />
-    </loading-indicator>
-  </div>
+      <loading-indicator :is-loading="!tests">
+        <data-table
+          :columns="[
+            ...(hasSubProjects ? [{
+              name: 'subProject',
+              displayName: 'SubProject',
+            }] : []),
+            {
+              name: 'name',
+              displayName: 'Name',
+              expand: true,
+            },
+            {
+              name: 'time',
+              displayName: 'Time',
+            },
+            ...pinnedMeasurementColumns,
+            {
+              name: 'details',
+              displayName: 'Details',
+            },
+            {
+              name: 'status',
+              displayName: 'Status',
+            },
+            ...(showTestTimeStatus ? [{
+              name: 'timeStatus',
+              displayName: 'Time Status',
+            }] : []),
+            {
+              name: 'history',
+              displayName: 'History',
+            },
+          ]"
+          :rows="formattedTestRows"
+          :full-width="true"
+          initial-sort-column="status"
+          test-id="tests-table"
+        />
+      </loading-indicator>
+    </div>
+  </BuildSidebar>
 </template>
 
 <script>
@@ -59,6 +64,7 @@ import gql from 'graphql-tag';
 import FilterBuilder from './shared/FilterBuilder.vue';
 import LoadingIndicator from './shared/LoadingIndicator.vue';
 import BuildSummaryCard from './shared/BuildSummaryCard.vue';
+import BuildSidebar from './shared/BuildSidebar.vue';
 import {DateTime} from 'luxon';
 
 export default {
@@ -69,6 +75,7 @@ export default {
     LoadingIndicator,
     FilterBuilder,
     DataTable,
+    BuildSidebar,
   },
 
   props: {

@@ -1,43 +1,49 @@
 <template>
-  <div class="tw-flex tw-flex-col tw-w-full tw-gap-4">
-    <BuildSummaryCard :build-id="buildId" />
+  <BuildSidebar
+    :build-id="buildId"
+    active-tab="commands"
+  >
+    <div class="tw-flex tw-flex-col tw-w-full tw-gap-4">
+      <BuildSummaryCard :build-id="buildId" />
 
-    <div class="tw-w-full tw-bg-base-100 tw-flex tw-flex-col tw-rounded-lg tw-border tw-border-gray-200 tw-p-4">
-      <FilterBuilder
-        filter-type="BuildCommandsFiltersMultiFilterInput"
-        primary-record-name="commands"
-        :initial-filters="initialFilters"
-        :execute-query-link="executeQueryLink"
-        @change-filters="filters => changedFilters = filters"
-      />
-
-      <loading-indicator :is-loading="!allCommands">
-        <CommandGanttChart :commands="formattedChartCommands" />
-      </loading-indicator>
-    </div>
-
-    <div class="tw-w-full tw-bg-base-100 tw-flex tw-flex-col tw-rounded-lg tw-border tw-border-gray-200 tw-p-4">
-      <h3 class="tw-text-xl tw-font-bold tw-mb-2">
-        Memory
-      </h3>
-
-      <loading-indicator :is-loading="!allCommands">
-        <LineChart
-          v-if="memoryChartData.length > 0"
-          y-label="Memory (GB)"
-          :data="memoryChartData"
+      <div class="tw-w-full tw-bg-base-100 tw-flex tw-flex-col tw-rounded-lg tw-border tw-border-gray-200 tw-p-4">
+        <FilterBuilder
+          filter-type="BuildCommandsFiltersMultiFilterInput"
+          primary-record-name="commands"
+          :initial-filters="initialFilters"
+          :execute-query-link="executeQueryLink"
+          @change-filters="filters => changedFilters = filters"
         />
-        <div v-else>
-          No data available.
-        </div>
-      </loading-indicator>
+
+        <loading-indicator :is-loading="!allCommands">
+          <CommandGanttChart :commands="formattedChartCommands" />
+        </loading-indicator>
+      </div>
+
+      <div class="tw-w-full tw-bg-base-100 tw-flex tw-flex-col tw-rounded-lg tw-border tw-border-gray-200 tw-p-4">
+        <h3 class="tw-text-xl tw-font-bold tw-mb-2">
+          Memory
+        </h3>
+
+        <loading-indicator :is-loading="!allCommands">
+          <LineChart
+            v-if="memoryChartData.length > 0"
+            y-label="Memory (GB)"
+            :data="memoryChartData"
+          />
+          <div v-else>
+            No data available.
+          </div>
+        </loading-indicator>
+      </div>
     </div>
-  </div>
+  </BuildSidebar>
 </template>
 
 <script>
 import BuildSummaryCard from './shared/BuildSummaryCard.vue';
 import LoadingIndicator from './shared/LoadingIndicator.vue';
+import BuildSidebar from './shared/BuildSidebar.vue';
 import gql from 'graphql-tag';
 import FilterBuilder from './shared/FilterBuilder.vue';
 import CommandGanttChart from './shared/CommandGanttChart.vue';
@@ -51,6 +57,7 @@ export default {
     FilterBuilder,
     LoadingIndicator,
     BuildSummaryCard,
+    BuildSidebar,
   },
 
   props: {

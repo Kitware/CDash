@@ -26452,6 +26452,15 @@ parameters:
 			path: tests/Browser/Pages/BuildErrorsPageTest.php
 
 		-
+			rawMessage: '''
+				Call to deprecated method coverageResults() of class App\Models\Build:
+				07/27/2025 Use this relation only to edit the underlying coverage table.  Use coverage() instead.
+			'''
+			identifier: method.deprecated
+			count: 1
+			path: tests/Browser/Pages/BuildSidebarComponentTest.php
+
+		-
 			rawMessage: 'Method Tests\Browser\Pages\ProjectMembersPageTest::testFullInvitationWorkflow() throws checked exception OverflowException but it''s missing from the PHPDoc @throws tag.'
 			identifier: missingType.checkedException
 			count: 1
