@@ -6138,7 +6138,7 @@ parameters:
 		-
 			rawMessage: Cannot cast mixed to int.
 			identifier: cast.int
-			count: 1
+			count: 2
 			path: app/Models/Project.php
 
 		-
@@ -26477,6 +26477,42 @@ parameters:
 			identifier: missingType.checkedException
 			count: 1
 			path: tests/Browser/Pages/ProjectMembersPageTest.php
+
+		-
+			rawMessage: 'Only booleans are allowed in a ternary operator condition, mixed given.'
+			identifier: ternary.condNotBoolean
+			count: 2
+			path: tests/Browser/Pages/ProjectSettingsPageTest.php
+
+		-
+			rawMessage: 'Parameter #2 $value of method Laravel\Dusk\Browser::assertRadioSelected() expects string, mixed given.'
+			identifier: argument.type
+			count: 1
+			path: tests/Browser/Pages/ProjectSettingsPageTest.php
+
+		-
+			rawMessage: 'Parameter #2 $value of method Laravel\Dusk\Browser::assertValue() expects string, mixed given.'
+			identifier: argument.type
+			count: 1
+			path: tests/Browser/Pages/ProjectSettingsPageTest.php
+
+		-
+			rawMessage: 'Parameter #2 $value of method Laravel\Dusk\Browser::radio() expects string, mixed given.'
+			identifier: argument.type
+			count: 1
+			path: tests/Browser/Pages/ProjectSettingsPageTest.php
+
+		-
+			rawMessage: 'Parameter #2 $value of method Laravel\Dusk\Browser::select() expects array|string|null, mixed given.'
+			identifier: argument.type
+			count: 1
+			path: tests/Browser/Pages/ProjectSettingsPageTest.php
+
+		-
+			rawMessage: 'Parameter #2 $value of method Laravel\Dusk\Browser::type() expects string, mixed given.'
+			identifier: argument.type
+			count: 1
+			path: tests/Browser/Pages/ProjectSettingsPageTest.php
 
 		-
 			rawMessage: 'You should use assertSame() instead of assertEquals(), because both values are scalars of the same type'

@@ -13,7 +13,6 @@ const app = Vue.createApp({
     BuildNotesPage: Vue.defineAsyncComponent(() => import('./components/BuildNotesPage.vue')),
     BuildSummary: Vue.defineAsyncComponent(() => import('./components/BuildSummary')),
     BuildUpdate: Vue.defineAsyncComponent(() => import('./components/BuildUpdate')),
-    EditProject: Vue.defineAsyncComponent(() => import('./components/EditProject')),
     UserHomepage: Vue.defineAsyncComponent(() => import('./components/UserHomepage')),
     ManageAuthTokens: Vue.defineAsyncComponent(() => import('./components/ManageAuthTokens.vue')),
     ManageMeasurements: Vue.defineAsyncComponent(() => import('./components/ManageMeasurements')),
@@ -37,6 +36,7 @@ const app = Vue.createApp({
     BuildCoveragePage: Vue.defineAsyncComponent(() => import('./components/BuildCoveragePage.vue')),
     CreateProjectPage: Vue.defineAsyncComponent(() => import('./components/CreateProjectPage.vue')),
     AdministrationPage: Vue.defineAsyncComponent(() => import('./components/AdministrationPage.vue')),
+    ProjectSettingsPage: Vue.defineAsyncComponent(() => import('./components/ProjectSettingsPage.vue')),
   },
 });
 

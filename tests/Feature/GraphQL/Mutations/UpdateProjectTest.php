@@ -204,7 +204,7 @@ class UpdateProjectTest extends TestCase
             ['displayLabels', false, 'displaylabels', false],
             ['autoRemoveTimeFrame', 10, 'autoremovetimeframe', 10],
             ['autoRemoveMaxBuilds', 20, 'autoremovemaxbuilds', 20],
-            ['fileUploadLimit', 50, 'uploadquota', 50],
+            ['fileUploadLimit', 50, 'uploadquota', 53687091200],
             ['showCoverageCode', false, 'showcoveragecode', false],
             ['shareLabelFilters', false, 'sharelabelfilters', false],
             ['showViewSubProjectsLink', false, 'viewsubprojectslink', false],

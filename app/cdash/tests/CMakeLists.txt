@@ -417,6 +417,8 @@ add_browser_test(/Browser/Pages/BuildSummaryPageTest)
 
 add_browser_test(/Browser/Pages/BuildSidebarComponentTest)
 
+add_browser_test(/Browser/Pages/ProjectSettingsPageTest)
+
 add_php_test(image)
 set_tests_properties(image PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 

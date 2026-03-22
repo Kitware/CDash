@@ -215,7 +215,7 @@ $showHeaderNav = isset($build);
                             <a href="#">Settings</a>
                             <ul>
                                 <li>
-                                    <a href="{{ url('/project') }}/{{ $project->Id }}/edit">
+                                    <a href="{{ url('/project') }}/{{ $project->Id }}/settings">
                                         Project
                                     </a>
                                 </li>

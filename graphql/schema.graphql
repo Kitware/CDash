@@ -307,7 +307,7 @@ type Project {
   """
   Uploaded files exceeding this limit (in GB) will be deleted from oldest to newest.
   """
-  fileUploadLimit: Int! @rename(attribute: "uploadquota")
+  fileUploadLimit: Int! @rename(attribute: "uploadquotagb")
 
   """
   Enable/Disable the display of source code for the project. Only administrators can see the source
@@ -478,7 +478,7 @@ input UpdateProjectInput @validator {
 
   autoRemoveMaxBuilds: Int @rename(attribute: "autoremovemaxbuilds")
 
-  fileUploadLimit: Int @rename(attribute: "uploadquota")
+  fileUploadLimit: Int @rename(attribute: "uploadquotagb")
 
   showCoverageCode: Boolean @rename(attribute: "showcoveragecode")
 
