@@ -127,7 +127,7 @@
                         <b>
                           <a
                             class="tw-link tw-link-hover"
-                            :href="$baseURL + '/builds/' + cdash.previousbuild.buildid + '/errors'"
+                            :href="$baseURL + '/builds/' + cdash.previousbuild.buildid + '/build'"
                           >
                             {{ cdash.previousbuild.nerrors }}
                           </a>
@@ -297,7 +297,7 @@
                         <b>
                           <a
                             class="tw-link tw-link-hover"
-                            :href="$baseURL + '/builds/' + cdash.build.id + '/errors'"
+                            :href="$baseURL + '/builds/' + cdash.build.id + '/build'"
                           >
                             {{ cdash.build.nerrors }}
                           </a>
@@ -310,7 +310,7 @@
                         <b>
                           <a
                             class="tw-link tw-link-hover"
-                            :href="$baseURL + '/builds/' + cdash.build.id + '/errors'"
+                            :href="$baseURL + '/builds/' + cdash.build.id + '/build'"
                           >
                             {{ cdash.build.nwarnings }}
                           </a>
@@ -474,7 +474,7 @@
                         <b>
                           <a
                             class="tw-link tw-link-hover"
-                            :href="$baseURL + '/builds/' + cdash.nextbuild.buildid + '/errors'"
+                            :href="$baseURL + '/builds/' + cdash.nextbuild.buildid + '/build'"
                           >
                             {{ cdash.nextbuild.nwarnings }}
                           </a>
@@ -913,7 +913,7 @@
 
         <a
           class="tw-link tw-link-hover"
-          :href="$baseURL + '/builds/' + cdash.build.id + '/errors'"
+          :href="$baseURL + '/builds/' + cdash.build.id + '/build'"
         >
           View Errors Summary
         </a>
@@ -959,7 +959,7 @@
         <a
           id="warnings_link"
           class="tw-link tw-link-hover"
-          :href="$baseURL + '/builds/' + cdash.build.id + '/errors'"
+          :href="$baseURL + '/builds/' + cdash.build.id + '/build'"
         >
           View Warnings Summary
         </a>

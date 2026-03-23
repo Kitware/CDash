@@ -35,7 +35,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 final class BuildController extends AbstractBuildController
 {
-    public function errors(Request $request, int $build_id): View
+    public function build(Request $request, int $build_id): View
     {
         $this->setBuildById($build_id);
 
@@ -58,7 +58,7 @@ final class BuildController extends AbstractBuildController
             }
         }
 
-        return $this->vue('build-errors-page', 'Build Errors', $params);
+        return $this->vue('build-build-page', 'Build', $params);
     }
 
     public function commands(int $build_id): View

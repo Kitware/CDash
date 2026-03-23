@@ -154,7 +154,7 @@ class BuildSidebarComponentTest extends BrowserTestCase
 
             $build->buildwarnings = 10;
             $build->save();
-            $this->assertNotDisabled($browser, "/builds/{$build->id}", '@sidebar-build', "/builds/{$build->id}/errors");
+            $this->assertNotDisabled($browser, "/builds/{$build->id}", '@sidebar-build', "/builds/{$build->id}/build");
             $browser->visit("/builds/{$build->id}")
                 ->waitFor('@sidebar-loaded')
                 ->assertSeeIn('@sidebar-build', '10');
@@ -162,14 +162,14 @@ class BuildSidebarComponentTest extends BrowserTestCase
             $build->buildwarnings = -1;
             $build->builderrors = 5;
             $build->save();
-            $this->assertNotDisabled($browser, "/builds/{$build->id}", '@sidebar-build', "/builds/{$build->id}/errors");
+            $this->assertNotDisabled($browser, "/builds/{$build->id}", '@sidebar-build', "/builds/{$build->id}/build");
             $browser->visit("/builds/{$build->id}")
                 ->waitFor('@sidebar-loaded')
                 ->assertSeeIn('@sidebar-build', '5');
 
             $build->buildwarnings = 10;
             $build->save();
-            $this->assertNotDisabled($browser, "/builds/{$build->id}", '@sidebar-build', "/builds/{$build->id}/errors");
+            $this->assertNotDisabled($browser, "/builds/{$build->id}", '@sidebar-build', "/builds/{$build->id}/build");
             $browser->visit("/builds/{$build->id}")
                 ->waitFor('@sidebar-loaded')
                 ->assertSeeIn('@sidebar-build', '10')

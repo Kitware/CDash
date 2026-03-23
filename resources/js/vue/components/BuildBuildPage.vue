@@ -1,18 +1,18 @@
 <template>
   <BuildSidebar
     :build-id="buildId"
-    active-tab="errors"
+    active-tab="build"
   >
     <div class="tw-flex tw-flex-col tw-w-full tw-gap-4">
       <build-summary-card :build-id="buildId" />
 
-      <loading-indicator :is-loading="!build">
+      <loading-indicator :is-loading="!buildWithErrors">
         <div
-          v-if="build.children.edges.length > 0"
+          v-if="buildWithErrors.children.edges.length > 0"
           class="tw-join tw-join-vertical tw-w-full"
         >
           <details
-            v-for="{ node: childBuild } in build.children.edges"
+            v-for="{ node: childBuild } in buildWithErrors.children.edges"
             class="tw-collapse tw-collapse-plus tw-join-item tw-border"
             :data-test="'collapse-' + childBuild.subProject.id"
           >
@@ -62,9 +62,9 @@ import {
   faTriangleExclamation,
 } from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
-import BuildErrorList from './shared/BuildErrorList.vue';
+import BuildErrorList from './BuildBuildPage/BuildErrorList.vue';
 
-const BUILD_QUERY = gql`
+const BUILD_ERRORS_QUERY = gql`
   query($buildid: ID) {
     build(id: $buildid) {
       id
@@ -113,16 +113,17 @@ export default {
   },
 
   apollo: {
-    build: {
-      query: BUILD_QUERY,
+    buildWithErrors: {
+      query: BUILD_ERRORS_QUERY,
+      update: (data) => data.build,
       variables() {
         return {
           buildid: this.buildId,
         };
       },
     },
-    previousBuild: {
-      query: BUILD_QUERY,
+    previousBuildWithErrors: {
+      query: BUILD_ERRORS_QUERY,
       update: (data) => data.build,
       variables() {
         return {
@@ -148,10 +149,10 @@ export default {
         [parseInt(this.buildId)]: parseInt(this.previousBuildId),
       };
 
-      if (this.previousBuild) {
-        this.build.children.edges.forEach(({node: currentBuildNode}) => {
+      if (this.previousBuildWithErrors) {
+        this.buildWithErrors.children.edges.forEach(({node: currentBuildNode}) => {
           if (currentBuildNode.subProject) {
-            this.previousBuild.children.edges.forEach(({node: previousBuildNode}) => {
+            this.previousBuildWithErrors.children.edges.forEach(({node: previousBuildNode}) => {
               if (parseInt(currentBuildNode.subProject.id) === parseInt(previousBuildNode.subProject.id)) {
                 retVal[parseInt(currentBuildNode.id)] = parseInt(previousBuildNode.id);
               }

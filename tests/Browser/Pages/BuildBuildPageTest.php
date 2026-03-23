@@ -17,7 +17,7 @@ use Tests\BrowserTestCase;
 use Tests\Traits\CreatesProjects;
 use Tests\Traits\CreatesSites;
 
-class BuildErrorsPageTest extends BrowserTestCase
+class BuildBuildPageTest extends BrowserTestCase
 {
     use CreatesProjects;
     use CreatesSites;
@@ -78,7 +78,7 @@ class BuildErrorsPageTest extends BrowserTestCase
         ]);
 
         $this->browse(function (Browser $browser) use ($build): void {
-            $browser->visit("/builds/{$build->id}/errors")
+            $browser->visit("/builds/{$build->id}/build")
                 ->waitForText($build->name)
                 ->assertSee($build->name)
             ;
@@ -95,7 +95,7 @@ class BuildErrorsPageTest extends BrowserTestCase
         ]);
 
         $this->browse(function (Browser $browser) use ($build): void {
-            $browser->visit("/builds/{$build->id}/errors")
+            $browser->visit("/builds/{$build->id}/build")
                 ->waitForText('No errors or warnings for this build.')
                 ->assertSee('No errors or warnings for this build.')
             ;
@@ -115,7 +115,7 @@ class BuildErrorsPageTest extends BrowserTestCase
         $build->buildErrors()->save(BuildError::factory()->make());
 
         $this->browse(function (Browser $browser) use ($build): void {
-            $browser->visit("/builds/{$build->id}/errors")
+            $browser->visit("/builds/{$build->id}/build")
                 ->waitForText('2 ERRORS')
                 ->assertDontSee('No errors or warnings for this build.')
             ;
@@ -132,7 +132,7 @@ class BuildErrorsPageTest extends BrowserTestCase
         ]);
 
         $this->browse(function (Browser $browser) use ($build): void {
-            $browser->visit("/builds/{$build->id}/errors?onlydeltap")
+            $browser->visit("/builds/{$build->id}/build?onlydeltap")
                 ->waitForText('No new errors or warnings for this build.')
                 ->assertSee('No new errors or warnings for this build.')
             ;
@@ -149,7 +149,7 @@ class BuildErrorsPageTest extends BrowserTestCase
         ]);
 
         $this->browse(function (Browser $browser) use ($build): void {
-            $browser->visit("/builds/{$build->id}/errors?onlydeltan")
+            $browser->visit("/builds/{$build->id}/build?onlydeltan")
                 ->waitForText('No fixed errors or warnings for this build.')
                 ->assertSee('No fixed errors or warnings for this build.')
             ;
@@ -169,7 +169,7 @@ class BuildErrorsPageTest extends BrowserTestCase
         $buildError1 = $build->buildErrors()->save(BuildError::factory()->make());
 
         $this->browse(function (Browser $browser) use ($buildError1, $build): void {
-            $browser->visit("/builds/{$build->id}/errors")
+            $browser->visit("/builds/{$build->id}/build")
                 ->waitForText('1 ERROR')
                 ->assertSee($buildError1->stdoutput)
                 ->assertSee($buildError1->stderror)
@@ -192,7 +192,7 @@ class BuildErrorsPageTest extends BrowserTestCase
         $buildError2 = $build->buildErrors()->save(BuildError::factory()->make());
 
         $this->browse(function (Browser $browser) use ($buildError2, $buildError1, $build): void {
-            $browser->visit("/builds/{$build->id}/errors")
+            $browser->visit("/builds/{$build->id}/build")
                 ->waitForText('2 ERRORS')
                 ->assertSee($buildError1->stdoutput)
                 ->assertSee($buildError1->stderror)
@@ -217,7 +217,7 @@ class BuildErrorsPageTest extends BrowserTestCase
         ]));
 
         $this->browse(function (Browser $browser) use ($buildError1, $build): void {
-            $browser->visit("/builds/{$build->id}/errors")
+            $browser->visit("/builds/{$build->id}/build")
                 ->waitForText('1 WARNING')
                 ->assertSee($buildError1->stdoutput)
                 ->assertSee($buildError1->stderror)
@@ -244,7 +244,7 @@ class BuildErrorsPageTest extends BrowserTestCase
         ]));
 
         $this->browse(function (Browser $browser) use ($buildError2, $buildError1, $build): void {
-            $browser->visit("/builds/{$build->id}/errors")
+            $browser->visit("/builds/{$build->id}/build")
                 ->waitForText('2 WARNINGS')
                 ->assertSee($buildError1->stdoutput)
                 ->assertSee($buildError1->stderror)
@@ -269,7 +269,7 @@ class BuildErrorsPageTest extends BrowserTestCase
         ]));
 
         $this->browse(function (Browser $browser) use ($buildError1, $build): void {
-            $browser->visit("/builds/{$build->id}/errors")
+            $browser->visit("/builds/{$build->id}/build")
                 ->waitForText('1 WARNING')
                 ->assertSee($buildError1->stdoutput)
             ;
@@ -277,7 +277,7 @@ class BuildErrorsPageTest extends BrowserTestCase
             $buildError1->stdoutput .= "a\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na\na";
             $buildError1->save();
 
-            $browser->visit("/builds/{$build->id}/errors")
+            $browser->visit("/builds/{$build->id}/build")
                 ->waitForText('1 WARNING')
                 ->assertDontSee($buildError1->stdoutput)
                 ->click('@stdout')
@@ -319,7 +319,7 @@ class BuildErrorsPageTest extends BrowserTestCase
         $buildError2 = $child_build_2->buildErrors()->save(BuildError::factory()->make());
 
         $this->browse(function (Browser $browser) use ($buildError1, $buildError2, $parent_build): void {
-            $browser->visit("/builds/{$parent_build->id}/errors")
+            $browser->visit("/builds/{$parent_build->id}/build")
                 ->waitForText($this->subproject1->name)
                 ->waitForText($this->subproject2->name)
                 ->assertDontSee($buildError1->stdoutput)
@@ -361,7 +361,7 @@ class BuildErrorsPageTest extends BrowserTestCase
         ]);
 
         $this->browse(function (Browser $browser) use ($parent_build): void {
-            $browser->visit("/builds/{$parent_build->id}/errors")
+            $browser->visit("/builds/{$parent_build->id}/build")
                 ->waitForText($this->subproject1->name)
                 ->waitForText($this->subproject2->name)
                 ->assertSeeIn('@errors-' . $this->subproject1->id, '1')
@@ -392,7 +392,7 @@ class BuildErrorsPageTest extends BrowserTestCase
         ]);
 
         $this->browse(function (Browser $browser) use ($label2, $label1, $build): void {
-            $browser->visit("/builds/{$build->id}/errors")
+            $browser->visit("/builds/{$build->id}/build")
                 ->waitForText($label1->text)
                 ->waitForText($label2->text)
                 ->assertSee($label1->text)
@@ -439,21 +439,21 @@ class BuildErrorsPageTest extends BrowserTestCase
         $current_build->buildErrors()->create($buildError3->toArray());
 
         $this->browse(function (Browser $browser) use ($buildError1, $buildError2, $buildError3, $current_build): void {
-            $browser->visit("/builds/{$current_build->id}/errors")
+            $browser->visit("/builds/{$current_build->id}/build")
                 ->waitForText('2 WARNINGS')
                 ->assertSee($buildError2->stdoutput)
                 ->assertSee($buildError3->stdoutput)
                 ->assertDontSee($buildError1->stdoutput)
             ;
 
-            $browser->visit("/builds/{$current_build->id}/errors?onlydeltap")
+            $browser->visit("/builds/{$current_build->id}/build?onlydeltap")
                 ->waitForText('1 NEW WARNING')
                 ->assertSee($buildError3->stdoutput)
                 ->assertDontSee($buildError2->stdoutput)
                 ->assertDontSee($buildError1->stdoutput)
             ;
 
-            $browser->visit("/builds/{$current_build->id}/errors?onlydeltan")
+            $browser->visit("/builds/{$current_build->id}/build?onlydeltan")
                 ->waitForText('1 FIXED WARNING')
                 ->assertSee($buildError1->stdoutput)
                 ->assertDontSee($buildError2->stdoutput)
@@ -500,21 +500,21 @@ class BuildErrorsPageTest extends BrowserTestCase
         $current_build->buildErrors()->create($buildError3->toArray());
 
         $this->browse(function (Browser $browser) use ($buildError1, $buildError2, $buildError3, $current_build): void {
-            $browser->visit("/builds/{$current_build->id}/errors")
+            $browser->visit("/builds/{$current_build->id}/build")
                 ->waitForText('2 ERRORS')
                 ->assertSee($buildError2->stdoutput)
                 ->assertSee($buildError3->stdoutput)
                 ->assertDontSee($buildError1->stdoutput)
             ;
 
-            $browser->visit("/builds/{$current_build->id}/errors?onlydeltap")
+            $browser->visit("/builds/{$current_build->id}/build?onlydeltap")
                 ->waitForText('1 NEW ERROR')
                 ->assertSee($buildError3->stdoutput)
                 ->assertDontSee($buildError2->stdoutput)
                 ->assertDontSee($buildError1->stdoutput)
             ;
 
-            $browser->visit("/builds/{$current_build->id}/errors?onlydeltan")
+            $browser->visit("/builds/{$current_build->id}/build?onlydeltan")
                 ->waitForText('1 FIXED ERROR')
                 ->assertSee($buildError1->stdoutput)
                 ->assertDontSee($buildError2->stdoutput)
@@ -622,7 +622,7 @@ class BuildErrorsPageTest extends BrowserTestCase
             $buildError4,
             $current_parent_build,
         ): void {
-            $browser->visit("/builds/{$current_parent_build->id}/errors")
+            $browser->visit("/builds/{$current_parent_build->id}/build")
                 ->waitForText($this->subproject1->name)
                 ->click('@collapse-' . $this->subproject1->id)
                 ->with('@collapse-' . $this->subproject1->id, function (Browser $browser) use (
@@ -654,7 +654,7 @@ class BuildErrorsPageTest extends BrowserTestCase
                 })
             ;
 
-            $browser->visit("/builds/{$current_parent_build->id}/errors?onlydeltap")
+            $browser->visit("/builds/{$current_parent_build->id}/build?onlydeltap")
                 ->waitForText($this->subproject1->name)
                 ->click('@collapse-' . $this->subproject1->id)
                 ->with('@collapse-' . $this->subproject1->id, function (Browser $browser) use (
@@ -686,7 +686,7 @@ class BuildErrorsPageTest extends BrowserTestCase
                 })
             ;
 
-            $browser->visit("/builds/{$current_parent_build->id}/errors?onlydeltan")
+            $browser->visit("/builds/{$current_parent_build->id}/build?onlydeltan")
                 ->waitForText($this->subproject1->name)
                 ->click('@collapse-' . $this->subproject1->id)
                 ->with('@collapse-' . $this->subproject1->id, function (Browser $browser) use (
