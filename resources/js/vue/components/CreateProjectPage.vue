@@ -212,7 +212,7 @@ export default {
         });
 
         if (response.data.createProject) {
-          window.location.href = `${this.$baseURL}/projects/${response.data.createProject.id}/edit`;
+          window.location.href = `${this.$baseURL}/projects/${response.data.createProject.id}/settings`;
         }
       }
       catch (error) {

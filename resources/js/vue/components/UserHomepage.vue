@@ -116,7 +116,7 @@
               <a
                 v-if="project.role > 1"
                 title="Edit project"
-                :href="$baseURL + '/projects/' + project.id + '/edit'"
+                :href="$baseURL + '/projects/' + project.id + '/settings'"
               >
                 <font-awesome-icon :icon="FA.faPencil" />
               </a>

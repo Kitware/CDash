@@ -41,6 +41,7 @@ use Illuminate\Support\Facades\Auth;
  * @property int $autoremovetimeframe
  * @property int $autoremovemaxbuilds
  * @property int $uploadquota Maximum sum of uploaded file sizes (in bytes)
+ * @property int $uploadquotagb Maximum sum of uploaded file sizes (in GiB)
  * @property bool $showcoveragecode
  * @property bool $sharelabelfilters
  * @property bool $authenticatesubmissions
@@ -89,6 +90,7 @@ class Project extends Model
         'autoremovetimeframe',
         'autoremovemaxbuilds',
         'uploadquota',
+        'uploadquotagb',
         'showcoveragecode',
         'sharelabelfilters',
         'authenticatesubmissions',
@@ -134,6 +136,19 @@ class Project extends Model
 
                 return url('/image/' . $attributes['imageid']);
             },
+        );
+    }
+
+    /**
+     * @return Attribute<int,int>
+     */
+    protected function uploadquotagb(): Attribute
+    {
+        return Attribute::make(
+            get: fn (mixed $value, array $attributes): int => (int) ((int) $attributes['uploadquota'] / (2 ** 30)),
+            set: fn (int $value): array => [
+                'uploadquota' => $value * (2 ** 30),
+            ]
         );
     }
 

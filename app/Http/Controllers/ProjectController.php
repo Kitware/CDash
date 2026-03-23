@@ -159,6 +159,8 @@ final class ProjectController extends AbstractProjectController
 
         $response['ldap_enabled'] = config('cdash.ldap_enabled');
 
+        $response['deprecated'] = 'This endpoint will be removed in the next major version of CDash.';
+
         $pageTimer->end($response);
         return response()->json(cast_data_for_JSON($response));
     }
