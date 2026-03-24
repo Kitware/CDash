@@ -13,6 +13,7 @@ use App\Models\SubProject;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Laravel\Dusk\Browser;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\BrowserTestCase;
 use Tests\Traits\CreatesProjects;
 use Tests\Traits\CreatesSites;
@@ -81,6 +82,48 @@ class BuildBuildPageTest extends BrowserTestCase
             $browser->visit("/builds/{$build->id}/build")
                 ->waitForText($build->name)
                 ->assertSee($build->name)
+            ;
+        });
+    }
+
+    /**
+     * @return array<array<string>>
+     */
+    public static function showsBuildInfoFieldIfSetCases(): array
+    {
+        return [
+            ['@compiler-name', 'compilername'],
+            ['@compiler-version', 'compilerversion'],
+            ['@generator', 'generator'],
+            ['@source-directory', 'sourcedirectory'],
+            ['@binary-directory', 'binarydirectory'],
+            ['@command', 'command'],
+        ];
+    }
+
+    #[DataProvider('showsBuildInfoFieldIfSetCases')]
+    public function testShowsBuildInfoFieldIfSet(string $testid, string $attribute): void
+    {
+        /** @var Build $build */
+        $build = $this->project->builds()->create([
+            'siteid' => $this->site->id,
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        $this->browse(function (Browser $browser) use ($attribute, $testid, $build): void {
+            $browser->visit("/builds/{$build->id}/build")
+                ->waitFor('@build-info')
+                ->assertMissing($testid)
+            ;
+
+            $build->setAttribute($attribute, Str::uuid()->toString());
+            $build->save();
+
+            $browser->visit("/builds/{$build->id}/build")
+                ->waitFor('@build-info')
+                ->assertVisible($testid)
+                ->assertSeeIn($testid, $build->getAttribute($attribute))
             ;
         });
     }
