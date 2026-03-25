@@ -46,12 +46,6 @@ defineProps({
     default: undefined,
   },
 
-  subDescription: {
-    type: String,
-    required: false,
-    default: undefined,
-  },
-
   disabled: {
     type: Boolean,
     required: false,
