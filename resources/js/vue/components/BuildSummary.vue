@@ -127,7 +127,7 @@
                         <b>
                           <a
                             class="tw-link tw-link-hover"
-                            :href="$baseURL + '/builds/' + cdash.previousbuild.buildid + '/errors'"
+                            :href="$baseURL + '/builds/' + cdash.previousbuild.buildid + '/build'"
                           >
                             {{ cdash.previousbuild.nerrors }}
                           </a>
@@ -297,7 +297,7 @@
                         <b>
                           <a
                             class="tw-link tw-link-hover"
-                            :href="$baseURL + '/builds/' + cdash.build.id + '/errors'"
+                            :href="$baseURL + '/builds/' + cdash.build.id + '/build'"
                           >
                             {{ cdash.build.nerrors }}
                           </a>
@@ -310,7 +310,7 @@
                         <b>
                           <a
                             class="tw-link tw-link-hover"
-                            :href="$baseURL + '/builds/' + cdash.build.id + '/errors'"
+                            :href="$baseURL + '/builds/' + cdash.build.id + '/build'"
                           >
                             {{ cdash.build.nwarnings }}
                           </a>
@@ -474,7 +474,7 @@
                         <b>
                           <a
                             class="tw-link tw-link-hover"
-                            :href="$baseURL + '/builds/' + cdash.nextbuild.buildid + '/errors'"
+                            :href="$baseURL + '/builds/' + cdash.nextbuild.buildid + '/build'"
                           >
                             {{ cdash.nextbuild.nwarnings }}
                           </a>
@@ -531,48 +531,6 @@
           :href="$baseURL + '/index.php?project=' + cdash.projectname_encoded + '&filtercount=4&showfilters=1&filtercombine=and&field1=site&compare1=61&value1=' + cdash.build.sitename_encoded + '&field2=buildname&compare2=61&value2=' + cdash.build.name + '&field3=buildtype&compare3=61&value3=' + cdash.build.type + '&field4=buildstarttime&compare4=84&value4=' + cdash.build.starttime"
         >
           Show Build History
-        </a>
-        <br>
-        <br>
-
-        <!-- Notes section -->
-        <div class="title-divider">
-          Notes
-        </div>
-        <a
-          class="tw-link tw-link-hover"
-          :href="$baseURL + '/builds/' + cdash.build.id + '/notes'"
-        >
-          View Notes
-        </a>
-        <br>
-        <br>
-
-        <!-- Instrumentation section -->
-        <div class="title-divider">
-          Instrumentation
-          <a href="https://cmake.org/cmake/help/latest/manual/cmake-instrumentation.7.html">
-            <font-awesome-icon :icon="FA.faQuestionCircle" />
-          </a>
-        </div>
-        <a
-          class="tw-link tw-link-hover"
-          :href="$baseURL + '/builds/' + cdash.build.id + '/commands'"
-        >
-          View Commands
-        </a>
-        <br>
-        <br>
-
-        <!-- Targets section -->
-        <div class="title-divider">
-          Targets
-        </div>
-        <a
-          class="tw-link tw-link-hover"
-          :href="$baseURL + '/builds/' + cdash.build.id + '/targets'"
-        >
-          View Targets
         </a>
         <br>
         <br>
@@ -788,219 +746,6 @@
             >{{ to.name }}</a> {{ to.relationship }} this build.
           </div>
         </div>
-
-        <!-- Update -->
-        <div v-if="cdash.hasupdate">
-          <div
-            id="Update"
-            class="title-divider"
-          >
-            Stage: Update ({{ cdash.update.nerrors }} errors, {{ cdash.update.nwarnings }} warnings)
-          </div>
-          <br>
-
-          <b>Start Time: </b>{{ cdash.update.starttime }}
-          <br>
-
-          <b>End Time: </b>{{ cdash.update.endtime }}
-          <br>
-
-          <b>Update Command: </b> {{ cdash.update.command }}
-          <br>
-
-          <b>Update Type: </b> {{ cdash.update.type }}
-          <br>
-
-          <b>Number of Updates: </b>
-          <a
-            class="tw-link tw-link-hover"
-            :href="$baseURL + '/builds/' + cdash.build.id + '/update'"
-          >
-            {{ cdash.update.nupdates }}
-          </a>
-          <div v-if="cdash.update.status">
-            <br>
-            <b>Update Status: </b>{{ cdash.update.status }}
-          </div>
-          <br>
-          <br>
-        </div>
-
-        <!-- Configure -->
-        <div v-if="cdash.hasconfigure">
-          <div
-            id="Configure"
-            class="title-divider"
-          >
-            Configure ({{ cdash.configure.nerrors }} errors, {{ cdash.configure.nwarnings }} warnings)
-          </div>
-          <br>
-
-          <b>Start Time: </b>{{ cdash.configure.starttime }}
-          <br>
-
-          <b>End Time: </b>{{ cdash.configure.endtime }}
-          <br>
-
-          <b>Configure Command:</b>
-          <code-box :text="cdash.configure.command" />
-
-          <b>Configure Return Value:</b>
-          <code-box :text="cdash.configure.status" />
-
-          <b>Configure Output:</b>
-
-          <code-box :text="cdash.configure.output" />
-
-          <a
-            id="configure_link"
-            class="tw-link tw-link-hover"
-            :href="$baseURL + '/builds/' + cdash.build.id + '/configure'"
-          >
-            View Configure Summary
-          </a>
-          <br>
-          <br>
-        </div>
-
-        <!-- Build -->
-        <div
-          id="Build"
-          class="title-divider"
-        >
-          Build ({{ cdash.build.nerrors }} errors, {{ cdash.build.nwarnings }} warnings)
-        </div>
-        <br>
-
-        <b>Build command: </b><code-box :text="cdash.build.command" />
-
-        <b>Start Time: </b>{{ cdash.build.starttime }}
-        <br>
-
-        <b>End Time: </b>{{ cdash.build.endtime }}
-        <br>
-        <br>
-
-        <!-- Show the errors -->
-        <div v-for="error in cdash.build.errors">
-          <div v-if="error.sourceline > 0">
-            <hr>
-            <h3>
-              <a>Build Log line {{ error.logline }}</a>
-            </h3>
-            <br>
-            File: <b>{{ error.sourcefile }}</b>
-            Line: <b>{{ error.sourceline }}</b>
-          </div>
-          <code-box
-            v-if="error?.text?.trim()"
-            :text="error.text"
-          />
-
-          <div v-if="error?.stdoutput?.trim() || error?.stderror?.trim()">
-            <br>
-            <b>{{ error.sourcefile }}</b>
-            <code-box
-              v-if="error?.stdoutput?.trim()"
-              :text="error.stdoutput"
-            />
-            <code-box
-              v-if="error?.stderror?.trim()"
-              :text="error.stderror"
-            />
-          </div>
-        </div>
-
-        <a
-          class="tw-link tw-link-hover"
-          :href="$baseURL + '/builds/' + cdash.build.id + '/errors'"
-        >
-          View Errors Summary
-        </a>
-        <br>
-        <br>
-
-        <!--  Warnings -->
-        <div
-          id="Warnings"
-          class="title-divider"
-        >
-          Build Warnings ({{ cdash.build.nwarnings }})
-        </div>
-
-        <div v-for="warning in cdash.build.warnings">
-          <div v-if="warning.sourceline > 0">
-            <hr>
-            <h3><a>Build Log line {{ warning.logline }}</a></h3>
-            <br>
-            File: <b>{{ warning.sourcefile }}</b>
-            Line: <b>{{ warning.sourceline }}</b>
-          </div>
-          <code-box
-            v-if="warning?.text?.trim()"
-            :text="warning.text"
-          />
-
-          <div v-if="warning?.stdoutput?.trim() || warning?.stderror?.trim()">
-            <br>
-            <b>{{ warning.sourcefile }}</b>
-            <code-box
-              v-if="warning?.stdoutput?.trim()"
-              :text="warning.stdoutput"
-            />
-            <code-box
-              v-if="warning?.stderror?.trim()"
-              :text="warning.stderror"
-            />
-          </div>
-        </div>
-        <br>
-
-        <a
-          id="warnings_link"
-          class="tw-link tw-link-hover"
-          :href="$baseURL + '/builds/' + cdash.build.id + '/errors'"
-        >
-          View Warnings Summary
-        </a>
-        <br>
-        <br>
-
-        <!-- Test -->
-        <div
-          id="Test"
-          class="title-divider"
-        >
-          Test ({{ cdash.test.npassed }}  passed, {{ cdash.test.nfailed }} failed, {{ cdash.test.nnotrun }} not run)
-        </div>
-        <a
-          id="tests_link"
-          class="tw-link tw-link-hover"
-          :href="$baseURL + '/builds/' + cdash.build.id + '/tests'"
-        >
-          View Tests Summary
-        </a>
-        <br>
-        <br>
-
-        <!-- Coverage -->
-        <div v-if="cdash.hascoverage">
-          <div
-            id="Coverage"
-            class="title-divider"
-          >
-            Coverage ({{ cdash.coverage }}%)
-          </div>
-          <a
-            id="coverage_link"
-            class="tw-link tw-link-hover"
-            :href="$baseURL + '/builds/' + cdash.build.id + '/coverage'"
-          >
-            View Coverage Summary
-          </a>
-          <br>
-          <br>
-        </div>
       </loading-indicator>
     </section>
   </BuildSidebar>
@@ -1009,7 +754,6 @@
 <script>
 import $ from 'jquery';
 import ApiLoader from './shared/ApiLoader';
-import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 import {
   faQuestionCircle,
 } from '@fortawesome/free-solid-svg-icons';
@@ -1022,7 +766,7 @@ import Utils from './shared/Utils';
 
 export default {
   name: 'BuildSummary',
-  components: {BuildSummaryCard, LoadingIndicator, CodeBox, FontAwesomeIcon, BuildSidebar},
+  components: {BuildSummaryCard, LoadingIndicator, CodeBox, BuildSidebar},
 
   props: {
     buildId: {

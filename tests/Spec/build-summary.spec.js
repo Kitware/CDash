@@ -126,10 +126,6 @@ test('BuildSummary handles API response', async () => {
   const html = component.html();
   expect(html).toContain('MyProject');
 
-  const configure_link = component.find('#configure_link');
-  expect(configure_link.attributes('href')).toMatch('/builds/1/configure');
-  expect(configure_link.text()).toBe('View Configure Summary');
-
   // test the current build table
   const curr_build_table = component.findAll('table').at(1);
   const curr_build_rows = curr_build_table.findAll('tr');

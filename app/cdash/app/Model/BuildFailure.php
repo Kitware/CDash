@@ -170,6 +170,6 @@ class BuildFailure
     /** Returns a self referencing URI for the current BuildFailure. */
     public function GetUrlForSelf(): string
     {
-        return url('/builds/' . $this->BuildId . '/errors');
+        return url('/builds/' . $this->BuildId . '/build');
     }
 }

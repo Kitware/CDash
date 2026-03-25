@@ -26437,6 +26437,18 @@ parameters:
 			path: server.php
 
 		-
+			rawMessage: 'PHPDoc tag @var with type App\Models\Label is not subtype of type App\Models\Label&object{pivot: Illuminate\Database\Eloquent\Relations\Pivot}.'
+			identifier: varTag.type
+			count: 2
+			path: tests/Browser/Pages/BuildBuildPageTest.php
+
+		-
+			rawMessage: 'Parameter #2 $text of method Laravel\Dusk\Browser::assertSeeIn() expects string, mixed given.'
+			identifier: argument.type
+			count: 1
+			path: tests/Browser/Pages/BuildBuildPageTest.php
+
+		-
 			rawMessage: '''
 				Call to deprecated method coverageResults() of class App\Models\Build:
 				07/27/2025 Use this relation only to edit the underlying coverage table.  Use coverage() instead.
@@ -26444,12 +26456,6 @@ parameters:
 			identifier: method.deprecated
 			count: 1
 			path: tests/Browser/Pages/BuildCoveragePageTest.php
-
-		-
-			rawMessage: 'PHPDoc tag @var with type App\Models\Label is not subtype of type App\Models\Label&object{pivot: Illuminate\Database\Eloquent\Relations\Pivot}.'
-			identifier: varTag.type
-			count: 2
-			path: tests/Browser/Pages/BuildErrorsPageTest.php
 
 		-
 			rawMessage: '''

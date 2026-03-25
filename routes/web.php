@@ -163,11 +163,12 @@ Route::get('/viewCoverageFile.php', function (Request $request) {
     return redirect("/builds/{$buildid}/coverage/{$fileid}", 301);
 });
 
-Route::get('/builds/{build_id}/errors', 'BuildController@errors')
+Route::get('/builds/{build_id}/build', 'BuildController@build')
     ->whereNumber('build_id');
+Route::permanentRedirect('/builds/{build_id}/errors', url('/builds/{build_id}/build'));
 Route::get('/viewBuildError.php', function (Request $request) {
     $buildid = $request->integer('buildid');
-    return redirect("/builds/{$buildid}/errors", 301);
+    return redirect("/builds/{$buildid}/build", 301);
 });
 
 Route::post('/projects/{project_id}/logo', UpdateProjectLogoController::class)

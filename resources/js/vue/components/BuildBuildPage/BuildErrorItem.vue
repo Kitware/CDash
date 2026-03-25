@@ -92,7 +92,7 @@
 </template>
 
 <script>
-import CodeBox from './CodeBox.vue';
+import CodeBox from '../shared/CodeBox.vue';
 import {
   faChevronDown,
   faChevronRight,

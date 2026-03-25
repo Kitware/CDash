@@ -47,7 +47,7 @@
 
 <script>
 import gql from 'graphql-tag';
-import LoadingIndicator from './LoadingIndicator.vue';
+import LoadingIndicator from '../shared/LoadingIndicator.vue';
 import BuildErrorItem from './BuildErrorItem.vue';
 
 const BUILD_ERROR_FIELDS = `

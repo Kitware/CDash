@@ -897,7 +897,7 @@ class Build
 
             if ($hasErrors) {
                 $message = "$this->Name experienced errors";
-                $url = url('/builds/' . $this->Id . '/errors');
+                $url = url('/builds/' . $this->Id . '/build');
                 $this->NotifyPullRequest($message, $url);
             }
         }
@@ -2297,7 +2297,7 @@ class Build
 
     public function GetBuildErrorUrl(): string
     {
-        return url('/builds/' . $this->Id . '/errors');
+        return url('/builds/' . $this->Id . '/build');
     }
 
     public function GetTestUrl(): string

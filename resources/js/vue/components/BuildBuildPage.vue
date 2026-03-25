@@ -1,18 +1,85 @@
 <template>
   <BuildSidebar
     :build-id="buildId"
-    active-tab="errors"
+    active-tab="build"
   >
     <div class="tw-flex tw-flex-col tw-w-full tw-gap-4">
       <build-summary-card :build-id="buildId" />
 
       <loading-indicator :is-loading="!build">
         <div
-          v-if="build.children.edges.length > 0"
+          class="tw-border tw-p-2 tw-rounded-lg tw-flex tw-flex-col tw-gap-2"
+          data-test="build-info"
+        >
+          <div
+            v-if="build.compilerName"
+            data-test="compiler-name"
+          >
+            <div class="tw-font-bold">
+              Compiler
+            </div>
+            <code-box :text="build.compilerName" />
+          </div>
+
+          <div
+            v-if="build.compilerVersion"
+            data-test="compiler-version"
+          >
+            <div class="tw-font-bold">
+              Compiler Version
+            </div>
+            <code-box :text="build.compilerVersion" />
+          </div>
+
+          <div
+            v-if="build.generator"
+            data-test="generator"
+          >
+            <div class="tw-font-bold">
+              Generator
+            </div>
+            <code-box :text="build.generator" />
+          </div>
+
+          <div
+            v-if="build.sourceDirectory"
+            data-test="source-directory"
+          >
+            <div class="tw-font-bold">
+              Source Directory
+            </div>
+            <code-box :text="build.sourceDirectory" />
+          </div>
+
+          <div
+            v-if="build.binaryDirectory"
+            data-test="binary-directory"
+          >
+            <div class="tw-font-bold">
+              Binary Directory
+            </div>
+            <code-box :text="build.binaryDirectory" />
+          </div>
+
+          <div
+            v-if="build.command"
+            data-test="command"
+          >
+            <div class="tw-font-bold">
+              Build Command
+            </div>
+            <code-box :text="build.command" />
+          </div>
+        </div>
+      </loading-indicator>
+
+      <loading-indicator :is-loading="!buildWithErrors">
+        <div
+          v-if="buildWithErrors.children.edges.length > 0"
           class="tw-join tw-join-vertical tw-w-full"
         >
           <details
-            v-for="{ node: childBuild } in build.children.edges"
+            v-for="{ node: childBuild } in buildWithErrors.children.edges"
             class="tw-collapse tw-collapse-plus tw-join-item tw-border"
             :data-test="'collapse-' + childBuild.subProject.id"
           >
@@ -62,9 +129,10 @@ import {
   faTriangleExclamation,
 } from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
-import BuildErrorList from './shared/BuildErrorList.vue';
+import BuildErrorList from './BuildBuildPage/BuildErrorList.vue';
+import CodeBox from './shared/CodeBox.vue';
 
-const BUILD_QUERY = gql`
+const BUILD_ERRORS_QUERY = gql`
   query($buildid: ID) {
     build(id: $buildid) {
       id
@@ -86,7 +154,15 @@ const BUILD_QUERY = gql`
 `;
 
 export default {
-  components: {BuildErrorList: BuildErrorList, FontAwesomeIcon, LoadingIndicator, BuildSummaryCard, BuildSidebar},
+  components: {
+    CodeBox,
+    BuildErrorList,
+    FontAwesomeIcon,
+    LoadingIndicator,
+    BuildSummaryCard,
+    BuildSidebar,
+  },
+
   props: {
     buildId: {
       type: Number,
@@ -114,15 +190,38 @@ export default {
 
   apollo: {
     build: {
-      query: BUILD_QUERY,
+      query: gql`
+        query($buildid: ID) {
+          build(id: $buildid) {
+            id
+            command
+            sourceDirectory
+            binaryDirectory
+            generator
+            compilerName
+            compilerVersion
+          }
+        }
+      `,
       variables() {
         return {
           buildid: this.buildId,
         };
       },
     },
-    previousBuild: {
-      query: BUILD_QUERY,
+
+    buildWithErrors: {
+      query: BUILD_ERRORS_QUERY,
+      update: (data) => data.build,
+      variables() {
+        return {
+          buildid: this.buildId,
+        };
+      },
+    },
+
+    previousBuildWithErrors: {
+      query: BUILD_ERRORS_QUERY,
       update: (data) => data.build,
       variables() {
         return {
@@ -148,10 +247,10 @@ export default {
         [parseInt(this.buildId)]: parseInt(this.previousBuildId),
       };
 
-      if (this.previousBuild) {
-        this.build.children.edges.forEach(({node: currentBuildNode}) => {
+      if (this.previousBuildWithErrors) {
+        this.buildWithErrors.children.edges.forEach(({node: currentBuildNode}) => {
           if (currentBuildNode.subProject) {
-            this.previousBuild.children.edges.forEach(({node: previousBuildNode}) => {
+            this.previousBuildWithErrors.children.edges.forEach(({node: previousBuildNode}) => {
               if (parseInt(currentBuildNode.subProject.id) === parseInt(previousBuildNode.subProject.id)) {
                 retVal[parseInt(currentBuildNode.id)] = parseInt(previousBuildNode.id);
               }

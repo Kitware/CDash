@@ -31,10 +31,10 @@
           data-test="sidebar-configure"
         />
         <build-sidebar-item
-          :href="`${$baseURL}/builds/${buildId}/errors`"
-          title="Build Errors"
-          :icon="FA.faCircleExclamation"
-          :selected="activeTab === 'errors'"
+          :href="`${$baseURL}/builds/${buildId}/build`"
+          title="Build"
+          :icon="FA.faHammer"
+          :selected="activeTab === 'build'"
           :disabled="errorsDisabled"
           :badges="errorsBadges"
           data-test="sidebar-build"
@@ -112,7 +112,7 @@ import {
   faCircleInfo,
   faCodePullRequest,
   faWrench,
-  faCircleExclamation,
+  faHammer,
   faTriangleExclamation,
   faFlask,
   faUmbrella,
@@ -210,7 +210,7 @@ export default {
         faCircleInfo,
         faCodePullRequest,
         faWrench,
-        faCircleExclamation,
+        faHammer,
         faTriangleExclamation,
         faFlask,
         faUmbrella,
