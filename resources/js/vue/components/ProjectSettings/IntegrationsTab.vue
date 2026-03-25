@@ -113,7 +113,7 @@
 <script>
 import TabContent from './TabContent.vue';
 import gql from 'graphql-tag';
-import InputField from './InputField.vue';
+import InputField from '../shared/FormInputs/InputField.vue';
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 import {
   faPlus,

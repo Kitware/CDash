@@ -469,7 +469,7 @@
 </template>
 
 <script>
-import FormSection from './FormSection.vue';
+import FormSection from '../shared/FormSection.vue';
 import gql from 'graphql-tag';
 import {
   faCircleXmark,
@@ -483,10 +483,10 @@ import {
   faCheck,
 } from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
-import InputField from './InputField.vue';
-import TextAreaField from './TextAreaField.vue';
-import CheckboxField from './CheckboxField.vue';
-import SelectField from './SelectField.vue';
+import InputField from '../shared/FormInputs/InputField.vue';
+import TextAreaField from '../shared/FormInputs/TextAreaField.vue';
+import CheckboxField from '../shared/FormInputs/CheckboxField.vue';
+import SelectField from '../shared/FormInputs/SelectField.vue';
 import TabContent from './TabContent.vue';
 import LoadingIndicator from '../shared/LoadingIndicator.vue';
 
