@@ -469,7 +469,7 @@
 </template>
 
 <script>
-import FormSection from './FormSection.vue';
+import FormSection from '../shared/FormSection.vue';
 import gql from 'graphql-tag';
 import {
   faCircleXmark,

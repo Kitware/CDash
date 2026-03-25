@@ -432,10 +432,11 @@ final class UserController extends AbstractController
             $error_msg = 'Your password has expired. Please set a new one.';
         }
 
-        return $this->view('auth.profile', 'Profile')
-            ->with('user', $user)
-            ->with('error', $error_msg)
-            ->with('message', $other_msg);
+        return $this->vue('profile-page', 'Profile', [
+            'user' => $user,
+            'error' => $error_msg,
+            'message' => $other_msg,
+        ]);
     }
 
     public function recoverPassword(): View

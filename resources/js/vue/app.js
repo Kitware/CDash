@@ -37,6 +37,7 @@ const app = Vue.createApp({
     CreateProjectPage: Vue.defineAsyncComponent(() => import('./components/CreateProjectPage.vue')),
     AdministrationPage: Vue.defineAsyncComponent(() => import('./components/AdministrationPage.vue')),
     ProjectSettingsPage: Vue.defineAsyncComponent(() => import('./components/ProjectSettingsPage.vue')),
+    ProfilePage: Vue.defineAsyncComponent(() => import('./components/ProfilePage.vue')),
   },
 });
 

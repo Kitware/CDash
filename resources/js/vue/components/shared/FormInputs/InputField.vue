@@ -12,6 +12,7 @@
     <input
       v-model="model"
       :type="type"
+      :name="name"
       class="tw-input tw-input-bordered tw-w-full"
       :class="{'tw-input-error': validationError}"
       :disabled="disabled"
@@ -63,6 +64,12 @@ defineProps({
     type: String,
     required: false,
     default: 'text',
+  },
+
+  name: {
+    type: String,
+    required: false,
+    default: undefined,
   },
 
   min: {
