@@ -459,7 +459,7 @@ parameters:
 		-
 			rawMessage: Cannot cast mixed to string.
 			identifier: cast.string
-			count: 1
+			count: 2
 			path: app/GraphQL/Scalars/Url.php
 
 		-
@@ -471,7 +471,7 @@ parameters:
 		-
 			rawMessage: 'Part $value (mixed) of encapsed string cannot be cast to string.'
 			identifier: encapsedStringPart.nonString
-			count: 2
+			count: 1
 			path: app/GraphQL/Scalars/Url.php
 
 		-
