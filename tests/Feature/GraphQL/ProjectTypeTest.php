@@ -120,6 +120,7 @@ class ProjectTypeTest extends TestCase
             ['description', 'abc', 'description', 'abc'],
             ['description', null, 'description', null],
             ['homeurl', 'https://cdash.org', 'homeurl', 'https://cdash.org'],
+            ['homeurl', 'cdash.org', 'homeurl', 'cdash.org'],
             ['homeurl', null, 'homeurl', null],
             ['homeurl', 'https://cdash.org', 'homeUrl', 'https://cdash.org'],
             ['homeurl', null, 'homeUrl', null],

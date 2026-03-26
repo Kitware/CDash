@@ -25,16 +25,10 @@ final class Url extends ScalarType
 
     /**
      * Serializes an internal value to include in a response.
-     *
-     * @throws InvariantViolation
      */
     public function serialize(mixed $value): string
     {
-        if (!$this->validate($value)) {
-            throw new InvariantViolation("Could not serialize {$value} as URL.");
-        }
-
-        return $this->parseValue($value);
+        return (string) $value;
     }
 
     /**
