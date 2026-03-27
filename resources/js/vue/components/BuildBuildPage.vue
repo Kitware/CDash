@@ -102,6 +102,8 @@
                 :previous-build-id="buildIdsToPreviousBuildIds[parseInt(childBuild.id)] ?? null"
                 :show-new-errors="showNewErrors"
                 :show-fixed-errors="showFixedErrors"
+                :repository-type="repositoryType"
+                :repository-url="repositoryUrl"
               />
             </div>
           </details>
@@ -112,6 +114,8 @@
             :previous-build-id="previousBuildId"
             :show-new-errors="showNewErrors"
             :show-fixed-errors="showFixedErrors"
+            :repository-type="repositoryType"
+            :repository-url="repositoryUrl"
           />
         </div>
       </loading-indicator>
@@ -185,6 +189,16 @@ export default {
       type: Boolean,
       required: false,
       default: false,
+    },
+
+    repositoryType: {
+      type: [String, null],
+      required: true,
+    },
+
+    repositoryUrl: {
+      type: [String, null],
+      required: true,
     },
   },
 

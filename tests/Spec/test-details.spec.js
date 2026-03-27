@@ -129,11 +129,11 @@ lines`);
   // Verify colorized/escaped output.
   const test_output = component.find('#test_output');
   const spans = test_output.findAll('span');
-  expect(spans.length).toBe(2);
-  expect(spans.at(0).attributes('style')).toBe('color:rgb(0,187,0)');
-  expect(spans.at(0).text()).toBe('Hello world!');
-  expect(spans.at(1).attributes('style')).toBe('color:rgb(255,85,85)');
-  expect(spans.at(1).text()).toBe('<script type="text/javascript">console.log("MALICIOUS JAVASCRIPT!!!");</script>');
+  expect(spans.length).toBe(3);
+  expect(spans.at(1).attributes('style')).toBe('color:rgb(0,187,0)');
+  expect(spans.at(1).text()).toBe('Hello world!');
+  expect(spans.at(2).attributes('style')).toBe('color:rgb(255,85,85)');
+  expect(spans.at(2).text()).toBe('<script type="text/javascript">console.log("MALICIOUS JAVASCRIPT!!!");</script>');
 
   // Verify links.
   const summary_link = component.find('#summary_link');
