@@ -125,8 +125,10 @@ class BuildFailure
 
         // Insert the labels
         foreach ($this->Labels as $label) {
-            $label = Label::firstOrCreate(['text' => $label->Text ?? '']);
-            $failure->labels()->syncWithoutDetaching([$label->id]);
+            if ($label->Text !== null && $label->Text !== '') {
+                $label = Label::firstOrCreate(['text' => $label->Text]);
+                $failure->labels()->syncWithoutDetaching([$label->id]);
+            }
         }
         return true;
     }
