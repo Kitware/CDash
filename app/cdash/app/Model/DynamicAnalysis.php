@@ -72,9 +72,11 @@ class DynamicAnalysis
         if ($this->Id) {
             $dynamicAnalysis = EloquentDynamicAnalysis::findOrFail((int) $this->Id);
             foreach ($this->Labels as $label) {
-                $dynamicAnalysis->labels()->attach(
-                    Label::firstOrCreate(['text' => $label->Text ?? ''])->id
-                );
+                if ($label->Text !== null && $label->Text !== '') {
+                    $dynamicAnalysis->labels()->attach(
+                        Label::firstOrCreate(['text' => $label->Text])->id
+                    );
+                }
             }
         } else {
             Log::error('No DynamicAnalysis::Id - cannot call $label->Insert...', [

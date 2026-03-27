@@ -35,7 +35,11 @@ class Label
      */
     public function Insert()
     {
-        $this->Id = EloquentLabel::firstOrCreate(['text' => $this->Text ?? ''])->id;
+        if ($this->Text === '') {
+            return false;
+        }
+
+        $this->Id = EloquentLabel::firstOrCreate(['text' => $this->Text])->id;
 
         // Insert relationship records, too, but only for those relationships
         // established by callers. (If coming from test.php, for example, TestId
