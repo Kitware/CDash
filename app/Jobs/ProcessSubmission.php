@@ -237,12 +237,15 @@ class ProcessSubmission implements ShouldQueue
             return $handler;
         }
 
-        // Special handling for unparsed (non-XML) submissions.
-        $handler = self::parse_put_submission($filename, $project, $expected_md5, $buildid);
-        if ($handler === false) {
-            // Otherwise, parse this submission as CTest XML.
-            $handler = self::ctest_parse($filehandle, $filename, $project, $buildid);
-        }
+        $handler = DB::transaction(function () use ($filehandle, $buildid, $expected_md5, $project, $filename) {
+            // Special handling for unparsed (non-XML) submissions.
+            $handler = self::parse_put_submission($filename, $project, $expected_md5, $buildid);
+            if ($handler === false) {
+                // Otherwise, parse this submission as CTest XML.
+                $handler = self::ctest_parse($filehandle, $filename, $project, $buildid);
+            }
+            return $handler;
+        });
 
         fclose($filehandle);
         unset($filehandle);
