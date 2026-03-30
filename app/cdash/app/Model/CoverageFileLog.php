@@ -233,7 +233,7 @@ class CoverageFileLog
                            WHERE
                                parentid=?
                                AND projectid=?
-                               AND b.subprojectid=?
+                               AND subprojectid=?
                        ', [
                     (int) $this->AggregateBuildId,
                     (int) $this->Build->ProjectId,
