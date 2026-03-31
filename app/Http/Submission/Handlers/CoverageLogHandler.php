@@ -66,6 +66,17 @@ class CoverageLogHandler extends AbstractXmlHandler
             $this->CurrentCoverageFileLog = new CoverageFileLog();
             $this->CurrentCoverageFile->FullPath = trim($attributes['FULLPATH']);
         } elseif ($name === 'LINE') {
+            if (array_key_exists('BRANCHESTESTED', $attributes) && array_key_exists('BRANCHESUNTESTED', $attributes)) {
+                if ($attributes['BRANCHESTESTED'] > 0 || $attributes['BRANCHESUNTESTED'] > 0) {
+                    $this->CurrentCoverageFileLog->AddBranch(
+                        (int) $attributes['NUMBER'],
+                        (int) $attributes['BRANCHESTESTED'],
+                        (int) $attributes['BRANCHESTESTED'] + (int) $attributes['BRANCHESUNTESTED']
+                    );
+                    $this->CurrentLine = '';
+                    return;
+                }
+            }
             if ($attributes['COUNT'] >= 0) {
                 $this->CurrentCoverageFileLog->AddLine($attributes['NUMBER'], $attributes['COUNT']);
             }
