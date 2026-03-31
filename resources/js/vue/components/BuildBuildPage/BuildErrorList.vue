@@ -20,7 +20,13 @@
             :key="buildError.id"
             class="tw-p-2 tw-border-2 tw-rounded-md"
           >
-            <build-error-item :build-error="buildError" />
+            <build-error-item
+              :build-error="buildError"
+              :source-directory="build.sourceDirectory"
+              :repository-type="repositoryType"
+              :repository-url="repositoryUrl"
+              :revision="build.updateStep?.revision"
+            />
           </div>
         </div>
       </div>
@@ -37,7 +43,13 @@
             :key="buildWarning.id"
             class="tw-p-2 tw-border-2 tw-rounded-md"
           >
-            <build-error-item :build-error="buildWarning" />
+            <build-error-item
+              :build-error="buildWarning"
+              :source-directory="build.sourceDirectory"
+              :repository-type="repositoryType"
+              :repository-url="repositoryUrl"
+              :revision="build.updateStep?.revision"
+            />
           </div>
         </div>
       </div>
@@ -82,6 +94,7 @@ const BUILD_QUERY = gql`
   query($buildid: ID) {
     build(id: $buildid) {
       id
+      sourceDirectory
       buildWarnings: buildErrors(filters: {
         eq: {
           type: WARNING
@@ -95,6 +108,10 @@ const BUILD_QUERY = gql`
         }
       }, first: 100000) {
         ${BUILD_ERROR_FIELDS}
+      }
+      updateStep {
+        id
+        revision
       }
     }
   }
@@ -125,6 +142,16 @@ export default {
       type: Boolean,
       required: false,
       default: false,
+    },
+
+    repositoryType: {
+      type: [String, null],
+      required: true,
+    },
+
+    repositoryUrl: {
+      type: [String, null],
+      required: true,
     },
   },
 

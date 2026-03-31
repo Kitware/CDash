@@ -5,6 +5,7 @@ namespace Tests\Browser\Pages;
 use App\Http\Submission\Traits\UpdatesSiteInformation;
 use App\Models\Build;
 use App\Models\BuildError;
+use App\Models\BuildUpdate;
 use App\Models\Label;
 use App\Models\Project;
 use App\Models\Site;
@@ -325,6 +326,117 @@ class BuildBuildPageTest extends BrowserTestCase
                 ->assertDontSee($buildError1->stdoutput)
                 ->click('@stdout')
                 ->assertSee($buildError1->stdoutput)
+            ;
+        });
+    }
+
+    public function testLinksToMainBranchWhenRepositoryConfiguredAndNoUpdateStep(): void
+    {
+        $this->project->cvsviewertype = 'github';
+        $this->project->cvsurl = 'https://example.com/org/repo';
+        $this->project->save();
+
+        $stdOutPart1 = Str::uuid()->toString();
+        $stdOutPart2 = Str::uuid()->toString();
+        $sourceDirectory = '/absolute/path/to/source';
+        $filePath = $sourceDirectory . '/foo/bar.cpp:10:20';
+
+        /** @var Build $build */
+        $build = $this->project->builds()->create([
+            'siteid' => $this->site->id,
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+            'sourcedirectory' => $sourceDirectory,
+        ]);
+
+        $build->buildErrors()->save(BuildError::factory()->make([
+            'stdoutput' => $stdOutPart1 . $filePath . $stdOutPart2,
+        ]));
+
+        $this->browse(function (Browser $browser) use ($filePath, $stdOutPart2, $stdOutPart1, $build): void {
+            $browser->visit("/builds/{$build->id}/build")
+                ->waitForText('1 ERROR')
+                ->assertSee($stdOutPart1)
+                ->assertSee($stdOutPart2)
+                ->assertSeeLink($filePath)
+                ->assertPresent('a[href="https://example.com/org/repo/blob/main/foo/bar.cpp"]')
+            ;
+        });
+    }
+
+    public function testLinksToUpdateRevisionWhenRepositoryConfiguredAndHasUpdateStep(): void
+    {
+        $this->project->cvsviewertype = 'github';
+        $this->project->cvsurl = 'https://example.com/org/repo';
+        $this->project->save();
+
+        $stdOutPart1 = Str::uuid()->toString();
+        $stdOutPart2 = Str::uuid()->toString();
+        $sourceDirectory = '/absolute/path/to/source';
+        $filePath = $sourceDirectory . '/foo/bar.cpp:10:20';
+
+        /** @var Build $build */
+        $build = $this->project->builds()->create([
+            'siteid' => $this->site->id,
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+            'sourcedirectory' => $sourceDirectory,
+        ]);
+
+        $build->buildErrors()->save(BuildError::factory()->make([
+            'stdoutput' => $stdOutPart1 . $filePath . $stdOutPart2,
+        ]));
+
+        /** @var BuildUpdate $update */
+        $update = BuildUpdate::create([
+            'command' => Str::uuid()->toString(),
+            'type' => 'GIT',
+            'status' => Str::uuid()->toString(),
+            'revision' => Str::uuid()->toString(),
+            'priorrevision' => Str::uuid()->toString(),
+            'path' => Str::uuid()->toString(),
+        ]);
+        $build->updateStep()->associate($update)->save();
+
+        $this->browse(function (Browser $browser) use ($update, $filePath, $stdOutPart2, $stdOutPart1, $build): void {
+            $browser->visit("/builds/{$build->id}/build")
+                ->waitForText('1 ERROR')
+                ->assertSee($stdOutPart1)
+                ->assertSee($stdOutPart2)
+                ->assertSeeLink($filePath)
+                ->assertPresent('a[href="https://example.com/org/repo/blob/' . $update->revision . '/foo/bar.cpp"]')
+            ;
+        });
+    }
+
+    public function testLinkifiesCorrectlyWhenNoSourceDirectoryProvided(): void
+    {
+        $this->project->cvsviewertype = 'github';
+        $this->project->cvsurl = 'https://example.com/org/repo';
+        $this->project->save();
+
+        $stdOutPart1 = Str::uuid()->toString();
+        $stdOutPart2 = Str::uuid()->toString();
+        $filePath = '/.../repository/foo/bar.cpp:10:20';
+
+        /** @var Build $build */
+        $build = $this->project->builds()->create([
+            'siteid' => $this->site->id,
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        $build->buildErrors()->save(BuildError::factory()->make([
+            'stdoutput' => $stdOutPart1 . $filePath . ':' . $stdOutPart2,
+        ]));
+
+        $this->browse(function (Browser $browser) use ($filePath, $stdOutPart2, $stdOutPart1, $build): void {
+            $browser->visit("/builds/{$build->id}/build")
+                ->waitForText('1 ERROR')
+                ->assertSee($stdOutPart1)
+                ->assertSee($stdOutPart2)
+                ->assertSeeLink($filePath)
+                ->assertPresent('a[href="https://example.com/org/repo/blob/main/foo/bar.cpp"]')
             ;
         });
     }

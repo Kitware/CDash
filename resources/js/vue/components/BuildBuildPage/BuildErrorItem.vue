@@ -32,6 +32,7 @@
       <code-box
         v-if="showStdError"
         :text="buildError.stdError"
+        :links="getLinksFromText(buildError.stdError)"
       />
     </div>
 
@@ -46,6 +47,7 @@
       <code-box
         v-if="showStdOutput"
         :text="buildError.stdOutput"
+        :links="getLinksFromText(buildError.stdOutput)"
       />
     </div>
 
@@ -100,6 +102,8 @@ import {
   faTriangleExclamation,
 } from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
+import {getRepository} from '../shared/RepositoryIntegrations';
+import 'core-js/actual/regexp/escape';
 
 export default {
   components: {FontAwesomeIcon, CodeBox},
@@ -108,6 +112,27 @@ export default {
     buildError: {
       type: Object,
       required: true,
+    },
+
+    sourceDirectory: {
+      type: [String, null],
+      required: true,
+    },
+
+    repositoryType: {
+      type: [String, null],
+      required: true,
+    },
+
+    repositoryUrl: {
+      type: [String, null],
+      required: true,
+    },
+
+    revision: {
+      type: String,
+      required: false,
+      default: undefined,
     },
   },
 
@@ -136,6 +161,36 @@ export default {
      */
     shouldShowStringByDefault(str) {
       return [...str.matchAll(/\r\n|\r|\n/g).take(21)].length <= 20;
+    },
+
+    getLinksFromText(text) {
+      if (!text || !this.repositoryType || !this.repositoryUrl) {
+        return new Map();
+      }
+
+      const regexPrefixes = [
+        ...(this.sourceDirectory ? [`${RegExp.escape(this.sourceDirectory)}/`] : []),
+        `${RegExp.escape('/.../')}[^/]+/`, // CTest includes the repository name in the path.
+      ];
+
+      const matches = text.match(new RegExp(`(${regexPrefixes.join('|')})[^:]*:[0-9]+:[0-9]+`, 'g'));
+      const repository = getRepository(this.repositoryType, this.repositoryUrl);
+
+      if (!repository || !matches) {
+        return new Map();
+      }
+
+      return new Map(
+        matches.map((match) => {
+          let filePath = match.replace(new RegExp(`(${regexPrefixes.join('|')})`), '');
+          filePath = filePath.split(':')[0]; // Trim off the line:col anchor.
+
+          return [
+            match,
+            repository.getFileUrl(this.revision ?? 'main', filePath),
+          ];
+        }),
+      );
     },
   },
 };

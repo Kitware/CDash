@@ -41,6 +41,8 @@ final class BuildController extends AbstractBuildController
 
         $params = [
             'build-id' => $this->build->Id,
+            'repository-type' => $this->project->CvsViewerType,
+            'repository-url' => $this->project->CvsUrl,
         ];
 
         $onlyNewErrors = $request->has('onlydeltap');
