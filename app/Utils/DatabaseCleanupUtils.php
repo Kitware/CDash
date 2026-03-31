@@ -11,9 +11,8 @@ use App\Models\Configure;
 use App\Models\CoverageFile;
 use App\Models\Image;
 use App\Models\Note;
-use App\Models\Test;
+use App\Models\TestOutput;
 use App\Models\UploadFile;
-use CDash\Database;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -133,124 +132,59 @@ class DatabaseCleanupUtils
         // Use Eloquent relationships to delete shared records that are only
         // used by builds that are about to be deleted.
 
-        // configure
         Configure::whereHas('builds', function (Builder $query) use ($buildids): void {
             $query->whereIn('id', $buildids);
-        })
-        ->whereDoesntHave('builds', function (Builder $query) use ($buildids): void {
+        })->whereDoesntHave('builds', function (Builder $query) use ($buildids): void {
             $query->whereNotIn('id', $buildids);
         })->delete();
 
-        // coveragefile
         CoverageFile::whereHas('builds', function (Builder $query) use ($buildids): void {
             $query->whereIn('build.id', $buildids);
-        })
-        ->whereDoesntHave('builds', function (Builder $query) use ($buildids): void {
+        })->whereDoesntHave('builds', function (Builder $query) use ($buildids): void {
             $query->whereNotIn('build.id', $buildids);
         })->delete();
 
-        // note
         Note::whereHas('builds', function (Builder $query) use ($buildids): void {
             $query->whereIn('id', $buildids);
-        })
-        ->whereDoesntHave('builds', function (Builder $query) use ($buildids): void {
+        })->whereDoesntHave('builds', function (Builder $query) use ($buildids): void {
             $query->whereNotIn('id', $buildids);
         })->delete();
 
-        // buildupdate
         BuildUpdate::whereHas('builds', function (Builder $query) use ($buildids): void {
             $query->whereIn('build.id', $buildids);
-        })
-        ->whereDoesntHave('builds', function (Builder $query) use ($buildids): void {
+        })->whereDoesntHave('builds', function (Builder $query) use ($buildids): void {
             $query->whereNotIn('build.id', $buildids);
         })->delete();
 
-        // image.
         Image::whereHas('tests.build', function (Builder $query) use ($buildids): void {
             $query->whereIn('build.id', $buildids);
         })->whereDoesntHave('tests.build', function (Builder $query) use ($buildids): void {
             $query->whereNotIn('build.id', $buildids);
         })->delete();
 
-        $db = Database::getInstance();
-        $buildid_prepare_array = $db->createPreparedArray(count($buildids));
-
-        // Delete tests and testoutputs that are not shared.
-        // First find all the tests and testoutputs from builds that are about to be deleted.
-        $tests = Test::whereHas('build', function (Builder $query) use ($buildids): void {
+        TestOutput::whereHas('tests.build', function (Builder $query) use ($buildids): void {
             $query->whereIn('build.id', $buildids);
+        })->whereDoesntHave('tests.build', function (Builder $query) use ($buildids): void {
+            $query->whereNotIn('build.id', $buildids);
+        })->delete();
+
+        $filesToDelete = UploadFile::whereHas('builds', function (Builder $query) use ($buildids): void {
+            $query->whereIn('build.id', $buildids);
+        })->whereDoesntHave('builds', function (Builder $query) use ($buildids): void {
+            $query->whereNotIn('build.id', $buildids);
         })->get();
 
-        $all_outputids = $tests->pluck('outputid')->unique()->toArray();
-
-        // Delete un-shared testoutput rows.
-        if (!empty($all_outputids)) {
-            // Next identify tests from this list that should be preserved
-            // because they are shared with builds that are not about to be deleted.
-            $all_outputids_prepare_array = $db->createPreparedArray(count($all_outputids));
-            $save_test_result = DB::select("
-                                    SELECT DISTINCT outputid
-                                    FROM build2test
-                                    WHERE
-                                        outputid IN $all_outputids_prepare_array
-                                        AND buildid NOT IN $buildid_prepare_array
-                                ", array_merge($all_outputids, $buildids));
-            $testoutputs_to_save = [];
-            foreach ($save_test_result as $save_test_row) {
-                $testoutputs_to_save[] = (int) $save_test_row->outputid;
-            }
-
-            // Use array_diff to get the list of tests that should be deleted.
-            $testoutputs_to_delete = array_diff($all_outputids, $testoutputs_to_save);
-            if (!empty($testoutputs_to_delete)) {
-                self::deleteRowsChunked('DELETE FROM testoutput WHERE id IN ', $testoutputs_to_delete);
-            }
+        foreach ($filesToDelete as $uploadFile) {
+            Storage::delete("upload/{$uploadFile->sha1sum}");
+            $uploadFile->delete();
         }
 
-        // Delete the uploaded files if not shared
-        $build2uploadfiles = DB::select("
-                                 SELECT a.fileid
-                                 FROM build2uploadfile AS a
-                                 LEFT JOIN build2uploadfile AS b ON (
-                                     a.fileid=b.fileid
-                                     AND b.buildid NOT IN $buildid_prepare_array
-                                 )
-                                 WHERE a.buildid IN $buildid_prepare_array
-                                 GROUP BY a.fileid
-                                 HAVING count(b.fileid)=0
-                             ", array_merge($buildids, $buildids));
-
-        $fileids = [];
-        foreach ($build2uploadfiles as $build2uploadfile_array) {
-            $fileid = (int) $build2uploadfile_array->fileid;
-            $fileids[] = $fileid;
-
-            $sha1sum = UploadFile::findOrFail($fileid)->sha1sum;
-            Storage::delete("upload/{$sha1sum}");
+        $childids = Build::whereIn('parentid', $buildids)->pluck('id');
+        if ($childids->isNotEmpty()) {
+            self::removeBuild($childids->toArray());
         }
 
-        if (count($fileids) > 0) {
-            $fileids_prepare_array = $db->createPreparedArray(count($fileids));
-            DB::delete("DELETE FROM uploadfile WHERE id IN $fileids_prepare_array", $fileids);
-        }
-
-        // Remove any children of these builds.
-        // In order to avoid making the list of builds to delete too large
-        // we delete them in batches (one batch per parent).
-        foreach ($buildids as $parentid) {
-            $child_result = DB::select('SELECT id FROM build WHERE parentid=?', [(int) $parentid]);
-
-            $childids = [];
-            foreach ($child_result as $child_array) {
-                $childids[] = (int) $child_array->id;
-            }
-            if (!empty($childids)) {
-                self::removeBuild($childids);
-            }
-        }
-
-        // Only delete the buildid at the end so that no other build can get it in the meantime
-        DB::delete("DELETE FROM build WHERE id IN $buildid_prepare_array", $buildids);
+        Build::whereIn('id', $buildids)->delete();
     }
 
     /**
@@ -262,19 +196,6 @@ class DatabaseCleanupUtils
     {
         foreach (array_chunk($buildids, 100) as $chunk) {
             self::removeBuild($chunk);
-        }
-    }
-
-    /**
-     * Chunk up DELETE queries into batches of 100.
-     */
-    private static function deleteRowsChunked(string $query, array $ids): void
-    {
-        foreach (array_chunk($ids, 100) as $chunk) {
-            $chunk_prepared_array = Database::getInstance()->createPreparedArray(count($chunk));
-            DB::delete("$query $chunk_prepared_array", $chunk);
-            // Sleep for a microsecond to give other processes a chance.
-            usleep(1);
         }
     }
 
