@@ -23,6 +23,8 @@
                                 <xs:extension base="xs:string">
                                   <xs:attribute name="Number" type="xs:int" use="required" />
                                   <xs:attribute name="Count" type="xs:int" use="required" />
+                                  <xs:attribute name="BranchesTested" type="xs:int" use="optional"/>
+                                  <xs:attribute name="BranchesUntested" type="xs:int" use="optional"/>
                                 </xs:extension>
                               </xs:simpleContent>
                             </xs:complexType>

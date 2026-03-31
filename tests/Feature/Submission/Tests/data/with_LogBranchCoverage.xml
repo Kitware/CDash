@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="dummy_test_name"
+  BuildStamp="dummy_stamp"
+  Name="dummy_name"
+  Generator="dummy_generator"
+	>
+	<CoverageLog>
+		<StartDateTime>Apr 01 09:08 EDT</StartDateTime>
+		<StartTime>1775048903</StartTime>
+		<File Name="hello.cxx" FullPath="./hello.cxx">
+			<Report>
+				<Line Number="0" Count="-1" BranchesTested="0" BranchesUntested="0">#include &lt;iostream&gt;</Line>
+				<Line Number="1" Count="-1" BranchesTested="0" BranchesUntested="0"></Line>
+				<Line Number="2" Count="11" BranchesTested="0" BranchesUntested="0">int  printMsg(int times) {</Line>
+				<Line Number="3" Count="66" BranchesTested="2" BranchesUntested="0"> for (int i =0; i &lt; times; i++) {</Line>
+				<Line Number="4" Count="55" BranchesTested="0" BranchesUntested="0">   std::cout &lt;&lt; i &lt;&lt; ":  Hello, World!" &lt;&lt; std::endl;</Line>
+				<Line Number="5" Count="55" BranchesTested="0" BranchesUntested="0"> }</Line>
+				<Line Number="6" Count="-1" BranchesTested="0" BranchesUntested="0"></Line>
+				<Line Number="7" Count="11" BranchesTested="0" BranchesUntested="0"> int i = 10;</Line>
+				<Line Number="8" Count="11" BranchesTested="0" BranchesUntested="0"> return i;</Line>
+				<Line Number="9" Count="11" BranchesTested="0" BranchesUntested="0">}</Line>
+				<Line Number="10" Count="-1" BranchesTested="0" BranchesUntested="0"></Line>
+				<Line Number="11" Count="11" BranchesTested="0" BranchesUntested="0">void main1() {}</Line>
+				<Line Number="12" Count="-1" BranchesTested="0" BranchesUntested="0"></Line>
+				<Line Number="13" Count="11" BranchesTested="0" BranchesUntested="0">int main() {</Line>
+				<Line Number="14" Count="11" BranchesTested="0" BranchesUntested="0">   printMsg(5);</Line>
+				<Line Number="15" Count="-1" BranchesTested="0" BranchesUntested="0"></Line>
+				<Line Number="16" Count="11" BranchesTested="0" BranchesUntested="0">   main1();</Line>
+				<Line Number="17" Count="-1" BranchesTested="0" BranchesUntested="0"></Line>
+				<Line Number="18" Count="11" BranchesTested="1" BranchesUntested="1">   if(false)</Line>
+				<Line Number="19" Count="0" BranchesTested="0" BranchesUntested="0">   {</Line>
+				<Line Number="20" Count="-1" BranchesTested="0" BranchesUntested="0">    // go to check</Line>
+				<Line Number="21" Count="0" BranchesTested="0" BranchesUntested="0">    return 1;</Line>
+				<Line Number="22" Count="0" BranchesTested="0" BranchesUntested="0">   }</Line>
+				<Line Number="23" Count="-1" BranchesTested="0" BranchesUntested="0"></Line>
+				<Line Number="24" Count="11" BranchesTested="0" BranchesUntested="0">   return 0;</Line>
+				<Line Number="25" Count="0" BranchesTested="0" BranchesUntested="0">   int blah;</Line>
+				<Line Number="26" Count="0" BranchesTested="0" BranchesUntested="0">}</Line>
+			</Report>
+		</File>
+		<EndDateTime>Apr 01 09:08 EDT</EndDateTime>
+		<EndTime>1775048903</EndTime>
+	</CoverageLog>
+</Site>
