@@ -41,7 +41,7 @@
     "daisyui": "^4.12.23",
     "echarts": "^6.0.0",
     "flot": "^4.2.6",
-    "graphql": "^16.12.0",
+    "graphql": "^16.13.2",
     "graphql-tag": "^2.12.6",
     "jquery": "^3.7",
     "jquery-ui-dist": "^1.13.3",
