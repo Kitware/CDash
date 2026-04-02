@@ -973,6 +973,8 @@ function get_filterdata_from_request($page_id = ''): array
         }
     }
 
+    $filters = array_filter($filters, fn (array $filter) => $filter !== []);
+
     // If no filters were passed in as parameters,
     // then add one default filter so that the user sees
     // somewhere to enter filter queries in the GUI:
