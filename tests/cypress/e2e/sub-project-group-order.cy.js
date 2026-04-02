@@ -2,7 +2,9 @@ describe('subProjectGroupOrder', () => {
 
   it('can change the group order', () => {
     cy.login();
+    cy.intercept('GET', '**/api/v1/manageSubProject.php*').as('pageData');
     cy.visit('manageSubProject.php?projectid=15');
+    cy.wait('@pageData');
 
     // navigate to the 'SubProjects Groups' tab
     cy.get('[data-test="subproject-groups"]').click();
