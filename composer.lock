@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "847326bd73012c1d1d84e3a238709764",
+    "content-hash": "3020aca838cfe6b715eef961d6837b35",
     "packages": [
         {
             "name": "24slides/laravel-saml2",
@@ -2981,30 +2981,30 @@
         },
         {
             "name": "mll-lab/laravel-graphiql",
-            "version": "v4.0.2",
+            "version": "v4.1.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/mll-lab/laravel-graphiql.git",
-                "reference": "50135ffb1874e41cd6bb59d6334e8639fe579c72"
+                "url": "https://github.com/mll-lab/laravel-graphiql",
+                "reference": "b6426ea4471aa60d68a560945aa7232193c4a34f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mll-lab/laravel-graphiql/zipball/50135ffb1874e41cd6bb59d6334e8639fe579c72",
-                "reference": "50135ffb1874e41cd6bb59d6334e8639fe579c72",
+                "url": "https://api.github.com/repos/mll-lab/laravel-graphiql/zipball/b6426ea4471aa60d68a560945aa7232193c4a34f",
+                "reference": "b6426ea4471aa60d68a560945aa7232193c4a34f",
                 "shasum": ""
             },
             "require": {
-                "illuminate/console": "^9 || ^10 || ^11 || ^12",
-                "illuminate/contracts": "^9 || ^10 || ^11 || ^12",
-                "illuminate/support": "^9 || ^10 || ^11 || ^12",
+                "illuminate/console": "^9 || ^10 || ^11 || ^12 || ^13",
+                "illuminate/contracts": "^9 || ^10 || ^11 || ^12 || ^13",
+                "illuminate/support": "^9 || ^10 || ^11 || ^12 || ^13",
                 "php": "^8"
             },
             "require-dev": {
                 "ergebnis/composer-normalize": "^2.45",
                 "larastan/larastan": "^2.9.14 || ^3.1",
-                "laravel/framework": "^9 || ^10 || ^11 || ^12",
+                "laravel/framework": "^9 || ^10 || ^11 || ^12 || ^13",
                 "mll-lab/php-cs-fixer-config": "^5.10",
-                "orchestra/testbench": "^7.52 || ^8.33 || ^9.11 || ^10",
+                "orchestra/testbench": "^7.52 || ^8.33 || ^9.11 || ^10 || ^11",
                 "phpstan/extension-installer": "^1.4.3",
                 "phpstan/phpstan": "^1.12.20 || ^2.1.7",
                 "phpstan/phpstan-phpunit": "^1.4.2 || ^2.0.6",
@@ -3039,11 +3039,7 @@
                 "graphql",
                 "laravel"
             ],
-            "support": {
-                "issues": "https://github.com/mll-lab/laravel-graphiql/issues",
-                "source": "https://github.com/mll-lab/laravel-graphiql/tree/v4.0.2"
-            },
-            "time": "2025-05-12T07:21:46+00:00"
+            "time": "2026-03-18T14:57:55+00:00"
         },
         {
             "name": "monolog/monolog",
