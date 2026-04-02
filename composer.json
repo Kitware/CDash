@@ -55,7 +55,7 @@
     "mockery/mockery": "1.6.12",
     "phpstan/extension-installer": "1.4.3",
     "phpstan/phpstan": "2.1.40",
-    "phpstan/phpstan-deprecation-rules": "2.0.3",
+    "phpstan/phpstan-deprecation-rules": "2.0.4",
     "phpstan/phpstan-mockery": "2.0.0",
     "phpstan/phpstan-phpunit": "2.0.16",
     "phpstan/phpstan-strict-rules": "2.0.7",
