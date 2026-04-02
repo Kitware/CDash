@@ -140,7 +140,7 @@
                         <b>
                           <a
                             class="tw-link tw-link-hover"
-                            :href="$baseURL + '/builds/' + cdash.previousbuild.buildid + 'errors'"
+                            :href="$baseURL + '/builds/' + cdash.previousbuild.buildid + '/build'"
                           >
                             {{ cdash.previousbuild.nwarnings }}
                           </a>
