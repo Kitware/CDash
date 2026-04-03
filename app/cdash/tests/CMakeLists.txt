@@ -77,11 +77,27 @@ function(add_feature_test_in_transaction TestName)
   )
 endfunction()
 
+add_test(
+  NAME change_app_url_to_website
+  COMMAND sed -i "s#http://localhost:8080#http://website:8080#g" "${CDash_SOURCE_DIR}/.env"
+)
+set_tests_properties(
+  change_app_url_to_website
+  PROPERTIES FIXTURES_SETUP APP_URL_WEBSITE
+)
+
+add_test(
+  NAME change_app_url_to_localhost
+  COMMAND sed -i "s#http://website:8080#http://localhost:8080#g" "${CDash_SOURCE_DIR}/.env"
+)
+set_tests_properties(
+  change_app_url_to_localhost
+  PROPERTIES FIXTURES_CLEANUP APP_URL_WEBSITE
+)
+
 function(add_browser_test TestName)
   add_feature_test(${TestName})
-  set_property(TEST ${TestName} APPEND PROPERTY RESOURCE_LOCK
-    APP_URL # All browser tests need exclusive access to the APP_URL configuration setting
-  )
+  set_property(TEST ${TestName} APPEND PROPERTY FIXTURES_REQUIRED APP_URL_WEBSITE)
   set_property(TEST ${TestName} APPEND PROPERTY PROCESSORS 2)
 endfunction()
 
@@ -467,6 +483,7 @@ set_tests_properties(lotsofsubprojects PROPERTIES DEPENDS /CDash/XmlHandler/Upda
 ###################################################################################################
 
 set_property(TEST install_2 APPEND PROPERTY DEPENDS
+  change_app_url_to_localhost
   /CDash/Lib/Repository/GitHub
   /CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilder
   /CDash/Messaging/Subscription/UserSubscriptionBuilder
@@ -482,7 +499,6 @@ set_property(TEST install_2 APPEND PROPERTY DEPENDS
   /CDash/Messaging/Topic/MissingTestTopic
   /CDash/Messaging/Topic/TestFailureTopic
   /CDash/Messaging/Topic/TopicDecorator
-  cypress/e2e/user-profile
   image
   changeid
   consistenttestingday
