@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -432,10 +433,14 @@ final class UserController extends AbstractController
             $error_msg = 'Your password has expired. Please set a new one.';
         }
 
+        $durationConfig = (int) Config::get('cdash.token_duration');
+        $maximumExpiration = $durationConfig === 0 ? Carbon::now()->endOfMillennium() : Carbon::now()->addSeconds($durationConfig);
+
         return $this->vue('profile-page', 'Profile', [
             'user' => $user,
             'error' => $error_msg,
             'message' => $other_msg,
+            'max-token-expiration' => $maximumExpiration->subDay()->toDateString(),
         ]);
     }
 
