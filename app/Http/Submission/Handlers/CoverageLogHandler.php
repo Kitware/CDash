@@ -69,6 +69,11 @@ class CoverageLogHandler extends AbstractXmlHandler
             if ($attributes['COUNT'] >= 0) {
                 $this->CurrentCoverageFileLog->AddLine($attributes['NUMBER'], $attributes['COUNT']);
             }
+            if (($attributes['BRANCHESTESTED'] > 0) || ($attributes['BRANCHESUNTESTED'] > 0)) {
+                $this->CurrentCoverageFileLog->AddBranch($attributes['NUMBER'],
+                    $attributes['BRANCHESTESTED'],
+                    $attributes['BRANCHESTESTED'] + $attributes['BRANCHESUNTESTED']);
+            }
             $this->CurrentLine = '';
         }
     }

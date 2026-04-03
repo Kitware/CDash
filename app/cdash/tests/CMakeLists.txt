@@ -352,6 +352,8 @@ add_feature_test(/Feature/Submission/Tests/TestXMLTest)
 
 add_feature_test(/Feature/Submission/Tests/BuildXMLTest)
 
+add_feature_test(/Feature/Submission/Tests/CoverageLogXMLTest)
+
 add_browser_test(/Browser/Pages/SitesIdPageTest)
 
 add_browser_test(/Browser/Pages/ProjectSitesPageTest)
