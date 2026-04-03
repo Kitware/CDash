@@ -2625,7 +2625,7 @@ parameters:
 		-
 			rawMessage: Cannot cast mixed to int.
 			identifier: cast.int
-			count: 2
+			count: 3
 			path: app/Http/Controllers/UserController.php
 
 		-
