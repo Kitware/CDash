@@ -735,7 +735,7 @@ parameters:
 		-
 			rawMessage: Cannot cast mixed to int.
 			identifier: cast.int
-			count: 11
+			count: 12
 			path: app/Http/Controllers/BuildController.php
 
 		-
@@ -937,6 +937,12 @@ parameters:
 			path: app/Http/Controllers/BuildController.php
 
 		-
+			rawMessage: 'Variable $previous_build in isset() always exists and is not nullable.'
+			identifier: isset.variable
+			count: 1
+			path: app/Http/Controllers/BuildController.php
+
+		-
 			rawMessage: Access to an undefined property App\Models\Note::$pivot.
 			identifier: property.notFound
 			count: 1
@@ -1096,6 +1102,12 @@ parameters:
 			rawMessage: 'Parameter #1 $stmt of method App\Http\Controllers\BuildPropertiesController::gather_defects() expects PDOStatement, (PDOStatement|false) given.'
 			identifier: argument.type
 			count: 2
+			path: app/Http/Controllers/BuildPropertiesController.php
+
+		-
+			rawMessage: 'Parameter #2 $string of function explode expects string, mixed given.'
+			identifier: argument.type
+			count: 1
 			path: app/Http/Controllers/BuildPropertiesController.php
 
 		-
@@ -1308,7 +1320,7 @@ parameters:
 		-
 			rawMessage: Cannot cast mixed to int.
 			identifier: cast.int
-			count: 18
+			count: 19
 			path: app/Http/Controllers/CoverageController.php
 
 		-
@@ -1468,9 +1480,21 @@ parameters:
 			path: app/Http/Controllers/CoverageController.php
 
 		-
+			rawMessage: 'Offset ''loctested'' might not exist on non-empty-array{label?: mixed, loctested?: int, locuntested?: int, coverages?: list<array{buildid: mixed, percentage: float, locuntested: int, loctested: int, percentagediff?: float, label: string}>}.'
+			identifier: offsetAccess.notFound
+			count: 2
+			path: app/Http/Controllers/CoverageController.php
+
+		-
 			rawMessage: 'Offset ''locuntested'' might not exist on array{label?: mixed, loctested: int, locuntested?: int, coverages?: list<array{buildid: mixed, percentage: float, locuntested: int, loctested: int, percentagediff?: float, label: string}>}.'
 			identifier: offsetAccess.notFound
 			count: 2
+			path: app/Http/Controllers/CoverageController.php
+
+		-
+			rawMessage: 'Offset ''locuntested'' might not exist on non-empty-array{label?: mixed, loctested?: int, locuntested?: int, coverages?: list<array{buildid: mixed, percentage: float, locuntested: int, loctested: int, percentagediff?: float, label: string}>}.'
+			identifier: offsetAccess.notFound
+			count: 1
 			path: app/Http/Controllers/CoverageController.php
 
 		-
@@ -1589,12 +1613,6 @@ parameters:
 
 		-
 			rawMessage: Variable $groupId might not be defined.
-			identifier: variable.undefined
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: Variable $roundedpercentage2 might not be defined.
 			identifier: variable.undefined
 			count: 1
 			path: app/Http/Controllers/CoverageController.php
@@ -2134,7 +2152,7 @@ parameters:
 			path: app/Http/Controllers/ProjectOverviewController.php
 
 		-
-			rawMessage: 'Offset ''loctested'' might not exist on array{}|array{loctested: (array|float|int), locuntested?: (array|float|int)}.'
+			rawMessage: 'Offset ''loctested'' might not exist on array{}|array{loctested?: (array|float|int), locuntested?: (array|float|int)}.'
 			identifier: offsetAccess.notFound
 			count: 6
 			path: app/Http/Controllers/ProjectOverviewController.php
@@ -2152,7 +2170,7 @@ parameters:
 			path: app/Http/Controllers/ProjectOverviewController.php
 
 		-
-			rawMessage: 'Offset ''locuntested'' might not exist on array{}|array{loctested: (array|float|int), locuntested?: (array|float|int)}.'
+			rawMessage: 'Offset ''locuntested'' might not exist on array{}|array{loctested?: (array|float|int), locuntested?: (array|float|int)}.'
 			identifier: offsetAccess.notFound
 			count: 2
 			path: app/Http/Controllers/ProjectOverviewController.php
@@ -2695,9 +2713,33 @@ parameters:
 			path: app/Http/Controllers/UserController.php
 
 		-
+			rawMessage: 'Parameter #1 $haystack of function str_contains expects string, mixed given.'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/UserController.php
+
+		-
+			rawMessage: 'Parameter #1 $password of function password_hash expects string, mixed given.'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/UserController.php
+
+		-
+			rawMessage: 'Parameter #1 $password of function password_verify expects string, mixed given.'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/UserController.php
+
+		-
 			rawMessage: 'Parameter #1 $stmt of function pdo_execute expects PDOStatement, (PDOStatement|false) given.'
 			identifier: argument.type
 			count: 4
+			path: app/Http/Controllers/UserController.php
+
+		-
+			rawMessage: 'Parameter #1 $string of function strlen expects string, mixed given.'
+			identifier: argument.type
+			count: 2
 			path: app/Http/Controllers/UserController.php
 
 		-
@@ -2710,6 +2752,30 @@ parameters:
 			rawMessage: 'Parameter #2 $timestamp of function date expects int|null, int|false given.'
 			identifier: argument.type
 			count: 2
+			path: app/Http/Controllers/UserController.php
+
+		-
+			rawMessage: 'Property App\Models\User::$email (string) does not accept mixed.'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Http/Controllers/UserController.php
+
+		-
+			rawMessage: 'Property App\Models\User::$firstname (string) does not accept mixed.'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Http/Controllers/UserController.php
+
+		-
+			rawMessage: 'Property App\Models\User::$institution (string) does not accept mixed.'
+			identifier: assign.propertyType
+			count: 1
+			path: app/Http/Controllers/UserController.php
+
+		-
+			rawMessage: 'Property App\Models\User::$lastname (string) does not accept mixed.'
+			identifier: assign.propertyType
+			count: 1
 			path: app/Http/Controllers/UserController.php
 
 		-
@@ -3190,6 +3256,12 @@ parameters:
 			path: app/Http/Submission/Handlers/BazelJSONHandler.php
 
 		-
+			rawMessage: 'Offset 1 might not exist on array{}|array{0: non-falsy-string, 1: string, 2: string, 3?: string}.'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: app/Http/Submission/Handlers/BazelJSONHandler.php
+
+		-
 			rawMessage: 'Only booleans are allowed in a negated boolean, int|string given.'
 			identifier: booleanNot.exprNotBoolean
 			count: 1
@@ -3292,15 +3364,9 @@ parameters:
 			path: app/Http/Submission/Handlers/BazelJSONHandler.php
 
 		-
-			rawMessage: Variable $source_file might not be defined.
-			identifier: variable.undefined
-			count: 1
-			path: app/Http/Submission/Handlers/BazelJSONHandler.php
-
-		-
 			rawMessage: Variable $type might not be defined.
 			identifier: variable.undefined
-			count: 4
+			count: 3
 			path: app/Http/Submission/Handlers/BazelJSONHandler.php
 
 		-
@@ -6817,6 +6883,12 @@ parameters:
 			path: app/Utils/RepositoryUtils.php
 
 		-
+			rawMessage: 'Offset 1 might not exist on array{}|array{non-falsy-string, numeric-string}.'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
 			rawMessage: 'Only booleans are allowed in a negated boolean, bool|string given.'
 			identifier: booleanNot.exprNotBoolean
 			count: 2
@@ -7336,6 +7408,12 @@ parameters:
 			rawMessage: 'Parameter #1 $json of function json_decode expects string, string|null given.'
 			identifier: argument.type
 			count: 1
+			path: app/Utils/UnparsedSubmissionProcessor.php
+
+		-
+			rawMessage: 'Parameter #1 $string of function htmlspecialchars expects string, mixed given.'
+			identifier: argument.type
+			count: 11
 			path: app/Utils/UnparsedSubmissionProcessor.php
 
 		-
@@ -8383,6 +8461,66 @@ parameters:
 			path: app/cdash/app/Controller/Api/TestOverview.php
 
 		-
+			rawMessage: 'Offset ''failed'' might not exist on non-empty-array{failed?: int<0, max>, timeout?: int<0, max>, time?: mixed, passed?: int<0, max>, name?: mixed, subproject?: mixed}.'
+			identifier: offsetAccess.notFound
+			count: 3
+			path: app/cdash/app/Controller/Api/TestOverview.php
+
+		-
+			rawMessage: 'Offset ''failed'' might not exist on non-empty-array{name?: mixed, subproject?: mixed, passed?: int<0, max>, failed?: int<0, max>, timeout?: int<0, max>, time?: mixed}.'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: app/cdash/app/Controller/Api/TestOverview.php
+
+		-
+			rawMessage: 'Offset ''passed'' might not exist on non-empty-array{failed?: int<0, max>, timeout?: int<0, max>, time?: mixed, passed?: int<0, max>, name?: mixed, subproject?: mixed}.'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: app/cdash/app/Controller/Api/TestOverview.php
+
+		-
+			rawMessage: 'Offset ''passed'' might not exist on non-empty-array{name?: mixed, subproject?: mixed, passed?: int<0, max>, failed?: int<0, max>, timeout?: int<0, max>, time?: mixed}.'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: app/cdash/app/Controller/Api/TestOverview.php
+
+		-
+			rawMessage: 'Offset ''subproject'' might not exist on non-empty-array{failed?: int<0, max>, timeout?: int<0, max>, time?: mixed, passed?: int<0, max>, name?: mixed, subproject?: mixed}.'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: app/cdash/app/Controller/Api/TestOverview.php
+
+		-
+			rawMessage: 'Offset ''time'' might not exist on non-empty-array{failed?: int<0, max>, timeout?: int<0, max>, time?: mixed, passed?: int<0, max>, name?: mixed, subproject?: mixed}.'
+			identifier: offsetAccess.notFound
+			count: 2
+			path: app/cdash/app/Controller/Api/TestOverview.php
+
+		-
+			rawMessage: 'Offset ''time'' might not exist on non-empty-array{name?: mixed, subproject?: mixed, passed?: int<0, max>, failed?: int<0, max>, timeout?: int<0, max>, time?: mixed}.'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: app/cdash/app/Controller/Api/TestOverview.php
+
+		-
+			rawMessage: 'Offset ''timeout'' might not exist on array{failed: 0, timeout?: int<0, max>, time?: mixed, passed?: int<0, max>, name?: mixed, subproject?: mixed}.'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: app/cdash/app/Controller/Api/TestOverview.php
+
+		-
+			rawMessage: 'Offset ''timeout'' might not exist on non-empty-array{failed?: int<0, max>, timeout?: int<0, max>, time?: mixed, passed?: int<0, max>, name?: mixed, subproject?: mixed}.'
+			identifier: offsetAccess.notFound
+			count: 2
+			path: app/cdash/app/Controller/Api/TestOverview.php
+
+		-
+			rawMessage: 'Offset ''timeout'' might not exist on non-empty-array{name?: mixed, subproject?: mixed, passed?: int<0, max>, failed?: int<0, max>, timeout?: int<0, max>, time?: mixed}.'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: app/cdash/app/Controller/Api/TestOverview.php
+
+		-
 			rawMessage: 'Only booleans are allowed in an if condition, int|string given.'
 			identifier: if.condNotBoolean
 			count: 1
@@ -8899,78 +9037,6 @@ parameters:
 			path: app/cdash/app/Controller/Api/ViewTest.php
 
 		-
-			rawMessage: 'Argument of an invalid type mixed supplied for foreach, only iterables are supported.'
-			identifier: foreach.nonIterable
-			count: 2
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			rawMessage: Cannot access offset 'author' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			rawMessage: Cannot access offset 'commit' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 7
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			rawMessage: Cannot access offset 'committer' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			rawMessage: Cannot access offset 'date' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			rawMessage: Cannot access offset 'email' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			rawMessage: Cannot access offset 'filename' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			rawMessage: Cannot access offset 'message' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			rawMessage: Cannot access offset 'name' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			rawMessage: Cannot access offset 'sha' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			rawMessage: Cannot access offset 0 on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			rawMessage: Cannot access offset mixed on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
 			rawMessage: Comparison operation ">" between 0 and 0 is always false.
 			identifier: greater.alwaysFalse
 			count: 2
@@ -9025,25 +9091,7 @@ parameters:
 			path: app/cdash/app/Lib/Repository/GitHub.php
 
 		-
-			rawMessage: 'Parameter #1 $array of function array_column expects array, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			rawMessage: 'Parameter #1 $array of function array_reverse expects array, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
 			rawMessage: 'Parameter #1 $filename of function file_exists expects string, bool|string|null given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			rawMessage: 'Parameter #1 $haystack of function str_contains expects string, mixed given.'
 			identifier: argument.type
 			count: 1
 			path: app/cdash/app/Lib/Repository/GitHub.php
@@ -9051,66 +9099,6 @@ parameters:
 		-
 			rawMessage: 'Parameter #1 $issuer of method Lcobucci\JWT\Builder::issuedBy() expects non-empty-string, bool|string given.'
 			identifier: argument.type
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			rawMessage: 'Parameter #1 $key of function array_key_exists expects int|string, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			rawMessage: 'Parameter #1 $time of static method Carbon\Carbon::parse() expects Carbon\Month|Carbon\WeekDay|DateTimeInterface|float|int|string|null, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			rawMessage: 'Parameter #1 $value of function count expects array|Countable, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			rawMessage: Possibly invalid array key type mixed.
-			identifier: offsetAccess.invalidOffset
-			count: 2
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			rawMessage: 'Property App\Models\BuildUpdateFile::$author (string) does not accept mixed.'
-			identifier: assign.propertyType
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			rawMessage: 'Property App\Models\BuildUpdateFile::$committer (string) does not accept mixed.'
-			identifier: assign.propertyType
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			rawMessage: 'Property App\Models\BuildUpdateFile::$committeremail (string) does not accept mixed.'
-			identifier: assign.propertyType
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			rawMessage: 'Property App\Models\BuildUpdateFile::$email (string) does not accept mixed.'
-			identifier: assign.propertyType
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			rawMessage: 'Property App\Models\BuildUpdateFile::$log (string) does not accept mixed.'
-			identifier: assign.propertyType
-			count: 1
-			path: app/cdash/app/Lib/Repository/GitHub.php
-
-		-
-			rawMessage: 'Property App\Models\BuildUpdateFile::$revision (string) does not accept mixed.'
-			identifier: assign.propertyType
 			count: 1
 			path: app/cdash/app/Lib/Repository/GitHub.php
 
@@ -9355,7 +9343,7 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			rawMessage: 'Method CDash\Model\Build::GetErrorDifferences() should return array{builderrorspositive: int, builderrorsnegative: int, buildwarningspositive: int, buildwarningsnegative: int, configureerrors: int, configurewarnings: int, testpassedpositive: int, testpassednegative: int, ...}|false but returns array<''builderrorsnegative''|''builderrorspositive''|''buildwarningsnegati…''|''buildwarningspositi…''|''configureerrors''|''configurewarnings''|''testfailednegative''|''testfailedpositive''|''testnotrunnegative''|''testnotrunpositive''|''testpassednegative''|''testpassedpositive'', int>.'
+			rawMessage: 'Method CDash\Model\Build::GetErrorDifferences() should return array{builderrorspositive: int, builderrorsnegative: int, buildwarningspositive: int, buildwarningsnegative: int, configureerrors: int, configurewarnings: int, testpassedpositive: int, testpassednegative: int, ...}|false but returns non-empty-array<''builderrorsnegative''|''builderrorspositive''|''buildwarningsnegati…''|''buildwarningspositi…''|''configureerrors''|''configurewarnings''|''testfailednegative''|''testfailedpositive''|''testnotrunnegative''|''testnotrunpositive''|''testpassednegative''|''testpassedpositive'', int>.'
 			identifier: return.type
 			count: 1
 			path: app/cdash/app/Model/Build.php
@@ -13599,7 +13587,7 @@ parameters:
 		-
 			rawMessage: 'Method CDash\Test\UseCase\UseCase::getSiteElement() throws checked exception DOMException but it''s missing from the PHPDoc @throws tag.'
 			identifier: missingType.checkedException
-			count: 2
+			count: 1
 			path: app/cdash/include/Test/UseCase/UseCase.php
 
 		-
@@ -13734,12 +13722,6 @@ parameters:
 		-
 			rawMessage: 'Call to function in_array() requires parameter #3 to be set.'
 			identifier: function.strict
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			rawMessage: Cannot access offset 'text' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: app/cdash/include/common.php
 
@@ -14760,13 +14742,19 @@ parameters:
 		-
 			rawMessage: Cannot access offset 'id' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 4
+			count: 8
 			path: app/cdash/public/api/v1/buildgroup.php
 
 		-
 			rawMessage: Cannot access offset 'match' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 3
+			path: app/cdash/public/api/v1/buildgroup.php
+
+		-
+			rawMessage: Cannot access offset 'name' on mixed.
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
 			path: app/cdash/public/api/v1/buildgroup.php
 
 		-
@@ -14802,7 +14790,7 @@ parameters:
 		-
 			rawMessage: Cannot cast mixed to int.
 			identifier: cast.int
-			count: 3
+			count: 4
 			path: app/cdash/public/api/v1/buildgroup.php
 
 		-
@@ -14868,7 +14856,7 @@ parameters:
 		-
 			rawMessage: 'Parameter #1 $json of function json_decode expects string, mixed given.'
 			identifier: argument.type
-			count: 3
+			count: 4
 			path: app/cdash/public/api/v1/buildgroup.php
 
 		-
@@ -15310,7 +15298,7 @@ parameters:
 			path: app/cdash/public/api/v1/manageBuildGroup.php
 
 		-
-			rawMessage: 'Parameter #1 $value of function intval expects array|bool|float|int|resource|string|null, mixed given.'
+			rawMessage: 'Parameter #1 $value of function intval expects array|bool|float|GMP|int|resource|SimpleXMLElement|string|null, mixed given.'
 			identifier: argument.type
 			count: 1
 			path: app/cdash/public/api/v1/manageBuildGroup.php
@@ -15715,15 +15703,21 @@ parameters:
 			path: app/cdash/public/api/v1/subproject.php
 
 		-
-			rawMessage: 'Parameter #1 $string of function htmlspecialchars expects string, mixed given.'
+			rawMessage: 'Parameter #1 $name of method CDash\Model\SubProjectGroup::SetName() expects string, mixed given.'
 			identifier: argument.type
-			count: 2
+			count: 1
 			path: app/cdash/public/api/v1/subproject.php
 
 		-
-			rawMessage: 'Parameter #1 $value of function intval expects array|bool|float|int|resource|string|null, mixed given.'
+			rawMessage: 'Parameter #1 $string of function htmlspecialchars expects string, mixed given.'
 			identifier: argument.type
-			count: 4
+			count: 3
+			path: app/cdash/public/api/v1/subproject.php
+
+		-
+			rawMessage: 'Parameter #1 $value of function intval expects array|bool|float|GMP|int|resource|SimpleXMLElement|string|null, mixed given.'
+			identifier: argument.type
+			count: 6
 			path: app/cdash/public/api/v1/subproject.php
 
 		-
@@ -19186,6 +19180,12 @@ parameters:
 			path: app/cdash/tests/test_builddetails.php
 
 		-
+			rawMessage: 'Cannot access offset int<0, max> on mixed.'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/cdash/tests/test_builddetails.php
+
+		-
 			rawMessage: Cannot access property $error on mixed.
 			identifier: property.nonObject
 			count: 2
@@ -20193,7 +20193,7 @@ parameters:
 		-
 			rawMessage: Binary operation "." between non-falsy-string and mixed results in an error.
 			identifier: binaryOp.invalid
-			count: 2
+			count: 3
 			path: app/cdash/tests/test_crosssubprojectcoverage.php
 
 		-
