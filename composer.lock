@@ -4,34 +4,33 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4cfaf8e7ef3f582605244607ee62903b",
+    "content-hash": "378d0c5692b40cc4d0e8bea71904193a",
     "packages": [
         {
             "name": "24slides/laravel-saml2",
-            "version": "2.4.2",
+            "version": "2.5.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/24Slides/laravel-saml2.git",
-                "reference": "e7f4938586c65fbe1fdd91552c582cac745223b9"
+                "url": "https://github.com/scaler-tech/laravel-saml2.git",
+                "reference": "d105b12995008ad6d1b40fe239f881ae47dbb553"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/24Slides/laravel-saml2/zipball/e7f4938586c65fbe1fdd91552c582cac745223b9",
-                "reference": "e7f4938586c65fbe1fdd91552c582cac745223b9",
+                "url": "https://api.github.com/repos/scaler-tech/laravel-saml2/zipball/d105b12995008ad6d1b40fe239f881ae47dbb553",
+                "reference": "d105b12995008ad6d1b40fe239f881ae47dbb553",
                 "shasum": ""
             },
             "require": {
                 "ext-openssl": "*",
-                "illuminate/console": "~5.5|^6.0|^7.0|^8.0|^9.0|^10.0|^11.0|^12.0",
-                "illuminate/database": "~5.5|^6.0|^7.0|^8.0|^9.0|^10.0|^11.0|^12.0",
-                "illuminate/support": "~5.4|^6.0|^7.0|^8.0|^9.0|^10.0|^11.0|^12.0",
-                "onelogin/php-saml": "^3.0|^4.0",
-                "php": ">=7.1",
-                "ramsey/uuid": "^3.8|^4.0"
+                "illuminate/console": "^5.5 || ^6.0 || ^7.0 || ^8.0 || ^9.0 || ^10.0 || ^11.0 || ^12.0",
+                "illuminate/database": "^5.5 || ^6.0 || ^7.0 || ^8.0 || ^9.0 || ^10.0 || ^11.0 || ^12.0",
+                "illuminate/support": "^5.5 || ^6.0 || ^7.0 || ^8.0 || ^9.0 || ^10.0 || ^11.0 || ^12.0",
+                "onelogin/php-saml": "^3.0 || ^4.0",
+                "php": ">=7.1"
             },
             "require-dev": {
                 "mockery/mockery": "^0.9.9",
-                "phpunit/phpunit": "^7.5|^9.0",
+                "phpunit/phpunit": "^7.5 || ^8.5 || ^9.0",
                 "squizlabs/php_codesniffer": "^2.3"
             },
             "type": "library",
@@ -45,7 +44,7 @@
                     ]
                 },
                 "branch-aliases": {
-                    "dev-master": "2.0.8-dev"
+                    "dev-master": "2.4.x-dev"
                 }
             },
             "autoload": {
@@ -62,12 +61,16 @@
             ],
             "authors": [
                 {
+                    "name": "Scaler Tech",
+                    "role": "Maintainer"
+                },
+                {
                     "name": "Artem Brezhnev",
                     "email": "brezzhnev@gmail.com"
                 }
             ],
-            "description": "SAML2 Service Provider integration to your Laravel 5.4+ application, based on OneLogin toolkit",
-            "homepage": "https://github.com/24slides/laravel-saml2",
+            "description": "SAML2 Service Provider integration for Laravel applications, based on OneLogin toolkit",
+            "homepage": "https://github.com/scaler-tech/laravel-saml2",
             "keywords": [
                 "SAML2",
                 "SSO",
@@ -76,10 +79,11 @@
                 "saml"
             ],
             "support": {
-                "issues": "https://github.com/24Slides/laravel-saml2/issues",
-                "source": "https://github.com/24Slides/laravel-saml2/tree/2.4.2"
+                "issues": "https://github.com/scaler-tech/laravel-saml2/issues",
+                "source": "https://github.com/scaler-tech/laravel-saml2"
             },
-            "time": "2025-03-12T12:39:37+00:00"
+            "abandoned": "scaler-tech/laravel-saml2",
+            "time": "2026-02-15T17:02:55+00:00"
         },
         {
             "name": "aws/aws-crt-php",
