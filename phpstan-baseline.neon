@@ -2533,50 +2533,8 @@ parameters:
 			path: app/Http/Controllers/SubscribeProjectController.php
 
 		-
-			rawMessage: 'Binary operation "." between mixed and ''&export=csv'' results in an error.'
-			identifier: binaryOp.invalid
-			count: 1
-			path: app/Http/Controllers/TestController.php
-
-		-
-			rawMessage: Cannot access property $buildid on mixed.
-			identifier: property.nonObject
-			count: 1
-			path: app/Http/Controllers/TestController.php
-
-		-
-			rawMessage: Cannot access property $name on mixed.
-			identifier: property.nonObject
-			count: 1
-			path: app/Http/Controllers/TestController.php
-
-		-
-			rawMessage: Cannot access property $value on mixed.
-			identifier: property.nonObject
-			count: 1
-			path: app/Http/Controllers/TestController.php
-
-		-
 			rawMessage: Cannot cast mixed to int.
 			identifier: cast.int
-			count: 2
-			path: app/Http/Controllers/TestController.php
-
-		-
-			rawMessage: Casting to float something that's already float.
-			identifier: cast.useless
-			count: 1
-			path: app/Http/Controllers/TestController.php
-
-		-
-			rawMessage: 'Loose comparison via "!=" between mixed and string is not allowed.'
-			identifier: notEqual.notAllowed
-			count: 1
-			path: app/Http/Controllers/TestController.php
-
-		-
-			rawMessage: 'Loose comparison via "!=" between string and string is not allowed.'
-			identifier: notEqual.notAllowed
 			count: 1
 			path: app/Http/Controllers/TestController.php
 
@@ -2584,30 +2542,6 @@ parameters:
 			rawMessage: 'Parameter #1 $project_name of method App\Http\Controllers\AbstractProjectController::setProjectByName() expects string, mixed given.'
 			identifier: argument.type
 			count: 2
-			path: app/Http/Controllers/TestController.php
-
-		-
-			rawMessage: 'Parameter #1 $string of function htmlspecialchars expects string, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/TestController.php
-
-		-
-			rawMessage: 'Parameter #2 $timestamp of function date expects int|null, (float|int) given.'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/TestController.php
-
-		-
-			rawMessage: 'Parameter #2 $timestamp of function gmdate expects int|null, (float|int) given.'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/TestController.php
-
-		-
-			rawMessage: 'Possibly invalid array key type int<0, max>|false.'
-			identifier: offsetAccess.invalidOffset
-			count: 1
 			path: app/Http/Controllers/TestController.php
 
 		-
@@ -22581,31 +22515,19 @@ parameters:
 		-
 			rawMessage: Cannot access offset 'builds' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 7
+			count: 4
 			path: app/cdash/tests/test_managemeasurements.php
 
 		-
 			rawMessage: Cannot access offset 'columncount' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
+			count: 2
 			path: app/cdash/tests/test_managemeasurements.php
 
 		-
 			rawMessage: Cannot access offset 'columnnames' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 6
-			path: app/cdash/tests/test_managemeasurements.php
-
-		-
-			rawMessage: Cannot access offset 'columns' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_managemeasurements.php
-
-		-
-			rawMessage: Cannot access offset 'csvlink' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
 			path: app/cdash/tests/test_managemeasurements.php
 
 		-
@@ -22641,7 +22563,7 @@ parameters:
 		-
 			rawMessage: Cannot access offset 'measurements' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 5
+			count: 4
 			path: app/cdash/tests/test_managemeasurements.php
 
 		-
@@ -22666,12 +22588,6 @@ parameters:
 			rawMessage: Cannot access offset 'procTimeFull' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 3
-			path: app/cdash/tests/test_managemeasurements.php
-
-		-
-			rawMessage: Cannot access offset 'proctime' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
 			path: app/cdash/tests/test_managemeasurements.php
 
 		-
@@ -22701,7 +22617,7 @@ parameters:
 		-
 			rawMessage: Cannot access offset 0 on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 13
+			count: 9
 			path: app/cdash/tests/test_managemeasurements.php
 
 		-
@@ -22723,21 +22639,9 @@ parameters:
 			path: app/cdash/tests/test_managemeasurements.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" between int<0, max> and int is not allowed.'
-			identifier: notEqual.notAllowed
-			count: 1
-			path: app/cdash/tests/test_managemeasurements.php
-
-		-
-			rawMessage: 'Loose comparison via "!=" between mixed and float is not allowed.'
-			identifier: notEqual.notAllowed
-			count: 1
-			path: app/cdash/tests/test_managemeasurements.php
-
-		-
 			rawMessage: 'Loose comparison via "!=" between mixed and int is not allowed.'
 			identifier: notEqual.notAllowed
-			count: 7
+			count: 5
 			path: app/cdash/tests/test_managemeasurements.php
 
 		-
@@ -22839,13 +22743,13 @@ parameters:
 		-
 			rawMessage: 'Parameter #1 $value of function count expects array|Countable, mixed given.'
 			identifier: argument.type
-			count: 6
+			count: 5
 			path: app/cdash/tests/test_managemeasurements.php
 
 		-
 			rawMessage: 'Part $found (mixed) of encapsed string cannot be cast to string.'
 			identifier: encapsedStringPart.nonString
-			count: 5
+			count: 1
 			path: app/cdash/tests/test_managemeasurements.php
 
 		-
