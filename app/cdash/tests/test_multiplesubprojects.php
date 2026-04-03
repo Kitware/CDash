@@ -572,7 +572,7 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
 
         $content = $this->getBrowser()->getContent();
         if ($content == false) {
-            $this->fail('Error retrieving content from viewConfigure.php');
+            $this->fail("Error retrieving content from {$this->url}/builds/{$parentid}/configure");
         }
 
         foreach ($subprojects as $subproject) {

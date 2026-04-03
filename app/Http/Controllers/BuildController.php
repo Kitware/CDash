@@ -16,7 +16,6 @@ use App\Utils\RepositoryUtils;
 use App\Utils\TestingDay;
 use CDash\Database;
 use CDash\Model\Build;
-use CDash\Model\BuildConfigure;
 use CDash\Model\BuildFailure;
 use CDash\Model\BuildGroupRule;
 use CDash\Model\BuildRelationship;
@@ -1154,67 +1153,6 @@ final class BuildController extends AbstractBuildController
         $response['numErrors']++;
 
         $response['errors'][] = $data;
-    }
-
-    public function apiViewConfigure(): JsonResponse
-    {
-        $pageTimer = new PageTimer();
-
-        if (!isset($_GET['buildid']) || !is_numeric($_GET['buildid'])) {
-            abort(400, 'Invalid buildid!');
-        }
-        $this->setBuildById((int) $_GET['buildid']);
-
-        $response = begin_JSON_response();
-        $response['deprecated'] = 'This endpoint will be removed in the next major version of CDash.';
-
-        $date = TestingDay::get($this->project, $this->build->StartTime);
-        get_dashboard_JSON($this->project->Name, $date, $response);
-        $response['title'] = "{$this->project->Name} - Configure";
-
-        // Menu
-        $menu_response = [];
-        if ($this->build->GetParentId() > 0) {
-            $menu_response['back'] = 'index.php?project=' . urlencode($this->project->Name) . "&parentid={$this->build->GetParentId()}";
-        } else {
-            $menu_response['back'] = 'index.php?project=' . urlencode($this->project->Name) . '&date=' . $date;
-        }
-
-        $previous_buildid = $this->build->GetPreviousBuildId();
-        $next_buildid = $this->build->GetNextBuildId();
-        $current_buildid = $this->build->GetCurrentBuildId();
-
-        $menu_response['previous'] = $previous_buildid > 0 ? "/builds/$previous_buildid/configure" : false;
-        $menu_response['current'] = "/builds/$current_buildid/configure";
-        $menu_response['next'] = $next_buildid > 0 ? "/builds/$next_buildid/configure" : false;
-
-        $response['menu'] = $menu_response;
-
-        // Configure
-        $configures_response = [];
-        $configures = $this->build->GetConfigures();
-        $has_subprojects = 0;
-        while ($configure = $configures->fetch()) {
-            if (isset($configure['subprojectid'])) {
-                $has_subprojects = 1;
-            }
-            $configures_response[] = BuildConfigure::marshal($configure);
-        }
-        $response['configures'] = $configures_response;
-
-        // Build
-        $site = $this->build->GetSite();
-        $response['build'] = [
-            'site' => $site->name,
-            'siteid' => $site->id,
-            'buildname' => $this->build->Name,
-            'buildid' => $this->build->Id,
-            'buildstarttime' => $this->build->StartTime,
-            'hassubprojects' => $has_subprojects,
-        ];
-
-        $pageTimer->end($response);
-        return response()->json(cast_data_for_JSON($response));
     }
 
     public function apiBuildUpdateGraph(): JsonResponse

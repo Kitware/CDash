@@ -23,8 +23,6 @@ Route::get('/v1/testDetails.php', 'TestDetailsController@apiTestDetails');
 
 Route::get('/v1/viewBuildError.php', 'BuildController@apiViewBuildError');
 
-Route::get('/v1/viewConfigure.php', 'BuildController@apiViewConfigure');
-
 Route::get('/v1/buildSummary.php', 'BuildController@apiBuildSummary');
 
 Route::match(['get', 'post', 'delete'], '/v1/relateBuilds.php', 'BuildController@apiRelateBuilds');

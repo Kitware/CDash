@@ -697,12 +697,6 @@ parameters:
 			path: app/Http/Controllers/BuildController.php
 
 		-
-			rawMessage: Cannot access offset 'subprojectid' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/Http/Controllers/BuildController.php
-
-		-
 			rawMessage: Cannot access offset 'to' on array|false.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -711,19 +705,13 @@ parameters:
 		-
 			rawMessage: Cannot access property $id on App\Models\Site|null.
 			identifier: property.nonObject
-			count: 2
+			count: 1
 			path: app/Http/Controllers/BuildController.php
 
 		-
 			rawMessage: Cannot access property $name on App\Models\Site|null.
 			identifier: property.nonObject
-			count: 4
-			path: app/Http/Controllers/BuildController.php
-
-		-
-			rawMessage: 'Cannot call method fetch() on PDOStatement|false.'
-			identifier: method.nonObject
-			count: 1
+			count: 3
 			path: app/Http/Controllers/BuildController.php
 
 		-
@@ -837,7 +825,7 @@ parameters:
 		-
 			rawMessage: 'Only booleans are allowed in a while condition, mixed given.'
 			identifier: while.condNotBoolean
-			count: 2
+			count: 1
 			path: app/Http/Controllers/BuildController.php
 
 		-
@@ -22588,20 +22576,8 @@ parameters:
 			path: app/cdash/tests/test_misassignedconfigure.php
 
 		-
-			rawMessage: Cannot access offset 'configures' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_misassignedconfigure.php
-
-		-
 			rawMessage: Class MisassignedConfigureTestCase has an uninitialized property $project. Give it default value or assign it in the constructor.
 			identifier: property.uninitialized
-			count: 1
-			path: app/cdash/tests/test_misassignedconfigure.php
-
-		-
-			rawMessage: 'Parameter #1 $value of function count expects array|Countable, mixed given.'
-			identifier: argument.type
 			count: 1
 			path: app/cdash/tests/test_misassignedconfigure.php
 
@@ -23325,7 +23301,7 @@ parameters:
 		-
 			rawMessage: 'Part $parentid (mixed) of encapsed string cannot be cast to string.'
 			identifier: encapsedStringPart.nonString
-			count: 6
+			count: 7
 			path: app/cdash/tests/test_multiplesubprojects.php
 
 		-
@@ -25990,18 +25966,6 @@ parameters:
 			rawMessage: 'Call to deprecated method pass() of class SimpleTestCase.'
 			identifier: method.deprecated
 			count: 1
-			path: app/cdash/tests/test_viewconfigure.php
-
-		-
-			rawMessage: 'Method ViewConfigureTestCase::testViewConfigure() has no return type specified.'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_viewconfigure.php
-
-		-
-			rawMessage: 'Call to deprecated method pass() of class SimpleTestCase.'
-			identifier: method.deprecated
-			count: 1
 			path: app/cdash/tests/test_viewdynamicanalysis.php
 
 		-
@@ -26580,7 +26544,7 @@ parameters:
 				Use useOrigin
 			'''
 			identifier: staticMethod.deprecated
-			count: 5
+			count: 4
 			path: tests/Feature/CDashTest.php
 
 		-
