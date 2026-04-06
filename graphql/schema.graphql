@@ -207,9 +207,6 @@ type Project {
   description: String
 
   "Homepage for this project."
-  homeurl: Url @deprecated(reason: "Use 'homeUrl' instead.")
-
-  "Homepage for this project."
   homeUrl: Url @rename(attribute: "homeurl")
 
   vcsViewer: VcsViewer @rename(attribute: "cvsviewertype")
@@ -402,20 +399,11 @@ input CreateProjectInput @validator {
   "Description."
   description: String
 
-  "Project homepage"
-  homeurl: Url @deprecated(reason: "Use 'homeUrl' instead.")
-
-  "Project homepage"
-  homeUrl: Url @rename(attribute: "homeurl") @deprecated(reason: "This field will be removed in the next major version of CDash.")
-
   "Visibility."
   visibility: ProjectVisibility! @rename(attribute: "public")
 
   "A boolean indicating whether authenticated submissions are required."
   authenticateSubmissions: Boolean! @rename(attribute: "authenticatesubmissions")
-
-  "A LDAP group users must be a member of to access the project."
-  ldapFilter: String @deprecated(reason: "This field will be removed in the next major version of CDash.") @rename(attribute: "ldapfilter")
 }
 
 
@@ -846,18 +834,6 @@ type Build {
     filters: _ @filter
   ): [BuildError!]! @hasMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)
 
-  # TODO: Make an "errors" field which returns the union of basic and rich errors
-  """
-  A list of "basic" errors submitted for this build.
-  """
-  basicErrors: [BasicBuildAlert!]! @hasMany(type: CONNECTION) @orderBy(column: "id", direction: DESC) @deprecated(reason: "This field will be removed in the next major version of CDash.  Use buildErrors instead.")
-
-  # TODO: Make a "warnings" field which returns the union of basic and rich warnings
-  """
-  A list of "basic" warnings submitted for this build.
-  """
-  basicWarnings: [BasicBuildAlert!]! @hasMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)  @deprecated(reason: "This field will be removed in the next major version of CDash.  Use buildErrors instead.")
-
   project: Project! @belongsTo
 
   notes: [Note!]! @belongsToMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)
@@ -881,10 +857,6 @@ type Build {
   children(
     filters: _ @filter
   ): [Build!]! @hasMany(type: CONNECTION) @orderBy(column: "id")
-
-  coverageResults(
-    filters: _ @filter
-  ): [Coverage!]! @belongsToMany(type: CONNECTION, relation: "coverage") @orderBy(column: "id", direction: DESC) @deprecated(reason: "Use 'coverage' instead.")
 
   coverage(
     filters: _ @filter

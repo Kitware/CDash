@@ -55,7 +55,6 @@ class CreateProjectTest extends TestCase
             'input' => [
                 'name' => $name,
                 'description' => 'test',
-                'homeUrl' => 'https://cdash.org',
                 'visibility' => 'PUBLIC',
                 'authenticateSubmissions' => false,
             ],
@@ -83,7 +82,6 @@ class CreateProjectTest extends TestCase
             'input' => [
                 'name' => $name,
                 'description' => 'test',
-                'homeUrl' => 'https://cdash.org',
                 'visibility' => 'PUBLIC',
                 'authenticateSubmissions' => false,
             ],
@@ -111,7 +109,6 @@ class CreateProjectTest extends TestCase
             'input' => [
                 'name' => $name,
                 'description' => 'test',
-                'homeUrl' => 'https://cdash.org',
                 'visibility' => 'PUBLIC',
                 'authenticateSubmissions' => false,
             ],
@@ -141,7 +138,6 @@ class CreateProjectTest extends TestCase
             'input' => [
                 'name' => $name,
                 'description' => 'test',
-                'homeUrl' => 'https://cdash.org',
                 'visibility' => 'PUBLIC',
                 'authenticateSubmissions' => false,
             ],
@@ -178,7 +174,6 @@ class CreateProjectTest extends TestCase
             'input' => [
                 'name' => $name,
                 'description' => 'test',
-                'homeUrl' => 'https://cdash.org',
                 'visibility' => 'PUBLIC',
                 'authenticateSubmissions' => false,
             ],
@@ -253,7 +248,6 @@ class CreateProjectTest extends TestCase
             'input' => [
                 'name' => $name,
                 'description' => 'test',
-                'homeUrl' => 'https://cdash.org',
                 'visibility' => $visibility,
                 'authenticateSubmissions' => false,
             ],
@@ -326,7 +320,6 @@ class CreateProjectTest extends TestCase
             'input' => [
                 'name' => $name,
                 'description' => 'test',
-                'homeUrl' => 'https://cdash.org',
                 'visibility' => 'PUBLIC',
                 'authenticateSubmissions' => $use_authenticated_submits,
             ],
