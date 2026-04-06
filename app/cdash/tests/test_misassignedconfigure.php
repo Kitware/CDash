@@ -2,6 +2,7 @@
 
 require_once __DIR__ . '/cdash_test_case.php';
 
+use App\Models\BuildConfigure;
 use CDash\Model\Project;
 use Illuminate\Support\Facades\DB;
 
@@ -48,10 +49,8 @@ class MisassignedConfigureTestCase extends KWWebTestCase
         $parentid = $parent_builds[0]->id;
 
         // Verify expected configure output.
-        $this->get("{$this->url}/api/v1/viewConfigure.php?buildid={$parentid}");
-        $content = $this->getBrowser()->getContent();
-        $jsonobj = json_decode($content, true);
-        if (count($jsonobj['configures']) !== 1) {
+        $configure_count = BuildConfigure::where('buildid', (int) $parentid)->count();
+        if ($configure_count !== 1) {
             $this->fail('Did not find one configure record when expected');
         }
         $this->deleteLog($this->logfilename);

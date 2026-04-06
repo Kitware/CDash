@@ -72,17 +72,6 @@ class CDashTest extends TestCase
             ->assertStatus(404);
     }
 
-    public function testRedirects(): void
-    {
-        URL::forceRootUrl('http://localhost');
-
-        $response = $this->call('GET', '/buildSummary.php', ['buildid' => '2']);
-        $response->assertRedirect('/builds/2');
-
-        $response = $this->call('GET', '/viewConfigure.php', ['buildid' => '5']);
-        $response->assertRedirect('/builds/5/configure');
-    }
-
     public function testOverrideLoginField(): void
     {
         URL::forceRootUrl('http://localhost');

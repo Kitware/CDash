@@ -573,11 +573,8 @@ set_tests_properties(querytests PROPERTIES DEPENDS projectmodel)
 add_php_test(testoverview)
 set_tests_properties(testoverview PROPERTIES DEPENDS querytests)
 
-add_php_test(viewconfigure)
-set_tests_properties(viewconfigure PROPERTIES DEPENDS testoverview)
-
 add_php_test(viewdynamicanalysis)
-set_tests_properties(viewdynamicanalysis PROPERTIES DEPENDS viewconfigure)
+set_tests_properties(viewdynamicanalysis PROPERTIES DEPENDS testoverview)
 
 add_php_test(viewdynamicanalysisfile)
 set_tests_properties(viewdynamicanalysisfile PROPERTIES DEPENDS viewdynamicanalysis)
