@@ -55,7 +55,6 @@ class RouteAccessTest extends TestCase
     public static function protectedRoutes(): array
     {
         return [
-            ['/user'],
             ['/profile'],
             ['/subscribeProject.php'],
         ];

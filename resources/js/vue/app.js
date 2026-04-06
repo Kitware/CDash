@@ -13,7 +13,6 @@ const app = Vue.createApp({
     BuildNotesPage: Vue.defineAsyncComponent(() => import('./components/BuildNotesPage.vue')),
     BuildSummary: Vue.defineAsyncComponent(() => import('./components/BuildSummary')),
     BuildUpdate: Vue.defineAsyncComponent(() => import('./components/BuildUpdate')),
-    UserHomepage: Vue.defineAsyncComponent(() => import('./components/UserHomepage')),
     ManageAuthTokens: Vue.defineAsyncComponent(() => import('./components/ManageAuthTokens.vue')),
     ManageMeasurements: Vue.defineAsyncComponent(() => import('./components/ManageMeasurements')),
     Monitor: Vue.defineAsyncComponent(() => import('./components/Monitor')),

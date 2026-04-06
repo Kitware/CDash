@@ -295,8 +295,8 @@ Route::get('/invitations/{invitationId}', GlobalInvitationController::class)
 // The user must be logged in to access routes in this section.
 // Requests from users who are not logged in will be redirected to /login.
 Route::middleware(['auth'])->group(function (): void {
-    Route::get('/user', 'UserController@userPage');
-    Route::permanentRedirect('/user.php', url('/user'));
+    Route::permanentRedirect('/user', url('/projects'));
+    Route::permanentRedirect('/user.php', url('/projects'));
 
     // TODO: (williamjallen) send the POST route to a different function
     Route::match(['get', 'post'], '/profile', 'UserController@edit');
