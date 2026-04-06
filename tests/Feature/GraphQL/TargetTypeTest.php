@@ -236,7 +236,7 @@ class TargetTypeTest extends TestCase
         $command = $build->commands()->create([
             'type' => BuildCommandType::CUSTOM,
             'starttime' => Carbon::now(),
-            'duration' => 0,
+            'duration' => 5,
             'command' => '',
             'result' => '',
             'workingdirectory' => Str::uuid()->toString(),
@@ -250,6 +250,7 @@ class TargetTypeTest extends TestCase
                     targets {
                         edges {
                             node {
+                                cumulativeDuration
                                 commands {
                                     edges {
                                         node {
@@ -280,6 +281,7 @@ class TargetTypeTest extends TestCase
                         'edges' => [
                             [
                                 'node' => [
+                                    'cumulativeDuration' => $command->duration,
                                     'commands' => [
                                         'edges' => [
                                             [

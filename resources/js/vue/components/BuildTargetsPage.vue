@@ -38,9 +38,15 @@
               name: 'type',
               displayName: 'Type',
             },
+            {
+              name: 'duration',
+              displayName: 'Duration',
+            },
           ]"
           :rows="formattedTargetRows"
           :full-width="true"
+          :initial-sort-asc="false"
+          initial-sort-column="duration"
           test-id="targets-table"
         />
       </LoadingIndicator>
@@ -57,6 +63,7 @@ import gql from 'graphql-tag';
 import FilterBuilder from './shared/FilterBuilder.vue';
 import CommandGanttChart from './shared/CommandGanttChart.vue';
 import { DateTime, Duration } from 'luxon';
+import Utils from './shared/Utils';
 
 export default {
   components: {
@@ -98,6 +105,7 @@ export default {
                   id
                   name
                   type
+                  cumulativeDuration
                 }
               }
             }
@@ -111,6 +119,7 @@ export default {
                         id
                         name
                         type
+                        cumulativeDuration
                       }
                     }
                   }
@@ -212,6 +221,10 @@ export default {
           type: {
             value: edge.node.type,
             text: this.humanReadableTargetType(edge.node.type),
+          },
+          duration: {
+            value: edge.node.cumulativeDuration,
+            text: Utils.formatDuration(edge.node.cumulativeDuration),
           },
         };
       });

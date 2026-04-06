@@ -1343,6 +1343,11 @@ type Target {
   """
   type: TargetType! @filterable
 
+  """
+  The sum of commands.duration, in integer milliseconds.
+  """
+  cumulativeDuration: NonNegativeIntegerMilliseconds @aggregate(relation: "commands", column: "duration", function: SUM)
+
   commands(
     filters: _ @filter
   ): [BuildCommand!]! @hasMany(type: CONNECTION) @orderBy(column: "id", direction: ASC)
