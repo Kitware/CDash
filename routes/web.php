@@ -314,17 +314,6 @@ Route::middleware(['auth'])->group(function (): void {
         return redirect("/projects/$projectid/members", 301);
     });
 
-    Route::match(['get', 'post'], '/editSite.php', function (Request $request) {
-        if ($request->has('siteid')) {
-            $siteid = $request->integer('siteid');
-            return redirect("/sites/$siteid", 301);
-        } elseif ($request->has('projectid')) {
-            $projectid = $request->integer('projectid');
-            return redirect("/projects/$projectid/sites", 301);
-        }
-        return redirect('/sites', 301);
-    });
-
     Route::get('/projects/{projectId}/invitations/{invitationId}', ProjectInvitationController::class)
         ->whereNumber('projectId')
         ->whereNumber('invitationId');
@@ -336,11 +325,6 @@ Route::middleware(['auth'])->group(function (): void {
 
         Route::get('/removeBuilds.php', 'AdminController@removeBuilds');
         Route::post('/removeBuilds.php', 'AdminController@removeBuilds');
-
-        // TODO: (williamjallen) Move this out of the admin-only section, and instead query only
-        //       the sites a given user is able to see.
-        Route::get('/sites', 'SiteController@siteStatistics');
-        Route::permanentRedirect('/siteStatistics.php', url('/sites'));
 
         Route::get('/monitor', 'MonitorController@monitor');
         Route::get('/monitor.php', fn () => redirect('/monitor', 301));

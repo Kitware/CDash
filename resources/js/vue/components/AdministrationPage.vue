@@ -17,11 +17,6 @@
         :icon="FA.faKey"
       />
       <administration-page-card
-        href="/sites"
-        title="Site Statistics"
-        :icon="FA.faChartBar"
-      />
-      <administration-page-card
         href="/removeBuilds.php"
         title="Remove Builds"
         :icon="FA.faTrashCan"

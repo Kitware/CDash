@@ -2326,12 +2326,6 @@ parameters:
 			path: app/Http/Controllers/RemoteProcessingController.php
 
 		-
-			rawMessage: 'Method App\Http\Controllers\SiteController::siteStatistics() never returns Illuminate\Http\RedirectResponse so it can be removed from the return type.'
-			identifier: return.unusedType
-			count: 1
-			path: app/Http/Controllers/SiteController.php
-
-		-
 			rawMessage: '''
 				Call to deprecated function pdo_real_escape_string():
 				04/01/2023
