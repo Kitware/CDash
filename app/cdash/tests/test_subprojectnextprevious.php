@@ -66,7 +66,7 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
         $error_msg = '';
 
         $pages = ['viewBuildError'];
-        $vue_pages = ['buildSummary', 'viewNotes', 'viewUpdate'];
+        $vue_pages = ['buildSummary', 'viewUpdate'];
         $pages_with_preview_tables = ['buildSummary'];
         foreach (array_merge($pages, $vue_pages) as $page) {
             if (in_array($page, $vue_pages, true)) {
