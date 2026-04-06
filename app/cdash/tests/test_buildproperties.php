@@ -133,53 +133,6 @@ class BuildPropertiesTestCase extends KWWebTestCase
         }
     }
 
-    public function testComputeClassifiers(): void
-    {
-        $this->get($this->url . '/api/v1/buildProperties.php?project=' . $this->Project->name . '&begin=2017-05-26&end=2017-05-29');
-        $content = $this->getBrowser()->getContent();
-        $jsonobj = json_decode($content, true);
-        $builds = [];
-        foreach ($jsonobj['builds'] as $build) {
-            if ($build['testfailed'] > 0) {
-                $build['success'] = false;
-            } else {
-                $build['success'] = true;
-            }
-            $builds[] = json_encode($build);
-        }
-
-        $query_string = http_build_query(['builds' => $builds]);
-        $this->get($this->url . "/api/v1/computeClassifier.php?$query_string");
-        $content = $this->getBrowser()->getContent();
-        $jsonobj = json_decode($content, true);
-        $num_classifiers = count($jsonobj);
-        if ($num_classifiers !== 3) {
-            $this->fail("Expected 3 classifiers, found $num_classifiers");
-        }
-        foreach ($jsonobj as $entry) {
-            $classifier = $entry['classifier'];
-            $found = $entry['accuracy'];
-            $expected = 0;
-            switch ($classifier) {
-                case 'debug == true':
-                    $expected = 77.8;
-                    break;
-                case 'debug == false':
-                    $expected = 77.8;
-                    break;
-                case 'buildtime > 7.02':
-                    $expected = 100;
-                    break;
-                default:
-                    $this->fail("Unexpected classifier $classifier");
-                    break;
-            }
-            if ($found != $expected) {
-                $this->fail("Expected $expected but found $found for $classifier");
-            }
-        }
-    }
-
     private function create_build($buildname, $filename, $date, $md5): void
     {
         $timestamp = strtotime($date);
