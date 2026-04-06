@@ -67,12 +67,6 @@ running simultaneously. This is particularly useful for CDash instances that
 receive heavy submission traffic, particularly if some of those submissions
 contain lots of data that can take a long time to parse.
 
-### Remote workers
-
-CDash supports queue workers that run on a separate system from the main CDash
-web service. To use this feature, set `REMOTE_WORKERS=true` in the .env file
-for both the CDash web service and the remote worker(s).
-
 ## Deferred submissions
 
 CDash automatically detects when its database is unavailable and stores submissions received during this outage. When database access is restored, CDash will attempt to parse the submissions that were received during the outage. This behavior is controlled by the presence of the file named `DB_WAS_DOWN` in the storage directory.

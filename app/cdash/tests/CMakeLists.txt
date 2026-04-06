@@ -265,11 +265,6 @@ add_feature_test_in_transaction(/Feature/Jobs/PruneAuthTokensTest)
 
 add_feature_test_in_transaction(/Feature/UserCommand)
 
-add_feature_test_in_transaction(/Feature/RemoteWorkers)
-set_property(TEST /Feature/RemoteWorkers APPEND PROPERTY
-    DISABLED "$<NOT:$<STREQUAL:${CDASH_STORAGE_TYPE},local>>"
-)
-
 add_feature_test_in_transaction(/Feature/Jobs/NotifyExpiringAuthTokensTest)
 
 add_feature_test_in_transaction(/Feature/Jobs/PruneUploadsTest)

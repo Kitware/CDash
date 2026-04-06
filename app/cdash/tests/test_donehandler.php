@@ -27,30 +27,6 @@ class DoneHandlerTestCase extends KWWebTestCase
         $this->performTest();
     }
 
-    public function testDoneHandlerRemote(): void
-    {
-        if (config('filesystems.default') !== 'local') {
-            // Skip this test case if we're already testing remote storage.
-            return;
-        }
-
-        $this->ConfigFile = __DIR__ . '/../../../.env';
-        $this->Original = file_get_contents($this->ConfigFile);
-
-        config(['cdash.remote_workers' => 'true']);
-        config(['queue.default' => 'database']);
-        file_put_contents($this->ConfigFile, "QUEUE_CONNECTION=database\n", FILE_APPEND | LOCK_EX);
-        file_put_contents($this->ConfigFile, "QUEUE_RETRY_BASE=0\n", FILE_APPEND | LOCK_EX);
-        file_put_contents($this->ConfigFile, "REMOTE_WORKERS=true\n", FILE_APPEND | LOCK_EX);
-
-        $this->performTest(true);
-
-        // Verify that we didn't leave any files behind in the inbox directory.
-        $this->assertEqual(count(Storage::files('inbox')), 0);
-
-        file_put_contents($this->ConfigFile, $this->Original);
-    }
-
     private function performTest($remote = false): void
     {
         // Make a build.

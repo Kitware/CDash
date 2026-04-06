@@ -80,46 +80,16 @@ class ProcessSubmission implements ShouldQueue
 
     private function renameSubmissionFile($src, $dst): bool
     {
-        if (config('cdash.remote_workers')) {
-            /** @var string $app_key */
-            $app_key = config('app.key', '');
-            return Http::withToken($app_key)->delete(url('/api/internal/deleteSubmissionFile'), [
-                'filename' => $src,
-                'dest' => $dst,
-            ])->ok();
-        }
         return Storage::move($src, $dst);
     }
 
     private function deleteSubmissionFile($filename): bool
     {
-        if (config('cdash.remote_workers')) {
-            /** @var string $app_key */
-            $app_key = config('app.key', '');
-            return Http::withToken($app_key)->delete(url('/api/internal/deleteSubmissionFile'), [
-                'filename' => $filename,
-            ])->ok();
-        }
         return Storage::delete($filename);
     }
 
     private function requeueSubmissionFile($buildid): bool
     {
-        if (config('cdash.remote_workers')) {
-            /** @var string $app_key */
-            $app_key = config('app.key', '');
-            $response = Http::withToken($app_key)->post(url('/api/internal/requeueSubmissionFile'), [
-                'filename' => $this->filename,
-                'buildid' => $buildid,
-                'projectid' => $this->projectid,
-                'md5' => $this->expected_md5,
-            ]);
-            if ($this->localFilename !== '') {
-                unlink($this->localFilename);
-                $this->localFilename = '';
-            }
-            return $response->ok();
-        }
         // Increment retry count.
         $retry_handler = new RetryHandler("inprogress/{$this->filename}");
         $retry_handler->increment();
@@ -179,11 +149,6 @@ class ProcessSubmission implements ShouldQueue
             $this->renameSubmissionFile("inprogress/{$this->filename}", "parsed/{$handler->backupFileName}");
         }
 
-        if ((bool) config('cdash.remote_workers') && $this->localFilename !== '') {
-            unlink($this->localFilename);
-            $this->localFilename = '';
-        }
-
         unset($handler);
         $handler = null;
 
@@ -205,11 +170,6 @@ class ProcessSubmission implements ShouldQueue
             $this->renameSubmissionFile("inprogress/{$this->filename}", "failed/{$this->filename}");
         } catch (UnableToMoveFile $e) {
             report($e);
-        }
-
-        if ((bool) config('cdash.remote_workers') && $this->localFilename !== '') {
-            unlink($this->localFilename);
-            $this->localFilename = '';
         }
     }
 
@@ -279,45 +239,9 @@ class ProcessSubmission implements ShouldQueue
         return $handler;
     }
 
-    /**
-     * Given a filename, query the CDash API for its contents and return
-     * a read-only file handle.
-     * This is used by workers running on other machines that need access to build xml.
-     **/
-    private function getRemoteSubmissionFileHandle($filename)
-    {
-        $ext = pathinfo($filename, PATHINFO_EXTENSION);
-        $_t = tempnam(Storage::path('inbox'), 'cdash-submission-');
-        $this->localFilename = "{$_t}.{$ext}";
-        rename($_t, $this->localFilename);
-
-        /** @var string $app_key */
-        $app_key = config('app.key', '');
-        $response = Http::withToken($app_key)->get(url('/api/internal/getSubmissionFile'), [
-            'filename' => $filename,
-        ]);
-
-        if ($response->status() === 200) {
-            // TODO: It's probably possible to use a streaming approach for this instead.
-            // The file could be read directly from the stream without needing to explicitly save it somewhere.
-            if (!Storage::put('inbox/' . basename($this->localFilename), $response->body())) {
-                Log::warning('Failed to write file to inbox.');
-                return false;
-            }
-
-            return fopen($this->localFilename, 'r');
-        }
-        // Log the status code and requested filename.
-        // (404 status means it's already been processed).
-        Log::warning('Failed to retrieve a file handle from filename ' . $filename . '(' . $response->status() . ')');
-        return false;
-    }
-
     private function getSubmissionFileHandle($filename)
     {
-        if ((bool) config('cdash.remote_workers') && is_string($filename)) {
-            return $this->getRemoteSubmissionFileHandle($filename);
-        } elseif (Storage::exists($filename)) {
+        if (Storage::exists($filename)) {
             return Storage::readStream($filename);
         }
         Log::error('Failed to get a file handle for submission (was type ' . gettype($filename) . ')');
