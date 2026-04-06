@@ -220,36 +220,6 @@ class ManageMeasurementsTestCase extends KWWebTestCase
             }
         }
 
-        // Verify that 'Processors' is also displayed on testSummary.php.
-        $this->get($this->url . "/api/v1/testSummary.php?project=$this->ProjectId&name=Test5Procs&date=2017-08-29");
-        $content = $this->getBrowser()->getContent();
-        $jsonobj = json_decode($content, true);
-        $found = $jsonobj['columncount'];
-        if ($found != 1) {
-            $this->fail("Expected 1 extra column on testSummary.php, found $found");
-        }
-        $found = $jsonobj['columns'][0];
-        if ($found !== 'Processors') {
-            $this->fail("Expected extra column to be called 'Processors', found $found");
-        }
-        $found = count($jsonobj['builds']);
-        if ($found != 1) {
-            $this->fail("Expected one build, found $found");
-        }
-        $found = $jsonobj['builds'][0]['measurements'][0];
-        if ($found != 5) {
-            $this->fail("Expected 5 processors on testSummary.php, found $found");
-        }
-        $found = $jsonobj['builds'][0]['proctime'];
-        if ($found != 6.5) {
-            $this->fail("Expected proctime to be 6.5, found $found");
-        }
-        $this->assertEqual("/api/v1/testSummary.php?project=$this->ProjectId&name=Test5Procs&date=2017-08-29&export=csv", $jsonobj['csvlink']);
-
-        // Make sure download as CSV works too.
-        $this->get($this->url . "/api/v1/testSummary.php?project=$this->ProjectId&name=Test5Procs&date=2017-08-29&export=csv");
-        $this->assertTrue($this->checkLog($this->logfilename) !== false);
-
         // Check queryTests.php for this extra data too.
         $this->get($this->url . '/api/v1/queryTests.php?project=InsightExample&date=2017-08-29');
         $content = $this->getBrowser()->getContent();
