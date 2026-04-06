@@ -14539,12 +14539,6 @@ parameters:
 			path: app/cdash/include/filterdataFunctions.php
 
 		-
-			rawMessage: 'Function filterdata_XML() has parameter $filterdata with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/include/filterdataFunctions.php
-
-		-
 			rawMessage: 'Function generate_filter_sql() has parameter $filter with no type specified.'
 			identifier: missingType.parameter
 			count: 1
@@ -14558,42 +14552,6 @@ parameters:
 
 		-
 			rawMessage: 'Function generate_filterdata_sql() has parameter $filterdata with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/include/filterdataFunctions.php
-
-		-
-			rawMessage: 'Function getFilterDefinitionXML invoked with 6 parameters, 5 required.'
-			identifier: arguments.count
-			count: 1
-			path: app/cdash/include/filterdataFunctions.php
-
-		-
-			rawMessage: 'Function getFilterDefinitionXML() has parameter $defaultvalue with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/include/filterdataFunctions.php
-
-		-
-			rawMessage: 'Function getFilterDefinitionXML() has parameter $key with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/include/filterdataFunctions.php
-
-		-
-			rawMessage: 'Function getFilterDefinitionXML() has parameter $type with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/include/filterdataFunctions.php
-
-		-
-			rawMessage: 'Function getFilterDefinitionXML() has parameter $uitext with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/include/filterdataFunctions.php
-
-		-
-			rawMessage: 'Function getFilterDefinitionXML() has parameter $valuelist with no type specified.'
 			identifier: missingType.parameter
 			count: 1
 			path: app/cdash/include/filterdataFunctions.php
@@ -14768,12 +14726,6 @@ parameters:
 
 		-
 			rawMessage: 'Method PageSpecificFilters::getDefaultShowLimit() has no return type specified.'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/include/filterdataFunctions.php
-
-		-
-			rawMessage: 'Method PageSpecificFilters::getFilterDefinitionsXML() has no return type specified.'
 			identifier: missingType.return
 			count: 1
 			path: app/cdash/include/filterdataFunctions.php

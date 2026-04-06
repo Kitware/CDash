@@ -17,27 +17,11 @@
 
 use Illuminate\Support\Facades\Log;
 
-function getFilterDefinitionXML($key, $uitext, $type, $valuelist, $defaultvalue): string
-{
-    $xml = '<def>';
-    $xml .= add_XML_value('key', $key);
-    $xml .= add_XML_value('uitext', $uitext);
-    $xml .= add_XML_value('type', $type);
-    // type == bool, enum, number, string, date
-    // (enum not implemented yet...)
-    $xml .= add_XML_value('valuelist', $valuelist);
-    $xml .= add_XML_value('defaultvalue', $defaultvalue);
-    $xml .= '</def>';
-    return $xml;
-}
-
 interface PageSpecificFilters
 {
     public function getDefaultFilter();
 
     public function getDefaultShowLimit();
-
-    public function getFilterDefinitionsXML();
 
     public function getSqlField($field): string;
 }
@@ -55,8 +39,6 @@ abstract class DefaultFilters implements PageSpecificFilters
     {
         return true;
     }
-
-    abstract public function getFilterDefinitionsXML(): string;
 
     abstract public function getSqlField($field): string;
 }
@@ -105,41 +87,6 @@ class IndexPhpFilters extends DefaultFilters
             'compare' => 63,
             'value' => '',
         ];
-    }
-
-    public function getFilterDefinitionsXML(): string
-    {
-        $xml = '';
-
-        $xml .= getFilterDefinitionXML('buildduration', 'Build Duration', 'number', '', '0');
-        $xml .= getFilterDefinitionXML('builderrors', 'Build Errors', 'number', '', '0');
-        $xml .= getFilterDefinitionXML('buildwarnings', 'Build Warnings', 'number', '', '0');
-        $xml .= getFilterDefinitionXML('buildname', 'Build Name', 'string', '', '');
-        $xml .= getFilterDefinitionXML('buildstamp', 'Build Stamp', 'string', '', '');
-        $xml .= getFilterDefinitionXML('buildstarttime', 'Build Start Time', 'date', '', '');
-        $xml .= getFilterDefinitionXML('buildtype', 'Build Type', 'string', '', 'Nightly');
-        $xml .= getFilterDefinitionXML('configureduration', 'Configure Duration', 'number', '', '0');
-        $xml .= getFilterDefinitionXML('configureerrors', 'Configure Errors', 'number', '', '0');
-        $xml .= getFilterDefinitionXML('configurewarnings', 'Configure Warnings', 'number', '', '0');
-        $xml .= getFilterDefinitionXML('expected', 'Expected', 'bool', '', '');
-        $xml .= getFilterDefinitionXML('groupname', 'Group', 'string', '', 'Nightly');
-        $xml .= getFilterDefinitionXML('hascoverage', 'Has Coverage', 'bool', '', '');
-        $xml .= getFilterDefinitionXML('hasctestnotes', 'Has CTest Notes', 'bool', '', '');
-        $xml .= getFilterDefinitionXML('hasdynamicanalysis', 'Has Dynamic Analysis', 'bool', '', '');
-        $xml .= getFilterDefinitionXML('hasusernotes', 'Has User Notes', 'bool', '', '');
-        $xml .= getFilterDefinitionXML('label', 'Label', 'string', '', '');
-        $xml .= getFilterDefinitionXML('revision', 'Revision', 'string', '', '');
-        $xml .= getFilterDefinitionXML('site', 'Site', 'string', '', '');
-        $xml .= getFilterDefinitionXML('buildgenerator', 'Submission Client', 'string', '', '2.8');
-        $xml .= getFilterDefinitionXML('subproject', 'SubProject', 'string', '', '');
-        $xml .= getFilterDefinitionXML('testsduration', 'Tests Duration', 'number', '', '', '0');
-        $xml .= getFilterDefinitionXML('testsfailed', 'Tests Failed', 'number', '', '0');
-        $xml .= getFilterDefinitionXML('testsnotrun', 'Tests Not Run', 'number', '', '0');
-        $xml .= getFilterDefinitionXML('testspassed', 'Tests Passed', 'number', '', '0');
-        $xml .= getFilterDefinitionXML('testtimestatus', 'Tests Timing Failed', 'number', '', '0');
-        $xml .= getFilterDefinitionXML('updateduration', 'Update Duration', 'number', '', '0');
-        $xml .= getFilterDefinitionXML('updatedfiles', 'Updated Files', 'number', '', '0');
-        return $xml;
     }
 
     public function getSqlField($field): string
@@ -358,24 +305,6 @@ class QueryTestsPhpFilters extends DefaultFilters
         ];
     }
 
-    public function getFilterDefinitionsXML(): string
-    {
-        $xml = '';
-
-        $xml .= getFilterDefinitionXML('buildname', 'Build Name', 'string', '', '');
-        $xml .= getFilterDefinitionXML('buildstarttime', 'Build Start Time', 'date', '', '');
-        $xml .= getFilterDefinitionXML('buildtype', 'Build Type', 'string', '', 'Nightly');
-        $xml .= getFilterDefinitionXML('details', 'Details', 'string', '', '');
-        $xml .= getFilterDefinitionXML('groupname', 'Group', 'string', '', 'Nightly');
-        $xml .= getFilterDefinitionXML('label', 'Label', 'string', '', '');
-        $xml .= getFilterDefinitionXML('revision', 'Revision', 'string', '', '');
-        $xml .= getFilterDefinitionXML('site', 'Site', 'string', '', '');
-        $xml .= getFilterDefinitionXML('status', 'Status', 'string', '', '');
-        $xml .= getFilterDefinitionXML('testname', 'Test Name', 'string', '', '');
-        $xml .= getFilterDefinitionXML('time', 'Time', 'number', '', '');
-        return $xml;
-    }
-
     public function getSqlField($field): string
     {
         $sql_field = '';
@@ -460,20 +389,6 @@ class ViewTestPhpFilters extends DefaultFilters
         ];
     }
 
-    public function getFilterDefinitionsXML(): string
-    {
-        $xml = '';
-
-        $xml .= getFilterDefinitionXML('details', 'Details', 'string', '', '');
-        $xml .= getFilterDefinitionXML('label', 'Label', 'string', '', '');
-        $xml .= getFilterDefinitionXML('status', 'Status', 'string', '', '');
-        $xml .= getFilterDefinitionXML('subproject', 'SubProject', 'string', '', '');
-        $xml .= getFilterDefinitionXML('testname', 'Test Name', 'string', '', '');
-        $xml .= getFilterDefinitionXML('timestatus', 'Time Status', 'string', '', '');
-        $xml .= getFilterDefinitionXML('time', 'Time', 'number', '', '');
-        return $xml;
-    }
-
     public function getSqlField($field): string
     {
         $sql_field = '';
@@ -533,13 +448,6 @@ class CompareCoveragePhpFilters extends DefaultFilters
         ];
     }
 
-    public function getFilterDefinitionsXML(): string
-    {
-        $xml = '';
-        $xml .= getFilterDefinitionXML('subproject', 'SubProject', 'string', '', '');
-        return $xml;
-    }
-
     public function getSqlField($field): string
     {
         $sql_field = '';
@@ -566,15 +474,6 @@ class TestOverviewPhpFilters extends DefaultFilters
             'compare' => 63,
             'value' => '',
         ];
-    }
-
-    public function getFilterDefinitionsXML(): string
-    {
-        $xml = '';
-        $xml .= getFilterDefinitionXML('buildname', 'Build Name', 'string', '', '');
-        $xml .= getFilterDefinitionXML('subproject', 'SubProject', 'string', '', '');
-        $xml .= getFilterDefinitionXML('testname', 'Test Name', 'string', '', '');
-        return $xml;
     }
 
     public function getSqlField($field): string
@@ -635,62 +534,6 @@ function createPageSpecificFilters($page_id)
                 E_USER_WARNING);
             throw new InvalidArgumentException('Invalid $page_id provided.');
     }
-}
-
-// Take a php $filterdata structure and return it as an XML string representation
-//
-function filterdata_XML($filterdata): string
-{
-    $debug = $filterdata['debug']; // '0' or '1' -- shows debug info in HTML output
-    $filtercombine = $filterdata['filtercombine']; // 'OR' or 'AND'
-    $filters = $filterdata['filters']; // an array
-    $limit = $filterdata['limit']; // an integer
-    $pageId = $filterdata['pageId']; // id of the "calling page"...
-    $pageSpecificFilters = $filterdata['pageSpecificFilters']; // an instance of PageSpecificFilters
-    $showfilters = $filterdata['showfilters']; // 0 or 1
-    $showlimit = $filterdata['showlimit']; // 0 or 1
-    $colorblind = $filterdata['colorblind']; // 0 or 1
-
-    $xml = '<filterdata>';
-    $xml .= add_XML_value('debug', $debug);
-    $xml .= add_XML_value('filtercombine', $filtercombine);
-    $xml .= add_XML_value('limit', $limit);
-    $xml .= add_XML_value('pageId', $pageId);
-    $xml .= add_XML_value('script', $_SERVER['SCRIPT_NAME']);
-    $xml .= add_XML_value('showfilters', $showfilters);
-    $xml .= add_XML_value('showlimit', $showlimit);
-    $xml .= add_XML_value('colorblind', $colorblind);
-
-    $xml .= '<filterdefinitions>';
-    $xml .= $pageSpecificFilters->getFilterDefinitionsXML();
-    $xml .= '</filterdefinitions>';
-
-    $xml .= '<filters>';
-
-    foreach ($filters as $filter) {
-        if (array_key_exists('filters', $filter)) {
-            $xml .= '<filter>';
-            foreach ($filter['filters'] as $subfilter) {
-                $xml .= '<subfilter>';
-                $xml .= add_XML_value('field', $subfilter['field']);
-                $xml .= add_XML_value('compare', $subfilter['compare']);
-                $xml .= add_XML_value('value', $subfilter['value']);
-                $xml .= '</subfilter>';
-            }
-            $xml .= '</filter>';
-        } else {
-            $xml .= '<filter>';
-            $xml .= add_XML_value('field', $filter['field']);
-            $xml .= add_XML_value('compare', $filter['compare']);
-            $xml .= add_XML_value('value', $filter['value']);
-            $xml .= '</filter>';
-        }
-    }
-
-    $xml .= '</filters>';
-
-    $xml .= '</filterdata>';
-    return $xml;
 }
 
 function get_sql_date_value($value): string
@@ -1025,9 +868,6 @@ function get_filterdata_from_request($page_id = ''): array
     }
 
     $filterdata['sql'] = generate_filterdata_sql($filterdata);
-
-    $xml = filterdata_XML($filterdata);
-    $filterdata['xml'] = $xml;
 
     return $filterdata;
 }
