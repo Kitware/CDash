@@ -13,7 +13,7 @@ function(add_cypress_e2e_test TestName)
   set_tests_properties(cypress/e2e/${TestName} PROPERTIES
     ENVIRONMENT "HOME=${CDash_BINARY_DIR};"
     DISABLED "$<STREQUAL:${CDASH_IMAGE},ubi>"
-    RESOURCE_LOCK "cypress;APP_URL" # Cypress can only run one at a time due to xvfb issues and needs a consistent APP_URL
+    RESOURCE_LOCK "cypress" # Cypress can only run one at a time due to xvfb issues
     PROCESSORS 2
     ATTACHED_FILES_ON_FAIL "${CDash_SOURCE_DIR}/storage/logs/cdash.log"
   )
@@ -21,7 +21,7 @@ endfunction()
 
 # These tests have the correct dependencies set up
 add_cypress_e2e_test(user-profile)
-set_tests_properties(cypress/e2e/user-profile PROPERTIES DEPENDS install_1)
+set_tests_properties(cypress/e2e/user-profile PROPERTIES DEPENDS install_2)
 
 add_cypress_e2e_test(query-tests)
 set_tests_properties(cypress/e2e/query-tests PROPERTIES DEPENDS cypress/e2e/remove-build)
