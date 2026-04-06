@@ -127,12 +127,6 @@ parameters:
 			path: app/Console/Commands/SaveUser.php
 
 		-
-			rawMessage: Variable property access on App\Models\User.
-			identifier: property.dynamicName
-			count: 1
-			path: app/Console/Commands/SaveUser.php
-
-		-
 			rawMessage: 'PHPDoc type array of property App\Exceptions\Handler::$dontFlash is not the same as PHPDoc type array<int, string> of overridden property Illuminate\Foundation\Exceptions\Handler::$dontFlash.'
 			identifier: property.phpDocType
 			count: 1
@@ -757,13 +751,25 @@ parameters:
 			path: app/Http/Controllers/BuildController.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between mixed and int is not allowed.'
 			identifier: notEqual.notAllowed
-			count: 3
+			count: 1
 			path: app/Http/Controllers/BuildController.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between mixed and string is not allowed.'
+			identifier: notEqual.notAllowed
+			count: 1
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			rawMessage: 'Loose comparison via "!=" between string and string is not allowed.'
+			identifier: notEqual.notAllowed
+			count: 1
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between string and string is not allowed.'
 			identifier: equal.notAllowed
 			count: 1
 			path: app/Http/Controllers/BuildController.php
@@ -1336,15 +1342,81 @@ parameters:
 			path: app/Http/Controllers/CoverageController.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between (float|int) and float is not allowed.'
 			identifier: notEqual.notAllowed
+			count: 1
+			path: app/Http/Controllers/CoverageController.php
+
+		-
+			rawMessage: 'Loose comparison via "!=" between int and int is not allowed.'
+			identifier: notEqual.notAllowed
+			count: 1
+			path: app/Http/Controllers/CoverageController.php
+
+		-
+			rawMessage: 'Loose comparison via "!=" between mixed and string is not allowed.'
+			identifier: notEqual.notAllowed
+			count: 4
+			path: app/Http/Controllers/CoverageController.php
+
+		-
+			rawMessage: 'Loose comparison via "!=" between string and string is not allowed.'
+			identifier: notEqual.notAllowed
+			count: 1
+			path: app/Http/Controllers/CoverageController.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between (float|int) and float is not allowed.'
+			identifier: equal.notAllowed
+			count: 1
+			path: app/Http/Controllers/CoverageController.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between float|int|string and float is not allowed.'
+			identifier: equal.notAllowed
 			count: 7
 			path: app/Http/Controllers/CoverageController.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "==" between int and int is not allowed.'
 			identifier: equal.notAllowed
-			count: 43
+			count: 16
+			path: app/Http/Controllers/CoverageController.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between int<min, -2>|int<0, max> and int is not allowed.'
+			identifier: equal.notAllowed
+			count: 1
+			path: app/Http/Controllers/CoverageController.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between mixed and int is not allowed.'
+			identifier: equal.notAllowed
+			count: 5
+			path: app/Http/Controllers/CoverageController.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between mixed and mixed is not allowed.'
+			identifier: equal.notAllowed
+			count: 9
+			path: app/Http/Controllers/CoverageController.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between mixed and null is not allowed.'
+			identifier: equal.notAllowed
+			count: 1
+			path: app/Http/Controllers/CoverageController.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between string and float is not allowed.'
+			identifier: equal.notAllowed
+			count: 2
+			path: app/Http/Controllers/CoverageController.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between string|null and string is not allowed.'
+			identifier: equal.notAllowed
+			count: 1
 			path: app/Http/Controllers/CoverageController.php
 
 		-
@@ -1624,6 +1696,12 @@ parameters:
 			path: app/Http/Controllers/DynamicAnalysisController.php
 
 		-
+			rawMessage: 'Possibly invalid array key type int<0, max>|false.'
+			identifier: offsetAccess.invalidOffset
+			count: 1
+			path: app/Http/Controllers/DynamicAnalysisController.php
+
+		-
 			rawMessage: Cannot cast mixed to int.
 			identifier: cast.int
 			count: 3
@@ -1774,7 +1852,7 @@ parameters:
 			path: app/Http/Controllers/ProjectController.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "==" between int<0, max> and int is not allowed.'
 			identifier: equal.notAllowed
 			count: 1
 			path: app/Http/Controllers/ProjectController.php
@@ -1876,7 +1954,7 @@ parameters:
 			path: app/Http/Controllers/ProjectOverviewController.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "==" between mixed and mixed is not allowed.'
 			identifier: equal.notAllowed
 			count: 2
 			path: app/Http/Controllers/ProjectOverviewController.php
@@ -2242,13 +2320,7 @@ parameters:
 			path: app/Http/Controllers/ProjectOverviewController.php
 
 		-
-			rawMessage: Variable property access on mixed.
-			identifier: property.dynamicName
-			count: 4
-			path: app/Http/Controllers/ProjectOverviewController.php
-
-		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "==" between bool|int|string and int is not allowed.'
 			identifier: equal.notAllowed
 			count: 1
 			path: app/Http/Controllers/RemoteProcessingController.php
@@ -2497,9 +2569,15 @@ parameters:
 			path: app/Http/Controllers/TestController.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between mixed and string is not allowed.'
 			identifier: notEqual.notAllowed
-			count: 2
+			count: 1
+			path: app/Http/Controllers/TestController.php
+
+		-
+			rawMessage: 'Loose comparison via "!=" between string and string is not allowed.'
+			identifier: notEqual.notAllowed
+			count: 1
 			path: app/Http/Controllers/TestController.php
 
 		-
@@ -2523,6 +2601,12 @@ parameters:
 		-
 			rawMessage: 'Parameter #2 $timestamp of function gmdate expects int|null, (float|int) given.'
 			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/TestController.php
+
+		-
+			rawMessage: 'Possibly invalid array key type int<0, max>|false.'
+			identifier: offsetAccess.invalidOffset
 			count: 1
 			path: app/Http/Controllers/TestController.php
 
@@ -2971,7 +3055,7 @@ parameters:
 			path: app/Http/Submission/Handlers/AbstractXmlHandler.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "==" between string and string is not allowed.'
 			identifier: equal.notAllowed
 			count: 1
 			path: app/Http/Submission/Handlers/AbstractXmlHandler.php
@@ -3148,9 +3232,15 @@ parameters:
 			path: app/Http/Submission/Handlers/BazelJSONHandler.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "==" between (int|string) and string is not allowed.'
 			identifier: equal.notAllowed
-			count: 2
+			count: 1
+			path: app/Http/Submission/Handlers/BazelJSONHandler.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between string and string is not allowed.'
+			identifier: equal.notAllowed
+			count: 1
 			path: app/Http/Submission/Handlers/BazelJSONHandler.php
 
 		-
@@ -3544,18 +3634,6 @@ parameters:
 			path: app/Http/Submission/Handlers/BuildHandler.php
 
 		-
-			rawMessage: Variable property access on CDash\Model\BuildError|CDash\Model\BuildFailure.
-			identifier: property.dynamicName
-			count: 3
-			path: app/Http/Submission/Handlers/BuildHandler.php
-
-		-
-			rawMessage: Variable property access on CDash\Model\BuildFailure.
-			identifier: property.dynamicName
-			count: 9
-			path: app/Http/Submission/Handlers/BuildHandler.php
-
-		-
 			rawMessage: 'Method App\Http\Submission\Handlers\BuildPropertiesJSONHandler::Parse() has parameter $filename with no type specified.'
 			identifier: missingType.parameter
 			count: 1
@@ -3628,7 +3706,7 @@ parameters:
 			path: app/Http/Submission/Handlers/ConfigureHandler.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "==" between mixed and int is not allowed.'
 			identifier: equal.notAllowed
 			count: 1
 			path: app/Http/Submission/Handlers/ConfigureHandler.php
@@ -3787,9 +3865,15 @@ parameters:
 			path: app/Http/Submission/Handlers/CoverageHandler.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "==" between mixed and int is not allowed.'
 			identifier: equal.notAllowed
-			count: 3
+			count: 2
+			path: app/Http/Submission/Handlers/CoverageHandler.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between mixed and string is not allowed.'
+			identifier: equal.notAllowed
+			count: 1
 			path: app/Http/Submission/Handlers/CoverageHandler.php
 
 		-
@@ -3895,7 +3979,7 @@ parameters:
 			path: app/Http/Submission/Handlers/CoverageJUnitHandler.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "==" between mixed and int is not allowed.'
 			identifier: equal.notAllowed
 			count: 1
 			path: app/Http/Submission/Handlers/CoverageJUnitHandler.php
@@ -4006,7 +4090,7 @@ parameters:
 			path: app/Http/Submission/Handlers/CoverageLogHandler.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "==" between mixed and int is not allowed.'
 			identifier: equal.notAllowed
 			count: 1
 			path: app/Http/Submission/Handlers/CoverageLogHandler.php
@@ -4210,7 +4294,7 @@ parameters:
 			path: app/Http/Submission/Handlers/DynamicAnalysisHandler.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "==" between mixed and int is not allowed.'
 			identifier: equal.notAllowed
 			count: 1
 			path: app/Http/Submission/Handlers/DynamicAnalysisHandler.php
@@ -4528,9 +4612,15 @@ parameters:
 			path: app/Http/Submission/Handlers/JSCoverTarHandler.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "==" between mixed and int is not allowed.'
 			identifier: equal.notAllowed
-			count: 2
+			count: 1
+			path: app/Http/Submission/Handlers/JSCoverTarHandler.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between mixed and string is not allowed.'
+			identifier: equal.notAllowed
+			count: 1
 			path: app/Http/Submission/Handlers/JSCoverTarHandler.php
 
 		-
@@ -4624,7 +4714,7 @@ parameters:
 			path: app/Http/Submission/Handlers/JavaJSONTarHandler.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "==" between mixed and string is not allowed.'
 			identifier: equal.notAllowed
 			count: 1
 			path: app/Http/Submission/Handlers/JavaJSONTarHandler.php
@@ -4690,13 +4780,13 @@ parameters:
 			path: app/Http/Submission/Handlers/NoteHandler.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between string and string is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 2
 			path: app/Http/Submission/Handlers/NoteHandler.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "==" between mixed and int is not allowed.'
 			identifier: equal.notAllowed
 			count: 1
 			path: app/Http/Submission/Handlers/NoteHandler.php
@@ -4864,9 +4954,15 @@ parameters:
 			path: app/Http/Submission/Handlers/OpenCoverTarHandler.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "==" between mixed and int is not allowed.'
 			identifier: equal.notAllowed
-			count: 2
+			count: 1
+			path: app/Http/Submission/Handlers/OpenCoverTarHandler.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between string and string is not allowed.'
+			identifier: equal.notAllowed
+			count: 1
 			path: app/Http/Submission/Handlers/OpenCoverTarHandler.php
 
 		-
@@ -5083,13 +5179,13 @@ parameters:
 			path: app/Http/Submission/Handlers/ProjectHandler.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between int and mixed is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 1
 			path: app/Http/Submission/Handlers/ProjectHandler.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "==" between mixed and mixed is not allowed.'
 			identifier: equal.notAllowed
 			count: 1
 			path: app/Http/Submission/Handlers/ProjectHandler.php
@@ -5275,7 +5371,7 @@ parameters:
 			path: app/Http/Submission/Handlers/TestingHandler.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "==" between mixed and int is not allowed.'
 			identifier: equal.notAllowed
 			count: 1
 			path: app/Http/Submission/Handlers/TestingHandler.php
@@ -5455,9 +5551,15 @@ parameters:
 			path: app/Http/Submission/Handlers/TestingJUnitHandler.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "==" between bool and false is not allowed.'
 			identifier: equal.notAllowed
-			count: 5
+			count: 4
+			path: app/Http/Submission/Handlers/TestingJUnitHandler.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between mixed and int is not allowed.'
+			identifier: equal.notAllowed
+			count: 1
 			path: app/Http/Submission/Handlers/TestingJUnitHandler.php
 
 		-
@@ -5581,7 +5683,7 @@ parameters:
 			path: app/Http/Submission/Handlers/UpdateHandler.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "==" between mixed and int is not allowed.'
 			identifier: equal.notAllowed
 			count: 1
 			path: app/Http/Submission/Handlers/UpdateHandler.php
@@ -5671,13 +5773,13 @@ parameters:
 			path: app/Http/Submission/Handlers/UploadHandler.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between int<-1, 1> and int is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 1
 			path: app/Http/Submission/Handlers/UploadHandler.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "==" between mixed and int is not allowed.'
 			identifier: equal.notAllowed
 			count: 1
 			path: app/Http/Submission/Handlers/UploadHandler.php
@@ -5866,7 +5968,7 @@ parameters:
 			path: app/Jobs/PerformLegacyDailyUpdates.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "==" between int and int is not allowed.'
 			identifier: equal.notAllowed
 			count: 1
 			path: app/Jobs/PerformLegacyDailyUpdates.php
@@ -5962,9 +6064,15 @@ parameters:
 			path: app/Jobs/ProcessSubmission.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "==" between App\Http\Submission\Handlers\AbstractSubmissionHandler|false and false is not allowed.'
 			identifier: equal.notAllowed
-			count: 5
+			count: 1
+			path: app/Jobs/ProcessSubmission.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between mixed and int is not allowed.'
+			identifier: equal.notAllowed
+			count: 4
 			path: app/Jobs/ProcessSubmission.php
 
 		-
@@ -6493,9 +6601,33 @@ parameters:
 			path: app/Utils/RepositoryUtils.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "==" between (float|int) and int is not allowed.'
 			identifier: equal.notAllowed
-			count: 8
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between int and int is not allowed.'
+			identifier: equal.notAllowed
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between int<0, max> and int is not allowed.'
+			identifier: equal.notAllowed
+			count: 3
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between int<1, max> and int is not allowed.'
+			identifier: equal.notAllowed
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between int|false and int is not allowed.'
+			identifier: equal.notAllowed
+			count: 2
 			path: app/Utils/RepositoryUtils.php
 
 		-
@@ -7036,15 +7168,27 @@ parameters:
 			path: app/Utils/SubmissionUtils.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between mixed and string is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 1
 			path: app/Utils/SubmissionUtils.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "==" between (array|float|int) and int is not allowed.'
 			identifier: equal.notAllowed
-			count: 4
+			count: 1
+			path: app/Utils/SubmissionUtils.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between int<0, max> and int is not allowed.'
+			identifier: equal.notAllowed
+			count: 1
+			path: app/Utils/SubmissionUtils.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between mixed and int is not allowed.'
+			identifier: equal.notAllowed
+			count: 2
 			path: app/Utils/SubmissionUtils.php
 
 		-
@@ -7363,7 +7507,7 @@ parameters:
 			path: app/Utils/UnparsedSubmissionProcessor.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between string and mixed is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 1
 			path: app/Utils/UnparsedSubmissionProcessor.php
@@ -7519,7 +7663,7 @@ parameters:
 			path: app/Validators/Password.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "==" between mixed and int is not allowed.'
 			identifier: equal.notAllowed
 			count: 3
 			path: app/Validators/Password.php
@@ -7708,13 +7852,25 @@ parameters:
 			path: app/cdash/app/Controller/Api/Index.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between mixed and int is not allowed.'
 			identifier: notEqual.notAllowed
-			count: 13
+			count: 10
 			path: app/cdash/app/Controller/Api/Index.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between mixed and string is not allowed.'
+			identifier: notEqual.notAllowed
+			count: 1
+			path: app/cdash/app/Controller/Api/Index.php
+
+		-
+			rawMessage: 'Loose comparison via "!=" between string and mixed is not allowed.'
+			identifier: notEqual.notAllowed
+			count: 2
+			path: app/cdash/app/Controller/Api/Index.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between mixed and int is not allowed.'
 			identifier: equal.notAllowed
 			count: 3
 			path: app/cdash/app/Controller/Api/Index.php
@@ -7884,6 +8040,12 @@ parameters:
 		-
 			rawMessage: 'Parameter #3 $subject of function str_replace expects array<string>|string, (array<string>|string|null) given.'
 			identifier: argument.type
+			count: 1
+			path: app/cdash/app/Controller/Api/Index.php
+
+		-
+			rawMessage: Possibly invalid array key type string|false.
+			identifier: offsetAccess.invalidOffset
 			count: 1
 			path: app/cdash/app/Controller/Api/Index.php
 
@@ -8062,9 +8224,15 @@ parameters:
 			path: app/cdash/app/Controller/Api/QueryTests.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "==" between mixed and int is not allowed.'
 			identifier: equal.notAllowed
-			count: 5
+			count: 4
+			path: app/cdash/app/Controller/Api/QueryTests.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between mixed and string is not allowed.'
+			identifier: equal.notAllowed
+			count: 1
 			path: app/cdash/app/Controller/Api/QueryTests.php
 
 		-
@@ -8140,7 +8308,7 @@ parameters:
 			path: app/cdash/app/Controller/Api/QueryTests.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "==" between mixed and string is not allowed.'
 			identifier: equal.notAllowed
 			count: 1
 			path: app/cdash/app/Controller/Api/ResultsApi.php
@@ -8320,13 +8488,13 @@ parameters:
 			path: app/cdash/app/Controller/Api/TestDetails.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between mixed and string is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 1
 			path: app/cdash/app/Controller/Api/TestDetails.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "==" between mixed and int is not allowed.'
 			identifier: equal.notAllowed
 			count: 1
 			path: app/cdash/app/Controller/Api/TestDetails.php
@@ -8386,7 +8554,7 @@ parameters:
 			path: app/cdash/app/Controller/Api/TestGraph.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between string and string is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 2
 			path: app/cdash/app/Controller/Api/TestGraph.php
@@ -8449,7 +8617,7 @@ parameters:
 			path: app/cdash/app/Controller/Api/TestOverview.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between string and string is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 1
 			path: app/cdash/app/Controller/Api/TestOverview.php
@@ -8578,7 +8746,7 @@ parameters:
 			path: app/cdash/app/Controller/Api/Timeline.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between mixed and string is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 1
 			path: app/cdash/app/Controller/Api/Timeline.php
@@ -8755,15 +8923,27 @@ parameters:
 			path: app/cdash/app/Controller/Api/ViewTest.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between mixed and string is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 6
 			path: app/cdash/app/Controller/Api/ViewTest.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "==" between int and int is not allowed.'
 			identifier: equal.notAllowed
-			count: 6
+			count: 1
+			path: app/cdash/app/Controller/Api/ViewTest.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between int<0, 2> and int is not allowed.'
+			identifier: equal.notAllowed
+			count: 1
+			path: app/cdash/app/Controller/Api/ViewTest.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between mixed and int is not allowed.'
+			identifier: equal.notAllowed
+			count: 4
 			path: app/cdash/app/Controller/Api/ViewTest.php
 
 		-
@@ -9007,6 +9187,12 @@ parameters:
 			path: app/cdash/app/Controller/Api/ViewTest.php
 
 		-
+			rawMessage: Possibly invalid array key type int|string|false.
+			identifier: offsetAccess.invalidOffset
+			count: 1
+			path: app/cdash/app/Controller/Api/ViewTest.php
+
+		-
 			rawMessage: Property CDash\Controller\Api\ViewTest::$JSONEncodeResponse has no type specified.
 			identifier: missingType.property
 			count: 1
@@ -9099,6 +9285,12 @@ parameters:
 		-
 			rawMessage: 'Parameter #1 $issuer of method Lcobucci\JWT\Builder::issuedBy() expects non-empty-string, bool|string given.'
 			identifier: argument.type
+			count: 1
+			path: app/cdash/app/Lib/Repository/GitHub.php
+
+		-
+			rawMessage: 'Possibly invalid array key type int<0, max>|false.'
+			identifier: offsetAccess.invalidOffset
 			count: 1
 			path: app/cdash/app/Lib/Repository/GitHub.php
 
@@ -9253,7 +9445,7 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between mixed and mixed is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 2
 			path: app/cdash/app/Model/Build.php
@@ -9943,12 +10135,6 @@ parameters:
 			path: app/cdash/app/Model/BuildEmail.php
 
 		-
-			rawMessage: 'Variable property access on $this(CDash\Model\BuildEmail).'
-			identifier: property.dynamicName
-			count: 1
-			path: app/cdash/app/Model/BuildEmail.php
-
-		-
 			rawMessage: 'Construct empty() is not allowed. Use more strict comparison.'
 			identifier: empty.notAllowed
 			count: 2
@@ -10150,7 +10336,7 @@ parameters:
 			path: app/cdash/app/Model/BuildFailure.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "==" between int<0, max> and int is not allowed.'
 			identifier: equal.notAllowed
 			count: 1
 			path: app/cdash/app/Model/BuildFailure.php
@@ -10357,13 +10543,13 @@ parameters:
 			path: app/cdash/app/Model/BuildRelationship.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between mixed and mixed is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 1
 			path: app/cdash/app/Model/BuildRelationship.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "==" between mixed and mixed is not allowed.'
 			identifier: equal.notAllowed
 			count: 1
 			path: app/cdash/app/Model/BuildRelationship.php
@@ -10447,15 +10633,15 @@ parameters:
 			path: app/cdash/app/Model/BuildRelationship.php
 
 		-
-			rawMessage: 'Variable property access on $this(CDash\Model\BuildRelationship).'
-			identifier: property.dynamicName
-			count: 3
-			path: app/cdash/app/Model/BuildRelationship.php
+			rawMessage: 'Loose comparison via "==" between int<0, max> and int is not allowed.'
+			identifier: equal.notAllowed
+			count: 1
+			path: app/cdash/app/Model/BuildUpdate.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "==" between string and int is not allowed.'
 			identifier: equal.notAllowed
-			count: 2
+			count: 1
 			path: app/cdash/app/Model/BuildUpdate.php
 
 		-
@@ -10627,7 +10813,7 @@ parameters:
 			path: app/cdash/app/Model/CoverageFile.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "==" between float|int|string and int is not allowed.'
 			identifier: equal.notAllowed
 			count: 1
 			path: app/cdash/app/Model/CoverageFile.php
@@ -10696,15 +10882,21 @@ parameters:
 			path: app/cdash/app/Model/CoverageFileLog.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between string and string is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 1
 			path: app/cdash/app/Model/CoverageFileLog.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "==" between mixed and int is not allowed.'
 			identifier: equal.notAllowed
-			count: 2
+			count: 1
+			path: app/cdash/app/Model/CoverageFileLog.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between string and int is not allowed.'
+			identifier: equal.notAllowed
+			count: 1
 			path: app/cdash/app/Model/CoverageFileLog.php
 
 		-
@@ -11188,7 +11380,7 @@ parameters:
 			path: app/cdash/app/Model/Project.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between mixed and mixed is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 2
 			path: app/cdash/app/Model/Project.php
@@ -11524,7 +11716,7 @@ parameters:
 			path: app/cdash/app/Model/SubProject.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between string and string is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 1
 			path: app/cdash/app/Model/SubProject.php
@@ -11584,7 +11776,7 @@ parameters:
 			path: app/cdash/app/Model/SubProjectGroup.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "==" between mixed and int is not allowed.'
 			identifier: equal.notAllowed
 			count: 1
 			path: app/cdash/app/Model/Subscriber.php
@@ -12232,7 +12424,7 @@ parameters:
 			path: app/cdash/include/Messaging/Topic/AuthoredTopic.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "==" between mixed and int is not allowed.'
 			identifier: equal.notAllowed
 			count: 1
 			path: app/cdash/include/Messaging/Topic/BuildErrorTopic.php
@@ -14068,15 +14260,27 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between mixed and string is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 1
 			path: app/cdash/include/common.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "==" between bool and false is not allowed.'
 			identifier: equal.notAllowed
-			count: 3
+			count: 1
+			path: app/cdash/include/common.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between mixed and int is not allowed.'
+			identifier: equal.notAllowed
+			count: 1
+			path: app/cdash/include/common.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between string and string is not allowed.'
+			identifier: equal.notAllowed
+			count: 1
 			path: app/cdash/include/common.php
 
 		-
@@ -14485,15 +14689,33 @@ parameters:
 			path: app/cdash/include/filterdataFunctions.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between mixed and mixed is not allowed.'
 			identifier: notEqual.notAllowed
-			count: 4
+			count: 2
 			path: app/cdash/include/filterdataFunctions.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between mixed and string is not allowed.'
+			identifier: notEqual.notAllowed
+			count: 2
+			path: app/cdash/include/filterdataFunctions.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between int<0, max> and int is not allowed.'
 			identifier: equal.notAllowed
-			count: 7
+			count: 2
+			path: app/cdash/include/filterdataFunctions.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between mixed and mixed is not allowed.'
+			identifier: equal.notAllowed
+			count: 2
+			path: app/cdash/include/filterdataFunctions.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between string and int is not allowed.'
+			identifier: equal.notAllowed
+			count: 3
 			path: app/cdash/include/filterdataFunctions.php
 
 		-
@@ -14842,7 +15064,7 @@ parameters:
 			path: app/cdash/public/api/v1/buildgroup.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "==" between mixed and mixed is not allowed.'
 			identifier: equal.notAllowed
 			count: 3
 			path: app/cdash/public/api/v1/buildgroup.php
@@ -15280,9 +15502,27 @@ parameters:
 			path: app/cdash/public/api/v1/manageBuildGroup.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "==" between int and mixed is not allowed.'
 			identifier: equal.notAllowed
-			count: 4
+			count: 1
+			path: app/cdash/public/api/v1/manageBuildGroup.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between mixed and int is not allowed.'
+			identifier: equal.notAllowed
+			count: 1
+			path: app/cdash/public/api/v1/manageBuildGroup.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between mixed and int|null is not allowed.'
+			identifier: equal.notAllowed
+			count: 1
+			path: app/cdash/public/api/v1/manageBuildGroup.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between mixed and mixed is not allowed.'
+			identifier: equal.notAllowed
+			count: 1
 			path: app/cdash/public/api/v1/manageBuildGroup.php
 
 		-
@@ -17203,7 +17443,7 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_test_manager.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between int<-1, 1> and int is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 2
 			path: app/cdash/tests/kwtest/kw_test_manager.php
@@ -17338,13 +17578,25 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between int and int is not allowed.'
 			identifier: notEqual.notAllowed
-			count: 3
+			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between int<0, max> and int<0, max> is not allowed.'
+			identifier: notEqual.notAllowed
+			count: 1
+			path: app/cdash/tests/kwtest/kw_web_tester.php
+
+		-
+			rawMessage: 'Loose comparison via "!=" between mixed and mixed is not allowed.'
+			identifier: notEqual.notAllowed
+			count: 1
+			path: app/cdash/tests/kwtest/kw_web_tester.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between int and int is not allowed.'
 			identifier: equal.notAllowed
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
@@ -18172,9 +18424,15 @@ parameters:
 			path: app/cdash/tests/test_aggregatecoverage.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between int<0, max> and int is not allowed.'
 			identifier: notEqual.notAllowed
-			count: 6
+			count: 3
+			path: app/cdash/tests/test_aggregatecoverage.php
+
+		-
+			rawMessage: 'Loose comparison via "!=" between mixed and mixed is not allowed.'
+			identifier: notEqual.notAllowed
+			count: 3
 			path: app/cdash/tests/test_aggregatecoverage.php
 
 		-
@@ -18337,13 +18595,19 @@ parameters:
 			path: app/cdash/tests/test_aggregatesubprojectcoverage.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between int<0, max> and int is not allowed.'
 			identifier: notEqual.notAllowed
-			count: 6
+			count: 3
 			path: app/cdash/tests/test_aggregatesubprojectcoverage.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between mixed and mixed is not allowed.'
+			identifier: notEqual.notAllowed
+			count: 3
+			path: app/cdash/tests/test_aggregatesubprojectcoverage.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between mixed and mixed is not allowed.'
 			identifier: equal.notAllowed
 			count: 1
 			path: app/cdash/tests/test_aggregatesubprojectcoverage.php
@@ -18562,7 +18826,7 @@ parameters:
 			path: app/cdash/tests/test_authtoken.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between int and int is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 1
 			path: app/cdash/tests/test_authtoken.php
@@ -18793,9 +19057,15 @@ parameters:
 			path: app/cdash/tests/test_bazeljson.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between int<0, max>|false and false is not allowed.'
 			identifier: notEqual.notAllowed
-			count: 14
+			count: 1
+			path: app/cdash/tests/test_bazeljson.php
+
+		-
+			rawMessage: 'Loose comparison via "!=" between mixed and int is not allowed.'
+			identifier: notEqual.notAllowed
+			count: 13
 			path: app/cdash/tests/test_bazeljson.php
 
 		-
@@ -18991,7 +19261,7 @@ parameters:
 			path: app/cdash/tests/test_branchcoverage.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between mixed and int is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 1
 			path: app/cdash/tests/test_branchcoverage.php
@@ -19240,13 +19510,13 @@ parameters:
 			path: app/cdash/tests/test_builddetails.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between mixed and int is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 1
 			path: app/cdash/tests/test_builddetails.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "==" between int<0, max> and int is not allowed.'
 			identifier: equal.notAllowed
 			count: 1
 			path: app/cdash/tests/test_builddetails.php
@@ -19381,7 +19651,7 @@ parameters:
 			path: app/cdash/tests/test_buildgrouprule.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between int and int is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 1
 			path: app/cdash/tests/test_buildgrouprule.php
@@ -19432,9 +19702,15 @@ parameters:
 			path: app/cdash/tests/test_buildmodel.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "==" between bool and false is not allowed.'
 			identifier: equal.notAllowed
-			count: 2
+			count: 1
+			path: app/cdash/tests/test_buildmodel.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between bool and true is not allowed.'
+			identifier: equal.notAllowed
+			count: 1
 			path: app/cdash/tests/test_buildmodel.php
 
 		-
@@ -19582,7 +19858,7 @@ parameters:
 			path: app/cdash/tests/test_buildproperties.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between mixed and float|int is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 1
 			path: app/cdash/tests/test_buildproperties.php
@@ -19918,7 +20194,7 @@ parameters:
 			path: app/cdash/tests/test_compressedtest.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "==" between mixed and int is not allowed.'
 			identifier: equal.notAllowed
 			count: 1
 			path: app/cdash/tests/test_compressedtest.php
@@ -19984,7 +20260,7 @@ parameters:
 			path: app/cdash/tests/test_configurewarnings.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between int|string|false|null and int is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 1
 			path: app/cdash/tests/test_configurewarnings.php
@@ -20281,9 +20557,21 @@ parameters:
 			path: app/cdash/tests/test_crosssubprojectcoverage.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between int<0, max> and int is not allowed.'
 			identifier: notEqual.notAllowed
-			count: 5
+			count: 2
+			path: app/cdash/tests/test_crosssubprojectcoverage.php
+
+		-
+			rawMessage: 'Loose comparison via "!=" between mixed and int is not allowed.'
+			identifier: notEqual.notAllowed
+			count: 1
+			path: app/cdash/tests/test_crosssubprojectcoverage.php
+
+		-
+			rawMessage: 'Loose comparison via "!=" between mixed and mixed is not allowed.'
+			identifier: notEqual.notAllowed
+			count: 2
 			path: app/cdash/tests/test_crosssubprojectcoverage.php
 
 		-
@@ -20788,7 +21076,7 @@ parameters:
 			path: app/cdash/tests/test_dynamicanalysissummary.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between mixed and int is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 1
 			path: app/cdash/tests/test_dynamicanalysissummary.php
@@ -21115,7 +21403,7 @@ parameters:
 			path: app/cdash/tests/test_excludesubprojects.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between int<0, max> and int is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 1
 			path: app/cdash/tests/test_excludesubprojects.php
@@ -21196,9 +21484,15 @@ parameters:
 			path: app/cdash/tests/test_expectedandmissing.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "==" between mixed and int is not allowed.'
 			identifier: equal.notAllowed
-			count: 3
+			count: 2
+			path: app/cdash/tests/test_expectedandmissing.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between mixed and mixed is not allowed.'
+			identifier: equal.notAllowed
+			count: 1
 			path: app/cdash/tests/test_expectedandmissing.php
 
 		-
@@ -21268,7 +21562,7 @@ parameters:
 			path: app/cdash/tests/test_expiredbuildrules.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between bool and mixed is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 1
 			path: app/cdash/tests/test_expiredbuildrules.php
@@ -21409,7 +21703,7 @@ parameters:
 			path: app/cdash/tests/test_filterblocks.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between int<0, max> and int is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 2
 			path: app/cdash/tests/test_filterblocks.php
@@ -21475,7 +21769,7 @@ parameters:
 			path: app/cdash/tests/test_filterbuilderrors.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between mixed and int is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 1
 			path: app/cdash/tests/test_filterbuilderrors.php
@@ -21556,9 +21850,15 @@ parameters:
 			path: app/cdash/tests/test_filtertestlabels.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between int<0, max> and int is not allowed.'
 			identifier: notEqual.notAllowed
-			count: 7
+			count: 1
+			path: app/cdash/tests/test_filtertestlabels.php
+
+		-
+			rawMessage: 'Loose comparison via "!=" between mixed and int is not allowed.'
+			identifier: notEqual.notAllowed
+			count: 6
 			path: app/cdash/tests/test_filtertestlabels.php
 
 		-
@@ -21625,9 +21925,15 @@ parameters:
 			path: app/cdash/tests/test_hidecolumns.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "==" between mixed and false is not allowed.'
 			identifier: equal.notAllowed
-			count: 16
+			count: 12
+			path: app/cdash/tests/test_hidecolumns.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between mixed and true is not allowed.'
+			identifier: equal.notAllowed
+			count: 4
 			path: app/cdash/tests/test_hidecolumns.php
 
 		-
@@ -21775,7 +22081,7 @@ parameters:
 			path: app/cdash/tests/test_indexfilters.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between int<0, max> and int is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 1
 			path: app/cdash/tests/test_indexfilters.php
@@ -22021,7 +22327,7 @@ parameters:
 			path: app/cdash/tests/test_javajsoncoverage.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between mixed and int is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 1
 			path: app/cdash/tests/test_javajsoncoverage.php
@@ -22084,7 +22390,7 @@ parameters:
 			path: app/cdash/tests/test_jscovercoverage.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between mixed and int is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 1
 			path: app/cdash/tests/test_jscovercoverage.php
@@ -22411,13 +22717,43 @@ parameters:
 			path: app/cdash/tests/test_managemeasurements.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between float|null and mixed is not allowed.'
 			identifier: notEqual.notAllowed
-			count: 20
+			count: 1
 			path: app/cdash/tests/test_managemeasurements.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between int<0, max> and int is not allowed.'
+			identifier: notEqual.notAllowed
+			count: 1
+			path: app/cdash/tests/test_managemeasurements.php
+
+		-
+			rawMessage: 'Loose comparison via "!=" between mixed and float is not allowed.'
+			identifier: notEqual.notAllowed
+			count: 1
+			path: app/cdash/tests/test_managemeasurements.php
+
+		-
+			rawMessage: 'Loose comparison via "!=" between mixed and int is not allowed.'
+			identifier: notEqual.notAllowed
+			count: 7
+			path: app/cdash/tests/test_managemeasurements.php
+
+		-
+			rawMessage: 'Loose comparison via "!=" between mixed and mixed is not allowed.'
+			identifier: notEqual.notAllowed
+			count: 1
+			path: app/cdash/tests/test_managemeasurements.php
+
+		-
+			rawMessage: 'Loose comparison via "!=" between string and float is not allowed.'
+			identifier: notEqual.notAllowed
+			count: 9
+			path: app/cdash/tests/test_managemeasurements.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between mixed and mixed is not allowed.'
 			identifier: equal.notAllowed
 			count: 1
 			path: app/cdash/tests/test_managemeasurements.php
@@ -22678,7 +23014,7 @@ parameters:
 			path: app/cdash/tests/test_multicoverage.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between mixed and int is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 5
 			path: app/cdash/tests/test_multicoverage.php
@@ -23059,15 +23395,57 @@ parameters:
 			path: app/cdash/tests/test_multiplesubprojects.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between int<0, max> and int is not allowed.'
 			identifier: notEqual.notAllowed
-			count: 29
+			count: 7
 			path: app/cdash/tests/test_multiplesubprojects.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between int|string|false|null and int is not allowed.'
+			identifier: notEqual.notAllowed
+			count: 1
+			path: app/cdash/tests/test_multiplesubprojects.php
+
+		-
+			rawMessage: 'Loose comparison via "!=" between int|string|null and float is not allowed.'
+			identifier: notEqual.notAllowed
+			count: 1
+			path: app/cdash/tests/test_multiplesubprojects.php
+
+		-
+			rawMessage: 'Loose comparison via "!=" between mixed and int is not allowed.'
+			identifier: notEqual.notAllowed
+			count: 18
+			path: app/cdash/tests/test_multiplesubprojects.php
+
+		-
+			rawMessage: 'Loose comparison via "!=" between mixed and mixed is not allowed.'
+			identifier: notEqual.notAllowed
+			count: 1
+			path: app/cdash/tests/test_multiplesubprojects.php
+
+		-
+			rawMessage: 'Loose comparison via "!=" between string|null and mixed is not allowed.'
+			identifier: notEqual.notAllowed
+			count: 1
+			path: app/cdash/tests/test_multiplesubprojects.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between int|false and false is not allowed.'
 			identifier: equal.notAllowed
-			count: 4
+			count: 2
+			path: app/cdash/tests/test_multiplesubprojects.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between int|false and int is not allowed.'
+			identifier: equal.notAllowed
+			count: 1
+			path: app/cdash/tests/test_multiplesubprojects.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between string and false is not allowed.'
+			identifier: equal.notAllowed
+			count: 1
 			path: app/cdash/tests/test_multiplesubprojects.php
 
 		-
@@ -23497,7 +23875,7 @@ parameters:
 			path: app/cdash/tests/test_nobackup.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between mixed and int is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 2
 			path: app/cdash/tests/test_nobackup.php
@@ -23551,7 +23929,7 @@ parameters:
 			path: app/cdash/tests/test_notesapi.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between int<0, max> and int is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 1
 			path: app/cdash/tests/test_notesapi.php
@@ -23692,7 +24070,7 @@ parameters:
 			path: app/cdash/tests/test_opencovercoverage.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between mixed and int is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 2
 			path: app/cdash/tests/test_opencovercoverage.php
@@ -23827,7 +24205,7 @@ parameters:
 			path: app/cdash/tests/test_parallelsubmissions.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between mixed and mixed is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 1
 			path: app/cdash/tests/test_passwordcomplexity.php
@@ -24154,9 +24532,15 @@ parameters:
 			path: app/cdash/tests/test_querytests.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between int<0, max> and int is not allowed.'
 			identifier: notEqual.notAllowed
-			count: 3
+			count: 1
+			path: app/cdash/tests/test_querytests.php
+
+		-
+			rawMessage: 'Loose comparison via "!=" between mixed and string is not allowed.'
+			identifier: notEqual.notAllowed
+			count: 2
 			path: app/cdash/tests/test_querytests.php
 
 		-
@@ -24439,9 +24823,21 @@ parameters:
 			path: app/cdash/tests/test_sequenceindependence.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between int<1, max> and int is not allowed.'
 			identifier: notEqual.notAllowed
-			count: 6
+			count: 1
+			path: app/cdash/tests/test_sequenceindependence.php
+
+		-
+			rawMessage: 'Loose comparison via "!=" between mixed and float is not allowed.'
+			identifier: notEqual.notAllowed
+			count: 1
+			path: app/cdash/tests/test_sequenceindependence.php
+
+		-
+			rawMessage: 'Loose comparison via "!=" between mixed and int is not allowed.'
+			identifier: notEqual.notAllowed
+			count: 4
 			path: app/cdash/tests/test_sequenceindependence.php
 
 		-
@@ -25246,9 +25642,15 @@ parameters:
 			path: app/cdash/tests/test_testimages.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between int|null and int|null is not allowed.'
 			identifier: notEqual.notAllowed
-			count: 2
+			count: 1
+			path: app/cdash/tests/test_testimages.php
+
+		-
+			rawMessage: 'Loose comparison via "!=" between mixed and mixed is not allowed.'
+			identifier: notEqual.notAllowed
+			count: 1
 			path: app/cdash/tests/test_testimages.php
 
 		-
@@ -25348,13 +25750,13 @@ parameters:
 			path: app/cdash/tests/test_timeline.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between mixed and mixed is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 3
 			path: app/cdash/tests/test_timeline.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "==" between mixed and mixed is not allowed.'
 			identifier: equal.notAllowed
 			count: 1
 			path: app/cdash/tests/test_timeline.php
@@ -25531,7 +25933,7 @@ parameters:
 			path: app/cdash/tests/test_timestatus.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between mixed and mixed is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 1
 			path: app/cdash/tests/test_timestatus.php
@@ -25738,7 +26140,7 @@ parameters:
 			path: app/cdash/tests/test_truncateoutput.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between mixed and mixed is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 1
 			path: app/cdash/tests/test_truncateoutput.php
@@ -25789,7 +26191,7 @@ parameters:
 			path: app/cdash/tests/test_uniquediffs.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between mixed and mixed is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 1
 			path: app/cdash/tests/test_uniquediffs.php
@@ -25882,9 +26284,21 @@ parameters:
 			path: app/cdash/tests/test_updateappend.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between int<0, max> and int is not allowed.'
 			identifier: notEqual.notAllowed
-			count: 6
+			count: 1
+			path: app/cdash/tests/test_updateappend.php
+
+		-
+			rawMessage: 'Loose comparison via "!=" between mixed and int is not allowed.'
+			identifier: notEqual.notAllowed
+			count: 4
+			path: app/cdash/tests/test_updateappend.php
+
+		-
+			rawMessage: 'Loose comparison via "!=" between mixed and string is not allowed.'
+			identifier: notEqual.notAllowed
+			count: 1
 			path: app/cdash/tests/test_updateappend.php
 
 		-
@@ -25939,7 +26353,7 @@ parameters:
 			path: app/cdash/tests/test_uploadfile.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "==" between int<0, max> and int is not allowed.'
 			identifier: equal.notAllowed
 			count: 2
 			path: app/cdash/tests/test_uploadfile.php
@@ -26203,13 +26617,25 @@ parameters:
 			path: app/cdash/tests/trilinos_submission_test.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between int<0, max> and int is not allowed.'
 			identifier: notEqual.notAllowed
-			count: 3
+			count: 1
 			path: app/cdash/tests/trilinos_submission_test.php
 
 		-
-			rawMessage: 'Loose comparison via "==" is not allowed.'
+			rawMessage: 'Loose comparison via "!=" between mixed and int is not allowed.'
+			identifier: notEqual.notAllowed
+			count: 1
+			path: app/cdash/tests/trilinos_submission_test.php
+
+		-
+			rawMessage: 'Loose comparison via "!=" between mixed and mixed is not allowed.'
+			identifier: notEqual.notAllowed
+			count: 1
+			path: app/cdash/tests/trilinos_submission_test.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between mixed and string is not allowed.'
 			identifier: equal.notAllowed
 			count: 1
 			path: app/cdash/tests/trilinos_submission_test.php
