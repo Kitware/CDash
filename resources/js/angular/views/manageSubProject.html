@@ -11,7 +11,7 @@
       </form>
 
       <!-- If a project has been selected -->
-      <div role="tabpanel" ng-if="cdash.projectid > -1">
+      <div role="tabpanel" ng-if="!loading && cdash.projectid > -1">
         <ul class="nav nav-tabs" role="tablist" id="tabs">
           <li role="presentation" class="active">
             <a class="cdash-link" href="#current" aria-controls="current" role="tab" data-toggle="tab">Current SubProjects</a>
