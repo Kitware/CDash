@@ -18,12 +18,6 @@ final class CreateProjectInputValidator extends Validator
                 Rule::unique(Project::class, 'name'),
                 new ProjectNameRule(),
             ],
-            'homeurl' => [
-                'prohibits:homeUrl',
-            ],
-            'homeUrl' => [
-                'prohibits:homeurl',
-            ],
             'visibility' => [
                 new ProjectVisibilityRule(),
             ],

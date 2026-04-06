@@ -94,19 +94,6 @@ class CoverageTypeTest extends TestCase
                                         }
                                     }
                                 }
-                                coverageResults {
-                                    edges {
-                                        node {
-                                            linesOfCodeTested
-                                            linesOfCodeUntested
-                                            branchesTested
-                                            branchesUntested
-                                            functionsTested
-                                            functionsUntested
-                                            filePath
-                                        }
-                                    }
-                                }
                             }
                         }
                     }
@@ -121,21 +108,6 @@ class CoverageTypeTest extends TestCase
                         'edges' => [
                             [
                                 'node' => [
-                                    'coverageResults' => [
-                                        'edges' => [
-                                            [
-                                                'node' => [
-                                                    'linesOfCodeTested' => 4,
-                                                    'linesOfCodeUntested' => 5,
-                                                    'branchesTested' => 6,
-                                                    'branchesUntested' => 7,
-                                                    'functionsTested' => 8,
-                                                    'functionsUntested' => 9,
-                                                    'filePath' => $coverageFile->fullpath,
-                                                ],
-                                            ],
-                                        ],
-                                    ],
                                     'coverage' => [
                                         'edges' => [
                                             [
