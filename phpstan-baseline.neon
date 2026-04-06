@@ -1174,21 +1174,9 @@ parameters:
 			path: app/Http/Controllers/CTestConfigurationController.php
 
 		-
-			rawMessage: 'Argument of an invalid type array|false supplied for foreach, only iterables are supported.'
-			identifier: foreach.nonIterable
-			count: 3
-			path: app/Http/Controllers/CoverageController.php
-
-		-
 			rawMessage: 'Argument of an invalid type mixed supplied for foreach, only iterables are supported.'
 			identifier: foreach.nonIterable
 			count: 6
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Binary operation "+" between (array|float|int) and 10 results in an error.'
-			identifier: binaryOp.invalid
-			count: 1
 			path: app/Http/Controllers/CoverageController.php
 
 		-
@@ -1198,18 +1186,12 @@ parameters:
 			path: app/Http/Controllers/CoverageController.php
 
 		-
-			rawMessage: 'Binary operation "." between non-falsy-string and (array|float|int) results in an error.'
-			identifier: binaryOp.invalid
-			count: 4
-			path: app/Http/Controllers/CoverageController.php
-
-		-
 			rawMessage: '''
 				Call to deprecated method executePrepared() of class CDash\Database:
 				04/22/2023  Use Laravel query builder or Eloquent instead
 			'''
 			identifier: method.deprecated
-			count: 4
+			count: 1
 			path: app/Http/Controllers/CoverageController.php
 
 		-
@@ -1218,7 +1200,7 @@ parameters:
 				04/22/2023  Use Laravel query builder or Eloquent instead
 			'''
 			identifier: method.deprecated
-			count: 3
+			count: 1
 			path: app/Http/Controllers/CoverageController.php
 
 		-
@@ -1326,7 +1308,7 @@ parameters:
 		-
 			rawMessage: Cannot cast mixed to int.
 			identifier: cast.int
-			count: 19
+			count: 11
 			path: app/Http/Controllers/CoverageController.php
 
 		-
@@ -1338,67 +1320,19 @@ parameters:
 		-
 			rawMessage: 'Construct empty() is not allowed. Use more strict comparison.'
 			identifier: empty.notAllowed
-			count: 5
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Loose comparison via "!=" between (float|int) and float is not allowed.'
-			identifier: notEqual.notAllowed
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Loose comparison via "!=" between int and int is not allowed.'
-			identifier: notEqual.notAllowed
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Loose comparison via "!=" between mixed and string is not allowed.'
-			identifier: notEqual.notAllowed
-			count: 4
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Loose comparison via "!=" between string and string is not allowed.'
-			identifier: notEqual.notAllowed
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Loose comparison via "==" between (float|int) and float is not allowed.'
-			identifier: equal.notAllowed
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Loose comparison via "==" between float|int|string and float is not allowed.'
-			identifier: equal.notAllowed
-			count: 7
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Loose comparison via "==" between int and int is not allowed.'
-			identifier: equal.notAllowed
-			count: 16
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Loose comparison via "==" between int<min, -2>|int<0, max> and int is not allowed.'
-			identifier: equal.notAllowed
-			count: 1
+			count: 3
 			path: app/Http/Controllers/CoverageController.php
 
 		-
 			rawMessage: 'Loose comparison via "==" between mixed and int is not allowed.'
 			identifier: equal.notAllowed
-			count: 5
+			count: 2
 			path: app/Http/Controllers/CoverageController.php
 
 		-
 			rawMessage: 'Loose comparison via "==" between mixed and mixed is not allowed.'
 			identifier: equal.notAllowed
-			count: 9
+			count: 3
 			path: app/Http/Controllers/CoverageController.php
 
 		-
@@ -1408,134 +1342,14 @@ parameters:
 			path: app/Http/Controllers/CoverageController.php
 
 		-
-			rawMessage: 'Loose comparison via "==" between string and float is not allowed.'
-			identifier: equal.notAllowed
-			count: 2
-			path: app/Http/Controllers/CoverageController.php
-
-		-
 			rawMessage: 'Loose comparison via "==" between string|null and string is not allowed.'
 			identifier: equal.notAllowed
 			count: 1
 			path: app/Http/Controllers/CoverageController.php
 
 		-
-			rawMessage: 'Method App\Http\Controllers\CoverageController::ajaxGetViewCoverage() throws checked exception DivisionByZeroError but it''s missing from the PHPDoc @throws tag.'
-			identifier: missingType.checkedException
-			count: 2
-			path: app/Http/Controllers/CoverageController.php
-
-		-
 			rawMessage: 'Method App\Http\Controllers\CoverageController::apiCompareCoverage_get_coverage() throws checked exception DivisionByZeroError but it''s missing from the PHPDoc @throws tag.'
 			identifier: missingType.checkedException
-			count: 2
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Method App\Http\Controllers\CoverageController::sort_branches() has parameter $a with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Method App\Http\Controllers\CoverageController::sort_branches() has parameter $b with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Method App\Http\Controllers\CoverageController::sort_branchpercentage() has parameter $a with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Method App\Http\Controllers\CoverageController::sort_branchpercentage() has parameter $b with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Method App\Http\Controllers\CoverageController::sort_filename() has parameter $a with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Method App\Http\Controllers\CoverageController::sort_filename() has parameter $b with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Method App\Http\Controllers\CoverageController::sort_lines() has parameter $a with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Method App\Http\Controllers\CoverageController::sort_lines() has parameter $b with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Method App\Http\Controllers\CoverageController::sort_percentage() has parameter $a with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Method App\Http\Controllers\CoverageController::sort_percentage() has parameter $b with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Method App\Http\Controllers\CoverageController::sort_status() has parameter $a with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Method App\Http\Controllers\CoverageController::sort_status() has parameter $b with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Offset ''branchcoveragemetric'' might not exist on array{directory: 1, covered: 1, fileid: 0, locuntested: (float|int), loctested: (float|int), branchesuntested: (float|int), branchestested: (float|int), functionsuntested: (float|int), ...}|array{filename: string, fullpath: mixed, fileid: 0, covered: 0, locuntested: 0, loctested: 0, branchesuntested: 0, branchestested: 0, ...}|array{filename: string, fullpath: mixed, fileid: mixed, locuntested: mixed, loctested: mixed, covered: 1, branchesuntested: mixed, branchestested: mixed, ...}.'
-			identifier: offsetAccess.notFound
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Offset ''branchcoveragemetric'' might not exist on array{directory: 1, covered: 1, fileid: 0, locuntested: (float|int), loctested: (float|int), branchesuntested: (float|int), branchestested: (float|int), functionsuntested: (float|int), ...}|array{filename: string, fullpath: mixed, fileid: mixed, locuntested: mixed, loctested: mixed, covered: 1, branchesuntested: mixed, branchestested: mixed, ...}.'
-			identifier: offsetAccess.notFound
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Offset ''branchcoveragemetric'' might not exist on array{filename: string, fullpath: mixed, fileid: mixed, locuntested: mixed, loctested: mixed, covered: 1, branchesuntested: mixed, branchestested: mixed, ...}.'
-			identifier: offsetAccess.notFound
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Offset ''branchpercentcoverage'' might not exist on array{directory: 1, covered: 1, fileid: 0, locuntested: (float|int), loctested: (float|int), branchesuntested: (float|int), branchestested: (float|int), functionsuntested: (float|int), ...}|array{filename: string, fullpath: mixed, fileid: 0, covered: 0, locuntested: 0, loctested: 0, branchesuntested: 0, branchestested: 0, ...}|array{filename: string, fullpath: mixed, fileid: mixed, locuntested: mixed, loctested: mixed, covered: 1, branchesuntested: mixed, branchestested: mixed, ...}.'
-			identifier: offsetAccess.notFound
-			count: 2
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Offset ''functionstested'' might not exist on array{directory: 1, covered: 1, fileid: 0, locuntested: (float|int), loctested: (float|int), branchesuntested: (float|int), branchestested: (float|int), functionsuntested: (float|int), ...}|array{filename: string, fullpath: mixed, fileid: mixed, locuntested: mixed, loctested: mixed, covered: 1, branchesuntested: mixed, branchestested: mixed, ...}.'
-			identifier: offsetAccess.notFound
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Offset ''functionsuntested'' might not exist on array{directory: 1, covered: 1, fileid: 0, locuntested: (float|int), loctested: (float|int), branchesuntested: (float|int), branchestested: (float|int), functionsuntested: (float|int), ...}|array{filename: string, fullpath: mixed, fileid: mixed, locuntested: mixed, loctested: mixed, covered: 1, branchesuntested: mixed, branchestested: mixed, ...}.'
-			identifier: offsetAccess.notFound
 			count: 2
 			path: app/Http/Controllers/CoverageController.php
 
@@ -1570,38 +1384,8 @@ parameters:
 			path: app/Http/Controllers/CoverageController.php
 
 		-
-			rawMessage: 'Only booleans are allowed in a negated boolean, int given.'
-			identifier: booleanNot.exprNotBoolean
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
 			rawMessage: 'Only numeric types are allowed in *, int|null given on the left side.'
 			identifier: mul.leftNonNumeric
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Only numeric types are allowed in +, (array|float|int) given on the left side.'
-			identifier: plus.leftNonNumeric
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Only numeric types are allowed in +, int|false given on the left side.'
-			identifier: plus.leftNonNumeric
-			count: 2
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Only numeric types are allowed in /, (array|float|int<1, max>) given on the right side.'
-			identifier: div.rightNonNumeric
-			count: 3
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: PHPDoc tag @var with type App\Models\User is not subtype of type Illuminate\Database\Eloquent\Builder<App\Models\User>.
-			identifier: varTag.type
 			count: 1
 			path: app/Http/Controllers/CoverageController.php
 
@@ -1624,21 +1408,9 @@ parameters:
 			path: app/Http/Controllers/CoverageController.php
 
 		-
-			rawMessage: 'Parameter #1 $num of function round expects float|int, int|string given.'
-			identifier: argument.type
-			count: 2
-			path: app/Http/Controllers/CoverageController.php
-
-		-
 			rawMessage: 'Parameter #1 $string of function htmlspecialchars expects string, mixed given.'
 			identifier: argument.type
-			count: 4
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Parameter #1 $string of function strlen expects string, mixed given.'
-			identifier: argument.type
-			count: 1
+			count: 2
 			path: app/Http/Controllers/CoverageController.php
 
 		-
@@ -1669,18 +1441,6 @@ parameters:
 			rawMessage: Possibly invalid array key type mixed.
 			identifier: offsetAccess.invalidOffset
 			count: 9
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Strict comparison using === between ''bullseye'' and ''bullseye'' will always evaluate to true.'
-			identifier: identical.alwaysTrue
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: Variable $coveragetype might not be defined.
-			identifier: variable.undefined
-			count: 2
 			path: app/Http/Controllers/CoverageController.php
 
 		-

@@ -257,8 +257,6 @@ Route::get('/testOverview.php', 'TestController@testOverview');
 
 Route::get('/compareCoverage.php', 'CoverageController@compareCoverage');
 
-Route::any('/ajax/getviewcoverage.php', 'CoverageController@ajaxGetViewCoverage');
-
 Route::match(['get', 'post'], '/buildOverview.php', 'BuildController@buildOverview');
 
 Route::get('/viewBuildGroup.php', 'BuildController@viewBuildGroup');
