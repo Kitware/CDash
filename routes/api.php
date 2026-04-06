@@ -76,8 +76,6 @@ Route::middleware(['auth'])->group(function (): void {
 
     Route::post('/v1/addUserNote.php', 'UserNoteController@apiAddUserNote');
 
-    Route::get('/v1/createProject.php', 'ProjectController@apiCreateProject');
-
     Route::get('/v1/manageSubProject.php', 'SubProjectController@apiManageSubProject');
 
     Route::get('/v1/manageMeasurements.php', 'ManageMeasurementsController@apiGet');

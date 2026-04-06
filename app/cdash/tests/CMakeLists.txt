@@ -665,11 +665,8 @@ set_tests_properties(uniquediffs PROPERTIES DEPENDS csvexport)
 add_php_test(imagecomparison)
 set_tests_properties(imagecomparison PROPERTIES DEPENDS uniquediffs)
 
-add_php_test(createprojectpermissions)
-set_tests_properties(createprojectpermissions PROPERTIES DEPENDS imagecomparison)
-
 add_php_test(testgraphpermissions)
-set_tests_properties(testgraphpermissions PROPERTIES DEPENDS createprojectpermissions)
+set_tests_properties(testgraphpermissions PROPERTIES DEPENDS imagecomparison)
 
 add_php_test(pdoexecutelogserrors)
 set_tests_properties(pdoexecutelogserrors PROPERTIES DEPENDS testgraphpermissions)
