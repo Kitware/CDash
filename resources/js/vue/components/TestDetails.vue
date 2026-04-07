@@ -2,10 +2,13 @@
   <section v-if="errored">
     <p>{{ cdash.error }}</p>
   </section>
-  <section v-else>
-    <loading-indicator :is-loading="loading">
-      <build-summary-card :build-id="cdash.test.buildid" />
+  <BuildSidebar
+    :build-id="buildId"
+    active-tab="tests"
+  >
+    <build-summary-card :build-id="buildId" />
 
+    <loading-indicator :is-loading="loading">
       <div
         id="executiontime"
         class="tw-flex tw-flex-row tw-gap-1"
@@ -253,7 +256,7 @@
         <br>
       </div>
     </loading-indicator>
-  </section>
+  </BuildSidebar>
 </template>
 
 <script>
@@ -265,15 +268,24 @@ import TestHistoryPlot from './shared/TestHistoryPlot.vue';
 import CodeBox from './shared/CodeBox.vue';
 import BuildSummaryCard from './shared/BuildSummaryCard.vue';
 import LoadingIndicator from './shared/LoadingIndicator.vue';
+import BuildSidebar from './shared/BuildSidebar.vue';
 
 export default {
   name: 'TestDetails',
 
   components: {
+    BuildSidebar,
     LoadingIndicator,
     BuildSummaryCard,
     CodeBox,
     TestHistoryPlot,
+  },
+
+  props: {
+    buildId: {
+      type: Number,
+      required: true,
+    },
   },
 
   data () {
@@ -380,7 +392,6 @@ export default {
       }
 
       const testname = this.cdash.test.test;
-      const buildid = this.cdash.test.buildid;
       const measurementname = this.graphSelection;
       if (this.graphSelection === '') {
         this.showgraph = false;
@@ -391,7 +402,7 @@ export default {
       this.showgraph = true;
 
       let graph_type = '';
-      let endpoint_path = `/api/v1/testGraph.php?testname=${testname}&buildid=${buildid}`;
+      let endpoint_path = `/api/v1/testGraph.php?testname=${testname}&buildid=${this.buildId}`;
       switch (this.graphSelection) {
       case 'status':
         graph_type = 'status';
