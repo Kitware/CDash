@@ -937,30 +937,6 @@ parameters:
 			path: app/Http/Controllers/BuildController.php
 
 		-
-			rawMessage: Access to an undefined property App\Models\Note::$pivot.
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Controllers/BuildNoteController.php
-
-		-
-			rawMessage: 'Call to an undefined method App\Models\Build|Illuminate\Database\Eloquent\Collection<int, App\Models\Build>::notes().'
-			identifier: method.notFound
-			count: 1
-			path: app/Http/Controllers/BuildNoteController.php
-
-		-
-			rawMessage: Cannot access property $name on App\Models\Site|null.
-			identifier: property.nonObject
-			count: 1
-			path: app/Http/Controllers/BuildNoteController.php
-
-		-
-			rawMessage: Cannot cast mixed to int.
-			identifier: cast.int
-			count: 1
-			path: app/Http/Controllers/BuildNoteController.php
-
-		-
 			rawMessage: '''
 				Call to deprecated function pdo_execute():
 				v2.5.0 01/22/2018
@@ -23036,54 +23012,6 @@ parameters:
 			identifier: missingType.property
 			count: 1
 			path: app/cdash/tests/test_nobackup.php
-
-		-
-			rawMessage: 'Argument of an invalid type mixed supplied for foreach, only iterables are supported.'
-			identifier: foreach.nonIterable
-			count: 1
-			path: app/cdash/tests/test_notesapi.php
-
-		-
-			rawMessage: 'Call to deprecated method pass() of class SimpleTestCase.'
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/test_notesapi.php
-
-		-
-			rawMessage: Cannot access offset 'name' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/cdash/tests/test_notesapi.php
-
-		-
-			rawMessage: Cannot access offset 'notes' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/cdash/tests/test_notesapi.php
-
-		-
-			rawMessage: 'Loose comparison via "!=" between int<0, max> and int is not allowed.'
-			identifier: notEqual.notAllowed
-			count: 1
-			path: app/cdash/tests/test_notesapi.php
-
-		-
-			rawMessage: 'Method NotesAPICase::testNotesAPI() has no return type specified.'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_notesapi.php
-
-		-
-			rawMessage: 'Parameter #1 $haystack of function str_contains expects string, mixed given.'
-			identifier: argument.type
-			count: 2
-			path: app/cdash/tests/test_notesapi.php
-
-		-
-			rawMessage: 'Parameter #1 $value of function count expects array|Countable, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/tests/test_notesapi.php
 
 		-
 			rawMessage: '''

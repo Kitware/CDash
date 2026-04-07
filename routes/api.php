@@ -54,8 +54,6 @@ Route::get('/v1/buildUpdateGraph.php', 'BuildController@apiBuildUpdateGraph');
 
 Route::get('/v1/overview.php', 'ProjectOverviewController@apiOverview');
 
-Route::get('/v1/viewNotes.php', 'BuildNoteController@apiViewNotes');
-
 Route::get('/v1/timeline.php', 'TimelineController@apiTimeline');
 
 Route::get('/v1/testOverview.php', 'TestController@apiTestOverview');

@@ -740,7 +740,6 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
             'buildSummary.php',
             'viewBuildError.php',
             'viewDynamicAnalysis.php',
-            'viewNotes.php',
             'viewTest.php',
         ];
         $child_buildid = $builds[0]['id'];
