@@ -29,8 +29,6 @@ Route::match(['get', 'post', 'delete'], '/v1/relateBuilds.php', 'BuildController
 
 Route::match(['get', 'post', 'delete'], '/v1/build.php', 'BuildController@restApi');
 
-Route::get('/v1/user.php', 'UserController@userPageContent');
-
 Route::get('/v1/filterdata.php', 'FilterController@getFilterDataArray');
 
 Route::get('/v1/viewSubProjects.php', 'SubProjectController@apiViewSubProjects');

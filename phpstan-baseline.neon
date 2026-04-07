@@ -2545,176 +2545,20 @@ parameters:
 			path: app/Http/Controllers/UpdateProjectLogoController.php
 
 		-
-			rawMessage: Access to an undefined property App\Models\Project::$pivot.
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Controllers/UserController.php
-
-		-
-			rawMessage: 'Access to an undefined property App\Models\Site|Illuminate\Database\Eloquent\Collection<int, App\Models\Site>::$id.'
-			identifier: property.notFound
-			count: 2
-			path: app/Http/Controllers/UserController.php
-
-		-
-			rawMessage: 'Access to an undefined property App\Models\Site|Illuminate\Database\Eloquent\Collection<int, App\Models\Site>::$name.'
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Controllers/UserController.php
-
-		-
-			rawMessage: 'Access to an undefined property App\Models\Site|Illuminate\Database\Eloquent\Collection<int, App\Models\Site>::$outoforder.'
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Controllers/UserController.php
-
-		-
-			rawMessage: Binary operation "." between mixed and ' UTC' results in an error.
-			identifier: binaryOp.invalid
-			count: 1
-			path: app/Http/Controllers/UserController.php
-
-		-
-			rawMessage: '''
-				Call to deprecated function pdo_execute():
-				v2.5.0 01/22/2018
-			'''
-			identifier: function.deprecated
-			count: 4
-			path: app/Http/Controllers/UserController.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method getPdo() of class CDash\Database:
-				04/22/2023  Use Laravel query builder or Eloquent instead
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/Http/Controllers/UserController.php
-
-		-
-			rawMessage: Cannot access offset 'id' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/Http/Controllers/UserController.php
-
-		-
-			rawMessage: Cannot access offset 'name' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/Http/Controllers/UserController.php
-
-		-
-			rawMessage: Cannot access offset 'projectid' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/Http/Controllers/UserController.php
-
-		-
 			rawMessage: Cannot access offset 'redirect' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: app/Http/Controllers/UserController.php
 
 		-
-			rawMessage: Cannot access offset 'siteid' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/Http/Controllers/UserController.php
-
-		-
-			rawMessage: Cannot access offset 'starttime' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/Http/Controllers/UserController.php
-
-		-
-			rawMessage: Cannot access property $status on App\Models\Configure|null.
-			identifier: property.nonObject
-			count: 2
-			path: app/Http/Controllers/UserController.php
-
-		-
-			rawMessage: 'Cannot call method bindParam() on PDOStatement|false.'
-			identifier: method.nonObject
-			count: 3
-			path: app/Http/Controllers/UserController.php
-
-		-
-			rawMessage: 'Cannot call method fetch() on PDOStatement|false.'
-			identifier: method.nonObject
-			count: 4
-			path: app/Http/Controllers/UserController.php
-
-		-
 			rawMessage: Cannot cast mixed to int.
 			identifier: cast.int
-			count: 3
-			path: app/Http/Controllers/UserController.php
-
-		-
-			rawMessage: Casting to int something that's already int.
-			identifier: cast.useless
 			count: 1
-			path: app/Http/Controllers/UserController.php
-
-		-
-			rawMessage: 'Method App\Http\Controllers\UserController::GetBuildsDailyAverage() should return int but returns (float|int).'
-			identifier: return.type
-			count: 1
-			path: app/Http/Controllers/UserController.php
-
-		-
-			rawMessage: 'Method App\Http\Controllers\UserController::GetBuildsDailyAverage() throws checked exception DivisionByZeroError but it''s missing from the PHPDoc @throws tag.'
-			identifier: missingType.checkedException
-			count: 1
-			path: app/Http/Controllers/UserController.php
-
-		-
-			rawMessage: 'Method App\Http\Controllers\UserController::ReportLastBuild() has parameter $nightlytime with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Http/Controllers/UserController.php
-
-		-
-			rawMessage: 'Method App\Http\Controllers\UserController::ReportLastBuild() return type has no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/Http/Controllers/UserController.php
-
-		-
-			rawMessage: 'Only booleans are allowed in a while condition, mixed given.'
-			identifier: while.condNotBoolean
-			count: 3
 			path: app/Http/Controllers/UserController.php
 
 		-
 			rawMessage: 'Only booleans are allowed in an if condition, mixed given.'
 			identifier: if.condNotBoolean
-			count: 2
-			path: app/Http/Controllers/UserController.php
-
-		-
-			rawMessage: 'Only numeric types are allowed in +, int|false given on the left side.'
-			identifier: plus.leftNonNumeric
-			count: 1
-			path: app/Http/Controllers/UserController.php
-
-		-
-			rawMessage: 'Only numeric types are allowed in -, (int|false) given on the right side.'
-			identifier: minus.rightNonNumeric
-			count: 1
-			path: app/Http/Controllers/UserController.php
-
-		-
-			rawMessage: 'Only numeric types are allowed in -, int|false given on the left side.'
-			identifier: minus.leftNonNumeric
-			count: 3
-			path: app/Http/Controllers/UserController.php
-
-		-
-			rawMessage: 'Only numeric types are allowed in -, int|false given on the right side.'
-			identifier: minus.rightNonNumeric
 			count: 1
 			path: app/Http/Controllers/UserController.php
 
@@ -2737,25 +2581,7 @@ parameters:
 			path: app/Http/Controllers/UserController.php
 
 		-
-			rawMessage: 'Parameter #1 $stmt of function pdo_execute expects PDOStatement, (PDOStatement|false) given.'
-			identifier: argument.type
-			count: 4
-			path: app/Http/Controllers/UserController.php
-
-		-
 			rawMessage: 'Parameter #1 $string of function strlen expects string, mixed given.'
-			identifier: argument.type
-			count: 2
-			path: app/Http/Controllers/UserController.php
-
-		-
-			rawMessage: 'Parameter #2 $timestamp of function date expects int|null, (int|false) given.'
-			identifier: argument.type
-			count: 2
-			path: app/Http/Controllers/UserController.php
-
-		-
-			rawMessage: 'Parameter #2 $timestamp of function date expects int|null, int|false given.'
 			identifier: argument.type
 			count: 2
 			path: app/Http/Controllers/UserController.php
@@ -2781,12 +2607,6 @@ parameters:
 		-
 			rawMessage: 'Property App\Models\User::$lastname (string) does not accept mixed.'
 			identifier: assign.propertyType
-			count: 1
-			path: app/Http/Controllers/UserController.php
-
-		-
-			rawMessage: 'Strict comparison using === between mixed~''subscribedtoproject'' and ''subscribedtoproject'' will always evaluate to false.'
-			identifier: identical.alwaysFalse
 			count: 1
 			path: app/Http/Controllers/UserController.php
 

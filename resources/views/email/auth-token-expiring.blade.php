@@ -2,6 +2,6 @@ An authentication token associated with your account will expire on {{ $authToke
 
   * {{ $authToken->description ?? 'No Description' }}
 
-Visit {{ url('/user') }} to manage your authentication tokens.
+Visit {{ url('/profile') }} to manage your authentication tokens.
 
 -CDash

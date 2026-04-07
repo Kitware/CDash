@@ -45,7 +45,7 @@ class AuthTokenExpiredTest extends TestCase
 
         $mailable = new AuthTokenExpired($authtoken);
 
-        $mailable->assertSeeInHtml(url('/user'));
+        $mailable->assertSeeInHtml(url('/profile'));
     }
 
     public function testMailableNoDescription(): void

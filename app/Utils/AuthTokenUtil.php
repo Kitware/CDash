@@ -211,21 +211,6 @@ class AuthTokenUtil
     }
 
     /**
-     * Contract: we assume that $user_id has already been validated and blindly return a list of
-     * auth tokens for the user requested.  It is your responsibility as a user of this method
-     * to ensure that $user_id is validated appropriately.
-     *
-     * @return Collection<int,AuthToken>
-     */
-    public static function getTokensForUser(int $user_id): Collection
-    {
-        return AuthToken::select('authtoken.*', 'project.name AS projectname')
-            ->leftJoin('project', 'project.id', '=', 'authtoken.projectid')
-            ->where('authtoken.userid', '=', $user_id)
-            ->get();
-    }
-
-    /**
      * Contract: we assume that the user has already been validated and blindly return a list of
      * all auth tokens.  It is your responsibility as a user of this method to ensure that only
      * administrators can access it.

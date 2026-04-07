@@ -26,9 +26,9 @@ $showHeaderNav = isset($build);
     <div id="headertop">
         <div id="topmenu">
             <span>
-                <a class="cdash-link" href="{{ url('/projects') }}">All Dashboards</a>
+                <a class="cdash-link" href="{{ url('/projects') }}">Dashboards</a>
                 @if(Auth::check())
-                    <a class="cdash-link" href="{{ url('/user') }}">My CDash</a>
+                    <a class="cdash-link" href="{{ url('/profile') }}">Profile</a>
                 @endif
                 @if(Auth::user()?->admin)
                     <a class="cdash-link" href="{{ url('/administration') }}">Administration</a>
