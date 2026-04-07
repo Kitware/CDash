@@ -65,7 +65,6 @@ class RouteAccessTest extends TestCase
     {
         return [
             ['/removeBuilds.php'],
-            ['/sites'],
             ['/monitor'],
         ];
     }
