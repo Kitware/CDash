@@ -11,6 +11,7 @@
           @click="currentSection = 'general'"
         >General</a>
       </li>
+
       <li>
         <a
           :class="{'tw-active': currentSection === 'integrations'}"
@@ -18,6 +19,31 @@
           @click="currentSection = 'integrations'"
         >Integrations</a>
       </li>
+
+      <li>
+        <a
+          :href="`${$baseURL}/manageBuildGroup.php?projectid=${projectId}`"
+        >Build Groups</a>
+      </li>
+
+      <li>
+        <a
+          :href="`${$baseURL}/projects/${projectId}/testmeasurements`"
+        >Test Measurements</a>
+      </li>
+
+      <li>
+        <a
+          :href="`${$baseURL}/manageSubProject.php?projectid=${projectId}`"
+        >SubProject Groups</a>
+      </li>
+
+      <li>
+        <a
+          :href="`${$baseURL}/manageOverview.php?projectid=${projectId}`"
+        >Overview Configuration</a>
+      </li>
+
       <li>
         <a
           :href="`${$baseURL}/projects/${projectId}/ctest_configuration`"
