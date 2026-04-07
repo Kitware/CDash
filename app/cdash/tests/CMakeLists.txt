@@ -541,11 +541,8 @@ set_tests_properties(buildconfigure PROPERTIES DEPENDS aggregatecoverage)
 add_php_test(buildgrouprule)
 set_tests_properties(buildgrouprule PROPERTIES DEPENDS buildconfigure)
 
-add_php_test(buildoverview)
-set_tests_properties(buildoverview PROPERTIES DEPENDS buildgrouprule)
-
 add_php_test(committerinfo)
-set_tests_properties(committerinfo PROPERTIES DEPENDS buildoverview)
+set_tests_properties(committerinfo PROPERTIES DEPENDS buildgrouprule)
 
 add_php_test(displayimage)
 set_tests_properties(displayimage PROPERTIES DEPENDS committerinfo)

@@ -18,7 +18,6 @@ use CDash\Model\Build;
 use CDash\Model\BuildGroupRule;
 use CDash\Model\BuildRelationship;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -532,93 +531,6 @@ final class BuildController extends AbstractBuildController
 
         $pageTimer->end($response);
         return response()->json(cast_data_for_JSON($response));
-    }
-
-    /**
-     * TODO: (williamjallen) this function contains legacy XSL templating and should be converted
-     *       to a proper Blade template with Laravel-based DB queries eventually.  This contents
-     *       this function are originally from buildOverview.php and have been copied (almost) as-is.
-     */
-    public function buildOverview(): View|RedirectResponse
-    {
-        $this->setProjectByName(htmlspecialchars($_GET['project'] ?? ''));
-
-        $date = htmlspecialchars($_GET['date'] ?? '');
-
-        // We select the builds
-        $currentstarttime = get_dates($date, $this->project->NightlyTime)[1];
-
-        // Return the available groups
-        $selected_group = (int) ($_POST['groupSelection'] ?? 0);
-
-        // Check the builds
-        $beginning_timestamp = $currentstarttime;
-        $end_timestamp = $currentstarttime + 3600 * 24;
-
-        $beginning_UTCDate = gmdate(FMT_DATETIME, $beginning_timestamp);
-        $end_UTCDate = gmdate(FMT_DATETIME, $end_timestamp);
-
-        $groupSelectionSQL = '';
-        $params = [];
-        if ($selected_group > 0) {
-            $groupSelectionSQL = ' AND b2g.groupid=? ';
-            $params[] = $selected_group;
-        }
-
-        $builds = DB::select("
-              SELECT
-                  s.name AS sitename,
-                  b.name AS buildname,
-                  be.type,
-                  be.sourcefile,
-                  be.sourceline,
-                  be.stderror as text
-              FROM
-                  build AS b,
-                  builderror as be,
-                  site AS s,
-                  build2group AS b2g
-              WHERE
-                  b.starttime<?
-                  AND b.starttime>?
-                  AND b.projectid=?
-                  AND be.buildid=b.id
-                  AND s.id=b.siteid
-                  AND b2g.buildid=b.id
-                  $groupSelectionSQL
-              ORDER BY
-                  be.sourcefile ASC,
-                  be.type ASC,
-                  be.sourceline ASC
-          ", array_merge([$end_UTCDate, $beginning_UTCDate, $this->project->Id], $params));
-
-        $sourcefiles = [];
-
-        // NOTE: Query results are already ordered by sourcefile...
-        foreach ($builds as $build_array) {
-            $filename = $build_array->sourcefile;
-
-            if (!isset($sourcefiles[$filename])) {
-                $sourcefiles[$filename] = [
-                    'name' => $filename,
-                    'errors' => [],
-                    'warnings' => [],
-                ];
-            }
-
-            $type = (int) $build_array->type === 0 ? 'errors' : 'warnings';
-            $sourcefiles[$filename][$type][] = [
-                'line' => (int) $build_array->sourceline,
-                'sitename' => $build_array->sitename,
-                'buildname' => $build_array->buildname,
-                'text' => $build_array->text,
-            ];
-        }
-
-        return $this->view('build.overview', 'Build Overview')
-            ->with('selected_group', $selected_group)
-            ->with('sourcefiles', $sourcefiles)
-            ->with('startdate', date('l, F d Y H:i:s', $currentstarttime));
     }
 
     public function viewUpdatePageContent(): JsonResponse
