@@ -87,7 +87,7 @@ if $INITIAL_DOCKER_INSTALL; then
   echo "Skipping website build..."
 else
   echo "Building the website..."
-    npm run prod --stats-children
+    npm run prod
 fi
 
 echo "Generating version files..."
