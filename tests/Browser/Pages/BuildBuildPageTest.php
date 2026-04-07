@@ -479,7 +479,7 @@ class BuildBuildPageTest extends BrowserTestCase
                 ->waitForText($this->subproject2->name)
                 ->assertDontSee($buildError1->stdoutput)
                 ->assertDontSee($buildError2->stdoutput)
-                ->click('@collapse-' . $this->subproject1->id)
+                ->click('@collapse-' . $this->subproject1->id . ' summary')
                 ->assertSee($buildError1->stdoutput)
                 ->assertDontSee($buildError2->stdoutput)
             ;
@@ -779,7 +779,7 @@ class BuildBuildPageTest extends BrowserTestCase
         ): void {
             $browser->visit("/builds/{$current_parent_build->id}/build")
                 ->waitForText($this->subproject1->name)
-                ->click('@collapse-' . $this->subproject1->id)
+                ->click('@collapse-' . $this->subproject1->id . ' summary')
                 ->with('@collapse-' . $this->subproject1->id, function (Browser $browser) use (
                     $buildError1,
                     $buildError2,
@@ -793,7 +793,7 @@ class BuildBuildPageTest extends BrowserTestCase
                         ->assertSee($buildError4->stdoutput)
                     ;
                 })
-                ->click('@collapse-' . $this->subproject2->id)
+                ->click('@collapse-' . $this->subproject2->id . ' summary')
                 ->with('@collapse-' . $this->subproject2->id, function (Browser $browser) use (
                     $buildError1,
                     $buildError2,
@@ -811,7 +811,7 @@ class BuildBuildPageTest extends BrowserTestCase
 
             $browser->visit("/builds/{$current_parent_build->id}/build?onlydeltap")
                 ->waitForText($this->subproject1->name)
-                ->click('@collapse-' . $this->subproject1->id)
+                ->click('@collapse-' . $this->subproject1->id . ' summary')
                 ->with('@collapse-' . $this->subproject1->id, function (Browser $browser) use (
                     $buildError1,
                     $buildError2,
@@ -825,7 +825,7 @@ class BuildBuildPageTest extends BrowserTestCase
                         ->assertSee($buildError4->stdoutput)
                     ;
                 })
-                ->click('@collapse-' . $this->subproject2->id)
+                ->click('@collapse-' . $this->subproject2->id . ' summary')
                 ->with('@collapse-' . $this->subproject2->id, function (Browser $browser) use (
                     $buildError1,
                     $buildError2,
@@ -843,7 +843,7 @@ class BuildBuildPageTest extends BrowserTestCase
 
             $browser->visit("/builds/{$current_parent_build->id}/build?onlydeltan")
                 ->waitForText($this->subproject1->name)
-                ->click('@collapse-' . $this->subproject1->id)
+                ->click('@collapse-' . $this->subproject1->id . ' summary')
                 ->with('@collapse-' . $this->subproject1->id, function (Browser $browser) use (
                     $buildError1,
                     $buildError2,
@@ -857,7 +857,7 @@ class BuildBuildPageTest extends BrowserTestCase
                         ->assertDontSee($buildError4->stdoutput)
                     ;
                 })
-                ->click('@collapse-' . $this->subproject2->id)
+                ->click('@collapse-' . $this->subproject2->id . ' summary')
                 ->with('@collapse-' . $this->subproject2->id, function (Browser $browser): void {
                     $browser->waitForText('No fixed errors or warnings for this build.');
                 })
