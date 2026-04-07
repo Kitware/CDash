@@ -436,34 +436,6 @@ class ViewTestPhpFilters extends DefaultFilters
     }
 }
 
-class CompareCoveragePhpFilters extends DefaultFilters
-{
-    public function getDefaultFilter(): array
-    {
-        return [
-            'field' => 'subproject',
-            'fieldtype' => 'string',
-            'compare' => 61,
-            'value' => '',
-        ];
-    }
-
-    public function getSqlField($field): string
-    {
-        $sql_field = '';
-        switch (strtolower($field)) {
-            case 'subproject':
-                $sql_field = 'sp.name';
-                break;
-
-            default:
-                trigger_error("unknown field: $field", E_USER_WARNING);
-                break;
-        }
-        return $sql_field;
-    }
-}
-
 class TestOverviewPhpFilters extends DefaultFilters
 {
     public function getDefaultFilter(): array
@@ -522,10 +494,6 @@ function createPageSpecificFilters($page_id)
 
         case 'testOverview.php':
             return new TestOverviewPhpFilters();
-            break;
-
-        case 'compareCoverage.php':
-            return new CompareCoveragePhpFilters();
             break;
 
         default:

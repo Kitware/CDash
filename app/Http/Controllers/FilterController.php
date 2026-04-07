@@ -122,7 +122,6 @@ final class FilterController extends AbstractController
                 'subproject',
                 'testname',
             ],
-            'compareCoverage.php' => ['subproject'],
             default => [],
         };
     }
@@ -130,7 +129,6 @@ final class FilterController extends AbstractController
     private static function isDatePage(string $page_id): bool
     {
         switch ($page_id) {
-            case 'compareCoverage.php':
             case 'index.php':
             case 'indexchildren.php':
             case 'project.php':

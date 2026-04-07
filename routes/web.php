@@ -255,8 +255,6 @@ Route::get('/testSummary.php', function (Request $request) {
 
 Route::get('/testOverview.php', 'TestController@testOverview');
 
-Route::get('/compareCoverage.php', 'CoverageController@compareCoverage');
-
 Route::match(['get', 'post'], '/buildOverview.php', 'BuildController@buildOverview');
 
 Route::get('/viewBuildGroup.php', 'BuildController@viewBuildGroup');
