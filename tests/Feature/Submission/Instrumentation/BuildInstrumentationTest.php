@@ -63,6 +63,7 @@ class BuildInstrumentationTest extends TestCase
                                         node {
                                             name
                                             type
+                                            cumulativeDuration
                                             commands {
                                                 edges {
                                                     node {
@@ -77,6 +78,7 @@ class BuildInstrumentationTest extends TestCase
                                                         target {
                                                             name
                                                             type
+                                                            cumulativeDuration
                                                         }
                                                         measurements {
                                                             edges {
@@ -122,6 +124,7 @@ class BuildInstrumentationTest extends TestCase
                                             target {
                                                 name
                                                 type
+                                                cumulativeDuration
                                             }
                                             measurements {
                                                 edges {
@@ -152,6 +155,7 @@ class BuildInstrumentationTest extends TestCase
                                                     node {
                                                         name
                                                         type
+                                                        cumulativeDuration
                                                         commands {
                                                             edges {
                                                                 node {
@@ -166,6 +170,7 @@ class BuildInstrumentationTest extends TestCase
                                                                     target {
                                                                         name
                                                                         type
+                                                                        cumulativeDuration
                                                                     }
                                                                     measurements {
                                                                         edges {
@@ -211,6 +216,7 @@ class BuildInstrumentationTest extends TestCase
                                                         target {
                                                             name
                                                             type
+                                                            cumulativeDuration
                                                         }
                                                         measurements {
                                                             edges {

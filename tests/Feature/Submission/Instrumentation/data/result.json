@@ -278,6 +278,7 @@
                             "node": {
                               "name": "MakeTable",
                               "type": "EXECUTABLE",
+                              "cumulativeDuration": 365,
                               "commands": {
                                 "edges": [
                                   {
@@ -292,7 +293,8 @@
                                       "config": "Debug",
                                       "target": {
                                         "name": "MakeTable",
-                                        "type": "EXECUTABLE"
+                                        "type": "EXECUTABLE",
+                                        "cumulativeDuration": 365
                                       },
                                       "measurements": {
                                         "edges": [
@@ -350,7 +352,8 @@
                                       "config": "Debug",
                                       "target": {
                                         "name": "MakeTable",
-                                        "type": "EXECUTABLE"
+                                        "type": "EXECUTABLE",
+                                        "cumulativeDuration": 365
                                       },
                                       "measurements": {
                                         "edges": [
@@ -429,6 +432,7 @@
                               "language": "C++",
                               "config": "Debug",
                               "target": {
+                                "cumulativeDuration": 365,
                                 "name": "MakeTable",
                                 "type": "EXECUTABLE"
                               },
@@ -487,6 +491,7 @@
                               "language": "C++",
                               "config": "Debug",
                               "target": {
+                                "cumulativeDuration": 365,
                                 "name": "MakeTable",
                                 "type": "EXECUTABLE"
                               },
@@ -560,6 +565,7 @@
                                       "language": "C++",
                                       "config": "Debug",
                                       "target": {
+                                        "cumulativeDuration": 143,
                                         "name": "MathFunctions",
                                         "type": "SHARED_LIBRARY"
                                       },
@@ -618,6 +624,7 @@
                                       "language": "C++",
                                       "config": "Debug",
                                       "target": {
+                                        "cumulativeDuration": 143,
                                         "name": "MathFunctions",
                                         "type": "SHARED_LIBRARY"
                                       },
@@ -667,6 +674,7 @@
                                   }
                                 ]
                               },
+                              "cumulativeDuration": 143,
                               "labels": {
                                 "edges": [
                                   {
@@ -700,6 +708,7 @@
                                       "language": "C++",
                                       "config": "Debug",
                                       "target": {
+                                        "cumulativeDuration": 477,
                                         "name": "SqrtLibrary",
                                         "type": "STATIC_LIBRARY"
                                       },
@@ -758,6 +767,7 @@
                                       "language": "C++",
                                       "config": "Debug",
                                       "target": {
+                                        "cumulativeDuration": 477,
                                         "name": "SqrtLibrary",
                                         "type": "STATIC_LIBRARY"
                                       },
@@ -816,6 +826,7 @@
                                       "language": "C++",
                                       "config": "Debug",
                                       "target": {
+                                        "cumulativeDuration": 477,
                                         "name": "SqrtLibrary",
                                         "type": "STATIC_LIBRARY"
                                       },
@@ -874,6 +885,7 @@
                                       "language": "C++",
                                       "config": "Debug",
                                       "target": {
+                                        "cumulativeDuration": 477,
                                         "name": "SqrtLibrary",
                                         "type": "STATIC_LIBRARY"
                                       },
@@ -932,6 +944,7 @@
                                       "language": "C++",
                                       "config": "Debug",
                                       "target": {
+                                        "cumulativeDuration": 477,
                                         "name": "SqrtLibrary",
                                         "type": "STATIC_LIBRARY"
                                       },
@@ -981,6 +994,7 @@
                                   }
                                 ]
                               },
+                              "cumulativeDuration": 477,
                               "labels": {
                                 "edges": [
                                   {
@@ -1012,6 +1026,7 @@
                               "language": "C++",
                               "config": "Debug",
                               "target": {
+                                "cumulativeDuration": 143,
                                 "name": "MathFunctions",
                                 "type": "SHARED_LIBRARY"
                               },
@@ -1070,6 +1085,7 @@
                               "language": "C++",
                               "config": "Debug",
                               "target": {
+                                "cumulativeDuration": 143,
                                 "name": "MathFunctions",
                                 "type": "SHARED_LIBRARY"
                               },
@@ -1128,6 +1144,7 @@
                               "language": "C++",
                               "config": "Debug",
                               "target": {
+                                "cumulativeDuration": 477,
                                 "name": "SqrtLibrary",
                                 "type": "STATIC_LIBRARY"
                               },
@@ -1186,6 +1203,7 @@
                               "language": "C++",
                               "config": "Debug",
                               "target": {
+                                "cumulativeDuration": 477,
                                 "name": "SqrtLibrary",
                                 "type": "STATIC_LIBRARY"
                               },
@@ -1244,6 +1262,7 @@
                               "language": "C++",
                               "config": "Debug",
                               "target": {
+                                "cumulativeDuration": 477,
                                 "name": "SqrtLibrary",
                                 "type": "STATIC_LIBRARY"
                               },
@@ -1302,6 +1321,7 @@
                               "language": "C++",
                               "config": "Debug",
                               "target": {
+                                "cumulativeDuration": 477,
                                 "name": "SqrtLibrary",
                                 "type": "STATIC_LIBRARY"
                               },
@@ -1360,6 +1380,7 @@
                               "language": "C++",
                               "config": "Debug",
                               "target": {
+                                "cumulativeDuration": 477,
                                 "name": "SqrtLibrary",
                                 "type": "STATIC_LIBRARY"
                               },
@@ -1433,6 +1454,7 @@
                                       "language": "C++",
                                       "config": "Debug",
                                       "target": {
+                                        "cumulativeDuration": 373,
                                         "name": "Tutorial",
                                         "type": "EXECUTABLE"
                                       },
@@ -1491,6 +1513,7 @@
                                       "language": "C++",
                                       "config": "Debug",
                                       "target": {
+                                        "cumulativeDuration": 373,
                                         "name": "Tutorial",
                                         "type": "EXECUTABLE"
                                       },
@@ -1540,6 +1563,7 @@
                                   }
                                 ]
                               },
+                              "cumulativeDuration": 373,
                               "labels": {
                                 "edges": [
                                   {
@@ -1576,6 +1600,7 @@
                               "language": "C++",
                               "config": "Debug",
                               "target": {
+                                "cumulativeDuration": 373,
                                 "name": "Tutorial",
                                 "type": "EXECUTABLE"
                               },
@@ -1634,6 +1659,7 @@
                               "language": "C++",
                               "config": "Debug",
                               "target": {
+                                "cumulativeDuration": 373,
                                 "name": "Tutorial",
                                 "type": "EXECUTABLE"
                               },
