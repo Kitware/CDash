@@ -238,7 +238,8 @@ class ProjectSettingsPageTest extends BrowserTestCase
                 ->waitFor('@integrations-tab-link')
                 ->click('@integrations-tab-link')
                 ->whenAvailable('@integrations-tab', function (Browser $browser): void {
-                    $browser->assertVisible('@no-integrations-message');
+                    $browser->waitFor('@no-integrations-message')
+                        ->assertVisible('@no-integrations-message');
                 });
         });
     }
