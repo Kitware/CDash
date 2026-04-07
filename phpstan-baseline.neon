@@ -1834,18 +1834,6 @@ parameters:
 			path: app/Http/Controllers/OAuthController.php
 
 		-
-			rawMessage: Cannot cast mixed to int.
-			identifier: cast.int
-			count: 1
-			path: app/Http/Controllers/ProjectController.php
-
-		-
-			rawMessage: 'Loose comparison via "==" between int<0, max> and int is not allowed.'
-			identifier: equal.notAllowed
-			count: 1
-			path: app/Http/Controllers/ProjectController.php
-
-		-
 			rawMessage: Access to an undefined property object::$numdefects.
 			identifier: property.notFound
 			count: 2
@@ -19886,69 +19874,6 @@ parameters:
 			identifier: argument.type
 			count: 2
 			path: app/cdash/tests/test_coveragedirectories.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method prepare() of class CDash\Database:
-				04/22/2023  Use Laravel query builder or Eloquent instead
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/test_createprojectpermissions.php
-
-		-
-			rawMessage: Cannot access offset 'id' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_createprojectpermissions.php
-
-		-
-			rawMessage: Cannot access property $error on mixed.
-			identifier: property.nonObject
-			count: 4
-			path: app/cdash/tests/test_createprojectpermissions.php
-
-		-
-			rawMessage: Cannot access property $project on mixed.
-			identifier: property.nonObject
-			count: 4
-			path: app/cdash/tests/test_createprojectpermissions.php
-
-		-
-			rawMessage: Cannot access property $user on mixed.
-			identifier: property.nonObject
-			count: 1
-			path: app/cdash/tests/test_createprojectpermissions.php
-
-		-
-			rawMessage: 'Cannot call method execute() on PDOStatement|false.'
-			identifier: method.nonObject
-			count: 1
-			path: app/cdash/tests/test_createprojectpermissions.php
-
-		-
-			rawMessage: 'Cannot call method fetch() on PDOStatement|false.'
-			identifier: method.nonObject
-			count: 1
-			path: app/cdash/tests/test_createprojectpermissions.php
-
-		-
-			rawMessage: 'Parameter #1 $object_or_class of function property_exists expects object|string, mixed given.'
-			identifier: argument.type
-			count: 15
-			path: app/cdash/tests/test_createprojectpermissions.php
-
-		-
-			rawMessage: 'Part $userid (mixed) of encapsed string cannot be cast to string.'
-			identifier: encapsedStringPart.nonString
-			count: 3
-			path: app/cdash/tests/test_createprojectpermissions.php
-
-		-
-			rawMessage: Property CreateProjectPermissionsTestCase::$BuildId has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/test_createprojectpermissions.php
 
 		-
 			rawMessage: 'Argument of an invalid type mixed supplied for foreach, only iterables are supported.'
