@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Build;
 use CDash\Database;
 
 //
@@ -78,29 +79,13 @@ class ActualTrilinosSubmissionTestCase extends TrilinosSubmissionTestCase
         $buildid = $query[0]['id'];
 
         // Verify 8 build errors.
-        $this->get($this->url . "/api/v1/viewBuildError.php?buildid=$buildid");
-        $content = $this->getBrowser()->getContent();
-        $jsonobj = json_decode($content, true);
-        $num_errors = 0;
-
-        if (isset($jsonobj['errors'])) {
-            $num_errors = count($jsonobj['errors']);
-        }
-
+        $num_errors = Build::findOrFail((int) $buildid)->builderrors;
         if ($num_errors !== 8) {
             $this->fail("Expected 8 build errors, found $num_errors");
         }
 
         // Verify 296 build warnings.
-        $this->get($this->url . "/api/v1/viewBuildError.php?buildid=$buildid&type=1");
-        $content = $this->getBrowser()->getContent();
-        $jsonobj = json_decode($content, true);
-        $num_warnings = 0;
-
-        if (isset($jsonobj['errors'])) {
-            $num_warnings = count($jsonobj['errors']);
-        }
-
+        $num_warnings = Build::findOrFail((int) $buildid)->buildwarnings;
         if ($num_warnings !== 296) {
             $this->fail("Expected 296 build warnings, found $num_warnings");
         }

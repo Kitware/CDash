@@ -65,10 +65,9 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
         $success = true;
         $error_msg = '';
 
-        $pages = ['viewBuildError'];
         $vue_pages = ['buildSummary', 'viewUpdate'];
         $pages_with_preview_tables = ['buildSummary'];
-        foreach (array_merge($pages, $vue_pages) as $page) {
+        foreach ($vue_pages as $page) {
             if (in_array($page, $vue_pages, true)) {
                 $path_to_first = "builds/{$first_buildid}";
                 $path_to_second = "builds/{$second_buildid}";
@@ -289,24 +288,6 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
         }
         if ($jsonobj['failingDate'] !== '2011-07-23') {
             $error_msg = "Expected 'failingDate' to be '2011-07-23', found " . $jsonobj['failingDate'];
-            $success = false;
-        }
-
-        // Make sure the 'type' parameter is preserved across Previous/Next/Current
-        // on viewBuildError.php.
-        $this->get($this->url . "/api/v1/viewBuildError.php?type=1&buildid=$second_buildid");
-        $content = $this->getBrowser()->getContent();
-        $jsonobj = json_decode($content, true);
-        if (!str_contains($jsonobj['menu']['next'], 'type=1')) {
-            $error_msg = 'type=1 not found in Next link of viewBuildError.php';
-            $success = false;
-        }
-        if (!str_contains($jsonobj['menu']['previous'], 'type=1')) {
-            $error_msg = 'type=1 not found in Previous link of viewBuildError.php';
-            $success = false;
-        }
-        if (!str_contains($jsonobj['menu']['current'], 'type=1')) {
-            $error_msg = 'type=1 not found in Current link of viewBuildError.php';
             $success = false;
         }
 

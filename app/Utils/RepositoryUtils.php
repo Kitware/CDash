@@ -14,44 +14,6 @@ use PDO;
 
 class RepositoryUtils
 {
-    /** Return the source directory for a source file */
-    public static function get_source_dir($projectid, $projecturl, $file_path)
-    {
-        if (!is_numeric($projectid)) {
-            return;
-        }
-
-        $service = ServiceContainer::getInstance();
-        $project = $service->get(Project::class);
-        $project->Id = $projectid;
-        $project->Fill();
-        if (null === $project->CvsViewerType) {
-            return;
-        }
-        $cvsviewertype = strtolower($project->CvsViewerType);
-
-        $target_fn = $cvsviewertype . '_get_source_dir';
-
-        if (method_exists(self::class, $target_fn)) {
-            return self::$target_fn($projecturl, $file_path);
-        }
-    }
-
-    /** Extract the source directory from a Github URL and a full path to
-     * a source file.  This only works properly if the source dir's name matches
-     * the repo's name, ie it was not renamed as it was cloned.
-     **/
-    public static function github_get_source_dir($projecturl, $file_path): string
-    {
-        $repo_name = basename($projecturl);
-        $offset = stripos($file_path, $repo_name);
-        if ($offset === false) {
-            return '/.../';
-        }
-        $offset += strlen($repo_name);
-        return substr($file_path, 0, $offset);
-    }
-
     /** Return the GitHub diff URL */
     public static function get_github_diff_url($projecturl, $directory, $file, $revision)
     {
@@ -153,36 +115,6 @@ class RepositoryUtils
         }
         // default is github
         return self::get_github_revision_url($projecturl, $revision, $priorrevision);
-    }
-
-    public static function linkify_compiler_output($projecturl, $source_dir, $revision, $compiler_output): string
-    {
-        // Escape HTML characters in compiler output first.  This allows us to properly
-        // display characters such as angle brackets in compiler output.
-        $compiler_output = htmlspecialchars($compiler_output, ENT_QUOTES, 'UTF-8', false);
-
-        // set a reasonable default revision if none was specified
-        if (empty($revision)) {
-            $revision = 'master';
-        }
-
-        // Make sure we specify a protocol so this isn't interpreted as a relative path.
-        if (!str_contains($projecturl, '//')) {
-            $projecturl = '//' . $projecturl;
-        }
-        $repo_link = "<a class='cdash-link' href='$projecturl/blob/$revision";
-        $pattern = "&$source_dir\/*([a-zA-Z0-9_\.\-\\/]+):(\d+)&";
-        $replacement = "$repo_link/$1#L$2'>$1:$2</a>";
-
-        // create links for source files
-        $compiler_output = preg_replace($pattern, $replacement, $compiler_output);
-
-        // remove base dir from other (binary) paths
-        $base_dir = dirname($source_dir) . '/';
-        if ($base_dir !== '//') {
-            return str_replace($base_dir, '', $compiler_output);
-        }
-        return $compiler_output;
     }
 
     /** Post a comment on a pull request */

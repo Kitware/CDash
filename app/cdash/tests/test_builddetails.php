@@ -48,64 +48,6 @@ class BuildDetailsTestCase extends KWWebTestCase
         }
     }
 
-    public function testViewBuildErrorReturnsErrorForNonexistentBuild(): void
-    {
-        $response = $this->get($this->url . '/api/v1/viewBuildError.php?buildid=80000001');
-        $response = json_decode($response);
-
-        $this->assertTrue(strlen($response->error) > 0);
-    }
-
-    public function testViewBuildErrorReturnsErrorForInvalidBuildId(): void
-    {
-        $response = $this->get($this->url . '/api/v1/viewBuildError.php?buildid=im-non-numeric');
-        $response = json_decode($response);
-
-        $this->assertTrue(strlen($response->error) > 0);
-    }
-
-    public function testViewBuildErrorReturnsArrayOfErrorsOnChildBuilds(): void
-    {
-        foreach ($this->builds as $build) {
-            if ($build['parentid'] != -1) {
-                $response = json_decode($this->get(
-                    $this->url . '/api/v1/viewBuildError.php?buildid=' . $build['id']));
-
-                $this->assertTrue(is_array($response->errors));
-            }
-        }
-    }
-
-    public function testViewBuildErrorReturnsProperFormat(): void
-    {
-        // This test is specific to Subbuild3.xml
-        $build = $this->builds[3];
-        $build_response = json_decode($this->get(
-            $this->url . '/api/v1/viewBuildError.php?buildid=' . $build['id']));
-
-        $this->assertTrue(count($build_response->errors) === 3);
-
-        $expectedErrors = json_decode(file_get_contents($this->testDataDir . '/Subbuild3_errors.json'));
-
-        for ($i = 0; $i < count($expectedErrors); $i++) {
-            $this->assertEqual($build_response->errors[$i], $expectedErrors[$i]);
-        }
-    }
-
-    public function testViewBuildErrorReturnsProperFormatForParentBuilds(): void
-    {
-        $build = $this->builds[0];
-        $build_response = json_decode($this->get(
-            $this->url . '/api/v1/viewBuildError.php?buildid=' . $build['id']));
-
-        $this->assertTrue($build_response->numSubprojects === 1);
-        $this->assertTrue(count($build_response->errors) == 3);
-
-        foreach ($build_response->errors as $error) {
-            $this->assertTrue($error->subprojectname === 'my_subproject');
-        }
-    }
-
     // This will be specific to a test xml
     public function testViewTestReturnsProperFormat()
     {
