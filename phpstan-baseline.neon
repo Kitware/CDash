@@ -2032,12 +2032,6 @@ parameters:
 			path: app/Http/Controllers/ProjectOverviewController.php
 
 		-
-			rawMessage: 'Loose comparison via "==" between bool|int|string and int is not allowed.'
-			identifier: equal.notAllowed
-			count: 1
-			path: app/Http/Controllers/RemoteProcessingController.php
-
-		-
 			rawMessage: '''
 				Call to deprecated function pdo_real_escape_string():
 				04/01/2023
@@ -2179,12 +2173,6 @@ parameters:
 			path: app/Http/Controllers/SubmissionController.php
 
 		-
-			rawMessage: 'Cannot call method storeAs() on array<Illuminate\Http\UploadedFile>|Illuminate\Http\UploadedFile.'
-			identifier: method.nonObject
-			count: 1
-			path: app/Http/Controllers/SubmissionController.php
-
-		-
 			rawMessage: 'Only booleans are allowed in a negated boolean, int|false given.'
 			identifier: booleanNot.exprNotBoolean
 			count: 1
@@ -2192,12 +2180,6 @@ parameters:
 
 		-
 			rawMessage: 'Parameter #1 $string of function htmlspecialchars expects string, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/SubmissionController.php
-
-		-
-			rawMessage: 'Parameter #1 $value of function decrypt expects string, mixed given.'
 			identifier: argument.type
 			count: 1
 			path: app/Http/Controllers/SubmissionController.php
@@ -5644,18 +5626,6 @@ parameters:
 			path: app/Jobs/ProcessSubmission.php
 
 		-
-			rawMessage: 'Method App\Jobs\ProcessSubmission::getRemoteSubmissionFileHandle() has no return type specified.'
-			identifier: missingType.return
-			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
-			rawMessage: 'Method App\Jobs\ProcessSubmission::getRemoteSubmissionFileHandle() has parameter $filename with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
 			rawMessage: 'Method App\Jobs\ProcessSubmission::getSubmissionFileHandle() has no return type specified.'
 			identifier: missingType.return
 			count: 1
@@ -5682,18 +5652,6 @@ parameters:
 		-
 			rawMessage: 'Method App\Jobs\ProcessSubmission::requeueSubmissionFile() has parameter $buildid with no type specified.'
 			identifier: missingType.parameter
-			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
-			rawMessage: 'Only booleans are allowed in an if condition, bool|string given.'
-			identifier: if.condNotBoolean
-			count: 3
-			path: app/Jobs/ProcessSubmission.php
-
-		-
-			rawMessage: 'Parameter #1 $from of function rename expects string, (string|false) given.'
-			identifier: argument.type
 			count: 1
 			path: app/Jobs/ProcessSubmission.php
 
@@ -26465,15 +26423,6 @@ parameters:
 			identifier: property.uninitialized
 			count: 1
 			path: tests/Feature/PurgeUnusedProjectsCommand.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method forceRootUrl() of class Illuminate\Routing\UrlGenerator:
-				Use useOrigin
-			'''
-			identifier: staticMethod.deprecated
-			count: 1
-			path: tests/Feature/RemoteWorkers.php
 
 		-
 			rawMessage: '''

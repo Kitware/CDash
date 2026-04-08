@@ -14,9 +14,7 @@ use App\Utils\UnparsedSubmissionProcessor;
 use CDash\Model\Build;
 use CDash\Model\Project;
 use Exception;
-use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
@@ -263,41 +261,5 @@ final class SubmissionController extends AbstractProjectController
         return response()
             ->view('submission.xml-response', ['statusarray' => $statusarray], $http_code)
             ->header('Content-Type', 'text/xml');
-    }
-
-    public function storeUploadedFile(Request $request): Response
-    {
-        if (!(bool) config('cdash.remote_workers')) {
-            return response('This feature is disabled', Response::HTTP_CONFLICT);
-        }
-
-        if (!$request->has('sha1sum')) {
-            return response('Bad request', Response::HTTP_BAD_REQUEST);
-        }
-
-        try {
-            $expected_sha1sum = decrypt($request->input('sha1sum'));
-        } catch (DecryptException) {
-            return response('This feature is disabled', Response::HTTP_CONFLICT);
-        }
-
-        $uploaded_file = array_values(request()->allFiles())[0];
-        $stored_path = $uploaded_file->storeAs('upload', $expected_sha1sum);
-        if ($stored_path === false) {
-            abort(Response::HTTP_INTERNAL_SERVER_ERROR, 'Failed to store uploaded file');
-        }
-
-        $fp = Storage::readStream($stored_path);
-        if ($fp === null) {
-            abort(Response::HTTP_INTERNAL_SERVER_ERROR, 'Failed to store uploaded file');
-        }
-
-        $found_sha1sum = SubmissionUtils::hashFileHandle($fp, 'sha1');
-        if ($found_sha1sum !== $expected_sha1sum) {
-            Storage::delete($stored_path);
-            return response('Uploaded file does not match expected sha1sum', Response::HTTP_BAD_REQUEST);
-        }
-
-        return response('OK', Response::HTTP_OK);
     }
 }

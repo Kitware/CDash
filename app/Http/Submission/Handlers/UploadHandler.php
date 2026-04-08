@@ -220,46 +220,22 @@ class UploadHandler extends AbstractXmlHandler
             } else {
                 $this->UploadFile->isurl = false;
 
-                if ((bool) config('cdash.remote_workers')) {
-                    // Make an API request to store this file.
-                    $encrypted_sha1sum = encrypt($this->UploadFile->sha1sum);
-                    $fp_to_upload = fopen($this->TmpFilename, 'r');
-                    if ($fp_to_upload === false) {
-                        Log::error("Failed to open temporary file {$this->TmpFilename} for upload");
+                // Store the file if we don't already have it.
+                $uploadFilepath = "upload/{$this->UploadFile->sha1sum}";
+                if (!Storage::exists($uploadFilepath)) {
+                    try {
+                        $fileToUpload = new File($this->TmpFilename);
+                    } catch (FileNotFoundException) {
+                        Log::error("Could not find file {$this->TmpFilename} to upload");
                         unlink($this->TmpFilename);
                         $this->UploadError = true;
                         return;
                     }
-                    $response = Http::attach(
-                        'attachment', $fp_to_upload, (string) $this->UploadFile->sha1sum
-                    )->post(url('/api/v1/store_upload'), [
-                        'sha1sum' => $encrypted_sha1sum,
-                    ]);
-                    fclose($fp_to_upload);
-                    if (!$response->successful()) {
-                        Log::error('Error uploading file via API: ' . $response->status() . ' ' . $response->body());
+                    if (Storage::putFileAs('upload', $fileToUpload, (string) $this->UploadFile->sha1sum) === false) {
+                        Log::error("Failed to store {$this->TmpFilename} as {$uploadFilepath}");
                         unlink($this->TmpFilename);
                         $this->UploadError = true;
                         return;
-                    }
-                } else {
-                    // Store the file if we don't already have it.
-                    $uploadFilepath = "upload/{$this->UploadFile->sha1sum}";
-                    if (!Storage::exists($uploadFilepath)) {
-                        try {
-                            $fileToUpload = new File($this->TmpFilename);
-                        } catch (FileNotFoundException) {
-                            Log::error("Could not find file {$this->TmpFilename} to upload");
-                            unlink($this->TmpFilename);
-                            $this->UploadError = true;
-                            return;
-                        }
-                        if (Storage::putFileAs('upload', $fileToUpload, (string) $this->UploadFile->sha1sum) === false) {
-                            Log::error("Failed to store {$this->TmpFilename} as {$uploadFilepath}");
-                            unlink($this->TmpFilename);
-                            $this->UploadError = true;
-                            return;
-                        }
                     }
                 }
             }
