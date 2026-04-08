@@ -67,9 +67,11 @@ describe('expected_build', () => {
     cy.contains('2 build(s) selected').should('be.visible');
 
     // click the "Mark as Expected" button in the bulk actions toolbar
+    cy.window().then(w => w.beforeReload1 = true);
     cy.get('[data-cy="bulk-mark-expected-btn"]').click();
 
     // wait for page reload
+    cy.window().should('not.have.property', 'beforeReload1');
     cy.url().should('contain', 'index.php?project=InsightExample&date=2010-07-07');
 
     // verify first build is now expected
@@ -96,9 +98,11 @@ describe('expected_build', () => {
     cy.get('#project_5_13').find('tbody').find('tr').eq(1).find('[data-cy="build-selection-checkbox"]').check();
 
     // mark them as not expected
+    cy.window().then(w => w.beforeReload2 = true);
     cy.get('[data-cy="bulk-mark-not-expected-btn"]').click();
 
     // wait for page reload
+    cy.window().should('not.have.property', 'beforeReload2');
     cy.url().should('contain', 'index.php?project=InsightExample&date=2010-07-07');
 
     // verify first build is now not expected
