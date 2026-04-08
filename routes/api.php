@@ -40,8 +40,6 @@ Route::get('/v1/viewDynamicAnalysisFile.php', 'DynamicAnalysisController@apiView
 
 Route::get('/v1/buildProperties.php', 'BuildPropertiesController@apiBuildProperties');
 
-Route::get('/v1/compareCoverage.php', 'CoverageController@apiCompareCoverage');
-
 Route::get('/v1/getPreviousBuilds.php', 'BuildController@apiGetPreviousBuilds');
 
 Route::get('/v1/queryTests.php', 'TestController@apiQueryTests');

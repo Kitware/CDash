@@ -26,9 +26,6 @@ const CDash = angular.module('CDash', [
 import { VERSION } from '../../../public/assets/js/angular/version.js';
 CDash.constant('VERSION', VERSION);
 
-import { CompareCoverageController } from "./controllers/compareCoverage";
-CDash.controller('CompareCoverageController', ["$scope", "$rootScope", "apiLoader", "filters", "multisort", CompareCoverageController]);
-
 import { ManageSubProjectController, filter_subproject_groups } from "./controllers/manageSubProject";
 CDash.controller('ManageSubProjectController', ["$scope", "$http", "apiLoader", ManageSubProjectController]);
 CDash.filter('filter_subproject_groups', filter_subproject_groups);

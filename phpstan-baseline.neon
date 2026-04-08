@@ -1138,282 +1138,6 @@ parameters:
 			path: app/Http/Controllers/CTestConfigurationController.php
 
 		-
-			rawMessage: 'Argument of an invalid type mixed supplied for foreach, only iterables are supported.'
-			identifier: foreach.nonIterable
-			count: 6
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: Binary operation "." between 'build' and mixed results in an error.
-			identifier: binaryOp.invalid
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method executePrepared() of class CDash\Database:
-				04/22/2023  Use Laravel query builder or Eloquent instead
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method executePreparedSingleRow() of class CDash\Database:
-				04/22/2023  Use Laravel query builder or Eloquent instead
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method getNumberOfSubProjects() of class App\Services\ProjectService:
-				12/06/2025  Use Eloquent relationships for all new code
-			'''
-			identifier: staticMethod.deprecated
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method getSubProjectGroups() of class App\Services\ProjectService:
-				12/06/2025  Use Eloquent relationships for all new code
-			'''
-			identifier: staticMethod.deprecated
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: Cannot access offset 'coverages' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: Cannot access offset 'id' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 10
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: Cannot access offset 'key' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: Cannot access offset 'label' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 4
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: Cannot access offset 'loctested' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 4
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: Cannot access offset 'loctesteddiff' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: Cannot access offset 'locuntested' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 4
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: Cannot access offset 'locuntesteddiff' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: Cannot access offset 'name' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: Cannot access offset 'percentage' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: Cannot access offset 'subprojectgroup' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: Cannot access offset 'text' on array|false|null.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Cannot call method GetId() on mixed.'
-			identifier: method.nonObject
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Cannot call method GetName() on mixed.'
-			identifier: method.nonObject
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: Cannot cast mixed to int.
-			identifier: cast.int
-			count: 11
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: Casting to int something that's already int.
-			identifier: cast.useless
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Construct empty() is not allowed. Use more strict comparison.'
-			identifier: empty.notAllowed
-			count: 3
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Loose comparison via "==" between mixed and int is not allowed.'
-			identifier: equal.notAllowed
-			count: 2
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Loose comparison via "==" between mixed and mixed is not allowed.'
-			identifier: equal.notAllowed
-			count: 3
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Loose comparison via "==" between mixed and null is not allowed.'
-			identifier: equal.notAllowed
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Loose comparison via "==" between string|null and string is not allowed.'
-			identifier: equal.notAllowed
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Method App\Http\Controllers\CoverageController::apiCompareCoverage_get_coverage() throws checked exception DivisionByZeroError but it''s missing from the PHPDoc @throws tag.'
-			identifier: missingType.checkedException
-			count: 2
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Offset ''id'' might not exist on array{}|array{name: ''Aggregate Coverage'', key: non-falsy-string, id: mixed}.'
-			identifier: offsetAccess.notFound
-			count: 2
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Offset ''key'' might not exist on array{}|array{name: ''Aggregate Coverage'', key: non-falsy-string, id: mixed}.'
-			identifier: offsetAccess.notFound
-			count: 3
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Offset ''loctested'' might not exist on non-empty-array{label?: mixed, loctested?: int, locuntested?: int, coverages?: list<array{buildid: mixed, percentage: float, locuntested: int, loctested: int, percentagediff?: float, label: string}>}.'
-			identifier: offsetAccess.notFound
-			count: 2
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Offset ''locuntested'' might not exist on array{label?: mixed, loctested: int, locuntested?: int, coverages?: list<array{buildid: mixed, percentage: float, locuntested: int, loctested: int, percentagediff?: float, label: string}>}.'
-			identifier: offsetAccess.notFound
-			count: 2
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Offset ''locuntested'' might not exist on non-empty-array{label?: mixed, loctested?: int, locuntested?: int, coverages?: list<array{buildid: mixed, percentage: float, locuntested: int, loctested: int, percentagediff?: float, label: string}>}.'
-			identifier: offsetAccess.notFound
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Only numeric types are allowed in *, int|null given on the left side.'
-			identifier: mul.leftNonNumeric
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Parameter #1 $array (list<array>) of array_values is already a list, call has no effect.'
-			identifier: arrayValues.list
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Parameter #1 $coverage of static method App\Http\Controllers\CoverageController::apiCompareCoverage_create_subproject() expects array<string, mixed>, mixed given.'
-			identifier: argument.type
-			count: 2
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Parameter #1 $key of function array_key_exists expects int|string, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Parameter #1 $string of function htmlspecialchars expects string, mixed given.'
-			identifier: argument.type
-			count: 2
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Parameter #2 $build_array of static method App\Http\Controllers\CoverageController::apiCompareCoverage_get_build_label() expects array<string, mixed>, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Parameter #2 $timestamp of function gmdate expects int|null, (float|int) given.'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Parameter #3 $coverage of static method App\Http\Controllers\CoverageController::apiCompareCoverage_populate_subproject() expects array<string, mixed>, mixed given.'
-			identifier: argument.type
-			count: 4
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: 'Part $num_labels (mixed) of encapsed string cannot be cast to string.'
-			identifier: encapsedStringPart.nonString
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: Possibly invalid array key type mixed.
-			identifier: offsetAccess.invalidOffset
-			count: 9
-			path: app/Http/Controllers/CoverageController.php
-
-		-
-			rawMessage: Variable $groupId might not be defined.
-			identifier: variable.undefined
-			count: 1
-			path: app/Http/Controllers/CoverageController.php
-
-		-
 			rawMessage: Cannot access property $name on App\Models\Site|null.
 			identifier: property.nonObject
 			count: 2
@@ -14095,18 +13819,6 @@ parameters:
 			path: app/cdash/include/filterdataFunctions.php
 
 		-
-			rawMessage: 'Method CompareCoveragePhpFilters::getDefaultFilter() return type has no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/include/filterdataFunctions.php
-
-		-
-			rawMessage: 'Method CompareCoveragePhpFilters::getSqlField() has parameter $field with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/include/filterdataFunctions.php
-
-		-
 			rawMessage: 'Method DefaultFilters::getDefaultFilter() return type has no value type specified in iterable type array.'
 			identifier: missingType.iterableValue
 			count: 1
@@ -14241,7 +13953,7 @@ parameters:
 		-
 			rawMessage: Unreachable statement - code above always terminates.
 			identifier: deadCode.unreachable
-			count: 6
+			count: 5
 			path: app/cdash/include/filterdataFunctions.php
 
 		-
@@ -17730,13 +17442,7 @@ parameters:
 		-
 			rawMessage: 'Argument of an invalid type mixed supplied for foreach, only iterables are supported.'
 			identifier: foreach.nonIterable
-			count: 5
-			path: app/cdash/tests/test_aggregatesubprojectcoverage.php
-
-		-
-			rawMessage: 'Binary operation "." between ''Unexpected build: '' and mixed results in an error.'
-			identifier: binaryOp.invalid
-			count: 1
+			count: 3
 			path: app/cdash/tests/test_aggregatesubprojectcoverage.php
 
 		-
@@ -17775,13 +17481,13 @@ parameters:
 		-
 			rawMessage: Cannot access offset 'builds' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
+			count: 1
 			path: app/cdash/tests/test_aggregatesubprojectcoverage.php
 
 		-
 			rawMessage: Cannot access offset 'coveragegroups' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 4
+			count: 2
 			path: app/cdash/tests/test_aggregatesubprojectcoverage.php
 
 		-
@@ -17791,31 +17497,13 @@ parameters:
 			path: app/cdash/tests/test_aggregatesubprojectcoverage.php
 
 		-
-			rawMessage: Cannot access offset 'key' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
-			path: app/cdash/tests/test_aggregatesubprojectcoverage.php
-
-		-
 			rawMessage: Cannot access offset 'label' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
-			path: app/cdash/tests/test_aggregatesubprojectcoverage.php
-
-		-
-			rawMessage: Cannot access offset 'name' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
 			path: app/cdash/tests/test_aggregatesubprojectcoverage.php
 
 		-
 			rawMessage: Cannot access offset 0 on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_aggregatesubprojectcoverage.php
-
-		-
-			rawMessage: Cannot access offset mixed on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: app/cdash/tests/test_aggregatesubprojectcoverage.php
@@ -17875,18 +17563,6 @@ parameters:
 			path: app/cdash/tests/test_aggregatesubprojectcoverage.php
 
 		-
-			rawMessage: 'Method AggregateSubProjectCoverageTestCase::compareCoverageCheck() has parameter $answers with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/test_aggregatesubprojectcoverage.php
-
-		-
-			rawMessage: 'Method AggregateSubProjectCoverageTestCase::compareCoverageCheck() has parameter $extra_url with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/test_aggregatesubprojectcoverage.php
-
-		-
 			rawMessage: 'Method AggregateSubProjectCoverageTestCase::testSubmitCoverage() has no return type specified.'
 			identifier: missingType.return
 			count: 1
@@ -17923,38 +17599,14 @@ parameters:
 			path: app/cdash/tests/test_aggregatesubprojectcoverage.php
 
 		-
-			rawMessage: 'Parameter #1 $key of function array_key_exists expects int|string, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/tests/test_aggregatesubprojectcoverage.php
-
-		-
 			rawMessage: 'Parameter #1 $value of function count expects array|Countable, mixed given.'
 			identifier: argument.type
-			count: 5
-			path: app/cdash/tests/test_aggregatesubprojectcoverage.php
-
-		-
-			rawMessage: 'Part $found (mixed) of encapsed string cannot be cast to string.'
-			identifier: encapsedStringPart.nonString
-			count: 1
-			path: app/cdash/tests/test_aggregatesubprojectcoverage.php
-
-		-
-			rawMessage: 'Part $groupname (mixed) of encapsed string cannot be cast to string.'
-			identifier: encapsedStringPart.nonString
-			count: 2
+			count: 3
 			path: app/cdash/tests/test_aggregatesubprojectcoverage.php
 
 		-
 			rawMessage: 'Part $name (mixed) of encapsed string cannot be cast to string.'
 			identifier: encapsedStringPart.nonString
-			count: 1
-			path: app/cdash/tests/test_aggregatesubprojectcoverage.php
-
-		-
-			rawMessage: Possibly invalid array key type mixed.
-			identifier: offsetAccess.invalidOffset
 			count: 1
 			path: app/cdash/tests/test_aggregatesubprojectcoverage.php
 
