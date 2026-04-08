@@ -35,8 +35,6 @@ Route::get('/v1/getSubProjectDependencies.php', 'SubProjectController@apiDepende
 
 Route::get('/v1/viewDynamicAnalysis.php', 'DynamicAnalysisController@apiViewDynamicAnalysis');
 
-Route::get('/v1/buildProperties.php', 'BuildPropertiesController@apiBuildProperties');
-
 Route::get('/v1/getPreviousBuilds.php', 'BuildController@apiGetPreviousBuilds');
 
 Route::get('/v1/queryTests.php', 'TestController@apiQueryTests');

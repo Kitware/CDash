@@ -116,23 +116,6 @@ class BuildPropertiesTestCase extends KWWebTestCase
         $warning->Insert();
     }
 
-    public function testListDefects(): void
-    {
-        $buildids = [];
-        foreach ($this->Builds as $name => $build) {
-            $buildids[] = $build->Id;
-        }
-        $defects = ['builderrors', 'buildwarnings', 'testfailed'];
-        $query_string = http_build_query(['buildid' => $buildids, 'defect' => $defects]);
-        $this->get($this->url . "/api/v1/buildProperties.php?$query_string");
-        $content = $this->getBrowser()->getContent();
-        $jsonobj = json_decode($content, true);
-        $num_defects = count($jsonobj['defects']);
-        if ($num_defects !== 3) {
-            $this->fail("Expected 3 defects, found $num_defects");
-        }
-    }
-
     private function create_build($buildname, $filename, $date, $md5): void
     {
         $timestamp = strtotime($date);
