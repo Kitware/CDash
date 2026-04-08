@@ -1416,7 +1416,7 @@ parameters:
 		-
 			rawMessage: Cannot access property $name on App\Models\Site|null.
 			identifier: property.nonObject
-			count: 2
+			count: 1
 			path: app/Http/Controllers/DynamicAnalysisController.php
 
 		-
@@ -25520,12 +25520,6 @@ parameters:
 
 		-
 			rawMessage: 'Parameter #1 $buildid of static method App\Utils\DatabaseCleanupUtils::removeBuild() expects array<int>|int, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/tests/test_viewdynamicanalysisfile.php
-
-		-
-			rawMessage: 'Parameter #1 $object_or_class of function property_exists expects object|string, mixed given.'
 			identifier: argument.type
 			count: 1
 			path: app/cdash/tests/test_viewdynamicanalysisfile.php
