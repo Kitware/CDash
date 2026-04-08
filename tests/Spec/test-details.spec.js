@@ -113,6 +113,9 @@ it('handles API response', async () => {
         transition: false,
       },
     },
+    props: {
+      buildId: 1,
+    },
   });
   await new Promise(process.nextTick);
   expect(component.vm.loading).toBe(false);
@@ -160,6 +163,9 @@ it('can toggle command line', async () => {
         transition: false,
       },
     },
+    props: {
+      buildId: 1,
+    },
   });
   await new Promise(process.nextTick);
 
@@ -183,6 +189,9 @@ it('can toggle environment', async () => {
         },
         transition: false,
       },
+    },
+    props: {
+      buildId: 1,
     },
   });
   await new Promise(process.nextTick);
@@ -211,6 +220,9 @@ it('"Show Environment" toggle is conditionally rendered', async () => {
         transition: false,
       },
     },
+    props: {
+      buildId: 1,
+    },
   });
   await new Promise(process.nextTick);
   expect(component.find('#environmentlink').exists()).toBe(false);
@@ -226,6 +238,9 @@ it('can toggle the graphs', async () => {
         },
         transition: false,
       },
+    },
+    props: {
+      buildId: 1,
     },
   });
   await new Promise(process.nextTick);
@@ -272,6 +287,9 @@ it('can load the graphs by default', async () => {
         },
         transition: false,
       },
+    },
+    props: {
+      buildId: 1,
     },
   });
   await new Promise(process.nextTick);

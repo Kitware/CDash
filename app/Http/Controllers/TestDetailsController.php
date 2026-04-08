@@ -27,7 +27,7 @@ final class TestDetailsController extends AbstractBuildController
         $latestTest = $latestBuild?->tests()->firstWhere('testname', $test?->testname);
         $nextTest = $nextBuild?->tests()->firstWhere('testname', $test?->testname);
 
-        return $this->vue('test-details', 'Test Results')
+        return $this->vue('test-details', 'Test Results', ['build-id' => $this->build->Id])
             ->with('previousUrl', $previousTest?->GetUrlForSelf())
             ->with('latestUrl', $latestTest?->GetUrlForSelf())
             ->with('nextUrl', $nextTest?->GetUrlForSelf());
