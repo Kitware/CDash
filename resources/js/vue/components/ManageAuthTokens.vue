@@ -1,8 +1,5 @@
 <template>
-  <section v-if="errored">
-    <p>{{ cdash.error }}</p>
-  </section>
-  <section v-else>
+  <loading-indicator :is-loading="!authenticationTokens">
     <data-table
       :column-groups="[
         {
@@ -25,6 +22,10 @@
           displayName: 'Scope',
         },
         {
+          name: 'created',
+          displayName: 'Created',
+        },
+        {
           name: 'expires',
           displayName: 'Expires',
         },
@@ -38,13 +39,13 @@
       empty-table-text="No authentication tokens have been created yet."
     >
       <template #scope="{ props: { scope: scope, projectname: projectname } }">
-        <template v-if="scope === 'submit_only' && projectname !== null && projectname.length > 0">
+        <template v-if="scope === 'SUBMIT_ONLY' && projectname">
           Submit Only (<a
             class="cdash-link"
             :href="$baseURL + '/index.php?project=' + projectname"
           >{{ projectname }}</a>)
         </template>
-        <template v-else-if="scope === 'submit_only'">
+        <template v-else-if="scope === 'SUBMIT_ONLY'">
           Submit Only
         </template>
         <template v-else>
@@ -61,26 +62,48 @@
         </button>
       </template>
     </data-table>
-  </section>
+  </loading-indicator>
 </template>
 <script>
 
-import ApiLoader from './shared/ApiLoader';
 import DataTable from './shared/DataTable.vue';
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 import {faTrash} from '@fortawesome/free-solid-svg-icons';
+import gql from 'graphql-tag';
+import LoadingIndicator from './shared/LoadingIndicator.vue';
+import {DateTime} from 'luxon';
 
 export default {
   name: 'ManageAuthTokens',
-  components: {FontAwesomeIcon, DataTable},
+  components: {LoadingIndicator, FontAwesomeIcon, DataTable},
 
-  data () {
-    return {
-      // API results.
-      cdash: {},
-      loading: true,
-      errored: false,
-    };
+  apollo: {
+    authenticationTokens: {
+      query: gql`
+        query {
+          authenticationTokens(first: 100000) {
+            edges {
+              node {
+                id
+                created
+                expires
+                description
+                scope
+                project {
+                  id
+                  name
+                }
+                user {
+                  id
+                  firstname
+                  lastname
+                }
+              }
+            }
+          }
+        }
+      `,
+    },
   },
 
   computed: {
@@ -91,38 +114,53 @@ export default {
     },
 
     formattedAuthTokenRows() {
-      return Object.values(this.cdash?.tokens ?? {}).map(token => {
+      return (this.authenticationTokens?.edges ?? []).map(({node: token}) => {
         return {
-          owner: `${token.owner_firstname} ${token.owner_lastname}`,
+          owner: `${token.user?.firstname} ${token.user?.lastname}`,
           description: token.description,
           scope: {
             scope: token.scope,
-            projectname: token.projectname,
+            projectname: token.project?.name,
           },
-          expires: token.expires,
+          created: this.stringToDate(token.created),
+          expires: this.stringToDate(token.expires),
           actions: {
             token: token,
           },
         };
-      }) ?? [];
+      });
     },
   },
 
-  mounted () {
-    ApiLoader.loadPageData(this, '/api/authtokens/all');
-  },
-
   methods: {
-    revokeToken(token) {
-      this.$axios
-        .delete(`/api/authtokens/delete/${token.hash}`)
-        .then(() => {
-          delete this.cdash.tokens[token.hash];
-        })
-        .catch(error => {
-          console.log(error);
-          this.errored = true;
+    async revokeToken(token) {
+      try {
+        await this.$apollo.mutate({
+          mutation: gql`
+            mutation deleteAuthenticationToken($input: DeleteAuthenticationTokenInput!) {
+              deleteAuthenticationToken(input: $input) {
+                message
+              }
+            }
+          `,
+          variables: {
+            input: {
+              tokenId: token.id,
+            },
+          },
         });
+        await this.$apollo.queries.authenticationTokens.refetch();
+      }
+      catch (error) {
+        console.error(error);
+      }
+    },
+
+    stringToDate(isoString) {
+      if (!isoString) {
+        return '';
+      }
+      return DateTime.fromISO(isoString).toISODate();
     },
   },
 };
