@@ -505,30 +505,6 @@ parameters:
 			path: app/Http/Controllers/AbstractProjectController.php
 
 		-
-			rawMessage: Cannot cast mixed to int.
-			identifier: cast.int
-			count: 8
-			path: app/Http/Controllers/AdminController.php
-
-		-
-			rawMessage: 'Construct empty() is not allowed. Use more strict comparison.'
-			identifier: empty.notAllowed
-			count: 1
-			path: app/Http/Controllers/AdminController.php
-
-		-
-			rawMessage: 'Method App\Http\Controllers\AdminController::removeBuilds() never returns Illuminate\Http\RedirectResponse so it can be removed from the return type.'
-			identifier: return.unusedType
-			count: 1
-			path: app/Http/Controllers/AdminController.php
-
-		-
-			rawMessage: 'Parameter #2 $timestamp of function date expects int|null, (int|false) given.'
-			identifier: argument.type
-			count: 3
-			path: app/Http/Controllers/AdminController.php
-
-		-
 			rawMessage: Access to an undefined property App\Http\Controllers\Auth\LoginController::$decayMinutes.
 			identifier: property.notFound
 			count: 1

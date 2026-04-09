@@ -317,9 +317,6 @@ Route::middleware(['auth'])->group(function (): void {
 
         Route::get('/authtokens/manage', 'AuthTokenController@manage');
 
-        Route::get('/removeBuilds.php', 'AdminController@removeBuilds');
-        Route::post('/removeBuilds.php', 'AdminController@removeBuilds');
-
         Route::get('/monitor', 'MonitorController@monitor');
         Route::get('/monitor.php', fn () => redirect('/monitor', 301));
     });

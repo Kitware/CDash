@@ -17,11 +17,6 @@
         :icon="FA.faKey"
       />
       <administration-page-card
-        href="/removeBuilds.php"
-        title="Remove Builds"
-        :icon="FA.faTrashCan"
-      />
-      <administration-page-card
         href="/monitor"
         title="Submission Status"
         :icon="FA.faListCheck"
