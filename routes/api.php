@@ -70,8 +70,6 @@ Route::middleware(['auth'])->group(function (): void {
     Route::match(['get', 'post'], '/v1/manageOverview.php', 'ProjectOverviewController@apiManageOverview');
 
     Route::middleware(['admin'])->group(function (): void {
-        Route::get('/authtokens/all', 'AuthTokenController@fetchAll');
-
         Route::get('/monitor', 'MonitorController@get');
     });
 });

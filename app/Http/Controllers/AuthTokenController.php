@@ -20,23 +20,6 @@ final class AuthTokenController extends AbstractController
         return $this->vue('manage-auth-tokens', 'Authentication Tokens');
     }
 
-    /**
-     * Get all of the authentication tokens available across the entire system.
-     * This method is only available to administrators.
-     */
-    public function fetchAll(): JsonResponse
-    {
-        $token_array = AuthTokenUtil::getAllTokens();
-        $token_map = [];
-        foreach ($token_array as $token) {
-            $token_map[$token['hash']] = $token;
-        }
-
-        return response()->json([
-            'tokens' => $token_map,
-        ]);
-    }
-
     public function createToken(Request $request): JsonResponse
     {
         $fields = ['scope', 'description'];
