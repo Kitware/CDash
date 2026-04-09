@@ -14772,312 +14772,6 @@ parameters:
 		-
 			rawMessage: 'Argument of an invalid type mixed supplied for foreach, only iterables are supported.'
 			identifier: foreach.nonIterable
-			count: 2
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: 'Binary operation "*" between bool|float|int<1, max>|string and 1024 results in an error.'
-			identifier: binaryOp.invalid
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: 'Call to function is_array() with string|false will always evaluate to false.'
-			identifier: function.impossibleType
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: Cannot access offset 'AuthenticateSubmissions' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: Cannot access offset 'CvsUrl' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: Cannot access offset 'Id' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: Cannot access offset 'Name' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: Cannot access offset 'Public' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: Cannot access offset 'branch' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: Cannot access offset 'buildname' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: Cannot access offset 'id' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: Cannot access offset 'ipaddress' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: Cannot access offset 'password' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: Cannot access offset 'repositories' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: Cannot access offset 'sitename' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: Cannot access offset 'size' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: Cannot access offset 'tmp_name' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: Cannot access offset 'type' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: Cannot access offset 'url' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: Cannot access offset 'username' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: Cannot cast mixed to int.
-			identifier: cast.int
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: 'Construct empty() is not allowed. Use more strict comparison.'
-			identifier: empty.notAllowed
-			count: 3
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: 'Function CDash\Api\v1\Project\addRepositoriesToProject() has parameter $branches with no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: 'Function CDash\Api\v1\Project\addRepositoriesToProject() has parameter $passwords with no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: 'Function CDash\Api\v1\Project\addRepositoriesToProject() has parameter $repositories with no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: 'Function CDash\Api\v1\Project\addRepositoriesToProject() has parameter $usernames with no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: 'Function CDash\Api\v1\Project\create_project() has parameter $response with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: 'Function CDash\Api\v1\Project\create_project() has parameter $user with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: 'Function CDash\Api\v1\Project\get_project() has parameter $response with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: 'Function CDash\Api\v1\Project\populate_project() has parameter $Project with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: 'Function CDash\Api\v1\Project\rest_get() has no return type specified.'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: 'Function CDash\Api\v1\Project\rest_post() has parameter $user with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: 'Function CDash\Api\v1\Project\set_logo() has parameter $Project with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: 'Function CDash\Api\v1\Project\update_project() has parameter $Project with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: 'Function CDash\Api\v1\Project\update_project() has parameter $User with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: 'Function CDash\Api\v1\Project\update_project() has parameter $response with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: Implicit array creation is not allowed - variable $response does not exist.
-			identifier: variable.implicitArray
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: 'Only booleans are allowed in a negated boolean, CDash\Model\Project|false given.'
-			identifier: booleanNot.exprNotBoolean
-			count: 3
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: 'Only booleans are allowed in an if condition, int|string|false given.'
-			identifier: if.condNotBoolean
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: 'Only booleans are allowed in an if condition, resource|false given.'
-			identifier: if.condNotBoolean
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: 'Parameter #1 $filename of function fopen expects string, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: 'Parameter #1 $json of function json_decode expects string, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: 'Parameter #1 $json of function json_decode expects string, string|false given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: 'Parameter #1 $string of function htmlspecialchars expects string, string|false given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: 'Parameter #1 $string of function strlen expects string, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: 'Parameter #2 $length of function fread expects int<1, max>, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: 'Part $Name (mixed) of encapsed string cannot be cast to string.'
-			identifier: encapsedStringPart.nonString
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: 'Property name for mixed must be a string, but mixed was given.'
-			identifier: property.nameNotString
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: Variable $filetype might not be defined.
-			identifier: variable.undefined
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: Variable property access on mixed.
-			identifier: property.dynamicName
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: Variable static method call on App\Utils\RepositoryUtils.
-			identifier: staticMethod.dynamicName
-			count: 1
-			path: app/cdash/public/api/v1/project.php
-
-		-
-			rawMessage: 'Argument of an invalid type mixed supplied for foreach, only iterables are supported.'
-			identifier: foreach.nonIterable
 			count: 1
 			path: app/cdash/public/api/v1/subproject.php
 
@@ -16780,18 +16474,6 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			rawMessage: Cannot access offset 'Id' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
-			rawMessage: Cannot access offset 'project' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
 			rawMessage: 'Cannot call method getAttribute() on DOMElement|null.'
 			identifier: method.nonObject
 			count: 1
@@ -16996,30 +16678,6 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			rawMessage: 'Method KWWebTestCase::deleteProject() has no return type specified.'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
-			rawMessage: 'Method KWWebTestCase::deleteProject() has parameter $projectid with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
-			rawMessage: 'Method KWWebTestCase::expectsPageRequiresLogin() has no return type specified.'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
-			rawMessage: 'Method KWWebTestCase::expectsPageRequiresLogin() has parameter $page with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
 			rawMessage: 'Method KWWebTestCase::findString() should return true but returns false.'
 			identifier: return.type
 			count: 1
@@ -17212,19 +16870,19 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			rawMessage: 'Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester.php:833::__construct() has parameter $response with no type specified.'
+			rawMessage: 'Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester.php:803::__construct() has parameter $response with no type specified.'
 			identifier: missingType.parameter
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			rawMessage: 'Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester.php:833::getSent() has no return type specified.'
+			rawMessage: 'Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester.php:803::getSent() has no return type specified.'
 			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			rawMessage: 'Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester.php:833::read() has no return type specified.'
+			rawMessage: 'Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester.php:803::read() has no return type specified.'
 			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
@@ -17452,7 +17110,7 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			rawMessage: Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester.php:833::$read has no type specified.
+			rawMessage: Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester.php:803::$read has no type specified.
 			identifier: missingType.property
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
@@ -17478,7 +17136,7 @@ parameters:
 		-
 			rawMessage: Variable property access on CDash\Model\Project.
 			identifier: property.dynamicName
-			count: 1
+			count: 2
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
@@ -25772,18 +25430,6 @@ parameters:
 			identifier: missingType.checkedException
 			count: 1
 			path: database/factories/UserFactory.php
-
-		-
-			rawMessage: Cannot access offset 'Id' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: database/seeders/DatabaseSeeder.php
-
-		-
-			rawMessage: Cannot cast mixed to int.
-			identifier: cast.int
-			count: 1
-			path: database/seeders/DatabaseSeeder.php
 
 		-
 			rawMessage: 'Method SocialiteProviders\PingIdentity\Provider::getAuthEndpoint() should return string but returns mixed.'

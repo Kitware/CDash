@@ -6,6 +6,7 @@
 //
 require_once __DIR__ . '/cdash_test_case.php';
 
+use App\Models\Project;
 use App\Models\Site;
 use CDash\Database;
 use CDash\Model\BuildGroup;
@@ -100,7 +101,8 @@ class PutDynamicBuildsTestCase extends KWWebTestCase
         $this->assertEqual($jsonobj['dynamics'][0]['rules'][0]['siteid'], 1);
 
         // Clean up.
-        $this->deleteProject($this->ProjectId);
+        remove_project_builds($this->ProjectId);
+        Project::findOrFail((int) $this->ProjectId)->delete();
     }
 
     protected function verifyListGetsCreated($client, $stmt, $build_rules): void

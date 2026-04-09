@@ -38,6 +38,7 @@ use Illuminate\Support\Str;
 use League\Flysystem\UnableToDeleteFile;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Tests\CreatesApplication;
+use Tests\Traits\CreatesProjects;
 
 /**#@+
  *  include other SimpleTest class files
@@ -52,6 +53,7 @@ require_once 'tests/kwtest/simpletest/web_tester.php';
 class KWWebTestCase extends WebTestCase
 {
     use CreatesApplication;
+    use CreatesProjects;
 
     public $url;
     public $db;
@@ -409,7 +411,6 @@ class KWWebTestCase extends WebTestCase
             $project->Id = $input_settings['Id'];
             $project->Fill();
             $settings = get_object_vars($project);
-            $submit_button = 'Update';
         } else {
             // Create a new project.
             if (!array_key_exists('Name', $input_settings)) {
@@ -422,7 +423,7 @@ class KWWebTestCase extends WebTestCase
                 'AutoremoveTimeframe' => 60,
                 'CoverageThreshold' => 70,
                 'CvsViewerType' => 'github',
-                'EmailBrokenSubmission' => 1,
+                'EmailBrokenSubmission' => true,
                 'EmailMaxChars' => 255,
                 'EmailMaxItems' => 5,
                 'NightlyTime' => '01:00:00 UTC',
@@ -431,11 +432,11 @@ class KWWebTestCase extends WebTestCase
                 'TestTimeMaxStatus' => 3,
                 'TestTimeStd' => 4,
                 'TestTimeStdThreshold' => 1,
-                'UploadQuota' => 1,
-                'ViewSubProjectsLink' => 1,
+                'UploadQuota' => 1073741824,
+                'ViewSubProjectsLink' => true,
                 'WarningsFilter' => '',
-                'ErrorsFilter' => ''];
-            $submit_button = 'Submit';
+                'ErrorsFilter' => '',
+            ];
         }
 
         // Override default/existing settings with those we wish to change.
@@ -443,25 +444,31 @@ class KWWebTestCase extends WebTestCase
             $settings[$k] = $v;
         }
 
-        // Login as admin.
-        $client = $this->getGuzzleClient($username, $password);
-
-        if (!$client) {
-            return false;
-        }
-
         // Create project.
-        try {
-            $response = $client->request('POST',
-                $this->url . '/api/v1/project.php',
-                ['json' => [$submit_button => true, 'project' => $settings]]);
-        } catch (ClientException $e) {
-            $this->fail($e->getMessage());
-            return false;
+        if (!$update) {
+            $eloquent_project = $this->makePublicProject();
+            $eloquent_project->users()
+                ->attach(User::where('email', $username)->firstOrFail()->id, [
+                    'emailtype' => 3,
+                    'emailcategory' => 126,
+                    'emailsuccess' => false,
+                    'emailmissingsites' => false,
+                    'role' => App\Models\Project::PROJECT_ADMIN,
+                ]);
+
+            $projectid = $eloquent_project->id;
+        } else {
+            $projectid = (int) $input_settings['Id'];
         }
 
-        $response_array = json_decode($response->getBody(), true);
-        $projectid = $response_array['project']['Id'];
+        $project = new Project();
+        $project->Id = $projectid;
+        $project->Fill();
+
+        foreach ($settings as $name => $value) {
+            $project->{$name} = $value;
+        }
+        $project->Save();
 
         // Make sure all of our settings were applied successfully.
         $project = new Project();
@@ -501,31 +508,6 @@ class KWWebTestCase extends WebTestCase
         return $projectid;
     }
 
-    // Delete project.
-    public function deleteProject($projectid)
-    {
-        // Login as admin.
-        $client = $this->getGuzzleClient();
-
-        // Delete project.
-        $project_array = ['Id' => $projectid];
-        try {
-            $response = $client->delete(
-                $this->url . '/api/v1/project.php',
-                ['json' => ['project' => $project_array]]);
-        } catch (ClientException $e) {
-            $this->fail($e->getMessage());
-            return false;
-        }
-
-        // Make sure the project doesn't exist anymore.
-        $project = new Project();
-        $project->Id = $projectid;
-        if ($project->Exists()) {
-            $this->fail("Project $projectid still exists after it should have been deleted");
-        }
-    }
-
     public function getGuzzleClient($username = 'simpletest@localhost',
         $password = 'simpletest')
     {
@@ -552,18 +534,6 @@ class KWWebTestCase extends WebTestCase
             return false;
         }
         return $client;
-    }
-
-    public function expectsPageRequiresLogin($page)
-    {
-        $this->logout();
-        $content = $this->get("{$this->url}{$page}");
-
-        if (!str_contains($content, '<form method="POST" action="login" name="loginform" id="loginform">')) {
-            $this->fail('Login not found when expected');
-            return false;
-        }
-        return true;
     }
 }
 

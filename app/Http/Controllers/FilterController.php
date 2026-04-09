@@ -38,7 +38,7 @@ final class FilterController extends AbstractController
     private static function getFiltersForPage(string $page_id): array
     {
         return match ($page_id) {
-            'index.php', 'project.php', 'viewBuildGroup.php' => [
+            'index.php', 'viewBuildGroup.php' => [
                 'buildduration',
                 'builderrors',
                 'buildwarnings',
@@ -133,7 +133,6 @@ final class FilterController extends AbstractController
             case 'compareCoverage.php':
             case 'index.php':
             case 'indexchildren.php':
-            case 'project.php':
             case 'queryTests.php':
             case 'testOverview.php':
             case 'viewBuildGroup.php':
