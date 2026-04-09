@@ -8,7 +8,6 @@ use App\Models\AuthToken;
 use App\Models\User;
 use CDash\Model\Project;
 use Illuminate\Auth\AuthenticationException;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
@@ -208,21 +207,6 @@ class AuthTokenUtil
                 throw new RuntimeException("Invalid scope listed for auth token with hash {$token_hash}");
         }
         return $auth_token->delete() > 0;
-    }
-
-    /**
-     * Contract: we assume that the user has already been validated and blindly return a list of
-     * all auth tokens.  It is your responsibility as a user of this method to ensure that only
-     * administrators can access it.
-     *
-     * @return Collection<int,AuthToken>
-     */
-    public static function getAllTokens(): Collection
-    {
-        return AuthToken::select('authtoken.*', 'project.name AS projectname', 'users.firstname AS owner_firstname', 'users.lastname AS owner_lastname')
-            ->leftJoin('project', 'project.id', '=', 'authtoken.projectid')
-            ->leftJoin('users', 'users.id', '=', 'authtoken.userid')
-            ->get();
     }
 
     public static function hashToken(?string $unhashed_token): string
