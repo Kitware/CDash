@@ -639,7 +639,7 @@ parameters:
 		-
 			rawMessage: 'Argument of an invalid type array|false supplied for foreach, only iterables are supported.'
 			identifier: foreach.nonIterable
-			count: 6
+			count: 4
 			path: app/Http/Controllers/BuildController.php
 
 		-
@@ -673,19 +673,7 @@ parameters:
 			path: app/Http/Controllers/BuildController.php
 
 		-
-			rawMessage: Cannot access an offset on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/Http/Controllers/BuildController.php
-
-		-
 			rawMessage: Cannot access offset 'from' on array|false.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/Http/Controllers/BuildController.php
-
-		-
-			rawMessage: Cannot access offset 'id' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: app/Http/Controllers/BuildController.php
@@ -705,7 +693,7 @@ parameters:
 		-
 			rawMessage: Cannot access property $name on App\Models\Site|null.
 			identifier: property.nonObject
-			count: 3
+			count: 2
 			path: app/Http/Controllers/BuildController.php
 
 		-
@@ -717,13 +705,7 @@ parameters:
 		-
 			rawMessage: Cannot cast mixed to int.
 			identifier: cast.int
-			count: 12
-			path: app/Http/Controllers/BuildController.php
-
-		-
-			rawMessage: Cannot use ++ on mixed.
-			identifier: postInc.type
-			count: 1
+			count: 11
 			path: app/Http/Controllers/BuildController.php
 
 		-
@@ -763,12 +745,6 @@ parameters:
 			path: app/Http/Controllers/BuildController.php
 
 		-
-			rawMessage: 'Method App\Http\Controllers\BuildController::GetSourceFileFromBuildError() has parameter $data with no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/Http/Controllers/BuildController.php
-
-		-
 			rawMessage: 'Method App\Http\Controllers\BuildController::add_file() has parameter $file with no type specified.'
 			identifier: missingType.parameter
 			count: 1
@@ -783,54 +759,6 @@ parameters:
 		-
 			rawMessage: 'Method App\Http\Controllers\BuildController::buildOverview() never returns Illuminate\Http\RedirectResponse so it can be removed from the return type.'
 			identifier: return.unusedType
-			count: 1
-			path: app/Http/Controllers/BuildController.php
-
-		-
-			rawMessage: 'Method App\Http\Controllers\BuildController::marshalBuildError() has parameter $data with no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/Http/Controllers/BuildController.php
-
-		-
-			rawMessage: 'Method App\Http\Controllers\BuildController::marshalBuildError() has parameter $revision with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Http/Controllers/BuildController.php
-
-		-
-			rawMessage: 'Method App\Http\Controllers\BuildController::marshalBuildFailure() has parameter $buildfailure with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Http/Controllers/BuildController.php
-
-		-
-			rawMessage: 'Method App\Http\Controllers\BuildController::marshalBuildFailure() has parameter $data with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Http/Controllers/BuildController.php
-
-		-
-			rawMessage: 'Method App\Http\Controllers\BuildController::marshalBuildFailure() has parameter $linkifyOutput with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Http/Controllers/BuildController.php
-
-		-
-			rawMessage: 'Method App\Http\Controllers\BuildController::marshalBuildFailure() has parameter $revision with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Http/Controllers/BuildController.php
-
-		-
-			rawMessage: 'Method App\Http\Controllers\BuildController::marshalBuildFailure() return type has no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/Http/Controllers/BuildController.php
-
-		-
-			rawMessage: 'Only booleans are allowed in a while condition, mixed given.'
-			identifier: while.condNotBoolean
 			count: 1
 			path: app/Http/Controllers/BuildController.php
 
@@ -867,12 +795,6 @@ parameters:
 		-
 			rawMessage: 'PHPDoc tag @var with type App\Models\UploadFile|null is not subtype of type (App\Models\UploadFile&object{pivot: Illuminate\Database\Eloquent\Relations\Pivot})|null.'
 			identifier: varTag.type
-			count: 1
-			path: app/Http/Controllers/BuildController.php
-
-		-
-			rawMessage: 'Parameter #1 $data of static method App\Http\Controllers\BuildController::marshalBuildError() expects array, mixed given.'
-			identifier: argument.type
 			count: 1
 			path: app/Http/Controllers/BuildController.php
 
@@ -5739,7 +5661,7 @@ parameters:
 		-
 			rawMessage: 'Construct empty() is not allowed. Use more strict comparison.'
 			identifier: empty.notAllowed
-			count: 8
+			count: 7
 			path: app/Utils/RepositoryUtils.php
 
 		-
@@ -6043,72 +5965,6 @@ parameters:
 			path: app/Utils/RepositoryUtils.php
 
 		-
-			rawMessage: 'Method App\Utils\RepositoryUtils::get_source_dir() has no return type specified.'
-			identifier: missingType.return
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
-			rawMessage: 'Method App\Utils\RepositoryUtils::get_source_dir() has parameter $file_path with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
-			rawMessage: 'Method App\Utils\RepositoryUtils::get_source_dir() has parameter $projectid with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
-			rawMessage: 'Method App\Utils\RepositoryUtils::get_source_dir() has parameter $projecturl with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
-			rawMessage: 'Method App\Utils\RepositoryUtils::github_get_source_dir() has parameter $file_path with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
-			rawMessage: 'Method App\Utils\RepositoryUtils::github_get_source_dir() has parameter $projecturl with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
-			rawMessage: 'Method App\Utils\RepositoryUtils::linkify_compiler_output() has parameter $compiler_output with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
-			rawMessage: 'Method App\Utils\RepositoryUtils::linkify_compiler_output() has parameter $projecturl with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
-			rawMessage: 'Method App\Utils\RepositoryUtils::linkify_compiler_output() has parameter $revision with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
-			rawMessage: 'Method App\Utils\RepositoryUtils::linkify_compiler_output() has parameter $source_dir with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
-			rawMessage: 'Method App\Utils\RepositoryUtils::linkify_compiler_output() should return string but returns string|null.'
-			identifier: return.type
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
 			rawMessage: 'Method App\Utils\RepositoryUtils::post_github_pull_request_comment() has parameter $cdash_url with no type specified.'
 			identifier: missingType.parameter
 			count: 1
@@ -6253,12 +6109,6 @@ parameters:
 			path: app/Utils/RepositoryUtils.php
 
 		-
-			rawMessage: 'Parameter #3 $subject of function str_replace expects array<string>|string, string|null given.'
-			identifier: argument.type
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
 			rawMessage: 'Parameter #3 $value of function curl_setopt expects array|string, string|false given.'
 			identifier: argument.type
 			count: 1
@@ -6273,7 +6123,7 @@ parameters:
 		-
 			rawMessage: Variable static method call on App\Utils\RepositoryUtils.
 			identifier: staticMethod.dynamicName
-			count: 5
+			count: 4
 			path: app/Utils/RepositoryUtils.php
 
 		-
@@ -8478,7 +8328,7 @@ parameters:
 				v2.5.0 01/22/2018
 			'''
 			identifier: function.deprecated
-			count: 14
+			count: 13
 			path: app/cdash/app/Model/Build.php
 
 		-
@@ -8774,12 +8624,6 @@ parameters:
 
 		-
 			rawMessage: 'Method CDash\Model\Build::GetPassedTests() return type has no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			rawMessage: 'Method CDash\Model\Build::GetResolvedBuildFailures() return type has no value type specified in iterable type array.'
 			identifier: missingType.iterableValue
 			count: 1
 			path: app/cdash/app/Model/Build.php
@@ -9428,15 +9272,6 @@ parameters:
 
 		-
 			rawMessage: '''
-				Call to deprecated function pdo_execute():
-				v2.5.0 01/22/2018
-			'''
-			identifier: function.deprecated
-			count: 1
-			path: app/cdash/app/Model/BuildFailure.php
-
-		-
-			rawMessage: '''
 				Call to deprecated method executePrepared() of class CDash\Database:
 				04/22/2023  Use Laravel query builder or Eloquent instead
 			'''
@@ -9478,20 +9313,8 @@ parameters:
 			path: app/cdash/app/Model/BuildFailure.php
 
 		-
-			rawMessage: 'Loose comparison via "==" between int<0, max> and int is not allowed.'
-			identifier: equal.notAllowed
-			count: 1
-			path: app/cdash/app/Model/BuildFailure.php
-
-		-
 			rawMessage: 'Method CDash\Model\BuildFailure::AddLabel() has parameter $label with no type specified.'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Model/BuildFailure.php
-
-		-
-			rawMessage: 'Method CDash\Model\BuildFailure::GetBuildFailureArguments() return type has no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
 			count: 1
 			path: app/cdash/app/Model/BuildFailure.php
 
@@ -9510,6 +9333,12 @@ parameters:
 		-
 			rawMessage: Property CDash\Model\BuildFailure::$PDO has no type specified.
 			identifier: missingType.property
+			count: 1
+			path: app/cdash/app/Model/BuildFailure.php
+
+		-
+			rawMessage: 'Property CDash\Model\BuildFailure::$PDO is never read, only written.'
+			identifier: property.onlyWritten
 			count: 1
 			path: app/cdash/app/Model/BuildFailure.php
 
@@ -14998,12 +14827,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Lib/Repository/GitHubTest.php
 
 		-
-			rawMessage: 'You should use assertSame() instead of assertEquals(), because both values are scalars of the same type'
-			identifier: phpunit.assertEquals
-			count: 1
-			path: app/cdash/tests/case/CDash/LinkifyCompilerOutputTest.php
-
-		-
 			rawMessage: '''
 				Call to deprecated method any() of class PHPUnit\Framework\TestCase:
 				https://github.com/sebastianbergmann/phpunit/issues/6461
@@ -15731,36 +15554,6 @@ parameters:
 			identifier: phpunit.callParent
 			count: 1
 			path: app/cdash/tests/case/CDash/Model/BuildErrorFilterTest.php
-
-		-
-			rawMessage: Access to an undefined property BuildErrorTest::$mock_project.
-			identifier: property.notFound
-			count: 3
-			path: app/cdash/tests/case/CDash/Model/BuildErrorTest.php
-
-		-
-			rawMessage: 'Missing call to parent::setUp() method.'
-			identifier: phpunit.callParent
-			count: 1
-			path: app/cdash/tests/case/CDash/Model/BuildErrorTest.php
-
-		-
-			rawMessage: Access to an undefined property BuildFailureTest::$mock_buildfailure.
-			identifier: property.notFound
-			count: 3
-			path: app/cdash/tests/case/CDash/Model/BuildFailureTest.php
-
-		-
-			rawMessage: Access to an undefined property BuildFailureTest::$mock_project.
-			identifier: property.notFound
-			count: 3
-			path: app/cdash/tests/case/CDash/Model/BuildFailureTest.php
-
-		-
-			rawMessage: 'Missing call to parent::setUp() method.'
-			identifier: phpunit.callParent
-			count: 1
-			path: app/cdash/tests/case/CDash/Model/BuildFailureTest.php
 
 		-
 			rawMessage: Access to an undefined property BuildRelationshipTest::$mock_build1.
@@ -17245,12 +17038,6 @@ parameters:
 			path: app/cdash/tests/test_actualtrilinossubmission.php
 
 		-
-			rawMessage: Cannot access offset 'errors' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/cdash/tests/test_actualtrilinossubmission.php
-
-		-
 			rawMessage: 'Cannot call method fetchColumn() on PDOStatement|false.'
 			identifier: method.nonObject
 			count: 1
@@ -17290,12 +17077,6 @@ parameters:
 			rawMessage: 'Parameter #1 $stmt of method CDash\Database::execute() expects PDOStatement, PDOStatement|false given.'
 			identifier: argument.type
 			count: 1
-			path: app/cdash/tests/test_actualtrilinossubmission.php
-
-		-
-			rawMessage: 'Parameter #1 $value of function count expects array|Countable, mixed given.'
-			identifier: argument.type
-			count: 2
 			path: app/cdash/tests/test_actualtrilinossubmission.php
 
 		-
@@ -17854,12 +17635,6 @@ parameters:
 			path: app/cdash/tests/test_authtoken.php
 
 		-
-			rawMessage: Binary operation "." between 'Expected error at…' and mixed results in an error.
-			identifier: binaryOp.invalid
-			count: 1
-			path: app/cdash/tests/test_bazeljson.php
-
-		-
 			rawMessage: '''
 				Call to deprecated function pdo_execute():
 				v2.5.0 01/22/2018
@@ -17899,18 +17674,6 @@ parameters:
 			path: app/cdash/tests/test_bazeljson.php
 
 		-
-			rawMessage: Cannot access offset 'errors' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_bazeljson.php
-
-		-
-			rawMessage: Cannot access offset 'logline' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/cdash/tests/test_bazeljson.php
-
-		-
 			rawMessage: Cannot access offset 'output' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 6
@@ -17929,12 +17692,6 @@ parameters:
 			path: app/cdash/tests/test_bazeljson.php
 
 		-
-			rawMessage: Cannot access offset 0 on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/cdash/tests/test_bazeljson.php
-
-		-
 			rawMessage: 'Loose comparison via "!=" between int<0, max>|false and false is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 1
@@ -17943,7 +17700,7 @@ parameters:
 		-
 			rawMessage: 'Loose comparison via "!=" between mixed and int is not allowed.'
 			identifier: notEqual.notAllowed
-			count: 13
+			count: 12
 			path: app/cdash/tests/test_bazeljson.php
 
 		-
@@ -18328,24 +18085,6 @@ parameters:
 			path: app/cdash/tests/test_builddetails.php
 
 		-
-			rawMessage: 'Cannot access offset int<0, max> on mixed.'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_builddetails.php
-
-		-
-			rawMessage: Cannot access property $error on mixed.
-			identifier: property.nonObject
-			count: 2
-			path: app/cdash/tests/test_builddetails.php
-
-		-
-			rawMessage: Cannot access property $errors on mixed.
-			identifier: property.nonObject
-			count: 5
-			path: app/cdash/tests/test_builddetails.php
-
-		-
 			rawMessage: Cannot access property $numFailed on mixed.
 			identifier: property.nonObject
 			count: 2
@@ -18364,12 +18103,6 @@ parameters:
 			path: app/cdash/tests/test_builddetails.php
 
 		-
-			rawMessage: Cannot access property $numSubprojects on mixed.
-			identifier: property.nonObject
-			count: 1
-			path: app/cdash/tests/test_builddetails.php
-
-		-
 			rawMessage: Cannot access property $numTimeFailed on mixed.
 			identifier: property.nonObject
 			count: 2
@@ -18385,18 +18118,6 @@ parameters:
 			rawMessage: Cannot access property $tests on mixed.
 			identifier: property.nonObject
 			count: 3
-			path: app/cdash/tests/test_builddetails.php
-
-		-
-			rawMessage: 'Loose comparison via "!=" between mixed and int is not allowed.'
-			identifier: notEqual.notAllowed
-			count: 1
-			path: app/cdash/tests/test_builddetails.php
-
-		-
-			rawMessage: 'Loose comparison via "==" between int<0, max> and int is not allowed.'
-			identifier: equal.notAllowed
-			count: 1
 			path: app/cdash/tests/test_builddetails.php
 
 		-
@@ -18425,12 +18146,6 @@ parameters:
 
 		-
 			rawMessage: 'Parameter #1 $json of function json_decode expects string, string|false given.'
-			identifier: argument.type
-			count: 2
-			path: app/cdash/tests/test_builddetails.php
-
-		-
-			rawMessage: 'Parameter #1 $value of function count expects array|Countable, mixed given.'
 			identifier: argument.type
 			count: 1
 			path: app/cdash/tests/test_builddetails.php
@@ -23667,7 +23382,7 @@ parameters:
 		-
 			rawMessage: Cannot access offset 'current' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 5
+			count: 4
 			path: app/cdash/tests/test_subprojectnextprevious.php
 
 		-
@@ -23703,13 +23418,13 @@ parameters:
 		-
 			rawMessage: Cannot access offset 'menu' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 15
+			count: 12
 			path: app/cdash/tests/test_subprojectnextprevious.php
 
 		-
 			rawMessage: Cannot access offset 'next' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 5
+			count: 4
 			path: app/cdash/tests/test_subprojectnextprevious.php
 
 		-
@@ -23739,7 +23454,7 @@ parameters:
 		-
 			rawMessage: Cannot access offset 'previous' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 5
+			count: 4
 			path: app/cdash/tests/test_subprojectnextprevious.php
 
 		-
@@ -23775,7 +23490,7 @@ parameters:
 		-
 			rawMessage: 'Parameter #1 $haystack of function str_contains expects string, mixed given.'
 			identifier: argument.type
-			count: 15
+			count: 12
 			path: app/cdash/tests/test_subprojectnextprevious.php
 
 		-
@@ -24754,12 +24469,6 @@ parameters:
 			path: app/cdash/tests/test_timesummary.php
 
 		-
-			rawMessage: 'Argument of an invalid type mixed supplied for foreach, only iterables are supported.'
-			identifier: foreach.nonIterable
-			count: 1
-			path: app/cdash/tests/test_truncateoutput.php
-
-		-
 			rawMessage: Binary operation "." between non-falsy-string and mixed results in an error.
 			identifier: binaryOp.invalid
 			count: 1
@@ -24775,44 +24484,14 @@ parameters:
 			path: app/cdash/tests/test_truncateoutput.php
 
 		-
-			rawMessage: Cannot access offset 'errors' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/cdash/tests/test_truncateoutput.php
-
-		-
 			rawMessage: Cannot access offset 'output' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: app/cdash/tests/test_truncateoutput.php
 
 		-
-			rawMessage: Cannot access offset 'stderror' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_truncateoutput.php
-
-		-
-			rawMessage: Cannot access offset 'stderror'|'stdoutput' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/cdash/tests/test_truncateoutput.php
-
-		-
 			rawMessage: Cannot access offset 'test' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_truncateoutput.php
-
-		-
-			rawMessage: Cannot access offset 0 on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_truncateoutput.php
-
-		-
-			rawMessage: 'Loose comparison via "!=" between mixed and mixed is not allowed.'
-			identifier: notEqual.notAllowed
 			count: 1
 			path: app/cdash/tests/test_truncateoutput.php
 

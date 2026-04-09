@@ -533,35 +533,6 @@ class Build
     }
 
     /**
-     * Return the errors that have been resolved from this build.
-     *
-     * @todo This doesn't support getting resolved build errors across parent builds.
-     **/
-    public function GetResolvedBuildErrors(int $type): PDOStatement|false
-    {
-        // This returns an empty result if there was no previous build
-        $stmt = $this->PDO->prepare('
-            SELECT *
-            FROM builderror builderror_previous
-            WHERE
-                builderror_previous.buildid = ?
-                AND builderror_previous.type = ?
-                AND NOT EXISTS(
-                    SELECT *
-                    FROM builderror
-                    WHERE
-                        builderror.buildid = ?
-                        AND builderror_previous.type = builderror.type
-                        AND builderror_previous.stderror = builderror.stderror
-                        AND builderror_previous.sourcefile = builderror.sourcefile
-                        AND builderror_previous.sourceline = builderror.sourceline
-                )
-        ');
-        pdo_execute($stmt, [$this->GetPreviousBuildId(), $type, $this->Id]);
-        return $stmt;
-    }
-
-    /**
      * Returns all errors, including warnings, from the database, caches, and
      * returns the filtered results
      */
@@ -679,40 +650,6 @@ class Build
             }
             return true;
         });
-    }
-
-    /**
-     * Get build failures (with details) that occurred in the most recent build
-     * but NOT this build.
-     *
-     * @todo This doesn't support getting resolved build failures across parent builds.
-     **/
-    public function GetResolvedBuildFailures(int $type): array
-    {
-        return DB::select('
-            SELECT buildfailure_previous.*
-            FROM buildfailure buildfailure_previous
-            WHERE
-                buildfailure_previous.buildid = :previousbuildid
-                AND buildfailure_previous.type = :type
-                AND NOT EXISTS(
-                    SELECT *
-                    FROM buildfailure
-                    WHERE
-                        buildfailure.buildid = :buildid
-                        AND buildfailure_previous.type = buildfailure.type
-                        AND buildfailure_previous.stderror = buildfailure.stderror
-                        AND buildfailure_previous.sourcefile = buildfailure.sourcefile
-                        AND buildfailure_previous.targetname = buildfailure.targetname
-                        AND buildfailure_previous.language = buildfailure.language
-                        AND buildfailure_previous.outputfile = buildfailure.outputfile
-                        AND buildfailure_previous.outputtype = buildfailure.outputtype
-                )
-        ', [
-            'buildid' => $this->Id,
-            'type' => $type,
-            'previousbuildid' => $this->GetPreviousBuildId(),
-        ]);
     }
 
     public function GetConfigures(): PDOStatement|false

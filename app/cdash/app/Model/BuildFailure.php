@@ -22,7 +22,6 @@ use App\Models\Label;
 use App\Models\RichBuildAlert;
 use CDash\Database;
 use Illuminate\Support\Facades\DB;
-use PDO;
 
 /** BuildFailure */
 class BuildFailure
@@ -131,42 +130,6 @@ class BuildFailure
             }
         }
         return true;
-    }
-
-    /**
-     * Retrieve the arguments from a build failure given its id.
-     **/
-    public function GetBuildFailureArguments(int $buildFailureId): array
-    {
-        $response = [
-            'argumentfirst' => null,
-            'arguments' => [],
-        ];
-
-        $sql = '
-            SELECT bfa.argument
-            FROM buildfailureargument AS bfa,
-            buildfailure2argument AS bf2a
-            WHERE bf2a.buildfailureid=:build_failure_id
-            AND bf2a.argumentid=bfa.id
-            ORDER BY bf2a.place ASC
-        ';
-
-        $stmt = $this->PDO->prepare($sql);
-        $stmt->bindParam(':build_failure_id', $buildFailureId);
-        pdo_execute($stmt);
-
-        $i = 0;
-        while ($argument_array = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            if ($i == 0) {
-                $response['argumentfirst'] = $argument_array['argument'];
-            } else {
-                $response['arguments'][] = $argument_array['argument'];
-            }
-            $i++;
-        }
-
-        return $response;
     }
 
     /** Returns a self referencing URI for the current BuildFailure. */

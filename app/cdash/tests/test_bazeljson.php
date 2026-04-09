@@ -2,6 +2,7 @@
 
 require_once __DIR__ . '/cdash_test_case.php';
 
+use App\Models\Build;
 use App\Utils\DatabaseCleanupUtils;
 use CDash\Database;
 use CDash\Model\Project;
@@ -462,13 +463,13 @@ class BazelJSONTestCase extends KWWebTestCase
             }
         }
 
-        // Use the API to verify that the line numbers were parsed correctly
-        $this->get($this->url . "/api/v1/viewBuildError.php?buildid=$buildid");
-        $content = $this->getBrowser()->getContent();
-        $jsonobj = json_decode($content, true);
-        $errors = $jsonobj['errors'];
-        if ($errors[0]['logline'] != 1) {
-            $this->fail('Expected error at line 1, found at line ' . $errors[0]['logline']);
+        // Verify that the line numbers were parsed correctly
+        $logline = Build::findOrFail((int) $buildid)
+            ->buildErrors()
+            ->firstOrFail()
+            ->logline;
+        if ($logline !== 1) {
+            $this->fail('Expected error at line 1, found at line ' . $logline);
         }
 
         // Cleanup.

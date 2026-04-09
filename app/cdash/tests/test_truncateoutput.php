@@ -4,6 +4,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
+use App\Models\Build;
 use App\Utils\DatabaseCleanupUtils;
 use Illuminate\Support\Facades\DB;
 
@@ -61,8 +62,8 @@ class TruncateOutputTestCase extends KWWebTestCase
             }
 
             // Query for the ID of the build that we just created.
-            $buildid_results = DB::select("SELECT id FROM build WHERE name='TruncateOutput'")[0];
-            $this->BuildId = $buildid_results->id;
+            $build = Build::where('name', 'TruncateOutput')->firstOrFail();
+            $this->BuildId = $build->id;
 
             // Verify that the output was properly truncated.
             $fields = [];
@@ -73,13 +74,10 @@ class TruncateOutputTestCase extends KWWebTestCase
                 $fields[] = 'stderror';
             }
 
-            $this->get($this->url . '/api/v1/viewBuildError.php?buildid=' . $this->BuildId);
-            $content = $this->getBrowser()->getContent();
-            $jsonobj = json_decode($content, true);
-            foreach ($jsonobj['errors'] as $error) {
+            foreach ($build->buildErrors()->get() as $error) {
                 foreach ($fields as $field) {
-                    if ($error[$field] != $this->Expected) {
-                        $this->fail("Expected $this->Expected for $file :: $field, found " . $error[$field]);
+                    if ($error->getAttribute($field) !== $this->Expected) {
+                        $this->fail("Expected $this->Expected for $file :: $field, found " . $error->getAttribute($field));
                     }
                 }
             }
@@ -90,12 +88,11 @@ class TruncateOutputTestCase extends KWWebTestCase
         // Test removing suppressed warnings.
         $expected = "[CTest: warning matched] This part survives\n";
         $this->submission('InsightExample', "$rep/Build_suppressed.xml");
-        $buildid_results = DB::select("SELECT id FROM build WHERE name='TruncateOutput'")[0];
-        $this->BuildId = $buildid_results->id;
-        $this->get($this->url . '/api/v1/viewBuildError.php?type=1&buildid=' . $this->BuildId);
-        $content = $this->getBrowser()->getContent();
-        $jsonobj = json_decode($content, true);
-        $actual = $jsonobj['errors'][0]['stderror'];
+        $actual = Build::where('name', 'TruncateOutput')
+            ->firstOrFail()
+            ->buildErrors()
+            ->firstOrFail()
+            ->stderror;
         $this->assertEqual($expected, $actual);
     }
 

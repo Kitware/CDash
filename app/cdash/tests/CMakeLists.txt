@@ -124,8 +124,6 @@ add_legacy_unit_test(/PHPUnitTest)
 
 add_legacy_unit_test(/CDash/ServiceContainer)
 
-add_legacy_unit_test(/CDash/LinkifyCompilerOutput)
-
 add_unit_test(/Unit/Console/Command/ValidateXmlCommandTest)
 
 add_php_test(seconds_from_interval)
@@ -134,13 +132,9 @@ add_php_test(extracttar)
 
 add_php_test(passwordcomplexity)
 
-add_legacy_unit_test(/CDash/Model/BuildError)
-
 add_legacy_unit_test(/CDash/Model/Build)
 
 add_legacy_unit_test(/CDash/Model/BuildErrorFilter)
-
-add_legacy_unit_test(/CDash/Model/BuildFailure)
 
 add_legacy_unit_test(/CDash/Model/Repository)
 
