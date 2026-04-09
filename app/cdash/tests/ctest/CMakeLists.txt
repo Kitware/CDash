@@ -73,11 +73,8 @@ set_tests_properties(indexfilters PROPERTIES DEPENDS submitsortingdata)
 add_php_test(timeline)
 set_tests_properties(timeline PROPERTIES DEPENDS indexfilters)
 
-add_laravel_test(Feature/Timeline)
-set_tests_properties(Feature/Timeline PROPERTIES DEPENDS timeline)
-
 add_php_test(nobackup)
-set_tests_properties(nobackup PROPERTIES DEPENDS Feature/Timeline)
+set_tests_properties(nobackup PROPERTIES DEPENDS timeline)
 
 # TODO: (sbelsk) revisit why this test fails and add proper dependencies
 #add_php_test(parallelsubmissions)

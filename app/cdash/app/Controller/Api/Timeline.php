@@ -68,8 +68,6 @@ class Timeline extends Index
 
         // Generate data based on the page that's requesting this chart.
         switch ($page) {
-            case 'buildProperties.php':
-                return $this->chartForBuildProperties();
             case 'testOverview.php':
                 return $this->chartForTestOverview();
             case 'viewBuildGroup.php':
@@ -91,52 +89,6 @@ class Timeline extends Index
             $this->colors[self::FAILURE] = ClassicPalette::Warning;
             $this->colors[self::CLEAN] = ClassicPalette::Success;
         }
-    }
-
-    private function chartForBuildProperties()
-    {
-        $request = request();
-        $defect_types = $request->session()->get('defecttypes');
-
-        if (!$defect_types) {
-            abort(400, 'No defecttypes defined in your session');
-        }
-        $this->defectTypes = $defect_types;
-
-        // Construct an SQL SELECT clause for the requested types of defects.
-        $defect_keys = [];
-        $valid_defect_types = [
-            'configureerrors',
-            'configurewarnings',
-            'builderrors',
-            'buildwarnings',
-            'testnotrun',
-            'testfailed',
-            'testpassed',
-        ];
-        foreach ($this->defectTypes as $type) {
-            if (!in_array($type['name'], $valid_defect_types, true)) {
-                abort(400, "Invalid defect type: {$type['name']}");
-            }
-            $defect_keys[] = $type['name'];
-        }
-        $defect_selection = implode(', ', $defect_keys);
-        $stmt = $this->db->prepare("
-            SELECT
-                id,
-                $defect_selection,
-                starttime
-            FROM build b
-            WHERE
-                projectid = ?
-                AND parentid IN (0, -1)
-            ORDER BY starttime
-        ");
-        if (!pdo_execute($stmt, [$this->project->Id])) {
-            abort(500, 'Failed to load results');
-        }
-
-        return $this->getTimelineChartData($stmt);
     }
 
     private function chartForTestOverview(): array
