@@ -705,7 +705,7 @@ parameters:
 		-
 			rawMessage: Cannot cast mixed to int.
 			identifier: cast.int
-			count: 11
+			count: 10
 			path: app/Http/Controllers/BuildController.php
 
 		-
@@ -753,12 +753,6 @@ parameters:
 		-
 			rawMessage: 'Method App\Http\Controllers\BuildController::add_file() has parameter $list_of_files with no value type specified in iterable type array.'
 			identifier: missingType.iterableValue
-			count: 1
-			path: app/Http/Controllers/BuildController.php
-
-		-
-			rawMessage: 'Method App\Http\Controllers\BuildController::buildOverview() never returns Illuminate\Http\RedirectResponse so it can be removed from the return type.'
-			identifier: return.unusedType
 			count: 1
 			path: app/Http/Controllers/BuildController.php
 
@@ -817,12 +811,6 @@ parameters:
 			path: app/Http/Controllers/BuildController.php
 
 		-
-			rawMessage: 'Parameter #1 $string of function htmlspecialchars expects string, mixed given.'
-			identifier: argument.type
-			count: 2
-			path: app/Http/Controllers/BuildController.php
-
-		-
 			rawMessage: 'Parameter #1 $value of function count expects array|Countable, array|false given.'
 			identifier: argument.type
 			count: 4
@@ -832,12 +820,6 @@ parameters:
 			rawMessage: 'Parameter #2 $timestamp of function date expects int|null, int|false given.'
 			identifier: argument.type
 			count: 11
-			path: app/Http/Controllers/BuildController.php
-
-		-
-			rawMessage: 'Parameter #2 $timestamp of function gmdate expects int|null, (float|int) given.'
-			identifier: argument.type
-			count: 1
 			path: app/Http/Controllers/BuildController.php
 
 		-
@@ -18197,18 +18179,6 @@ parameters:
 			identifier: missingType.property
 			count: 1
 			path: app/cdash/tests/test_buildmodel.php
-
-		-
-			rawMessage: 'Call to deprecated method pass() of class SimpleTestCase.'
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/test_buildoverview.php
-
-		-
-			rawMessage: 'Method BuildOverviewTestCase::testBuildOverview() has no return type specified.'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_buildoverview.php
 
 		-
 			rawMessage: '''
