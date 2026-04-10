@@ -37,16 +37,6 @@ class RemoveBuildsTestCase extends KWWebTestCase
         parent::__construct();
     }
 
-    public function testRemoveBuilds(): void
-    {
-        $this->login();
-        $this->get($this->url . '/removeBuilds.php?projectid=5');
-        $this->clickSubmitByName('Submit');
-        if (!str_contains($this->getBrowser()->getContentAsText(), 'Removed')) {
-            $this->fail("'Removed' not found when expected");
-        }
-    }
-
     public function testBuildRemovalWorksAsExpected(): void
     {
         $time = gmdate(FMT_DATETIME);

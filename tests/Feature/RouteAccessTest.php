@@ -64,7 +64,6 @@ class RouteAccessTest extends TestCase
     public static function adminRoutes(): array
     {
         return [
-            ['/removeBuilds.php'],
             ['/monitor'],
         ];
     }
