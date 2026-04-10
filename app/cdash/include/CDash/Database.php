@@ -43,16 +43,6 @@ class Database extends Singleton
     {
         if ($this->pdo === null) {
             $pdo = DB::connection()->getPdo();
-
-            // The best of a number of bad  solutions. Essentially if a SQL statement
-            // contains the same token more than once, e.g.:
-            //   SELECT * FROM a WHERE b=:token OR c=:token
-            // the $stmt->bindValue(':token', $token) does not take into account the
-            // second token with the same name.
-            // @see https://stackoverflow.com/a/35375592/1373710
-            // TODO: Find out if this can be set at application bootstrap
-            //       by extending the DatabaseServiceProvider class
-            $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
             $this->pdo = $pdo;
         }
 

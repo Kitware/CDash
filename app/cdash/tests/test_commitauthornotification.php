@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Project;
 use CDash\Model\BuildGroup;
 use Illuminate\Support\Str;
 
@@ -28,7 +29,8 @@ class CommitAuthorNotificationTestCase extends KWWebTestCase
 
     public function __destruct()
     {
-        $this->deleteProject($this->projectId);
+        remove_project_builds($this->projectId);
+        Project::findOrFail((int) $this->projectId)->delete();
     }
 
     private function submitFile($file): void

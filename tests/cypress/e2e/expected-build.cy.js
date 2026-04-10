@@ -36,7 +36,7 @@ describe('expected_build', () => {
     // 'latest' should now display 'test-build-relationships' with unknown start time
     cy.get('a').contains('Latest').click();
     cy.get('#project_5_15').find('tr').last().should('contain', 'test-build-relationships');
-    cy.get('#project_5_15').find('tr').last().find('td').last().should('contain', 'Expected build');
+    cy.get('#project_5_15').find('tr').last().find('td').eq(-2).should('contain', 'Expected build');
 
     // restore it to not be expected
     cy.get('a').contains('Prev').click();

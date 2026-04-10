@@ -6,6 +6,7 @@
 //
 require_once __DIR__ . '/cdash_test_case.php';
 
+use App\Models\Project;
 use CDash\Database;
 use CDash\Model\BuildConfigure;
 
@@ -81,6 +82,8 @@ class ConfigureWarningTestCase extends KWWebTestCase
         if ($num_warnings != 1) {
             $this->fail("Expected 1 but got $num_warnings for second build");
         }
-        $this->deleteProject($this->ProjectId);
+
+        remove_project_builds($this->ProjectId);
+        Project::findOrFail((int) $this->ProjectId)->delete();
     }
 }
