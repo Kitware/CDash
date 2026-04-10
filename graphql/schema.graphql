@@ -214,6 +214,9 @@ type Project {
   "Example: https://github.com/Kitware/CDash"
   vcsUrl: Url @rename(attribute: "cvsurl")
 
+  "Relative path to the root of the CMake project in the repository."
+  cmakeProjectRoot: String @rename(attribute: "cmakeprojectroot")
+
   bugTracker: BugTracker @rename(attribute: "bugtrackertype")
 
   "Example: https://github.com/Kitware/CDash/issues"
@@ -419,6 +422,8 @@ input UpdateProjectInput @validator {
   vcsViewer: VcsViewer @rename(attribute: "cvsviewertype")
 
   vcsUrl: Url @rename(attribute: "cvsurl")
+
+  cmakeProjectRoot: String @rename(attribute: "cmakeprojectroot")
 
   bugTracker: BugTracker @rename(attribute: "bugtrackertype")
 

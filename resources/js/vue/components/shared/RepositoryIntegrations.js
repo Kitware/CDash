@@ -4,12 +4,15 @@
  * @param {...String} components
  */
 function makeUrlFromComponents(...components) {
-  return components.map(part => part.replace(/\/+$/, '')).join('/');
+  return components.filter(component => component !== null)
+    .map(part => part.replace(/\/+$|^\/+/, ''))
+    .join('/');
 }
 
 export class Repository {
-  constructor(repositoryUrl) {
+  constructor(repositoryUrl, repositoryCmakeProjectRoot) {
     this.repositoryUrl = repositoryUrl;
+    this.repositoryCmakeProjectRoot = repositoryCmakeProjectRoot;
   }
 
   /**
@@ -49,7 +52,7 @@ export class GitHub extends Repository {
   }
 
   getFileUrl(commit, path) {
-    return makeUrlFromComponents(this.repositoryUrl, 'blob', commit, path);
+    return makeUrlFromComponents(this.repositoryUrl, 'blob', commit, this.repositoryCmakeProjectRoot, path);
   }
 }
 
@@ -62,21 +65,22 @@ export class GitLab extends Repository {
     return makeUrlFromComponents(this.repositoryUrl, '-', 'compare', `${commit1}...${commit2}`);
   }
   getFileUrl(commit, path) {
-    return makeUrlFromComponents(this.repositoryUrl, '-', 'blob', commit, path);
+    return makeUrlFromComponents(this.repositoryUrl, '-', 'blob', commit, this.repositoryCmakeProjectRoot, path);
   }
 }
 
 /**
  * @param {String} repositoryType
  * @param {String} repositoryUrl
+ * @param {String} repositoryCmakeProjectRoot
  * @return ?Repository
  */
-export function getRepository(repositoryType, repositoryUrl) {
+export function getRepository(repositoryType, repositoryUrl, repositoryCmakeProjectRoot) {
   switch (repositoryType.toLowerCase()) {
   case 'github':
-    return new GitHub(repositoryUrl);
+    return new GitHub(repositoryUrl, repositoryCmakeProjectRoot);
   case 'gitlab':
-    return new GitLab(repositoryUrl);
+    return new GitLab(repositoryUrl, repositoryCmakeProjectRoot);
   default:
     return null;
   }

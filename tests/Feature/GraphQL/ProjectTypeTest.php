@@ -125,6 +125,8 @@ class ProjectTypeTest extends TestCase
             ...$vcsViewerValues,
             ['cvsurl', 'https://github.com/Kitware/CDash', 'vcsUrl', 'https://github.com/Kitware/CDash'],
             ['cvsurl', null, 'vcsUrl', null],
+            ['cmakeprojectroot', '/abc', 'cmakeProjectRoot', '/abc'],
+            ['cmakeprojectroot', null, 'cmakeProjectRoot', null],
             ...$bugTrackerValues,
             ['bugtrackerurl', 'https://github.com/Kitware/CDash/issues', 'bugTrackerUrl', 'https://github.com/Kitware/CDash/issues'],
             ['bugtrackerurl', null, 'bugTrackerUrl', null],

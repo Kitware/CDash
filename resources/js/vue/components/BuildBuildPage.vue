@@ -104,6 +104,7 @@
                 :show-fixed-errors="showFixedErrors"
                 :repository-type="repositoryType"
                 :repository-url="repositoryUrl"
+                :repository-cmake-project-root="repositoryCmakeProjectRoot"
               />
             </div>
           </details>
@@ -116,6 +117,7 @@
             :show-fixed-errors="showFixedErrors"
             :repository-type="repositoryType"
             :repository-url="repositoryUrl"
+            :repository-cmake-project-root="repositoryCmakeProjectRoot"
           />
         </div>
       </loading-indicator>
@@ -197,6 +199,11 @@ export default {
     },
 
     repositoryUrl: {
+      type: [String, null],
+      required: true,
+    },
+
+    repositoryCmakeProjectRoot: {
       type: [String, null],
       required: true,
     },

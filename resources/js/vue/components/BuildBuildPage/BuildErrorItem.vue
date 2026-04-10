@@ -129,6 +129,11 @@ export default {
       required: true,
     },
 
+    repositoryCmakeProjectRoot: {
+      type: [String, null],
+      required: true,
+    },
+
     revision: {
       type: String,
       required: false,
@@ -174,7 +179,7 @@ export default {
       ];
 
       const matches = text.match(new RegExp(`(${regexPrefixes.join('|')})[^:]*:[0-9]+:[0-9]+`, 'g'));
-      const repository = getRepository(this.repositoryType, this.repositoryUrl);
+      const repository = getRepository(this.repositoryType, this.repositoryUrl, this.repositoryCmakeProjectRoot);
 
       if (!repository || !matches) {
         return new Map();

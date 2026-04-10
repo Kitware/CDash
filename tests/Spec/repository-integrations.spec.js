@@ -8,31 +8,31 @@ import {
 describe('RepositoryIntegrations', () => {
   describe('getRepository', () => {
     it('returns a GitHub instance for "github" type', () => {
-      const repo = getRepository('github', 'https://github.com/foo/bar');
+      const repo = getRepository('github', 'https://github.com/foo/bar', '');
       expect(repo).toBeInstanceOf(GitHub);
       expect(repo.repositoryUrl).toBe('https://github.com/foo/bar');
     });
 
     it('returns a GitLab instance for "gitlab" type', () => {
-      const repo = getRepository('gitlab', 'https://gitlab.com/foo/bar');
+      const repo = getRepository('gitlab', 'https://gitlab.com/foo/bar', '');
       expect(repo).toBeInstanceOf(GitLab);
       expect(repo.repositoryUrl).toBe('https://gitlab.com/foo/bar');
     });
 
     it('is case insensitive for repository type', () => {
-      const repo = getRepository('GitHub', 'https://github.com/foo/bar');
+      const repo = getRepository('GitHub', 'https://github.com/foo/bar', '');
       expect(repo).toBeInstanceOf(GitHub);
     });
 
     it('returns null for unknown repository types', () => {
-      const repo = getRepository('bitbucket', 'https://bitbucket.org/foo/bar');
+      const repo = getRepository('bitbucket', 'https://bitbucket.org/foo/bar', '');
       expect(repo).toBeNull();
     });
   });
 
   describe('GitHub', () => {
     const repoUrl = 'https://github.com/foo/bar';
-    const repo = new GitHub(repoUrl);
+    const repo = new GitHub(repoUrl, '/src');
 
     it('generates correct commit URL', () => {
       const commit = 'abcdef123456';
@@ -47,12 +47,12 @@ describe('RepositoryIntegrations', () => {
 
     it('generates correct file URL', () => {
       const commit = 'abcdef123456';
-      const path = 'src/main.cpp';
-      expect(repo.getFileUrl(commit, path)).toBe(`${repoUrl}/blob/${commit}/${path}`);
+      const path = 'main.cpp';
+      expect(repo.getFileUrl(commit, path, '')).toBe(`${repoUrl}/blob/${commit}/src/${path}`);
     });
 
     it('handles trailing slashes in repository URL', () => {
-      const repoWithSlash = new GitHub('https://github.com/foo/bar/');
+      const repoWithSlash = new GitHub('https://github.com/foo/bar/', '');
       const commit = '123';
       expect(repoWithSlash.getCommitUrl(commit)).toBe('https://github.com/foo/bar/commit/123');
     });
@@ -60,7 +60,7 @@ describe('RepositoryIntegrations', () => {
 
   describe('GitLab', () => {
     const repoUrl = 'https://gitlab.com/foo/bar';
-    const repo = new GitLab(repoUrl);
+    const repo = new GitLab(repoUrl, '/src');
 
     it('generates correct commit URL', () => {
       const commit = 'abcdef123456';
@@ -75,12 +75,12 @@ describe('RepositoryIntegrations', () => {
 
     it('generates correct file URL', () => {
       const commit = 'abcdef123456';
-      const path = 'src/main.cpp';
-      expect(repo.getFileUrl(commit, path)).toBe(`${repoUrl}/-/blob/${commit}/${path}`);
+      const path = 'main.cpp';
+      expect(repo.getFileUrl(commit, path, '')).toBe(`${repoUrl}/-/blob/${commit}/src/${path}`);
     });
 
     it('handles trailing slashes in repository URL', () => {
-      const repoWithSlash = new GitLab('https://gitlab.com/foo/bar/');
+      const repoWithSlash = new GitLab('https://gitlab.com/foo/bar/', '');
       const commit = '123';
       expect(repoWithSlash.getCommitUrl(commit)).toBe('https://gitlab.com/foo/bar/-/commit/123');
     });

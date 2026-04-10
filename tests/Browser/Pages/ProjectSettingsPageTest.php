@@ -100,6 +100,7 @@ class ProjectSettingsPageTest extends BrowserTestCase
         $documentationurl = fake()->url();
         $testdataurl = fake()->url();
         $vcsurl = fake()->url();
+        $cmakeprojectroot = Str::uuid()->toString();
         $bugtrackerurl = fake()->url();
         $bugtrackernewissueurl = fake()->url();
         $emailmaxitems = fake()->numberBetween(1, 100);
@@ -138,6 +139,8 @@ class ProjectSettingsPageTest extends BrowserTestCase
             ['@vcs-viewer-input', 'GITLAB', 'cvsviewertype', 'gitlab', 'select'],
             ['@vcs-url-input', $vcsurl, 'cvsurl', $vcsurl, 'string'],
             ['@vcs-url-input', '', 'cvsurl', null, 'string'],
+            ['@cmake-project-root-input', $cmakeprojectroot, 'cmakeprojectroot', $cmakeprojectroot, 'string'],
+            ['@cmake-project-root-input', '', 'cmakeprojectroot', null, 'string'],
             ['@bug-tracker-input', 'None', 'bugtrackertype', null, 'select'],
             ['@bug-tracker-input', 'GITHUB', 'bugtrackertype', 'GitHub', 'select'],
             ['@bug-tracker-input', 'JIRA', 'bugtrackertype', 'JIRA', 'select'],
