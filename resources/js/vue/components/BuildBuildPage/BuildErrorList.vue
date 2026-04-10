@@ -25,6 +25,7 @@
               :source-directory="build.sourceDirectory"
               :repository-type="repositoryType"
               :repository-url="repositoryUrl"
+              :repository-cmake-project-root="repositoryCmakeProjectRoot"
               :revision="build.updateStep?.revision"
             />
           </div>
@@ -48,6 +49,7 @@
               :source-directory="build.sourceDirectory"
               :repository-type="repositoryType"
               :repository-url="repositoryUrl"
+              :repository-cmake-project-root="repositoryCmakeProjectRoot"
               :revision="build.updateStep?.revision"
             />
           </div>
@@ -150,6 +152,11 @@ export default {
     },
 
     repositoryUrl: {
+      type: [String, null],
+      required: true,
+    },
+
+    repositoryCmakeProjectRoot: {
       type: [String, null],
       required: true,
     },

@@ -181,6 +181,7 @@ class UpdateProjectTest extends TestCase
             ['homeUrl', 'https://kitware.com', 'homeurl', 'https://kitware.com'],
             ['vcsViewer', 'GITLAB', 'cvsviewertype', 'gitlab'],
             ['vcsUrl', 'https://gitlab.kitware.com/kitware/cdash', 'cvsurl', 'https://gitlab.kitware.com/kitware/cdash'],
+            ['cmakeProjectRoot', '/abc', 'cmakeprojectroot', '/abc'],
             ['bugTracker', 'JIRA', 'bugtrackertype', 'JIRA'],
             ['bugTrackerUrl', 'https://jira.kitware.com', 'bugtrackerurl', 'https://jira.kitware.com'],
             ['bugTrackerNewIssueUrl', 'https://jira.kitware.com/new', 'bugtrackernewissueurl', 'https://jira.kitware.com/new'],

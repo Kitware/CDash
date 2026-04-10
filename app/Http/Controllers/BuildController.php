@@ -34,10 +34,13 @@ final class BuildController extends AbstractBuildController
     {
         $this->setBuildById($build_id);
 
+        $project = Project::findOrFail((int) $this->project->Id);
+
         $params = [
             'build-id' => $this->build->Id,
-            'repository-type' => $this->project->CvsViewerType,
-            'repository-url' => $this->project->CvsUrl,
+            'repository-type' => $project->cvsviewertype,
+            'repository-url' => $project->cvsurl,
+            'repository-cmake-project-root' => $project->cmakeprojectroot,
         ];
 
         $onlyNewErrors = $request->has('onlydeltap');

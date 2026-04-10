@@ -364,6 +364,41 @@ class BuildBuildPageTest extends BrowserTestCase
         });
     }
 
+    public function testLinksCorrectlyWhenNotRootOfRepository(): void
+    {
+        $this->project->cvsviewertype = 'github';
+        $this->project->cvsurl = 'https://example.com/org/repo';
+        $this->project->cmakeprojectroot = '/source';
+        $this->project->save();
+
+        $stdOutPart1 = Str::uuid()->toString();
+        $stdOutPart2 = Str::uuid()->toString();
+        $sourceDirectory = '/absolute/path/to/source';
+        $filePath = $sourceDirectory . '/foo/bar.cpp:10:20';
+
+        /** @var Build $build */
+        $build = $this->project->builds()->create([
+            'siteid' => $this->site->id,
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+            'sourcedirectory' => $sourceDirectory,
+        ]);
+
+        $build->buildErrors()->save(BuildError::factory()->make([
+            'stdoutput' => $stdOutPart1 . $filePath . $stdOutPart2,
+        ]));
+
+        $this->browse(function (Browser $browser) use ($filePath, $stdOutPart2, $stdOutPart1, $build): void {
+            $browser->visit("/builds/{$build->id}/build")
+                ->waitForText('1 ERROR')
+                ->assertSee($stdOutPart1)
+                ->assertSee($stdOutPart2)
+                ->assertSeeLink($filePath)
+                ->assertPresent('a[href="https://example.com/org/repo/blob/main/source/foo/bar.cpp"]')
+            ;
+        });
+    }
+
     public function testLinksToUpdateRevisionWhenRepositoryConfiguredAndHasUpdateStep(): void
     {
         $this->project->cvsviewertype = 'github';

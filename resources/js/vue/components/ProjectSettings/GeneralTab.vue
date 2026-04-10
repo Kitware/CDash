@@ -253,6 +253,14 @@
             placeholder="https://example.com"
             test-id="vcs-url-input"
           />
+
+          <InputField
+            v-model="form.cmakeProjectRoot"
+            :validation-error="validationErrors?.cmakeProjectRoot?.[0]"
+            label="CMake Project Root "
+            placeholder="/src"
+            test-id="cmake-project-root-input"
+          />
         </div>
 
         <div class="tw-flex tw-flex-row tw-gap-4">
@@ -519,6 +527,7 @@ export default {
         homeUrl: '',
         vcsViewer: null,
         vcsUrl: '',
+        cmakeProjectRoot: '',
         bugTracker: null,
         bugTrackerUrl: '',
         bugTrackerNewIssueUrl: '',
@@ -562,6 +571,7 @@ export default {
             homeUrl
             vcsViewer
             vcsUrl
+            cmakeProjectRoot
             bugTracker
             bugTrackerUrl
             bugTrackerNewIssueUrl
