@@ -237,20 +237,6 @@ class AuthTokenTestCase extends KWWebTestCase
         }
     }
 
-    public function testRevokeToken(): void
-    {
-        // Log in as non-admin user.
-        $this->login('user1@kw', 'user1');
-
-        // Use API to revoke token.
-        $this->delete($this->url . "/api/authtokens/delete/$this->Hash");
-
-        // Make sure the token is really gone.
-        if (AuthToken::firstWhere('hash', $this->Hash)) {
-            $this->fail('Token still exists after it was revoked');
-        }
-    }
-
     public function testRemoveExpiredToken(): void
     {
         // Put an expired token in the database.
@@ -268,7 +254,7 @@ class AuthTokenTestCase extends KWWebTestCase
         }
 
         // Make sure this token does not exist anymore.
-        if (AuthToken::firstWhere('hash', $this->Hash)) {
+        if (AuthToken::firstWhere('hash', $authtoken['hash'])) {
             $this->fail('Expired token still exists after submission');
         }
     }

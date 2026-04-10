@@ -57,7 +57,6 @@ Route::match(['get', 'post', 'delete'], '/v1/expectedbuild.php', 'ExpectedBuildC
 
 Route::middleware(['auth'])->group(function (): void {
     Route::post('/authtokens/create', 'AuthTokenController@createToken');
-    Route::delete('/authtokens/delete/{token_hash}', 'AuthTokenController@deleteToken');
 
     Route::post('/v1/addUserNote.php', 'UserNoteController@apiAddUserNote');
 

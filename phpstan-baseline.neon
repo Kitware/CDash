@@ -613,12 +613,6 @@ parameters:
 			path: app/Http/Controllers/AuthTokenController.php
 
 		-
-			rawMessage: 'Parameter #2 $expected_user_id of static method App\Utils\AuthTokenUtil::deleteToken() expects int, int|string|null given.'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/AuthTokenController.php
-
-		-
 			rawMessage: 'Parameter #3 $scope of static method App\Utils\AuthTokenUtil::generateToken() expects string, mixed given.'
 			identifier: argument.type
 			count: 1
@@ -17361,7 +17355,7 @@ parameters:
 		-
 			rawMessage: 'Only booleans are allowed in an if condition, App\Models\AuthToken|null given.'
 			identifier: if.condNotBoolean
-			count: 2
+			count: 1
 			path: app/cdash/tests/test_authtoken.php
 
 		-

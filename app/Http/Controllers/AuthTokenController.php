@@ -51,12 +51,4 @@ final class AuthTokenController extends AbstractController
 
         return response()->json($gen_auth_token);
     }
-
-    public function deleteToken(string $token_hash): JsonResponse
-    {
-        if (!AuthTokenUtil::deleteToken($token_hash, Auth::id())) {
-            return response()->json(['error' => 'Permissions error'], status: Response::HTTP_FORBIDDEN);
-        }
-        return response()->json('Token deleted');
-    }
 }
