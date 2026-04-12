@@ -1436,6 +1436,8 @@ type UpdateFile @model(class: "App\\Models\\BuildUpdateFile")  {
 
   committerEmail: String @rename(attribute: "committeremail") @filterable
 
+  checkinDate: DateTimeTz @rename(attribute: "checkindate")
+
   log: String
 
   revision: String @filterable

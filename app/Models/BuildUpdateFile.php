@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use Database\Factories\BuildUpdateFileFactory;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 
@@ -24,6 +26,9 @@ use Illuminate\Support\Carbon;
  */
 class BuildUpdateFile extends Model
 {
+    /** @use HasFactory<BuildUpdateFileFactory> */
+    use HasFactory;
+
     protected $table = 'updatefile';
 
     public $timestamps = false;
