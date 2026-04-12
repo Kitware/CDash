@@ -318,12 +318,6 @@ type Project {
   "Forward label filters from index.php to queryTests.php and viewTest.php."
   shareLabelFilters: Boolean! @rename(attribute: "sharelabelfilters")
 
-  """
-  If true and this Project uses SubProjects, show a per-SubProject breakdown by default. If false,
-  CDash will show per-build results instead.
-  """
-  showViewSubProjectsLink: Boolean! @rename(attribute: "viewsubprojectslink")
-
   "Custom text displayed at the top of a project's dashboard."
   banner: String
 
@@ -476,8 +470,6 @@ input UpdateProjectInput @validator {
   showCoverageCode: Boolean @rename(attribute: "showcoveragecode")
 
   shareLabelFilters: Boolean @rename(attribute: "sharelabelfilters")
-
-  showViewSubProjectsLink: Boolean @rename(attribute: "viewsubprojectslink")
 
   banner: String
 }

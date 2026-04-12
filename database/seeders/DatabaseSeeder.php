@@ -43,7 +43,6 @@ class DatabaseSeeder extends Seeder
     {
         $project = $this->makePublicProject('Trilinos');
         $project->description = 'Submission files donated by the Trilinos project.';
-        $project->viewsubprojectslink = true;
         $project->save();
 
         $files_to_submit = file_get_contents(app_path('/cdash/tests/data/ActualTrilinosSubmission/orderedFileList.txt'));

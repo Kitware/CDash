@@ -148,15 +148,6 @@
           label="Display Labels"
           test-id="display-labels-input"
         />
-
-        <CheckboxField
-          v-model="form.showViewSubProjectsLink"
-          :validation-error="validationErrors?.showViewSubProjectsLink?.[0]"
-          label="Show View SubProjects Link"
-          description="If this Project uses SubProjects, show a per-SubProject breakdown by default.
-          If unchecked, CDash will show per-build results instead."
-          test-id="view-subprojects-link-input"
-        />
       </FormSection>
 
       <FormSection
@@ -552,7 +543,6 @@ export default {
         fileUploadLimit: 50,
         showCoverageCode: true,
         shareLabelFilters: false,
-        showViewSubProjectsLink: true,
         banner: '',
       },
       validationErrors: {},
@@ -598,7 +588,6 @@ export default {
             fileUploadLimit
             showCoverageCode
             shareLabelFilters
-            showViewSubProjectsLink
             banner
           }
         }

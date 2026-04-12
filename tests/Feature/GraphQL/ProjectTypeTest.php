@@ -168,8 +168,6 @@ class ProjectTypeTest extends TestCase
             ['showcoveragecode', false, 'showCoverageCode', false],
             ['sharelabelfilters', true, 'shareLabelFilters', true],
             ['sharelabelfilters', false, 'shareLabelFilters', false],
-            ['viewsubprojectslink', true, 'showViewSubProjectsLink', true],
-            ['viewsubprojectslink', false, 'showViewSubProjectsLink', false],
             ['banner', 'test', 'banner', 'test'],
             ['banner', null, 'banner', null],
         ];
