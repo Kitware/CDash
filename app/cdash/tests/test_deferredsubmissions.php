@@ -8,6 +8,8 @@ require_once __DIR__ . '/cdash_test_case.php';
 require_once 'tests/test_branchcoverage.php';
 
 use App\Models\AuthToken;
+use App\Models\User;
+use App\Utils\AuthTokenUtil;
 use App\Utils\DatabaseCleanupUtils;
 use CDash\Model\Project;
 use Illuminate\Support\Facades\DB;
@@ -130,18 +132,9 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
             return;
         }
 
-        // Log in as non-admin user.
-        $this->login('user1@kw', 'user1');
-
-        // Use API to generate token.
-        $response = $this->post($this->url . '/api/authtokens/create', [
-            'description' => 'mytoken',
-            'scope' => $scope,
-            'projectid' => $this->project->Id,
-        ]);
-        $response = json_decode($response, true);
+        $userid = User::where('email', 'user1@kw')->firstOrFail()->id;
+        $response = AuthTokenUtil::generateToken($userid, $this->project->Id, $scope, 'mytoken');
         $this->token = $response['raw_token'];
-        $this->logout();
     }
 
     public function testNormalSubmitWithValidToken(): void

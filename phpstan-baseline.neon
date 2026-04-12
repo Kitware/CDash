@@ -571,36 +571,6 @@ parameters:
 			path: app/Http/Controllers/Auth/RegisterController.php
 
 		-
-			rawMessage: 'Call to function is_numeric() with int will always evaluate to true.'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: app/Http/Controllers/AuthTokenController.php
-
-		-
-			rawMessage: Cannot cast mixed to int.
-			identifier: cast.int
-			count: 1
-			path: app/Http/Controllers/AuthTokenController.php
-
-		-
-			rawMessage: 'Parameter #1 $user_id of static method App\Utils\AuthTokenUtil::generateToken() expects int, int|string|null given.'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/AuthTokenController.php
-
-		-
-			rawMessage: 'Parameter #3 $scope of static method App\Utils\AuthTokenUtil::generateToken() expects string, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/AuthTokenController.php
-
-		-
-			rawMessage: 'Parameter #4 $description of static method App\Utils\AuthTokenUtil::generateToken() expects string, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/AuthTokenController.php
-
-		-
 			rawMessage: 'Argument of an invalid type array|false supplied for foreach, only iterables are supported.'
 			identifier: foreach.nonIterable
 			count: 4
@@ -16873,12 +16843,6 @@ parameters:
 			path: app/cdash/tests/test_attachedfiles.php
 
 		-
-			rawMessage: Access to an undefined property App\Models\AuthToken::$Hash.
-			identifier: property.notFound
-			count: 1
-			path: app/cdash/tests/test_authtoken.php
-
-		-
 			rawMessage: '''
 				Call to deprecated method getConfig() of class GuzzleHttp\Client:
 				Client::getConfig will be removed in guzzlehttp/guzzle:8.0.
@@ -16969,12 +16933,6 @@ parameters:
 			path: app/cdash/tests/test_authtoken.php
 
 		-
-			rawMessage: 'Only booleans are allowed in a negated boolean, Illuminate\Database\Eloquent\Builder<App\Models\AuthToken> given.'
-			identifier: booleanNot.exprNotBoolean
-			count: 1
-			path: app/cdash/tests/test_authtoken.php
-
-		-
 			rawMessage: 'Only booleans are allowed in a negated boolean, Psr\Http\Message\ResponseInterface given.'
 			identifier: booleanNot.exprNotBoolean
 			count: 1
@@ -17017,20 +16975,8 @@ parameters:
 			path: app/cdash/tests/test_authtoken.php
 
 		-
-			rawMessage: 'Parameter #2 $array of function array_key_exists expects array, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/tests/test_authtoken.php
-
-		-
 			rawMessage: 'Parameter #3 $value of function curl_setopt expects bool, int given.'
 			identifier: argument.type
-			count: 1
-			path: app/cdash/tests/test_authtoken.php
-
-		-
-			rawMessage: Property AuthTokenTestCase::$Hash has no type specified.
-			identifier: missingType.property
 			count: 1
 			path: app/cdash/tests/test_authtoken.php
 
@@ -18640,12 +18586,6 @@ parameters:
 			'''
 			identifier: method.deprecated
 			count: 18
-			path: app/cdash/tests/test_deferredsubmissions.php
-
-		-
-			rawMessage: Cannot access offset 'raw_token' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
 			path: app/cdash/tests/test_deferredsubmissions.php
 
 		-
