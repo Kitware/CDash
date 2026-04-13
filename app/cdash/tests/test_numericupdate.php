@@ -2,6 +2,8 @@
 
 require_once __DIR__ . '/cdash_test_case.php';
 
+use App\Models\Build;
+use App\Models\BuildUpdate;
 use App\Models\Project;
 use Tests\Traits\CreatesProjects;
 
@@ -36,12 +38,13 @@ class NumericUpdateTestCase extends KWWebTestCase
         $buildgroup = array_pop($jsonobj['buildgroups']);
         $this->assertTrue('084161' === $buildgroup['builds'][0]['update']['files']);
 
-        // Verify Revision and PriorRevision on viewUpdate.php.
+        // Verify Revision and PriorRevision.
         $buildid = $buildgroup['builds'][0]['id'];
-        $this->get("{$this->url}/api/v1/viewUpdate.php?buildid={$buildid}");
-        $content = $this->getBrowser()->getContent();
-        $jsonobj = json_decode($content, true);
-        $this->assertTrue('08416132611118b6817515907055112111663314' === $jsonobj['update']['revision']);
-        $this->assertTrue('07416132611118b6817515907055112111663314' === $jsonobj['update']['priorrevision']);
+
+        /** @var BuildUpdate $update */
+        $update = Build::findOrFail((int) $buildid)->updateStep;
+
+        $this->assertEqual('08416132611118b6817515907055112111663314', $update->revision);
+        $this->assertEqual('07416132611118b6817515907055112111663314', $update->priorrevision);
     }
 }
