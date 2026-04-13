@@ -30,21 +30,25 @@
           v-model="profileForm.fname"
           name="fname"
           label="First Name"
+          test-id="fname-input"
         />
         <InputField
           v-model="profileForm.lname"
           name="lname"
           label="Last Name"
+          test-id="lname-input"
         />
         <InputField
           v-model="profileForm.email"
           name="email"
           label="Email"
+          test-id="email-input"
         />
         <InputField
           v-model="profileForm.institution"
           name="institution"
           label="Institution"
+          test-id="institution-input"
         />
 
         <div class="tw-flex tw-justify-end tw-mt-4">
@@ -53,6 +57,7 @@
             value="Update Profile"
             name="updateprofile"
             class="tw-btn tw-btn-sm tw-btn-primary"
+            data-test="update-profile-button"
           >
         </div>
       </form>
@@ -76,18 +81,21 @@
           name="oldpasswd"
           type="password"
           label="Current Password"
+          test-id="oldpasswd-input"
         />
         <InputField
           v-model="passwordForm.passwd"
           name="passwd"
           type="password"
           label="New Password"
+          test-id="passwd-input"
         />
         <InputField
           v-model="passwordForm.passwd2"
           name="passwd2"
           type="password"
           label="Confirm Password"
+          test-id="passwd2-input"
         />
 
         <div class="tw-flex tw-justify-end tw-mt-4">
@@ -96,6 +104,7 @@
             value="Update Password"
             name="updatepassword"
             class="tw-btn tw-btn-sm tw-btn-primary"
+            data-test="update-password-button"
           >
         </div>
       </form>
