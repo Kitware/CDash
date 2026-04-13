@@ -76,6 +76,10 @@ export class GitLab extends Repository {
  * @return ?Repository
  */
 export function getRepository(repositoryType, repositoryUrl, repositoryCmakeProjectRoot) {
+  if (!repositoryUrl) {
+    return null;
+  }
+
   switch (repositoryType.toLowerCase()) {
   case 'github':
     return new GitHub(repositoryUrl, repositoryCmakeProjectRoot);

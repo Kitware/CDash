@@ -7,6 +7,7 @@ use App\Models\BuildUpdate;
 use App\Models\BuildUpdateFile;
 use App\Models\Project;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
@@ -70,6 +71,7 @@ class UpdateFileTypeTest extends TestCase
             'email' => Str::uuid()->toString(),
             'committer' => Str::uuid()->toString(),
             'committeremail' => Str::uuid()->toString(),
+            'checkindate' => Carbon::parse(fake()->dateTime())->roundDay(),
             'log' => Str::uuid()->toString(),
             'revision' => Str::uuid()->toString(),
             'priorrevision' => Str::uuid()->toString(),
@@ -88,6 +90,7 @@ class UpdateFileTypeTest extends TestCase
                                     authorEmail
                                     committerName
                                     committerEmail
+                                    checkinDate
                                     log
                                     revision
                                     priorRevision
@@ -113,6 +116,7 @@ class UpdateFileTypeTest extends TestCase
                                         'authorEmail' => $updateFile->email,
                                         'committerName' => $updateFile->committer,
                                         'committerEmail' => $updateFile->committeremail,
+                                        'checkinDate' => $updateFile->checkindate->toIso8601String(),
                                         'log' => $updateFile->log,
                                         'revision' => $updateFile->revision,
                                         'priorRevision' => $updateFile->priorrevision,

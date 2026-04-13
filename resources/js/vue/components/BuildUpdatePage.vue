@@ -3,39 +3,33 @@
     :build-id="buildId"
     active-tab="update"
   >
-    <section v-if="errored">
-      <p>{{ cdash.error }}</p>
-    </section>
-    <section
-      v-else
-      class="tw-flex tw-flex-col tw-w-full tw-gap-4"
-    >
+    <section class="tw-flex tw-flex-col tw-w-full tw-gap-4">
       <build-summary-card :build-id="buildId" />
 
-      <loading-indicator :is-loading="loading">
+      <loading-indicator :is-loading="!update">
         <div>
-          <div v-if="cdash.update.revision">
+          <div v-if="update.revision">
             <b>Revision: </b>
-            <tt v-if="cdash.update.revisionurl.length > 0">
+            <tt v-if="repository">
               <a
                 class="tw-link tw-link-hover tw-link-info"
-                :href="repository?.getComparisonUrl(cdash.update.revision, cdash.update.priorrevision) ?? ''"
-              >{{ cdash.update.revision }}</a>
+                :href="revisionUrl"
+              >{{ update.revision }}</a>
             </tt>
             <tt v-else>
-              {{ cdash.update.revision }}
+              {{ update.revision }}
             </tt>
           </div>
-          <div v-if="cdash.update.priorrevision">
+          <div v-if="update.priorRevision">
             <b>Prior Revision: </b>
-            <tt v-if="cdash.update.revisiondiff.length > 0">
+            <tt v-if="repository">
               <a
                 class="tw-link tw-link-hover tw-link-info"
-                :href="repository?.getCommitUrl(cdash.update.priorrevision) ?? ''"
-              >{{ cdash.update.priorrevision }}</a>
+                :href="repository?.getCommitUrl(update.priorRevision) ?? ''"
+              >{{ update.priorRevision }}</a>
             </tt>
             <tt v-else>
-              {{ cdash.update.priorrevision }}
+              {{ update.priorRevision }}
             </tt>
           </div>
 
@@ -62,66 +56,21 @@
         </div>
 
         <h3
-          v-if="cdash.update.status"
+          v-if="update.status"
           class="error"
         >
-          {{ cdash.update.status }}
+          {{ update.status }}
         </h3>
+      </loading-indicator>
 
-        <div v-for="group in cdash.updategroups">
-          <div class="tw-w-full">
-            <div @click="group.hidden = !group.hidden; $forceUpdate()">
-              <font-awesome-icon :icon="group.hidden ? FA.faChevronRight : FA.faChevronDown" />
-              <b>{{ group.description }}</b>
-            </div>
-            <div class="tw-flex tw-flex-col tw-gap-4 tw-ml-8">
-              <div
-                v-for="directory in group.directories"
-                v-show="!group.hidden"
-              >
-                <div
-                  @click="directory.hidden = !directory.hidden; $forceUpdate()"
-                >
-                  <font-awesome-icon :icon="directory.hidden ? FA.faChevronRight : FA.faChevronDown" />
-                  <tt>{{ directory.name }}</tt>
-                </div>
-                <div class="tw-flex tw-flex-col tw-gap-4 tw-ml-8">
-                  <div
-                    v-for="file in directory.files"
-                    v-show="!directory.hidden"
-                  >
-                    <div>
-                      <tt>{{ file.filename }}</tt> Revision:
-                      <a
-                        v-if="file.diffurl"
-                        class="tw-link tw-link-hover tw-link-info"
-                        :href="file.diffurl"
-                      >
-                        <tt>{{ file.revision }}</tt>
-                      </a>
-                      <tt v-else>
-                        {{ file.revision }}
-                      </tt>
-                      <span v-if="file.author">
-                        by
-                        <a
-                          v-if="file.email"
-                          class="tw-link tw-link-hover tw-link-info"
-                          :href="'mailto:' + file.email"
-                        >
-                          {{ file.author }}
-                        </a>
-                        <span v-else>
-                          {{ file.author }}
-                        </span>
-                      </span>
-                    </div>
-                    <code-box :text="file.log" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+      <loading-indicator :is-loading="!updateFiles">
+        <div class="tw-flex tw-flex-col tw-gap-4">
+          <CommitCard
+            v-for="commitFiles in commits"
+            :key="commitFiles[0].revision"
+            :commit-files="commitFiles"
+            :repository="repository"
+          />
         </div>
       </loading-indicator>
     </section>
@@ -130,18 +79,17 @@
 
 <script>
 import $ from 'jquery';
-import ApiLoader from './shared/ApiLoader';
 import BuildSummaryCard from './shared/BuildSummaryCard.vue';
 import LoadingIndicator from './shared/LoadingIndicator.vue';
 import BuildSidebar from './shared/BuildSidebar.vue';
-import CodeBox from './shared/CodeBox.vue';
-import {faChevronDown, faChevronRight} from '@fortawesome/free-solid-svg-icons';
-import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 import {getRepository} from './shared/RepositoryIntegrations';
+import gql from 'graphql-tag';
+import { DateTime } from 'luxon';
+import CommitCard from './BuildUpdate/CommitCard.vue';
 
 export default {
   name: 'BuildUpdate',
-  components: {FontAwesomeIcon, CodeBox, LoadingIndicator, BuildSummaryCard, BuildSidebar},
+  components: {CommitCard, LoadingIndicator, BuildSummaryCard, BuildSidebar},
 
   props: {
     buildId: {
@@ -162,11 +110,6 @@ export default {
 
   data() {
     return {
-      // API results.
-      cdash: {},
-      loading: true,
-      errored: false,
-
       // Booleans controlling whether a section should be displayed or not.
       showGraph: false,
 
@@ -183,16 +126,128 @@ export default {
     };
   },
 
-  computed: {
-    FA() {
-      return {
-        faChevronDown,
-        faChevronRight,
-      };
+  apollo: {
+    update: {
+      query: gql`
+        query($buildId: ID) {
+          build(id: $buildId) {
+            id
+            updateStep {
+              id
+              command
+              type
+              status
+              revision
+              priorRevision
+              path
+            }
+          }
+        }
+      `,
+      update: data => data?.build?.updateStep,
+      variables() {
+        return {
+          buildId: this.buildId,
+        };
+      },
     },
 
+    updateFiles: {
+      query: gql`
+        query($buildId: ID) {
+          build(id: $buildId) {
+            id
+            updateStep {
+              id
+              updateFiles(first: 100000) {
+                edges {
+                  node {
+                    id
+                    fileName
+                    authorName
+                    authorEmail
+                    committerName
+                    committerEmail
+                    checkinDate
+                    log
+                    revision
+                    priorRevision
+                    status
+                  }
+                }
+              }
+            }
+          }
+        }
+      `,
+      update: data => data?.build?.updateStep?.updateFiles?.edges,
+      variables() {
+        return {
+          buildId: this.buildId,
+        };
+      },
+    },
+  },
+
+  computed: {
     repository() {
       return getRepository(this.repositoryType, this.repositoryUrl);
+    },
+
+    revisionUrl() {
+      if (this.update.priorRevision) {
+        return this.repository?.getComparisonUrl(this.update.revision, this.update.priorRevision) ?? '';
+      }
+      else {
+        return this.repository?.getCommitUrl(this.update.revision) ?? '';
+      }
+    },
+
+    commits() {
+      if (!this.updateFiles) {
+        return [];
+      }
+
+      // Group by revision
+      const groups = {};
+      for (const edge of this.updateFiles) {
+        const file = edge.node;
+        const revision = file.revision || 'Unknown Revision';
+        if (!groups[revision]) {
+          groups[revision] = [];
+        }
+        groups[revision].push(file);
+      }
+
+      const commits = Object.values(groups);
+
+      // Sort files within each commit
+      commits.forEach(commitFiles => {
+        commitFiles.sort((a, b) => a.fileName.localeCompare(b.fileName));
+      });
+
+      // Sort commits by max checkin date (descending)
+      commits.sort((a, b) => {
+        const maxDateA = a.reduce((max, file) => {
+          if (!file.checkinDate) {
+            return max;
+          }
+          const dt = DateTime.fromISO(file.checkinDate);
+          return dt > max ? dt : max;
+        }, DateTime.fromMillis(0));
+
+        const maxDateB = b.reduce((max, file) => {
+          if (!file.checkinDate) {
+            return max;
+          }
+          const dt = DateTime.fromISO(file.checkinDate);
+          return dt > max ? dt : max;
+        }, DateTime.fromMillis(0));
+
+        return maxDateB.toMillis() - maxDateA.toMillis();
+      });
+
+      return commits;
     },
   },
 
@@ -200,9 +255,6 @@ export default {
     // Ensure jQuery is globally available before loading plugins
     window.jQuery = $;
     await import('flot/dist/es5/jquery.flot');
-
-    const endpoint_path = `/api/v1/viewUpdate.php?buildid=${this.buildId}`;
-    ApiLoader.loadPageData(this, endpoint_path);
   },
 
   methods: {
@@ -264,7 +316,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-
-</style>
