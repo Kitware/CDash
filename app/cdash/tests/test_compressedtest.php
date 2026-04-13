@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\Build;
+use App\Models\BuildUpdate;
+
 //
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
@@ -59,23 +62,12 @@ class CompressedTestCase extends KWWebTestCase
             return;
         }
 
-        // Verify that viewUpdate has the info we expect.
-        $this->get($this->url . "/api/v1/viewUpdate.php?buildid=$buildid");
-        $response = json_decode($this->getBrowser()->getContentAsText(), true);
+        // Verify that the update has the info we expect.
+        /** @var BuildUpdate $update */
+        $update = Build::findOrFail((int) $buildid)->updateStep;
 
-        $expected = 'http://public.kitware.com/cgi-bin/viewcvs.cgi/?cvsroot=TestCompressionExample/compare/0758f1dbf75d1f0a1759b5f2d0aa00b3aba0d8c4...23a41258921e1cba8581ee2fa5add00f817f39fe';
-        $found = $response['update']['revisionurl'];
-        if (!str_contains($found, $expected)) {
-            $this->fail("expected $expected but found $found for revisionurl");
-            return;
-        }
-
-        $expected = 'http://public.kitware.com/cgi-bin/viewcvs.cgi/?cvsroot=TestCompressionExample/commit/0758f1dbf75d1f0a1759b5f2d0aa00b3aba0d8c4';
-        $found = $response['update']['revisiondiff'];
-        if (!str_contains($found, $expected)) {
-            $this->fail("expected $expected but found $found for revisiondiff");
-            return;
-        }
+        $this->assertEqual('23a41258921e1cba8581ee2fa5add00f817f39fe', $update->revision);
+        $this->assertEqual('0758f1dbf75d1f0a1759b5f2d0aa00b3aba0d8c4', $update->priorrevision);
 
         $this->pass('Test passed');
     }

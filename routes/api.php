@@ -15,8 +15,6 @@ use Illuminate\Support\Facades\Route;
 
 // NOTE: All routes listed in this file will be prefixed with /api
 
-Route::get('/v1/viewUpdate.php', 'BuildController@viewUpdatePageContent');
-
 Route::get('/v1/viewTest.php', 'ViewTestController@fetchPageContent');
 
 Route::get('/v1/testDetails.php', 'TestDetailsController@apiTestDetails');
