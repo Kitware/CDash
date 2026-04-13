@@ -54,8 +54,6 @@ Route::get('/v1/testOverview.php', 'TestController@apiTestOverview');
 Route::match(['get', 'post', 'delete'], '/v1/expectedbuild.php', 'ExpectedBuildController@apiResponse');
 
 Route::middleware(['auth'])->group(function (): void {
-    Route::post('/authtokens/create', 'AuthTokenController@createToken');
-
     Route::post('/v1/addUserNote.php', 'UserNoteController@apiAddUserNote');
 
     Route::get('/v1/manageSubProject.php', 'SubProjectController@apiManageSubProject');

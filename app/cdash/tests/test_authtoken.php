@@ -18,12 +18,10 @@ class AuthTokenTestCase extends KWWebTestCase
     private $Token;
     private $PostBuildId;
     private ?Project $Project;
-    private $Hash;
 
     public function __construct()
     {
         parent::__construct();
-        $this->Hash = '';
         $this->PostBuildId = 0;
         $this->Project = null;
         $this->Token = '';
@@ -68,24 +66,10 @@ class AuthTokenTestCase extends KWWebTestCase
 
     public function testGenerateToken(): void
     {
-        // Log in as non-admin user.
-        $this->login('user1@kw', 'user1');
+        $userid = User::where('email', 'user1@kw')->firstOrFail()->id;
+        $response = AuthTokenUtil::generateToken($userid, -1, AuthToken::SCOPE_FULL_ACCESS, 'mytoken');
 
-        // Use API to generate token.
-        $response = $this->post($this->url . '/api/authtokens/create', ['description' => 'mytoken', 'scope' => AuthToken::SCOPE_FULL_ACCESS]);
-        $response = json_decode($response, true);
-        if (!array_key_exists('raw_token', $response)) {
-            $this->fail('Failed to generate token');
-        }
         $this->Token = $response['raw_token'];
-
-        // Test that the model agrees that this token exists.
-        $tokenmodel = new AuthToken();
-        $this->Hash = $response['token']['hash'];
-        $tokenmodel->Hash = $this->Hash;
-        if (!$tokenmodel->Exists()) {
-            $this->fail('Token does not exist');
-        }
     }
 
     public function testApiAccess()
