@@ -1,19 +1,3 @@
-function(set_app_url)
-  if(DEFINED ENV{APP_URL})
-    set(APP_URL "$ENV{APP_URL}" PARENT_SCOPE)
-  elseif(EXISTS ${CDash_SOURCE_DIR}/.env)
-    file(STRINGS ${CDash_SOURCE_DIR}/.env env_vars)
-    foreach(var IN LISTS env_vars)
-      if(var MATCHES "^APP_URL=(.*)$")
-        set(APP_URL "${CMAKE_MATCH_1}" PARENT_SCOPE)
-        break()
-      endif()
-    endforeach()
-  else()
-    set(APP_URL "http://localhost:8080" PARENT_SCOPE)
-  endif()
-endfunction()
-
 add_test(
   NAME php_style_check
   COMMAND ${CMAKE_SOURCE_DIR}/vendor/bin/php-cs-fixer fix --dry-run --allow-risky=yes

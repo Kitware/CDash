@@ -1,13 +1,11 @@
 function(add_cypress_e2e_test TestName)
-  set_app_url()
-
   add_test(
     NAME cypress/e2e/${TestName}
     COMMAND ${NPX_EXE} cypress run
       --e2e
       --project ${CDash_SOURCE_DIR}
       --spec ${CDash_SOURCE_DIR}/tests/cypress/e2e/${TestName}.cy.js
-      --config baseUrl=${APP_URL}
+      --config baseUrl=http://localhost:8080
   )
   # Cypress tries to put stuff in our home directory, which doesn't work for /var/www.
   set_tests_properties(cypress/e2e/${TestName} PROPERTIES
