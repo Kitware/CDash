@@ -122,8 +122,6 @@ class ProjectSettingsPageTest extends BrowserTestCase
             ['@banner-input', '', 'banner', null, 'string'],
             ['@display-labels-input', true, 'displaylabels', true, 'checkbox'],
             ['@display-labels-input', false, 'displaylabels', false, 'checkbox'],
-            ['@view-subprojects-link-input', true, 'viewsubprojectslink', true, 'checkbox'],
-            ['@view-subprojects-link-input', false, 'viewsubprojectslink', false, 'checkbox'],
             ['@nightly-time-input', '23:01:01', 'nightlytime', '23:01:01', 'string'],
             ['@autoremove-time-frame-input', 7, 'autoremovetimeframe', 7, 'string'],
             ['@autoremove-max-builds-input', 100, 'autoremovemaxbuilds', 100, 'string'],

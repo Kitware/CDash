@@ -70,7 +70,6 @@ class Project
     public $EmailMaxChars = 255;
     public $DisplayLabels = 0;
     public $ShareLabelFilters = 0;
-    public $ViewSubProjectsLink = 0;
     public $AuthenticateSubmissions = 0;
     public $ShowCoverageCode = 0;
     public $AutoremoveTimeframe = 0;
@@ -131,7 +130,6 @@ class Project
             'emailredundantfailures' => filter_var($this->EmailRedundantFailures, FILTER_VALIDATE_BOOLEAN),
             'displaylabels' => filter_var($this->DisplayLabels, FILTER_VALIDATE_BOOLEAN),
             'sharelabelfilters' => filter_var($this->ShareLabelFilters, FILTER_VALIDATE_BOOLEAN),
-            'viewsubprojectslink' => filter_var($this->ViewSubProjectsLink, FILTER_VALIDATE_BOOLEAN),
             'authenticatesubmissions' => filter_var($this->AuthenticateSubmissions, FILTER_VALIDATE_BOOLEAN),
             'showcoveragecode' => filter_var($this->ShowCoverageCode, FILTER_VALIDATE_BOOLEAN),
             'autoremovetimeframe' => (int) $this->AutoremoveTimeframe,
@@ -219,7 +217,6 @@ class Project
             $this->EmailRedundantFailures = (int) $project->emailredundantfailures;
             $this->DisplayLabels = $project->displaylabels;
             $this->ShareLabelFilters = $project->sharelabelfilters;
-            $this->ViewSubProjectsLink = $project->viewsubprojectslink;
             $this->AuthenticateSubmissions = $project->authenticatesubmissions;
             $this->ShowCoverageCode = $project->showcoveragecode;
             $this->AutoremoveTimeframe = $project->autoremovetimeframe;

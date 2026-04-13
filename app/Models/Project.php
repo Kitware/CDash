@@ -45,7 +45,6 @@ use Illuminate\Support\Facades\Auth;
  * @property bool $showcoveragecode
  * @property bool $sharelabelfilters
  * @property bool $authenticatesubmissions
- * @property bool $viewsubprojectslink
  * @property ?string $ldapfilter
  * @property ?string $banner
  * @property ?string $logoUrl
@@ -95,7 +94,6 @@ class Project extends Model
         'showcoveragecode',
         'sharelabelfilters',
         'authenticatesubmissions',
-        'viewsubprojectslink',
         'ldapfilter',
         'banner',
         'cmakeprojectroot',
@@ -115,7 +113,6 @@ class Project extends Model
         'showcoveragecode' => 'boolean',
         'sharelabelfilters' => 'boolean',
         'authenticatesubmissions' => 'boolean',
-        'viewsubprojectslink' => 'boolean',
     ];
 
     public const PROJECT_ADMIN = 2;

@@ -208,7 +208,6 @@ class UpdateProjectTest extends TestCase
             ['fileUploadLimit', 50, 'uploadquota', 53687091200],
             ['showCoverageCode', false, 'showcoveragecode', false],
             ['shareLabelFilters', false, 'sharelabelfilters', false],
-            ['showViewSubProjectsLink', false, 'viewsubprojectslink', false],
             ['banner', 'new banner', 'banner', 'new banner'],
         ];
     }
