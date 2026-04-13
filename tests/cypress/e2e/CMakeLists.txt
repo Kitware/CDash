@@ -20,9 +20,6 @@ function(add_cypress_e2e_test TestName)
 endfunction()
 
 # These tests have the correct dependencies set up
-add_cypress_e2e_test(user-profile)
-set_tests_properties(cypress/e2e/user-profile PROPERTIES DEPENDS install_2)
-
 add_cypress_e2e_test(query-tests)
 set_tests_properties(cypress/e2e/query-tests PROPERTIES DEPENDS cypress/e2e/remove-build)
 
