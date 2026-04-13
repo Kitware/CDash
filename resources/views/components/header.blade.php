@@ -166,6 +166,13 @@ $showHeaderNav = isset($build);
                     <li>
                         <a href="#">Project</a>
                         <ul>
+                            @can('edit-project', $project)
+                                <li>
+                                    <a href="{{ url("/projects/{$project->Id}/settings") }}">
+                                        Settings
+                                    </a>
+                                </li>
+                            @endcan
                             @if(isset($project->HomeUrl) && strlen($project->HomeUrl) > 0)
                                 <li>
                                     <a href="{{ $project->HomeUrl }}">
@@ -210,38 +217,6 @@ $showHeaderNav = isset($build);
                             @endif
                         </ul>
                     </li>
-                    @can('edit-project', $project)
-                        <li>
-                            <a href="#">Settings</a>
-                            <ul>
-                                <li>
-                                    <a href="{{ url("/projects/{$project->Id}/settings") }}">
-                                        Project
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ url('/manageBuildGroup.php') }}?projectid={{ $project->Id }}">
-                                        Groups
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ url("/projects/{$project->Id}/testmeasurements") }}">
-                                        Measurements
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ url('/manageSubProject.php') }}?projectid={{ $project->Id }}">
-                                        SubProjects
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ url('/manageOverview.php') }}?projectid={{ $project->Id }}">
-                                        Overview
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                    @endcan
                 @endif
             </ul>
         </div>
