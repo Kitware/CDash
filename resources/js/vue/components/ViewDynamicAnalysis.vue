@@ -6,83 +6,21 @@
     <section v-if="errored">
       <p>{{ cdash.error }}</p>
     </section>
-    <section v-else>
+    <section
+      v-else
+      class="tw-flex tw-flex-col tw-gap-4"
+    >
       <BuildSummaryCard :build-id="buildid" />
 
       <loading-indicator :is-loading="loading">
-        <div class="buildgroup">
-          <table
-            cellspacing="0"
-            class="tabb striped"
-            width="100%"
-          >
-            <thead>
-              <tr class="table-heading1">
-                <td
-                  class="center-text botl"
-                  colspan="100"
-                >
-                  Dynamic Analysis
-                </td>
-              </tr>
-              <tr class="table-heading">
-                <th class="column-header">
-                  Name
-                </th>
-                <th class="column-header">
-                  Status
-                </th>
-                <th
-                  v-for="defecttype in cdash.defecttypes"
-                  class="column-header"
-                >
-                  {{ defecttype.type }}
-                </th>
-                <th
-                  v-if="cdash.displaylabels"
-                  class="column-header"
-                >
-                  Labels
-                </th>
-              </tr>
-            </thead>
-
-            <tbody>
-              <tr
-                v-for="DA in cdash.dynamicanalyses"
-                align="center"
-              >
-                <td align="left">
-                  <a
-                    class="cdash-link"
-                    :href="$baseURL + '/viewDynamicAnalysisFile.php?id=' + DA.id"
-                  >
-                    {{ DA.name }}
-                  </a>
-                </td>
-
-                <td :class="DA.status === 'Passed' ? 'normal' : 'error'">
-                  {{ DA.status }}
-                </td>
-
-                <!-- Show how many defects of each type were found for this test -->
-                <td
-                  v-for="numdefects in DA.defects"
-                  :class="{warning: numdefects > 0}"
-                >
-                  <span v-if="numdefects > 0">
-                    {{ numdefects }}
-                  </span>
-                </td>
-
-                <!-- Labels -->
-                <td v-if="cdash.displaylabels">
-                  {{ DA.labels }}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <data-table
+          :columns="columns"
+          :column-groups="columnGroups"
+          :rows="rows"
+          :full-width="true"
+          initial-sort-column="status"
+          test-id="dynamic-analysis-table"
+        />
       </loading-indicator>
     </section>
   </BuildSidebar>
@@ -93,10 +31,16 @@ import ApiLoader from './shared/ApiLoader';
 import LoadingIndicator from './shared/LoadingIndicator.vue';
 import BuildSummaryCard from './shared/BuildSummaryCard.vue';
 import BuildSidebar from './shared/BuildSidebar.vue';
+import DataTable from './shared/DataTable.vue';
 
 export default {
   name: 'ViewDynamicAnalysis',
-  components: {BuildSidebar, BuildSummaryCard, LoadingIndicator},
+  components: {
+    BuildSidebar,
+    BuildSummaryCard,
+    LoadingIndicator,
+    DataTable,
+  },
 
   props: {
     buildid: {
@@ -112,6 +56,87 @@ export default {
       loading: true,
       errored: false,
     };
+  },
+
+  computed: {
+    columns() {
+      if (!this.cdash.defecttypes) {
+        return [];
+      }
+      const columns = [
+        {
+          name: 'name',
+          displayName: 'Name',
+          expand: true,
+        },
+        {
+          name: 'status',
+          displayName: 'Status',
+        },
+      ];
+
+      this.cdash.defecttypes.forEach((defecttype, index) => {
+        columns.push({
+          name: `defect_${index}`,
+          displayName: defecttype.type,
+        });
+      });
+
+      if (this.cdash.displaylabels) {
+        columns.push({
+          name: 'labels',
+          displayName: 'Labels',
+        });
+      }
+
+      return columns;
+    },
+
+    rows() {
+      if (!this.cdash.dynamicanalyses) {
+        return [];
+      }
+      return this.cdash.dynamicanalyses.map(DA => {
+        const row = {
+          name: {
+            text: DA.name,
+            value: DA.name,
+            href: `${this.$baseURL}/viewDynamicAnalysisFile.php?id=${DA.id}`,
+          },
+          status: {
+            text: DA.status,
+            value: DA.status,
+            classes: [DA.status === 'Passed' ? 'normal' : 'error'],
+          },
+        };
+
+        DA.defects.forEach((numdefects, index) => {
+          row[`defect_${index}`] = {
+            text: numdefects > 0 ? numdefects : '',
+            value: numdefects,
+            classes: numdefects > 0 ? ['warning'] : [],
+          };
+        });
+
+        if (this.cdash.displaylabels) {
+          row.labels = DA.labels;
+        }
+
+        return row;
+      });
+    },
+
+    columnGroups() {
+      if (this.columns.length === 0) {
+        return [];
+      }
+      return [
+        {
+          displayName: 'Dynamic Analysis',
+          width: this.columns.length,
+        },
+      ];
+    },
   },
 
   mounted () {
