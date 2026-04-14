@@ -298,4 +298,39 @@ class ProjectSettingsPageTest extends BrowserTestCase
                 });
         });
     }
+
+    public function testCanManageTestMeasurements(): void
+    {
+        $this->browse(function (Browser $browser): void {
+            $m1 = Str::uuid()->toString();
+            $m2 = Str::uuid()->toString();
+
+            $browser->loginAs($this->admin)
+                ->visit("/projects/{$this->project->id}/settings")
+                ->waitFor('@test-measurements-tab-link')
+                ->click('@test-measurements-tab-link')
+                ->whenAvailable('@test-measurements-tab', function (Browser $browser) use ($m1, $m2): void {
+                    $browser->assertSee('No pinned test measurements yet.')
+                        ->type('@new-test-measurement-input', $m1)
+                        ->click('@add-test-measurement-button')
+                        ->waitForText($m1)
+                        ->assertDontSee('No pinned test measurements yet.')
+                        ->type('@new-test-measurement-input', $m2)
+                        ->click('@add-test-measurement-button')
+                        ->waitForText($m2)
+                        ->assertSee($m1)
+                        ->assertSee($m2)
+                        ->click('@delete-test-measurement-button')
+                        ->waitUntilMissingText($m1)
+                        ->assertSee($m2);
+                })
+                ->refresh()
+                ->waitFor('@test-measurements-tab-link')
+                ->click('@test-measurements-tab-link')
+                ->whenAvailable('@test-measurements-tab', function (Browser $browser) use ($m1, $m2): void {
+                    $browser->assertSee($m2)
+                        ->assertDontSee($m1);
+                });
+        });
+    }
 }

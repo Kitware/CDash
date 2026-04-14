@@ -4,7 +4,7 @@
       {{ title }}
     </h3>
     <div class="tw-divider" />
-    <div class="tw-flex tw-flex-col tw-w-full tw-justify-center tw-gap-12">
+    <div class="tw-flex tw-flex-col tw-w-full tw-justify-start tw-gap-6">
       <slot />
     </div>
   </div>
