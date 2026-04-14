@@ -38,7 +38,6 @@ use CDash\Messaging\Topic\BuildErrorTopic;
 use CDash\Messaging\Topic\TopicCollection;
 use CDash\Model\Build;
 use CDash\Model\BuildError;
-use CDash\Model\BuildErrorFilter;
 use CDash\Model\BuildFailure;
 use CDash\Model\BuildGroup;
 use CDash\Model\Label;
@@ -71,7 +70,6 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
     private string $PullRequest = '';
     private ?string $SourceDirectory = null;
     private ?string $BinaryDirectory = null;
-    private ?BuildErrorFilter $BuildErrorFilter = null;
     protected static ?string $schema_file = '/app/Validators/Schemas/Build.xsd';
 
     /**
@@ -431,26 +429,6 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
                 }
             }
         } elseif ($name === 'WARNING' || $name === 'ERROR' || $name === 'FAILURE') {
-            $skip_error = false;
-            foreach (['StdOutput', 'StdError', 'Text'] as $field) {
-                if (isset($this->Error->$field)) {
-                    if ($this->BuildErrorFilter === null) {
-                        $this->BuildErrorFilter = new BuildErrorFilter($this->GetProject());
-                        $this->BuildErrorFilter->Fill();
-                    }
-
-                    if ($this->Error->Type === 1) {
-                        $skip_error = $this->BuildErrorFilter->FilterWarning($this->Error->$field);
-                    } elseif ($this->Error->Type === 0) {
-                        $skip_error = $this->BuildErrorFilter->FilterError($this->Error->$field);
-                    }
-                }
-            }
-            if ($skip_error) {
-                unset($this->Error);
-                return;
-            }
-
             $threshold = config('cdash.large_text_limit');
             if ($threshold > 0) {
                 $chunk_size = $threshold / 2;

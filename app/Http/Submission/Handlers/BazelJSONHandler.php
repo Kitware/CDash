@@ -21,11 +21,9 @@ use App\Models\Project as EloquentProject;
 use App\Services\ProjectService;
 use App\Utils\SubmissionUtils;
 use App\Utils\TestCreator;
-use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildConfigure;
 use CDash\Model\BuildError;
-use CDash\Model\BuildErrorFilter;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -57,7 +55,6 @@ class BazelJSONHandler extends AbstractSubmissionHandler
     private array $TestsOutput = [];
     private string $TestName = '';
     private bool $ParseConfigure = true;
-    private ?BuildErrorFilter $BuildErrorFilter = null;
 
     public function __construct(Build $build)
     {
@@ -755,21 +752,7 @@ class BazelJSONHandler extends AbstractSubmissionHandler
 
     private function RecordError($build_error, $type, $subproject_name): void
     {
-        $text_with_context = $build_error->Text . $build_error->PostContext;
-
-        if ($this->BuildErrorFilter === null) {
-            $this->BuildErrorFilter = new BuildErrorFilter($this->GetProject());
-            $this->BuildErrorFilter->Fill();
-        }
-
-        if ($type === 0) {
-            $skip_error = $this->BuildErrorFilter->FilterError($text_with_context);
-        } else {
-            $skip_error = $this->BuildErrorFilter->FilterWarning($text_with_context);
-        }
-        if (!$skip_error) {
-            $this->BuildErrors[$subproject_name][] = $build_error;
-        }
+        $this->BuildErrors[$subproject_name][] = $build_error;
     }
 
     /**
