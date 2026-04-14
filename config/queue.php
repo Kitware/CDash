@@ -23,7 +23,7 @@ return [
     | is used by your application. A default configuration has been added
     | for each back-end shipped with Laravel. You are free to add more.
     |
-    | Drivers: "sync", "database", "beanstalkd", "sqs", "null"
+    | Drivers: "sync", "database", "null"
     |
     */
 
@@ -37,36 +37,6 @@ return [
             'table' => 'jobs',
             'queue' => 'default',
             'retry_after' => env('QUEUE_TIMEOUT', 2000) + 60,
-        ],
-
-        'beanstalkd' => [
-            'driver' => 'beanstalkd',
-            'host' => 'localhost',
-            'queue' => 'default',
-            'retry_after' => env('QUEUE_TIMEOUT', 2000) + 60,
-        ],
-
-        'sqs' => [
-            'driver' => 'sqs',
-            'key' => env('SQS_KEY', 'your-public-key'),
-            'secret' => env('SQS_SECRET', 'your-secret-key'),
-            'prefix' => env('SQS_PREFIX', 'https://sqs.us-east-1.amazonaws.com/your-account-id'),
-            'queue' => env('SQS_QUEUE', 'your-queue-name'),
-            'region' => env('SQS_REGION', 'us-east-1'),
-        ],
-
-        'sqs-fifo' => [
-            'driver' => 'sqs-fifo',
-            'key' => env('SQS_KEY'),
-            'secret' => env('SQS_SECRET'),
-            'prefix' => env('SQS_FIFO_PREFIX', 'https://sqs.us-east-1.amazonaws.com/your-account-id'),
-            'queue' => env('SQS_FIFO_QUEUE', 'default.fifo'),
-            'suffix' => env('SQS_FIFO_SUFFIX'),
-            'region' => env('SQS_REGION', 'us-east-1'),
-            'after_commit' => false,
-            'group' => 'default',
-            'deduplicator' => env('SQS_FIFO_DEDUPLICATOR', 'unique'),
-            'allow_delay' => env('SQS_FIFO_ALLOW_DELAY', false),
         ],
     ],
 
