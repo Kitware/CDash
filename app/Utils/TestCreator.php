@@ -19,6 +19,7 @@ namespace App\Utils;
 
 use App\Models\Test;
 use App\Models\TestImage;
+use App\Models\TestMeasurement;
 use App\Models\TestOutput;
 use Carbon\Carbon;
 use CDash\Model\Build;
@@ -157,9 +158,18 @@ class TestCreator
                 'starttime' => $this->testStartTime,
             ]);
 
-            foreach ($this->measurements as $measurement) {
-                $measurement->testid = $buildtest->id;
-                $measurement->save();
+            if ($this->measurements->isNotEmpty()) {
+                // Bulk inserting test measurements is more efficient than individual saves.
+                $measurements = $this->measurements->map(fn ($measurement) => [
+                    'testid' => $buildtest->id,
+                    'name' => $measurement->name,
+                    'type' => $measurement->type,
+                    'value' => $measurement->value,
+                ])->toArray();
+                TestMeasurement::insert($measurements);
+
+                // Reload the test measurements so we can pass them downstream to compute the proc time.
+                $this->measurements = $buildtest->testMeasurements;
             }
 
             // Give measurements to the buildtest model so we can properly calculate
