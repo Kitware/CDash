@@ -14,7 +14,6 @@ const app = Vue.createApp({
     BuildSummary: Vue.defineAsyncComponent(() => import('./components/BuildSummary')),
     BuildUpdatePage: Vue.defineAsyncComponent(() => import('./components/BuildUpdatePage.vue')),
     ManageAuthTokens: Vue.defineAsyncComponent(() => import('./components/ManageAuthTokens.vue')),
-    ManageMeasurements: Vue.defineAsyncComponent(() => import('./components/ManageMeasurements')),
     Monitor: Vue.defineAsyncComponent(() => import('./components/Monitor')),
     TestDetails: Vue.defineAsyncComponent(() => import('./components/TestDetails')),
     HeaderNav: Vue.defineAsyncComponent(() => import('./components/page-header/HeaderNav.vue')),
@@ -70,6 +69,8 @@ const apolloClient = new ApolloClient({
           basicUsers: relayStylePagination(),
           administrators: relayStylePagination(),
           invitations: relayStylePagination(),
+          pinnedTestMeasurements: relayStylePagination(),
+          repositories: relayStylePagination(),
         },
       },
       Build: {

@@ -182,9 +182,8 @@ Route::get('/projects/{project_id}/settings', ProjectSettingsController::class)
 Route::permanentRedirect('/project/{id}/edit', url('/projects/{id}/settings'));
 Route::permanentRedirect('/projects/{id}/edit', url('/projects/{id}/settings'));
 
-Route::get('/projects/{id}/testmeasurements', 'ManageMeasurementsController@show')
-    ->whereNumber('id');
-Route::permanentRedirect('/project/{id}/testmeasurements', url('/projects/{id}/testmeasurements'));
+Route::permanentRedirect('/projects/{id}/testmeasurements', url('/projects/{id}/settings'));
+Route::permanentRedirect('/project/{id}/testmeasurements', url('/projects/{id}/settings'));
 
 Route::get('/projects/{id}/ctest_configuration', 'CTestConfigurationController@get')
     ->whereNumber('id');

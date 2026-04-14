@@ -28,7 +28,9 @@
 
       <li>
         <a
-          :href="`${$baseURL}/projects/${projectId}/testmeasurements`"
+          :class="{'tw-active': currentSection === 'test-measurements'}"
+          data-test="test-measurements-tab-link"
+          @click="currentSection = 'test-measurements'"
         >Test Measurements</a>
       </li>
 
@@ -61,15 +63,21 @@
       v-if="currentSection === 'integrations'"
       :project-id="projectId"
     />
+
+    <TestMeasurementsTab
+      v-if="currentSection === 'test-measurements'"
+      :project-id="projectId"
+    />
   </div>
 </template>
 
 <script>
 import GeneralTab from './ProjectSettings/GeneralTab.vue';
 import IntegrationsTab from './ProjectSettings/IntegrationsTab.vue';
+import TestMeasurementsTab from './ProjectSettings/TestMeasurementsTab.vue';
 
 export default {
-  components: {GeneralTab,IntegrationsTab},
+  components: {GeneralTab,IntegrationsTab,TestMeasurementsTab},
   props: {
     projectId: {
       type: Number,
