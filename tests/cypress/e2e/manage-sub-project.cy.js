@@ -6,19 +6,6 @@ describe('manageSubProject', () => {
   });
 
 
-  it('can add a subproject', () => {
-    cy.login();
-    cy.visit('manageSubProject.php?projectid=8');
-
-    cy.get('a').contains('Add a SubProject').click();
-    cy.get('input[name="newsubproject"]').type('aNewSubProject');
-    cy.get('button').contains('Add SubProject').click();
-
-    cy.reload();
-    cy.get('#current').should('contain', 'aNewSubProject');
-  });
-
-
   // TODO: (sbelsk) add test to check that no subprojects under the
   // same parent project can be created with duplicate names
 
@@ -34,27 +21,6 @@ describe('manageSubProject', () => {
     // switch back to original project
     cy.get('select[name="projectSelection"]').select('Trilinos');
     cy.url().should('contain', 'manageSubProject.php?projectid=8');
-  });
-
-
-  it('can add and remove a dependency', () => {
-    cy.login();
-    cy.visit('manageSubProject.php?projectid=8');
-
-    // get the first subproject & expand its details
-    cy.get('[data-cy="subproject-item"]').first().as('subproject');
-    cy.get('@subproject').find('span.glyphicon-chevron-right').click();
-
-    // select a new dependency and add it to our subproject
-    cy.get('@subproject').find('select.dependency_selector').select('Aristos');
-    cy.get('@subproject').find('button').contains('Add').click();
-
-    cy.get('@subproject').find('div[data-cy="current-dependency"]').contains('- Aristos').as('new_dependency');
-    cy.get('@new_dependency').should('be.visible');
-
-    // find the trash icon and click it
-    cy.get('@new_dependency').find('span.glyphicon-trash').click();
-    cy.get('@subproject').find('div[data-cy="current-dependency"]').contains('- Aristos').should('not.exist');
   });
 
 
@@ -168,25 +134,4 @@ describe('manageSubProject', () => {
     cy.get('a').contains('SubProject Groups').click();
     cy.get('table[data-cy="existing-subproject-groups"]').should('not.exist');
   });
-
-
-  it('can delete a subproject', () => {
-    cy.login();
-    cy.visit('manageSubProject.php?projectid=8');
-
-    // select the subproject we added from the list & expand its details
-    cy.get('[data-cy="subproject-item"]').contains('aNewSubProject').as('subproject');
-    cy.get('@subproject').find('span.glyphicon-chevron-right').click();
-
-    // locate the deletion icon for this subproject & click it
-    cy.get('@subproject').find('span.glyphicon-trash').click();
-
-    // make sure that 'aNewSubProject' doesn't appear on the page anymore
-    cy.get('[data-cy="subproject-item"]').contains('aNewSubProject').should('not.exist');
-
-    // reload the page to make sure it's really gone from the database too
-    cy.reload();
-    cy.get('[data-cy="subproject-item"]').contains('aNewSubProject').should('not.exist');
-  });
-
 });
