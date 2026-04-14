@@ -271,6 +271,18 @@ parameters:
 			path: app/GraphQL/Mutations/CreateAuthenticationToken.php
 
 		-
+			rawMessage: 'Cannot call method comments() on App\Models\Build|null.'
+			identifier: method.nonObject
+			count: 1
+			path: app/GraphQL/Mutations/CreateComment.php
+
+		-
+			rawMessage: 'Parameter #2 $args (array{buildId: string, text: string}) of method App\GraphQL\Mutations\CreateComment::__invoke() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::__invoke()'
+			identifier: method.childParameterType
+			count: 1
+			path: app/GraphQL/Mutations/CreateComment.php
+
+		-
 			rawMessage: 'Parameter #1 $args (array{email: string, role: App\Enums\GlobalRole}) of method App\GraphQL\Mutations\CreateGlobalInvitation::mutate() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::mutate()'
 			identifier: method.childParameterType
 			count: 1

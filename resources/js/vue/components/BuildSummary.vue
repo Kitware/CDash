@@ -563,16 +563,16 @@
                 title="graph"
               >
               <a
-                id="toggle_note"
+                id="toggle_comments"
                 class="tw-link tw-link-hover"
-                @click="toggleNote()"
+                @click="toggleComments()"
               >
                 Add a comment to this Build
               </a>
             </div>
             <div
-              v-show="showNote"
-              id="new_note_div"
+              v-show="showComments"
+              id="new_comment_div"
             >
               <table>
                 <tbody>
@@ -580,8 +580,8 @@
                     <td><b>Comment:</b></td>
                     <td>
                       <textarea
-                        id="note_text"
-                        v-model="cdash.noteText"
+                        id="comment_text"
+                        v-model="commentText"
                         class="tw-textarea tw-textarea-bordered"
                         cols="50"
                         rows="5"
@@ -592,12 +592,12 @@
                     <td />
                     <td>
                       <button
-                        id="add_note"
+                        id="add_comment"
                         class="tw-btn"
-                        :disabled="!cdash.noteText"
-                        @click="addNote()"
+                        :disabled="!commentText"
+                        @click="addComment()"
                       >
-                        Add Note
+                        Add Comment
                       </button>
                     </td>
                   </tr>
@@ -782,12 +782,14 @@ export default {
       loading: true,
       errored: false,
 
+      commentText: '',
+
       // Booleans controlling whether a section should be displayed or not.
       showErrorGraph: false,
       showTestGraph: false,
       showTimeGraph: false,
       showWarningGraph: false,
-      showNote: false,
+      showComments: false,
 
       // Graph data.
       graphLoading: false,
@@ -856,10 +858,6 @@ export default {
   },
 
   methods: {
-    postSetup: function () {
-      this.cdash.noteStatus = '0';
-    },
-
     loadGraphData: function(graphType) {
       this.graphLoading = true;
       this.$axios
@@ -1062,23 +1060,37 @@ export default {
       }, 1);
     },
 
-    toggleNote: function() {
-      this.showNote = !this.showNote;
+    toggleComments: function() {
+      this.showComments = !this.showComments;
     },
 
-    addNote: function() {
-      this.$axios
-        .post('/api/v1/addUserNote.php', {
-          buildid: this.cdash.build.id,
-          Status: this.cdash.noteStatus,
-          AddNote: this.cdash.noteText,
+    addComment: function() {
+      this.$apollo
+        .mutate({
+          mutation: gql`
+            mutation createComment($input: CreateCommentInput!) {
+              createComment(input: $input) {
+                comment {
+                  id
+                }
+              }
+            }
+          `,
+          variables: {
+            input: {
+              buildId: this.buildId,
+              text: this.commentText,
+            },
+          },
         })
         .then(() => {
-          // Add the newly created note to our list.
+          // Add the newly created comment to our list.
           this.$apollo.queries.comments.refetch();
+          this.commentText = '';
+          this.showComments = false;
         })
         .catch(error => {
-        // Display the error.
+          // Display the error.
           this.cdash.error = error;
           console.log(error);
         });
@@ -1086,14 +1098,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-
-.dart th, .dart td {
-  padding: 3px 7px;
-}
-
-.pre-wrap {
-  white-space: pre-wrap;
-}
-</style>

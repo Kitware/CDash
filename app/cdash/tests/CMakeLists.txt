@@ -311,6 +311,8 @@ add_feature_test_in_transaction(/Feature/GraphQL/GlobalInvitationTypeTest)
 
 add_feature_test_in_transaction(/Feature/GraphQL/Mutations/RemoveUserTest)
 
+add_feature_test_in_transaction(/Feature/GraphQL/Mutations/CreateCommentTest)
+
 add_feature_test_in_transaction(/Feature/Jobs/PruneBuildsTest)
 
 add_feature_test_in_transaction(/Feature/Jobs/PruneEmailsTest)

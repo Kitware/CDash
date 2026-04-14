@@ -157,6 +157,25 @@ type Mutation {
    2. A system administrator
   """
   deleteAuthenticationToken(input: DeleteAuthenticationTokenInput! @spread): DeleteAuthenticationTokenMutationPayload! @field(resolver: "DeleteAuthenticationToken")
+
+  "Create a new comment."
+  createComment(input: CreateCommentInput! @spread): CreateCommentMutationPayload! @field(resolver: "CreateComment")
+}
+
+input CreateCommentInput {
+  "The build to associate the comment with."
+  buildId: ID!
+
+  "Comment body."
+  text: String!
+}
+
+type CreateCommentMutationPayload implements MutationPayloadInterface {
+  "Optional error message."
+  message: String
+
+  "The newly created comment."
+  comment: Comment
 }
 
 
