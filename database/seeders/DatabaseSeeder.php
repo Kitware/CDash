@@ -66,7 +66,7 @@ class DatabaseSeeder extends Seeder
         $project->save();
 
         $this->submitFiles($project->name, [
-            base_path('tests/Feature/Submission/Instrumentation/data/Build.xml'),
+            base_path('tests/Feature/Submission/Build/data/with_instrumentation_data.xml'),
         ], 1);
     }
 }

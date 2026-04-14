@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Submission\Instrumentation;
+namespace Feature\Submission\Build;
 
 use App\Models\Project;
 use Exception;
@@ -8,7 +8,7 @@ use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
 use Tests\Traits\CreatesSubmissions;
 
-class BuildInstrumentationTest extends TestCase
+class BuildXMLTest extends TestCase
 {
     use CreatesProjects;
     use CreatesSubmissions;
@@ -20,8 +20,6 @@ class BuildInstrumentationTest extends TestCase
         parent::setUp();
 
         $this->project = $this->makePublicProject();
-
-        $this->project->refresh();
     }
 
     protected function tearDown(): void
@@ -32,15 +30,46 @@ class BuildInstrumentationTest extends TestCase
     }
 
     /**
-     * A basic submission which tests all of the core parts of the instrumentation functionality
+     * Test parsing a valid Build.xml file that contains
+     * the Source and Binary directories
      */
-    public function testValidSubmission(): void
+    public function testBuildDirectoriesHandling(): void
     {
         $this->submitFiles($this->project->name, [
-            base_path('tests/Feature/Submission/Instrumentation/data/Build.xml'),
+            base_path(
+                'tests/Feature/Submission/Build/data/with_build_source_binary_directories.xml'
+            ),
         ]);
 
-        $expected_result_json = file_get_contents(base_path('tests/Feature/Submission/Instrumentation/data/result.json'));
+        $this->graphQL('
+            query build($id: ID) {
+              build(id: $id) {
+                sourceDirectory
+                binaryDirectory
+              }
+            }
+        ', [
+            'id' => $this->project->builds()->firstOrFail()->id,
+        ])->assertExactJson([
+            'data' => [
+                'build' => [
+                    'sourceDirectory' => '/home/user/Work/cmake',
+                    'binaryDirectory' => '/home/user/Work/cmake-build',
+                ],
+            ],
+        ]);
+    }
+
+    /**
+     * A basic submission which tests all of the core parts of the instrumentation functionality
+     */
+    public function testValidSubmissionWithInstrumentation(): void
+    {
+        $this->submitFiles($this->project->name, [
+            base_path('tests/Feature/Submission/Build/data/with_instrumentation_data.xml'),
+        ]);
+
+        $expected_result_json = file_get_contents(base_path('tests/Feature/Submission/Build/data/instrumentation-result.json'));
         if ($expected_result_json === false) {
             throw new Exception('Failed to read result JSON.');
         }

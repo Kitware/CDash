@@ -351,13 +351,11 @@ set_property(TEST /Feature/SubmissionValidation APPEND PROPERTY RUN_SERIAL TRUE)
 add_feature_test(/Feature/LdapIntegration)
 set_property(TEST /Feature/LdapIntegration APPEND PROPERTY RUN_SERIAL TRUE)
 
-add_feature_test(/Feature/Submission/Instrumentation/BuildInstrumentationTest)
+add_feature_test(/Feature/Submission/Test/TestXMLTest)
 
-add_feature_test(/Feature/Submission/Tests/TestXMLTest)
+add_feature_test(/Feature/Submission/Build/BuildXMLTest)
 
-add_feature_test(/Feature/Submission/Tests/BuildXMLTest)
-
-add_feature_test(/Feature/Submission/Tests/CoverageLogXMLTest)
+add_feature_test(/Feature/Submission/CoverageLog/CoverageLogXMLTest)
 
 add_browser_test(/Browser/Pages/SitesIdPageTest)
 
