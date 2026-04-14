@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Submission\Tests;
+namespace Feature\Submission\Test;
 
 use App\Models\Project;
 use Tests\TestCase;
@@ -36,7 +36,7 @@ class TestXMLTest extends TestCase
     {
         $this->submitFiles($this->project->name, [
             base_path(
-                'tests/Feature/Submission/Tests/data/angle_brackets_in_test_name.xml'
+                'tests/Feature/Submission/Test/data/angle_brackets_in_test_name.xml'
             ),
         ]);
 
@@ -79,7 +79,7 @@ class TestXMLTest extends TestCase
     {
         $this->submitFiles($this->project->name, [
             base_path(
-                'tests/Feature/Submission/Tests/data/non_utf8_output.xml'
+                'tests/Feature/Submission/Test/data/non_utf8_output.xml'
             ),
         ]);
 
@@ -122,7 +122,7 @@ class TestXMLTest extends TestCase
     {
         $this->submitFiles($this->project->name, [
             base_path(
-                'tests/Feature/Submission/Tests/data/with_starttesttime.xml'
+                'tests/Feature/Submission/Test/data/with_starttesttime.xml'
             ),
         ]);
 

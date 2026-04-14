@@ -36,10 +36,10 @@ class CoverageLogXMLTest extends TestCase
     {
         $this->submitFiles($this->project->name, [
             base_path(
-                'tests/Feature/Submission/Tests/data/with_branchCoverage.xml'
+                'tests/Feature/Submission/CoverageLog/data/with_branchCoverage.xml'
             ),
             base_path(
-                'tests/Feature/Submission/Tests/data/with_LogBranchCoverage.xml'
+                'tests/Feature/Submission/CoverageLog/data/with_LogBranchCoverage.xml'
             ),
         ]);
 
