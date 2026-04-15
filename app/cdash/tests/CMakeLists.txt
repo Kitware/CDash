@@ -134,8 +134,6 @@ add_php_test(passwordcomplexity)
 
 add_legacy_unit_test(/CDash/Model/Build)
 
-add_legacy_unit_test(/CDash/Model/BuildErrorFilter)
-
 add_legacy_unit_test(/CDash/Model/Repository)
 
 ###################################################################################################
@@ -459,9 +457,6 @@ set_tests_properties(dynamicanalysisdefectlongtype PROPERTIES DEPENDS /CDash/Xml
 add_php_test(configureappend)
 set_tests_properties(configureappend PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
-add_php_test(filterbuilderrors)
-set_tests_properties(filterbuilderrors PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
-
 add_php_test(buildproperties)
 set_tests_properties(buildproperties PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
@@ -505,7 +500,6 @@ set_property(TEST install_2 APPEND PROPERTY DEPENDS
   dynamicanalysislogs
   dynamicanalysisdefectlongtype
   configureappend
-  filterbuilderrors
   buildproperties
   issuecreation
   junithandler

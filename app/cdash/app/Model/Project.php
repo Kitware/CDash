@@ -75,8 +75,6 @@ class Project
     public $AutoremoveTimeframe = 0;
     public int $AutoremoveMaxBuilds = 300;
     public $UploadQuota = 0;
-    public $WarningsFilter = '';
-    public $ErrorsFilter = '';
     public ?string $LdapFilter = null;
     public ?string $Banner = null;
     private Database $PDO;
@@ -149,12 +147,6 @@ class Project
         $project->save();
         $this->Id = $project->id;
 
-        $buildErrorFilter = new BuildErrorFilter($this);
-        $buildErrorFilter->Fill();
-        if ($buildErrorFilter->GetErrorsFilter() != $this->ErrorsFilter
-            || $buildErrorFilter->GetWarningsFilter() != $this->WarningsFilter) {
-            return $buildErrorFilter->AddOrUpdateFilters($this->WarningsFilter, $this->ErrorsFilter);
-        }
         return true;
     }
 
@@ -231,14 +223,6 @@ class Project
             $this->EmailMaxChars = $project->emailmaxchars;
             $this->Banner = $project->banner;
             $this->LdapFilter = $project->ldapfilter;
-        }
-
-        // Check if we have filters
-        $build_filters = DB::select('SELECT * FROM build_filters WHERE projectid=?', [(int) $this->Id]);
-
-        if (count($build_filters) > 0) {
-            $this->WarningsFilter = $build_filters[0]->warnings;
-            $this->ErrorsFilter = $build_filters[0]->errors;
         }
 
         $this->Filled = true;

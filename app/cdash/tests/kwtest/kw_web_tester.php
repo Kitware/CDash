@@ -433,8 +433,6 @@ class KWWebTestCase extends WebTestCase
                 'TestTimeStd' => 4,
                 'TestTimeStdThreshold' => 1,
                 'UploadQuota' => 1073741824,
-                'WarningsFilter' => '',
-                'ErrorsFilter' => '',
             ];
         }
 

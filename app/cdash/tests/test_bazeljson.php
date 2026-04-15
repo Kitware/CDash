@@ -87,58 +87,6 @@ class BazelJSONTestCase extends KWWebTestCase
         DatabaseCleanupUtils::removeBuild($buildid2);
     }
 
-    public function testFilterBazelJSON()
-    {
-        // Create a new project.
-        $settings = [
-            'Name' => 'Bazel',
-            'Public' => 1,
-            'WarningsFilter' => 'unused variable',
-            'ErrorsFilter' => 'use of undeclared identifier',
-        ];
-        $projectid = $this->createProject($settings);
-        if ($projectid < 1) {
-            $this->fail('Failed to create project');
-        }
-        $project = new Project();
-        $project->Id = $projectid;
-
-        // Submit testing data.
-        $buildid = $this->submit_data('Bazel', 'BazelJSON',
-            '0a9b0aeeb73618cd10d6e1bee221fd71',
-            __DIR__ . '/data/Bazel/bazel_BEP.json');
-        if (!$buildid) {
-            return false;
-        }
-
-        // Validate the build.
-        $stmt = $this->PDO->query(
-            "SELECT builderrors, buildwarnings, testfailed, testpassed,
-                        configureerrors, configurewarnings
-                FROM build WHERE id = $buildid");
-        $row = $stmt->fetch();
-
-        // Warnings and errors are filtered out
-        $answer_key = [
-            'builderrors' => 0,
-            'buildwarnings' => 0,
-            'testfailed' => 1,
-            'testpassed' => 1,
-            'configureerrors' => 0,
-            'configurewarnings' => 0,
-        ];
-        foreach ($answer_key as $key => $expected) {
-            $found = $row[$key];
-            if ($found != $expected) {
-                $this->fail("Expected $expected for $key but found $found");
-            }
-        }
-
-        // Cleanup.
-        DatabaseCleanupUtils::removeBuild($buildid);
-        App\Models\Project::findOrFail((int) $project->Id)->delete();
-    }
-
     public function testBazelSubProjs()
     {
         // Create a new project.
