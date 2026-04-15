@@ -14004,13 +14004,13 @@ parameters:
 		-
 			rawMessage: 'Parameter #1 $string of function htmlspecialchars expects string, mixed given.'
 			identifier: argument.type
-			count: 3
+			count: 1
 			path: app/cdash/public/api/v1/subproject.php
 
 		-
 			rawMessage: 'Parameter #1 $value of function intval expects array|bool|float|GMP|int|resource|SimpleXMLElement|string|null, mixed given.'
 			identifier: argument.type
-			count: 6
+			count: 4
 			path: app/cdash/public/api/v1/subproject.php
 
 		-

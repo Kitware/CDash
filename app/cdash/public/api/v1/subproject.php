@@ -142,53 +142,11 @@ function rest_delete(): void
         $Group->Delete();
         return;
     }
-
-    $subprojectid = get_subprojectid();
-    if ($subprojectid === false) {
-        return;
-    }
-
-    if (isset($_GET['dependencyid'])) {
-        // Remove dependency from subproject.
-        $SubProject = new SubProject();
-        $SubProject->SetId($subprojectid);
-        $SubProject->RemoveDependency(intval($_GET['dependencyid']));
-    } else {
-        // Delete subproject.
-        $SubProject = new SubProject();
-        $SubProject->SetId($subprojectid);
-        $SubProject->Delete();
-    }
 }
 
 /** Handle POST requests */
 function rest_post($projectid): void
 {
-    if (isset($_POST['newsubproject'])) {
-        // Create a new subproject
-        $SubProject = new SubProject();
-        $SubProject->SetProjectId($projectid);
-
-        $newSubProject =
-            htmlspecialchars($_POST['newsubproject']);
-        $SubProject->SetName($newSubProject);
-
-        if (isset($_POST['group'])) {
-            $SubProject->SetGroup(
-                htmlspecialchars($_POST['group']));
-        }
-
-        $SubProject->Save();
-
-        // Respond with a JSON representation of this new subproject
-        $response = [];
-        $response['id'] = $SubProject->GetId();
-        $response['name'] = $SubProject->GetName();
-        $response['group'] = $SubProject->GetGroupId();
-        echo json_encode(cast_data_for_JSON($response));
-        return;
-    }
-
     if (isset($_POST['newgroup'])) {
         // Create a new group
         $Group = new SubProjectGroup();
@@ -252,13 +210,6 @@ function rest_put($projectid): void
     }
     $SubProject = new SubProject();
     $SubProject->SetId($subprojectid);
-
-    if (isset($_GET['dependencyid'])) {
-        // Add dependency to existing subproject.
-        $dependencyid = intval($_GET['dependencyid']);
-        $SubProject->AddDependency($dependencyid);
-        return;
-    }
 
     if (isset($_GET['groupname'])) {
         // Change which group a subproject belongs to.

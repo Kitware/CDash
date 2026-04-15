@@ -17,9 +17,6 @@
             <a class="cdash-link" href="#current" aria-controls="current" role="tab" data-toggle="tab">Current SubProjects</a>
           </li>
           <li role="presentation">
-            <a class="cdash-link" href="#add" aria-controls="add" role="tab" data-toggle="tab">Add a SubProject</a>
-          </li>
-          <li role="presentation">
             <a class="cdash-link" href="#groups" aria-controls="groups" role="tab" data-toggle="tab" data-test="subproject-groups">SubProject Groups</a>
           </li>
         </ul>
@@ -49,9 +46,6 @@
                 <div class="col-md-4">
                   <!-- The subproject's name & an icon to fetch more info -->
                   <span ng-click="loadData(subproject.id); showDetails = !showDetails" ng-class="showDetails ? 'glyphicon glyphicon-chevron-down' : 'glyphicon glyphicon-chevron-right'"></span> {{subproject.name}}
-
-                  <!-- Link to delete this subproject -->
-                  <span ng-show="showDetails" ng-click="deleteSubProject(subproject.id)" class="glyphicon glyphicon-trash"></span>
                 </div>
               </div>
 
@@ -67,16 +61,6 @@
                       <img id="group_changed_{{details.subprojectid}}" src="img/check.gif" style="display: none; height:16px; width:16px; margin-top:9px;" />
                     </div>
                   </div>
-
-                  <!-- Form to add new dependencies to this subproject -->
-                  <div class="col-md-3 col-md-offset-5 form-group">
-                    <label for="dependency_selection_{{details.subprojectid}}">Add dependency: </label>
-                    <select class="dependency_selector form-control" name="dependency_selection_{{details.subprojectid}}" ng-model="dependencySelection" ng-options="avail as avail.name for avail in details.available_dependencies | orderBy:'name'">
-                      <option value="">Choose...</option>
-                    </select>
-                    <button class="btn btn-default" ng-click="addDependency(dependencySelection, details.subprojectid)" ng-disabled="! dependencySelection">Add</button>
-                  </div>
-
                 </div>
 
                 <!-- List the dependencies for this subproject -->
@@ -88,9 +72,7 @@
 
                 <div class="row repeat-item" ng-repeat="dep in details.dependencies | orderBy:'name'">
                   <div class="col-md-5" data-cy="current-dependency">
-                    <!-- Remove a dependency from a subproject -->
                     - {{dep.name}}
-                    <span ng-click="removeDependency(dep.id, details.subprojectid)" class="glyphicon glyphicon-trash"></span>
                   </div>
                 </div>
 
@@ -101,24 +83,6 @@
               </div>
             </div>
           </div> <!-- "current" pane -->
-
-          <div role="tabpanel" class="tab-pane container" id="add">
-            <div class="col-md-9 text-center">
-              <strong>Add a SubProject</strong>
-            </div>
-            <div class="col-md-9 form-horizontal">
-              <label for="newsubproject">New SubProject</label>
-              <input name="newsubproject" type="text" class="form-control" ng-model="newsubproject">
-              <div ng-if="cdash.groups.length > 0">
-                <label for="newGroupSelection">Group</label>
-                <select name="newGroupSelection" ng-model="dd" ng-options="group as group.name for group in cdash.groups | orderBy:'name'" class="form-control">
-                </select>
-              </div>
-
-              <button class="btn btn-default" ng-click="createSubProject(newsubproject, dd.name)">Add SubProject</button>
-              <img id="subproject_created" src="img/check.gif" style="display: none; height:16px; width:16px; margin-top:9px;" />
-            </div>
-          </div> <!-- "add" pane -->
 
           <div role="tabpanel" class="tab-pane container" id="groups">
 

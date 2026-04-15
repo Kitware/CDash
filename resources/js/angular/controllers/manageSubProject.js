@@ -40,28 +40,6 @@ export function ManageSubProjectController($scope, $http, apiLoader) {
     };
   };
 
-  $scope.createSubProject = function(newSubProject, groupName) {
-    var parameters = {
-      projectid: $scope.cdash.projectid,
-      newsubproject: newSubProject,
-      group: groupName
-    };
-    $http.post('api/v1/subproject.php', parameters)
-    .then(function success(s) {
-      var subproj = s.data;
-      if (subproj.error) {
-        $scope.cdash.error = subproj.error;
-      }
-      else {
-        $("#subproject_created").show();
-        $("#subproject_created").delay(3000).fadeOut(400);
-
-        // Add this new subproject to our scope.
-        $scope.cdash.subprojects.push(subproj);
-      }
-    });
-  };
-
   $scope.createGroup = function(newGroup, threshold, isDefault) {
     var parameters = {
       projectid: $scope.cdash.projectid,
