@@ -211,7 +211,7 @@ class ProcessSubmission implements ShouldQueue
         unset($filehandle);
 
         // this is the md5 checksum fail case
-        if ($handler == false) {
+        if ($handler === false) {
             // no need to log an error since ctest_parse already did
             return false;
         }
@@ -366,7 +366,7 @@ class ProcessSubmission implements ShouldQueue
      *
      * @throws BadSubmissionException
      */
-    private static function ctest_parse($filehandle, string $filename, \App\Models\Project $project_param, ?int $buildid = null): AbstractSubmissionHandler|false
+    private static function ctest_parse($filehandle, string $filename, \App\Models\Project $project_param, ?int $buildid = null): AbstractSubmissionHandler
     {
         // Figure out what type of XML file this is.
         $xml_info = SubmissionUtils::get_xml_type($filehandle, $filename);
@@ -410,21 +410,6 @@ class ProcessSubmission implements ShouldQueue
             $buildname = $handler->getBuildName();
             $subprojectname = $handler->getSubProjectName();
             $stamp = $handler->getBuildStamp();
-        }
-
-        // Check if the build is in the block list
-        $build_is_blocked = $project_param->blockedbuilds()->where([
-            'buildname' => $buildname,
-            'sitename' => $sitename,
-        ])->exists();
-
-        if ($build_is_blocked) {
-            Log::info('Blocked prohibited submission.', [
-                'projectid' => $project_param->id,
-                'build' => $buildname,
-                'site' => $sitename,
-            ]);
-            return false;
         }
 
         while (!feof($filehandle)) {

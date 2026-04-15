@@ -4888,12 +4888,6 @@ parameters:
 			path: app/Jobs/ProcessSubmission.php
 
 		-
-			rawMessage: 'Loose comparison via "==" between App\Http\Submission\Handlers\AbstractSubmissionHandler|false and false is not allowed.'
-			identifier: equal.notAllowed
-			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
 			rawMessage: 'Loose comparison via "==" between mixed and int is not allowed.'
 			identifier: equal.notAllowed
 			count: 4

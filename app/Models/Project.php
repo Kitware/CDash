@@ -289,14 +289,6 @@ class Project extends Model
     }
 
     /**
-     * @return HasMany<BlockedBuild, $this>
-     */
-    public function blockedbuilds(): HasMany
-    {
-        return $this->hasMany(BlockedBuild::class, 'projectid', 'id');
-    }
-
-    /**
      * Queries the sites which have submitted builds to this project.  A convenience method to
      * get sites from all builds in aggregate form.
      *
