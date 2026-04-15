@@ -1699,12 +1699,6 @@ parameters:
 			path: app/Http/Controllers/UserController.php
 
 		-
-			rawMessage: 'Parameter #1 $string of function strlen expects string, (array|string) given.'
-			identifier: argument.type
-			count: 2
-			path: app/Http/Controllers/UserNoteController.php
-
-		-
 			rawMessage: 'Method App\Http\Controllers\ViewTestController::get_int_param() has parameter $name with no type specified.'
 			identifier: missingType.parameter
 			count: 1
@@ -23813,24 +23807,6 @@ parameters:
 			identifier: missingType.property
 			count: 1
 			path: app/cdash/tests/test_uploadfile.php
-
-		-
-			rawMessage: Cannot access property $error on mixed.
-			identifier: property.nonObject
-			count: 2
-			path: app/cdash/tests/test_usernotes.php
-
-		-
-			rawMessage: Cannot access property $note on mixed.
-			identifier: property.nonObject
-			count: 2
-			path: app/cdash/tests/test_usernotes.php
-
-		-
-			rawMessage: Cannot access property $requirelogin on mixed.
-			identifier: property.nonObject
-			count: 2
-			path: app/cdash/tests/test_usernotes.php
 
 		-
 			rawMessage: 'Call to deprecated method pass() of class SimpleTestCase.'

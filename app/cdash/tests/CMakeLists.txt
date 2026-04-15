@@ -601,11 +601,8 @@ set_tests_properties(builddetails PROPERTIES DEPENDS buildfailuredetails)
 add_php_test(updateappend)
 set_tests_properties(updateappend PROPERTIES DEPENDS builddetails)
 
-add_php_test(usernotes)
-set_tests_properties(usernotes PROPERTIES DEPENDS updateappend)
-
 add_php_test(hidecolumns)
-set_tests_properties(hidecolumns PROPERTIES DEPENDS usernotes)
+set_tests_properties(hidecolumns PROPERTIES DEPENDS updateappend)
 
 add_php_test(subprojectnextprevious)
 set_tests_properties(subprojectnextprevious PROPERTIES DEPENDS hidecolumns)
