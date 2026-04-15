@@ -119,7 +119,7 @@
           <td>
             <a
               class="cdash-link"
-              :href="$baseURL + '/api/v1/testDetails.php?buildtestid=' + buildtestid+ '&fileid=' + file.fileid"
+              :href="$baseURL + '/api/v1/testDetails.php?buildtestid=' + testId + '&fileid=' + file.fileid"
             >
               <img :src="$baseURL + '/img/package.png'">
             </a>
@@ -286,12 +286,16 @@ export default {
       type: Number,
       required: true,
     },
+
+    testId: {
+      type: Number,
+      required: true,
+    },
   },
 
   data () {
     return {
       // API results.
-      buildtestid: null,
       cdash: {},
       loading: true,
       errored: false,
@@ -335,8 +339,7 @@ export default {
     await import('flot/dist/es5/jquery.flot');
     await import('../../angular/je_compare.js');
 
-    this.buildtestid = window.location.pathname.split('/').pop();
-    let endpoint_path = `/api/v1/testDetails.php?buildtestid=${this.buildtestid}`;
+    let endpoint_path = `/api/v1/testDetails.php?buildtestid=${this.testId}`;
     this.queryParams = QueryParams.get();
     if ('graph' in this.queryParams) {
       this.graphSelection = this.queryParams.graph;
