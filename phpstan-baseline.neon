@@ -24165,7 +24165,7 @@ parameters:
 		-
 			rawMessage: Binary operation "+" between 2000|bool|string and 60 results in an error.
 			identifier: binaryOp.invalid
-			count: 2
+			count: 1
 			path: config/queue.php
 
 		-
