@@ -613,18 +613,6 @@ parameters:
 			path: app/Http/Controllers/BuildController.php
 
 		-
-			rawMessage: Cannot access offset 'from' on array|false.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/Http/Controllers/BuildController.php
-
-		-
-			rawMessage: Cannot access offset 'to' on array|false.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/Http/Controllers/BuildController.php
-
-		-
 			rawMessage: Cannot access property $name on App\Models\Site|null.
 			identifier: property.nonObject
 			count: 1
@@ -639,13 +627,7 @@ parameters:
 		-
 			rawMessage: Cannot cast mixed to int.
 			identifier: cast.int
-			count: 9
-			path: app/Http/Controllers/BuildController.php
-
-		-
-			rawMessage: 'Construct empty() is not allowed. Use more strict comparison.'
-			identifier: empty.notAllowed
-			count: 2
+			count: 7
 			path: app/Http/Controllers/BuildController.php
 
 		-
@@ -9121,105 +9103,6 @@ parameters:
 			path: app/cdash/app/Model/BuildGroupRule.php
 
 		-
-			rawMessage: '''
-				Call to deprecated function pdo_execute():
-				v2.5.0 01/22/2018
-			'''
-			identifier: function.deprecated
-			count: 6
-			path: app/cdash/app/Model/BuildRelationship.php
-
-		-
-			rawMessage: 'Loose comparison via "!=" between mixed and mixed is not allowed.'
-			identifier: notEqual.notAllowed
-			count: 1
-			path: app/cdash/app/Model/BuildRelationship.php
-
-		-
-			rawMessage: 'Loose comparison via "==" between mixed and mixed is not allowed.'
-			identifier: equal.notAllowed
-			count: 1
-			path: app/cdash/app/Model/BuildRelationship.php
-
-		-
-			rawMessage: 'Method CDash\Model\BuildRelationship::Delete() has parameter $error_msg with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Model/BuildRelationship.php
-
-		-
-			rawMessage: 'Method CDash\Model\BuildRelationship::GetRelationships() has parameter $build with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Model/BuildRelationship.php
-
-		-
-			rawMessage: 'Method CDash\Model\BuildRelationship::GetRelationships() return type has no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/app/Model/BuildRelationship.php
-
-		-
-			rawMessage: 'Method CDash\Model\BuildRelationship::Save() has parameter $error_msg with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Model/BuildRelationship.php
-
-		-
-			rawMessage: 'Method CDash\Model\BuildRelationship::marshal() return type has no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/app/Model/BuildRelationship.php
-
-		-
-			rawMessage: Property CDash\Model\BuildRelationship::$Build has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/BuildRelationship.php
-
-		-
-			rawMessage: Property CDash\Model\BuildRelationship::$Filled has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/BuildRelationship.php
-
-		-
-			rawMessage: Property CDash\Model\BuildRelationship::$PDO has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/BuildRelationship.php
-
-		-
-			rawMessage: Property CDash\Model\BuildRelationship::$Project has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/BuildRelationship.php
-
-		-
-			rawMessage: Property CDash\Model\BuildRelationship::$RelatedBuild has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/BuildRelationship.php
-
-		-
-			rawMessage: Property CDash\Model\BuildRelationship::$Relationship has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/BuildRelationship.php
-
-		-
-			rawMessage: Property CDash\Model\BuildRelationship::$Service has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/BuildRelationship.php
-
-		-
-			rawMessage: 'Property CDash\Model\BuildRelationship::$Service is never read, only written.'
-			identifier: property.onlyWritten
-			count: 1
-			path: app/cdash/app/Model/BuildRelationship.php
-
-		-
 			rawMessage: 'Loose comparison via "==" between int<0, max> and int is not allowed.'
 			identifier: equal.notAllowed
 			count: 1
@@ -14806,42 +14689,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Topic/UpdateErrorTopicTest.php
 
 		-
-			rawMessage: Access to an undefined property BuildRelationshipTest::$mock_build1.
-			identifier: property.notFound
-			count: 13
-			path: app/cdash/tests/case/CDash/Model/BuildRelationshipTest.php
-
-		-
-			rawMessage: Access to an undefined property BuildRelationshipTest::$mock_build2.
-			identifier: property.notFound
-			count: 11
-			path: app/cdash/tests/case/CDash/Model/BuildRelationshipTest.php
-
-		-
-			rawMessage: Access to an undefined property BuildRelationshipTest::$mock_project.
-			identifier: property.notFound
-			count: 6
-			path: app/cdash/tests/case/CDash/Model/BuildRelationshipTest.php
-
-		-
-			rawMessage: Access to an undefined property BuildRelationshipTest::$relationship.
-			identifier: property.notFound
-			count: 37
-			path: app/cdash/tests/case/CDash/Model/BuildRelationshipTest.php
-
-		-
-			rawMessage: Access to an undefined property BuildRelationshipTest::$service.
-			identifier: property.notFound
-			count: 1
-			path: app/cdash/tests/case/CDash/Model/BuildRelationshipTest.php
-
-		-
-			rawMessage: 'You should use assertSame() instead of assertEquals(), because both values are scalars of the same type'
-			identifier: phpunit.assertEquals
-			count: 9
-			path: app/cdash/tests/case/CDash/Model/BuildRelationshipTest.php
-
-		-
 			rawMessage: 'Call to method PHPUnit\Framework\Assert::assertInstanceOf() with ''CDash\\Collection\\BuildEmailCollection'' and CDash\Collection\BuildEmailCollection will always evaluate to true.'
 			identifier: method.alreadyNarrowedType
 			count: 1
@@ -17650,66 +17497,6 @@ parameters:
 			'''
 			identifier: method.deprecated
 			count: 1
-			path: app/cdash/tests/test_buildrelationship.php
-
-		-
-			rawMessage: Cannot access offset 'buildid' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_buildrelationship.php
-
-		-
-			rawMessage: Cannot access offset 'relatedid' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_buildrelationship.php
-
-		-
-			rawMessage: Cannot access offset 'relationship' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/cdash/tests/test_buildrelationship.php
-
-		-
-			rawMessage: Cannot access offset 'relationships_from' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_buildrelationship.php
-
-		-
-			rawMessage: Cannot access offset 'relationships_to' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_buildrelationship.php
-
-		-
-			rawMessage: Cannot access offset 0 on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/cdash/tests/test_buildrelationship.php
-
-		-
-			rawMessage: Cannot access property $error on mixed.
-			identifier: property.nonObject
-			count: 7
-			path: app/cdash/tests/test_buildrelationship.php
-
-		-
-			rawMessage: Cannot access property $relationship on mixed.
-			identifier: property.nonObject
-			count: 1
-			path: app/cdash/tests/test_buildrelationship.php
-
-		-
-			rawMessage: Foreach overwrites $payload with its value variable.
-			identifier: foreach.valueOverwrite
-			count: 1
-			path: app/cdash/tests/test_buildrelationship.php
-
-		-
-			rawMessage: 'Parameter #1 $object_or_class of function property_exists expects object|string, mixed given.'
-			identifier: argument.type
-			count: 10
 			path: app/cdash/tests/test_buildrelationship.php
 
 		-

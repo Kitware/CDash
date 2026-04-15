@@ -721,31 +721,6 @@
           />
         </div>
         <br>
-
-        <!-- Relationships -->
-        <div v-if="cdash.hasrelationships">
-          <div class="title-divider">
-            Relationships
-          </div>
-          <div
-            v-for="from in cdash.relationships_from"
-            :key="from.relatedid"
-          >
-            This build {{ from.relationship }} <a
-              class="tw-link tw-link-hover"
-              :href="$baseURL + '/builds/' + from.relatedid"
-            >{{ from.name }}</a>.
-          </div>
-          <div
-            v-for="to in cdash.relationships_to"
-            :key="to.buildid"
-          >
-            <a
-              class="tw-link tw-link-hover"
-              :href="$baseURL + '/builds/' + to.buildid"
-            >{{ to.name }}</a> {{ to.relationship }} this build.
-          </div>
-        </div>
       </loading-indicator>
     </section>
   </BuildSidebar>
