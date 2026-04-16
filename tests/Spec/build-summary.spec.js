@@ -77,8 +77,6 @@ beforeEach(() => {
     },
     notes: [],
     projectname_encoded: 'MyProject',
-    relationships_from: [],
-    relationships_to: [],
     test: {
       nfailed: 0,
       nnotrun: 0,
