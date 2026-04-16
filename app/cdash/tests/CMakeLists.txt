@@ -211,6 +211,8 @@ add_feature_test_in_transaction(/Feature/GraphQL/ConfigureTypeTest)
 
 add_feature_test_in_transaction(/Feature/GraphQL/TestTypeTest)
 
+add_feature_test_in_transaction(/Feature/GraphQL/TestImageTypeTest)
+
 add_feature_test_in_transaction(/Feature/GraphQL/TestMeasurementTypeTest)
 
 add_feature_test_in_transaction(/Feature/GraphQL/NoteTypeTest)

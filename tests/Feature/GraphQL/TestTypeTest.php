@@ -62,6 +62,8 @@ class TestTypeTest extends TestCase
             'status' => 'failed',
             'details' => 'details text',
             'time' => 1.2,
+            'timemean' => 3.4,
+            'timestd' => 5.6,
             'outputid' => $this->test_output->id,
             'starttime' => '2026-02-13T18:03:54+00:00',
         ]);
@@ -80,6 +82,8 @@ class TestTypeTest extends TestCase
                                             status
                                             details
                                             runningTime
+                                            meanRunningTime
+                                            stdDevRunningTime
                                             startTime
                                             path
                                             command
@@ -110,6 +114,8 @@ class TestTypeTest extends TestCase
                                                     'status' => 'FAILED',
                                                     'details' => 'details text',
                                                     'runningTime' => 1.2,
+                                                    'meanRunningTime' => 3.4,
+                                                    'stdDevRunningTime' => 5.6,
                                                     'startTime' => '2026-02-13T18:03:54+00:00',
                                                     'path' => 'a',
                                                     'command' => 'b',

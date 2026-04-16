@@ -51,6 +51,12 @@ type Query {
     id: ID @eq
   ): Build @find @canResolved(ability: "view")
 
+  "Find a single test by ID."
+  test(
+    "Search by primary key."
+    id: ID @eq
+  ): Test @find @canResolved(ability: "view", action: RETURN_VALUE, returnValue: null)
+
   """
   Find a single site by ID.  All sites are currently public (although not necessarily
   the projects they contribute to).  In the future, the concept of "private sites"
@@ -930,6 +936,12 @@ type Test {
 
   runningTime: NonNegativeSeconds! @rename(attribute: "time") @filterable
 
+  "The average of recent running times for this test"
+  meanRunningTime: NonNegativeSeconds! @rename(attribute: "timemean") @filterable
+
+  "The standard deviation of recent running times for this test"
+  stdDevRunningTime: Float! @rename(attribute: "timestd") @filterable
+
   startTime: DateTimeTz @rename(attribute: "starttime") @filterable
 
   details: String! @filterable
@@ -943,6 +955,10 @@ type Test {
   testMeasurements(
     filters: _ @filter
   ): [TestMeasurement!]! @hasMany @orderBy(column: "id", direction: DESC)
+
+  testImages(
+    filters: _ @filter
+  ): [TestImage!]! @hasMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)
 
   labels(
     filters: _ @filter
@@ -981,6 +997,17 @@ type TestMeasurement {
   Example: "5"
   """
   value: String!
+}
+
+
+"Test Measurement."
+type TestImage {
+  "Unique primary key."
+  id: ID!
+
+  role: String! @filterable
+
+  url: String
 }
 
 
