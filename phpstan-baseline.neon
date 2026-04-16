@@ -862,78 +862,6 @@ parameters:
 			path: app/Http/Controllers/IndexController.php
 
 		-
-			rawMessage: 'Call to an undefined method App\Models\Project|Illuminate\Database\Eloquent\Collection<int, App\Models\Project>::pinnedTestMeasurements().'
-			identifier: method.notFound
-			count: 2
-			path: app/Http/Controllers/ManageMeasurementsController.php
-
-		-
-			rawMessage: Cannot access offset 'id' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/Http/Controllers/ManageMeasurementsController.php
-
-		-
-			rawMessage: Cannot access offset 'name' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/Http/Controllers/ManageMeasurementsController.php
-
-		-
-			rawMessage: Cannot access offset 'position' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/Http/Controllers/ManageMeasurementsController.php
-
-		-
-			rawMessage: Cannot access property $id on App\Models\PinnedTestMeasurement|null.
-			identifier: property.nonObject
-			count: 1
-			path: app/Http/Controllers/ManageMeasurementsController.php
-
-		-
-			rawMessage: Cannot access property $name on App\Models\PinnedTestMeasurement|null.
-			identifier: property.nonObject
-			count: 1
-			path: app/Http/Controllers/ManageMeasurementsController.php
-
-		-
-			rawMessage: Cannot access property $position on App\Models\PinnedTestMeasurement|null.
-			identifier: property.nonObject
-			count: 1
-			path: app/Http/Controllers/ManageMeasurementsController.php
-
-		-
-			rawMessage: Cannot access property $projectid on App\Models\PinnedTestMeasurement|null.
-			identifier: property.nonObject
-			count: 1
-			path: app/Http/Controllers/ManageMeasurementsController.php
-
-		-
-			rawMessage: 'Cannot call method save() on App\Models\PinnedTestMeasurement|null.'
-			identifier: method.nonObject
-			count: 1
-			path: app/Http/Controllers/ManageMeasurementsController.php
-
-		-
-			rawMessage: Cannot cast mixed to int.
-			identifier: cast.int
-			count: 4
-			path: app/Http/Controllers/ManageMeasurementsController.php
-
-		-
-			rawMessage: 'Only booleans are allowed in an if condition, int|null given.'
-			identifier: if.condNotBoolean
-			count: 1
-			path: app/Http/Controllers/ManageMeasurementsController.php
-
-		-
-			rawMessage: 'Only booleans are allowed in an if condition, mixed given.'
-			identifier: if.condNotBoolean
-			count: 1
-			path: app/Http/Controllers/ManageMeasurementsController.php
-
-		-
 			rawMessage: 'Binary operation "-" between int<1, max> and mixed results in an error.'
 			identifier: binaryOp.invalid
 			count: 1
@@ -20155,12 +20083,6 @@ parameters:
 			path: app/cdash/tests/test_managemeasurements.php
 
 		-
-			rawMessage: Cannot access offset 'id' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_managemeasurements.php
-
-		-
 			rawMessage: Cannot access offset 'label' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -20251,12 +20173,6 @@ parameters:
 			path: app/cdash/tests/test_managemeasurements.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" between mixed and mixed is not allowed.'
-			identifier: notEqual.notAllowed
-			count: 1
-			path: app/cdash/tests/test_managemeasurements.php
-
-		-
 			rawMessage: 'Loose comparison via "!=" between string and float is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 9
@@ -20335,12 +20251,6 @@ parameters:
 			path: app/cdash/tests/test_managemeasurements.php
 
 		-
-			rawMessage: 'Only booleans are allowed in a negated boolean, mixed given.'
-			identifier: booleanNot.exprNotBoolean
-			count: 1
-			path: app/cdash/tests/test_managemeasurements.php
-
-		-
 			rawMessage: 'Parameter #1 $array of function array_pop expects array, mixed given.'
 			identifier: argument.type
 			count: 1
@@ -20362,12 +20272,6 @@ parameters:
 			rawMessage: 'Part $label (mixed) of encapsed string cannot be cast to string.'
 			identifier: encapsedStringPart.nonString
 			count: 2
-			path: app/cdash/tests/test_managemeasurements.php
-
-		-
-			rawMessage: 'Part $measurement_id (mixed) of encapsed string cannot be cast to string.'
-			identifier: encapsedStringPart.nonString
-			count: 3
 			path: app/cdash/tests/test_managemeasurements.php
 
 		-
@@ -22098,12 +22002,6 @@ parameters:
 		-
 			rawMessage: Cannot access offset 0 on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_redundanttests.php
-
-		-
-			rawMessage: 'Method RedundantTestsTestCase::testRedundantTests() has no return type specified.'
-			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/test_redundanttests.php
 

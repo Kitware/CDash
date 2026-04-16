@@ -10,7 +10,6 @@ require_once __DIR__ . '/cdash_test_case.php';
 use App\Models\PinnedTestMeasurement;
 use App\Utils\DatabaseCleanupUtils;
 use CDash\Database;
-use GuzzleHttp\Exception\ClientException;
 
 class ManageMeasurementsTestCase extends KWWebTestCase
 {
@@ -154,46 +153,18 @@ class ManageMeasurementsTestCase extends KWWebTestCase
         $this->PDO->execute($stmt, [':buildid' => $this->BuildId]);
         $this->assertEqual(12.13, $stmt->fetchColumn());
 
-        // Login as admin.
-        $client = $this->getGuzzleClient();
-
-        // POST to manageMeasurements.php to add 'Processors', 'I/O Wait Time',
-        // and 'Peak Memory' as test measurements for these projects.
+        // Add 'Processors', 'I/O Wait Time', and 'Peak Memory' as test measurements for these projects.
         $this->ProjectId = get_project_id('InsightExample');
         $this->SubProjectId = get_project_id('SubProjectExample');
         $new_measurements = ['Processors', 'I/O Wait Time', 'Peak Memory'];
         $idx = 1;
         foreach ($new_measurements as $new_measurement) {
             foreach ([$this->ProjectId, $this->SubProjectId] as $projectid) {
-                $measurements = [];
-                $measurements[] = [
-                    'id' => -1,
+                PinnedTestMeasurement::create([
+                    'projectid' => $projectid,
                     'name' => $new_measurement,
                     'position' => $idx,
-                ];
-                try {
-                    $response = $client->request('POST',
-                        $this->url . '/api/v1/manageMeasurements.php',
-                        ['json' => ['projectid' => $projectid, 'measurements' => $measurements]]);
-                } catch (ClientException $e) {
-                    $this->fail($e->getMessage());
-                    return false;
-                }
-
-                // Response should have the ID of the newly created measurement.
-                $response_array = json_decode($response->getBody(), true);
-                $measurement_id = $response_array['id'];
-                if (!$measurement_id > 0) {
-                    $this->fail("Expected positive integer for measurement ID, found $measurement_id");
-                }
-                $this->MeasurementIds[] = $measurement_id;
-                // Check that the measurement actually got added to the database.
-                $stmt = $this->PDO->query(
-                    "SELECT id FROM measurement WHERE id = $measurement_id");
-                $found = $stmt->fetchColumn();
-                if ($found != $measurement_id) {
-                    $this->fail("Expected $measurement_id but found $found for DB measurement ID");
-                }
+                ]);
             }
             $idx++;
         }
