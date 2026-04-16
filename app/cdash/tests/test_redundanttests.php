@@ -2,8 +2,8 @@
 
 require_once __DIR__ . '/cdash_test_case.php';
 
+use App\Models\PinnedTestMeasurement;
 use CDash\Model\Project;
-use GuzzleHttp\Exception\ClientException;
 use Illuminate\Support\Facades\DB;
 
 class RedundantTestsTestCase extends KWWebTestCase
@@ -26,7 +26,7 @@ class RedundantTestsTestCase extends KWWebTestCase
         }
     }
 
-    public function testRedundantTests()
+    public function testRedundantTests(): void
     {
         // Create test project.
         $this->login();
@@ -38,21 +38,11 @@ class RedundantTestsTestCase extends KWWebTestCase
         $this->project->Fill();
 
         // Add 'color' as a custom test measurement for this project.
-        $client = $this->getGuzzleClient();
-        $measurements = [];
-        $measurements[] = [
-            'id' => -1,
+        PinnedTestMeasurement::create([
+            'projectid' => $this->project->Id,
             'name' => 'color',
             'position' => 1,
-        ];
-        try {
-            $client->request('POST',
-                $this->url . '/api/v1/manageMeasurements.php',
-                ['json' => ['projectid' => $this->project->Id, 'measurements' => $measurements]]);
-        } catch (ClientException $e) {
-            $this->fail($e->getMessage());
-            return false;
-        }
+        ]);
 
         // Submit our testing data.
         if (!$this->submission('RedundantTests', __DIR__ . '/data/RedundantTests/Test.xml')) {
