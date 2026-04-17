@@ -355,7 +355,7 @@ class BuildSidebarComponentTest extends BrowserTestCase
                 'workingdirectory' => Str::uuid()->toString(),
             ]);
 
-            $this->assertNotDisabled($browser, "/builds/{$build->id}", '@sidebar-instrumentation', "/builds/{$build->id}/commands");
+            $this->assertNotDisabled($browser, "/builds/{$build->id}", '@sidebar-instrumentation', "/builds/{$build->id}/instrumentation");
         });
     }
 

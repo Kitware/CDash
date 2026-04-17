@@ -59,13 +59,13 @@ final class BuildController extends AbstractBuildController
         return $this->vue('build-build-page', 'Build', $params);
     }
 
-    public function commands(int $build_id): View
+    public function instrumentation(int $build_id): View
     {
         $this->setBuildById($build_id);
 
         $filters = json_decode(request()->query('filters')) ?? ['all' => []];
 
-        return $this->vue('build-commands-page', 'Commands', [
+        return $this->vue('build-instrumentation-page', 'Instrumentation', [
             'build-id' => $this->build->Id,
             'initial-filters' => $filters,
         ]);
