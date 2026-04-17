@@ -5044,6 +5044,18 @@ parameters:
 			path: app/Models/Test.php
 
 		-
+			rawMessage: Binary operation "." between '/image/' and mixed results in an error.
+			identifier: binaryOp.invalid
+			count: 1
+			path: app/Models/TestImage.php
+
+		-
+			rawMessage: Cannot cast mixed to int.
+			identifier: cast.int
+			count: 1
+			path: app/Models/TestImage.php
+
+		-
 			rawMessage: '''
 				Call to deprecated method forceRootUrl() of class Illuminate\Routing\UrlGenerator:
 				Use useOrigin

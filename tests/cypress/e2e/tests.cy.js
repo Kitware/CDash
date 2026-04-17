@@ -50,7 +50,7 @@ describe('the test page', () => {
     // verify information for the test we clicked on
 
     // duration of this test
-    cy.get('#executiontime').find('span.builddateelapsed').should('contain', '9s');
+    cy.get('#executiontime').find('span.builddateelapsed').should('contain', '9.00s');
     // test name
     cy.get('a#summary_link').should('contain', 'nap');
 
@@ -58,7 +58,7 @@ describe('the test page', () => {
     cy.get('#main_content')
       .and('contain', 'Completed')
       .and('contain', 'Warning')
-      .and('contain', 'This test took longer to complete (9s) than the threshold allows (5s 120ms).');
+      .and('contain', 'This test took longer to complete (9.00s) than the threshold allows (5.12s).');
 
     // expand the test command line
     cy.get('a#commandlinelink').should('contain', 'Show Command Line').click();

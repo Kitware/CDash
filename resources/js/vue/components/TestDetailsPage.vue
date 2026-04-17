@@ -1,24 +1,21 @@
 <template>
-  <section v-if="errored">
-    <p>{{ cdash.error }}</p>
-  </section>
   <BuildSidebar
     :build-id="buildId"
     active-tab="tests"
   >
     <build-summary-card :build-id="buildId" />
 
-    <loading-indicator :is-loading="loading">
+    <loading-indicator :is-loading="!build || !test">
       <div
         id="executiontime"
         class="tw-flex tw-flex-row tw-gap-1"
       >
         <img
           :src="$baseURL + '/img/clock.png'"
-          :title="'Average: ' + cdash.test.timemean + ', SD: ' + cdash.test.timestd"
+          :title="'Average: ' + test.meanRunningTime + ', SD: ' + test.stdDevRunningTime"
         >
         <span class="builddateelapsed">
-          {{ cdash.test.time }}
+          {{ runningTime }}
         </span>
       </div>
       <br>
@@ -27,64 +24,69 @@
       <a
         id="summary_link"
         class="tw-link tw-link-hover"
-        :href="$baseURL + '/' + cdash.test.summaryLink"
+        :href="`${$baseURL}/queryTests.php?project=${build.project.name}&filtercount=1&showfilters=1&field1=testname&compare1=61&value1=${test.name}&date=${testingDay}`"
       >
-        {{ cdash.test.test }}
+        {{ test.name }}
       </a>
-      <b :class="cdash.test.statusColor">
-        ({{ cdash.test.status }})
+      <b :class="testStatusColorClass">
+        ({{ testStatus }})
       </b>
       <br>
 
-      <div v-if="cdash.test.update.revision">
+      <div v-if="build.updateStep?.revision">
         <b>Repository revision: </b>
         <a
           id="revision_link"
           class="tw-link tw-link-hover"
-          :href="cdash.test.update.revisionurl"
+          :href="revisionUrl"
         >
-          {{ cdash.test.update.revision }}
+          {{ build.updateStep.revision }}
         </a>
         <br>
       </div>
 
-      <div v-if="cdash.test.details != ''">
+      <div v-if="test.details">
         <b>Test Details: </b>
-        {{ cdash.test.details }}
+        {{ test.details }}
         <br>
       </div>
 
-      <div v-if="cdash.project.showtesttime == 1">
+      <div v-if="build.project.enableTestTiming">
         <br>
         <b>Test Timing: </b>
-        <b :class="cdash.test.timeStatusColor">
-          {{ cdash.test.timestatus }}
+        <b :class="testTimeStatusColorClass">
+          {{ testTimeStatus }}
         </b>
-        <div v-if="cdash.test.timestatus != 'Passed'">
-          This test took longer to complete ({{ cdash.test.time }}) than the threshold allows ({{ cdash.test.threshold }}).
+        <div v-if="test.timeStatusCategory !== 'PASSED'">
+          This test took longer to complete ({{ runningTime }}) than the threshold allows ({{ runningTimeThreshold }}).
         </div>
       </div>
 
-      <div v-if="cdash.test.labels != ''">
-        <b>Labels: </b>
-        {{ cdash.test.labels }}
-        <br>
+      <div v-if="test.labels.edges.length > 0">
+        <div class="tw-flex tw-flex-row tw-flex-wrap tw-gap-2">
+          <b>Labels:</b>
+          <span
+            v-for="{ node: label } in test.labels.edges"
+            class="tw-badge tw-badge-outline tw-text-xs tw-text-neutral-500"
+          >
+            {{ label.text }}
+          </span>
+        </div>
       </div>
 
       <br>
 
       <!-- Display the measurements -->
       <table id="test_measurement_table">
-        <tr v-if="cdash.test.compareimages">
+        <tr v-if="compareImages.length > 0">
           <th class="measurement">
             Interactive Image
           </th>
           <td>
             <div class="je_compare">
               <img
-                v-for="(image, index) in cdash.test.compareimages"
-                :key="image.imgid"
-                :src="$baseURL + '/image/' + image.imgid"
+                v-for="(image, index) in compareImages"
+                :src="image.url"
                 :alt="image.role"
                 @load="index === 0 && initializeJeCompare()"
               >
@@ -92,13 +94,13 @@
           </td>
         </tr>
 
-        <tr v-for="image in cdash.test.images">
+        <tr v-for="{ node: image } in test.testImages.edges">
           <th class="measurement">
             {{ image.role }}
           </th>
           <td>
             <img
-              :src="$baseURL + '/image/' + image.imgid"
+              :src="image.url"
               :alt="image.role"
             >
           </td>
@@ -156,14 +158,14 @@
       <div v-if="showcommandline">
         <code-box
           id="commandline"
-          :text="cdash.test.command"
+          :text="test.command"
         />
         <br>
       </div>
 
       <!-- Show environment variables -->
       <div
-        v-if="hasenvironment"
+        v-if="environment"
         class="tw-flex tw-flex-row tw-gap-1"
       >
         <img
@@ -184,7 +186,7 @@
       <div v-if="showenvironment">
         <code-box
           id="environment"
-          :text="cdash.test.environment"
+          :text="environment"
         />
         <br>
       </div>
@@ -236,23 +238,23 @@
       <test-history-plot
         v-if="graphSelection === 'status'"
         :base-url="$baseURL"
-        :project-id="cdash.projectid"
-        :project-name="cdash.projectname"
-        :test-name="cdash.test.test"
-        :build-name="cdash.test.build"
+        :project-id="build.project.id"
+        :project-name="build.project.name"
+        :test-name="test.name"
+        :build-name="build.name"
       />
 
       <br>
       <b>Test Output</b>
       <code-box
         id="test_output"
-        :text="cdash.test.output"
+        :text="test.output"
       />
       <br>
 
-      <div v-for="preformatted_measurement in cdash.test.preformatted_measurements">
-        <b>{{ preformatted_measurement.name }}</b>
-        <code-box :text="preformatted_measurement.value" />
+      <div v-for="preformattedMeasurement in preformattedMeasurements">
+        <b>{{ preformattedMeasurement.name }}</b>
+        <code-box :text="preformattedMeasurement.value" />
         <br>
       </div>
     </loading-indicator>
@@ -262,13 +264,15 @@
 <script>
 import $ from 'jquery';
 import ApiLoader from './shared/ApiLoader';
-import QueryParams from './shared/QueryParams';
 import {DateTime} from 'luxon';
 import TestHistoryPlot from './shared/TestHistoryPlot.vue';
 import CodeBox from './shared/CodeBox.vue';
 import BuildSummaryCard from './shared/BuildSummaryCard.vue';
 import LoadingIndicator from './shared/LoadingIndicator.vue';
 import BuildSidebar from './shared/BuildSidebar.vue';
+import gql from 'graphql-tag';
+import {getRepository} from './shared/RepositoryIntegrations';
+import Utils from './shared/Utils';
 
 export default {
   name: 'TestDetails',
@@ -291,18 +295,99 @@ export default {
       type: Number,
       required: true,
     },
+
+    testingDay: {
+      type: String,
+      required: true,
+    },
+  },
+
+  apollo: {
+    build: {
+      query: gql`
+        query($id: ID) {
+          build(id: $id) {
+            id
+            name
+            updateStep {
+              id
+              revision
+              priorRevision
+            }
+            project {
+              id
+              name
+              enableTestTiming
+              testTimeStdMultiplier
+              vcsViewer
+              vcsUrl
+              cmakeProjectRoot
+            }
+          }
+        }
+      `,
+      variables() {
+        return {
+          id: this.buildId,
+        };
+      },
+    },
+
+    test: {
+      query: gql`
+        query($id: ID) {
+          test(id: $id) {
+            id
+            name
+            status
+            details
+            command
+            output
+            runningTime
+            meanRunningTime
+            stdDevRunningTime
+            timeStatusCategory
+            testMeasurements {
+              id
+              name
+              type
+              value
+            }
+            labels {
+              edges {
+                node {
+                  id
+                  text
+                }
+              }
+            }
+            testImages {
+              edges {
+                node {
+                  id
+                  role
+                  url
+                }
+              }
+            }
+          }
+        }
+      `,
+      variables() {
+        return {
+          id: this.testId,
+        };
+      },
+    },
   },
 
   data () {
     return {
       // API results.
       cdash: {},
-      loading: true,
-      errored: false,
 
       showcommandline: false,
       showenvironment: false,
-      hasenvironment: false,
       showgraph: false,
       graphSelection: '',
       rawdatalink: '',
@@ -311,25 +396,137 @@ export default {
   },
 
   computed: {
-    files: function () {
-      return this.cdash.test.measurements.filter((measurement) => {
+    files() {
+      return this.test.testMeasurements.filter((measurement) => {
         return measurement.type === 'file';
       });
     },
-    links: function () {
-      return this.cdash.test.measurements.filter((measurement) => {
+
+    links() {
+      return this.test.testMeasurements.filter((measurement) => {
         return measurement.type === 'text/link';
       });
     },
-    measurements: function () {
-      return this.cdash.test.measurements.filter((measurement) => {
-        return measurement.type !== 'file' && measurement.type !== 'text/link';
+
+    measurements() {
+      return this.test.testMeasurements.filter((measurement) => {
+        return measurement.type !== 'file'
+          && measurement.type !== 'text/link'
+          && measurement.type !== 'text/preformatted'
+          && !(measurement.type === 'text/string' && measurement.name === 'Environment');
       });
     },
-    numericMeasurements: function () {
-      return this.cdash.test.measurements.filter((measurement) => {
+
+    numericMeasurements() {
+      return this.test.testMeasurements.filter((measurement) => {
         return measurement.type.lastIndexOf('numeric/', 0) === 0;
       });
+    },
+
+    preformattedMeasurements() {
+      return this.test.testMeasurements.filter((measurement) => {
+        return measurement.type === 'text/preformatted';
+      });
+    },
+
+    environment() {
+      return this.test.testMeasurements.filter((measurement) => {
+        return measurement.type === 'text/string' && measurement.name === 'Environment';
+      })[0]?.value ?? null;
+    },
+
+    revisionUrl() {
+      return getRepository(this.build.project.vcsViewer, this.build.project.vcsUrl, this.build.project.cmakeProjectRoot)
+        ?.getCommitUrl(this.build.updateStep?.revision);
+    },
+
+    runningTime() {
+      return Utils.formatDuration(this.test.runningTime * 1000);
+    },
+
+    runningTimeThreshold() {
+      if (!this.test.runningTime || !this.test.meanRunningTime || !this.test.stdDevRunningTime) {
+        return '';
+      }
+
+      const thresholdInSeconds = this.test.meanRunningTime + (this.build.project.testTimeStdMultiplier * this.test.stdDevRunningTime);
+      return Utils.formatDuration(thresholdInSeconds * 1000);
+    },
+
+    testStatus() {
+      switch (this.test.status) {
+      case 'PASSED':
+        return 'Passed';
+      case 'FAILED':
+        return 'Failed';
+      case 'NOT_RUN':
+        return 'Not Run';
+      default:
+        return this.test.status;
+      }
+    },
+
+    /**
+     * TODO: Convert these to Tailwind colors
+     */
+    testStatusColorClass() {
+      switch (this.test.status) {
+      case 'PASSED':
+        return 'normal-text';
+      case 'FAILED':
+        return 'error-text';
+      case 'NOT_RUN':
+        return 'warning-text';
+      default:
+        return '';
+      }
+    },
+
+    testTimeStatus() {
+      switch (this.test.timeStatusCategory) {
+      case 'PASSED':
+        return 'Passed';
+      case 'FAILED':
+        return 'Warning';
+      default:
+        return this.test.timeStatusCategory;
+      }
+    },
+
+    /**
+     * TODO: Convert these to Tailwind colors
+     */
+    testTimeStatusColorClass() {
+      switch (this.test.timeStatusCategory) {
+      case 'PASSED':
+        return 'normal-text';
+      case 'FAILED':
+        return 'warning-text';
+      default:
+        return '';
+      }
+    },
+
+    compareImages() {
+      if (!this.test || !this.test.testImages) {
+        return [];
+      }
+
+      const images = [];
+
+      this.test.testImages.edges.forEach(({ node: image }) => {
+        if (image.role === 'ValidImage') {
+          images.push(image);
+        }
+      });
+
+      this.test.testImages.edges.forEach(({ node: image }) => {
+        if (image.role === 'TestImage') {
+          images.push(image);
+        }
+      });
+
+      return images;
     },
   },
 
@@ -338,14 +535,6 @@ export default {
     window.jQuery = $;
     await import('flot/dist/es5/jquery.flot');
     await import('../../angular/je_compare.js');
-
-    let endpoint_path = `/api/v1/testDetails.php?buildtestid=${this.testId}`;
-    this.queryParams = QueryParams.get();
-    if ('graph' in this.queryParams) {
-      this.graphSelection = this.queryParams.graph;
-      endpoint_path += `&graph=${this.graphSelection}`;
-    }
-    ApiLoader.loadPageData(this, endpoint_path);
   },
 
   methods: {
@@ -358,14 +547,8 @@ export default {
     },
 
     postSetup: function() {
-      this.queryParams = QueryParams.get();
       if (this.graphSelection) {
         this.displayGraph();
-      }
-
-      // eslint-disable-next-line eqeqeq
-      if (this.cdash.test.environment != '') {
-        this.hasenvironment = true;
       }
     },
 
@@ -377,14 +560,6 @@ export default {
           const newurl = `${window.location.protocol}//${window.location.host}${window.location.pathname}${graph_query}`;
           window.history.pushState({path:newurl},'',newurl);
 
-          // Update menu links.
-          this.cdash.menu.current = this.cdash.menu.current.split('?')[0] + graph_query;
-          if (this.cdash.menu.previous) {
-            this.cdash.menu.previous = this.cdash.menu.previous.split('?')[0] + graph_query;
-          }
-          if (this.cdash.menu.next) {
-            this.cdash.menu.next = this.cdash.menu.next.split('?')[0] + graph_query;
-          }
           ApiLoader.$emit('api-loaded', this.cdash);
         }
       }
@@ -394,7 +569,6 @@ export default {
         return;
       }
 
-      const testname = this.cdash.test.test;
       const measurementname = this.graphSelection;
       if (this.graphSelection === '') {
         this.showgraph = false;
@@ -405,7 +579,7 @@ export default {
       this.showgraph = true;
 
       let graph_type = '';
-      let endpoint_path = `/api/v1/testGraph.php?testname=${testname}&buildid=${this.buildId}`;
+      let endpoint_path = `/api/v1/testGraph.php?testname=${this.test.name}&buildid=${this.buildId}`;
       switch (this.graphSelection) {
       case 'status':
         graph_type = 'status';

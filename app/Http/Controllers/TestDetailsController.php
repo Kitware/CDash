@@ -30,6 +30,7 @@ final class TestDetailsController extends AbstractBuildController
         return $this->vue('test-details-page', 'Test Results', [
             'build-id' => $this->build->Id,
             'test-id' => $test->id,
+            'testing-day' => $this->date,
         ])
             ->with('previousUrl', $previousTest?->GetUrlForSelf())
             ->with('latestUrl', $latestTest?->GetUrlForSelf())
