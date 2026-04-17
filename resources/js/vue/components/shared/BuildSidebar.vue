@@ -81,11 +81,11 @@
           data-test="sidebar-notes"
         />
         <build-sidebar-item
-          :href="`${$baseURL}/builds/${buildId}/commands`"
+          :href="`${$baseURL}/builds/${buildId}/instrumentation`"
           title="Instrumentation"
           :icon="FA.faGaugeHigh"
           :selected="activeTab === 'instrumentation'"
-          :disabled="commandsDisabled"
+          :disabled="instrumentationDisabled"
           data-test="sidebar-instrumentation"
         />
         <build-sidebar-item
@@ -255,7 +255,7 @@ export default {
     notesDisabled() {
       return !this.build || !this.build.notes || this.build.notes.pageInfo.total === 0;
     },
-    commandsDisabled() {
+    instrumentationDisabled() {
       return !this.build || !this.build.commands || this.build.commands.pageInfo.total === 0;
     },
     targetsDisabled() {
