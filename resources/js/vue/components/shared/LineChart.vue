@@ -42,6 +42,7 @@ export default {
       let chartData = [];
 
       const baseOption = {
+        animation: false,
         grid: {
           left: '30px',
           right: '20px',
