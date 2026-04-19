@@ -3,6 +3,7 @@
 require_once __DIR__ . '/cdash_test_case.php';
 
 use App\Models\PinnedTestMeasurement;
+use App\Models\Test;
 use CDash\Model\Project;
 use Illuminate\Support\Facades\DB;
 
@@ -65,13 +66,11 @@ class RedundantTestsTestCase extends KWWebTestCase
         $test1found = false;
         $test2found = false;
         foreach ($results as $row) {
-            $this->get("{$this->url}/api/v1/testDetails.php?buildtestid={$row->id}");
-            $content = $this->getBrowser()->getContent();
-            $jsonobj = json_decode($content, true);
-            if ($jsonobj['test']['output'] === "this is a test\n") {
+            $output = Test::findOrFail((int) $row->id)->testOutput?->output;
+            if ($output === "this is a test\n") {
                 $test1found = true;
             }
-            if ($jsonobj['test']['output'] === "this is the same test but with different output\n") {
+            if ($output === "this is the same test but with different output\n") {
                 $test2found = true;
             }
         }

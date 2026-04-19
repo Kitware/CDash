@@ -112,15 +112,6 @@ class TimeStatusTestCase extends KWWebTestCase
         $this->verify_row($rows[2], 9.00, 0.60, 1.13, 1);
         $this->verify_row($rows[3], 9.00, 0.60, 1.13, 2);
         $this->verify_row($rows[4], 9.00, 0.60, 1.13, 3);
-
-        // Verify API results.
-        $buildtestid = $rows[4]['buildtestid'];
-        $this->get($this->url . "/api/v1/testDetails.php?buildtestid={$buildtestid}&graph=time");
-        $content = $this->getBrowser()->getContent();
-        $jsonobj = json_decode($content, true);
-        $menu = $jsonobj['menu'];
-        $this->assertTrue(str_contains($menu['previous'], '?graph=time'));
-        $this->assertTrue(str_contains($menu['current'], '?graph=time'));
     }
 
     private function verify_field($expected, $found, $field, $id): void

@@ -7102,80 +7102,8 @@ parameters:
 			path: app/cdash/app/Controller/Api/ResultsApi.php
 
 		-
-			rawMessage: Access to an undefined property CDash\Controller\Api\TestDetails::$pageTimer.
-			identifier: property.notFound
-			count: 1
-			path: app/cdash/app/Controller/Api/TestDetails.php
-
-		-
-			rawMessage: 'Call to an undefined method App\Models\Project|Illuminate\Database\Eloquent\Collection<int, App\Models\Project>::pinnedTestMeasurements().'
-			identifier: method.notFound
-			count: 1
-			path: app/cdash/app/Controller/Api/TestDetails.php
-
-		-
-			rawMessage: 'Call to function array_search() requires parameter #3 to be set.'
-			identifier: function.strict
-			count: 2
-			path: app/cdash/app/Controller/Api/TestDetails.php
-
-		-
 			rawMessage: 'Call to function base64_decode() requires parameter #2 to be set.'
 			identifier: function.strict
-			count: 2
-			path: app/cdash/app/Controller/Api/TestDetails.php
-
-		-
-			rawMessage: 'Construct empty() is not allowed. Use more strict comparison.'
-			identifier: empty.notAllowed
-			count: 2
-			path: app/cdash/app/Controller/Api/TestDetails.php
-
-		-
-			rawMessage: 'Loose comparison via "!=" between mixed and string is not allowed.'
-			identifier: notEqual.notAllowed
-			count: 1
-			path: app/cdash/app/Controller/Api/TestDetails.php
-
-		-
-			rawMessage: 'Loose comparison via "==" between mixed and int is not allowed.'
-			identifier: equal.notAllowed
-			count: 1
-			path: app/cdash/app/Controller/Api/TestDetails.php
-
-		-
-			rawMessage: 'Method CDash\Controller\Api\TestDetails::getRelatedBuildTest() has no return type specified.'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Controller/Api/TestDetails.php
-
-		-
-			rawMessage: 'Method CDash\Controller\Api\TestDetails::getRelatedBuildTest() has parameter $which_buildtest with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Controller/Api/TestDetails.php
-
-		-
-			rawMessage: 'Method CDash\Controller\Api\TestDetails::utf8_for_xml() has parameter $string with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Controller/Api/TestDetails.php
-
-		-
-			rawMessage: 'Method CDash\Controller\Api\TestDetails::utf8_for_xml() should return string but returns (array<string>|string|null).'
-			identifier: return.type
-			count: 1
-			path: app/cdash/app/Controller/Api/TestDetails.php
-
-		-
-			rawMessage: 'Parameter #1 $string of function strlen expects string, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/app/Controller/Api/TestDetails.php
-
-		-
-			rawMessage: 'Parameter #2 $timestamp of function date expects int|null, int|false given.'
-			identifier: argument.type
 			count: 1
 			path: app/cdash/app/Controller/Api/TestDetails.php
 
@@ -16639,27 +16567,9 @@ parameters:
 			path: app/cdash/tests/test_bazeljson.php
 
 		-
-			rawMessage: Cannot access offset 'details' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
-			path: app/cdash/tests/test_bazeljson.php
-
-		-
-			rawMessage: Cannot access offset 'output' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
+			rawMessage: Cannot access property $output on App\Models\TestOutput|null.
+			identifier: property.nonObject
 			count: 6
-			path: app/cdash/tests/test_bazeljson.php
-
-		-
-			rawMessage: Cannot access offset 'test' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 11
-			path: app/cdash/tests/test_bazeljson.php
-
-		-
-			rawMessage: Cannot access offset 'time' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
 			path: app/cdash/tests/test_bazeljson.php
 
 		-
@@ -16777,25 +16687,7 @@ parameters:
 			path: app/cdash/tests/test_bazeljson.php
 
 		-
-			rawMessage: 'Parameter #1 $haystack of function str_contains expects string, mixed given.'
-			identifier: argument.type
-			count: 15
-			path: app/cdash/tests/test_bazeljson.php
-
-		-
-			rawMessage: 'Parameter #1 $haystack of function strpos expects string, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/tests/test_bazeljson.php
-
-		-
 			rawMessage: 'Part $buildid (mixed) of encapsed string cannot be cast to string.'
-			identifier: encapsedStringPart.nonString
-			count: 1
-			path: app/cdash/tests/test_bazeljson.php
-
-		-
-			rawMessage: 'Part $jsonobj[''test''][''time''] (mixed) of encapsed string cannot be cast to string.'
 			identifier: encapsedStringPart.nonString
 			count: 1
 			path: app/cdash/tests/test_bazeljson.php
@@ -18913,24 +18805,6 @@ parameters:
 			path: app/cdash/tests/test_expiredbuildrules.php
 
 		-
-			rawMessage: Binary operation "." between 'Expected name to be…' and mixed results in an error.
-			identifier: binaryOp.invalid
-			count: 1
-			path: app/cdash/tests/test_externallinksfromtests.php
-
-		-
-			rawMessage: Binary operation "." between 'Expected type to be…' and mixed results in an error.
-			identifier: binaryOp.invalid
-			count: 1
-			path: app/cdash/tests/test_externallinksfromtests.php
-
-		-
-			rawMessage: Binary operation "." between 'Expected value to…' and mixed results in an error.
-			identifier: binaryOp.invalid
-			count: 1
-			path: app/cdash/tests/test_externallinksfromtests.php
-
-		-
 			rawMessage: 'Call to deprecated method pass() of class SimpleTestCase.'
 			identifier: method.deprecated
 			count: 1
@@ -18946,44 +18820,8 @@ parameters:
 			path: app/cdash/tests/test_externallinksfromtests.php
 
 		-
-			rawMessage: Cannot access offset 'measurements' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_externallinksfromtests.php
-
-		-
-			rawMessage: Cannot access offset 'name' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_externallinksfromtests.php
-
-		-
-			rawMessage: Cannot access offset 'test' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_externallinksfromtests.php
-
-		-
-			rawMessage: Cannot access offset 'type' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_externallinksfromtests.php
-
-		-
-			rawMessage: Cannot access offset 'value' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_externallinksfromtests.php
-
-		-
 			rawMessage: 'Method ExternalLinksFromTestsTestCase::testExternalLinksFromTests() has no return type specified.'
 			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_externallinksfromtests.php
-
-		-
-			rawMessage: 'Parameter #1 $array of function array_pop expects array, mixed given.'
-			identifier: argument.type
 			count: 1
 			path: app/cdash/tests/test_externallinksfromtests.php
 
@@ -20286,12 +20124,6 @@ parameters:
 		-
 			rawMessage: Cannot access offset 'labels' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/cdash/tests/test_multiplelabelsfortests.php
-
-		-
-			rawMessage: Cannot access offset 'test' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: app/cdash/tests/test_multiplelabelsfortests.php
 
@@ -20308,13 +20140,7 @@ parameters:
 			path: app/cdash/tests/test_multiplelabelsfortests.php
 
 		-
-			rawMessage: Cannot access property $id on App\Models\Test|null.
-			identifier: property.nonObject
-			count: 1
-			path: app/cdash/tests/test_multiplelabelsfortests.php
-
-		-
-			rawMessage: 'Cannot call method getLabels() on App\Models\Test|null.'
+			rawMessage: 'Cannot call method labels() on App\Models\Test|null.'
 			identifier: method.nonObject
 			count: 1
 			path: app/cdash/tests/test_multiplelabelsfortests.php
@@ -21262,38 +21088,8 @@ parameters:
 			path: app/cdash/tests/test_outputcolor.php
 
 		-
-			rawMessage: Cannot access offset 'name' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_outputcolor.php
-
-		-
-			rawMessage: Cannot access offset 'output' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_outputcolor.php
-
-		-
-			rawMessage: Cannot access offset 'preformatted_measurements' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/cdash/tests/test_outputcolor.php
-
-		-
-			rawMessage: Cannot access offset 'test' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
-			path: app/cdash/tests/test_outputcolor.php
-
-		-
-			rawMessage: Cannot access offset 'value' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_outputcolor.php
-
-		-
-			rawMessage: Cannot access offset 0 on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
+			rawMessage: Cannot access property $output on App\Models\TestOutput|null.
+			identifier: property.nonObject
 			count: 1
 			path: app/cdash/tests/test_outputcolor.php
 
@@ -21306,18 +21102,6 @@ parameters:
 		-
 			rawMessage: 'Method OutputColorTestCase::getIdForTest() has parameter $testname with no type specified.'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/test_outputcolor.php
-
-		-
-			rawMessage: 'Parameter #1 $haystack of function str_contains expects string, mixed given.'
-			identifier: argument.type
-			count: 3
-			path: app/cdash/tests/test_outputcolor.php
-
-		-
-			rawMessage: 'Parameter #1 $value of function count expects array|Countable, mixed given.'
-			identifier: argument.type
 			count: 1
 			path: app/cdash/tests/test_outputcolor.php
 
@@ -21776,18 +21560,6 @@ parameters:
 
 		-
 			rawMessage: Cannot access offset 'measurements' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/cdash/tests/test_redundanttests.php
-
-		-
-			rawMessage: Cannot access offset 'output' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_redundanttests.php
-
-		-
-			rawMessage: Cannot access offset 'test' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
 			path: app/cdash/tests/test_redundanttests.php
@@ -22588,21 +22360,9 @@ parameters:
 			path: app/cdash/tests/test_testhistory.php
 
 		-
-			rawMessage: Cannot access offset 'buildid' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
-			path: app/cdash/tests/test_testhistory.php
-
-		-
 			rawMessage: Cannot access offset 'buildtestid' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 5
-			path: app/cdash/tests/test_testhistory.php
-
-		-
-			rawMessage: Cannot access offset 'current' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
 			path: app/cdash/tests/test_testhistory.php
 
 		-
@@ -22624,33 +22384,9 @@ parameters:
 			path: app/cdash/tests/test_testhistory.php
 
 		-
-			rawMessage: Cannot access offset 'menu' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 9
-			path: app/cdash/tests/test_testhistory.php
-
-		-
 			rawMessage: Cannot access offset 'name' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
-			path: app/cdash/tests/test_testhistory.php
-
-		-
-			rawMessage: Cannot access offset 'next' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
-			path: app/cdash/tests/test_testhistory.php
-
-		-
-			rawMessage: Cannot access offset 'previous' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
-			path: app/cdash/tests/test_testhistory.php
-
-		-
-			rawMessage: Cannot access offset 'test' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
 			path: app/cdash/tests/test_testhistory.php
 
 		-
@@ -22744,12 +22480,6 @@ parameters:
 			path: app/cdash/tests/test_testhistory.php
 
 		-
-			rawMessage: 'Parameter #1 $result of method WebTestCase::assertFalse() expects bool, mixed given.'
-			identifier: argument.type
-			count: 2
-			path: app/cdash/tests/test_testhistory.php
-
-		-
 			rawMessage: 'Parameter #1 $value of function count expects array|Countable, mixed given.'
 			identifier: argument.type
 			count: 2
@@ -22757,24 +22487,6 @@ parameters:
 
 		-
 			rawMessage: 'Part $history (mixed) of encapsed string cannot be cast to string.'
-			identifier: encapsedStringPart.nonString
-			count: 5
-			path: app/cdash/tests/test_testhistory.php
-
-		-
-			rawMessage: 'Part $sporadic_ids[0] (mixed) of encapsed string cannot be cast to string.'
-			identifier: encapsedStringPart.nonString
-			count: 2
-			path: app/cdash/tests/test_testhistory.php
-
-		-
-			rawMessage: 'Part $sporadic_ids[1] (mixed) of encapsed string cannot be cast to string.'
-			identifier: encapsedStringPart.nonString
-			count: 3
-			path: app/cdash/tests/test_testhistory.php
-
-		-
-			rawMessage: 'Part $sporadic_ids[2] (mixed) of encapsed string cannot be cast to string.'
 			identifier: encapsedStringPart.nonString
 			count: 5
 			path: app/cdash/tests/test_testhistory.php
@@ -23074,24 +22786,6 @@ parameters:
 			path: app/cdash/tests/test_timestatus.php
 
 		-
-			rawMessage: Cannot access offset 'current' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_timestatus.php
-
-		-
-			rawMessage: Cannot access offset 'menu' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_timestatus.php
-
-		-
-			rawMessage: Cannot access offset 'previous' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_timestatus.php
-
-		-
 			rawMessage: 'Loose comparison via "!=" between mixed and mixed is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 1
@@ -23149,12 +22843,6 @@ parameters:
 			rawMessage: 'Method TimeStatusTestCase::verify_row() has parameter $timestd with no type specified.'
 			identifier: missingType.parameter
 			count: 1
-			path: app/cdash/tests/test_timestatus.php
-
-		-
-			rawMessage: 'Parameter #1 $haystack of function str_contains expects string, mixed given.'
-			identifier: argument.type
-			count: 2
 			path: app/cdash/tests/test_timestatus.php
 
 		-
@@ -23257,20 +22945,8 @@ parameters:
 			path: app/cdash/tests/test_truncateoutput.php
 
 		-
-			rawMessage: Cannot access offset 'output' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_truncateoutput.php
-
-		-
-			rawMessage: Cannot access offset 'test' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_truncateoutput.php
-
-		-
-			rawMessage: 'Parameter #1 $haystack of function str_contains expects string, mixed given.'
-			identifier: argument.type
+			rawMessage: Cannot access property $output on App\Models\TestOutput|null.
+			identifier: property.nonObject
 			count: 1
 			path: app/cdash/tests/test_truncateoutput.php
 

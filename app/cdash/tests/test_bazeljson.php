@@ -3,6 +3,7 @@
 require_once __DIR__ . '/cdash_test_case.php';
 
 use App\Models\Build;
+use App\Models\Test;
 use App\Utils\DatabaseCleanupUtils;
 use CDash\Database;
 use CDash\Model\Project;
@@ -60,11 +61,8 @@ class BazelJSONTestCase extends KWWebTestCase
         pdo_execute($test_stmt, [$buildid, '//main:hello-good']);
         $buildtestid = $test_stmt->fetchColumn();
 
-        // Use the API to verify that only output for the specified test is displayed
-        $this->get($this->url . "/api/v1/testDetails.php?buildtestid=$buildtestid");
-        $content = $this->getBrowser()->getContent();
-        $jsonobj = json_decode($content, true);
-        $output = $jsonobj['test']['output'];
+        // Verify that only output for the specified test is displayed
+        $output = Test::findOrFail((int) $buildtestid)->testOutput->output;
 
         $not_expected = 'Executed 2 out of 2 tests';
         if (str_contains($output, $not_expected)) {
@@ -236,11 +234,8 @@ class BazelJSONTestCase extends KWWebTestCase
         pdo_execute($test_stmt, [$buildid, '//drake/bindings:pydrake_common_install_test']);
         $buildtestid = $test_stmt->fetchColumn();
 
-        // Use the API to verify that all of the build output is displayed.
-        $this->get($this->url . "/api/v1/testDetails.php?buildtestid=$buildtestid");
-        $content = $this->getBrowser()->getContent();
-        $jsonobj = json_decode($content, true);
-        $output = $jsonobj['test']['output'];
+        // Verify that all of the build output is displayed.
+        $output = Test::findOrFail((int) $buildtestid)->testOutput->output;
 
         $expected = 'FAIL: testDrakeFindResourceOrThrowInInstall (__main__.TestCommonInstall)';
         if (!str_contains($output, $expected)) {
@@ -292,11 +287,8 @@ class BazelJSONTestCase extends KWWebTestCase
         pdo_execute($test_stmt, [$buildid, '//drake/bindings:pydrake_common_install_test']);
         $buildtestid = $test_stmt->fetchColumn();
 
-        // Use the API to verify that the 'TIMEOUT' message is displayed
-        $this->get($this->url . "/api/v1/testDetails.php?buildtestid=$buildtestid");
-        $content = $this->getBrowser()->getContent();
-        $jsonobj = json_decode($content, true);
-        $output = $jsonobj['test']['output'];
+        // Verify that the 'TIMEOUT' message is displayed
+        $output = Test::findOrFail((int) $buildtestid)->testOutput->output;
 
         $expected = 'TIMEOUT';
         if (!str_contains($output, $expected)) {
@@ -465,13 +457,11 @@ class BazelJSONTestCase extends KWWebTestCase
         pdo_execute($test_stmt, [$buildid, '//automotive/maliput/multilane:multilane_lanes_test']);
         $buildtestid = $test_stmt->fetchColumn();
 
-        $this->get($this->url . "/api/v1/testDetails.php?buildtestid=$buildtestid");
-        $content = $this->getBrowser()->getContent();
-        $jsonobj = json_decode($content, true);
+        $test = Test::findOrFail((int) $buildtestid);
 
         // Check Details
         $expected = 'Completed';
-        if (!str_contains($jsonobj['test']['details'], $expected)) {
+        if (!str_contains($test->details, $expected)) {
             $this->fail("Expected output to include '$expected'");
         }
 
@@ -520,12 +510,8 @@ class BazelJSONTestCase extends KWWebTestCase
         pdo_execute($test_stmt, [$buildid, '//automotive/maliput/multilane:multilane_builder_test']);
         $buildtestid = $test_stmt->fetchColumn();
 
-        $this->get($this->url . "/api/v1/testDetails.php?buildtestid=$buildtestid");
-        $content = $this->getBrowser()->getContent();
-        $jsonobj = json_decode($content, true);
-
-        // Use the API to verify that the expected output is displayed
-        $output = $jsonobj['test']['output'];
+        // Verify that the expected output is displayed
+        $output = Test::findOrFail((int) $buildtestid)->testOutput->output;
 
         $expected = '//automotive/maliput/multilane:multilane_builder_test';
         if (!str_contains($output, $expected)) {
@@ -552,12 +538,9 @@ class BazelJSONTestCase extends KWWebTestCase
         pdo_execute($test_stmt, [$buildid, '//automotive/maliput/multilane:multilane_lanes_test']);
         $buildtestid = $test_stmt->fetchColumn();
 
-        $this->get($this->url . "/api/v1/testDetails.php?buildtestid=$buildtestid");
-        $content = $this->getBrowser()->getContent();
-        $jsonobj = json_decode($content, true);
-
-        // Use the API to verify that the expected output is displayed
-        $output = $jsonobj['test']['output'];
+        // Verify that the expected output is displayed
+        $test = Test::findOrFail((int) $buildtestid);
+        $output = $test->testOutput->output;
 
         $expected = 'automotive/maliput/multilane:multilane_lanes_test';
         if (!str_contains($output, $expected)) {
@@ -566,7 +549,7 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Check Details
         $expected = 'Completed (Failed)';
-        if (!str_contains($jsonobj['test']['details'], $expected)) {
+        if (!str_contains($test->details, $expected)) {
             $this->fail("Expected output to include '$expected'");
         }
 
@@ -615,12 +598,9 @@ class BazelJSONTestCase extends KWWebTestCase
         pdo_execute($test_stmt, [$buildid, '//automotive/maliput/multilane:multilane_lanes_test']);
         $buildtestid = $test_stmt->fetchColumn();
 
-        $this->get($this->url . "/api/v1/testDetails.php?buildtestid=$buildtestid");
-        $content = $this->getBrowser()->getContent();
-        $jsonobj = json_decode($content, true);
-
-        // Use the API to verify that the expected output is displayed
-        $output = $jsonobj['test']['output'];
+        // Verify that the expected output is displayed
+        $test = Test::findOrFail((int) $buildtestid);
+        $output = $test->testOutput->output;
 
         $expected = 'Note: This is test shard 8 of 10.';
         if (!str_contains($output, $expected)) {
@@ -646,15 +626,12 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Check Details
         $expected = 'Completed (Timeout)';
-        if (!str_contains($jsonobj['test']['details'], $expected)) {
+        if (!str_contains($test->details, $expected)) {
             $this->fail("Expected output to include '$expected'");
         }
 
         // Check time - should be sum of all shards
-        $expected = '3m 5s 750ms';
-        if (!str_contains($jsonobj['test']['time'], $expected)) {
-            $this->fail("Expected time to be $expected, found {$jsonobj['test']['time']}");
-        }
+        $this->assertEqual(185.75, $test->time);
 
         // Cleanup.
         DatabaseCleanupUtils::removeBuild($buildid);

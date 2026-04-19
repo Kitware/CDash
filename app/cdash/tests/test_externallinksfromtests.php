@@ -4,6 +4,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
+use App\Models\TestMeasurement;
 use App\Utils\DatabaseCleanupUtils;
 use Illuminate\Support\Facades\DB;
 
@@ -35,37 +36,14 @@ class ExternalLinksFromTestsTestCase extends KWWebTestCase
             "SELECT id FROM build2test WHERE buildid=$buildid")[0];
         $buildtestid = $result->id;
 
-        // Use the API to verify that our external link was parsed properly.
-        $this->get($this->url . "/api/v1/testDetails.php?buildtestid=$buildtestid");
-        $content = $this->getBrowser()->getContent();
-        $jsonobj = json_decode($content, true);
-        $measurement = array_pop($jsonobj['test']['measurements']);
-
-        $success = true;
-        $error_msg = '';
-
-        if ($measurement['name'] !== 'Interesting website') {
-            $error_msg = "Expected name to be 'Interesting website', instead found " . $measurement['name'];
-            $success = false;
-        }
-
-        if ($measurement['type'] !== 'text/link') {
-            $error_msg = "Expected type to be 'text/link', instead found " . $measurement['type'];
-            $success = false;
-        }
-
-        if ($measurement['value'] !== 'http://www.google.com') {
-            $error_msg = "Expected value to be 'http://www.google.com', instead found " . $measurement['value'];
-            $success = false;
-        }
+        // Verify that our external link was parsed properly.
+        $testMeasurement = TestMeasurement::where('testid', (int) $buildtestid)->firstOrFail();
+        $this->assertEqual('Interesting website', $testMeasurement->name);
+        $this->assertEqual('text/link', $testMeasurement->type);
+        $this->assertEqual('http://www.google.com', $testMeasurement->value);
 
         // Delete the build that we created during this test.
         DatabaseCleanupUtils::removeBuild($buildid);
-
-        if (!$success) {
-            $this->fail($error_msg);
-            return 1;
-        }
 
         $this->pass('Tests passed');
         return 0;

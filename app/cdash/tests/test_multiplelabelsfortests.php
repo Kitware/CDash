@@ -55,13 +55,11 @@ class MultipleLabelsForTestsTestCase extends KWWebTestCase
         // Verify that the test has multiple labels.
         $buildid = $results[0]->id;
         $buildtest = Test::where('buildid', '=', $buildid)->first();
-        $this->assertTrue(3 === count($buildtest->getLabels()));
-
-        // Verify that these labels are correctly returned by the testDetails API.
-        $this->get("{$this->url}/api/v1/testDetails.php?buildtestid={$buildtest->id}");
-        $content = $this->getBrowser()->getContent();
-        $jsonobj = json_decode($content, true);
-        $this->assertEqual('label1, label2, label3', $jsonobj['test']['labels']);
+        $labels = $buildtest->labels()->get()->sortBy('text')->pluck('text')->toArray();
+        $this->assertEqual(3, count($labels));
+        $this->assertEqual('label1', $labels[0]);
+        $this->assertEqual('label2', $labels[1]);
+        $this->assertEqual('label3', $labels[2]);
 
         // Verify that these labels are correctly returned by the viewTests API.
         $this->get("{$this->url}/api/v1/viewTest.php?buildid={$buildid}");
