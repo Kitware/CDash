@@ -5,6 +5,7 @@
 // relative to the top of the CDash source tree
 //
 use App\Models\Build;
+use App\Models\Test;
 use App\Utils\DatabaseCleanupUtils;
 use Illuminate\Support\Facades\DB;
 
@@ -45,11 +46,10 @@ class TruncateOutputTestCase extends KWWebTestCase
                   project.name = 'EmailProjectExample' AND
                   build2test.testname = 'curl'");
         $buildtestid = $buildtests[0]->id;
-        $this->get($this->url . "/api/v1/testDetails.php?buildtestid={$buildtestid}");
-        $content = $this->getBrowser()->getContent();
-        $jsonobj = json_decode($content, true);
+
+        $testOutput = Test::findOrFail((int) $buildtestid)->testOutput->output;
         $expected = 'The rest of the test output was removed since it exceeds the threshold';
-        $this->assertTrue(str_contains($jsonobj['test']['output'], $expected));
+        $this->assertTrue(str_contains($testOutput, $expected));
 
         // Set a limit that will cause our test output to be truncated.
         file_put_contents($this->ConfigFile, "LARGE_TEXT_LIMIT=44\n", FILE_APPEND | LOCK_EX);

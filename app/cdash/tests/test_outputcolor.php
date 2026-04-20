@@ -6,6 +6,7 @@
 //
 require_once __DIR__ . '/cdash_test_case.php';
 
+use App\Models\Test;
 use CDash\Model\Project;
 use Illuminate\Support\Facades\DB;
 
@@ -46,9 +47,7 @@ class OutputColorTestCase extends KWWebTestCase
 
         // Get test output.
         $buildtestid = $this->getIdForTest('colortest_long');
-        $content = $this->connect($this->url . "/api/v1/testDetails.php?buildtestid=$buildtestid");
-        $json_content = json_decode($content, true);
-        $output = $json_content['test']['output'];
+        $output = Test::findOrFail((int) $buildtestid)->testOutput->output;
 
         // Check for expected escape sequences.
         if (!str_contains($output, "\x1B[32m")) {
@@ -71,15 +70,19 @@ class OutputColorTestCase extends KWWebTestCase
         }
         $this->assertTrue($this->checkLog($this->logfilename) !== false);
         $buildtestid = $this->getIdForTest('preformatted_color');
-        $content = $this->connect($this->url . "/api/v1/testDetails.php?buildtestid=$buildtestid");
-        $json_content = json_decode($content, true);
-        $this->assertEqual(1, count($json_content['test']['preformatted_measurements']));
-        $measurement = $json_content['test']['preformatted_measurements'][0];
-        $this->assertEqual('Color Output', $measurement['name']);
+
+        $testMeasurements = Test::findOrFail((int) $buildtestid)
+            ->testMeasurements()
+            ->where('type', 'text/preformatted')
+            ->get();
+
+        $this->assertEqual(1, $testMeasurements->count());
+        $measurement = $testMeasurements->firstOrFail();
+        $this->assertEqual('Color Output', $measurement->name);
         $expected = 'not bold[NON-XML-CHAR-0x1B][1m bold[NON-XML-CHAR-0x1B][0;0m not bold
 [NON-XML-CHAR-0x1B][32mHello world![NON-XML-CHAR-0x1B][0m
 [NON-XML-CHAR-0x1B][31mThis is test output[NON-XML-CHAR-0x1B][0m';
-        $this->assertEqual($expected, $measurement['value']);
+        $this->assertEqual($expected, $measurement->value);
 
         // Submit build data for later check in viewBuildErrors.
         $file = __DIR__ . '/data/OutputColor/Build.xml';

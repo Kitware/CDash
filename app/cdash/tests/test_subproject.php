@@ -111,7 +111,7 @@ class SubProjectTestCase extends KWWebTestCase
             'Type: Nightly',
             'Total Failing Tests: 1',
             '*Failing Tests*',
-            "NOX_FiniteDifferenceIsorropiaColoring | Completed (Failed) | ({$url}/testDetails.php?test=",
+            "NOX_FiniteDifferenceIsorropiaColoring | Completed (Failed) | ({$url}/tests/",
             '-CDash on',
         ];
         if ($this->assertLogContains($expected, 17)) {
