@@ -39,6 +39,14 @@ return [
     'delete_old_subprojects' => env('DELETE_OLD_SUBPROJECTS', true),
     'github_always_pass' => env('GITHUB_ALWAYS_PASS', false),
     'github_app_id' => env('GITHUB_APP_ID', null),
+    /*
+     * Watchdog timeout (in minutes) after which a GitHub check-run for a
+     * build with done=0 is finalized as success even though Done.xml has
+     * not been received. Set to 0 to disable the watchdog and preserve
+     * the legacy behaviour of waiting indefinitely. See
+     * \CDash\Lib\Repository\GitHub::isBuildStale().
+     */
+    'github_check_stale_minutes' => env('CDASH_GITHUB_CHECK_STALE_MINUTES', 240),
     'github_private_key' => env('GITHUB_PRIVATE_KEY', null),
     'github_webhook_secret' => env('GITHUB_WEBHOOK_SECRET', null),
     'large_text_limit' => env('LARGE_TEXT_LIMIT', 0),
