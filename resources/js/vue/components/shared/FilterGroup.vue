@@ -1,81 +1,75 @@
 <template>
-  <loading-indicator :is-loading="!result">
-    <div class="tw-flex tw-w-full">
-      <div class="tw-divider tw-divider-horizontal" />
-      <div class="tw-flex tw-flex-col tw-w-full tw-gap-1">
-        <div>
-          <template v-if="primaryRecordName === ''">
-            and
-          </template>
-          <template v-else>
-            Show all {{ primaryRecordName }} where
-          </template>
-          <select
-            class="tw-select tw-select-xs tw-select-bordered tw-shrink"
-            @change="event => changeCombineType(event.target.value)"
+  <div class="tw-flex tw-w-full">
+    <div class="tw-divider tw-divider-horizontal" />
+    <div class="tw-flex tw-flex-col tw-w-full tw-gap-1">
+      <div>
+        <template v-if="primaryRecordName === ''">
+          and
+        </template>
+        <template v-else>
+          Show all {{ primaryRecordName }} where
+        </template>
+        <select
+          class="tw-select tw-select-xs tw-select-bordered tw-shrink"
+          @change="event => changeCombineType(event.target.value)"
+        >
+          <option
+            value="all"
+            :selected="currentCombineType === 'all'"
           >
-            <option
-              value="all"
-              :selected="currentCombineType === 'all'"
-            >
-              all
-            </option>
-            <option
-              value="any"
-              :selected="currentCombineType === 'any'"
-            >
-              any
-            </option>
-          </select> of the following are true
-        </div>
-        <div v-for="(entry, index) in filters[currentCombineType]">
-          <filter-group
-            v-if="entry !== 'deleted' && (entry.hasOwnProperty('any') || entry.hasOwnProperty('all'))"
-            :initial-filters="entry"
-            :type="type"
-            @delete="changeRow('deleted', index)"
-            @change-filters="newEntry => changeRow(newEntry, index)"
-          />
-          <filter-row
-            v-else-if="entry !== 'deleted'"
-            :operators="operatorTypes.map(o => o.name)"
-            :type="operatorTypes[0].type.name"
-            :initial-field="filterToFilterRow(entry).field"
-            :initial-operator="filterToFilterRow(entry).operator"
-            :initial-value="filterToFilterRow(entry).value"
-            @delete="changeRow('deleted', index)"
-            @change-filters="newEntry => changeRow(newEntry, index)"
-          />
-        </div>
-        <div class="tw-flex tw-flex-row tw-w-full tw-gap-1">
-          <button
-            class="tw-btn tw-btn-xs"
-            @click="addFilter"
+            all
+          </option>
+          <option
+            value="any"
+            :selected="currentCombineType === 'any'"
           >
-            <font-awesome-icon :icon="FA.faPlus" /> Add Filter
-          </button>
-          <button
-            class="tw-btn tw-btn-xs"
-            @click="addGroup"
-          >
-            <font-awesome-icon :icon="FA.faBarsStaggered" /> Add Group
-          </button>
-          <button
-            class="tw-btn tw-btn-xs"
-            @click="$emit('delete')"
-          >
-            <font-awesome-icon :icon="FA.faTrash" /> Delete Group
-          </button>
-        </div>
+            any
+          </option>
+        </select> of the following are true
+      </div>
+      <div v-for="(entry, index) in filters[currentCombineType]">
+        <filter-group
+          v-if="entry !== 'deleted' && (entry.hasOwnProperty('any') || entry.hasOwnProperty('all'))"
+          :initial-filters="entry"
+          :type="type"
+          @delete="changeRow('deleted', index)"
+          @change-filters="newEntry => changeRow(newEntry, index)"
+        />
+        <filter-row
+          v-else-if="entry !== 'deleted'"
+          :fields="availableFields"
+          :initial-field="filterRowFromGraphQLFilter(entry).field"
+          :initial-operator="filterRowFromGraphQLFilter(entry).operator"
+          :initial-value="filterRowFromGraphQLFilter(entry).value"
+          @delete="changeRow('deleted', index)"
+          @change-filters="newEntry => changeRow(newEntry, index)"
+        />
+      </div>
+      <div class="tw-flex tw-flex-row tw-w-full tw-gap-1">
+        <button
+          class="tw-btn tw-btn-xs"
+          @click="addFilter"
+        >
+          <font-awesome-icon :icon="FA.faPlus" /> Add Filter
+        </button>
+        <button
+          class="tw-btn tw-btn-xs"
+          @click="addGroup"
+        >
+          <font-awesome-icon :icon="FA.faBarsStaggered" /> Add Group
+        </button>
+        <button
+          class="tw-btn tw-btn-xs"
+          @click="$emit('delete')"
+        >
+          <font-awesome-icon :icon="FA.faTrash" /> Delete Group
+        </button>
       </div>
     </div>
-  </loading-indicator>
+  </div>
 </template>
 
 <script>
-import LoadingIndicator from './LoadingIndicator.vue';
-import {useQuery} from '@vue/apollo-composable';
-import gql from 'graphql-tag';
 import FilterRow from './FilterRow.vue';
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 import {
@@ -83,9 +77,49 @@ import {
   faBarsStaggered,
   faTrash,
 } from '@fortawesome/free-solid-svg-icons';
+import {BasicFilterField, FilterType, getEnumValues} from './Filters/FilterUtils';
+
+const AVAILABLE_FILTERS = Object.freeze({
+  BuildTestsFiltersMultiFilterInput: (apolloClient) => [
+    new BasicFilterField('Name', FilterType.TEXT, null, 'name'),
+    new BasicFilterField('Details', FilterType.TEXT, null, 'details'),
+    new BasicFilterField('Running Time', FilterType.NUMBER, null, 'runningTime'),
+    new BasicFilterField('Start Time', FilterType.DATETIME, null, 'startTime'),
+    new BasicFilterField('Status', FilterType.ENUM, () => getEnumValues(apolloClient, 'TestStatus'), 'status'),
+    new BasicFilterField('Time Status', FilterType.ENUM, () => getEnumValues(apolloClient, 'TestTimeStatusCategory'), 'timeStatusCategory'),
+  ],
+  BuildCoverageFiltersMultiFilterInput: () => [
+    new BasicFilterField('Lines of Code Tested', FilterType.NUMBER, null, 'linesOfCodeTested'),
+    new BasicFilterField('Lines of Code Untested', FilterType.NUMBER, null, 'linesOfCodeUntested'),
+    new BasicFilterField('Line Percentage', FilterType.NUMBER, null, 'linePercentage'),
+    new BasicFilterField('Branches Tested', FilterType.NUMBER, null, 'branchesTested'),
+    new BasicFilterField('Branches Untested', FilterType.NUMBER, null, 'branchesUntested'),
+    new BasicFilterField('Branch Percentage', FilterType.NUMBER, null, 'branchPercentage'),
+    new BasicFilterField('Functions Tested', FilterType.NUMBER, null, 'functionsTested'),
+    new BasicFilterField('Functions Untested', FilterType.NUMBER, null, 'functionsUntested'),
+    new BasicFilterField('Function Percentage', FilterType.NUMBER, null, 'functionPercentage'),
+    new BasicFilterField('File Path', FilterType.TEXT, null, 'filePath'),
+    new BasicFilterField('File', FilterType.TEXT, null, 'file'),
+  ],
+  BuildCommandsFiltersMultiFilterInput: (apolloClient) => [
+    new BasicFilterField('Type', FilterType.ENUM, () => getEnumValues(apolloClient, 'BuildCommandType'), 'type'),
+    new BasicFilterField('Start Time', FilterType.DATETIME, null, 'startTime'),
+    new BasicFilterField('Duration', FilterType.NUMBER, null, 'duration'),
+    new BasicFilterField('Command', FilterType.TEXT, null, 'command'),
+    new BasicFilterField('Working Directory', FilterType.TEXT, null, 'workingDirectory'),
+    new BasicFilterField('Result', FilterType.TEXT, null, 'result'),
+    new BasicFilterField('Source', FilterType.TEXT, null, 'source'),
+    new BasicFilterField('Language', FilterType.TEXT, null, 'language'),
+    new BasicFilterField('Config', FilterType.TEXT, null, 'config'),
+  ],
+  BuildTargetsFiltersMultiFilterInput: (apolloClient) => [
+    new BasicFilterField('Name', FilterType.TEXT, null, 'name'),
+    new BasicFilterField('Type', FilterType.ENUM, () => getEnumValues(apolloClient, 'TargetType'), 'type'),
+  ],
+});
 
 export default {
-  components: { FontAwesomeIcon, FilterRow, LoadingIndicator },
+  components: { FontAwesomeIcon, FilterRow },
 
   props: {
     type: {
@@ -116,33 +150,10 @@ export default {
     'delete',
   ],
 
-  setup(props) {
-    const { result, error } = useQuery(gql`
-      query {
-        typeInformation: __type(name: "${props.type}") {
-          inputFields {
-            name
-            type {
-              name
-              kind
-              ofType {
-                name
-              }
-            }
-          }
-        }
-      }
-    `);
-
-    return {
-      result,
-      error,
-    };
-  },
-
   data() {
     return {
       filters: JSON.parse(JSON.stringify(this.initialFilters)),
+      availableFields: AVAILABLE_FILTERS[this.type](this.$apollo.provider.defaultClient),
     };
   },
 
@@ -156,12 +167,7 @@ export default {
     },
 
     currentCombineType() {
-      // eslint-disable-next-line no-prototype-builtins
-      return this.filters.hasOwnProperty('any') ? 'any' : 'all';
-    },
-
-    operatorTypes() {
-      return this.result.typeInformation.inputFields.filter(f => f.type.kind !== 'LIST' && !f.type.name.endsWith('RelationshipFilterInput'));
+      return 'any' in this.filters ? 'any' : 'all';
     },
   },
 
@@ -178,19 +184,23 @@ export default {
       this.filters[this.currentCombineType].push({});
     },
 
-    filterToFilterRow(filter) {
-      if (Object.keys(filter).length > 0 && Object.keys(Object.values(filter)[0]).length > 0) {
+    filterRowFromGraphQLFilter(filter) {
+      const filterField = this.availableFields.find(field => field.isMatch(filter));
+
+      if (filterField) {
         return {
-          field: Object.keys(Object.values(filter)[0])[0],
-          operator: Object.keys(filter)[0],
-          value: Object.values(Object.values(filter)[0])[0],
+          field: filterField,
+          operator: filterField.getOperatorFromFilter(filter),
+          value: filterField.getValueFromFilter(filter),
         };
       }
       else {
+        const field = this.availableFields[0];
+
         return {
-          field: null,
-          operator: null,
-          value: null,
+          field: field,
+          operator: 'eq',
+          value: '',
         };
       }
     },

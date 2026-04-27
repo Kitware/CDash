@@ -14,7 +14,7 @@ describe('DateTimeSelector', () => {
 
     cy.mount(DateTimeSelector, {
       props: {
-        modelValue: initialDate,
+        modelValue: initialDate.toISO({ suppressMilliseconds: true }),
       },
     });
 
@@ -35,9 +35,10 @@ describe('DateTimeSelector', () => {
   });
 
   it('updates the number of days when the month or year changes', () => {
+    const initialDate = DateTime.fromObject({ year: 2023, month: 11, day: 1 });
     cy.mount(DateTimeSelector, {
       props: {
-        modelValue: DateTime.fromObject({ year: 2023, month: 11, day: 1 }), // November
+        modelValue: initialDate.toISO({ suppressMilliseconds: true }),
       },
     });
 
@@ -53,7 +54,7 @@ describe('DateTimeSelector', () => {
     cy.get('select').eq(1).find('option').should('have.length', 29);
   });
 
-  it('emits an update:modelValue event with the correct Luxon object on change', () => {
+  it('emits an update:modelValue event with the correct ISO string on change', () => {
     const initialDate = DateTime.fromObject({
       year: 2025,
       month: 12,
@@ -67,9 +68,14 @@ describe('DateTimeSelector', () => {
 
     cy.mount(DateTimeSelector, {
       props: {
-        modelValue: initialDate,
+        modelValue: initialDate.toISO({ suppressMilliseconds: true }),
         'onUpdate:modelValue': onUpdateSpy,
       },
+    });
+
+    // Wait for initial emission (if any) and reset spy so we only catch the hour change
+    cy.get('@onUpdateSpy').then((spy) => {
+      spy.resetHistory();
     });
 
     // Change the hour
@@ -77,12 +83,13 @@ describe('DateTimeSelector', () => {
 
     // Check the emitted event
     cy.get('@onUpdateSpy').should((spy) => {
-      const newDate = spy.getCall(0).args[0];
-      expect(newDate).to.be.an.instanceOf(DateTime);
+      const lastCall = spy.lastCall;
+      const newDateISO = lastCall.args[0];
+      const newDate = DateTime.fromISO(newDateISO, { setZone: true });
+      expect(newDate.hour).to.equal(15);
       expect(newDate.year).to.equal(2025);
       expect(newDate.month).to.equal(12);
       expect(newDate.day).to.equal(29);
-      expect(newDate.hour).to.equal(15); // Check for the new value
       expect(newDate.minute).to.equal(30);
       expect(newDate.second).to.equal(45);
     });
@@ -99,9 +106,14 @@ describe('DateTimeSelector', () => {
 
     cy.mount(DateTimeSelector, {
       props: {
-        modelValue: initialDate,
+        modelValue: initialDate.toISO({ suppressMilliseconds: true }),
         'onUpdate:modelValue': onUpdateSpy,
       },
+    });
+
+    // Wait for initial emission (if any) and reset spy
+    cy.get('@onUpdateSpy').then((spy) => {
+      spy.resetHistory();
     });
 
     // Change the timezone
@@ -109,8 +121,9 @@ describe('DateTimeSelector', () => {
 
     // Check the emitted event
     cy.get('@onUpdateSpy').should((spy) => {
-      const newDate = spy.getCall(0).args[0];
-      expect(newDate).to.be.an.instanceOf(DateTime);
+      const lastCall = spy.lastCall;
+      const newDateISO = lastCall.args[0];
+      const newDate = DateTime.fromISO(newDateISO, { setZone: true });
       expect(newDate.offset / 60).to.equal(-8);
     });
   });
@@ -127,7 +140,7 @@ describe('DateTimeSelector', () => {
 
     cy.mount(DateTimeSelector, {
       props: {
-        modelValue: initialDate,
+        modelValue: initialDate.toISO({ suppressMilliseconds: true }),
       },
     });
 
@@ -149,9 +162,14 @@ describe('DateTimeSelector', () => {
 
     cy.mount(DateTimeSelector, {
       props: {
-        modelValue: initialDate,
+        modelValue: initialDate.toISO({ suppressMilliseconds: true }),
         'onUpdate:modelValue': onUpdateSpy,
       },
+    });
+
+    // Reset spy to ignore initial emission
+    cy.get('@onUpdateSpy').then((spy) => {
+      spy.resetHistory();
     });
 
     // Change to February
@@ -160,7 +178,9 @@ describe('DateTimeSelector', () => {
     // The day should be clamped to 28, and an event emitted.
     cy.get('select').eq(1).should('have.value', '28');
     cy.get('@onUpdateSpy').should((spy) => {
-      const newDate = spy.getCall(0).args[0];
+      const lastCall = spy.lastCall;
+      const newDateISO = lastCall.args[0];
+      const newDate = DateTime.fromISO(newDateISO, { setZone: true });
       expect(newDate.day).to.equal(28);
       expect(newDate.month).to.equal(2);
     });
@@ -172,9 +192,14 @@ describe('DateTimeSelector', () => {
 
     cy.mount(DateTimeSelector, {
       props: {
-        modelValue: initialDate,
+        modelValue: initialDate.toISO({ suppressMilliseconds: true }),
         'onUpdate:modelValue': onUpdateSpy,
       },
+    });
+
+    // Reset spy to ignore initial emission
+    cy.get('@onUpdateSpy').then((spy) => {
+      spy.resetHistory();
     });
 
     // Change to February
@@ -183,7 +208,9 @@ describe('DateTimeSelector', () => {
     // The day should be clamped to 29
     cy.get('select').eq(1).should('have.value', '29');
     cy.get('@onUpdateSpy').should((spy) => {
-      const newDate = spy.getCall(0).args[0];
+      const lastCall = spy.lastCall;
+      const newDateISO = lastCall.args[0];
+      const newDate = DateTime.fromISO(newDateISO, { setZone: true });
       expect(newDate.day).to.equal(29);
       expect(newDate.month).to.equal(2);
     });

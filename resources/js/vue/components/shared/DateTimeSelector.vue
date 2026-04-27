@@ -96,20 +96,25 @@ export default {
   name: 'DateTimeSelector',
   props: {
     modelValue: {
-      type: Object,
-      default: () => DateTime.now().toUTC(),
+      type: String,
+      default: '',
     },
   },
   emits: ['update:modelValue'],
   data() {
+    let dt = DateTime.fromISO(this.modelValue, { setZone: true });
+    if (!dt.isValid) {
+      dt = DateTime.now().toUTC();
+    }
     return {
-      year: this.modelValue.year,
-      month: this.modelValue.month,
-      day: this.modelValue.day,
-      hour: this.modelValue.hour,
-      minute: this.modelValue.minute,
-      second: this.modelValue.second,
-      timezone: this.getOffsetString(this.modelValue.offset / 60),
+      year: dt.year,
+      month: dt.month,
+      day: dt.day,
+      hour: dt.hour,
+      minute: dt.minute,
+      second: dt.second,
+      timezone: this.getOffsetString(dt.offset / 60),
+      lastEmittedValue: this.modelValue,
     };
   },
   computed: {
@@ -172,14 +177,29 @@ export default {
     second: 'updateDateTime',
     timezone: 'updateDateTime',
     modelValue(newValue) {
-      this.year = newValue.year;
-      this.month = newValue.month;
-      this.day = newValue.day;
-      this.hour = newValue.hour;
-      this.minute = newValue.minute;
-      this.second = newValue.second;
-      this.timezone = this.getOffsetString(newValue.offset / 60);
+      if (newValue === this.lastEmittedValue) {
+        return;
+      }
+      let dt = DateTime.fromISO(newValue, { setZone: true });
+      const isValid = dt.isValid;
+      if (!isValid) {
+        dt = DateTime.now().toUTC();
+      }
+      this.year = dt.year;
+      this.month = dt.month;
+      this.day = dt.day;
+      this.hour = dt.hour;
+      this.minute = dt.minute;
+      this.second = dt.second;
+      this.timezone = this.getOffsetString(dt.offset / 60);
+
+      if (isValid) {
+        this.lastEmittedValue = dt.toISO({ suppressMilliseconds: true });
+      }
     },
+  },
+  mounted() {
+    this.updateDateTime();
   },
   methods: {
     getOffsetString(offsetHours) {
@@ -202,7 +222,11 @@ export default {
         { zone: this.timezone },
       );
       if (newDateTime.isValid) {
-        this.$emit('update:modelValue', newDateTime);
+        const isoString = newDateTime.toISO({ suppressMilliseconds: true });
+        if (isoString !== this.lastEmittedValue) {
+          this.lastEmittedValue = isoString;
+          this.$emit('update:modelValue', isoString);
+        }
       }
     },
   },
