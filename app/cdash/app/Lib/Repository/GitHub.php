@@ -225,7 +225,7 @@ class GitHub implements RepositoryInterface
     {
         $stmt = $this->db->prepare('
             SELECT b.id, b.name, b.builderrors, b.configureerrors, b.testfailed,
-                   b.done, b.starttime, bp.properties
+                   b.done, b.starttime, b.endtime, bp.properties
             FROM build b
             JOIN buildupdate bu ON bu.id = b.updateid
             LEFT JOIN buildproperties bp ON bp.buildid = b.id
@@ -446,6 +446,18 @@ class GitHub implements RepositoryInterface
                 $icon = ':white_check_mark:';
                 $msg = 'success';
                 $this->numPassed++;
+            } elseif ($this->isBuildStale($row)) {
+                // CDash never received a Done.xml for this build, but
+                // enough time has elapsed since it started/ended that we
+                // assume the submitter crashed before its final
+                // ctest_submit(PARTS Done) call. Treat the build as
+                // complete for check-run purposes so the GitHub PR is
+                // not blocked indefinitely. The web UI still shows
+                // done=0 so a maintainer can investigate the missing
+                // submission.
+                $icon = ':white_check_mark:';
+                $msg = 'success (stale: no Done.xml)';
+                $this->numPassed++;
             } else {
                 // Build hasn't finished reporting yet.
                 $icon = ':hourglass_flowing_sand:';
@@ -460,6 +472,50 @@ class GitHub implements RepositoryInterface
         }
         $build_summary = "[$build_name]($build_url) | $icon | [$msg]($details_url)";
         return $build_summary;
+    }
+
+    /**
+     * Watchdog: decide whether a build with done=0 has nonetheless been
+     * idle long enough that the GitHub check-run should be finalized.
+     *
+     * A misbehaving CTest submitter can leave a build in done=0 forever
+     * (e.g., the dashboard wrapper crashes after submitting Test.xml
+     * but before submitting Done.xml). Without a watchdog, the
+     * resulting GitHub check-run stays in_progress indefinitely and
+     * blocks merge for projects that gate on the `CDash` check.
+     *
+     * The threshold is configurable via cdash.github_check_stale_minutes
+     * (default: 240 minutes). Setting it to 0 disables the watchdog.
+     *
+     * @param array<string, int|string> $row
+     */
+    public function isBuildStale(array $row): bool
+    {
+        $threshold_minutes = (int) config('cdash.github_check_stale_minutes', 240);
+        if ($threshold_minutes <= 0) {
+            return false;
+        }
+
+        // Prefer endtime when CTest reported a build end (the most
+        // common stuck-in_progress shape: build ran to completion but
+        // Done.xml never arrived). Fall back to starttime when endtime
+        // is empty.
+        $reference = '';
+        if (!empty($row['endtime']) && (string) $row['endtime'] !== '1980-01-01 00:00:00') {
+            $reference = (string) $row['endtime'];
+        } elseif (!empty($row['starttime']) && (string) $row['starttime'] !== '1980-01-01 00:00:00') {
+            $reference = (string) $row['starttime'];
+        }
+        if ($reference === '') {
+            return false;
+        }
+
+        $reference_ts = strtotime($reference);
+        if ($reference_ts === false) {
+            return false;
+        }
+
+        return (time() - $reference_ts) >= ($threshold_minutes * 60);
     }
 
     /**

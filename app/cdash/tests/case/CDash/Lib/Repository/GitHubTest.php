@@ -18,6 +18,7 @@
 use App\Utils\RepositoryUtils;
 use CDash\Lib\Repository\GitHub;
 use CDash\Model\Project;
+use DateTime;
 use Github\Api\Apps;
 use Github\Api\Repo;
 use Github\Api\Repository\Statuses;
@@ -145,6 +146,57 @@ class GitHubTest extends TestCase
         $actual = $sut->getCheckSummaryForBuildRow($build_row);
         $expected = $common . ":white_check_mark: | [success]($summary_url)";
         $this::assertEquals($expected, $actual);
+    }
+
+    public function testStaleBuildIsTreatedAsSuccess(): void
+    {
+        // Regression test for the stuck-`in_progress` GitHub check-run
+        // bug: a build with done=0 whose reference timestamp is older
+        // than cdash.github_check_stale_minutes must be reported as
+        // completed-success so the merge gate is unblocked.
+        $this->project->expects($this::once())
+            ->method('GetRepositories')
+            ->willReturn([]);
+        $sut = new GitHub($this->project);
+
+        $summary_url = "$this->baseUrl/builds/99999";
+        $common = "[my build]($summary_url) | ";
+
+        // 4 hour 5 minute window: longer than the default 240-minute
+        // threshold, comfortably outside any plausible real CI run.
+        $stale_endtime = (new DateTime('-245 minutes'))->format('Y-m-d H:i:s');
+        $build_row = [
+            'name' => 'my build',
+            'id' => 99999,
+            'properties' => '',
+            'configureerrors' => 0,
+            'builderrors' => 0,
+            'testfailed' => 0,
+            'done' => 0,
+            'starttime' => $stale_endtime,
+            'endtime' => $stale_endtime,
+        ];
+        $actual = $sut->getCheckSummaryForBuildRow($build_row);
+        $expected = $common . ":white_check_mark: | [success (stale: no Done.xml)]($summary_url)";
+        $this::assertEquals($expected, $actual);
+
+        // A fresh build with done=0 must remain pending (default 240 min).
+        $fresh_endtime = (new DateTime('-1 minute'))->format('Y-m-d H:i:s');
+        $build_row['starttime'] = $fresh_endtime;
+        $build_row['endtime'] = $fresh_endtime;
+        $actual = $sut->getCheckSummaryForBuildRow($build_row);
+        $expected = $common . ":hourglass_flowing_sand: | [pending]($summary_url)";
+        $this::assertEquals($expected, $actual);
+
+        // Setting cdash.github_check_stale_minutes=0 disables the
+        // watchdog and restores the legacy behaviour.
+        config(['cdash.github_check_stale_minutes' => 0]);
+        $build_row['starttime'] = $stale_endtime;
+        $build_row['endtime'] = $stale_endtime;
+        $actual = $sut->getCheckSummaryForBuildRow($build_row);
+        $expected = $common . ":hourglass_flowing_sand: | [pending]($summary_url)";
+        $this::assertEquals($expected, $actual);
+        config(['cdash.github_check_stale_minutes' => 240]);
     }
 
     /**
