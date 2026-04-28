@@ -56,18 +56,25 @@ final class FilterDirective extends BaseDirective implements ArgBuilderDirective
         $defaultFilterType = $returnType . 'FilterInput';
         $filterName = $this->directiveArgValue('inputType', $defaultFilterType);
 
+        $subFilterableFields = $this->getSubFilterableFieldsForType($documentAST, $argDefinition, $parentType);
+        foreach ($subFilterableFields as $subMultiFilterName) {
+            $subTypeName = Str::before($subMultiFilterName, 'MultiFilterInput');
+            $this->ensureFilterInputTypes($documentAST, $subTypeName, $argDefinition);
+        }
+
         if (
-            $this->getSubFilterableFieldsForType($argDefinition, $parentType) === []
+            $subFilterableFields === []
             || (
                 !($parentField->type instanceof ListTypeNode)
                 && Str::doesntEndWith(ASTHelper::getUnderlyingTypeName($parentField), 'Connection')
             )
-            || $this->getSubFilterableFieldsForType($argDefinition, $documentAST->types[$returnType]) === []
+            || !isset($documentAST->types[$returnType])
+            || $this->getSubFilterableFieldsForType($documentAST, $argDefinition, $documentAST->types[$returnType]) === []
         ) {
             // Don't create a relationship filter input type because this type has no relationships
             $documentAST->setTypeDefinition($this->createMultiFilterInput($multiFilterName, $filterName, null));
         } else {
-            $relatedFieldRelationshipFilterName = Str::replaceEnd('Connection', '', $parentField->type->type->name->value) . 'RelationshipFilterInput';
+            $relatedFieldRelationshipFilterName = Str::replaceEnd('Connection', '', ASTHelper::getUnderlyingTypeName($parentField)) . 'RelationshipFilterInput';
             $documentAST->setTypeDefinition($this->createMultiFilterInput($multiFilterName, $filterName, $relatedFieldRelationshipFilterName));
         }
 
@@ -76,12 +83,12 @@ final class FilterDirective extends BaseDirective implements ArgBuilderDirective
         $relationshipFilterName = $parentType->name->value . 'RelationshipFilterInput';
         if (
             !array_key_exists($relationshipFilterName, $documentAST->types)
-            && $this->getSubFilterableFieldsForType($argDefinition, $parentType) !== []
+            && $subFilterableFields !== []
         ) {
             $documentAST->setTypeDefinition(
                 $this->createRelationshipFilterInput(
                     $relationshipFilterName,
-                    $this->getSubFilterableFieldsForType($argDefinition, $parentType)
+                    $subFilterableFields
                 )
             );
         }
@@ -243,20 +250,102 @@ final class FilterDirective extends BaseDirective implements ArgBuilderDirective
      *
      * @return array<string,string> A mapping of field names to their respective ...MultiFilterInput types
      */
-    private function getSubFilterableFieldsForType(InputValueDefinitionNode $argDefinition, ObjectTypeDefinitionNode|InterfaceTypeDefinitionNode $type): array
+    private function getSubFilterableFieldsForType(DocumentAST $documentAST, InputValueDefinitionNode $argDefinition, ObjectTypeDefinitionNode|InterfaceTypeDefinitionNode $type): array
     {
         $subFilterableFieldNames = [];
         foreach ($type->fields as $field) {
+            // Check for hasMany/Connection style relationships with @filter argument
+            $hasFilterArg = false;
             foreach ($field->arguments as $argument) {
-                if (
-                    ASTHelper::hasDirective($argument, 'filter')
-                    && Str::endsWith(ASTHelper::getUnderlyingTypeName($field), 'Connection')
-                ) {
-                    $subFilterableFieldNames[(string) $field->name->value] = ASTHelper::qualifiedArgType($argDefinition, $field, $type) . 'MultiFilterInput';
+                if (ASTHelper::hasDirective($argument, 'filter')) {
+                    $hasFilterArg = true;
                     break;
+                }
+            }
+
+            if (
+                $hasFilterArg
+                && Str::endsWith(ASTHelper::getUnderlyingTypeName($field), 'Connection')
+            ) {
+                $subFilterableFieldNames[(string) $field->name->value] = ASTHelper::qualifiedArgType($argDefinition, $field, $type) . 'MultiFilterInput';
+                continue;
+            }
+
+            // Check for single-record relationships
+            if (
+                ASTHelper::hasDirective($field, 'belongsTo')
+                || ASTHelper::hasDirective($field, 'hasOne')
+                || ASTHelper::hasDirective($field, 'hasOneThrough')
+                || ASTHelper::hasDirective($field, 'morphOne')
+                || ASTHelper::hasDirective($field, 'morphTo')
+            ) {
+                $typeName = ASTHelper::getUnderlyingTypeName($field);
+                if ($this->isTypeFilterable($documentAST, $typeName)) {
+                    $subFilterableFieldNames[(string) $field->name->value] = $typeName . 'MultiFilterInput';
                 }
             }
         }
         return $subFilterableFieldNames;
+    }
+
+    private function ensureFilterInputTypes(DocumentAST &$documentAST, string $typeName, InputValueDefinitionNode $argDefinition): void
+    {
+        $multiFilterName = $typeName . 'MultiFilterInput';
+        if (array_key_exists($multiFilterName, $documentAST->types)) {
+            return;
+        }
+
+        $type = $documentAST->types[$typeName] ?? null;
+        if (!$type || (!$type instanceof ObjectTypeDefinitionNode && !$type instanceof InterfaceTypeDefinitionNode)) {
+            return;
+        }
+
+        // Avoid infinite recursion by setting a placeholder
+        $documentAST->types[$multiFilterName] = null;
+
+        $subFilterableFields = $this->getSubFilterableFieldsForType($documentAST, $argDefinition, $type);
+
+        $relationshipFilterName = null;
+        if ($subFilterableFields !== []) {
+            $relationshipFilterName = $typeName . 'RelationshipFilterInput';
+            if (!array_key_exists($relationshipFilterName, $documentAST->types)) {
+                // Ensure related types exist
+                foreach ($subFilterableFields as $subMultiFilterName) {
+                    $subTypeName = Str::before($subMultiFilterName, 'MultiFilterInput');
+                    $this->ensureFilterInputTypes($documentAST, $subTypeName, $argDefinition);
+                }
+
+                $documentAST->setTypeDefinition($this->createRelationshipFilterInput($relationshipFilterName, $subFilterableFields));
+            }
+        }
+
+        $filterName = $typeName . 'FilterInput';
+        $documentAST->setTypeDefinition($this->createMultiFilterInput($multiFilterName, $filterName, $relationshipFilterName));
+    }
+
+    private function isTypeFilterable(DocumentAST $documentAST, string $typeName): bool
+    {
+        if (!isset($documentAST->types[$typeName])) {
+            return false;
+        }
+
+        $type = $documentAST->types[$typeName];
+        if (!$type instanceof ObjectTypeDefinitionNode && !$type instanceof InterfaceTypeDefinitionNode) {
+            return false;
+        }
+
+        foreach ($type->fields as $field) {
+            if (ASTHelper::hasDirective($field, 'filterable')) {
+                return true;
+            }
+            // Also check for arguments with @filter
+            foreach ($field->arguments as $argument) {
+                if (ASTHelper::hasDirective($argument, 'filter')) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

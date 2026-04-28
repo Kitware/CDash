@@ -1127,4 +1127,60 @@ class FilterTest extends TestCase
             ],
         ]);
     }
+
+    public function testFilterByBelongsToRelationship(): void
+    {
+        $site1 = $this->makeSite(['name' => 'site1']);
+        $build1 = $this->projects['public1']->builds()->create([
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+            'siteid' => $site1->id,
+        ]);
+
+        $site2 = $this->makeSite(['name' => 'site2']);
+        $build2 = $this->projects['public1']->builds()->create([
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+            'siteid' => $site2->id,
+        ]);
+
+        $this->actingAs($this->users['admin'])->graphQL('
+            query($sitename: String!, $projectId: ID!) {
+                project(id: $projectId) {
+                    builds(filters: {
+                        has: {
+                            site: {
+                                eq: {
+                                    name: $sitename
+                                }
+                            }
+                        }
+                    }) {
+                        edges {
+                            node {
+                                name
+                            }
+                        }
+                    }
+                }
+            }
+        ', [
+            'projectId' => $this->projects['public1']->id,
+            'sitename' => $site1->name,
+        ])->assertExactJson([
+            'data' => [
+                'project' => [
+                    'builds' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'name' => $build1->name,
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+    }
 }
