@@ -39,7 +39,6 @@ use Illuminate\Support\Facades\Auth;
  * @property int $emailmaxchars
  * @property bool $displaylabels
  * @property int $autoremovetimeframe
- * @property int $autoremovemaxbuilds
  * @property int $uploadquota Maximum sum of uploaded file sizes (in bytes)
  * @property int $uploadquotagb Maximum sum of uploaded file sizes (in GiB)
  * @property bool $showcoveragecode
@@ -88,7 +87,6 @@ class Project extends Model
         'emailmaxchars',
         'displaylabels',
         'autoremovetimeframe',
-        'autoremovemaxbuilds',
         'uploadquota',
         'uploadquotagb',
         'showcoveragecode',

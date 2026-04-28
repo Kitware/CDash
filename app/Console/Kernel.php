@@ -36,12 +36,8 @@ class Kernel extends ConsoleKernel
             ->hourly()
             ->withoutOverlapping();
 
-        // TODO: This currently runs daily because the autoremovemaxbuilds project setting specifies
-        // the maximum number of builds to be removed per day.  In the future, we should evaluate
-        // whether this setting is meaningful.  Ideally, this job would run more frequently--perhaps
-        // hourly.
         $schedule->job(new PruneBuilds())
-            ->daily()
+            ->hourly()
             ->withoutOverlapping();
 
         $schedule->job(new PruneEmails())

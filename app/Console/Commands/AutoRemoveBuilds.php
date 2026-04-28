@@ -43,7 +43,7 @@ class AutoRemoveBuilds extends Command
 
         $projectname = $this->argument('project');
         $db = new Database();
-        $sql = 'SELECT id, autoremovetimeframe, autoremovemaxbuilds
+        $sql = 'SELECT id, autoremovetimeframe
                 FROM project';
         $args = [];
         if ($projectname !== 'all') {
@@ -69,12 +69,11 @@ class AutoRemoveBuilds extends Command
                 DatabaseCleanupUtils::removeFirstBuilds(
                     $project_array['id'],
                     $project_array['autoremovetimeframe'],
-                    (int) $project_array['autoremovemaxbuilds'],
+                    -1,
                     true // force the autoremove
                 );
                 DatabaseCleanupUtils::removeBuildsGroupwise(
                     (int) $project_array['id'],
-                    (int) $project_array['autoremovemaxbuilds'],
                     true // force the autoremove
                 );
             }

@@ -162,7 +162,6 @@ class ProjectTypeTest extends TestCase
             ['emailmaxchars', 10, 'emailMaxCharacters', 10],
             ['displaylabels', true, 'displayLabels', true],
             ['displaylabels', false, 'displayLabels', false],
-            ['autoremovemaxbuilds', 10, 'autoRemoveMaxBuilds', 10],
             ['uploadquota', 10737418240, 'fileUploadLimit', 10],
             ['showcoveragecode', true, 'showCoverageCode', true],
             ['showcoveragecode', false, 'showCoverageCode', false],

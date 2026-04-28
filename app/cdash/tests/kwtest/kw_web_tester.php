@@ -419,7 +419,6 @@ class KWWebTestCase extends WebTestCase
             }
             // Specify some default settings.
             $settings = [
-                'AutoremoveMaxBuilds' => 500,
                 'AutoremoveTimeframe' => 60,
                 'CoverageThreshold' => 70,
                 'CvsViewerType' => 'github',

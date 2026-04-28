@@ -170,15 +170,6 @@
         />
 
         <InputField
-          v-model="form.autoRemoveMaxBuilds"
-          :validation-error="validationErrors?.autoRemoveMaxBuilds?.[0]"
-          label="Maximum Builds Removed Per Day"
-          type="number"
-          min="0"
-          test-id="autoremove-max-builds-input"
-        />
-
-        <InputField
           v-model="form.fileUploadLimit"
           :validation-error="validationErrors?.fileUploadLimit?.[0]"
           label="File Upload Limit (GB)"
@@ -539,7 +530,6 @@ export default {
         emailMaxCharacters: 255,
         displayLabels: true,
         autoRemoveTimeFrame: 0,
-        autoRemoveMaxBuilds: 500,
         fileUploadLimit: 50,
         showCoverageCode: true,
         shareLabelFilters: false,
@@ -584,7 +574,6 @@ export default {
             emailMaxCharacters
             displayLabels
             autoRemoveTimeFrame
-            autoRemoveMaxBuilds
             fileUploadLimit
             showCoverageCode
             shareLabelFilters

@@ -124,7 +124,6 @@ class ProjectSettingsPageTest extends BrowserTestCase
             ['@display-labels-input', false, 'displaylabels', false, 'checkbox'],
             ['@nightly-time-input', '23:01:01', 'nightlytime', '23:01:01', 'string'],
             ['@autoremove-time-frame-input', 7, 'autoremovetimeframe', 7, 'string'],
-            ['@autoremove-max-builds-input', 100, 'autoremovemaxbuilds', 100, 'string'],
             ['@file-upload-limit-input', 100, 'uploadquota', 107374182400, 'string'],
             ['@home-url-input', $homeurl, 'homeurl', $homeurl, 'string'],
             ['@home-url-input', '', 'homeurl', null, 'string'],
