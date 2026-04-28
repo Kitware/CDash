@@ -16,7 +16,7 @@
         />
 
         <loading-indicator :is-loading="!allCommands">
-          <CommandGanttChart :commands="formattedChartCommands" />
+          <CommandFlameChart :commands="formattedChartCommands" />
         </loading-indicator>
       </div>
 
@@ -46,14 +46,14 @@ import LoadingIndicator from './shared/LoadingIndicator.vue';
 import BuildSidebar from './shared/BuildSidebar.vue';
 import gql from 'graphql-tag';
 import FilterBuilder from './shared/FilterBuilder.vue';
-import CommandGanttChart from './shared/CommandGanttChart.vue';
+import CommandFlameChart from './shared/CommandFlameChart.vue';
 import { DateTime, Duration } from 'luxon';
-import LineChart from './shared/LineChart.vue';
+import LineChart from './shared/Charts/LineChart.vue';
 
 export default {
   components: {
     LineChart,
-    CommandGanttChart,
+    CommandFlameChart,
     FilterBuilder,
     LoadingIndicator,
     BuildSummaryCard,

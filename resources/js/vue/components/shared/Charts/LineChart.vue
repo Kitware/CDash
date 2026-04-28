@@ -7,8 +7,24 @@
 </template>
 
 <script>
+import { use } from 'echarts/core';
+import { CanvasRenderer } from 'echarts/renderers';
+import { LineChart } from 'echarts/charts';
+import {
+  GridComponent,
+  TooltipComponent,
+  DataZoomComponent,
+} from 'echarts/components';
 import VChart from 'vue-echarts';
-import Utils from './Utils';
+import Utils from '../Utils';
+
+use([
+  CanvasRenderer,
+  LineChart,
+  GridComponent,
+  TooltipComponent,
+  DataZoomComponent,
+]);
 
 export default {
   name: 'LineChart',
