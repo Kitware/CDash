@@ -30,58 +30,42 @@
       </span>
     </div>
     <div class="text-center">
-      <img
-        v-if="graphLoading"
-        :src="$baseURL + '/img/loading.gif'"
-      >
-      <div
-        id="chart_placeholder"
-        data-cy="svg-wrapper"
-      />
-    </div>
-    <!-- Tooltip -->
-    <div
-      id="toolTip"
-      class="tooltip"
-      data-cy="tooltip"
-    >
-      <div
-        id="header1"
-        class="header"
-        data-cy="tooltip-name-header"
-      >
-        Name: {{ nodeHeader }}
-      </div>
-      <div
-        v-if="dependsList"
-        id="dependency"
-        class="dependency"
-      >
-        Depends: {{ dependsList }}
-      </div>
-      <div
-        v-if="dependentsList"
-        id="dependents"
-        class="dependents"
-      >
-        Dependents: {{ dependentsList }}
-      </div>
-      <div
-        id="tooltip-tail"
-        class="tooltipTail"
-      />
+      <loading-indicator :is-loading="graphLoading">
+        <v-chart
+          id="chart_placeholder"
+          :option="chartOption"
+          autoresize
+          class="chart-container"
+          @mouseover="onMouseOver"
+          @mouseout="onMouseOut"
+        />
+      </loading-indicator>
     </div>
   </section>
 </template>
 
 <script>
-import $ from 'jquery';
 import ApiLoader from './shared/ApiLoader';
-import DependencyEdgeBundling from './shared/DependencyEdgeBundling.js';
-import d3 from 'd3';
+import LoadingIndicator from './shared/LoadingIndicator.vue';
+import VChart from 'vue-echarts';
+import * as echarts from 'echarts/core';
+import { CanvasRenderer } from 'echarts/renderers';
+import { GraphChart } from 'echarts/charts';
+import { LegendComponent } from 'echarts/components';
+
+echarts.use([
+  CanvasRenderer,
+  GraphChart,
+  LegendComponent,
+]);
 
 export default {
   name: 'SubProjectDependencies',
+
+  components: {
+    VChart,
+    LoadingIndicator,
+  },
 
   props: {
     projectName: {
@@ -102,10 +86,8 @@ export default {
       errored: false,
       depData: {},
       graphLoading: true,
-      chart: {},
-      nodeHeader: false,
-      dependsList: false,
-      dependentsList: false,
+      chartOption: {},
+      hoveredNodeName: null,
     };
   },
 
@@ -116,211 +98,229 @@ export default {
   methods: {
     postSetup(response) {
       this.depData = response.data.dependencies;
-      this.chart = DependencyEdgeBundling.initChart();
-      this.plot_subdependencies();
+      this.apply_sorting({ target: { value: 0 } });
+      this.graphLoading = false;
     },
 
-    plot_subdependencies() {
-
-      const vm = this;
-      vm.chart.mouseOvered(mouseOvered).mouseOuted(mouseOuted);
-
-      function mouseOvered(d) {
-        let header1Text = d.key;
-        if (d.group !== undefined) {
-          header1Text += `, Group: ${d.group}`;
+    onMouseOver(params) {
+      if (params.dataType === 'node') {
+        const d = params.data;
+        if (this.hoveredNodeName === d.name) {
+          return;
         }
-        vm.nodeHeader = header1Text;
-        if (d.depends.length > 0) {
-          vm.dependsList = d.depends.join(', ');
-        }
-        let dependents = '';
-        d3.selectAll('.node--source').each((p) => {
-          if (p.key) {
-            dependents += `${p.key}, `;
-          }
-        });
+        this.hoveredNodeName = d.name;
 
-        if (dependents) {
-          vm.dependentsList = dependents.substring(0,dependents.length-2);
-        }
-        d3.select('#toolTip').style('left', `${d3.event.pageX + 40}px`)
-          .style('top', `${d3.event.pageY + 5}px`)
-          .style('opacity', '.9');
+        this.highlightLinks(d.name);
       }
-
-      function mouseOuted() {
-        $('#header1').text('');
-        vm.nameHeader = false;
-        vm.dependentsList = false;
-        vm.dependsList = false;
-        d3.select('#toolTip').style('opacity', '0');
-      }
-
-      vm.apply_sorting({ target: { value: 0 } }); // load the graph for the first time
     },
 
-    // replot the graph after change (or on initial load)
-    resetDepView() {
-      const vm = this;
-      vm.graphLoading = true;
-      d3.select('#chart_placeholder svg').remove();
-      d3.select('#chart_placeholder')
-        .datum(vm.depData)
-        .call(vm.chart);
-      vm.graphLoading = false;
+    onMouseOut() {
+      if (!this.hoveredNodeName) {
+        return;
+      }
+      this.hoveredNodeName = null;
+      this.chartOption = this.getChartOption(this.depData);
+    },
+
+    highlightLinks(nodeName) {
+      const newOption = this.getChartOption(this.depData);
+      const series = newOption.series[0];
+      const links = series.links;
+      const nodes = series.data;
+
+      const sourceNodeNames = new Set();
+      const targetNodeNames = new Set();
+
+      links.forEach((link) => {
+        if (link.source === nodeName) {
+          // Outgoing - Red
+          link.lineStyle = {
+            color: '#d62728',
+            opacity: 1,
+            width: 4,
+          };
+          targetNodeNames.add(link.target);
+        }
+        else if (link.target === nodeName) {
+          // Incoming - Green
+          link.lineStyle = {
+            color: '#2ca02c',
+            opacity: 1,
+            width: 4,
+          };
+          sourceNodeNames.add(link.source);
+        }
+        else {
+          link.lineStyle = {
+            color: '#ccc',
+            opacity: 0.05,
+          };
+        }
+      });
+
+      nodes.forEach((node) => {
+        if (node.name === nodeName) {
+          node.itemStyle = {
+            opacity: 1,
+          };
+          node.label = {
+            fontWeight: 'bold',
+            color: '#000',
+          };
+        }
+        else if (sourceNodeNames.has(node.name)) {
+          // Dependent (Incoming source)
+          node.itemStyle = {
+            color: '#2ca02c',
+            opacity: 1,
+          };
+          node.label = {
+            fontWeight: 'bold',
+            color: '#000',
+          };
+        }
+        else if (targetNodeNames.has(node.name)) {
+          // Dependency (Outgoing target)
+          node.itemStyle = {
+            color: '#d62728',
+            opacity: 1,
+          };
+          node.label = {
+            fontWeight: 'bold',
+            color: '#000',
+          };
+        }
+        else {
+          node.itemStyle = {
+            opacity: 0.1,
+          };
+          node.label = {
+            color: '#ccc',
+          };
+        }
+      });
+      this.chartOption = newOption;
     },
 
     // event listener to resort graph according to selection field
     apply_sorting(e) {
-      const vm = this;
       const selected = e.target.value;
       if (parseInt(selected) === 1) {
-        vm.depData.sort(sort_by_id);
+        this.depData.sort(this.sort_by_id);
       }
       else if (parseInt(selected) === 0) {
-        vm.depData.sort(sort_by_name);
+        this.depData.sort(this.sort_by_name);
       }
-      vm.resetDepView();
+      this.chartOption = this.getChartOption(this.depData);
+    },
 
-      function sort_by_name (a, b) {
-        if (a.name < b.name) {
-          return -1;
+    getChartOption(data) {
+      const nodes = [];
+      const links = [];
+      const categories = [];
+      const categoryMap = {};
+
+      // Grouping logic
+      data.forEach(item => {
+        if (item.group && !categoryMap[item.group]) {
+          categoryMap[item.group] = categories.length;
+          categories.push({ name: item.group });
         }
-        if (a.name > b.name) {
-          return 1;
+      });
+
+      data.forEach(item => {
+        nodes.push({
+          name: item.name,
+          category: item.group ? categoryMap[item.group] : undefined,
+          value: item.name,
+        });
+      });
+
+      data.forEach(item => {
+        if (item.depends) {
+          item.depends.forEach(dep => {
+            links.push({
+              source: item.name,
+              target: dep,
+            });
+          });
         }
-        return 0;
+      });
+
+      return {
+        series: [
+          {
+            type: 'graph',
+            layout: 'circular',
+            circular: {
+              rotateLabel: true,
+            },
+            data: nodes,
+            links: links,
+            categories: categories,
+            roam: false,
+            zoom: 1,
+            label: {
+              show: true,
+              position: 'right',
+              formatter: '{b}',
+              fontSize: 13,
+              color: '#888',
+            },
+            itemStyle: {
+              opacity: 0.8,
+            },
+            lineStyle: {
+              curveness: 0.3,
+              opacity: 0.3,
+              color: '#ccc',
+            },
+            edgeSymbol: ['none', 'arrow'],
+            edgeSymbolSize: [0, 8],
+            emphasis: {
+              focus: 'none',
+              scale: false,
+              label: {
+                fontWeight: 'bold',
+                color: '#000',
+              },
+              lineStyle: {
+                width: 3,
+                opacity: 1,
+              },
+            },
+          },
+        ],
+      };
+    },
+
+    sort_by_name(a, b) {
+      if (a.name < b.name) {
+        return -1;
       }
-
-      function sort_by_id (a, b) {
-        if (a.id < b.id) {
-          return -1;
-        }
-        if (a.id > b.id) {
-          return 1;
-        }
-        return 0;
+      if (a.name > b.name) {
+        return 1;
       }
+      return 0;
+    },
 
+    sort_by_id(a, b) {
+      if (a.id < b.id) {
+        return -1;
+      }
+      if (a.id > b.id) {
+        return 1;
+      }
+      return 0;
     },
   },
 };
 </script>
 
-<style>
-/* these can't be under a scoped style tag because they
-   target elements generated by d3 that Vue doesn't track */
-.node {
-  font-weight: 400;
-  font-size: 13px;
-  fill: #888;
-  opacity: 0.8;
-}
-
-.node:hover {
-  fill: #000;
-  cursor: hand;
-  cursor: pointer;
-}
-
-.link {
-  stroke: steelblue;
-  stroke-opacity: .4;
-  fill: none;
-  pointer-events: none;
-  opacity: 0.4;
-}
-
-.node:hover,
-.node--source,
-.node--target {
-  fill: #000;
-  font-weight: 700;
-  opacity: 1;
-}
-
-.node--source {
-  fill: #2ca02c;
-}
-
-.node--target {
-  fill: #d62728;
-}
-
-.link--source,
-.link--target {
-  stroke-opacity: 1;
-  stroke-width: 2px;
-  opacity: 1;
-}
-
-.link--source {
-  stroke: #d62728;
-}
-
-.link--target {
-  stroke: #2ca02c;
-}
-</style>
-
 <style scoped>
-div.tooltip {
-  text-align: left;
-  pointer-events: none; /* 'none' tells the mouse to ignore the rectangle */
-  font-family: arial,helvetica,sans-serif;
-  position: absolute;
-  font-size: 1.1em;
-  padding: 10px;
-  border-radius: 3px;
-  background: rgba(255,255,255,0.9);
-  color: #000;
-  box-shadow: 0 1px 5px rgba(0,0,0,0.4);
-  border: 1px solid rgba(200,200,200,0.85);
-  z-index: 10000;
-  opacity: 0;
-}
-
-div.tooltipTail {
-  position: absolute;
-  left: -7px;
-  top: 12px;
-  width: 7px;
-  height: 13px;
-  background: url("/img/tail_white.png") 50% 0%;
-}
-
-div.toolTipBody {
-  position: absolute;
-  height: 100px;
-  width: 230px;
-}
-
-#toolTip .header {
-  text-align: left;
-  font-size: 14px;
-  margin-bottom: 2px;
-  color: #000;
-  font-weight: 700;
-}
-
-div.dependency {
-  color: #d62728;
-}
-
-div.dependents {
-  color: #2ca02c;
-}
-
-p.dependency-list {
-  opacity: 0;
-}
-
-div.header1{
-  text-align: left;
-  font-size: 12px;
-  margin-bottom: 2px;
-  color: black;
+.chart-container {
+  height: 800px;
+  width: 100%;
 }
 
 span.hint {

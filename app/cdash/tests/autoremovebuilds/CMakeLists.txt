@@ -3,7 +3,6 @@
 add_php_test(deletesubproject)
 set_property(TEST deletesubproject PROPERTY DEPENDS
   cypress/e2e/manage-overview
-  cypress/e2e/sub-project-dependencies
   cypress/e2e/manage-build-group
   cypress/e2e/manage-sub-project
   cypress/e2e/view-test

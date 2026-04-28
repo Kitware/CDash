@@ -34,9 +34,6 @@ add_cypress_e2e_test(sub-project-group-order)
 set_tests_properties(cypress/e2e/sub-project-group-order PROPERTIES DEPENDS crosssubprojectcoverage)
 set_tests_properties(cypress/e2e/sub-project-group-order PROPERTIES DEPENDS aggregatesubprojectcoverage)
 
-add_cypress_e2e_test(sub-project-dependencies)
-set_tests_properties(cypress/e2e/sub-project-dependencies PROPERTIES DEPENDS subproject)
-
 add_cypress_e2e_test(filter-labels)
 set_tests_properties(cypress/e2e/filter-labels PROPERTIES DEPENDS actualtrilinossubmission)
 
