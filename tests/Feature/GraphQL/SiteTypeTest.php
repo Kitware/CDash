@@ -1216,15 +1216,8 @@ class SiteTypeTest extends TestCase
             }
         ', [
             'siteid' => $this->sites['site1']->id,
-        ])->assertExactJson([
-            'data' => [
-                'unclaimSite' => [
-                    'user' => null,
-                    'site' => null,
-                    'message' => 'Authentication required to unclaim sites.',
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.unclaimSite', null)
+            ->assertGraphQLErrorMessage('Authentication required to unclaim sites.');
     }
 
     public function testUnclaimSiteMutationRejectsInvalidSiteId(): void
@@ -1245,15 +1238,8 @@ class SiteTypeTest extends TestCase
             }
         ', [
             'siteid' => 123456789,
-        ])->assertExactJson([
-            'data' => [
-                'unclaimSite' => [
-                    'user' => null,
-                    'site' => null,
-                    'message' => 'Requested site not found.',
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.unclaimSite', null)
+            ->assertGraphQLErrorMessage('Requested site not found.');
     }
 
     public function testUnclaimSiteMutationAcceptsValidRequest(): void
