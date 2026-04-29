@@ -29,13 +29,7 @@ class DeletePinnedTestMeasurementTest extends TestCase
             'input' => [
                 'id' => 123456789,
             ],
-        ])->assertExactJson([
-            'data' => [
-                'deletePinnedTestMeasurement' => [
-                    'message' => 'This action is unauthorized.',
-                ],
-            ],
-        ]);
+        ])->assertGraphQLErrorMessage('This action is unauthorized.');
     }
 
     public function testFailsWhenNoUser(): void
@@ -58,13 +52,8 @@ class DeletePinnedTestMeasurementTest extends TestCase
             'input' => [
                 'id' => $measurement->id,
             ],
-        ])->assertExactJson([
-            'data' => [
-                'deletePinnedTestMeasurement' => [
-                    'message' => 'This action is unauthorized.',
-                ],
-            ],
-        ]);
+        ])->assertGraphQLErrorMessage('This action is unauthorized.');
+
         self::assertDatabaseHas(PinnedTestMeasurement::class, ['id' => $measurement->id]);
     }
 
@@ -89,13 +78,8 @@ class DeletePinnedTestMeasurementTest extends TestCase
             'input' => [
                 'id' => $measurement->id,
             ],
-        ])->assertExactJson([
-            'data' => [
-                'deletePinnedTestMeasurement' => [
-                    'message' => 'This action is unauthorized.',
-                ],
-            ],
-        ]);
+        ])->assertGraphQLErrorMessage('This action is unauthorized.');
+
         self::assertDatabaseHas(PinnedTestMeasurement::class, ['id' => $measurement->id]);
     }
 
@@ -126,7 +110,8 @@ class DeletePinnedTestMeasurementTest extends TestCase
                     'message' => null,
                 ],
             ],
-        ]);
+        ])->assertGraphQLErrorFree();
+
         self::assertEmpty(PinnedTestMeasurement::all());
     }
 }
