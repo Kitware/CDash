@@ -119,14 +119,8 @@ class ChangeGlobalRoleTest extends TestCase
         ', [
             'userId' => $this->users['admin']->id,
             'role' => GlobalRole::ADMINISTRATOR,
-        ])->assertExactJson([
-            'data' => [
-                'changeGlobalRole' => [
-                    'message' => 'Insufficient permissions.',
-                    'user' => null,
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.changeGlobalRole', null)
+            ->assertGraphQLErrorMessage('Insufficient permissions.');
 
         self::assertFalse($this->users['normal']->refresh()->admin);
     }
@@ -150,14 +144,8 @@ class ChangeGlobalRoleTest extends TestCase
         ', [
             'userId' => $this->users['admin']->id,
             'role' => GlobalRole::USER,
-        ])->assertExactJson([
-            'data' => [
-                'changeGlobalRole' => [
-                    'message' => 'Insufficient permissions.',
-                    'user' => null,
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.changeGlobalRole', null)
+            ->assertGraphQLErrorMessage('Insufficient permissions.');
 
         self::assertTrue($this->users['admin']->refresh()->admin);
     }
@@ -179,14 +167,8 @@ class ChangeGlobalRoleTest extends TestCase
         ', [
             'userId' => 123456789,
             'role' => GlobalRole::USER,
-        ])->assertExactJson([
-            'data' => [
-                'changeGlobalRole' => [
-                    'message' => 'Cannot change role for user which does not exist.',
-                    'user' => null,
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.changeGlobalRole', null)
+            ->assertGraphQLErrorMessage('Cannot change role for user which does not exist.');
     }
 
     public function testAnonymousUserCannotChangeRole(): void
@@ -208,14 +190,8 @@ class ChangeGlobalRoleTest extends TestCase
         ', [
             'userId' => $this->users['admin']->id,
             'role' => GlobalRole::USER,
-        ])->assertExactJson([
-            'data' => [
-                'changeGlobalRole' => [
-                    'message' => 'Attempt to invite user when not signed in.',
-                    'user' => null,
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.changeGlobalRole', null)
+            ->assertGraphQLErrorMessage('Attempt to invite user when not signed in.');
 
         self::assertTrue($this->users['admin']->refresh()->admin);
     }
