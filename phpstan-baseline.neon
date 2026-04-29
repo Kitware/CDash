@@ -247,7 +247,7 @@ parameters:
 			path: app/GraphQL/Mutations/ChangeGlobalRole.php
 
 		-
-			rawMessage: 'Parameter #1 $args (array{userId: int, projectId: int, role: App\Enums\ProjectRole}) of method App\GraphQL\Mutations\ChangeProjectRole::mutate() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::mutate()'
+			rawMessage: 'Parameter #2 $args (array{userId: int, projectId: int, role: App\Enums\ProjectRole}) of method App\GraphQL\Mutations\ChangeProjectRole::__invoke() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::__invoke()'
 			identifier: method.childParameterType
 			count: 1
 			path: app/GraphQL/Mutations/ChangeProjectRole.php

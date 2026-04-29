@@ -190,15 +190,8 @@ class ChangeProjectRoleTest extends TestCase
             'userId' => $this->users['projectAdmin']->id,
             'projectId' => $this->project->id,
             'role' => ProjectRole::USER,
-        ])->assertExactJson([
-            'data' => [
-                'changeProjectRole' => [
-                    'message' => 'This action is unauthorized.',
-                    'user' => null,
-                    'project' => null,
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.changeProjectRole', null)
+            ->assertGraphQLErrorMessage('This action is unauthorized.');
 
         self::assertNotContains($this->users['admin']->id, $this->project->users()->pluck('id'));
         self::assertContains($this->users['projectMember']->id, $this->project->basicUsers()->pluck('id'));
@@ -233,15 +226,8 @@ class ChangeProjectRoleTest extends TestCase
             'userId' => $this->users['projectMember']->id,
             'projectId' => $this->project->id,
             'role' => ProjectRole::ADMINISTRATOR,
-        ])->assertExactJson([
-            'data' => [
-                'changeProjectRole' => [
-                    'message' => 'This action is unauthorized.',
-                    'user' => null,
-                    'project' => null,
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.changeProjectRole', null)
+            ->assertGraphQLErrorMessage('This action is unauthorized.');
 
         self::assertNotContains($this->users['admin']->id, $this->project->users()->pluck('id'));
         self::assertContains($this->users['projectMember']->id, $this->project->basicUsers()->pluck('id'));
@@ -276,15 +262,8 @@ class ChangeProjectRoleTest extends TestCase
             'userId' => $this->users['admin']->id,
             'projectId' => $this->project->id,
             'role' => ProjectRole::USER,
-        ])->assertExactJson([
-            'data' => [
-                'changeProjectRole' => [
-                    'message' => 'This action is unauthorized.',
-                    'user' => null,
-                    'project' => null,
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.changeProjectRole', null)
+            ->assertGraphQLErrorMessage('This action is unauthorized.');
 
         self::assertNotContains($this->users['admin']->id, $this->project->users()->pluck('id'));
         self::assertContains($this->users['projectMember']->id, $this->project->basicUsers()->pluck('id'));
@@ -319,15 +298,8 @@ class ChangeProjectRoleTest extends TestCase
             'userId' => $this->users['nonmemberUser']->id,
             'projectId' => $this->project->id,
             'role' => ProjectRole::USER,
-        ])->assertExactJson([
-            'data' => [
-                'changeProjectRole' => [
-                    'message' => 'This action is unauthorized.',
-                    'user' => null,
-                    'project' => null,
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.changeProjectRole', null)
+            ->assertGraphQLErrorMessage('This action is unauthorized.');
 
         self::assertNotContains($this->users['admin']->id, $this->project->users()->pluck('id'));
         self::assertContains($this->users['projectMember']->id, $this->project->basicUsers()->pluck('id'));
@@ -362,15 +334,8 @@ class ChangeProjectRoleTest extends TestCase
             'userId' => 12345678,
             'projectId' => $this->project->id,
             'role' => ProjectRole::USER,
-        ])->assertExactJson([
-            'data' => [
-                'changeProjectRole' => [
-                    'message' => 'Cannot change role for user which does not exist.',
-                    'user' => null,
-                    'project' => null,
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.changeProjectRole', null)
+            ->assertGraphQLErrorMessage('Cannot change role for user which does not exist.');
 
         self::assertNotContains($this->users['admin']->id, $this->project->users()->pluck('id'));
         self::assertContains($this->users['projectMember']->id, $this->project->basicUsers()->pluck('id'));
@@ -405,15 +370,8 @@ class ChangeProjectRoleTest extends TestCase
             'userId' => $this->users['projectMember']->id,
             'projectId' => 12345678,
             'role' => ProjectRole::USER,
-        ])->assertExactJson([
-            'data' => [
-                'changeProjectRole' => [
-                    'message' => 'This action is unauthorized.',
-                    'user' => null,
-                    'project' => null,
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.changeProjectRole', null)
+            ->assertGraphQLErrorMessage('This action is unauthorized.');
 
         self::assertNotContains($this->users['admin']->id, $this->project->users()->pluck('id'));
         self::assertContains($this->users['projectMember']->id, $this->project->basicUsers()->pluck('id'));

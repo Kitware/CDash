@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App\GraphQL\Mutations;
 
 use App\Enums\ProjectRole;
+use App\Exceptions\GraphQLMutationException;
 use App\Models\Project;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
-use Illuminate\Validation\ValidationException;
 
 final class ChangeProjectRole extends AbstractMutation
 {
@@ -24,9 +24,10 @@ final class ChangeProjectRole extends AbstractMutation
      *     role: ProjectRole,
      * } $args
      *
-     * @throws ValidationException
+     * @throws GraphQLMutationException
+     * @throws Exception
      */
-    protected function mutate(array $args): void
+    public function __invoke(null $_, array $args): self
     {
         Validator::make($args, [
             'userId' => [
@@ -44,20 +45,17 @@ final class ChangeProjectRole extends AbstractMutation
         /** @var ?User $user */
         $user = auth()->user();
         if ($user === null) {
-            // This should never happen, but we handle the case anyway to make PHPStan happy.
-            throw new Exception('Attempt to invite user when not signed in.');
+            throw new GraphQLMutationException('Attempt to invite user when not signed in.');
         }
 
         $userToChange = User::find((int) $args['userId']);
         if ($userToChange === null) {
-            $this->message = 'Cannot change role for user which does not exist.';
-            return;
+            throw new GraphQLMutationException('Cannot change role for user which does not exist.');
         }
 
         $project = Project::find((int) $args['projectId']);
         if ($project === null || $user->cannot('changeUserRole', [$project, $userToChange])) {
-            $this->message = 'This action is unauthorized.';
-            return;
+            throw new GraphQLMutationException('This action is unauthorized.');
         }
 
         $rowsEdited = $userToChange->projects()->updateExistingPivot($project->id, [
@@ -73,5 +71,7 @@ final class ChangeProjectRole extends AbstractMutation
 
         $this->user = $userToChange;
         $this->project = $project;
+
+        return $this;
     }
 }
