@@ -1,4 +1,12 @@
-@extends('cdash')
+@php
+    $title = 'Register';
+@endphp
+
+@extends('cdash', [
+    'vue' => true,
+    'daisyui' => true,
+])
+
 @section('header_script')
     <script language="javascript" type="text/javascript">
         function doSubmit() {
@@ -8,144 +16,115 @@
 @endsection
 
 @section('main_content')
-    <form method="post" action="{{ route('register') }}" name="regform" onsubmit="doSubmit();" id="regform">
-        @csrf
-        <input type="hidden" value="" name="url"/>
-        @if ($errors->has('url'))
-            <div>
-                <span class="invalid-feedback" role="alert">
-                    <strong>{{ $errors->first('url') }}</strong>
-                </span>
-            </div>
-        @endif
-        <table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb">
-            <tbody>
-            <tr class="treven">
-                <td width="20%" height="2" class="nob">
-                    <div align="right">First Name:</div>
-                </td>
-                <td width="80%" height="2" class="nob">
-                    <input class="form-control{{ $errors->has('fname')? ' is-invalid' : ''}}"
+    <div class="tw-flex tw-flex-row tw-w-full tw-justify-center tw-gap-8">
+        <div class="tw-flex tw-flex-col tw-w-96 tw-gap-2">
+            <form method="post" action="{{ route('register') }}" name="regform" onsubmit="doSubmit();" id="regform">
+                @csrf
+                <div class="tw-w-full tw-flex tw-flex-row tw-justify-center">
+                    <img src="{{ asset('img/cdash_logo_full.svg?rev=2023-05-31') }}" height="60" alt="CDash logo" style="height: 60px;">
+                </div>
+
+                <input type="hidden" value="" name="url"/>
+                @if ($errors->has('url'))
+                    <div class="tw-text-error">
+                        <strong>{{ $errors->first('url') }}</strong>
+                    </div>
+                @endif
+
+                <label class="tw-form-control tw-w-full">
+                    <span class="tw-label tw-label-text">
+                        First Name
+                    </span>
+                    <input class="tw-input tw-input-bordered tw-w-full"
                            name="fname"
-                           size="20"
                            value="{{ old('fname', $fname) }}"
                            required
                            autofocus
                     />
                     @if ($errors->has('fname'))
-                        <div>
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $errors->first('fname') }}</strong>
+                        <span class="tw-label-alt tw-text-error">
+                            {{ $errors->first('fname') }}
                         </span>
-                        </div>
                     @endif
-                </td>
-            </tr>
-            <tr class="trodd">
-                <td width="20%" height="2" class="nob">
-                    <div align="right"> Last Name:</div>
-                </td>
-                <td width="80%" height="2" class="nob">
-                    <input class="form-control{{ $errors->has('lname') ? ' is-invalid' : ''}}"
+                </label>
+
+                <label class="tw-form-control tw-w-full">
+                    <span class="tw-label tw-label-text">
+                        Last Name
+                    </span>
+                    <input class="tw-input tw-input-bordered tw-w-full"
                            name="lname"
-                           size="20"
                            value="{{ old('lname', $lname) }}"
                            required
                     />
                     @if ($errors->has('lname'))
-                        <div>
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $errors->first('lname') }}</strong>
+                        <span class="tw-label-alt tw-text-error">
+                            {{ $errors->first('lname') }}
                         </span>
-                        </div>
                     @endif
-                </td>
-            </tr>
-            <tr class="treven">
-                <td width="20%" height="2" class="nob">
-                    <div align="right"> Email:</div>
-                </td>
-                <td width="80%" height="2" class="nob">
-                    <input class="form-control{{ $errors->has('email') ? ' is-invalid' : ''}}"
+                </label>
+
+                <label class="tw-form-control tw-w-full">
+                    <span class="tw-label tw-label-text">
+                        Email
+                    </span>
+                    <input class="tw-input tw-input-bordered tw-w-full"
                            name="email"
-                           size="20"
                            value="{{ old('email', $email) }}"
                            required
                     />
                     @if ($errors->has('email'))
-                        <div>
-                            <span class="invalid-feedback" role="alert">
-                            <strong>{{$errors->first('email')}}</strong>
+                        <span class="tw-label-alt tw-text-error">
+                            {{ $errors->first('email') }}
                         </span>
-                        </div>
-
                     @endif
-                </td>
-            </tr>
-            <tr class="trodd">
-                <td width="20%" height="2" class="nob">
-                    <div align="right">Password:</div>
-                </td>
-                <td width="80%" height="2" class="nob">
-                    <input class="form-control{{ $errors->has('password') ? ' is-invalid' : ''}}"
-                           type="password"
+                </label>
+
+                <label class="tw-form-control tw-w-full">
+                    <span class="tw-label tw-label-text">
+                        Password
+                    </span>
+                    <input type="password"
                            name="password"
-                           size="20"
+                           class="tw-input tw-input-bordered tw-w-full"
                            autocomplete="off"
                            required
                     />
                     @if ($errors->has('password'))
-                        <div>
-                            <span class="invalid-feedback" role="alert">
-                            <strong>{{$errors->first('password')}}</strong>
+                        <span class="tw-label-alt tw-text-error">
+                            {{ $errors->first('password') }}
                         </span>
-                        </div>
-
                     @endif
-                </td>
-            </tr>
-            <tr class="treven">
-                <td width="20%" height="2" class="nob">
-                    <div align="right">Confirm Password:</div>
-                </td>
-                <td width="80%" height="2" class="nob">
-                    <input class="form-control"
-                           type="password"
+                </label>
+
+                <label class="tw-form-control tw-w-full">
+                    <span class="tw-label tw-label-text">
+                        Confirm Password
+                    </span>
+                    <input type="password"
                            name="password_confirmation"
-                           size="20"
+                           class="tw-input tw-input-bordered tw-w-full"
                            autocomplete="off"
                     />
-                </td>
-            </tr>
-            <tr class="trodd">
-                <td width="20%" height="2" class="nob">
-                    <div align="right"> Institution:</div>
-                </td>
-                <td width="80%" height="2" class="nob">
-                    <input class="form-control"
+                </label>
+
+                <label class="tw-form-control tw-w-full">
+                    <span class="tw-label tw-label-text">
+                        Institution
+                    </span>
+                    <input class="tw-input tw-input-bordered tw-w-full"
                            name="institution"
-                           size="20"
                            value="{{ old('institution') }}"
                     />
-                </td>
-            </tr>
-            <tr>
-                <td width="20%" class="nob"></td>
-                <td width="80%" class="nob">
-                    <input type="submit"
-                           value="Register"
-                           name="sent"
-                           class="textbox"
-                    />
-                    <input id="url"
-                           class="textbox"
-                           type="hidden"
-                           name="url"
-                           size="20"
-                    />
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </form>
+                </label>
+
+                <button class="tw-btn tw-btn-block tw-mt-4" type="submit">Register</button>
+
+                <input id="url"
+                       type="hidden"
+                       name="url"
+                />
+            </form>
+        </div>
+    </div>
 @endsection
