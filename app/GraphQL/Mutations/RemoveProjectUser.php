@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\GraphQL\Mutations;
 
+use App\Exceptions\GraphQLMutationException;
 use App\Models\Project;
 use App\Models\User;
 
@@ -14,8 +15,10 @@ final class RemoveProjectUser extends AbstractMutation
      *     userId: int,
      *     projectId: int,
      * } $args
+     *
+     * @throws GraphQLMutationException
      */
-    protected function mutate(array $args): void
+    public function __invoke(null $_, array $args): self
     {
         /** @var ?User $user */
         $user = auth()->user();
@@ -36,9 +39,11 @@ final class RemoveProjectUser extends AbstractMutation
             )
             || !$project->users()->where('id', $userToRemove->id)->exists()
         ) {
-            abort(401, 'This action is unauthorized.');
+            throw new GraphQLMutationException('This action is unauthorized.');
         }
 
         $project->users()->detach($userToRemove->id);
+
+        return $this;
     }
 }

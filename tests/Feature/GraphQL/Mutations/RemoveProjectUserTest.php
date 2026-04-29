@@ -115,13 +115,8 @@ class RemoveProjectUserTest extends TestCase
         ', [
             'projectId' => $this->project->id,
             'userId' => $userToDelete->id,
-        ])->assertExactJson([
-            'data' => [
-                'removeProjectUser' => [
-                    'message' => 'This action is unauthorized.',
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.removeProjectUser', null)
+            ->assertGraphQLErrorMessage('This action is unauthorized.');
 
         $this->assertProjectMember($userToDelete);
     }
@@ -144,13 +139,8 @@ class RemoveProjectUserTest extends TestCase
         ', [
             'projectId' => $this->project->id,
             'userId' => $userToDelete->id,
-        ])->assertExactJson([
-            'data' => [
-                'removeProjectUser' => [
-                    'message' => 'This action is unauthorized.',
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.removeProjectUser', null)
+            ->assertGraphQLErrorMessage('This action is unauthorized.');
 
         $this->assertProjectMember($userToDelete);
     }
@@ -233,13 +223,8 @@ class RemoveProjectUserTest extends TestCase
         ', [
             'projectId' => $this->project->id,
             'userId' => $userToDelete->id,
-        ])->assertExactJson([
-            'data' => [
-                'removeProjectUser' => [
-                    'message' => 'This action is unauthorized.',
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.removeProjectUser', null)
+            ->assertGraphQLErrorMessage('This action is unauthorized.');
 
         $this->assertProjectMember($userToDelete);
     }
@@ -263,13 +248,8 @@ class RemoveProjectUserTest extends TestCase
         ', [
             'projectId' => $this->project->id,
             'userId' => $this->users['normal']->id,
-        ])->assertExactJson([
-            'data' => [
-                'removeProjectUser' => [
-                    'message' => 'This action is unauthorized.',
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.removeProjectUser', null)
+            ->assertGraphQLErrorMessage('This action is unauthorized.');
 
         self::assertTrue($this->users['normal']->refresh()->exists());
     }
@@ -290,13 +270,8 @@ class RemoveProjectUserTest extends TestCase
         ', [
             'projectId' => $this->project->id,
             'userId' => 123456789,
-        ])->assertExactJson([
-            'data' => [
-                'removeProjectUser' => [
-                    'message' => 'This action is unauthorized.',
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.removeProjectUser', null)
+            ->assertGraphQLErrorMessage('This action is unauthorized.');
     }
 
     public function testHandlesMissingProject(): void
@@ -316,13 +291,8 @@ class RemoveProjectUserTest extends TestCase
         ', [
             'projectId' => 123456789,
             'userId' => $this->users['normal']->id,
-        ])->assertExactJson([
-            'data' => [
-                'removeProjectUser' => [
-                    'message' => 'This action is unauthorized.',
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.removeProjectUser', null)
+            ->assertGraphQLErrorMessage('This action is unauthorized.');
     }
 
     public function testCannotDeleteProjectMembersIfManagedByLdap(): void
@@ -348,13 +318,8 @@ class RemoveProjectUserTest extends TestCase
         ', [
             'projectId' => $this->project->id,
             'userId' => $userToDelete->id,
-        ])->assertExactJson([
-            'data' => [
-                'removeProjectUser' => [
-                    'message' => 'This action is unauthorized.',
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.removeProjectUser', null)
+            ->assertGraphQLErrorMessage('This action is unauthorized.');
 
         $this->assertProjectMember($userToDelete);
     }

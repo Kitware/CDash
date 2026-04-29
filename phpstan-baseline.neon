@@ -343,7 +343,7 @@ parameters:
 			path: app/GraphQL/Mutations/JoinProject.php
 
 		-
-			rawMessage: 'Parameter #1 $args (array{userId: int, projectId: int}) of method App\GraphQL\Mutations\RemoveProjectUser::mutate() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::mutate()'
+			rawMessage: 'Parameter #2 $args (array{userId: int, projectId: int}) of method App\GraphQL\Mutations\RemoveProjectUser::__invoke() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::__invoke()'
 			identifier: method.childParameterType
 			count: 1
 			path: app/GraphQL/Mutations/RemoveProjectUser.php
