@@ -391,7 +391,7 @@ parameters:
 			path: app/GraphQL/Mutations/UpdatePinnedTestMeasurementOrder.php
 
 		-
-			rawMessage: 'Parameter #1 $args (array{projectId: int, pinnedTestMeasurementIds: array<int>}) of method App\GraphQL\Mutations\UpdatePinnedTestMeasurementOrder::mutate() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::mutate()'
+			rawMessage: 'Parameter #2 $args (array{projectId: int, pinnedTestMeasurementIds: array<int>}) of method App\GraphQL\Mutations\UpdatePinnedTestMeasurementOrder::__invoke() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::__invoke()'
 			identifier: method.childParameterType
 			count: 1
 			path: app/GraphQL/Mutations/UpdatePinnedTestMeasurementOrder.php

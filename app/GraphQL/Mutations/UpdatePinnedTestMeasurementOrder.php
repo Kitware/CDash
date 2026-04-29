@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\GraphQL\Mutations;
 
+use App\Exceptions\GraphQLMutationException;
 use App\Models\PinnedTestMeasurement;
 use App\Models\Project;
-use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Gate;
 
@@ -20,8 +20,10 @@ final class UpdatePinnedTestMeasurementOrder extends AbstractMutation
      *     projectId: int,
      *     pinnedTestMeasurementIds: array<int>,
      * } $args
+     *
+     * @throws GraphQLMutationException
      */
-    protected function mutate(array $args): void
+    public function __invoke(null $_, array $args): self
     {
         $project = Project::find((int) $args['projectId']);
         Gate::authorize('updatePinnedTestMeasurementOrder', $project);
@@ -30,15 +32,15 @@ final class UpdatePinnedTestMeasurementOrder extends AbstractMutation
         $newOrder = collect($args['pinnedTestMeasurementIds']);
 
         if ($projectMeasurementIds->diff($newOrder)->isNotEmpty()) {
-            throw new Exception('IDs for all PinnedTestMeasurements must be provided.');
+            throw new GraphQLMutationException('IDs for all PinnedTestMeasurements must be provided.');
         }
 
         if ($newOrder->count() !== $projectMeasurementIds->count()) {
-            throw new Exception('Provided set cannot contain duplicate IDs.');
+            throw new GraphQLMutationException('Provided set cannot contain duplicate IDs.');
         }
 
         if ($newOrder->isEmpty()) {
-            throw new Exception("Can't order an empty set.");
+            throw new GraphQLMutationException("Can't order an empty set.");
         }
 
         // We start at the previous maximum ID + 1 to guarantee that there are never any conflicts.
@@ -54,5 +56,7 @@ final class UpdatePinnedTestMeasurementOrder extends AbstractMutation
         }
 
         $this->pinnedTestMeasurements = $project?->pinnedTestMeasurements()->orderBy('position')->get();
+
+        return $this;
     }
 }
