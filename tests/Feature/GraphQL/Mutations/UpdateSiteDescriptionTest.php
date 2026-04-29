@@ -56,14 +56,8 @@ class UpdateSiteDescriptionTest extends TestCase
         ', [
             'siteid' => 123456789,
             'description' => Str::uuid()->toString(),
-        ])->assertExactJson([
-            'data' => [
-                'updateSiteDescription' => [
-                    'site' => null,
-                    'message' => 'Requested site not found.',
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.updateSiteDescription', null)
+            ->assertGraphQLErrorMessage('Requested site not found.');
 
         self::assertEmpty($this->site->information()->get());
     }
@@ -87,14 +81,8 @@ class UpdateSiteDescriptionTest extends TestCase
         ', [
             'siteid' => $this->site->id,
             'description' => Str::uuid()->toString(),
-        ])->assertExactJson([
-            'data' => [
-                'updateSiteDescription' => [
-                    'site' => null,
-                    'message' => 'Authentication required to edit site descriptions.',
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.updateSiteDescription', null)
+            ->assertGraphQLErrorMessage('Authentication required to edit site descriptions.');
 
         self::assertEmpty($this->site->information()->get());
     }
