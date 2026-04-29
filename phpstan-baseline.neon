@@ -337,7 +337,7 @@ parameters:
 			path: app/GraphQL/Mutations/InviteToProject.php
 
 		-
-			rawMessage: 'Parameter #1 $args (array{projectId: int}) of method App\GraphQL\Mutations\JoinProject::mutate() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::mutate()'
+			rawMessage: 'Parameter #2 $args (array{projectId: int}) of method App\GraphQL\Mutations\JoinProject::__invoke() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::__invoke()'
 			identifier: method.childParameterType
 			count: 1
 			path: app/GraphQL/Mutations/JoinProject.php
