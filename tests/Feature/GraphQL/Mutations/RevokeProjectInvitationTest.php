@@ -104,13 +104,8 @@ class RevokeProjectInvitationTest extends TestCase
             }
         ', [
             'invitationId' => $invitation->id,
-        ])->assertExactJson([
-            'data' => [
-                'revokeProjectInvitation' => [
-                    'message' => 'This action is unauthorized.',
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.revokeProjectInvitation', null)
+            ->assertGraphQLErrorMessage('This action is unauthorized.');
 
         self::assertCount(1, $this->project->invitations()->get());
     }
@@ -137,13 +132,8 @@ class RevokeProjectInvitationTest extends TestCase
             }
         ', [
             'invitationId' => $invitation->id,
-        ])->assertExactJson([
-            'data' => [
-                'revokeProjectInvitation' => [
-                    'message' => 'This action is unauthorized.',
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.revokeProjectInvitation', null)
+            ->assertGraphQLErrorMessage('This action is unauthorized.');
 
         self::assertCount(1, $this->project->invitations()->get());
     }
@@ -180,13 +170,8 @@ class RevokeProjectInvitationTest extends TestCase
             }
         ', [
             'invitationId' => $invitation->id,
-        ])->assertExactJson([
-            'data' => [
-                'revokeProjectInvitation' => [
-                    'message' => 'This action is unauthorized.',
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.revokeProjectInvitation', null)
+            ->assertGraphQLErrorMessage('This action is unauthorized.');
 
         self::assertCount(1, $this->project->invitations()->get());
     }
@@ -246,12 +231,7 @@ class RevokeProjectInvitationTest extends TestCase
             }
         ', [
             'invitationId' => 1234567,
-        ])->assertExactJson([
-            'data' => [
-                'revokeProjectInvitation' => [
-                    'message' => 'Invitation does not exist.',
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.revokeProjectInvitation', null)
+            ->assertGraphQLErrorMessage('Invitation does not exist.');
     }
 }
