@@ -22,7 +22,7 @@ use InvalidArgumentException;
 class DatabaseCleanupUtils
 {
     /** Remove builds by their group-specific auto-remove timeframe setting */
-    public static function removeBuildsGroupwise(int $projectid, int $maxbuilds, bool $force = false): void
+    public static function removeBuildsGroupwise(int $projectid, bool $force = false): void
     {
         if (!$force && !(bool) config('cdash.autoremove_builds')) {
             return;
@@ -53,8 +53,7 @@ class DatabaseCleanupUtils
                               AND build2group.buildid = build.id
                               AND build2group.groupid = ?
                           ORDER BY build.starttime ASC
-                          LIMIT ?
-                      ', [$cutoffdate, $groupid, $maxbuilds]);
+                      ', [$cutoffdate, $groupid]);
 
             foreach ($builds as $build) {
                 $buildids[] = (int) $build->id;

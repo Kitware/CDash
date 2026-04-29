@@ -204,7 +204,6 @@ class UpdateProjectTest extends TestCase
             ['emailMaxCharacters', 2000, 'emailmaxchars', 2000],
             ['displayLabels', false, 'displaylabels', false],
             ['autoRemoveTimeFrame', 10, 'autoremovetimeframe', 10],
-            ['autoRemoveMaxBuilds', 20, 'autoremovemaxbuilds', 20],
             ['fileUploadLimit', 50, 'uploadquota', 53687091200],
             ['showCoverageCode', false, 'showcoveragecode', false],
             ['shareLabelFilters', false, 'sharelabelfilters', false],

@@ -23,8 +23,8 @@ class PruneBuilds implements ShouldQueue
     public function handle(): void
     {
         foreach (Project::all() as $project) {
-            DatabaseCleanupUtils::removeFirstBuilds($project->id, $project->autoremovetimeframe, $project->autoremovemaxbuilds);
-            DatabaseCleanupUtils::removeBuildsGroupwise($project->id, $project->autoremovemaxbuilds);
+            DatabaseCleanupUtils::removeFirstBuilds($project->id, $project->autoremovetimeframe, -1);
+            DatabaseCleanupUtils::removeBuildsGroupwise($project->id);
         }
     }
 }

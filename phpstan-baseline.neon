@@ -19,12 +19,6 @@ parameters:
 			path: app/Console/Commands/AutoRemoveBuilds.php
 
 		-
-			rawMessage: Cannot access offset 'autoremovemaxbuilds' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/Console/Commands/AutoRemoveBuilds.php
-
-		-
 			rawMessage: Cannot access offset 'autoremovetimeframe' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -45,7 +39,7 @@ parameters:
 		-
 			rawMessage: Cannot cast mixed to int.
 			identifier: cast.int
-			count: 3
+			count: 1
 			path: app/Console/Commands/AutoRemoveBuilds.php
 
 		-
@@ -9706,12 +9700,6 @@ parameters:
 			path: app/cdash/app/Model/Project.php
 
 		-
-			rawMessage: Casting to int something that's already int.
-			identifier: cast.useless
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
 			rawMessage: 'Method CDash\Model\Project::AddLogo() has no return type specified.'
 			identifier: missingType.return
 			count: 1
@@ -15640,19 +15628,19 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			rawMessage: 'Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester.php:800::__construct() has parameter $response with no type specified.'
+			rawMessage: 'Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester.php:799::__construct() has parameter $response with no type specified.'
 			identifier: missingType.parameter
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			rawMessage: 'Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester.php:800::getSent() has no return type specified.'
+			rawMessage: 'Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester.php:799::getSent() has no return type specified.'
 			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			rawMessage: 'Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester.php:800::read() has no return type specified.'
+			rawMessage: 'Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester.php:799::read() has no return type specified.'
 			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
@@ -15880,7 +15868,7 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			rawMessage: Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester.php:800::$read has no type specified.
+			rawMessage: Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester.php:799::$read has no type specified.
 			identifier: missingType.property
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php

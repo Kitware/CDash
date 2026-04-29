@@ -73,7 +73,6 @@ class Project
     public $AuthenticateSubmissions = 0;
     public $ShowCoverageCode = 0;
     public $AutoremoveTimeframe = 0;
-    public int $AutoremoveMaxBuilds = 300;
     public $UploadQuota = 0;
     public ?string $LdapFilter = null;
     public ?string $Banner = null;
@@ -131,7 +130,6 @@ class Project
             'authenticatesubmissions' => filter_var($this->AuthenticateSubmissions, FILTER_VALIDATE_BOOLEAN),
             'showcoveragecode' => filter_var($this->ShowCoverageCode, FILTER_VALIDATE_BOOLEAN),
             'autoremovetimeframe' => (int) $this->AutoremoveTimeframe,
-            'autoremovemaxbuilds' => (int) $this->AutoremoveMaxBuilds,
             'uploadquota' => (int) $this->UploadQuota,
             'cvsviewertype' => $this->CvsViewerType,
             'testtimestd' => (int) $this->TestTimeStd,
@@ -212,7 +210,6 @@ class Project
             $this->AuthenticateSubmissions = $project->authenticatesubmissions;
             $this->ShowCoverageCode = $project->showcoveragecode;
             $this->AutoremoveTimeframe = $project->autoremovetimeframe;
-            $this->AutoremoveMaxBuilds = $project->autoremovemaxbuilds;
             $this->UploadQuota = $project->uploadquota;
             $this->CvsViewerType = $project->cvsviewertype;
             $this->TestTimeStd = $project->testtimestd;
