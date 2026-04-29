@@ -73,13 +73,9 @@ class RemoveUserTest extends TestCase
             }
         ', [
             'userId' => $this->users['admin']->id,
-        ])->assertExactJson([
-            'data' => [
-                'removeUser' => [
-                    'message' => 'This action is unauthorized.',
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.removeUser', null)
+            ->assertGraphQLErrorMessage('This action is unauthorized.');
+
         self::assertContains($this->users['normal']->id, User::pluck('id'));
     }
 
@@ -96,13 +92,9 @@ class RemoveUserTest extends TestCase
             }
         ', [
             'userId' => $this->users['admin']->id,
-        ])->assertExactJson([
-            'data' => [
-                'removeUser' => [
-                    'message' => 'This action is unauthorized.',
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.removeUser', null)
+            ->assertGraphQLErrorMessage('This action is unauthorized.');
+
         self::assertContains($this->users['admin']->id, User::pluck('id'));
     }
 
@@ -119,13 +111,9 @@ class RemoveUserTest extends TestCase
             }
         ', [
             'userId' => $this->users['admin']->id,
-        ])->assertExactJson([
-            'data' => [
-                'removeUser' => [
-                    'message' => 'This action is unauthorized.',
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.removeUser', null)
+            ->assertGraphQLErrorMessage('This action is unauthorized.');
+
         self::assertContains($this->users['admin']->id, User::pluck('id'));
     }
 
@@ -141,12 +129,7 @@ class RemoveUserTest extends TestCase
             }
         ', [
             'userId' => 123456789,
-        ])->assertExactJson([
-            'data' => [
-                'removeUser' => [
-                    'message' => 'User does not exist.',
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.removeUser', null)
+            ->assertGraphQLErrorMessage('User does not exist.');
     }
 }
