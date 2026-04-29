@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\GraphQL\Mutations;
 
 use App\Enums\GlobalRole;
+use App\Exceptions\GraphQLMutationException;
 use App\Mail\InvitedToCdash;
 use App\Models\GlobalInvitation;
 use App\Models\User;
@@ -26,9 +27,10 @@ final class CreateGlobalInvitation extends AbstractMutation
      *     role: GlobalRole,
      * } $args
      *
+     * @throws GraphQLMutationException
      * @throws Exception
      */
-    protected function mutate(array $args): void
+    public function __invoke(null $_, array $args): self
     {
         // This field might not reset when testing since the same mocked request is reused.
         $this->invitedUser = null;
@@ -47,20 +49,19 @@ final class CreateGlobalInvitation extends AbstractMutation
         /** @var ?User $user */
         $user = auth()->user();
         if ($user === null) {
-            // This should never happen, but we handle the case anyway to make PHPStan happy.
-            throw new Exception('Attempt to invite user when not signed in.');
+            throw new GraphQLMutationException('Attempt to invite user when not signed in.');
         }
 
         if ($user->cannot('createInvitation', GlobalInvitation::class)) {
-            abort(401, 'This action is unauthorized.');
+            throw new GraphQLMutationException('This action is unauthorized.');
         }
 
         if (GlobalInvitation::where('email', $args['email'])->exists()) {
-            abort(400, 'Duplicate invitations are not allowed.');
+            throw new GraphQLMutationException('Duplicate invitations are not allowed.');
         }
 
         if (User::where('email', $args['email'])->exists()) {
-            abort(401, 'User is already a member of this instance.');
+            throw new GraphQLMutationException('User is already a member of this instance.');
         }
 
         $password = Str::password();
@@ -76,5 +77,7 @@ final class CreateGlobalInvitation extends AbstractMutation
         // The email gets sent to the queue, so we have no way to know immediately whether it was sent or not.
         // TODO: We should eventually track whether the email was actually sent.
         Mail::to($args['email'])->send(new InvitedToCdash($this->invitedUser, $password));
+
+        return $this;
     }
 }

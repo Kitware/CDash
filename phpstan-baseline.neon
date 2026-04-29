@@ -283,7 +283,7 @@ parameters:
 			path: app/GraphQL/Mutations/CreateComment.php
 
 		-
-			rawMessage: 'Parameter #1 $args (array{email: string, role: App\Enums\GlobalRole}) of method App\GraphQL\Mutations\CreateGlobalInvitation::mutate() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::mutate()'
+			rawMessage: 'Parameter #2 $args (array{email: string, role: App\Enums\GlobalRole}) of method App\GraphQL\Mutations\CreateGlobalInvitation::__invoke() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::__invoke()'
 			identifier: method.childParameterType
 			count: 1
 			path: app/GraphQL/Mutations/CreateGlobalInvitation.php

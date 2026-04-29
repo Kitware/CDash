@@ -139,14 +139,8 @@ class CreateGlobalInvitationTest extends TestCase
         ', [
             'email' => $email,
             'role' => GlobalRole::USER,
-        ])->assertExactJson([
-            'data' => [
-                'createGlobalInvitation' => [
-                    'message' => 'This action is unauthorized.',
-                    'invitedUser' => null,
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.createGlobalInvitation', null)
+            ->assertGraphQLErrorMessage('This action is unauthorized.');
 
         self::assertEmpty(GlobalInvitation::all());
         Mail::assertNothingQueued();
@@ -179,14 +173,8 @@ class CreateGlobalInvitationTest extends TestCase
         ', [
             'email' => $email,
             'role' => GlobalRole::USER,
-        ])->assertExactJson([
-            'data' => [
-                'createGlobalInvitation' => [
-                    'message' => 'Attempt to invite user when not signed in.',
-                    'invitedUser' => null,
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.createGlobalInvitation', null)
+            ->assertGraphQLErrorMessage('Attempt to invite user when not signed in.');
 
         self::assertEmpty(GlobalInvitation::all());
         Mail::assertNothingQueued();
@@ -244,14 +232,8 @@ class CreateGlobalInvitationTest extends TestCase
         ', [
             'email' => $email,
             'role' => GlobalRole::USER,
-        ])->assertExactJson([
-            'data' => [
-                'createGlobalInvitation' => [
-                    'message' => 'Duplicate invitations are not allowed.',
-                    'invitedUser' => null,
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.createGlobalInvitation', null)
+            ->assertGraphQLErrorMessage('Duplicate invitations are not allowed.');
 
         self::assertCount(1, GlobalInvitation::all());
         Mail::assertQueued(InvitedToCdash::class, 1);
@@ -292,14 +274,8 @@ class CreateGlobalInvitationTest extends TestCase
         ', [
             'email' => $email,
             'role' => 'USER',
-        ])->assertExactJson([
-            'data' => [
-                'createGlobalInvitation' => [
-                    'message' => 'The email must be a valid email address.',
-                    'invitedUser' => null,
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.createGlobalInvitation', null)
+            ->assertGraphQLErrorMessage('The email must be a valid email address.');
 
         self::assertEmpty(GlobalInvitation::all());
         Mail::assertNothingQueued();
@@ -326,14 +302,8 @@ class CreateGlobalInvitationTest extends TestCase
         ', [
             'email' => $this->users['normal']->email,
             'role' => 'USER',
-        ])->assertExactJson([
-            'data' => [
-                'createGlobalInvitation' => [
-                    'message' => 'User is already a member of this instance.',
-                    'invitedUser' => null,
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.createGlobalInvitation', null)
+            ->assertGraphQLErrorMessage('User is already a member of this instance.');
 
         self::assertEmpty(GlobalInvitation::all());
         Mail::assertNothingQueued();
@@ -368,14 +338,8 @@ class CreateGlobalInvitationTest extends TestCase
         ', [
             'email' => $email,
             'role' => GlobalRole::USER,
-        ])->assertExactJson([
-            'data' => [
-                'createGlobalInvitation' => [
-                    'message' => 'This action is unauthorized.',
-                    'invitedUser' => null,
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.createGlobalInvitation', null)
+            ->assertGraphQLErrorMessage('This action is unauthorized.');
 
         self::assertEmpty(GlobalInvitation::all());
         Mail::assertNothingQueued();
