@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\GraphQL\Mutations;
 
 use App\Enums\ProjectRole;
+use App\Exceptions\GraphQLMutationException;
 use App\Mail\InvitedToProject;
 use App\Models\Project;
 use App\Models\ProjectInvitation;
@@ -26,9 +27,10 @@ final class InviteToProject extends AbstractMutation
      *     role: ProjectRole,
      * } $args
      *
+     * @throws GraphQLMutationException
      * @throws Exception
      */
-    protected function mutate(array $args): void
+    public function __invoke(null $_, array $args): self
     {
         // This field might not reset when testing since the same mocked request is reused.
         $this->invitedUser = null;
@@ -56,18 +58,15 @@ final class InviteToProject extends AbstractMutation
 
         $project = isset($args['projectId']) ? Project::find((int) $args['projectId']) : null;
         if ($project === null || $user->cannot('inviteUser', $project)) {
-            $this->message = 'This action is unauthorized.';
-            return;
+            throw new GraphQLMutationException('This action is unauthorized.');
         }
 
         if (ProjectInvitation::where(['email' => $args['email'], 'project_id' => $args['projectId']])->exists()) {
-            $this->message = 'Duplicate invitations are not allowed.';
-            return;
+            throw new GraphQLMutationException('Duplicate invitations are not allowed.');
         }
 
         if ($project->users()->where('email', $args['email'])->exists()) {
-            $this->message = 'User is already a member of this project.';
-            return;
+            throw new GraphQLMutationException('User is already a member of this project.');
         }
 
         $this->invitedUser = ProjectInvitation::create([
@@ -81,5 +80,7 @@ final class InviteToProject extends AbstractMutation
         // The email gets sent to the queue, so we have no way to know immediately whether it was sent or not.
         // TODO: We should eventually track whether the email was actually sent.
         Mail::to($args['email'])->send(new InvitedToProject($this->invitedUser));
+
+        return $this;
     }
 }
