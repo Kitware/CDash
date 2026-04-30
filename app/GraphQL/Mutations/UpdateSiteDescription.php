@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\GraphQL\Mutations;
 
+use App\Exceptions\GraphQLMutationException;
 use App\Models\Site;
 use App\Models\User;
 
@@ -15,20 +16,22 @@ final class UpdateSiteDescription extends AbstractMutation
      *     siteId: int,
      *     description: string
      * } $args
+     *
+     * @throws GraphQLMutationException
      */
-    protected function mutate(array $args): void
+    public function __invoke(null $_, array $args): self
     {
         /** @var ?User $user */
         $user = auth()->user();
 
         if ($user === null) {
-            abort(401, 'Authentication required to edit site descriptions.');
+            throw new GraphQLMutationException('Authentication required to edit site descriptions.');
         }
 
         $site = Site::find((int) $args['siteId']);
 
         if ($site === null) {
-            abort(404, 'Requested site not found.');
+            throw new GraphQLMutationException('Requested site not found.');
         }
 
         $newSiteInformation = $site->mostRecentInformation?->getAttributes() ?? [];
@@ -39,5 +42,7 @@ final class UpdateSiteDescription extends AbstractMutation
         $site->information()->create($newSiteInformation);
 
         $this->site = $site;
+
+        return $this;
     }
 }

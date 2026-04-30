@@ -14,12 +14,14 @@ final class DeletePinnedTestMeasurement extends AbstractMutation
      *     id: int,
      * } $args
      */
-    protected function mutate(array $args): void
+    public function __invoke(null $_, array $args): self
     {
         $measurement = PinnedTestMeasurement::find((int) $args['id']);
 
         Gate::authorize('deletePinnedTestMeasurement', $measurement?->project);
 
         $measurement?->delete();
+
+        return $this;
     }
 }

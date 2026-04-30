@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\GraphQL\Mutations;
 
+use App\Exceptions\GraphQLMutationException;
 use App\Models\Site;
 use App\Models\User;
 
@@ -15,25 +16,29 @@ final class ClaimSite extends AbstractMutation
     /** @param array{
      *     siteId: int
      * } $args
+     *
+     * @throws GraphQLMutationException
      */
-    protected function mutate(array $args): void
+    public function __invoke(null $_, array $args): self
     {
         /** @var ?User $user */
         $user = auth()->user();
 
         if ($user === null) {
-            abort(401, 'Authentication required to claim sites.');
+            throw new GraphQLMutationException('Authentication required to claim sites.');
         }
 
         $site = Site::find((int) $args['siteId']);
 
         if ($site === null) {
-            abort(404, 'Requested site not found.');
+            throw new GraphQLMutationException('Requested site not found.');
         }
 
         $site->maintainers()->syncWithoutDetaching($user);
 
         $this->site = $site;
         $this->user = $user;
+
+        return $this;
     }
 }

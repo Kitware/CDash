@@ -109,13 +109,8 @@ class RevokeGlobalInvitationTest extends TestCase
             }
         ', [
             'invitationId' => $invitation->id,
-        ])->assertExactJson([
-            'data' => [
-                'revokeGlobalInvitation' => [
-                    'message' => 'This action is unauthorized.',
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.revokeGlobalInvitation', null)
+            ->assertGraphQLErrorMessage('This action is unauthorized.');
 
         self::assertTrue($invitation->refresh()->exists());
     }
@@ -143,13 +138,8 @@ class RevokeGlobalInvitationTest extends TestCase
             }
         ', [
             'invitationId' => $invitation->id,
-        ])->assertExactJson([
-            'data' => [
-                'revokeGlobalInvitation' => [
-                    'message' => 'This action is unauthorized.',
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.revokeGlobalInvitation', null)
+            ->assertGraphQLErrorMessage('This action is unauthorized.');
 
         self::assertTrue($invitation->refresh()->exists());
     }
@@ -166,12 +156,7 @@ class RevokeGlobalInvitationTest extends TestCase
             }
         ', [
             'invitationId' => 1234567,
-        ])->assertExactJson([
-            'data' => [
-                'revokeGlobalInvitation' => [
-                    'message' => 'Invitation does not exist.',
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.revokeGlobalInvitation', null)
+            ->assertGraphQLErrorMessage('Invitation does not exist.');
     }
 }

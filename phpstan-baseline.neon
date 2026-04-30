@@ -247,19 +247,19 @@ parameters:
 			path: app/GraphQL/Directives/FilterableDirective.php
 
 		-
-			rawMessage: 'Parameter #1 $args (array{userId: int, role: App\Enums\GlobalRole}) of method App\GraphQL\Mutations\ChangeGlobalRole::mutate() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::mutate()'
+			rawMessage: 'Parameter #2 $args (array{userId: int, role: App\Enums\GlobalRole}) of method App\GraphQL\Mutations\ChangeGlobalRole::__invoke() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::__invoke()'
 			identifier: method.childParameterType
 			count: 1
 			path: app/GraphQL/Mutations/ChangeGlobalRole.php
 
 		-
-			rawMessage: 'Parameter #1 $args (array{userId: int, projectId: int, role: App\Enums\ProjectRole}) of method App\GraphQL\Mutations\ChangeProjectRole::mutate() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::mutate()'
+			rawMessage: 'Parameter #2 $args (array{userId: int, projectId: int, role: App\Enums\ProjectRole}) of method App\GraphQL\Mutations\ChangeProjectRole::__invoke() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::__invoke()'
 			identifier: method.childParameterType
 			count: 1
 			path: app/GraphQL/Mutations/ChangeProjectRole.php
 
 		-
-			rawMessage: 'Parameter #1 $args (array{siteId: int}) of method App\GraphQL\Mutations\ClaimSite::mutate() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::mutate()'
+			rawMessage: 'Parameter #2 $args (array{siteId: int}) of method App\GraphQL\Mutations\ClaimSite::__invoke() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::__invoke()'
 			identifier: method.childParameterType
 			count: 1
 			path: app/GraphQL/Mutations/ClaimSite.php
@@ -289,7 +289,7 @@ parameters:
 			path: app/GraphQL/Mutations/CreateComment.php
 
 		-
-			rawMessage: 'Parameter #1 $args (array{email: string, role: App\Enums\GlobalRole}) of method App\GraphQL\Mutations\CreateGlobalInvitation::mutate() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::mutate()'
+			rawMessage: 'Parameter #2 $args (array{email: string, role: App\Enums\GlobalRole}) of method App\GraphQL\Mutations\CreateGlobalInvitation::__invoke() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::__invoke()'
 			identifier: method.childParameterType
 			count: 1
 			path: app/GraphQL/Mutations/CreateGlobalInvitation.php
@@ -301,7 +301,7 @@ parameters:
 			path: app/GraphQL/Mutations/CreatePinnedTestMeasurement.php
 
 		-
-			rawMessage: 'Parameter #1 $args (array{projectId: int, name: string}) of method App\GraphQL\Mutations\CreatePinnedTestMeasurement::mutate() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::mutate()'
+			rawMessage: 'Parameter #2 $args (array{projectId: int, name: string}) of method App\GraphQL\Mutations\CreatePinnedTestMeasurement::__invoke() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::__invoke()'
 			identifier: method.childParameterType
 			count: 1
 			path: app/GraphQL/Mutations/CreatePinnedTestMeasurement.php
@@ -325,7 +325,7 @@ parameters:
 			path: app/GraphQL/Mutations/DeleteAuthenticationToken.php
 
 		-
-			rawMessage: 'Parameter #1 $args (array{id: int}) of method App\GraphQL\Mutations\DeletePinnedTestMeasurement::mutate() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::mutate()'
+			rawMessage: 'Parameter #2 $args (array{id: int}) of method App\GraphQL\Mutations\DeletePinnedTestMeasurement::__invoke() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::__invoke()'
 			identifier: method.childParameterType
 			count: 1
 			path: app/GraphQL/Mutations/DeletePinnedTestMeasurement.php
@@ -337,43 +337,43 @@ parameters:
 			path: app/GraphQL/Mutations/DeleteRepository.php
 
 		-
-			rawMessage: 'Parameter #1 $args (array{email: string, projectId: int, role: App\Enums\ProjectRole}) of method App\GraphQL\Mutations\InviteToProject::mutate() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::mutate()'
+			rawMessage: 'Parameter #2 $args (array{email: string, projectId: int, role: App\Enums\ProjectRole}) of method App\GraphQL\Mutations\InviteToProject::__invoke() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::__invoke()'
 			identifier: method.childParameterType
 			count: 1
 			path: app/GraphQL/Mutations/InviteToProject.php
 
 		-
-			rawMessage: 'Parameter #1 $args (array{projectId: int}) of method App\GraphQL\Mutations\JoinProject::mutate() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::mutate()'
+			rawMessage: 'Parameter #2 $args (array{projectId: int}) of method App\GraphQL\Mutations\JoinProject::__invoke() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::__invoke()'
 			identifier: method.childParameterType
 			count: 1
 			path: app/GraphQL/Mutations/JoinProject.php
 
 		-
-			rawMessage: 'Parameter #1 $args (array{userId: int, projectId: int}) of method App\GraphQL\Mutations\RemoveProjectUser::mutate() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::mutate()'
+			rawMessage: 'Parameter #2 $args (array{userId: int, projectId: int}) of method App\GraphQL\Mutations\RemoveProjectUser::__invoke() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::__invoke()'
 			identifier: method.childParameterType
 			count: 1
 			path: app/GraphQL/Mutations/RemoveProjectUser.php
 
 		-
-			rawMessage: 'Parameter #1 $args (array{userId: int}) of method App\GraphQL\Mutations\RemoveUser::mutate() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::mutate()'
+			rawMessage: 'Parameter #2 $args (array{userId: int}) of method App\GraphQL\Mutations\RemoveUser::__invoke() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::__invoke()'
 			identifier: method.childParameterType
 			count: 1
 			path: app/GraphQL/Mutations/RemoveUser.php
 
 		-
-			rawMessage: 'Parameter #1 $args (array{invitationId: int}) of method App\GraphQL\Mutations\RevokeGlobalInvitation::mutate() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::mutate()'
+			rawMessage: 'Parameter #2 $args (array{invitationId: int}) of method App\GraphQL\Mutations\RevokeGlobalInvitation::__invoke() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::__invoke()'
 			identifier: method.childParameterType
 			count: 1
 			path: app/GraphQL/Mutations/RevokeGlobalInvitation.php
 
 		-
-			rawMessage: 'Parameter #1 $args (array{invitationId: int}) of method App\GraphQL\Mutations\RevokeProjectInvitation::mutate() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::mutate()'
+			rawMessage: 'Parameter #2 $args (array{invitationId: int}) of method App\GraphQL\Mutations\RevokeProjectInvitation::__invoke() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::__invoke()'
 			identifier: method.childParameterType
 			count: 1
 			path: app/GraphQL/Mutations/RevokeProjectInvitation.php
 
 		-
-			rawMessage: 'Parameter #1 $args (array{siteId: int}) of method App\GraphQL\Mutations\UnclaimSite::mutate() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::mutate()'
+			rawMessage: 'Parameter #2 $args (array{siteId: int}) of method App\GraphQL\Mutations\UnclaimSite::__invoke() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::__invoke()'
 			identifier: method.childParameterType
 			count: 1
 			path: app/GraphQL/Mutations/UnclaimSite.php
@@ -397,7 +397,7 @@ parameters:
 			path: app/GraphQL/Mutations/UpdatePinnedTestMeasurementOrder.php
 
 		-
-			rawMessage: 'Parameter #1 $args (array{projectId: int, pinnedTestMeasurementIds: array<int>}) of method App\GraphQL\Mutations\UpdatePinnedTestMeasurementOrder::mutate() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::mutate()'
+			rawMessage: 'Parameter #2 $args (array{projectId: int, pinnedTestMeasurementIds: array<int>}) of method App\GraphQL\Mutations\UpdatePinnedTestMeasurementOrder::__invoke() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::__invoke()'
 			identifier: method.childParameterType
 			count: 1
 			path: app/GraphQL/Mutations/UpdatePinnedTestMeasurementOrder.php
@@ -415,7 +415,7 @@ parameters:
 			path: app/GraphQL/Mutations/UpdateProject.php
 
 		-
-			rawMessage: 'Parameter #1 $args (array{siteId: int, description: string}) of method App\GraphQL\Mutations\UpdateSiteDescription::mutate() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::mutate()'
+			rawMessage: 'Parameter #2 $args (array{siteId: int, description: string}) of method App\GraphQL\Mutations\UpdateSiteDescription::__invoke() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::__invoke()'
 			identifier: method.childParameterType
 			count: 1
 			path: app/GraphQL/Mutations/UpdateSiteDescription.php

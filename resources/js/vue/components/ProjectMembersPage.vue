@@ -518,7 +518,7 @@ export default {
             projectId: $projectId
             role: $role
           }) {
-            message
+            __typename
           }
         }`,
         variables: {
@@ -543,7 +543,6 @@ export default {
             projectId: $projectId
             role: $role
           }) {
-            message
             invitedUser {
               id
               email
@@ -564,10 +563,6 @@ export default {
         },
         updateQueries: {
           projectInvitations(prev, { mutationResult }) {
-            if (mutationResult.data.inviteToProject.message !== null) {
-              return prev;
-            }
-
             const data = JSON.parse(JSON.stringify(prev));
             data.project.invitations.edges.push({
               __typename: 'ProjectInvitationEdge',
@@ -578,17 +573,13 @@ export default {
             return data;
           },
         },
-      }).then((mutationResult) => {
-        if (mutationResult.data.inviteToProject.message !== null) {
-          this.inviteMembersModalError = mutationResult.data.inviteToProject.message;
-        }
-        else {
-          // eslint-disable-next-line no-undef
-          invite_members_modal.close();
-          this.inviteMembersModalEmail = '';
-          this.inviteMembersModalRole = this.USER_TYPES.USER;
-        }
+      }).then(() => {
+        // eslint-disable-next-line no-undef
+        invite_members_modal.close();
+        this.inviteMembersModalEmail = '';
+        this.inviteMembersModalRole = this.USER_TYPES.USER;
       }).catch((error) => {
+        this.inviteMembersModalError = error.message;
         console.error(error);
       });
     },
@@ -599,7 +590,7 @@ export default {
           revokeProjectInvitation(input: {
             invitationId: $invitationId
           }) {
-            message
+            __typename
           }
         }`,
         variables: {
@@ -630,7 +621,7 @@ export default {
             userId: $userId
             projectId: $projectId
           }) {
-            message
+            __typename
           }
         }`,
         variables: {
@@ -660,16 +651,16 @@ export default {
           joinProject(input: {
             projectId: $projectId
           }) {
-            message
+            __typename
           }
         }`,
         variables: {
           projectId: this.projectId,
         },
-      }).catch((error) => {
-        console.error(error);
       }).then(() => {
         window.location.reload();
+      }).catch((error) => {
+        console.error(error);
       });
     },
 
@@ -680,17 +671,17 @@ export default {
             userId: $userId
             projectId: $projectId
           }) {
-            message
+            __typename
           }
         }`,
         variables: {
           userId: this.userId,
           projectId: this.projectId,
         },
-      }).catch((error) => {
-        console.error(error);
       }).then(() => {
         window.location.reload();
+      }).catch((error) => {
+        console.error(error);
       });
     },
   },

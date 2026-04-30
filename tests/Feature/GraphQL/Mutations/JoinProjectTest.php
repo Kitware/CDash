@@ -102,13 +102,8 @@ class JoinProjectTest extends TestCase
             }
         ', [
             'projectId' => $this->project?->id,
-        ])->assertExactJson([
-            'data' => [
-                'joinProject' => [
-                    'message' => 'This action is unauthorized.',
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.joinProject', null)
+            ->assertGraphQLErrorMessage('This action is unauthorized.');
 
         self::assertEmpty($this->project?->users()->get());
     }
@@ -129,13 +124,8 @@ class JoinProjectTest extends TestCase
             }
         ', [
             'projectId' => $this->project->id,
-        ])->assertExactJson([
-            'data' => [
-                'joinProject' => [
-                    'message' => 'This action is unauthorized.',
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.joinProject', null)
+            ->assertGraphQLErrorMessage('This action is unauthorized.');
 
         self::assertEmpty($this->project->users()->get());
     }
@@ -154,12 +144,7 @@ class JoinProjectTest extends TestCase
             }
         ', [
             'projectId' => 123456789,
-        ])->assertExactJson([
-            'data' => [
-                'joinProject' => [
-                    'message' => 'This action is unauthorized.',
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.joinProject', null)
+            ->assertGraphQLErrorMessage('This action is unauthorized.');
     }
 }

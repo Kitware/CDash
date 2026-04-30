@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\GraphQL\Mutations;
 
+use App\Exceptions\GraphQLMutationException;
 use App\Models\Project;
 use App\Models\User;
-use Exception;
 
 final class JoinProject extends AbstractMutation
 {
@@ -15,9 +15,9 @@ final class JoinProject extends AbstractMutation
      *     projectId: int,
      * } $args
      *
-     * @throws Exception
+     * @throws GraphQLMutationException
      */
-    protected function mutate(array $args): void
+    public function __invoke(null $_, array $args): self
     {
         /** @var ?User $user */
         $user = auth()->user();
@@ -28,7 +28,7 @@ final class JoinProject extends AbstractMutation
             || $project === null
             || $user->cannot('join', $project)
         ) {
-            abort(401, 'This action is unauthorized.');
+            throw new GraphQLMutationException('This action is unauthorized.');
         }
 
         $project
@@ -40,5 +40,7 @@ final class JoinProject extends AbstractMutation
                 'emailmissingsites' => false,
                 'role' => Project::PROJECT_USER,
             ]);
+
+        return $this;
     }
 }

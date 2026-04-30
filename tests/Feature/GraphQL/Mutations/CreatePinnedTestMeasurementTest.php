@@ -35,14 +35,8 @@ class CreatePinnedTestMeasurementTest extends TestCase
                 'projectId' => 1234567,
                 'name' => $name,
             ],
-        ])->assertExactJson([
-            'data' => [
-                'createPinnedTestMeasurement' => [
-                    'message' => 'This action is unauthorized.',
-                    'pinnedTestMeasurement' => null,
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.createPinnedTestMeasurement', null)
+            ->assertGraphQLErrorMessage('This action is unauthorized.');
 
         self::assertEmpty(PinnedTestMeasurement::all());
     }
@@ -67,14 +61,8 @@ class CreatePinnedTestMeasurementTest extends TestCase
                 'projectId' => $project->id,
                 'name' => $name,
             ],
-        ])->assertExactJson([
-            'data' => [
-                'createPinnedTestMeasurement' => [
-                    'message' => 'This action is unauthorized.',
-                    'pinnedTestMeasurement' => null,
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.createPinnedTestMeasurement', null)
+            ->assertGraphQLErrorMessage('This action is unauthorized.');
 
         self::assertEmpty(PinnedTestMeasurement::all());
     }
@@ -100,14 +88,8 @@ class CreatePinnedTestMeasurementTest extends TestCase
                 'projectId' => $project->id,
                 'name' => $name,
             ],
-        ])->assertExactJson([
-            'data' => [
-                'createPinnedTestMeasurement' => [
-                    'message' => 'This action is unauthorized.',
-                    'pinnedTestMeasurement' => null,
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.createPinnedTestMeasurement', null)
+            ->assertGraphQLErrorMessage('This action is unauthorized.');
 
         self::assertEmpty(PinnedTestMeasurement::all());
     }

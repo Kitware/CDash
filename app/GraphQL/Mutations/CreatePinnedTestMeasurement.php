@@ -18,7 +18,7 @@ final class CreatePinnedTestMeasurement extends AbstractMutation
      *     name: string,
      * } $args
      */
-    protected function mutate(array $args): void
+    public function __invoke(null $_, array $args): self
     {
         $project = Project::find((int) $args['projectId']);
         Gate::authorize('createPinnedTestMeasurement', $project);
@@ -34,5 +34,7 @@ final class CreatePinnedTestMeasurement extends AbstractMutation
             'name' => $args['name'],
             'position' => $nextAvailablePosition,
         ]);
+
+        return $this;
     }
 }

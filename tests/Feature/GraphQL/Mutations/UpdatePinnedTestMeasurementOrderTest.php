@@ -45,14 +45,8 @@ class UpdatePinnedTestMeasurementOrderTest extends TestCase
                 'projectId' => $project1->id,
                 'pinnedTestMeasurementIds' => [$measurement2->id],
             ],
-        ])->assertExactJson([
-            'data' => [
-                'updatePinnedTestMeasurementOrder' => [
-                    'message' => 'IDs for all PinnedTestMeasurements must be provided.',
-                    'pinnedTestMeasurements' => null,
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.updatePinnedTestMeasurementOrder', null)
+            ->assertGraphQLErrorMessage('IDs for all PinnedTestMeasurements must be provided.');
     }
 
     public function testFailsWhenMissingIds(): void
@@ -85,14 +79,8 @@ class UpdatePinnedTestMeasurementOrderTest extends TestCase
                 'projectId' => $project->id,
                 'pinnedTestMeasurementIds' => [$measurement1->id],
             ],
-        ])->assertExactJson([
-            'data' => [
-                'updatePinnedTestMeasurementOrder' => [
-                    'message' => 'IDs for all PinnedTestMeasurements must be provided.',
-                    'pinnedTestMeasurements' => null,
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.updatePinnedTestMeasurementOrder', null)
+            ->assertGraphQLErrorMessage('IDs for all PinnedTestMeasurements must be provided.');
 
         self::assertSame(1, $measurement1->fresh()?->position);
         self::assertSame(2, $measurement2->fresh()?->position);
@@ -119,14 +107,8 @@ class UpdatePinnedTestMeasurementOrderTest extends TestCase
                 'projectId' => $project->id,
                 'pinnedTestMeasurementIds' => [],
             ],
-        ])->assertExactJson([
-            'data' => [
-                'updatePinnedTestMeasurementOrder' => [
-                    'message' => "Can't order an empty set.",
-                    'pinnedTestMeasurements' => null,
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.updatePinnedTestMeasurementOrder', null)
+            ->assertGraphQLErrorMessage("Can't order an empty set.");
     }
 
     public function testFailsWhenAnonymousUser(): void
@@ -153,14 +135,8 @@ class UpdatePinnedTestMeasurementOrderTest extends TestCase
                 'projectId' => $project->id,
                 'pinnedTestMeasurementIds' => [$measurement->id],
             ],
-        ])->assertExactJson([
-            'data' => [
-                'updatePinnedTestMeasurementOrder' => [
-                    'message' => 'This action is unauthorized.',
-                    'pinnedTestMeasurements' => null,
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.updatePinnedTestMeasurementOrder', null)
+            ->assertGraphQLErrorMessage('This action is unauthorized.');
 
         self::assertSame(1, $measurement->fresh()?->position);
     }
@@ -190,14 +166,8 @@ class UpdatePinnedTestMeasurementOrderTest extends TestCase
                 'projectId' => $project->id,
                 'pinnedTestMeasurementIds' => [$measurement->id],
             ],
-        ])->assertExactJson([
-            'data' => [
-                'updatePinnedTestMeasurementOrder' => [
-                    'message' => 'This action is unauthorized.',
-                    'pinnedTestMeasurements' => null,
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.updatePinnedTestMeasurementOrder', null)
+            ->assertGraphQLErrorMessage('This action is unauthorized.');
 
         self::assertSame(1, $measurement->fresh()?->position);
     }
@@ -228,14 +198,8 @@ class UpdatePinnedTestMeasurementOrderTest extends TestCase
                 'projectId' => $project->id,
                 'pinnedTestMeasurementIds' => [$measurement->id, $measurement->id],
             ],
-        ])->assertExactJson([
-            'data' => [
-                'updatePinnedTestMeasurementOrder' => [
-                    'message' => 'Provided set cannot contain duplicate IDs.',
-                    'pinnedTestMeasurements' => null,
-                ],
-            ],
-        ]);
+        ])->assertJsonPath('data.updatePinnedTestMeasurementOrder', null)
+            ->assertGraphQLErrorMessage('Provided set cannot contain duplicate IDs.');
 
         self::assertSame(1, $measurement->fresh()?->position);
     }
