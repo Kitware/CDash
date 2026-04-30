@@ -181,3 +181,66 @@ export class BasicFilterField extends FilterField {
   }
 }
 
+export class RelationshipFilterField extends FilterField {
+  /**
+   * @param {String} name
+   * @param {FilterType} type
+   * @param {function} values
+   * @param {String} field
+   * @param {String} relationship
+   */
+  constructor(name, type, values, field, relationship) {
+    super(name, type, values);
+    this.field = field;
+    this.relationship = relationship;
+  }
+
+  /**
+   * @param {*} data
+   * @param {String} operator
+   * @return Object
+   */
+  getFilter(data, operator) {
+    return {
+      has: {
+        [this.relationship]: {
+          [operator]: {
+            [this.field]: data,
+          },
+        },
+      },
+    };
+  }
+
+  /**
+   * @param {Object} filter
+   * @return boolean
+   */
+  isMatch(filter) {
+    const relationshipObject = filter.has;
+    if (!relationshipObject || !relationshipObject[this.relationship]) {
+      return false;
+    }
+
+    const operator = Object.keys(relationshipObject[this.relationship])[0];
+    return operator && this.field in relationshipObject[this.relationship][operator];
+  }
+
+  /**
+   * @param {Object} filter
+   * @return {*}
+   */
+  getValueFromFilter(filter) {
+    const operator = Object.keys(filter.has[this.relationship])[0];
+    return filter.has[this.relationship][operator][this.field];
+  }
+
+  /**
+   * @param {Object} filter
+   * @return {String}
+   */
+  getOperatorFromFilter(filter) {
+    return Object.keys(filter.has[this.relationship])[0];
+  }
+}
+

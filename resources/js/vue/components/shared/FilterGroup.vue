@@ -77,7 +77,7 @@ import {
   faBarsStaggered,
   faTrash,
 } from '@fortawesome/free-solid-svg-icons';
-import {BasicFilterField, FilterType, getEnumValues} from './Filters/FilterUtils';
+import {BasicFilterField, FilterType, getEnumValues, RelationshipFilterField} from './Filters/FilterUtils';
 
 const AVAILABLE_FILTERS = Object.freeze({
   BuildTestsFiltersMultiFilterInput: (apolloClient) => [
@@ -87,6 +87,7 @@ const AVAILABLE_FILTERS = Object.freeze({
     new BasicFilterField('Start Time', FilterType.DATETIME, null, 'startTime'),
     new BasicFilterField('Status', FilterType.ENUM, () => getEnumValues(apolloClient, 'TestStatus'), 'status'),
     new BasicFilterField('Time Status', FilterType.ENUM, () => getEnumValues(apolloClient, 'TestTimeStatusCategory'), 'timeStatusCategory'),
+    new RelationshipFilterField('Label', FilterType.TEXT, null, 'text', 'labels'),
   ],
   BuildCoverageFiltersMultiFilterInput: () => [
     new BasicFilterField('Lines of Code Tested', FilterType.NUMBER, null, 'linesOfCodeTested'),
