@@ -145,18 +145,6 @@ parameters:
 			path: app/Exceptions/Handler.php
 
 		-
-			rawMessage: Access to an undefined property GraphQL\Language\AST\ListTypeNode|GraphQL\Language\AST\NamedTypeNode|GraphQL\Language\AST\NonNullTypeNode::$name.
-			identifier: property.notFound
-			count: 1
-			path: app/GraphQL/Directives/FilterDirective.php
-
-		-
-			rawMessage: Access to an undefined property GraphQL\Language\AST\ListTypeNode|GraphQL\Language\AST\NamedTypeNode|GraphQL\Language\AST\NonNullTypeNode::$type.
-			identifier: property.notFound
-			count: 1
-			path: app/GraphQL/Directives/FilterDirective.php
-
-		-
 			rawMessage: 'Generic type Illuminate\Database\Eloquent\Relations\Relation<Illuminate\Database\Eloquent\Model> in PHPDoc tag @param for parameter $builder does not specify all template types of class Illuminate\Database\Eloquent\Relations\Relation: TRelatedModel, TDeclaringModel, TResult'
 			identifier: generics.lessTypes
 			count: 1
@@ -181,15 +169,33 @@ parameters:
 			path: app/GraphQL/Directives/FilterDirective.php
 
 		-
+			rawMessage: 'Method App\GraphQL\Directives\FilterDirective::ensureFilterInputTypes() throws checked exception GraphQL\Error\SyntaxError but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
+			count: 2
+			path: app/GraphQL/Directives/FilterDirective.php
+
+		-
+			rawMessage: 'Method App\GraphQL\Directives\FilterDirective::ensureFilterInputTypes() throws checked exception JsonException but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
+			count: 2
+			path: app/GraphQL/Directives/FilterDirective.php
+
+		-
 			rawMessage: 'Method App\GraphQL\Directives\FilterDirective::handleBuilder() never returns Illuminate\Database\Query\Builder so it can be removed from the return type.'
 			identifier: return.unusedType
 			count: 1
 			path: app/GraphQL/Directives/FilterDirective.php
 
 		-
+			rawMessage: 'Only booleans are allowed in a negated boolean, (GraphQL\Language\AST\Node&GraphQL\Language\AST\TypeDefinitionNode)|null given.'
+			identifier: booleanNot.exprNotBoolean
+			count: 1
+			path: app/GraphQL/Directives/FilterDirective.php
+
+		-
 			rawMessage: 'Parameter #2 $array of function array_key_exists expects array, array<string, GraphQL\Language\AST\Node&GraphQL\Language\AST\TypeDefinitionNode>|GraphQL\Language\AST\NodeList<GraphQL\Language\AST\Node&GraphQL\Language\AST\TypeDefinitionNode> given.'
 			identifier: argument.type
-			count: 1
+			count: 2
 			path: app/GraphQL/Directives/FilterDirective.php
 
 		-
@@ -205,8 +211,14 @@ parameters:
 			path: app/GraphQL/Directives/FilterDirective.php
 
 		-
-			rawMessage: 'Parameter #2 $type of method App\GraphQL\Directives\FilterDirective::getSubFilterableFieldsForType() expects GraphQL\Language\AST\InterfaceTypeDefinitionNode|GraphQL\Language\AST\ObjectTypeDefinitionNode, GraphQL\Language\AST\Node&GraphQL\Language\AST\TypeDefinitionNode given.'
+			rawMessage: 'Parameter #3 $type of method App\GraphQL\Directives\FilterDirective::getSubFilterableFieldsForType() expects GraphQL\Language\AST\InterfaceTypeDefinitionNode|GraphQL\Language\AST\ObjectTypeDefinitionNode, GraphQL\Language\AST\Node&GraphQL\Language\AST\TypeDefinitionNode given.'
 			identifier: argument.type
+			count: 1
+			path: app/GraphQL/Directives/FilterDirective.php
+
+		-
+			rawMessage: 'array<string, GraphQL\Language\AST\Node&GraphQL\Language\AST\TypeDefinitionNode>|GraphQL\Language\AST\NodeList<GraphQL\Language\AST\Node&GraphQL\Language\AST\TypeDefinitionNode> does not accept null.'
+			identifier: offsetAssign.valueType
 			count: 1
 			path: app/GraphQL/Directives/FilterDirective.php
 
