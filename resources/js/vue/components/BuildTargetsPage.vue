@@ -16,7 +16,7 @@
 
       <loading-indicator :is-loading="!build || !targets">
         <div class="tw-w-full tw-bg-base-100 tw-flex tw-flex-col tw-rounded-lg tw-border tw-border-gray-200 tw-p-4">
-          <CommandGanttChart :commands="formattedCommands" />
+          <CommandFlameChart :commands="formattedCommands" />
         </div>
       </loading-indicator>
 
@@ -61,13 +61,13 @@ import LoadingIndicator from './shared/LoadingIndicator.vue';
 import BuildSidebar from './shared/BuildSidebar.vue';
 import gql from 'graphql-tag';
 import FilterBuilder from './shared/FilterBuilder.vue';
-import CommandGanttChart from './shared/CommandGanttChart.vue';
+import CommandFlameChart from './shared/CommandFlameChart.vue';
 import { DateTime, Duration } from 'luxon';
 import Utils from './shared/Utils';
 
 export default {
   components: {
-    CommandGanttChart,
+    CommandFlameChart,
     FilterBuilder,
     LoadingIndicator,
     DataTable,

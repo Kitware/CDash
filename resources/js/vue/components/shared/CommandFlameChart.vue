@@ -16,9 +16,16 @@
         <span class="tw-text-gray-700">{{ type }}</span>
       </div>
     </div>
-    <div
-      ref="chartContainerRef"
+    <flame-chart
       class="tw-w-full tw-p-0 tw-flex-grow"
+      :data="processedChartData.data"
+      :tracks="processedChartData.tracks"
+      :overall-start-time="processedChartData.overallStartTime"
+      :overall-end-time="processedChartData.overallEndTime"
+      :height="totalChartHeight"
+      :tooltip-formatter="getTooltipElement"
+      :render-item="renderItem"
+      @click="onCellClick"
     />
     <template v-if="selectedCommandId">
       <div class="tw-divider" />
@@ -28,12 +35,16 @@
 </template>
 
 <script>
-import * as echarts from 'echarts';
+import FlameChart from './Charts/FlameChart.vue';
 import CommandInfoCard from './CommandInfoCard.vue';
 import Utils from './Utils';
 
 export default {
-  components: {CommandInfoCard},
+  name: 'CommandFlameChart',
+  components: {
+    CommandInfoCard,
+    FlameChart,
+  },
   props: {
     /**
      * An array of command objects. Each object is expected to have the following properties:
@@ -68,53 +79,21 @@ export default {
       },
       commandBarHeight: 15,
       commandBarSpacing: 5,
-      processedChartData: {},
-      overallStartTime: 0,
       selectedCommandId: null,
     };
   },
-  watch: {
-    commands: {
-      handler(newCommands) {
-        if (newCommands && newCommands.length > 0) {
-          this.renderChart(newCommands);
-        }
-      },
-      deep: true,
-    },
-    selectedCommandId: {
-      handler() {
-        // We only need to update the series data to apply the selection highlight.
-        // This avoids resetting the zoom level.
-        this.chart.setOption({
-          series: [{
-            id: 'command-series',
-            data: this.processedChartData.data,
-          }],
-        });
-      },
-    },
-  },
-  created() {
-    this.chart = null;
-  },
-  mounted() {
-    this.$nextTick(() => {
-      window.addEventListener('resize', this.handleResize);
-      if (this.commands && this.commands.length > 0) {
-        this.renderChart(this.commands);
+  computed: {
+    processedChartData() {
+      if (!this.commands || this.commands.length === 0) {
+        return {
+          data: [],
+          tracks: [],
+          overallStartTime: 0,
+          overallEndTime: 0,
+        };
       }
-    });
-  },
-  unmounted() {
-    if (this.chart) {
-      this.chart.dispose();
-    }
-    window.removeEventListener('resize', this.handleResize);
-  },
-  methods: {
-    processData(incomingCommands) {
-      const rawCommandData = incomingCommands.map((cmd, index) => {
+
+      const rawCommandData = this.commands.map((cmd, index) => {
         const startTime = cmd.startTime.toMillis();
         const endTime = startTime + cmd.duration.toMillis();
         return {
@@ -125,12 +104,8 @@ export default {
         };
       });
 
-      if (rawCommandData.length > 0) {
-        this.overallStartTime = Math.min(...rawCommandData.map(cmd => cmd.startTime));
-      }
-      else {
-        this.overallStartTime = 0;
-      }
+      const overallStartTime = Math.min(...rawCommandData.map(cmd => cmd.startTime));
+      const overallEndTime = Math.max(...rawCommandData.map(cmd => cmd.endTime));
 
       const trackEndTimes = [];
       const processedData = [];
@@ -171,144 +146,20 @@ export default {
         processedData.push(processedCommand);
       });
 
-      this.processedChartData = {
+      return {
         data: processedData,
         tracks: trackEndTimes.map((_, i) => `Thread ${i + 1}`),
+        overallStartTime,
+        overallEndTime,
       };
     },
 
-    initializeChart() {
-      if (!this.$refs.chartContainerRef || this.chart) {
-        return;
-      }
-      this.chart = echarts.init(this.$refs.chartContainerRef);
-      this.chart.on('click', this.onCellClick);
-    },
-
-    renderChart(commands) {
-      this.processData(commands);
-
+    totalChartHeight() {
       const numtracks = this.processedChartData.tracks.length;
-      const overallEndTime = Math.max(...this.processedChartData.data.map(d => d.value[2]));
-      const totalChartHeight = (this.commandBarHeight + this.commandBarSpacing) * numtracks + 60;
-
-      // The container size must be set before initializing the chart.
-      if (this.$refs.chartContainerRef) {
-        this.$refs.chartContainerRef.style.height = `${totalChartHeight}px`;
-      }
-
-      // If the chart instance doesn't exist yet, initialize it now that the container has dimensions.
-      if (!this.chart) {
-        this.initializeChart();
-      }
-
-      // Ensure the chart is resized to fit the newly set container height.
-      this.chart.resize();
-
-      const option = {
-        tooltip: {
-          confine: true,
-          trigger: 'item',
-          extraCssText: 'max-width: 500px; white-space: normal;',
-          formatter: this.getTooltipElement,
-        },
-        grid: {
-          top: '0px',
-          left: '10px',
-          right: '10px',
-          bottom: '50px',
-        },
-        xAxis: {
-          max: overallEndTime,
-          type: 'time',
-          axisLabel: {
-            formatter: val => {
-              const relativeTime = val - this.overallStartTime;
-              return Utils.formatDuration(relativeTime);
-            },
-          },
-        },
-        yAxis: {
-          show: false,
-          type: 'category',
-          data: this.processedChartData.tracks,
-          inverse: true,
-        },
-        dataZoom: [
-          {
-            type: 'slider',
-            filterMode: 'weakFilter',
-            showDataShadow: false,
-            bottom: 5,
-            height: 15,
-          },
-          {
-            type: 'inside',
-            filterMode: 'weakFilter',
-          },
-        ],
-        series: [{
-          id: 'command-series',
-          type: 'custom',
-          coordinateSystem: 'cartesian2d',
-          data: this.processedChartData.data,
-          large: true,
-          progressive: 400,
-          renderItem: (params, api) => {
-            const trackIndex = api.value(0);
-            const start = api.coord([api.value(1), trackIndex]);
-            const end = api.coord([api.value(2), trackIndex]);
-            if (!start || !end) {
-              return;
-            }
-
-            const height = this.commandBarHeight;
-            const itemType = api.value(5);
-            const isDisabled = api.value(6);
-            const commandId = api.value(11);
-
-            const style = {
-              fill: this.colors[itemType],
-              opacity: 0.85,
-            };
-
-            if (isDisabled) {
-              Object.assign(style, {
-                fill: '#d1d5db',
-                stroke: '#d1d5db',
-                lineWidth: 0.5,
-                opacity: 0.4,
-              });
-            }
-
-            if (commandId === this.selectedCommandId) {
-              Object.assign(style, {
-                stroke: '#000000',
-                lineWidth: 2,
-              });
-            }
-
-            return {
-              type: 'rect',
-              shape: {
-                x: start[0],
-                y: start[1] - height / 2,
-                width: end[0] - start[0],
-                height: height,
-              },
-              style: style,
-            };
-          },
-          encode: {
-            x: [1, 2],
-            y: 0,
-          },
-        }],
-      };
-
-      this.chart.setOption(option, true);
+      return (this.commandBarHeight + this.commandBarSpacing) * numtracks + 60;
     },
-
+  },
+  methods: {
     getTooltipElement(params) {
       if (!params.data.value || !Array.isArray(params.data.value)) {
         return '';
@@ -359,9 +210,7 @@ export default {
     },
 
     handleResize() {
-      if (this.chart) {
-        this.chart.resize();
-      }
+      // No-op, vue-echarts handles resize via autoresize prop
     },
 
     onCellClick(params) {
@@ -376,6 +225,52 @@ export default {
       else {
         this.selectedCommandId = clickedCommandId;
       }
+    },
+
+    renderItem(params, api) {
+      const trackIndex = api.value(0);
+      const start = api.coord([api.value(1), trackIndex]);
+      const end = api.coord([api.value(2), trackIndex]);
+      if (!start || !end) {
+        return;
+      }
+
+      const height = this.commandBarHeight;
+      const itemType = api.value(5);
+      const isDisabled = api.value(6);
+      const commandId = api.value(11);
+
+      const style = {
+        fill: this.colors[itemType],
+        opacity: 0.85,
+      };
+
+      if (isDisabled) {
+        Object.assign(style, {
+          fill: '#d1d5db',
+          stroke: '#d1d5db',
+          lineWidth: 0.5,
+          opacity: 0.4,
+        });
+      }
+
+      if (commandId === this.selectedCommandId) {
+        Object.assign(style, {
+          stroke: '#000000',
+          lineWidth: 2,
+        });
+      }
+
+      return {
+        type: 'rect',
+        shape: {
+          x: start[0],
+          y: start[1] - height / 2,
+          width: end[0] - start[0],
+          height: height,
+        },
+        style: style,
+      };
     },
   },
 };
