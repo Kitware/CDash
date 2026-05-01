@@ -34,7 +34,7 @@
     "ansi_up": "^6.0.6",
     "as-jqplot": "^1.0.8",
     "autoprefixer": "^10.5.0",
-    "axios": "^1.13",
+    "axios": "^1.15",
     "bootstrap": "^4.6.2",
     "core-js": "^3.49.0",
     "d3": "^3.5.17",
