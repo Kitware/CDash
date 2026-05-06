@@ -674,6 +674,8 @@ class Index extends ResultsApi
             $buildplatform = 'linux';
         } elseif (strtolower(substr($build_array['osname'], 0, 7)) === 'freebsd') {
             $buildplatform = 'freebsd';
+        } elseif (strtolower(substr($build_array['osname'], 0, 7)) === 'openbsd') {
+            $buildplatform = 'openbsd';
         } elseif (strtolower(substr($build_array['osname'], 0, 3)) === 'gnu') {
             $buildplatform = 'gnu';
         }
