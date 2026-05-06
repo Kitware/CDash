@@ -32,6 +32,7 @@ class CleanDatabase extends Command
         DatabaseCleanupUtils::deleteUnusedRows('note', 'id', 'build2note', 'noteid');
         DatabaseCleanupUtils::deleteUnusedRows('testoutput', 'id', 'build2test', 'outputid');
         DatabaseCleanupUtils::deleteUnusedRows('uploadfile', 'id', 'build2uploadfile', 'fileid');
+        DatabaseCleanupUtils::deleteUnusedRows('buildupdate', 'id', 'build', 'updateid');
 
         Log::info('Deleting unused rows from `image`');
         $num_deleted = DB::delete('DELETE FROM image WHERE
