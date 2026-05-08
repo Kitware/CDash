@@ -45,6 +45,9 @@ elif [ "$1" = "start-worker" ] ; then
   php artisan storage:mkdirs
   php -d memory_limit=-1 artisan queue:work --verbose --max-time=3600 --memory=${WORKER_MEMORY_LIMIT:-256}
 
+elif [ "$1" = "validate-xml" ] ; then
+  php artisan submission:validate /tmp/validate/*.xml
+
 # Otherwise, throw an error...
 else
   echo "Unknown argument(s) provided: $*"
