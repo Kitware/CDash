@@ -71,11 +71,13 @@ class CreateProjectPageTest extends BrowserTestCase
         $this->browse(function (Browser $browser): void {
             $browser->loginAs($this->users['admin'])
                 ->visit('/projects/new')
-                ->waitFor('@create-project-page')
-                ->type('@project-name-input', 'invalid project name %')
-                ->click('@create-project-button')
-                ->waitFor('@project-name-validation-errors')
-                ->assertSeeIn('@project-name-validation-errors', 'Project name may only contain letters, numbers, dashes, and underscores.')
+                ->whenAvailable('@create-project-page', function (Browser $browser): void {
+                    $browser->waitFor('@project-name-input')
+                        ->type('@project-name-input', 'invalid project name %')
+                        ->click('@create-project-button')
+                        ->waitFor('@project-name-validation-errors')
+                        ->assertSeeIn('@project-name-validation-errors', 'Project name may only contain letters, numbers, dashes, and underscores.');
+                })
             ;
         });
     }
@@ -93,11 +95,13 @@ class CreateProjectPageTest extends BrowserTestCase
         $this->browse(function (Browser $browser) use ($project_name): void {
             $browser->loginAs($this->users['admin'])
                 ->visit('/projects/new')
-                ->waitFor('@create-project-page')
-                ->type('@project-name-input', $project_name)
-                ->click('@create-project-button')
-                ->waitFor('@project-name-validation-errors')
-                ->assertSeeIn('@project-name-validation-errors', 'A project with this name already exists.')
+                ->whenAvailable('@create-project-page', function (Browser $browser) use ($project_name): void {
+                    $browser->waitFor('@project-name-input')
+                        ->type('@project-name-input', $project_name)
+                        ->click('@create-project-button')
+                        ->waitFor('@project-name-validation-errors')
+                        ->assertSeeIn('@project-name-validation-errors', 'A project with this name already exists.');
+                })
             ;
         });
     }
@@ -112,10 +116,12 @@ class CreateProjectPageTest extends BrowserTestCase
         $this->browse(function (Browser $browser) use ($description, $name): void {
             $browser->loginAs($this->users['admin'])
                 ->visit('/projects/new')
-                ->waitFor('@create-project-page')
-                ->type('@project-name-input', $name)
-                ->type('@project-description-input', $description)
-                ->click('@create-project-button')
+                ->whenAvailable('@create-project-page', function (Browser $browser) use ($description, $name): void {
+                    $browser->waitFor('@project-name-input')
+                        ->type('@project-name-input', $name)
+                        ->type('@project-description-input', $description)
+                        ->click('@create-project-button');
+                })
                 ->waitForReload()
             ;
         });
@@ -135,10 +141,12 @@ class CreateProjectPageTest extends BrowserTestCase
         $this->browse(function (Browser $browser) use ($name): void {
             $browser->loginAs($this->users['admin'])
                 ->visit('/projects/new')
-                ->waitFor('@create-project-page')
-                ->type('@project-name-input', $name)
-                ->click('@project-authenticated-submissions-input')
-                ->click('@create-project-button')
+                ->whenAvailable('@create-project-page', function (Browser $browser) use ($name): void {
+                    $browser->waitFor('@project-name-input')
+                        ->type('@project-name-input', $name)
+                        ->click('@project-authenticated-submissions-input')
+                        ->click('@create-project-button');
+                })
                 ->waitForReload()
             ;
         });
@@ -171,10 +179,12 @@ class CreateProjectPageTest extends BrowserTestCase
         $this->browse(function (Browser $browser) use ($fieldname, $name): void {
             $browser->loginAs($this->users['admin'])
                 ->visit('/projects/new')
-                ->waitFor('@create-project-page')
-                ->type('@project-name-input', $name)
-                ->click('@project-visibility-' . $fieldname)
-                ->click('@create-project-button')
+                ->whenAvailable('@create-project-page', function (Browser $browser) use ($fieldname, $name): void {
+                    $browser->waitFor('@project-name-input')
+                        ->type('@project-name-input', $name)
+                        ->click('@project-visibility-' . $fieldname)
+                        ->click('@create-project-button');
+                })
                 ->waitForReload()
             ;
         });
