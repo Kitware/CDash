@@ -958,6 +958,12 @@ parameters:
 			path: app/Http/Controllers/ProjectOverviewController.php
 
 		-
+			rawMessage: Foreach overwrites $coverage_category with its value variable.
+			identifier: foreach.valueOverwrite
+			count: 2
+			path: app/Http/Controllers/ProjectOverviewController.php
+
+		-
 			rawMessage: Implicit array creation is not allowed - variable $menu does not exist.
 			identifier: variable.implicitArray
 			count: 1
@@ -10794,6 +10800,12 @@ parameters:
 		-
 			rawMessage: Property CDash\Messaging\Topic\BuildErrorTopic::$type has no type specified.
 			identifier: missingType.property
+			count: 1
+			path: app/cdash/include/Messaging/Topic/BuildErrorTopic.php
+
+		-
+			rawMessage: 'Property CDash\Model\Build::$Errors (array) in isset() is not nullable.'
+			identifier: isset.property
 			count: 1
 			path: app/cdash/include/Messaging/Topic/BuildErrorTopic.php
 
@@ -22027,12 +22039,6 @@ parameters:
 			path: app/cdash/tests/test_subprojectnextprevious.php
 
 		-
-			rawMessage: 'Part $first_buildid (mixed) of encapsed string cannot be cast to string.'
-			identifier: encapsedStringPart.nonString
-			count: 1
-			path: app/cdash/tests/test_subprojectnextprevious.php
-
-		-
 			rawMessage: 'Part $found (mixed) of encapsed string cannot be cast to string.'
 			identifier: encapsedStringPart.nonString
 			count: 1
@@ -22040,18 +22046,6 @@ parameters:
 
 		-
 			rawMessage: 'Part $label (mixed) of encapsed string cannot be cast to string.'
-			identifier: encapsedStringPart.nonString
-			count: 1
-			path: app/cdash/tests/test_subprojectnextprevious.php
-
-		-
-			rawMessage: 'Part $second_buildid (mixed) of encapsed string cannot be cast to string.'
-			identifier: encapsedStringPart.nonString
-			count: 2
-			path: app/cdash/tests/test_subprojectnextprevious.php
-
-		-
-			rawMessage: 'Part $third_buildid (mixed) of encapsed string cannot be cast to string.'
 			identifier: encapsedStringPart.nonString
 			count: 1
 			path: app/cdash/tests/test_subprojectnextprevious.php
