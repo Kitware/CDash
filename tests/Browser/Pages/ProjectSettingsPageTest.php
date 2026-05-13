@@ -257,7 +257,8 @@ class ProjectSettingsPageTest extends BrowserTestCase
                 ->waitFor('@integrations-tab-link')
                 ->click('@integrations-tab-link')
                 ->whenAvailable('@integrations-tab', function (Browser $browser) use ($branch, $password, $username, $url): void {
-                    $browser->assertButtonDisabled('@create-repository-button')
+                    $browser->waitForText('No integrations configured yet.')
+                        ->assertButtonDisabled('@create-repository-button')
                         ->type('@repository-url-input', $url)
                         ->type('@repository-username-input', $username)
                         ->type('@repository-password-input', $password)
@@ -274,8 +275,8 @@ class ProjectSettingsPageTest extends BrowserTestCase
                 ->waitFor('@integrations-tab-link')
                 ->click('@integrations-tab-link')
                 ->whenAvailable('@integrations-tab', function (Browser $browser) use ($branch, $username, $url): void {
-                    $browser->assertButtonDisabled('@create-repository-button')
-                        ->waitForText($url)
+                    $browser->waitForText($url)
+                        ->assertButtonDisabled('@create-repository-button')
                         ->assertSee($username)
                         ->assertSee($branch)
                         ->click('@delete-repository-button')
@@ -289,7 +290,8 @@ class ProjectSettingsPageTest extends BrowserTestCase
                 ->waitFor('@integrations-tab-link')
                 ->click('@integrations-tab-link')
                 ->whenAvailable('@integrations-tab', function (Browser $browser) use ($branch, $username, $url): void {
-                    $browser->assertButtonDisabled('@create-repository-button')
+                    $browser->waitForText('No integrations configured yet.')
+                        ->assertButtonDisabled('@create-repository-button')
                         ->assertDontSee($url)
                         ->assertDontSee($username)
                         ->assertDontSee($branch)
@@ -321,13 +323,15 @@ class ProjectSettingsPageTest extends BrowserTestCase
                         ->assertSee($m2)
                         ->click('@delete-test-measurement-button')
                         ->waitUntilMissingText($m1)
+                        ->waitForText($m2)
                         ->assertSee($m2);
                 })
                 ->refresh()
                 ->waitFor('@test-measurements-tab-link')
                 ->click('@test-measurements-tab-link')
                 ->whenAvailable('@test-measurements-tab', function (Browser $browser) use ($m1, $m2): void {
-                    $browser->assertSee($m2)
+                    $browser->waitForText($m2)
+                        ->assertSee($m2)
                         ->assertDontSee($m1);
                 });
         });
