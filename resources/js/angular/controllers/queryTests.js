@@ -33,12 +33,6 @@ export function QueryTestsController($scope, $rootScope, $filter, apiLoader, fil
     $scope.finishSetup = function() {
       // Hide test output context by default.
       $scope.cdash.showmatchingoutput = false;
-
-      // Check for label filters
-      $scope.cdash.extrafilterurl = filters.getLabelString($scope.cdash.filterdata);
-      if ($scope.cdash.extrafilterurl) {
-        $scope.cdash.querytestfilters = $scope.cdash.extrafilterurl;
-      }
       $scope.cdash.builds = $filter('orderBy')($scope.cdash.builds, $scope.orderByFields);
       $scope.pageChanged();
     };

@@ -220,13 +220,6 @@ export function IndexController($scope, $rootScope, $location, $http, $filter, $
       $scope.pageChanged($scope.cdash.buildgroups[i]);
     }
 
-    // Check for label filters
-    $scope.cdash.extrafilterurl = '';
-    if ($scope.cdash.sharelabelfilters) {
-      $scope.cdash.extrafilterurl = filters.getLabelString($scope.cdash.filterdata);
-      $scope.cdash.querytestfilters = $scope.cdash.extrafilterurl;
-    }
-
     // Read simple/advanced view cookie setting.
     var advanced_cookie = $.cookie('cdash_'+$scope.cdash.projectname+'_advancedview');
     var show_time_columns = 0;

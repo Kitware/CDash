@@ -25,7 +25,7 @@ class ActualTrilinosSubmissionTestCase extends TrilinosSubmissionTestCase
             'EmailBrokenSubmission' => '1',
             'DisplayLabels' => '1',
             'NightlyTime' => '21:00:00 America/New_York',
-            'ShareLabelFilters' => '1'];
+        ];
         return $this->createProject($settings);
     }
 

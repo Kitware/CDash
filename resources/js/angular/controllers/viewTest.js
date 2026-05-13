@@ -37,11 +37,6 @@ export function ViewTestController($scope, $rootScope, $http, $filter, $q, apiLo
 
     apiLoader.loadPageData($scope, 'api/v1/viewTest.php');
     $scope.finishSetup = function() {
-      // Check for label filters
-      $scope.cdash.extrafilterurl = filters.getLabelString($scope.cdash.filterdata);
-      if ($scope.cdash.extrafilterurl) {
-        $scope.cdash.querytestfilters = $scope.cdash.extrafilterurl;
-      }
       $scope.cdash.tests = $filter('orderBy')($scope.cdash.tests, $scope.orderByFields);
       $scope.setPage(1);
     };

@@ -9874,12 +9874,6 @@ parameters:
 			path: app/cdash/app/Model/Project.php
 
 		-
-			rawMessage: Property CDash\Model\Project::$ShareLabelFilters has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
 			rawMessage: Property CDash\Model\Project::$ShowCoverageCode has no type specified.
 			identifier: missingType.property
 			count: 1
@@ -18912,7 +18906,7 @@ parameters:
 				04/01/2023
 			'''
 			identifier: function.deprecated
-			count: 3
+			count: 1
 			path: app/cdash/tests/test_filtertestlabels.php
 
 		-

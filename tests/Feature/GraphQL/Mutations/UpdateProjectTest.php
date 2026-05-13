@@ -206,7 +206,6 @@ class UpdateProjectTest extends TestCase
             ['autoRemoveTimeFrame', 10, 'autoremovetimeframe', 10],
             ['fileUploadLimit', 50, 'uploadquota', 53687091200],
             ['showCoverageCode', false, 'showcoveragecode', false],
-            ['shareLabelFilters', false, 'sharelabelfilters', false],
             ['banner', 'new banner', 'banner', 'new banner'],
         ];
     }

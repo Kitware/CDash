@@ -42,7 +42,6 @@ use Illuminate\Support\Facades\Auth;
  * @property int $uploadquota Maximum sum of uploaded file sizes (in bytes)
  * @property int $uploadquotagb Maximum sum of uploaded file sizes (in GiB)
  * @property bool $showcoveragecode
- * @property bool $sharelabelfilters
  * @property bool $authenticatesubmissions
  * @property ?string $ldapfilter
  * @property ?string $banner
@@ -90,7 +89,6 @@ class Project extends Model
         'uploadquota',
         'uploadquotagb',
         'showcoveragecode',
-        'sharelabelfilters',
         'authenticatesubmissions',
         'ldapfilter',
         'banner',
@@ -109,7 +107,6 @@ class Project extends Model
         'displaylabels' => 'boolean',
         'coveragethreshold' => 'integer',
         'showcoveragecode' => 'boolean',
-        'sharelabelfilters' => 'boolean',
         'authenticatesubmissions' => 'boolean',
     ];
 

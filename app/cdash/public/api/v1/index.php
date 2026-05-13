@@ -236,7 +236,6 @@ $response['filterdata'] = $controller->getFilterData();
 $response['filterurl'] = get_filterurl();
 
 $controller->checkForSubProjectFilters();
-$response['sharelabelfilters'] = $controller->shareLabelFilters;
 $response['testfilters'] = $controller->subProjectTestFilters;
 
 $build_data = $controller->getDailyBuilds();

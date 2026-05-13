@@ -1350,7 +1350,7 @@ class Index extends ResultsApi
             }
         }
         unset($filters);
-        if ($filter_on_labels && $this->project->ShareLabelFilters) {
+        if ($filter_on_labels) {
             $this->shareLabelFilters = true;
             $this->labelIds = get_label_ids_from_filterdata($this->filterdata);
         }

@@ -340,9 +340,6 @@ type Project {
   """
   showCoverageCode: Boolean! @rename(attribute: "showcoveragecode")
 
-  "Forward label filters from index.php to queryTests.php and viewTest.php."
-  shareLabelFilters: Boolean! @rename(attribute: "sharelabelfilters")
-
   "Custom text displayed at the top of a project's dashboard."
   banner: String
 
@@ -493,8 +490,6 @@ input UpdateProjectInput @validator {
   fileUploadLimit: Int @rename(attribute: "uploadquotagb")
 
   showCoverageCode: Boolean @rename(attribute: "showcoveragecode")
-
-  shareLabelFilters: Boolean @rename(attribute: "sharelabelfilters")
 
   banner: String
 }

@@ -532,7 +532,6 @@ export default {
         autoRemoveTimeFrame: 0,
         fileUploadLimit: 50,
         showCoverageCode: true,
-        shareLabelFilters: false,
         banner: '',
       },
       validationErrors: {},
@@ -576,7 +575,6 @@ export default {
             autoRemoveTimeFrame
             fileUploadLimit
             showCoverageCode
-            shareLabelFilters
             banner
           }
         }

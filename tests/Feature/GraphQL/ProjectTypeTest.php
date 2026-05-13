@@ -165,8 +165,6 @@ class ProjectTypeTest extends TestCase
             ['uploadquota', 10737418240, 'fileUploadLimit', 10],
             ['showcoveragecode', true, 'showCoverageCode', true],
             ['showcoveragecode', false, 'showCoverageCode', false],
-            ['sharelabelfilters', true, 'shareLabelFilters', true],
-            ['sharelabelfilters', false, 'shareLabelFilters', false],
             ['banner', 'test', 'banner', 'test'],
             ['banner', null, 'banner', null],
         ];
