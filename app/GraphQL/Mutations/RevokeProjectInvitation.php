@@ -7,6 +7,7 @@ namespace App\GraphQL\Mutations;
 use App\Exceptions\GraphQLMutationException;
 use App\Models\ProjectInvitation;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 
 final class RevokeProjectInvitation extends AbstractMutation
 {
@@ -28,6 +29,9 @@ final class RevokeProjectInvitation extends AbstractMutation
         Gate::authorize('revokeInvitation', $invitation->project);
 
         $invitation->delete();
+
+        $user = auth()->user();
+        Log::info("User {$user?->id} revoked invitation for user {$invitation->email} to project {$invitation->project_id}.");
 
         return $this;
     }

@@ -7,6 +7,7 @@ namespace App\GraphQL\Mutations;
 use App\Models\Project;
 use App\Models\Repository;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 
 final class CreateRepository extends AbstractMutation
 {
@@ -33,6 +34,9 @@ final class CreateRepository extends AbstractMutation
             'password' => $args['password'],
             'branch' => $args['branch'],
         ]);
+
+        $user = auth()->user();
+        Log::info("User {$user?->id} created repository {$this->repository?->id} for project {$project?->id}.");
 
         return $this;
     }

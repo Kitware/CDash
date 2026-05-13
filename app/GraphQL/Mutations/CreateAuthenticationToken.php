@@ -10,6 +10,7 @@ use App\Utils\AuthTokenUtil;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 
 final class CreateAuthenticationToken extends AbstractMutation
 {
@@ -46,6 +47,13 @@ final class CreateAuthenticationToken extends AbstractMutation
             $args['description'] ?? '',
             $args['expiration'],
         );
+
+        $logMessage = "User {$user->id} created authentication token with scope {$this->token->scope}";
+        if ($this->token->projectid > 0) {
+            $logMessage .= " for project {$this->token->projectid}";
+        }
+
+        Log::info("$logMessage.");
 
         return $this;
     }

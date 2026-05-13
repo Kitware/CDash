@@ -6,6 +6,7 @@ namespace App\GraphQL\Mutations;
 
 use App\Models\PinnedTestMeasurement;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 
 final class DeletePinnedTestMeasurement extends AbstractMutation
 {
@@ -21,6 +22,9 @@ final class DeletePinnedTestMeasurement extends AbstractMutation
         Gate::authorize('deletePinnedTestMeasurement', $measurement?->project);
 
         $measurement?->delete();
+
+        $user = auth()->user();
+        Log::info("User {$user?->id} deleted pinned test measurement {$args['id']}.");
 
         return $this;
     }

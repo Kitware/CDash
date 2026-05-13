@@ -7,6 +7,7 @@ namespace App\GraphQL\Mutations;
 use App\Exceptions\GraphQLMutationException;
 use App\Models\Project;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 
 final class RemoveProjectUser extends AbstractMutation
 {
@@ -43,6 +44,8 @@ final class RemoveProjectUser extends AbstractMutation
         }
 
         $project->users()->detach($userToRemove->id);
+
+        Log::info("User {$user->id} removed user {$userToRemove->id} from project {$project->id}.");
 
         return $this;
     }

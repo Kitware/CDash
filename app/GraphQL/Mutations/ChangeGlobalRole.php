@@ -7,6 +7,7 @@ namespace App\GraphQL\Mutations;
 use App\Enums\GlobalRole;
 use App\Exceptions\GraphQLMutationException;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
@@ -54,6 +55,8 @@ final class ChangeGlobalRole extends AbstractMutation
 
         $userToChange->admin = $args['role'] === GlobalRole::ADMINISTRATOR;
         $userToChange->save();
+
+        Log::info("User {$user->id} changed global role to {$args['role']->value} for user {$userToChange->id}.");
 
         $this->user = $userToChange;
 

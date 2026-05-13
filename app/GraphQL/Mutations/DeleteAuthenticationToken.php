@@ -7,6 +7,7 @@ namespace App\GraphQL\Mutations;
 use App\Models\AuthToken;
 use App\Utils\AuthTokenUtil;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Support\Facades\Log;
 
 final class DeleteAuthenticationToken extends AbstractMutation
 {
@@ -25,6 +26,8 @@ final class DeleteAuthenticationToken extends AbstractMutation
         if ($userid === null || !AuthTokenUtil::deleteToken($token->hash ?? '', $userid)) {
             throw new AuthenticationException('This action is unauthorized.');
         }
+
+        Log::info("User {$userid} deleted authentication token {$args['tokenId']}.");
 
         return $this;
     }

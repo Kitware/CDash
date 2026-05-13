@@ -7,6 +7,7 @@ namespace App\GraphQL\Mutations;
 use App\Models\PinnedTestMeasurement;
 use App\Models\Project;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 
 final class CreatePinnedTestMeasurement extends AbstractMutation
 {
@@ -34,6 +35,9 @@ final class CreatePinnedTestMeasurement extends AbstractMutation
             'name' => $args['name'],
             'position' => $nextAvailablePosition,
         ]);
+
+        $user = auth()->user();
+        Log::info("User {$user?->id} created pinned test measurement {$this->pinnedTestMeasurement?->id} for project {$project?->id}.");
 
         return $this;
     }

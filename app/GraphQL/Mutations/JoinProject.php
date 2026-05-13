@@ -7,6 +7,7 @@ namespace App\GraphQL\Mutations;
 use App\Exceptions\GraphQLMutationException;
 use App\Models\Project;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 
 final class JoinProject extends AbstractMutation
 {
@@ -40,6 +41,8 @@ final class JoinProject extends AbstractMutation
                 'emailmissingsites' => false,
                 'role' => Project::PROJECT_USER,
             ]);
+
+        Log::info("User {$user->id} joined project {$project->id}.");
 
         return $this;
     }

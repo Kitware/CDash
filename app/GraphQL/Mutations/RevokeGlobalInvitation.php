@@ -7,6 +7,7 @@ namespace App\GraphQL\Mutations;
 use App\Exceptions\GraphQLMutationException;
 use App\Models\GlobalInvitation;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 
 final class RevokeGlobalInvitation extends AbstractMutation
 {
@@ -28,6 +29,9 @@ final class RevokeGlobalInvitation extends AbstractMutation
         Gate::authorize('revokeInvitation', $invitation);
 
         $invitation->delete();
+
+        $user = auth()->user();
+        Log::info("User {$user?->id} revoked global invitation for {$invitation->email}.");
 
         return $this;
     }

@@ -6,6 +6,7 @@ namespace App\GraphQL\Mutations;
 
 use App\Models\Repository;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 
 final class DeleteRepository extends AbstractMutation
 {
@@ -21,6 +22,9 @@ final class DeleteRepository extends AbstractMutation
         Gate::authorize('deleteRepository', $repository?->project);
 
         $repository?->delete();
+
+        $user = auth()->user();
+        Log::info("User {$user?->id} deleted repository {$args['repositoryId']}.");
 
         return $this;
     }

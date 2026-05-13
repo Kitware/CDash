@@ -12,6 +12,7 @@ use App\Models\ProjectInvitation;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -76,6 +77,8 @@ final class InviteToProject extends AbstractMutation
             'role' => $args['role'],  // Note: we assume that anyone who can invite users can assign them any role.
             'invitation_timestamp' => Carbon::now(),
         ]);
+
+        Log::info("User {$user->id} invited user {$args['email']} to project {$project->id} with role {$args['role']->value}.");
 
         // The email gets sent to the queue, so we have no way to know immediately whether it was sent or not.
         // TODO: We should eventually track whether the email was actually sent.

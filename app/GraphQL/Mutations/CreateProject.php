@@ -7,6 +7,7 @@ namespace App\GraphQL\Mutations;
 use App\Models\Project;
 use App\Services\ProjectService;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 
 class CreateProject
 {
@@ -26,6 +27,9 @@ class CreateProject
             'emailmissingsites' => false,
             'role' => Project::PROJECT_ADMIN,
         ]);
+
+        $user = auth()->user();
+        Log::info("User {$user?->id} created project {$project->id}.");
 
         return $project;
     }

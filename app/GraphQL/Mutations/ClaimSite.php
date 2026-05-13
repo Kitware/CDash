@@ -7,6 +7,7 @@ namespace App\GraphQL\Mutations;
 use App\Exceptions\GraphQLMutationException;
 use App\Models\Site;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 
 final class ClaimSite extends AbstractMutation
 {
@@ -35,6 +36,8 @@ final class ClaimSite extends AbstractMutation
         }
 
         $site->maintainers()->syncWithoutDetaching($user);
+
+        Log::info("User {$user->id} claimed site {$site->id}.");
 
         $this->site = $site;
         $this->user = $user;

@@ -8,6 +8,7 @@ use App\Models\Build;
 use App\Models\Comment;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 
 final class CreateComment extends AbstractMutation
 {
@@ -40,6 +41,8 @@ final class CreateComment extends AbstractMutation
         ]);
 
         $this->comment = $comment->refresh();
+
+        Log::info("User {$user->id} left comment {$comment->id} on build {$build?->id}.");
 
         return $this;
     }

@@ -7,6 +7,7 @@ namespace App\GraphQL\Mutations;
 use App\Exceptions\GraphQLMutationException;
 use App\Models\Site;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 
 final class UpdateSiteDescription extends AbstractMutation
 {
@@ -40,6 +41,8 @@ final class UpdateSiteDescription extends AbstractMutation
         unset($newSiteInformation['timestamp']);
         $newSiteInformation['description'] = $args['description'];
         $site->information()->create($newSiteInformation);
+
+        Log::info("User {$user->id} updated description for site {$site->id}.");
 
         $this->site = $site;
 

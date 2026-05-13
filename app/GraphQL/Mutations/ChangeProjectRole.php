@@ -9,6 +9,7 @@ use App\Exceptions\GraphQLMutationException;
 use App\Models\Project;
 use App\Models\User;
 use Exception;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -64,6 +65,8 @@ final class ChangeProjectRole extends AbstractMutation
                 ProjectRole::ADMINISTRATOR => Project::PROJECT_ADMIN,
             },
         ]);
+
+        Log::info("User {$user->id} changed role to {$args['role']->value} for user {$userToChange->id} in project {$project->id}.");
 
         if ($rowsEdited !== 1) {
             throw new Exception('Failed to update pivot table with new role.');

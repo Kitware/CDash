@@ -12,6 +12,7 @@ use App\Models\User;
 use Exception;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -73,6 +74,8 @@ final class CreateGlobalInvitation extends AbstractMutation
             'invitation_timestamp' => Carbon::now(),
             'password' => Hash::make($password),
         ]);
+
+        Log::info("User {$user->id} invited user {$this->invitedUser->email} with role {$this->invitedUser->role->value}.");
 
         // The email gets sent to the queue, so we have no way to know immediately whether it was sent or not.
         // TODO: We should eventually track whether the email was actually sent.

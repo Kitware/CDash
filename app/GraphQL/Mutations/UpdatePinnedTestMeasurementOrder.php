@@ -9,6 +9,7 @@ use App\Models\PinnedTestMeasurement;
 use App\Models\Project;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 
 final class UpdatePinnedTestMeasurementOrder extends AbstractMutation
 {
@@ -56,6 +57,9 @@ final class UpdatePinnedTestMeasurementOrder extends AbstractMutation
         }
 
         $this->pinnedTestMeasurements = $project?->pinnedTestMeasurements()->orderBy('position')->get();
+
+        $user = auth()->user();
+        Log::info("User {$user?->id} updated pinned test measurement order for project {$project?->id}.");
 
         return $this;
     }

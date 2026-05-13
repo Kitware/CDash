@@ -7,6 +7,7 @@ namespace App\GraphQL\Mutations;
 use App\Exceptions\GraphQLMutationException;
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 
 final class RemoveUser extends AbstractMutation
 {
@@ -28,6 +29,9 @@ final class RemoveUser extends AbstractMutation
         Gate::authorize('delete', $user);
 
         $user->delete();
+
+        $authUser = auth()->user();
+        Log::info("User {$authUser?->id} removed user {$args['userId']}.");
 
         return $this;
     }

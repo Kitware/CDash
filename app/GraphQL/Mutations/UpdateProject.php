@@ -6,6 +6,7 @@ namespace App\GraphQL\Mutations;
 
 use App\Models\Project;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 
 final class UpdateProject extends AbstractMutation
 {
@@ -25,6 +26,9 @@ final class UpdateProject extends AbstractMutation
         $project?->update($args);
 
         $this->project = $project;
+
+        $user = auth()->user();
+        Log::info("User {$user?->id} updated project {$project?->id}.");
 
         return $this;
     }
