@@ -14,6 +14,19 @@ use PDO;
 
 class RepositoryUtils
 {
+    private static function is_github_url(string $url): bool
+    {
+        if (str_contains($url, 'github.com')) {
+            return true;
+        }
+        $enterpriseUrl = config('cdash.github_enterprise_url');
+        if ($enterpriseUrl !== null) {
+            $host = parse_url($enterpriseUrl, PHP_URL_HOST);
+            return is_string($host) && str_contains($url, $host);
+        }
+        return false;
+    }
+
     /** Return the GitHub diff URL */
     public static function get_github_diff_url($projecturl, $directory, $file, $revision)
     {
@@ -146,6 +159,18 @@ class RepositoryUtils
     /** Convert GitHub repository viewer URL into corresponding API URL. */
     public static function get_github_api_url($github_url): string
     {
+        $enterpriseUrl = config('cdash.github_enterprise_url');
+        if ($enterpriseUrl !== null) {
+            $host = parse_url($enterpriseUrl, PHP_URL_HOST);
+            if (is_string($host) && str_contains($github_url, $host)) {
+                // GHE API URL format
+                $idx = strpos($github_url, $host);
+                $idx2 = $idx + strlen($host) + 1;
+                $api_url = substr($github_url, 0, $idx) . $host . '/api/v3/repos/';
+                $api_url .= substr($github_url, $idx2);
+                return $api_url;
+            }
+        }
         /*
          * For a URL of the form:
          * ...://github.com/<user>/<repo>
@@ -166,7 +191,7 @@ class RepositoryUtils
         $repo = null;
         $repositories = $project->GetRepositories();
         foreach ($repositories as $repository) {
-            if (str_contains($repository['url'], 'github.com')) {
+            if (self::is_github_url($repository['url'])) {
                 $repo = $repository;
                 break;
             }

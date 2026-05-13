@@ -76,7 +76,7 @@ class GitHub implements RepositoryInterface
 
         $repositories = $this->project->GetRepositories();
         foreach ($repositories as $repo) {
-            if (str_contains($repo['url'], 'github.com')) {
+            if ($this->isGitHubUrl($repo['url'])) {
                 $this->installationId = $repo['username'];
                 break;
             }
@@ -93,7 +93,8 @@ class GitHub implements RepositoryInterface
     protected function initializeApiClient(): void
     {
         $builder = new GitHubBuilder();
-        $apiClient = new GitHubClient($builder, 'machine-man-preview');
+        $enterpriseUrl = config('cdash.github_enterprise_url');
+        $apiClient = new GitHubClient($builder, 'machine-man-preview', $enterpriseUrl);
         $this->setApiClient($apiClient);
     }
 
@@ -660,6 +661,19 @@ class GitHub implements RepositoryInterface
     public function getRepository(): string
     {
         return $this->repo;
+    }
+
+    private function isGitHubUrl(string $url): bool
+    {
+        if (str_contains($url, 'github.com')) {
+            return true;
+        }
+        $enterpriseUrl = config('cdash.github_enterprise_url');
+        if ($enterpriseUrl !== null) {
+            $host = parse_url($enterpriseUrl, PHP_URL_HOST);
+            return is_string($host) && str_contains($url, $host);
+        }
+        return false;
     }
 
     protected function getRepositoryInformation(): void
