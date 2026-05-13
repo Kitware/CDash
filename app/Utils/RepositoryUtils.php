@@ -14,7 +14,7 @@ use PDO;
 
 class RepositoryUtils
 {
-    private static function is_github_url(string $url): bool
+    public static function is_github_url(string $url): bool
     {
         if (str_contains($url, 'github.com')) {
             return true;
