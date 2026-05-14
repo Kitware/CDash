@@ -737,7 +737,6 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
 
         // Verify that 'Back' links to the parent build.
         $pages = [
-            'buildSummary.php',
             'viewDynamicAnalysis.php',
             'viewTest.php',
         ];

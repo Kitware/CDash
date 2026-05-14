@@ -155,27 +155,4 @@ class ProjectWebPageTestCase extends KWWebTestCase
         ];
         $this->assertEqual($result[0], $expected);
     }
-
-    public function testProjectExperimentalLinkBuildSummary(): void
-    {
-        $content = $this->connect($this->url . '/api/v1/index.php?project=BatchmakeExample');
-        $jsonobj = json_decode($content, true);
-        if (count($jsonobj['buildgroups']) < 1) {
-            $this->fail('No build found when expected');
-            return;
-        }
-
-        $buildgroup = array_pop($jsonobj['buildgroups']);
-        $buildid = $buildgroup['builds'][0]['id'];
-        $content = $this->connect($this->url . "/api/v1/buildSummary.php?buildid=$buildid");
-
-        $expected = 'warning C4068: unknown pragma';
-        if (!$content) {
-            return;
-        } elseif (!$this->findString($content, $expected)) {
-            $this->assertTrue(false, 'The webpage does not match right the content exepected');
-            return;
-        }
-        $this->assertTrue(true, 'The webpage match the content exepected');
-    }
 }

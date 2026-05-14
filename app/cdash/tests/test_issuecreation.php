@@ -221,10 +221,5 @@ class IssueCreationTestCase extends KWWebTestCase
                 $this->fail($error_msg);
             }
         }
-
-        // Verify that the issue creation link is not shown for clean builds.
-        $content = $this->get($this->url . "/api/v1/buildSummary.php?buildid={$this->Builds['clean']->Id}");
-        $response = json_decode($content, true);
-        $this->assertFalse($response['newissueurl']);
     }
 }

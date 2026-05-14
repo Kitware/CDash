@@ -589,18 +589,6 @@ parameters:
 			path: app/Http/Controllers/Auth/RegisterController.php
 
 		-
-			rawMessage: 'Argument of an invalid type array|false supplied for foreach, only iterables are supported.'
-			identifier: foreach.nonIterable
-			count: 4
-			path: app/Http/Controllers/BuildController.php
-
-		-
-			rawMessage: 'Call to an undefined method App\Models\Build|Illuminate\Database\Eloquent\Collection<int, App\Models\Build>::notes().'
-			identifier: method.notFound
-			count: 1
-			path: app/Http/Controllers/BuildController.php
-
-		-
 			rawMessage: '''
 				Call to deprecated function pdo_execute():
 				v2.5.0 01/22/2018
@@ -619,12 +607,6 @@ parameters:
 			path: app/Http/Controllers/BuildController.php
 
 		-
-			rawMessage: Cannot access property $name on App\Models\Site|null.
-			identifier: property.nonObject
-			count: 1
-			path: app/Http/Controllers/BuildController.php
-
-		-
 			rawMessage: 'Cannot call method fetchColumn() on PDOStatement|false.'
 			identifier: method.nonObject
 			count: 4
@@ -633,19 +615,7 @@ parameters:
 		-
 			rawMessage: Cannot cast mixed to int.
 			identifier: cast.int
-			count: 7
-			path: app/Http/Controllers/BuildController.php
-
-		-
-			rawMessage: 'Loose comparison via "!=" between mixed and int is not allowed.'
-			identifier: notEqual.notAllowed
-			count: 1
-			path: app/Http/Controllers/BuildController.php
-
-		-
-			rawMessage: 'Loose comparison via "!=" between mixed and string is not allowed.'
-			identifier: notEqual.notAllowed
-			count: 1
+			count: 6
 			path: app/Http/Controllers/BuildController.php
 
 		-
@@ -703,27 +673,9 @@ parameters:
 			path: app/Http/Controllers/BuildController.php
 
 		-
-			rawMessage: 'Parameter #1 $value of function count expects array|Countable, array|false given.'
-			identifier: argument.type
-			count: 4
-			path: app/Http/Controllers/BuildController.php
-
-		-
 			rawMessage: 'Parameter #2 $timestamp of function date expects int|null, int|false given.'
 			identifier: argument.type
-			count: 10
-			path: app/Http/Controllers/BuildController.php
-
-		-
-			rawMessage: 'Variable $buildupdate in isset() is never defined.'
-			identifier: isset.variable
-			count: 1
-			path: app/Http/Controllers/BuildController.php
-
-		-
-			rawMessage: 'Variable $previous_build in isset() always exists and is not nullable.'
-			identifier: isset.variable
-			count: 1
+			count: 2
 			path: app/Http/Controllers/BuildController.php
 
 		-
@@ -19363,18 +19315,6 @@ parameters:
 			path: app/cdash/tests/test_issuecreation.php
 
 		-
-			rawMessage: Cannot access offset 'newissueurl' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_issuecreation.php
-
-		-
-			rawMessage: 'Parameter #1 $result of method WebTestCase::assertFalse() expects bool, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/tests/test_issuecreation.php
-
-		-
 			rawMessage: 'Parameter #1 $string of function urlencode expects string, bool|string given.'
 			identifier: argument.type
 			count: 1
@@ -21229,19 +21169,7 @@ parameters:
 			path: app/cdash/tests/test_projectwebpage.php
 
 		-
-			rawMessage: Cannot access offset 'buildgroups' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/cdash/tests/test_projectwebpage.php
-
-		-
 			rawMessage: Cannot access offset 'buildid' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_projectwebpage.php
-
-		-
-			rawMessage: Cannot access offset 'builds' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: app/cdash/tests/test_projectwebpage.php
@@ -21253,15 +21181,9 @@ parameters:
 			path: app/cdash/tests/test_projectwebpage.php
 
 		-
-			rawMessage: Cannot access offset 'id' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_projectwebpage.php
-
-		-
 			rawMessage: Cannot access offset 0 on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
+			count: 1
 			path: app/cdash/tests/test_projectwebpage.php
 
 		-
@@ -21271,20 +21193,8 @@ parameters:
 			path: app/cdash/tests/test_projectwebpage.php
 
 		-
-			rawMessage: 'Parameter #1 $array of function array_pop expects array, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/tests/test_projectwebpage.php
-
-		-
 			rawMessage: 'Parameter #1 $value of function count expects array|Countable, mixed given.'
 			identifier: argument.type
-			count: 2
-			path: app/cdash/tests/test_projectwebpage.php
-
-		-
-			rawMessage: 'Part $buildid (mixed) of encapsed string cannot be cast to string.'
-			identifier: encapsedStringPart.nonString
 			count: 1
 			path: app/cdash/tests/test_projectwebpage.php
 
@@ -21862,12 +21772,6 @@ parameters:
 			path: app/cdash/tests/test_subprojectnextprevious.php
 
 		-
-			rawMessage: Binary operation "." between non-falsy-string and mixed results in an error.
-			identifier: binaryOp.invalid
-			count: 4
-			path: app/cdash/tests/test_subprojectnextprevious.php
-
-		-
 			rawMessage: 'Call to deprecated method pass() of class SimpleTestCase.'
 			identifier: method.deprecated
 			count: 1
@@ -21883,21 +21787,9 @@ parameters:
 			path: app/cdash/tests/test_subprojectnextprevious.php
 
 		-
-			rawMessage: 'Call to function in_array() with arguments ''buildSummary'', array{''buildSummary''} and true will always evaluate to true.'
-			identifier: function.alreadyNarrowedType
-			count: 5
-			path: app/cdash/tests/test_subprojectnextprevious.php
-
-		-
 			rawMessage: Cannot access offset 'buildgroups' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 4
-			path: app/cdash/tests/test_subprojectnextprevious.php
-
-		-
-			rawMessage: Cannot access offset 'buildid' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 8
 			path: app/cdash/tests/test_subprojectnextprevious.php
 
 		-
@@ -21915,7 +21807,7 @@ parameters:
 		-
 			rawMessage: Cannot access offset 'current' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 4
+			count: 2
 			path: app/cdash/tests/test_subprojectnextprevious.php
 
 		-
@@ -21951,19 +21843,13 @@ parameters:
 		-
 			rawMessage: Cannot access offset 'menu' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 12
+			count: 6
 			path: app/cdash/tests/test_subprojectnextprevious.php
 
 		-
 			rawMessage: Cannot access offset 'next' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 4
-			path: app/cdash/tests/test_subprojectnextprevious.php
-
-		-
-			rawMessage: Cannot access offset 'nextbuild' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 4
+			count: 2
 			path: app/cdash/tests/test_subprojectnextprevious.php
 
 		-
@@ -21987,13 +21873,7 @@ parameters:
 		-
 			rawMessage: Cannot access offset 'previous' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 4
-			path: app/cdash/tests/test_subprojectnextprevious.php
-
-		-
-			rawMessage: Cannot access offset 'previousbuild' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 4
+			count: 2
 			path: app/cdash/tests/test_subprojectnextprevious.php
 
 		-
@@ -22023,7 +21903,7 @@ parameters:
 		-
 			rawMessage: 'Parameter #1 $haystack of function str_contains expects string, mixed given.'
 			identifier: argument.type
-			count: 12
+			count: 6
 			path: app/cdash/tests/test_subprojectnextprevious.php
 
 		-
