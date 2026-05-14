@@ -52,38 +52,6 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <th>
-                        <b>Update</b>
-                      </th>
-                      <td
-                        align="right"
-                        :class="cdash.previousbuild.nupdateerrors > 0 ? 'error' : 'normal'"
-                      >
-                        <b>
-                          <a
-                            class="tw-link tw-link-hover"
-                            :href="$baseURL + '/builds/' + cdash.previousbuild.buildid + '/update'"
-                          >
-                            {{ cdash.previousbuild.nupdateerrors }}
-                          </a>
-                        </b>
-                      </td>
-                      <td
-                        align="right"
-                        :class="cdash.previousbuild.nupdatewarnings > 0 ? 'warning' : 'normal'"
-                      >
-                        <b>
-                          <a
-                            class="tw-link tw-link-hover"
-                            :href="$baseURL + '/builds/' + cdash.previousbuild.buildid + '/update'"
-                          >
-                            {{ cdash.previousbuild.nupdatewarnings }}
-                          </a>
-                        </b>
-                      </td>
-                    </tr>
-
                     <tr v-if="cdash.hasconfigure">
                       <th>
                         <b>Configure</b>
@@ -206,45 +174,6 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <th>
-                        <a
-                          v-if="cdash.hasupdate"
-                          href="#Update"
-                        >
-                          <b>Update</b>
-                        </a>
-                        <span v-if="!cdash.hasupdate">
-                          Update
-                        </span>
-                      </th>
-                      <td
-                        align="right"
-                        :class="cdash.update.nerrors > 0 ? 'error' : 'normal'"
-                      >
-                        <b>
-                          <a
-                            class="tw-link tw-link-hover"
-                            :href="$baseURL + '/builds/' + cdash.build.id + '/update'"
-                          >
-                            {{ cdash.update.nerrors }}
-                          </a>
-                        </b>
-                      </td>
-                      <td
-                        align="right"
-                        :class="cdash.update.nwarnings > 0 ? 'warning' : 'normal'"
-                      >
-                        <b>
-                          <a
-                            class="tw-link tw-link-hover"
-                            :href="$baseURL + '/builds/' + cdash.build.id + '/update'"
-                          >
-                            {{ cdash.update.nwarnings }}
-                          </a>
-                        </b>
-                      </td>
-                    </tr>
                     <tr v-if="cdash.hasconfigure">
                       <th>
                         <a
@@ -386,38 +315,6 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <th>
-                        <b>Update</b>
-                      </th>
-                      <td
-                        align="right"
-                        :class="cdash.nextbuild.nupdateerrors > 0 ? 'error' : 'normal'"
-                      >
-                        <b>
-                          <a
-                            class="tw-link tw-link-hover"
-                            :href="$baseURL + '/builds/' + cdash.nextbuild.buildid + '/update'"
-                          >
-                            {{ cdash.nextbuild.nupdateerrors }}
-                          </a>
-                        </b>
-                      </td>
-                      <td
-                        align="right"
-                        :class="cdash.nextbuild.nupdatewarnings > 0 ? 'warning' : 'normal'"
-                      >
-                        <b>
-                          <a
-                            class="tw-link tw-link-hover"
-                            :href="$baseURL + '/builds/' + cdash.nextbuild.buildid + '/update'"
-                          >
-                            {{ cdash.nextbuild.nupdatewarnings }}
-                          </a>
-                        </b>
-                      </td>
-                    </tr>
-
                     <tr v-if="cdash.hasconfigure">
                       <th>
                         <b>Configure</b>
@@ -461,7 +358,7 @@
                         <b>
                           <a
                             class="tw-link tw-link-hover"
-                            :href="$baseURL + '/builds/' + cdash.nextbuild.buildid + 'errors'"
+                            :href="$baseURL + '/builds/' + cdash.nextbuild.buildid + '/build'"
                           >
                             {{ cdash.nextbuild.nerrors }}
                           </a>
@@ -728,7 +625,6 @@
 
 <script>
 import $ from 'jquery';
-import ApiLoader from './shared/ApiLoader';
 import {
   faQuestionCircle,
 } from '@fortawesome/free-solid-svg-icons';
@@ -747,6 +643,26 @@ export default {
     buildId: {
       type: Number,
       required: true,
+    },
+    previousBuildId: {
+      type: Number,
+      default: 0,
+    },
+    nextBuildId: {
+      type: Number,
+      default: 0,
+    },
+    newIssueUrl: {
+      type: String,
+      default: '',
+    },
+    bugTracker: {
+      type: String,
+      default: '',
+    },
+    userId: {
+      type: Number,
+      default: 0,
     },
   },
 
@@ -780,6 +696,133 @@ export default {
   },
 
   apollo: {
+    buildData: {
+      query: gql`
+        query BuildSummary($buildId: ID!, $prevId: ID, $nextId: ID, $hasPrev: Boolean!, $hasNext: Boolean!) {
+          buildData: build(id: $buildId) {
+            id
+            name
+            startTime
+            buildType
+            configureErrorsCount
+            configureWarningsCount
+            buildErrorsCount
+            buildWarningsCount
+            failedTestsCount
+            notRunTestsCount
+            site {
+              id
+              name
+            }
+            project {
+              id
+              name
+            }
+            configure {
+              id
+            }
+          }
+          prevBuild: build(id: $prevId) @include(if: $hasPrev) {
+            id
+            configureErrorsCount
+            configureWarningsCount
+            buildErrorsCount
+            buildWarningsCount
+            failedTestsCount
+            notRunTestsCount
+          }
+          nextBuild: build(id: $nextId) @include(if: $hasNext) {
+            id
+            configureErrorsCount
+            configureWarningsCount
+            buildErrorsCount
+            buildWarningsCount
+            failedTestsCount
+            notRunTestsCount
+          }
+        }
+      `,
+      variables() {
+        return {
+          buildId: this.buildId,
+          prevId: this.previousBuildId || null,
+          nextId: this.nextBuildId || null,
+          hasPrev: !!this.previousBuildId,
+          hasNext: !!this.nextBuildId,
+        };
+      },
+      result({ data }) {
+        this.loading = false;
+        const build = data.buildData;
+
+        this.cdash.newissueurl = this.newIssueUrl;
+        this.cdash.bugtracker = this.bugTracker;
+
+        if (data.prevBuild) {
+          const prev = data.prevBuild;
+          this.cdash.previousbuild = {
+            buildid: prev.id,
+            nconfigureerrors: Math.max(0, prev.configureErrorsCount),
+            nconfigurewarnings: Math.max(0, prev.configureWarningsCount),
+            nerrors: Math.max(0, prev.buildErrorsCount),
+            nwarnings: Math.max(0, prev.buildWarningsCount),
+            ntestfailed: Math.max(0, prev.failedTestsCount),
+            ntestnotrun: Math.max(0, prev.notRunTestsCount),
+          };
+        }
+        else {
+          this.cdash.previousbuild = null;
+        }
+
+        if (data.nextBuild) {
+          const next = data.nextBuild;
+          this.cdash.nextbuild = {
+            buildid: next.id,
+            nconfigureerrors: Math.max(0, next.configureErrorsCount),
+            nconfigurewarnings: Math.max(0, next.configureWarningsCount),
+            nerrors: Math.max(0, next.buildErrorsCount),
+            nwarnings: Math.max(0, next.buildWarningsCount),
+            ntestfailed: Math.max(0, next.failedTestsCount),
+            ntestnotrun: Math.max(0, next.notRunTestsCount),
+          };
+        }
+        else {
+          this.cdash.nextbuild = null;
+        }
+
+        this.cdash.hasconfigure = !!build.configure;
+
+        this.cdash.build = {
+          id: build.id,
+          nerrors: Math.max(0, build.buildErrorsCount),
+          nwarnings: Math.max(0, build.buildWarningsCount),
+          name: build.name,
+          type: build.buildType,
+          starttime: build.startTime,
+          sitename_encoded: encodeURIComponent(build.site.name),
+        };
+
+        this.cdash.configure = {
+          nerrors: Math.max(0, build.configureErrorsCount),
+          nwarnings: Math.max(0, build.configureWarningsCount),
+        };
+
+        this.cdash.test = {
+          nfailed: Math.max(0, build.failedTestsCount),
+          nnotrun: Math.max(0, build.notRunTestsCount),
+        };
+
+        this.cdash.projectname_encoded = encodeURIComponent(build.project.name);
+        this.cdash.user = {
+          id: this.userId,
+        };
+      },
+      error(error) {
+        this.errored = true;
+        this.cdash.error = error;
+        this.loading = false;
+      },
+    },
     comments: {
       query: gql`
         query($buildId: ID) {
@@ -827,9 +870,6 @@ export default {
     // Ensure jQuery is globally available before loading plugins
     window.jQuery = $;
     await import('flot/dist/es5/jquery.flot');
-
-    const endpoint_path = `/api/v1/buildSummary.php?buildid=${this.buildId}`;
-    ApiLoader.loadPageData(this, endpoint_path);
   },
 
   methods: {
@@ -852,19 +892,19 @@ export default {
             const t = build['timestamp'];
 
             this.cdash.buildtimes.push([t, build['time'] / 60]);
-            this.cdash.builderrors.push([t, build['builderrors']]);
-            this.cdash.buildwarnings.push([t, build['buildwarnings']]);
-            this.cdash.testfailed.push([t, build['testfailed']]);
+            this.cdash.builderrors.push([t, Math.max(0, build['builderrors'])]);
+            this.cdash.buildwarnings.push([t, Math.max(0, build['buildwarnings'])]);
+            this.cdash.testfailed.push([t, Math.max(0, build['testfailed'])]);
             this.cdash.buildids[t] = build['id'];
 
             const history_build = [];
             history_build['id'] = build['id'];
-            history_build['nfiles'] = build['nfiles'];
-            history_build['configureerrors'] = build['configureerrors'];
-            history_build['configurewarnings'] = build['configurewarnings'];
-            history_build['builderrors'] = build['builderrors'];
-            history_build['buildwarnings'] = build['buildwarnings'];
-            history_build['testfailed'] = build['testfailed'];
+            history_build['nfiles'] = Math.max(0, build['nfiles']);
+            history_build['configureerrors'] = Math.max(0, build['configureerrors']);
+            history_build['configurewarnings'] = Math.max(0, build['configurewarnings']);
+            history_build['builderrors'] = Math.max(0, build['builderrors']);
+            history_build['buildwarnings'] = Math.max(0, build['buildwarnings']);
+            history_build['testfailed'] = Math.max(0, build['testfailed']);
             history_build['starttime'] = build['starttime'];
             this.cdash.buildhistory.push(history_build);
           }

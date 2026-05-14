@@ -105,8 +105,28 @@ final class BuildController extends AbstractBuildController
     {
         $this->setBuildById($build_id);
 
+        $previous_buildid = $this->build->GetPreviousBuildId();
+        $next_buildid = $this->build->GetNextBuildId();
+
+        // Check if this project uses a supported bug tracker.
+        $new_issue_url = '';
+        $bug_tracker = '';
+        switch ($this->project->BugTrackerType) {
+            case 'Buganizer':
+            case 'JIRA':
+            case 'GitHub':
+                $new_issue_url = RepositoryUtils::generate_bugtracker_new_issue_link($this->build, $this->project);
+                $bug_tracker = $this->project->BugTrackerType;
+                break;
+        }
+
         return $this->vue('build-summary', 'Build Summary', [
             'build-id' => $this->build->Id,
+            'previous-build-id' => $previous_buildid,
+            'next-build-id' => $next_buildid,
+            'new-issue-url' => $new_issue_url,
+            'bug-tracker' => $bug_tracker,
+            'user-id' => Auth::id() ?? 0,
         ]);
     }
 
