@@ -121,7 +121,7 @@ final class BuildController extends AbstractBuildController
         ]);
     }
 
-    public function tests(int $build_id): View
+    public function tests(Request $request, int $build_id): View
     {
         $this->setBuildById($build_id);
 
@@ -129,14 +129,24 @@ final class BuildController extends AbstractBuildController
 
         $eloquent_project = Project::findOrFail((int) $this->project->Id);
 
-        return $this->vue('build-tests-page', 'Tests', [
+        $params = [
             'build-id' => $this->build->Id,
             'show-test-time-status' => (bool) $eloquent_project->showtesttime,
             'project-name' => $eloquent_project->name,
             'build-time' => Carbon::parse($this->build->StartTime)->toIso8601String(),
             'initial-filters' => $filters,
             'pinned-measurements' => $eloquent_project->pinnedTestMeasurements()->orderBy('position')->pluck('name')->toArray(),
-        ]);
+        ];
+
+        if ($request->has('onlydelta')) {
+            $params['only-delta'] = true;
+            $previousBuildId = $this->build->GetPreviousBuildId();
+            if ($previousBuildId > 0) {
+                $params['previous-build-id'] = $previousBuildId;
+            }
+        }
+
+        return $this->vue('build-tests-page', 'Tests', $params);
     }
 
     public function coverage(int $build_id): View

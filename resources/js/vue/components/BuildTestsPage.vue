@@ -13,8 +13,15 @@
         :execute-query-link="executeQueryLink"
         @change-filters="filters => changedFilters = filters"
       />
-      <loading-indicator :is-loading="!tests">
+      <loading-indicator :is-loading="!tests || (onlyDelta && !previousTests && previousBuildId !== null)">
+        <div
+          v-if="onlyDelta && tests && filteredTests.length === 0"
+          class="tw-self-center"
+        >
+          No tests with changed state for this build.
+        </div>
         <data-table
+          v-if="!onlyDelta || filteredTests.length > 0"
           :columns="[
             ...(hasSubProjects ? [{
               name: 'subProject',
@@ -67,6 +74,63 @@ import BuildSummaryCard from './shared/BuildSummaryCard.vue';
 import BuildSidebar from './shared/BuildSidebar.vue';
 import {DateTime} from 'luxon';
 
+const TEST_QUERY = gql`
+  query(
+    $buildid: ID,
+    $filters: BuildTestsFiltersMultiFilterInput,
+    $measurementFilters: TestTestMeasurementsFiltersMultiFilterInput,
+  ) {
+    build(id: $buildid) {
+      id
+      tests(filters: $filters, first: 1000000) {
+        edges {
+          node {
+            id
+            name
+            status
+            details
+            runningTime
+            timeStatusCategory
+            testMeasurements(filters: $measurementFilters) {
+              id
+              name
+              value
+            }
+          }
+        }
+      }
+      children(first: 100000) {
+        edges {
+          node {
+            id
+            tests(filters: $filters, first: 1000000) {
+              edges {
+                node {
+                  id
+                  name
+                  status
+                  details
+                  runningTime
+                  timeStatusCategory
+                  testMeasurements(filters: $measurementFilters) {
+                    id
+                    name
+                    value
+                  }
+                }
+              }
+            }
+            subProject {
+              id
+              name
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
 export default {
   name: 'BuildTestsPage',
 
@@ -109,68 +173,28 @@ export default {
       type: Array,
       required: true,
     },
+
+    onlyDelta: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+
+    previousBuildId: {
+      type: [Number, null],
+      required: false,
+      default: null,
+    },
   },
 
   apollo: {
     tests: {
-      query: gql`
-        query(
-          $buildid: ID,
-          $filters: BuildTestsFiltersMultiFilterInput,
-          $measurementFilters: TestTestMeasurementsFiltersMultiFilterInput,
-        ) {
-          build(id: $buildid) {
-            id
-            tests(filters: $filters, first: 1000000) {
-              edges {
-                node {
-                  id
-                  name
-                  status
-                  details
-                  runningTime
-                  timeStatusCategory
-                  testMeasurements(filters: $measurementFilters) {
-                    id
-                    name
-                    value
-                  }
-                }
-              }
-            }
-            children(first: 100000) {
-              edges {
-                node {
-                  id
-                  tests(filters: $filters, first: 1000000) {
-                    edges {
-                      node {
-                        id
-                        name
-                        status
-                        details
-                        runningTime
-                        timeStatusCategory
-                        testMeasurements(filters: $measurementFilters) {
-                          id
-                          name
-                          value
-                        }
-                      }
-                    }
-                  }
-                  subProject {
-                    id
-                    name
-                  }
-                }
-              }
-            }
-          }
-        }
-      `,
+      query: TEST_QUERY,
       update: (data) => {
-        let tests = [...data.build.tests.edges];
+        let tests = data.build.tests.edges.map((test) => ({
+          ...test,
+          subProject: '',
+        }));
         data.build.children.edges.forEach((child) => {
           tests = tests.concat(
             child.node.tests.edges.map((test) => ({
@@ -195,6 +219,41 @@ export default {
         };
       },
     },
+
+    previousTests: {
+      query: TEST_QUERY,
+      update: (data) => {
+        let tests = data.build.tests.edges.map((test) => ({
+          ...test,
+          subProject: '',
+        }));
+        data.build.children.edges.forEach((child) => {
+          tests = tests.concat(
+            child.node.tests.edges.map((test) => ({
+              ...test,
+              subProject: child.node.subProject.name,
+            })),
+          );
+        });
+        return tests;
+      },
+      variables() {
+        return {
+          buildid: this.previousBuildId,
+          filters: this.initialFilters,
+          measurementFilters: {
+            any: this.pinnedMeasurements.map((name) => ({
+              eq: {
+                name: name,
+              },
+            })),
+          },
+        };
+      },
+      skip() {
+        return !this.onlyDelta || this.previousBuildId === null;
+      },
+    },
   },
 
   data() {
@@ -204,8 +263,33 @@ export default {
   },
 
   computed: {
+    filteredTests() {
+      if (!this.onlyDelta) {
+        return this.tests;
+      }
+
+      if (!this.tests) {
+        return [];
+      }
+
+      if (!this.previousTests) {
+        return [];
+      }
+
+      const previousTestsMap = new Map(this.previousTests.map(test => [
+        `${test.subProject}:${test.node.name}`,
+        test.node.status,
+      ]));
+
+      return this.tests.filter(test => {
+        const key = `${test.subProject}:${test.node.name}`;
+        const previousStatus = previousTestsMap.get(key);
+        return previousStatus !== test.node.status;
+      });
+    },
+
     hasSubProjects() {
-      return this.tests?.some((element) => element.subProject) ?? false;
+      return this.filteredTests?.some((element) => element.subProject) ?? false;
     },
 
     pinnedMeasurementColumns() {
@@ -216,11 +300,15 @@ export default {
     },
 
     executeQueryLink() {
-      return `${window.location.origin}${window.location.pathname}?filters=${encodeURIComponent(JSON.stringify(this.changedFilters))}`;
+      let link = `${window.location.origin}${window.location.pathname}?filters=${encodeURIComponent(JSON.stringify(this.changedFilters))}`;
+      if (this.onlyDelta) {
+        link += '&onlydelta';
+      }
+      return link;
     },
 
     formattedTestRows() {
-      return this.tests?.map(edge => {
+      return this.filteredTests?.map(edge => {
         return {
           name: {
             value: edge.node.name,

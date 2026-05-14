@@ -386,4 +386,142 @@ class BuildTestsPageTest extends BrowserTestCase
             ;
         });
     }
+
+    public function testOnlyDelta(): void
+    {
+        /** @var Build $previous_build */
+        $previous_build = $this->project->builds()->create([
+            'siteid' => $this->site->id,
+            'name' => 'test-build',
+            'uuid' => Str::uuid()->toString(),
+            'starttime' => '2025-01-01 10:00:00',
+            'type' => 'Experimental',
+        ]);
+
+        /** @var Test $previous_test_failed */
+        $previous_test_failed = $previous_build->tests()->create([
+            'testname' => 'failed-before',
+            'status' => 'failed',
+            'outputid' => $this->testOutput->id,
+        ]);
+
+        /** @var Test $previous_test_passed */
+        $previous_test_passed = $previous_build->tests()->create([
+            'testname' => 'passed-before',
+            'status' => 'passed',
+            'outputid' => $this->testOutput->id,
+        ]);
+
+        /** @var Test $previous_test_to_be_fixed */
+        $previous_test_to_be_fixed = $previous_build->tests()->create([
+            'testname' => 'fixed-test',
+            'status' => 'failed',
+            'outputid' => $this->testOutput->id,
+        ]);
+
+        /** @var Test $previous_test_stayed_passed */
+        $previous_test_stayed_passed = $previous_build->tests()->create([
+            'testname' => 'stayed-passed',
+            'status' => 'passed',
+            'outputid' => $this->testOutput->id,
+        ]);
+
+        /** @var Build $current_build */
+        $current_build = $this->project->builds()->create([
+            'siteid' => $this->site->id,
+            'name' => 'test-build',
+            'uuid' => Str::uuid()->toString(),
+            'starttime' => '2025-01-01 11:00:00',
+            'type' => 'Experimental',
+        ]);
+
+        /** @var Test $current_test_failed_again */
+        $current_test_failed_again = $current_build->tests()->create([
+            'testname' => 'failed-before',
+            'status' => 'failed',
+            'outputid' => $this->testOutput->id,
+        ]);
+
+        /** @var Test $current_test_newly_failed */
+        $current_test_newly_failed = $current_build->tests()->create([
+            'testname' => 'passed-before',
+            'status' => 'failed',
+            'outputid' => $this->testOutput->id,
+        ]);
+
+        /** @var Test $current_test_entirely_new_failed */
+        $current_test_entirely_new_failed = $current_build->tests()->create([
+            'testname' => 'new-failed',
+            'status' => 'failed',
+            'outputid' => $this->testOutput->id,
+        ]);
+
+        /** @var Test $current_test_fixed */
+        $current_test_fixed = $current_build->tests()->create([
+            'testname' => 'fixed-test',
+            'status' => 'passed',
+            'outputid' => $this->testOutput->id,
+        ]);
+
+        /** @var Test $current_test_stayed_passed */
+        $current_test_stayed_passed = $current_build->tests()->create([
+            'testname' => 'stayed-passed',
+            'status' => 'passed',
+            'outputid' => $this->testOutput->id,
+        ]);
+
+        $this->browse(function (Browser $browser) use ($current_build, $current_test_failed_again, $current_test_newly_failed, $current_test_entirely_new_failed, $current_test_fixed, $current_test_stayed_passed): void {
+            $browser->visit("/builds/{$current_build->id}/tests?onlydelta")
+                ->waitFor('@tests-table')
+                ->assertDontSeeIn('@tests-table', $current_test_failed_again->testname)
+                ->assertSeeIn('@tests-table', $current_test_newly_failed->testname)
+                ->assertSeeIn('@tests-table', $current_test_entirely_new_failed->testname)
+                ->assertSeeIn('@tests-table', $current_test_fixed->testname)
+                ->assertDontSeeIn('@tests-table', $current_test_stayed_passed->testname)
+            ;
+        });
+    }
+
+    public function testOnlyDeltaNoResults(): void
+    {
+        /** @var Build $previous_build */
+        $previous_build = $this->project->builds()->create([
+            'siteid' => $this->site->id,
+            'name' => 'test-build',
+            'uuid' => Str::uuid()->toString(),
+            'starttime' => '2025-01-01 10:00:00',
+            'type' => 'Experimental',
+        ]);
+
+        /** @var Test $previous_test_failed */
+        $previous_test_failed = $previous_build->tests()->create([
+            'testname' => 'failed-before',
+            'status' => 'failed',
+            'outputid' => $this->testOutput->id,
+        ]);
+
+        /** @var Build $current_build */
+        $current_build = $this->project->builds()->create([
+            'siteid' => $this->site->id,
+            'name' => 'test-build',
+            'uuid' => Str::uuid()->toString(),
+            'starttime' => '2025-01-01 11:00:00',
+            'type' => 'Experimental',
+        ]);
+
+        /** @var Test $current_test_failed_again */
+        $current_test_failed_again = $current_build->tests()->create([
+            'testname' => 'failed-before',
+            'status' => 'failed',
+            'outputid' => $this->testOutput->id,
+        ]);
+
+        $this->browse(function (Browser $browser) use ($current_build): void {
+            $browser->visit("/builds/{$current_build->id}/tests?onlydelta")
+                ->waitForText('No tests with changed state for this build.')
+                ->assertSee('No tests with changed state for this build.')
+                ->assertMissing('@tests-table')
+            ;
+        });
+    }
 }
