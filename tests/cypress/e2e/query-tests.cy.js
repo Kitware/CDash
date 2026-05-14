@@ -49,6 +49,6 @@ describe('query tests', () => {
     // load the page and verify the expected number of tests.
     cy.visit(expected_url);
     cy.get('#numtests').should('contain', 'Query  Tests: 126 matches');
-    cy.get('#queryTestsTable').find('tbody').find('tr').should('have.length', 25);
+    cy.get('#queryTestsTable').find('tbody').find('tr').should('have.length', 50);
   });
 });

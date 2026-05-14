@@ -35,7 +35,7 @@ export function TestOverviewController($scope, $rootScope, $filter, apiLoader, f
     if(num_per_page_cookie) {
       $scope.pagination.numPerPage = parseInt(num_per_page_cookie);
     } else {
-      $scope.pagination.numPerPage = 10;
+      $scope.pagination.numPerPage = 50;
     }
 
     apiLoader.loadPageData($scope, 'api/v1/testOverview.php');

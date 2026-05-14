@@ -12,7 +12,7 @@ export function QueryTestsController($scope, $rootScope, $filter, apiLoader, fil
     if(num_per_page_cookie) {
       $scope.pagination.numPerPage = parseInt(num_per_page_cookie);
     } else {
-      $scope.pagination.numPerPage = 25;
+      $scope.pagination.numPerPage = 50;
     }
 
     // Hide filters by default.

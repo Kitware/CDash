@@ -128,7 +128,7 @@ export function IndexController($scope, $rootScope, $location, $http, $filter, $
       if(num_per_page_cookie) {
         $scope.cdash.buildgroups[i].pagination.numPerPage = parseInt(num_per_page_cookie);
       } else {
-        $scope.cdash.buildgroups[i].pagination.numPerPage = 10;
+        $scope.cdash.buildgroups[i].pagination.numPerPage = 50;
       }
 
       // Setup sorting.
