@@ -114,14 +114,17 @@
             {{ measurement.value }}
           </td>
         </tr>
-        <tr v-for="file in files">
+        <tr
+          v-for="(file, index) in files"
+          :key="index"
+        >
           <th class="measurement">
             {{ file.name }}
           </th>
           <td>
             <a
               class="cdash-link"
-              :href="$baseURL + '/api/v1/testDetails.php?buildtestid=' + testId + '&fileid=' + file.fileid"
+              :href="$baseURL + '/api/v1/testDetails.php?buildtestid=' + testId + '&fileid=' + (index + 1)"
             >
               <img :src="$baseURL + '/img/package.png'">
             </a>
