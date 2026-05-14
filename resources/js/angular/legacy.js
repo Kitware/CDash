@@ -57,9 +57,6 @@ CDash.controller('SubProjectController', ["$scope", "$rootScope", "$http", SubPr
 import { QueryTestsController } from "./controllers/queryTests";
 CDash.controller('QueryTestsController', ["$scope", "$rootScope", "$filter", "apiLoader", "filters", "multisort", QueryTestsController]);
 
-import { ViewTestController } from "./controllers/viewTest";
-CDash.controller('ViewTestController', ["$scope", "$rootScope", "$http", "$filter", "$q", "apiLoader", "multisort", "filters", ViewTestController]);
-
 import { OverviewController, linechart, bulletchart } from "./controllers/overview";
 CDash.controller('OverviewController', ["$scope", "$location", "anchors", "apiLoader", OverviewController]);
 CDash.directive('linechart', linechart);

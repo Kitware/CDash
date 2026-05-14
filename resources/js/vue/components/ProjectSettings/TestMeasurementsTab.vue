@@ -86,7 +86,6 @@
           Add test measurements of type <span class="tw-font-mono">numeric/double</span> or <span class="tw-font-mono">text/string</span>. Any measurement added here will be displayed as an extra column on the following pages:
           <ul class="tw-list-circle tw-ml-4">
             <li><span class="tw-font-mono">queryTests.php</span></li>
-            <li><span class="tw-font-mono">viewTest.php</span></li>
             <li><span class="tw-font-mono">builds/&lt;id&gt;/tests</span></li>
           </ul>
         </li>

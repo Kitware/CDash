@@ -91,6 +91,10 @@ Route::get('/viewConfigure.php', function (Request $request) {
 
 Route::get('/builds/{build_id}/tests', 'BuildController@tests')
     ->whereNumber('build_id');
+Route::get('/viewTest.php', function (Request $request) {
+    $buildid = $request->query('buildid');
+    return redirect("/builds/{$buildid}/tests", 301);
+});
 
 Route::get('/builds/{id}/update', 'BuildController@update')
     ->whereNumber('id');
@@ -228,8 +232,6 @@ Route::get('/manageOverview.php', 'ProjectOverviewController@manageOverview');
 Route::match(['get', 'post'], '/projects', 'ViewProjectsController@viewProjects');
 Route::permanentRedirect('/viewProjects.php', url('/projects'));
 Route::permanentRedirect('/projects/all', url('/projects'));
-
-Route::get('/viewTest.php', 'ViewTestController@viewTest');
 
 Route::get('/queryTests.php', 'TestController@queryTests');
 Route::get('/testSummary.php', function (Request $request) {

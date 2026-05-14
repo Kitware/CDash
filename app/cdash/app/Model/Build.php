@@ -2239,7 +2239,7 @@ class Build
 
     public function GetTestUrl(): string
     {
-        return url('/viewTest.php') . "?buildid={$this->Id}";
+        return url("/builds/{$this->Id}/tests");
     }
 
     public static function ConvertMissingToZero($value): int
