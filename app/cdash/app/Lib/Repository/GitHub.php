@@ -19,6 +19,7 @@ namespace CDash\Lib\Repository;
 
 use App\Models\BuildUpdateFile;
 use App\Models\PendingSubmissions;
+use App\Utils\RepositoryUtils;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildUpdate;
@@ -44,8 +45,6 @@ use PDO;
  */
 class GitHub implements RepositoryInterface
 {
-    public const BASE_URI = 'https://api.github.com';
-
     private string $installationId = '';
     private string $owner = '';
     private string $repo = '';
@@ -76,7 +75,7 @@ class GitHub implements RepositoryInterface
 
         $repositories = $this->project->GetRepositories();
         foreach ($repositories as $repo) {
-            if (str_contains($repo['url'], 'github.com')) {
+            if (RepositoryUtils::is_github_url($repo['url'])) {
                 $this->installationId = $repo['username'];
                 break;
             }
@@ -93,7 +92,8 @@ class GitHub implements RepositoryInterface
     protected function initializeApiClient(): void
     {
         $builder = new GitHubBuilder();
-        $apiClient = new GitHubClient($builder, 'machine-man-preview');
+        $enterpriseUrl = config('cdash.github_enterprise_url');
+        $apiClient = new GitHubClient($builder, 'machine-man-preview', $enterpriseUrl);
         $this->setApiClient($apiClient);
     }
 

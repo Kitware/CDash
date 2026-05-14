@@ -39,6 +39,7 @@ return [
     'delete_old_subprojects' => env('DELETE_OLD_SUBPROJECTS', true),
     'github_always_pass' => env('GITHUB_ALWAYS_PASS', false),
     'github_app_id' => env('GITHUB_APP_ID', null),
+    'github_enterprise_url' => env('GITHUB_ENTERPRISE_URL', null),
     'github_private_key' => env('GITHUB_PRIVATE_KEY', null),
     'github_webhook_secret' => env('GITHUB_WEBHOOK_SECRET', null),
     'large_text_limit' => env('LARGE_TEXT_LIMIT', 0),
