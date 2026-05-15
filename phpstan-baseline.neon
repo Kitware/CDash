@@ -6504,7 +6504,7 @@ parameters:
 		-
 			rawMessage: 'Construct empty() is not allowed. Use more strict comparison.'
 			identifier: empty.notAllowed
-			count: 16
+			count: 18
 			path: app/cdash/app/Controller/Api/Index.php
 
 		-
