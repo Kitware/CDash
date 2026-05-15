@@ -13123,6 +13123,12 @@ parameters:
 			path: app/cdash/include/filterdataFunctions.php
 
 		-
+			rawMessage: 'Parameter #3 $subject of function preg_replace expects array<float|int|string>|string, string|null given.'
+			identifier: argument.type
+			count: 1
+			path: app/cdash/include/filterdataFunctions.php
+
+		-
 			rawMessage: Unreachable statement - code above always terminates.
 			identifier: deadCode.unreachable
 			count: 5

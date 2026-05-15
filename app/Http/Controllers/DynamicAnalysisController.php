@@ -29,7 +29,7 @@ final class DynamicAnalysisController extends AbstractBuildController
             [
                 'build-id' => $buildid,
                 'dynamic-analysis-id' => $fileid,
-                'link' => url("queryTests.php?project={$this->project->Name}&filtercount=1&showfilters=1&field1=testname&compare1=61&value1={$da?->name}&date={$this->date}"),
+                'link' => url("queryTests.php?project={$this->project->Name}&date={$this->date}&filtercount=1&showfilters=1&field1=testname&compare1=61&value1={$da?->name}"),
             ],
         );
     }

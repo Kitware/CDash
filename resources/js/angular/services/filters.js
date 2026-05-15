@@ -17,7 +17,8 @@ export function filtersSvc() {
     var str = new String(window.location);
     var idx = str.indexOf("&filtercount=", 0);
     if (idx > 0) {
-      return str.substr(idx);
+      var filterstring = str.substr(idx);
+      return filterstring.replace(/&date=[^&]*/, "").replace(/&limit=[^&]*/, "");
     }
     else {
       return "";

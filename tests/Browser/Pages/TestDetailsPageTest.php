@@ -142,7 +142,7 @@ class TestDetailsPageTest extends BrowserTestCase
         $this->build->save();
 
         $this->browse(function (Browser $browser) use ($test): void {
-            $url = url('queryTests.php') . '?project=' . $this->project->name . '&filtercount=1&showfilters=1&field1=testname&compare1=61&value1=' . $test->testname . '&date=' . $this->build->starttime->toDateString();
+            $url = url('queryTests.php') . '?project=' . $this->project->name . '&date=' . $this->build->starttime->toDateString() . '&filtercount=1&showfilters=1&field1=testname&compare1=61&value1=' . $test->testname;
 
             $browser->visit("/tests/{$test->id}")
                 ->waitForLink($test->testname)

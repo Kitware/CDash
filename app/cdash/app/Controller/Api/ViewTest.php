@@ -690,7 +690,7 @@ class ViewTest extends BuildApi
             'execTime' => time_difference($data['time'], true, '', true),
             'execTimeFull' => (float) $data['time'],
             'details' => $data['details'],
-            'summaryLink' => "queryTests.php?project={$projectname}&filtercount=1&showfilters=1&field1=testname&compare1=61&value1=" . urlencode($data['testname']) . "&date={$testdate}",
+            'summaryLink' => "queryTests.php?project={$projectname}&date={$testdate}&filtercount=1&showfilters=1&field1=testname&compare1=61&value1=" . urlencode($data['testname']),
             'summary' => 'Summary', /* Default value later replaced by AJAX */
             'detailsLink' => "tests/{$data['buildtestid']}",
         ];

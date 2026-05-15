@@ -337,7 +337,7 @@ export default {
           history: {
             value: '',
             text: 'History',
-            href: `${this.$baseURL}/queryTests.php?project=${this.projectName}&filtercount=1&showfilters=1&field1=testname&compare1=61&value1=${edge.node.name}&date=${DateTime.fromISO(this.buildTime).toISODate()}`,
+            href: `${this.$baseURL}/queryTests.php?project=${this.projectName}&date=${DateTime.fromISO(this.buildTime).toISODate()}&filtercount=1&showfilters=1&field1=testname&compare1=61&value1=${edge.node.name}`,
           },
           ...this.pinnedMeasurements.reduce((acc, name) => ({
             ...acc,

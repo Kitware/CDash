@@ -969,6 +969,11 @@ function get_filterurl()
     $filterurl = htmlentities($_GET['filterstring'], ENT_QUOTES);
     // ...but we need ampersands to pass through unescaped, so convert them back.
     $filterurl = str_replace('&amp;', '&', $filterurl);
+
+    // Remove &date= and &limit= from filterurl to avoid duplicates when next/prev links are built.
+    $filterurl = preg_replace('/&date=[^&]*/', '', $filterurl);
+    $filterurl = preg_replace('/&limit=[^&]*/', '', $filterurl);
+
     return $filterurl;
 }
 

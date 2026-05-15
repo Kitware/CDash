@@ -24,7 +24,7 @@
       <a
         id="summary_link"
         class="tw-link tw-link-hover"
-        :href="`${$baseURL}/queryTests.php?project=${build.project.name}&filtercount=1&showfilters=1&field1=testname&compare1=61&value1=${test.name}&date=${testingDay}`"
+        :href="`${$baseURL}/queryTests.php?project=${build.project.name}&date=${testingDay}&filtercount=1&showfilters=1&field1=testname&compare1=61&value1=${test.name}`"
       >
         {{ test.name }}
       </a>
