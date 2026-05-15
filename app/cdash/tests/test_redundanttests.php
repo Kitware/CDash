@@ -80,28 +80,5 @@ class RedundantTestsTestCase extends KWWebTestCase
         if (!$test2found) {
             $this->fail('test #2 output not found when expected');
         }
-
-        // Verify expected output from 'view tests' API.
-        $this->get("{$this->url}/api/v1/viewTest.php?buildid={$buildid}");
-        $content = $this->getBrowser()->getContent();
-        $jsonobj = json_decode($content, true);
-        $this->assertEqual(2, count($jsonobj['tests']));
-
-        $purple_found = false;
-        $orange_found = false;
-        foreach ($jsonobj['tests'] as $test) {
-            if ($test['measurements'][0] === 'purple') {
-                $purple_found = true;
-            }
-            if ($test['measurements'][0] === 'orange') {
-                $orange_found = true;
-            }
-        }
-        if (!$purple_found) {
-            $this->fail('purple test not found when expected');
-        }
-        if (!$orange_found) {
-            $this->fail('orange test not found when expected');
-        }
     }
 }

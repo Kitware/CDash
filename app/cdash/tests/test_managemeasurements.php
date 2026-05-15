@@ -169,28 +169,6 @@ class ManageMeasurementsTestCase extends KWWebTestCase
             $idx++;
         }
 
-        // Verify that the new measurements are displayed on viewTest.php.
-        $this->get($this->url . "/api/v1/viewTest.php?buildid=$this->BuildId");
-        $content = $this->getBrowser()->getContent();
-        $jsonobj = json_decode($content, true);
-        $this->assertEqual(3, $jsonobj['columncount']);
-        $this->assertEqual('Processors', $jsonobj['columnnames'][0]);
-        $this->assertEqual('I/O Wait Time', $jsonobj['columnnames'][1]);
-        $this->assertEqual('Peak Memory', $jsonobj['columnnames'][2]);
-        $this->assertEqual(3, count($jsonobj['tests']));
-        $first = true;
-        foreach ($jsonobj['tests'] as $test) {
-            $test_name = $test['name'];
-            $num_procs = $test['measurements'][0];
-            $proc_time = $test['procTimeFull'];
-            $this->validate_test($test_name, $num_procs, $proc_time, 'viewTest.php');
-            if ($first && $num_procs) {
-                $selected_test_name = $test['name'];
-                $selected_nprocs = $num_procs;
-                $first = false;
-            }
-        }
-
         // Check queryTests.php for this extra data too.
         $this->get($this->url . '/api/v1/queryTests.php?project=InsightExample&date=2017-08-29');
         $content = $this->getBrowser()->getContent();
@@ -204,22 +182,6 @@ class ManageMeasurementsTestCase extends KWWebTestCase
         $this->assertEqual(3, count($jsonobj['builds']));
         foreach ($jsonobj['builds'] as $build) {
             $this->validate_test($build['testname'], $build['nprocs'], $build['procTime'], 'queryTests.php');
-        }
-
-        $this->get($this->url . "/api/v1/viewTest.php?buildid=$this->SubProjectBuildId");
-        $content = $this->getBrowser()->getContent();
-        $jsonobj = json_decode($content, true);
-        $this->assertEqual(3, $jsonobj['columncount']);
-        $this->assertEqual('Processors', $jsonobj['columnnames'][0]);
-        $this->assertEqual('I/O Wait Time', $jsonobj['columnnames'][1]);
-        $this->assertEqual('Peak Memory', $jsonobj['columnnames'][2]);
-        $this->assertEqual(3, count($jsonobj['tests']));
-        foreach ($jsonobj['tests'] as $test) {
-            $test_name = $test['name'];
-            $num_procs = $test['measurements'][0];
-            $proc_time = $test['procTimeFull'];
-            $io_wait_time = $test['measurements'][1];
-            $this->validate_subproject_test($test_name, $num_procs, $proc_time, $io_wait_time, 'viewTest.php');
         }
 
         $this->get($this->url . '/api/v1/queryTests.php?project=SubProjectExample&date=2017-08-29');
@@ -253,12 +215,5 @@ class ManageMeasurementsTestCase extends KWWebTestCase
                 $this->fail("Expected proc time to be $expected but found $found for subproject build $label");
             }
         }
-
-        // Verify that our test graphs correctly report Processors.
-        $this->get($this->url . "/api/v1/testGraph.php?testname={$selected_test_name}&buildid={$this->BuildId}&measurementname=Processors&type=measurement");
-        $content = $this->getBrowser()->getContent();
-        $jsonobj = json_decode($content, true);
-        $this->assertTrue($jsonobj[0]['data'][0]['y'] == $selected_nprocs);
-        $this->assertTrue(count($jsonobj[0]['data']) === 1);
     }
 }

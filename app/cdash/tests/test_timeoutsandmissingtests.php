@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\DB;
-
 require_once __DIR__ . '/cdash_test_case.php';
 
 class TimeoutsAndMissingTestsTestCase extends KWWebTestCase
@@ -12,20 +10,6 @@ class TimeoutsAndMissingTestsTestCase extends KWWebTestCase
     {
         parent::__construct();
         $this->buildName = 'Win32-MSVC2009';
-    }
-
-    private function getLastBuildId()
-    {
-        $sql = "
-          SELECT id
-          FROM build
-          WHERE name='{$this->buildName}'
-          ORDER BY starttime DESC
-          LIMIT 1
-         ";
-
-        $query = DB::select($sql)[0];
-        return $query->id;
     }
 
     public function testMissingTestsSummarizedInEmail(): void
@@ -64,33 +48,6 @@ class TimeoutsAndMissingTestsTestCase extends KWWebTestCase
         if ($this->assertLogContains($expected, 18)) {
             $this->pass('Passed');
         }
-    }
-
-    public function testMissingTestsSummarizedInViewTestAPI(): void
-    {
-        $id = $this->getLastBuildId();
-
-        $url = "{$this->url}/api/v1/viewTest.php?buildid={$id}";
-        $this->get($url);
-        $json = $this->getBrowser()->getContent();
-
-        $response = json_decode($json, true);
-        $tests = [];
-
-        foreach ($response['tests'] as $test) {
-            $tests[$test['name']] = $test;
-        }
-
-        $this->assertEqual($response['numMissing'], 3);
-
-        $this->assertEqual($tests['SystemInfoTest']['status'], 'Missing');
-        $this->assertEqual($tests['DashboardSendTest']['status'], 'Missing');
-        $this->assertEqual($tests['Parser1Test1']['status'], 'Missing');
-
-        $this->assertNotEqual($tests['curl']['status'], 'Missing');
-        $this->assertNotEqual($tests['FileActionsTest']['status'], 'Missing');
-        $this->assertNotEqual($tests['StringActionsTest']['status'], 'Missing');
-        $this->assertNotEqual($tests['MathActionsTest']['status'], 'Missing');
     }
 
     public function testTimeoutFailuresDifferentiatedInEmail(): void

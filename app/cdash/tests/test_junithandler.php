@@ -2,6 +2,7 @@
 
 require_once __DIR__ . '/cdash_test_case.php';
 
+use App\Models\Build;
 use CDash\Database;
 use CDash\Model\Project;
 
@@ -64,19 +65,18 @@ class JUnitHandlerTestCase extends KWWebTestCase
         }
 
         // Make sure the testing results look correct.
-        $this->get("$this->url/api/v1/viewTest.php?buildid=$buildid");
-        $content = $this->getBrowser()->getContent();
-        $jsonobj = json_decode($content, true);
-        if ($jsonobj['numPassed'] !== 2) {
+        $build = Build::findOrFail((int) $buildid);
+        if ($build->tests()->where('status', 'passed')->count() !== 2) {
             $this->fail("Did not find 2 'Passed' tests when expected");
         }
-        if ($jsonobj['numFailed'] !== 3) {
+        if ($build->tests()->where('status', 'failed')->count() !== 3) {
             $this->fail("Did not find 3 'Failed' tests when expected");
         }
-        if ($jsonobj['numNotRun'] !== 1) {
+        if ($build->tests()->where('status', 'notrun')->count() !== 1) {
             $this->fail("Did not find 1 'Not Run' test when expected");
         }
-        if (trim($jsonobj['totaltime']) !== '500ms') {
+        echo 'Total time: ' . $build->tests()->sum('time') . PHP_EOL;
+        if (abs($build->tests()->sum('time') - 0.5) > 0.0001) {
             $this->fail('Did not find 500ms totaltime when expected');
         }
     }

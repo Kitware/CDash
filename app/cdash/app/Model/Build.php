@@ -378,29 +378,6 @@ class Build
         $this->Filled = true;
     }
 
-    public static function MarshalResponseArray(self $build, array $optional_values = []): array
-    {
-        $response = [
-            'id' => $build->Id,
-            'buildid' => $build->Id,
-            'siteid' => $build->SiteId,
-            'name' => $build->Name,
-            'buildname' => $build->Name,
-            'stamp' => $build->Stamp,
-            'projectid' => $build->ProjectId,
-            'starttime' => $build->StartTime,
-            'endtime' => $build->EndTime,
-            'groupid' => $build->GroupId,
-            'group' => $build->Type,
-        ];
-
-        if ($build->GetSubProjectName()) {
-            $response['subproject'] = $build->SubProjectName;
-        }
-
-        return array_merge($response, $optional_values);
-    }
-
     /** Get the previous build id. */
     public function GetPreviousBuildId(?int $previous_parentid = null): int
     {

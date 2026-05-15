@@ -60,11 +60,5 @@ class MultipleLabelsForTestsTestCase extends KWWebTestCase
         $this->assertEqual('label1', $labels[0]);
         $this->assertEqual('label2', $labels[1]);
         $this->assertEqual('label3', $labels[2]);
-
-        // Verify that these labels are correctly returned by the viewTests API.
-        $this->get("{$this->url}/api/v1/viewTest.php?buildid={$buildid}");
-        $content = $this->getBrowser()->getContent();
-        $jsonobj = json_decode($content, true);
-        $this->assertTrue(3 === count($jsonobj['tests'][0]['labels']));
     }
 }
