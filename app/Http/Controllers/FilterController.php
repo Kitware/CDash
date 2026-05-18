@@ -108,15 +108,6 @@ final class FilterController extends AbstractController
                 'testoutput',
                 'time',
             ],
-            'viewTest.php' => [
-                'details',
-                'label',
-                'status',
-                'subproject',
-                'testname',
-                'timestatus',
-                'time',
-            ],
             'testOverview.php' => [
                 'buildname',
                 'subproject',
@@ -135,8 +126,6 @@ final class FilterController extends AbstractController
             case 'testOverview.php':
             case 'viewBuildGroup.php':
                 return true;
-
-            case 'viewTest.php':
             default:
                 return false;
         }

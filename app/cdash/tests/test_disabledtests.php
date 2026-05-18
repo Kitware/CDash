@@ -36,34 +36,6 @@ class DisabledTestsTestCase extends KWWebTestCase
             $this->fail('No buildid found when expected');
         }
 
-        // Verify one disabled test and one test missing its executable.
-        $this->get("$this->url/api/v1/viewTest.php?buildid=$buildid");
-        $content = $this->getBrowser()->getContent();
-        $jsonobj = json_decode($content, true);
-        if ($jsonobj['numFailed'] !== 1) {
-            $this->fail("Did not find 1 'Failed' tests when expected");
-        }
-        if ($jsonobj['numNotRun'] !== 1) {
-            $this->fail("Did not find 1 'NotRun' tests when expected");
-        }
-
-        $verified_disabled = false;
-        $verified_missingexe = false;
-        foreach ($jsonobj['tests'] as $test) {
-            if ($test['details'] === 'Disabled') {
-                $verified_disabled = true;
-            }
-            if ($test['details'] === 'Unable to find executable') {
-                $verified_missingexe = true;
-            }
-        }
-        if (!$verified_disabled) {
-            $this->fail('Did not find Disabled test');
-        }
-        if (!$verified_missingexe) {
-            $this->fail('Did not find test with missing executable');
-        }
-
         // Verify email was sent for the missing exe but not for the disabled test.
         $log_contents = file_get_contents($this->logfilename);
         if (!str_contains($log_contents, 'ThisTestFails')) {

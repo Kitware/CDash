@@ -594,11 +594,8 @@ set_tests_properties(opencovercoverage PROPERTIES DEPENDS jscovercoverage)
 add_php_test(buildfailuredetails)
 set_tests_properties(buildfailuredetails PROPERTIES DEPENDS opencovercoverage)
 
-add_php_test(builddetails)
-set_tests_properties(builddetails PROPERTIES DEPENDS buildfailuredetails)
-
 add_php_test(updateappend)
-set_tests_properties(updateappend PROPERTIES DEPENDS builddetails)
+set_tests_properties(updateappend PROPERTIES DEPENDS buildfailuredetails)
 
 add_php_test(hidecolumns)
 set_tests_properties(hidecolumns PROPERTIES DEPENDS updateappend)
@@ -648,11 +645,8 @@ set_tests_properties(viewsubprojects PROPERTIES DEPENDS dynamicanalysissummary)
 add_php_test(truncateoutput)
 set_tests_properties(truncateoutput PROPERTIES DEPENDS viewsubprojects)
 
-add_php_test(csvexport)
-set_tests_properties(csvexport PROPERTIES DEPENDS truncateoutput)
-
 add_php_test(uniquediffs)
-set_tests_properties(uniquediffs PROPERTIES DEPENDS csvexport)
+set_tests_properties(uniquediffs PROPERTIES DEPENDS truncateoutput)
 
 add_php_test(imagecomparison)
 set_tests_properties(imagecomparison PROPERTIES DEPENDS uniquediffs)
@@ -732,11 +726,8 @@ set_tests_properties(longbuildname PROPERTIES DEPENDS namedmeasurements)
 add_php_test(multiplelabelsfortests)
 set_tests_properties(multiplelabelsfortests PROPERTIES DEPENDS longbuildname)
 
-add_php_test(subprojecttestfilters)
-set_tests_properties(subprojecttestfilters PROPERTIES DEPENDS multiplelabelsfortests)
-
 add_php_test(starttimefromnotes)
-set_tests_properties(starttimefromnotes PROPERTIES DEPENDS subprojecttestfilters)
+set_tests_properties(starttimefromnotes PROPERTIES DEPENDS multiplelabelsfortests)
 
 add_php_test(starttimefromupload)
 set_tests_properties(starttimefromupload PROPERTIES DEPENDS starttimefromnotes)

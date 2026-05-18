@@ -377,65 +377,6 @@ class QueryTestsPhpFilters extends DefaultFilters
     }
 }
 
-class ViewTestPhpFilters extends DefaultFilters
-{
-    public function getDefaultFilter(): array
-    {
-        return [
-            'field' => 'testname',
-            'fieldtype' => 'string',
-            'compare' => 63,
-            'value' => '',
-        ];
-    }
-
-    public function getSqlField($field): string
-    {
-        $sql_field = '';
-        switch (strtolower($field)) {
-            case 'details':
-                $sql_field = 'bt.details';
-
-                break;
-
-            case 'label':
-                $sql_field = "(SELECT $this->TextConcat FROM label, label2test WHERE label.id=label2test.labelid AND label2test.testid=bt.id)";
-
-                break;
-
-            case 'status':
-                $sql_field = 'bt.status';
-
-                break;
-
-            case 'subproject':
-                $sql_field = 'sp.name';
-
-                break;
-
-            case 'testname':
-                $sql_field = 'bt.testname';
-
-                break;
-
-            case 'timestatus':
-                $sql_field = 'bt.timestatus';
-
-                break;
-
-            case 'time':
-                $sql_field = 'bt.time';
-
-                break;
-
-            default:
-                trigger_error('unknown $field value: ' . $field, E_USER_WARNING);
-                break;
-        }
-        return $sql_field;
-    }
-}
-
 class TestOverviewPhpFilters extends DefaultFilters
 {
     public function getDefaultFilter(): array
@@ -486,10 +427,6 @@ function createPageSpecificFilters($page_id)
 
         case 'queryTests.php':
             return new QueryTestsPhpFilters();
-            break;
-
-        case 'viewTest.php':
-            return new ViewTestPhpFilters();
             break;
 
         case 'testOverview.php':

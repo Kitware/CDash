@@ -2,7 +2,7 @@ describe('subProjectGroupOrder', () => {
 
   it('can change the group order', () => {
     cy.login();
-    cy.visit('manageSubProject.php?projectid=15');
+    cy.visit('manageSubProject.php?projectid=14');
 
     // navigate to the 'SubProjects Groups' tab
     cy.get('[data-test="subproject-groups"]').click();
@@ -34,13 +34,13 @@ describe('subProjectGroupOrder', () => {
     // cy.get('#sortable').find('tr').first().find('input[name="group_name"]').should('contain', 'Production');
 
     // navigate to our example of coverage across groups
-    cy.visit('index.php?project=CrossSubProjectExample&parentid=121');
+    cy.visit('index.php?project=CrossSubProjectExample&parentid=124');
 
     // make sure that Production is the first group listed after Total
     cy.get('#coveragetable').find('tbody').eq(1).should('contain', 'Production'); // this page has some cursed html
 
     // restore group order
-    cy.visit('manageSubProject.php?projectid=15');
+    cy.visit('manageSubProject.php?projectid=14');
     cy.get('a').contains('SubProject Groups').click();
     // cy.get('tbody#sortable').contains('tr', 'Production').as('prod_group_tr'); // TODO: (sbelsk) this too
     cy.get('tbody#sortable').find('tr').first().find('td').eq(1).as('prod_group_tr');
@@ -58,7 +58,7 @@ describe('subProjectGroupOrder', () => {
     cy.get('@save_order_button').click();
 
     // verify that we restored it
-    cy.visit('index.php?project=CrossSubProjectExample&parentid=121');
+    cy.visit('index.php?project=CrossSubProjectExample&parentid=124');
     cy.get('#coveragetable').find('tbody').eq(3).should('contain', 'Production');
   });
 });

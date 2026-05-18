@@ -1573,36 +1573,6 @@ parameters:
 			path: app/Http/Controllers/UserController.php
 
 		-
-			rawMessage: 'Method App\Http\Controllers\ViewTestController::get_int_param() has parameter $name with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Http/Controllers/ViewTestController.php
-
-		-
-			rawMessage: 'Method App\Http\Controllers\ViewTestController::get_int_param() has parameter $required with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Http/Controllers/ViewTestController.php
-
-		-
-			rawMessage: 'Only booleans are allowed in an if condition, int given.'
-			identifier: if.condNotBoolean
-			count: 1
-			path: app/Http/Controllers/ViewTestController.php
-
-		-
-			rawMessage: 'Parameter #2 $build of class CDash\Controller\Api\ViewTest constructor expects CDash\Model\Build, CDash\Model\Build|null given.'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/ViewTestController.php
-
-		-
-			rawMessage: 'Strict comparison using === between null and string will always evaluate to false.'
-			identifier: identical.alwaysFalse
-			count: 1
-			path: app/Http/Controllers/ViewTestController.php
-
-		-
 			rawMessage: 'PHPDoc type array of property App\Http\Kernel::$middleware is not the same as PHPDoc type array<int, string> of overridden property Illuminate\Foundation\Http\Kernel::$middleware.'
 			identifier: property.phpDocType
 			count: 1
@@ -7372,363 +7342,6 @@ parameters:
 			path: app/cdash/app/Controller/Api/Timeline.php
 
 		-
-			rawMessage: Access to an undefined property CDash\Controller\Api\ViewTest::$pageTimer.
-			identifier: property.notFound
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: 'Argument of an invalid type mixed supplied for foreach, only iterables are supported.'
-			identifier: foreach.nonIterable
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: 'Call to an undefined method App\Models\Project|Illuminate\Database\Eloquent\Collection<int, App\Models\Project>::pinnedTestMeasurements().'
-			identifier: method.notFound
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: '''
-				Call to deprecated function pdo_real_escape_string():
-				04/01/2023
-			'''
-			identifier: function.deprecated
-			count: 3
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: 'Call to function array_search() requires parameter #3 to be set.'
-			identifier: function.strict
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: Cannot access property $projectid on stdClass|null.
-			identifier: property.nonObject
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: Cannot cast mixed to int.
-			identifier: cast.int
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: 'Construct empty() is not allowed. Use more strict comparison.'
-			identifier: empty.notAllowed
-			count: 6
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: Foreach overwrites $test with its value variable.
-			identifier: foreach.valueOverwrite
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: 'Loose comparison via "!=" between mixed and string is not allowed.'
-			identifier: notEqual.notAllowed
-			count: 6
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: 'Loose comparison via "==" between int and int is not allowed.'
-			identifier: equal.notAllowed
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: 'Loose comparison via "==" between int<0, 2> and int is not allowed.'
-			identifier: equal.notAllowed
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: 'Loose comparison via "==" between mixed and int is not allowed.'
-			identifier: equal.notAllowed
-			count: 4
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: 'Method CDash\Controller\Api\ViewTest::exportAsCsv() has parameter $projectshowtesttime with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: 'Method CDash\Controller\Api\ViewTest::exportAsCsv() has parameter $stmt with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: 'Method CDash\Controller\Api\ViewTest::exportAsCsv() has parameter $testtimemaxstatus with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: 'Method CDash\Controller\Api\ViewTest::exportAsCsv() should return string but returns (string|false).'
-			identifier: return.type
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: 'Method CDash\Controller\Api\ViewTest::getResponse() has no return type specified.'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: 'Method CDash\Controller\Api\ViewTest::getTestHistory() has parameter $previous_buildids with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: 'Method CDash\Controller\Api\ViewTest::getTestHistory() has parameter $testname with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: 'Method CDash\Controller\Api\ViewTest::getTestHistory() return type has no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: 'Method CDash\Controller\Api\ViewTest::getTestSummary() has parameter $begin with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: 'Method CDash\Controller\Api\ViewTest::getTestSummary() has parameter $end with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: 'Method CDash\Controller\Api\ViewTest::getTestSummary() has parameter $groupid with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: 'Method CDash\Controller\Api\ViewTest::getTestSummary() has parameter $projectid with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: 'Method CDash\Controller\Api\ViewTest::getTestSummary() has parameter $testname with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: 'Method CDash\Controller\Api\ViewTest::getTestSummary() return type has no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: 'Method CDash\Controller\Api\ViewTest::marshal() has parameter $buildid with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: 'Method CDash\Controller\Api\ViewTest::marshal() has parameter $data with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: 'Method CDash\Controller\Api\ViewTest::marshal() has parameter $projectname with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: 'Method CDash\Controller\Api\ViewTest::marshal() has parameter $projectshowtesttime with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: 'Method CDash\Controller\Api\ViewTest::marshal() has parameter $testdate with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: 'Method CDash\Controller\Api\ViewTest::marshal() has parameter $testtimemaxstatus with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: 'Method CDash\Controller\Api\ViewTest::marshal() return type has no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: 'Method CDash\Controller\Api\ViewTest::marshalMissing() has parameter $buildid with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: 'Method CDash\Controller\Api\ViewTest::marshalMissing() has parameter $name with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: 'Method CDash\Controller\Api\ViewTest::marshalMissing() has parameter $projectname with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: 'Method CDash\Controller\Api\ViewTest::marshalMissing() has parameter $projectshowtesttime with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: 'Method CDash\Controller\Api\ViewTest::marshalMissing() has parameter $testdate with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: 'Method CDash\Controller\Api\ViewTest::marshalMissing() has parameter $testtimemaxstatus with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: 'Method CDash\Controller\Api\ViewTest::marshalMissing() return type has no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: 'Method CDash\Controller\Api\ViewTest::marshalStatus() has parameter $status with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: 'Method CDash\Controller\Api\ViewTest::marshalStatus() return type has no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: 'Only booleans are allowed in &&, string given on the left side.'
-			identifier: booleanAnd.leftNotBoolean
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: 'Only booleans are allowed in &&, string given on the right side.'
-			identifier: booleanAnd.rightNotBoolean
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: 'Only booleans are allowed in an elseif condition, int given.'
-			identifier: elseif.condNotBoolean
-			count: 5
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: 'Only booleans are allowed in an if condition, int given.'
-			identifier: if.condNotBoolean
-			count: 3
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: 'Only booleans are allowed in an if condition, string given.'
-			identifier: if.condNotBoolean
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: 'Parameter #1 $stream of function fclose expects resource, resource|false given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: 'Parameter #1 $stream of function fputcsv expects resource, resource|false given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: 'Parameter #1 $stream of function rewind expects resource, resource|false given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: 'Parameter #1 $stream of function stream_get_contents expects resource, resource|false given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: 'Parameter #2 $timestamp of function gmdate expects int|null, (float|int) given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: Possibly invalid array key type int|string|false.
-			identifier: offsetAccess.invalidOffset
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: Property CDash\Controller\Api\ViewTest::$JSONEncodeResponse has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: Property CDash\Controller\Api\ViewTest::$extraMeasurements has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: Property CDash\Controller\Api\ViewTest::$numExtraMeasurements has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: Variable $current_buildid might not be defined.
-			identifier: variable.undefined
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
-			rawMessage: Variable $next_buildid might not be defined.
-			identifier: variable.undefined
-			count: 1
-			path: app/cdash/app/Controller/Api/ViewTest.php
-
-		-
 			rawMessage: Comparison operation ">" between 0 and 0 is always false.
 			identifier: greater.alwaysFalse
 			count: 2
@@ -8155,18 +7768,6 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			rawMessage: 'Method CDash\Model\Build::MarshalResponseArray() has parameter $optional_values with no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			rawMessage: 'Method CDash\Model\Build::MarshalResponseArray() return type has no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
 			rawMessage: 'Method CDash\Model\Build::PropertyFilter() has parameter $rows with no value type specified in iterable type array.'
 			identifier: missingType.iterableValue
 			count: 1
@@ -8259,7 +7860,7 @@ parameters:
 		-
 			rawMessage: 'Only booleans are allowed in an if condition, string|false given.'
 			identifier: if.condNotBoolean
-			count: 2
+			count: 1
 			path: app/cdash/app/Model/Build.php
 
 		-
@@ -12724,12 +12325,6 @@ parameters:
 			path: app/cdash/include/filterdataFunctions.php
 
 		-
-			rawMessage: Access to an undefined property ViewTestPhpFilters::$TextConcat.
-			identifier: property.notFound
-			count: 1
-			path: app/cdash/include/filterdataFunctions.php
-
-		-
 			rawMessage: '''
 				Call to deprecated function pdo_fetch_array():
 				04/01/2023
@@ -13015,18 +12610,6 @@ parameters:
 			path: app/cdash/include/filterdataFunctions.php
 
 		-
-			rawMessage: 'Method ViewTestPhpFilters::getDefaultFilter() return type has no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/include/filterdataFunctions.php
-
-		-
-			rawMessage: 'Method ViewTestPhpFilters::getSqlField() has parameter $field with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/include/filterdataFunctions.php
-
-		-
 			rawMessage: 'Only booleans are allowed in a while condition, array|false|null given.'
 			identifier: while.condNotBoolean
 			count: 1
@@ -13083,7 +12666,7 @@ parameters:
 		-
 			rawMessage: Unreachable statement - code above always terminates.
 			identifier: deadCode.unreachable
-			count: 5
+			count: 4
 			path: app/cdash/include/filterdataFunctions.php
 
 		-
@@ -16885,117 +16468,6 @@ parameters:
 			'''
 			identifier: function.deprecated
 			count: 1
-			path: app/cdash/tests/test_builddetails.php
-
-		-
-			rawMessage: '''
-				Call to deprecated function pdo_query():
-				04/01/2023
-			'''
-			identifier: function.deprecated
-			count: 1
-			path: app/cdash/tests/test_builddetails.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method submission() of class KWWebTestCase:
-				12/09/2024  Use \Test\Traits\CreatesSubmissions instead
-			'''
-			identifier: method.deprecated
-			count: 3
-			path: app/cdash/tests/test_builddetails.php
-
-		-
-			rawMessage: Cannot access property $numFailed on mixed.
-			identifier: property.nonObject
-			count: 2
-			path: app/cdash/tests/test_builddetails.php
-
-		-
-			rawMessage: Cannot access property $numNotRun on mixed.
-			identifier: property.nonObject
-			count: 2
-			path: app/cdash/tests/test_builddetails.php
-
-		-
-			rawMessage: Cannot access property $numPassed on mixed.
-			identifier: property.nonObject
-			count: 2
-			path: app/cdash/tests/test_builddetails.php
-
-		-
-			rawMessage: Cannot access property $numTimeFailed on mixed.
-			identifier: property.nonObject
-			count: 2
-			path: app/cdash/tests/test_builddetails.php
-
-		-
-			rawMessage: Cannot access property $parentBuild on mixed.
-			identifier: property.nonObject
-			count: 1
-			path: app/cdash/tests/test_builddetails.php
-
-		-
-			rawMessage: Cannot access property $tests on mixed.
-			identifier: property.nonObject
-			count: 3
-			path: app/cdash/tests/test_builddetails.php
-
-		-
-			rawMessage: 'Method BuildDetailsTestCase::__construct() with return type void returns int but should not return anything.'
-			identifier: return.void
-			count: 1
-			path: app/cdash/tests/test_builddetails.php
-
-		-
-			rawMessage: 'Method BuildDetailsTestCase::testViewTestReturnsProperFormat() has no return type specified.'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_builddetails.php
-
-		-
-			rawMessage: 'Method BuildDetailsTestCase::testViewTestReturnsProperFormatForParentBuilds() has no return type specified.'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_builddetails.php
-
-		-
-			rawMessage: 'Only booleans are allowed in a while condition, array|false|null given.'
-			identifier: while.condNotBoolean
-			count: 1
-			path: app/cdash/tests/test_builddetails.php
-
-		-
-			rawMessage: 'Parameter #1 $json of function json_decode expects string, string|false given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/tests/test_builddetails.php
-
-		-
-			rawMessage: Property BuildDetailsTestCase::$builds has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/test_builddetails.php
-
-		-
-			rawMessage: Property BuildDetailsTestCase::$testDataDir has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/test_builddetails.php
-
-		-
-			rawMessage: Property BuildDetailsTestCase::$testDataFiles has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/test_builddetails.php
-
-		-
-			rawMessage: '''
-				Call to deprecated function pdo_fetch_array():
-				04/01/2023
-			'''
-			identifier: function.deprecated
-			count: 1
 			path: app/cdash/tests/test_buildfailuredetails.php
 
 		-
@@ -17909,39 +17381,6 @@ parameters:
 
 		-
 			rawMessage: '''
-				Call to deprecated method prepare() of class CDash\Database:
-				04/22/2023  Use Laravel query builder or Eloquent instead
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/test_csvexport.php
-
-		-
-			rawMessage: Cannot access offset 'id' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_csvexport.php
-
-		-
-			rawMessage: 'Cannot call method execute() on PDOStatement|false.'
-			identifier: method.nonObject
-			count: 1
-			path: app/cdash/tests/test_csvexport.php
-
-		-
-			rawMessage: 'Cannot call method fetch() on PDOStatement|false.'
-			identifier: method.nonObject
-			count: 1
-			path: app/cdash/tests/test_csvexport.php
-
-		-
-			rawMessage: 'Part $buildid (mixed) of encapsed string cannot be cast to string.'
-			identifier: encapsedStringPart.nonString
-			count: 1
-			path: app/cdash/tests/test_csvexport.php
-
-		-
-			rawMessage: '''
 				Call to deprecated method submission() of class KWWebTestCase:
 				12/09/2024  Use \Test\Traits\CreatesSubmissions instead
 			'''
@@ -18055,12 +17494,6 @@ parameters:
 			path: app/cdash/tests/test_deletesubproject.php
 
 		-
-			rawMessage: 'Argument of an invalid type mixed supplied for foreach, only iterables are supported.'
-			identifier: foreach.nonIterable
-			count: 1
-			path: app/cdash/tests/test_disabledtests.php
-
-		-
 			rawMessage: '''
 				Call to deprecated method getPdo() of class CDash\Database:
 				04/22/2023  Use Laravel query builder or Eloquent instead
@@ -18079,31 +17512,7 @@ parameters:
 			path: app/cdash/tests/test_disabledtests.php
 
 		-
-			rawMessage: Cannot access offset 'details' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_disabledtests.php
-
-		-
 			rawMessage: Cannot access offset 'id' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_disabledtests.php
-
-		-
-			rawMessage: Cannot access offset 'numFailed' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_disabledtests.php
-
-		-
-			rawMessage: Cannot access offset 'numNotRun' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_disabledtests.php
-
-		-
-			rawMessage: Cannot access offset 'tests' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: app/cdash/tests/test_disabledtests.php
@@ -18124,12 +17533,6 @@ parameters:
 			rawMessage: 'Parameter #1 $haystack of function str_contains expects string, string|false given.'
 			identifier: argument.type
 			count: 2
-			path: app/cdash/tests/test_disabledtests.php
-
-		-
-			rawMessage: 'Part $buildid (mixed) of encapsed string cannot be cast to string.'
-			identifier: encapsedStringPart.nonString
-			count: 1
 			path: app/cdash/tests/test_disabledtests.php
 
 		-
@@ -19489,36 +18892,6 @@ parameters:
 			path: app/cdash/tests/test_junithandler.php
 
 		-
-			rawMessage: Cannot access offset 'numFailed' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_junithandler.php
-
-		-
-			rawMessage: Cannot access offset 'numNotRun' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_junithandler.php
-
-		-
-			rawMessage: Cannot access offset 'numPassed' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_junithandler.php
-
-		-
-			rawMessage: Cannot access offset 'totaltime' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_junithandler.php
-
-		-
-			rawMessage: 'Parameter #1 $string of function trim expects string, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/tests/test_junithandler.php
-
-		-
 			rawMessage: Property JUnitHandlerTestCase::$PDO has no type specified.
 			identifier: missingType.property
 			count: 1
@@ -19608,7 +18981,7 @@ parameters:
 		-
 			rawMessage: 'Argument of an invalid type mixed supplied for foreach, only iterables are supported.'
 			identifier: foreach.nonIterable
-			count: 5
+			count: 3
 			path: app/cdash/tests/test_managemeasurements.php
 
 		-
@@ -19642,24 +19015,6 @@ parameters:
 			path: app/cdash/tests/test_managemeasurements.php
 
 		-
-			rawMessage: Cannot access offset 'columncount' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/cdash/tests/test_managemeasurements.php
-
-		-
-			rawMessage: Cannot access offset 'columnnames' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 6
-			path: app/cdash/tests/test_managemeasurements.php
-
-		-
-			rawMessage: Cannot access offset 'data' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/cdash/tests/test_managemeasurements.php
-
-		-
 			rawMessage: Cannot access offset 'extrameasurements' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 3
@@ -19680,13 +19035,7 @@ parameters:
 		-
 			rawMessage: Cannot access offset 'measurements' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 4
-			path: app/cdash/tests/test_managemeasurements.php
-
-		-
-			rawMessage: Cannot access offset 'name' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
+			count: 1
 			path: app/cdash/tests/test_managemeasurements.php
 
 		-
@@ -19704,7 +19053,7 @@ parameters:
 		-
 			rawMessage: Cannot access offset 'procTimeFull' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
+			count: 1
 			path: app/cdash/tests/test_managemeasurements.php
 
 		-
@@ -19720,33 +19069,15 @@ parameters:
 			path: app/cdash/tests/test_managemeasurements.php
 
 		-
-			rawMessage: Cannot access offset 'tests' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 4
-			path: app/cdash/tests/test_managemeasurements.php
-
-		-
-			rawMessage: Cannot access offset 'y' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_managemeasurements.php
-
-		-
 			rawMessage: Cannot access offset 0 on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 9
+			count: 2
 			path: app/cdash/tests/test_managemeasurements.php
 
 		-
 			rawMessage: Cannot access offset 1 on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 4
-			path: app/cdash/tests/test_managemeasurements.php
-
-		-
-			rawMessage: Cannot access offset 2 on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
+			count: 1
 			path: app/cdash/tests/test_managemeasurements.php
 
 		-
@@ -19765,12 +19096,6 @@ parameters:
 			rawMessage: 'Loose comparison via "!=" between string and float is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 9
-			path: app/cdash/tests/test_managemeasurements.php
-
-		-
-			rawMessage: 'Loose comparison via "==" between mixed and mixed is not allowed.'
-			identifier: equal.notAllowed
-			count: 1
 			path: app/cdash/tests/test_managemeasurements.php
 
 		-
@@ -19834,12 +19159,6 @@ parameters:
 			path: app/cdash/tests/test_managemeasurements.php
 
 		-
-			rawMessage: 'Only booleans are allowed in &&, mixed given on the right side.'
-			identifier: booleanAnd.rightNotBoolean
-			count: 1
-			path: app/cdash/tests/test_managemeasurements.php
-
-		-
 			rawMessage: 'Parameter #1 $array of function array_pop expects array, mixed given.'
 			identifier: argument.type
 			count: 1
@@ -19848,7 +19167,7 @@ parameters:
 		-
 			rawMessage: 'Parameter #1 $value of function count expects array|Countable, mixed given.'
 			identifier: argument.type
-			count: 5
+			count: 2
 			path: app/cdash/tests/test_managemeasurements.php
 
 		-
@@ -19861,12 +19180,6 @@ parameters:
 			rawMessage: 'Part $label (mixed) of encapsed string cannot be cast to string.'
 			identifier: encapsedStringPart.nonString
 			count: 2
-			path: app/cdash/tests/test_managemeasurements.php
-
-		-
-			rawMessage: 'Part $selected_test_name (mixed) of encapsed string cannot be cast to string.'
-			identifier: encapsedStringPart.nonString
-			count: 1
 			path: app/cdash/tests/test_managemeasurements.php
 
 		-
@@ -19902,18 +19215,6 @@ parameters:
 		-
 			rawMessage: Property ManageMeasurementsTestCase::$SubProjectId has no type specified.
 			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/test_managemeasurements.php
-
-		-
-			rawMessage: Variable $selected_nprocs might not be defined.
-			identifier: variable.undefined
-			count: 1
-			path: app/cdash/tests/test_managemeasurements.php
-
-		-
-			rawMessage: Variable $selected_test_name might not be defined.
-			identifier: variable.undefined
 			count: 1
 			path: app/cdash/tests/test_managemeasurements.php
 
@@ -20074,32 +19375,8 @@ parameters:
 			path: app/cdash/tests/test_multiplelabelsfortests.php
 
 		-
-			rawMessage: Cannot access offset 'labels' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_multiplelabelsfortests.php
-
-		-
-			rawMessage: Cannot access offset 'tests' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_multiplelabelsfortests.php
-
-		-
-			rawMessage: Cannot access offset 0 on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_multiplelabelsfortests.php
-
-		-
 			rawMessage: 'Cannot call method labels() on App\Models\Test|null.'
 			identifier: method.nonObject
-			count: 1
-			path: app/cdash/tests/test_multiplelabelsfortests.php
-
-		-
-			rawMessage: 'Parameter #1 $value of function count expects array|Countable, mixed given.'
-			identifier: argument.type
 			count: 1
 			path: app/cdash/tests/test_multiplelabelsfortests.php
 
@@ -21466,41 +20743,11 @@ parameters:
 			path: app/cdash/tests/test_recoverpassword.php
 
 		-
-			rawMessage: 'Argument of an invalid type mixed supplied for foreach, only iterables are supported.'
-			identifier: foreach.nonIterable
-			count: 1
-			path: app/cdash/tests/test_redundanttests.php
-
-		-
 			rawMessage: '''
 				Call to deprecated method submission() of class KWWebTestCase:
 				12/09/2024  Use \Test\Traits\CreatesSubmissions instead
 			'''
 			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/test_redundanttests.php
-
-		-
-			rawMessage: Cannot access offset 'measurements' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/cdash/tests/test_redundanttests.php
-
-		-
-			rawMessage: Cannot access offset 'tests' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/cdash/tests/test_redundanttests.php
-
-		-
-			rawMessage: Cannot access offset 0 on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_redundanttests.php
-
-		-
-			rawMessage: 'Parameter #1 $value of function count expects array|Countable, mixed given.'
-			identifier: argument.type
 			count: 1
 			path: app/cdash/tests/test_redundanttests.php
 
@@ -22012,126 +21259,6 @@ parameters:
 			path: app/cdash/tests/test_subprojectorder.php
 
 		-
-			rawMessage: 'Argument of an invalid type mixed supplied for foreach, only iterables are supported.'
-			identifier: foreach.nonIterable
-			count: 2
-			path: app/cdash/tests/test_subprojecttestfilters.php
-
-		-
-			rawMessage: Cannot access offset 'buildgroups' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/cdash/tests/test_subprojecttestfilters.php
-
-		-
-			rawMessage: Cannot access offset 'builds' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 4
-			path: app/cdash/tests/test_subprojecttestfilters.php
-
-		-
-			rawMessage: Cannot access offset 'fail' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/cdash/tests/test_subprojecttestfilters.php
-
-		-
-			rawMessage: Cannot access offset 'id' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
-			path: app/cdash/tests/test_subprojecttestfilters.php
-
-		-
-			rawMessage: Cannot access offset 'notrun' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/cdash/tests/test_subprojecttestfilters.php
-
-		-
-			rawMessage: Cannot access offset 'numFailed' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/cdash/tests/test_subprojecttestfilters.php
-
-		-
-			rawMessage: Cannot access offset 'numNotRun' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/cdash/tests/test_subprojecttestfilters.php
-
-		-
-			rawMessage: Cannot access offset 'numPassed' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/cdash/tests/test_subprojecttestfilters.php
-
-		-
-			rawMessage: Cannot access offset 'pass' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/cdash/tests/test_subprojecttestfilters.php
-
-		-
-			rawMessage: Cannot access offset 'subprojectname' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
-			path: app/cdash/tests/test_subprojecttestfilters.php
-
-		-
-			rawMessage: Cannot access offset 'test' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 6
-			path: app/cdash/tests/test_subprojecttestfilters.php
-
-		-
-			rawMessage: Cannot access offset 'testfilters' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
-			path: app/cdash/tests/test_subprojecttestfilters.php
-
-		-
-			rawMessage: Cannot access offset 'tests' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/cdash/tests/test_subprojecttestfilters.php
-
-		-
-			rawMessage: Cannot access offset 0 on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/cdash/tests/test_subprojecttestfilters.php
-
-		-
-			rawMessage: 'Parameter #1 $array of function array_pop expects array, mixed given.'
-			identifier: argument.type
-			count: 2
-			path: app/cdash/tests/test_subprojecttestfilters.php
-
-		-
-			rawMessage: 'Parameter #1 $value of function count expects array|Countable, mixed given.'
-			identifier: argument.type
-			count: 2
-			path: app/cdash/tests/test_subprojecttestfilters.php
-
-		-
-			rawMessage: 'Part $build[''id''] (mixed) of encapsed string cannot be cast to string.'
-			identifier: encapsedStringPart.nonString
-			count: 3
-			path: app/cdash/tests/test_subprojecttestfilters.php
-
-		-
-			rawMessage: 'Part $test[''subprojectname''] (mixed) of encapsed string cannot be cast to string.'
-			identifier: encapsedStringPart.nonString
-			count: 1
-			path: app/cdash/tests/test_subprojecttestfilters.php
-
-		-
-			rawMessage: 'Part $testfilters (mixed) of encapsed string cannot be cast to string.'
-			identifier: encapsedStringPart.nonString
-			count: 2
-			path: app/cdash/tests/test_subprojecttestfilters.php
-
-		-
 			rawMessage: '''
 				Call to deprecated method submission() of class KWWebTestCase:
 				12/09/2024  Use \Test\Traits\CreatesSubmissions instead
@@ -22219,12 +21346,6 @@ parameters:
 			path: app/cdash/tests/test_testgraphpermissions.php
 
 		-
-			rawMessage: 'Argument of an invalid type mixed supplied for foreach, only iterables are supported.'
-			identifier: foreach.nonIterable
-			count: 1
-			path: app/cdash/tests/test_testhistory.php
-
-		-
 			rawMessage: '''
 				Call to deprecated method submission() of class KWWebTestCase:
 				12/09/2024  Use \Test\Traits\CreatesSubmissions instead
@@ -22246,27 +21367,9 @@ parameters:
 			path: app/cdash/tests/test_testhistory.php
 
 		-
-			rawMessage: Cannot access offset 'history' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_testhistory.php
-
-		-
 			rawMessage: Cannot access offset 'label' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 4
-			path: app/cdash/tests/test_testhistory.php
-
-		-
-			rawMessage: Cannot access offset 'name' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/cdash/tests/test_testhistory.php
-
-		-
-			rawMessage: Cannot access offset 'tests' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
 			path: app/cdash/tests/test_testhistory.php
 
 		-
@@ -22306,12 +21409,6 @@ parameters:
 			path: app/cdash/tests/test_testhistory.php
 
 		-
-			rawMessage: Left side of && is always true.
-			identifier: booleanAnd.leftAlwaysTrue
-			count: 2
-			path: app/cdash/tests/test_testhistory.php
-
-		-
 			rawMessage: 'Method TestHistoryTestCase::generateXML() has no return type specified.'
 			identifier: missingType.return
 			count: 1
@@ -22342,12 +21439,6 @@ parameters:
 			path: app/cdash/tests/test_testhistory.php
 
 		-
-			rawMessage: 'Only booleans are allowed in &&, string given on the left side.'
-			identifier: booleanAnd.leftNotBoolean
-			count: 2
-			path: app/cdash/tests/test_testhistory.php
-
-		-
 			rawMessage: 'Only booleans are allowed in a negated boolean, int given.'
 			identifier: booleanNot.exprNotBoolean
 			count: 1
@@ -22357,18 +21448,6 @@ parameters:
 			rawMessage: 'Parameter #1 $value of function count expects array|Countable, mixed given.'
 			identifier: argument.type
 			count: 2
-			path: app/cdash/tests/test_testhistory.php
-
-		-
-			rawMessage: 'Part $history (mixed) of encapsed string cannot be cast to string.'
-			identifier: encapsedStringPart.nonString
-			count: 5
-			path: app/cdash/tests/test_testhistory.php
-
-		-
-			rawMessage: 'Part $test[''name''] (mixed) of encapsed string cannot be cast to string.'
-			identifier: encapsedStringPart.nonString
-			count: 1
 			path: app/cdash/tests/test_testhistory.php
 
 		-
@@ -22573,12 +21652,6 @@ parameters:
 			path: app/cdash/tests/test_timeline.php
 
 		-
-			rawMessage: 'Argument of an invalid type mixed supplied for foreach, only iterables are supported.'
-			identifier: foreach.nonIterable
-			count: 1
-			path: app/cdash/tests/test_timeoutsandmissingtests.php
-
-		-
 			rawMessage: 'Call to deprecated method pass() of class SimpleTestCase.'
 			identifier: method.deprecated
 			count: 2
@@ -22594,44 +21667,14 @@ parameters:
 			path: app/cdash/tests/test_timeoutsandmissingtests.php
 
 		-
-			rawMessage: Cannot access offset 'name' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_timeoutsandmissingtests.php
-
-		-
-			rawMessage: Cannot access offset 'numMissing' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_timeoutsandmissingtests.php
-
-		-
-			rawMessage: Cannot access offset 'status' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 7
-			path: app/cdash/tests/test_timeoutsandmissingtests.php
-
-		-
-			rawMessage: Cannot access offset 'tests' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_timeoutsandmissingtests.php
-
-		-
-			rawMessage: 'Method TimeoutsAndMissingTestsTestCase::getLastBuildId() has no return type specified.'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_timeoutsandmissingtests.php
-
-		-
-			rawMessage: Possibly invalid array key type mixed.
-			identifier: offsetAccess.invalidOffset
-			count: 1
-			path: app/cdash/tests/test_timeoutsandmissingtests.php
-
-		-
 			rawMessage: Property TimeoutsAndMissingTestsTestCase::$buildName has no type specified.
 			identifier: missingType.property
+			count: 1
+			path: app/cdash/tests/test_timeoutsandmissingtests.php
+
+		-
+			rawMessage: 'Property TimeoutsAndMissingTestsTestCase::$buildName is never read, only written.'
+			identifier: property.onlyWritten
 			count: 1
 			path: app/cdash/tests/test_timeoutsandmissingtests.php
 
