@@ -112,6 +112,7 @@ const AVAILABLE_FILTERS = Object.freeze({
     new BasicFilterField('Source', FilterType.TEXT, null, 'source'),
     new BasicFilterField('Language', FilterType.TEXT, null, 'language'),
     new BasicFilterField('Config', FilterType.TEXT, null, 'config'),
+    new RelationshipFilterField('Target', FilterType.TEXT, null, 'name', 'target'),
   ],
   BuildTargetsFiltersMultiFilterInput: (apolloClient) => [
     new BasicFilterField('Name', FilterType.TEXT, null, 'name'),
