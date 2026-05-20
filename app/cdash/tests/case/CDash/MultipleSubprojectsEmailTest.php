@@ -32,9 +32,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use PHPUnit\Framework\MockObject\MockObject;
+use Tests\Traits\CreatesProjects;
 
 class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
 {
+    use CreatesProjects;
+
     private static $tz;
     private static $database;
 
@@ -109,9 +112,8 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
         URL::forceRootUrl('http://open.cdash.org');
 
         if (self::$projectid === -1) {
-            self::$projectid = DB::table('project')->insertGetId([
-                'name' => 'TestProject1',
-            ]);
+            $project = $this->makePublicProject('TestProject1');
+            self::$projectid = $project->id;
 
             // A hack to make sure builds exist and can be referenced so we don't violate our foreign key constraints
             for ($i = 0; $i < 10; $i++) {

@@ -32,6 +32,7 @@ class BuildModelTestCase extends KWWebTestCase
 
         $project = Project::create([
             'name' => 'BuildModel',
+            'public' => Project::ACCESS_PUBLIC,
         ]);
 
         DB::table('buildgroup')->insertOrIgnore([

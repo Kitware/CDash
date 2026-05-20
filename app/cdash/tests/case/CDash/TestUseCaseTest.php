@@ -9,17 +9,19 @@ use CDash\Test\UseCase\TestUseCase;
 use CDash\Test\UseCase\UseCase;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Tests\Traits\CreatesProjects;
 
 class TestUseCaseTest extends CDashUseCaseTestCase
 {
+    use CreatesProjects;
+
     private int $projectid = -1;
 
     public function setUp(): void
     {
         $this->createApplication();
-        $this->projectid = DB::table('project')->insertGetId([
-            'name' => 'TestProject1',
-        ]);
+        $project = $this->makePublicProject('TestProject1');
+        $this->projectid = $project->id;
 
         // A hack to make sure builds exist and can be referenced so we don't violate our foreign key constraints
         for ($i = 0; $i < 10; $i++) {
