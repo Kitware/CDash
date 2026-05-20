@@ -131,8 +131,8 @@ class Project extends Model
         'emailmaxitems' => 5,
         'emailmaxchars' => 255,
         'displaylabels' => true,
-        'autoremovetimeframe' => 0,
-        'uploadquota' => 0,
+        'autoremovetimeframe' => 90,
+        'uploadquota' => 10,
         'showcoveragecode' => true,
         'authenticatesubmissions' => false,
     ];
