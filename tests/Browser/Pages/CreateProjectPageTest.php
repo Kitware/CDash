@@ -4,7 +4,6 @@ namespace Tests\Browser\Pages;
 
 use App\Models\Project;
 use App\Models\User;
-use App\Services\ProjectService;
 use Illuminate\Support\Str;
 use Laravel\Dusk\Browser;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -88,9 +87,7 @@ class CreateProjectPageTest extends BrowserTestCase
 
         $project_name = Str::uuid()->toString();
 
-        $this->projects[] = ProjectService::create([
-            'name' => $project_name,
-        ]);
+        $this->projects[] = $this->makePublicProject($project_name);
 
         $this->browse(function (Browser $browser) use ($project_name): void {
             $browser->loginAs($this->users['admin'])

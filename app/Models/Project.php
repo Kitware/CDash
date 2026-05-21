@@ -31,8 +31,8 @@ use Illuminate\Support\Facades\Auth;
  * @property bool $emailbrokensubmission
  * @property bool $emailredundantfailures
  * @property ?string $cvsviewertype
- * @property int $testtimestd
- * @property int $testtimestdthreshold
+ * @property float $testtimestd
+ * @property float $testtimestdthreshold
  * @property bool $showtesttime
  * @property int $testtimemaxstatus
  * @property int $emailmaxitems
@@ -108,6 +108,33 @@ class Project extends Model
         'coveragethreshold' => 'integer',
         'showcoveragecode' => 'boolean',
         'authenticatesubmissions' => 'boolean',
+        'testtimestd' => 'float',
+        'testtimestdthreshold' => 'float',
+        'testtimemaxstatus' => 'integer',
+        'emailmaxitems' => 'integer',
+        'emailmaxchars' => 'integer',
+        'autoremovetimeframe' => 'integer',
+        'uploadquota' => 'integer',
+    ];
+
+    protected $attributes = [
+        'coveragethreshold' => 70,
+        'nightlytime' => '00:00:00',
+        'emaillowcoverage' => false,
+        'emailtesttimingchanged' => false,
+        'emailbrokensubmission' => true,
+        'emailredundantfailures' => false,
+        'testtimestd' => 4,
+        'testtimestdthreshold' => 1,
+        'showtesttime' => false,
+        'testtimemaxstatus' => 3,
+        'emailmaxitems' => 5,
+        'emailmaxchars' => 255,
+        'displaylabels' => true,
+        'autoremovetimeframe' => 90,
+        'uploadquota' => 10,
+        'showcoveragecode' => true,
+        'authenticatesubmissions' => false,
     ];
 
     public const PROJECT_ADMIN = 2;

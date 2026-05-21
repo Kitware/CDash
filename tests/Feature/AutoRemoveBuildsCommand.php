@@ -3,16 +3,17 @@
 namespace Tests\Feature;
 
 use App\Models\Project;
-use App\Services\ProjectService;
 use CDash\Database;
 use CDash\Model\Build;
 use DateTime;
 use DateTimeZone;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
+use Tests\Traits\CreatesProjects;
 
 class AutoRemoveBuildsCommand extends TestCase
 {
+    use CreatesProjects;
     use DatabaseTransactions;
 
     protected Project $project;
@@ -21,10 +22,9 @@ class AutoRemoveBuildsCommand extends TestCase
     {
         parent::setUp();
 
-        $this->project = ProjectService::create([
-            'name' => 'AutoRemoveProject',
-            'autoremovetimeframe' => 45,
-        ]);
+        $this->project = $this->makePublicProject('AutoRemoveProject');
+        $this->project->autoremovetimeframe = 45;
+        $this->project->save();
     }
 
     public function tearDown(): void
