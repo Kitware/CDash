@@ -274,6 +274,14 @@ class Build extends Model
     }
 
     /**
+     * @return HasMany<CoverageDiff, $this>
+     */
+    public function coverageDiffs(): HasMany
+    {
+        return $this->hasMany(CoverageDiff::class, 'comparebuildid');
+    }
+
+    /**
      * @return BelongsToMany<Label, $this>
      */
     public function labels(): BelongsToMany
