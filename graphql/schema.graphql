@@ -166,6 +166,9 @@ type Mutation {
 
   "Create a new comment."
   createComment(input: CreateCommentInput! @spread): CreateCommentMutationPayload! @field(resolver: "CreateComment")
+
+  "Compute patch coverage between two builds."
+  createCoverageDiff(input: CreateCoverageDiffInput! @spread): CreateCoverageDiffMutationPayload! @field(resolver: "CreateCoverageDiff")
 }
 
 input CreateCommentInput {
@@ -182,6 +185,17 @@ type CreateCommentMutationPayload implements MutationPayloadInterface {
 
   "The newly created comment."
   comment: Comment
+}
+
+
+input CreateCoverageDiffInput @validator {
+  baseBuildId: ID!
+  compareBuildId: ID!
+}
+
+type CreateCoverageDiffMutationPayload implements MutationPayloadInterface {
+  "Optional error message."
+  message: String
 }
 
 
@@ -879,6 +893,8 @@ type Build {
     filters: _ @filter
   ): [Coverage!]! @belongsToMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)
 
+  coverageDiffs: [CoverageDiff!]! @hasMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)
+
   """
   Get the percentage of lines covered in all files starting with the provided path.
   Automatically trims leading slashes and dots.  Returns null if the directory does
@@ -1314,6 +1330,31 @@ type Coverage @model(class: "App\\Models\\CoverageView") {
   labels(
     filters: _ @filter
   ): [Label!]! @belongsToMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)
+}
+
+
+"""
+Difference in coverage between two builds.
+"""
+type CoverageDiff {
+  "Unique primary key."
+  id: ID!
+
+  baseBuild: Build! @belongsTo
+
+  compareBuild: Build! @belongsTo
+
+  coveredLinesAdded: Int! @rename(attribute: "coveredlinesadded")
+
+  coveredLinesRemoved: Int! @rename(attribute: "coveredlinesremoved")
+
+  coveredLinesUncovered: Int! @rename(attribute: "coveredlinesuncovered")
+
+  uncoveredLinesAdded: Int! @rename(attribute: "uncoveredlinesadded")
+
+  uncoveredLinesRemoved: Int! @rename(attribute: "uncoveredlinesremoved")
+
+  uncoveredLinesCovered: Int! @rename(attribute: "uncoveredlinescovered")
 }
 
 

@@ -171,6 +171,11 @@ class ProjectPolicy
         return $currentUser->admin || $project->users()->where('id', $currentUser->id)->exists();
     }
 
+    public function createCoverageDiff(User $user, Project $project): bool
+    {
+        return $user->admin || $project->users()->where('id', $user->id)->exists();
+    }
+
     private function isLdapControlledMembership(Project $project): bool
     {
         // If a LDAP filter has been specified and LDAP is enabled, CDash controls the entire members list.

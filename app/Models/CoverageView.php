@@ -28,6 +28,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property ?string $fullpath
  * @property ?string $file
  * @property ?string $log
+ * @property CoverageLine[] $coveredLines
  *
  * @mixin Builder<CoverageView>
  */
@@ -64,12 +65,17 @@ class CoverageView extends Model
     {
         return Attribute::make(
             get: function (mixed $value, array $attributes): array {
-                if ($attributes['log'] === null) {
+                if (($attributes['log'] ?? null) === null) {
+                    return [];
+                }
+
+                $log = str($attributes['log'])->rtrim(';');
+                if ($log->isEmpty()) {
                     return [];
                 }
 
                 $lines = [];
-                foreach (str($attributes['log'])->rtrim(';')->explode(';') as $line_str) {
+                foreach ($log->explode(';') as $line_str) {
                     $line_str = str($line_str);
 
                     $hasBranches = $line_str->startsWith('b');

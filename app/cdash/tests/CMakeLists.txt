@@ -242,6 +242,8 @@ add_feature_test_in_transaction(/Feature/GraphQL/CommentTypeTest)
 
 add_feature_test_in_transaction(/Feature/GraphQL/RepositoryTypeTest)
 
+add_feature_test_in_transaction(/Feature/GraphQL/CoverageDiffTypeTest)
+
 add_feature_test_in_transaction(/Feature/RouteAccessTest)
 
 add_feature_test_in_transaction(/Feature/Monitor)
@@ -310,9 +312,13 @@ add_feature_test_in_transaction(/Feature/GraphQL/Mutations/RemoveUserTest)
 
 add_feature_test_in_transaction(/Feature/GraphQL/Mutations/CreateCommentTest)
 
+add_feature_test_in_transaction(/Feature/GraphQL/Mutations/CreateCoverageDiffMutationTest)
+
 add_feature_test_in_transaction(/Feature/Jobs/PruneBuildsTest)
 
 add_feature_test_in_transaction(/Feature/Jobs/PruneEmailsTest)
+
+add_feature_test_in_transaction(/Feature/Jobs/ComputeCoverageDifferenceTest)
 
 add_feature_test_in_transaction(/Feature/Services/ProjectServiceTest)
 

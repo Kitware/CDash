@@ -289,6 +289,12 @@ parameters:
 			path: app/GraphQL/Mutations/CreateComment.php
 
 		-
+			rawMessage: 'Parameter #2 $args (array{baseBuildId: int, compareBuildId: int}) of method App\GraphQL\Mutations\CreateCoverageDiff::__invoke() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::__invoke()'
+			identifier: method.childParameterType
+			count: 1
+			path: app/GraphQL/Mutations/CreateCoverageDiff.php
+
+		-
 			rawMessage: 'Parameter #2 $args (array{email: string, role: App\Enums\GlobalRole}) of method App\GraphQL\Mutations\CreateGlobalInvitation::__invoke() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::__invoke()'
 			identifier: method.childParameterType
 			count: 1
@@ -22928,6 +22934,15 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: tests/Feature/GraphQL/SiteTypeTest.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method coverageResults() of class App\Models\Build:
+				07/27/2025 Use this relation only to edit the underlying coverage table.  Use coverage() instead.
+			'''
+			identifier: method.deprecated
+			count: 1
+			path: tests/Feature/Jobs/ComputeCoverageDifferenceTest.php
 
 		-
 			rawMessage: Cannot access offset 0 on mixed.
