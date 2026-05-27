@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Utils\TestDisplay;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -399,5 +400,23 @@ class Build extends Model
         }
 
         return ($loctested / $total_lines) * 100;
+    }
+
+    /**
+     * The number of not-run tests whose details do not match the project's skipped pattern.
+     */
+    public function notRunTestsWarningCount(): int
+    {
+        $patterns = $this->project?->notrun_skipped_details_regex
+            ?? TestDisplay::DEFAULT_NOTRUN_SKIPPED_DETAILS_REGEX;
+
+        $count = 0;
+        foreach ($this->tests()->where('status', Test::NOTRUN)->pluck('details') as $details) {
+            if (!TestDisplay::isAcceptableNotRun($details, $patterns)) {
+                $count++;
+            }
+        }
+
+        return $count;
     }
 }
