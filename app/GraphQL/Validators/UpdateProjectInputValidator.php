@@ -3,6 +3,7 @@
 namespace App\GraphQL\Validators;
 
 use App\Models\Project;
+use App\Rules\NotRunSkippedDetailsRegexRule;
 use App\Rules\ProjectAuthenticateSubmissionsRule;
 use App\Rules\ProjectNameRule;
 use App\Rules\ProjectVisibilityRule;
@@ -24,6 +25,11 @@ final class UpdateProjectInputValidator extends Validator
             ],
             'authenticateSubmissions' => [
                 new ProjectAuthenticateSubmissionsRule(),
+            ],
+            'notRunSkippedDetailsRegex' => [
+                'nullable',
+                'string',
+                new NotRunSkippedDetailsRegexRule(),
             ],
         ];
     }

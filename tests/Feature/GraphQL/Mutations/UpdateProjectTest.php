@@ -207,6 +207,8 @@ class UpdateProjectTest extends TestCase
             ['fileUploadLimit', 50, 'uploadquota', 53687091200],
             ['showCoverageCode', false, 'showcoveragecode', false],
             ['banner', 'new banner', 'banner', 'new banner'],
+            ['notRunSkippedDetailsRegex', '*skip*', 'notrun_skipped_details_regex', '*skip*'],
+            ['notRunSkippedDetailsRegex', "Skip\nDisabled", 'notrun_skipped_details_regex', "Skip\nDisabled"],
         ];
     }
 
@@ -267,6 +269,30 @@ class UpdateProjectTest extends TestCase
             ],
         ])->assertGraphQLErrorMessage('Validation failed for the field [updateProject].');
         self::assertSame($original_name, $project1->fresh()?->name);
+    }
+
+    public function testCannotSetInvalidNotRunSkippedDetailsRegex(): void
+    {
+        $project = $this->makePublicProject();
+        $user = $this->makeAdminUser();
+
+        $this->actingAs($user)->graphQL('
+            mutation updateProject($input: UpdateProjectInput!) {
+                updateProject(input: $input) {
+                    project {
+                        notRunSkippedDetailsRegex
+                    }
+                    message
+                }
+            }
+        ', [
+            'input' => [
+                'id' => $project->id,
+                'notRunSkippedDetailsRegex' => '(',
+            ],
+        ])->assertGraphQLErrorMessage('Validation failed for the field [updateProject].');
+
+        self::assertSame('*skip*', $project->fresh()?->notrun_skipped_details_regex);
     }
 
     public function testCannotChangeNameToInvalidName(): void

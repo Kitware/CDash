@@ -390,6 +390,13 @@ type Project {
   invitations: [ProjectInvitation!]! @canRoot(ability: "inviteUser") @hasMany(type: CONNECTION) @orderBy(column: "id")
 
   """
+  Regular expression(s), one per line, matched against not-run test details. Matching tests are
+  displayed in green instead of yellow. Glob wildcards (*) are supported. The default pattern is
+  *skip* (case insensitive).
+  """
+  notRunSkippedDetailsRegex: String! @rename(attribute: "notrun_skipped_details_regex")
+
+  """
   Pinned test measurements are test measurements, identified by name, which should be shown
   alongside Test details throughout the site.
   """
@@ -506,6 +513,12 @@ input UpdateProjectInput @validator {
   showCoverageCode: Boolean @rename(attribute: "showcoveragecode")
 
   banner: String
+
+  """
+  Regular expression(s), one per line, matched against not-run test details. Matching tests are
+  displayed in green instead of yellow.
+  """
+  notRunSkippedDetailsRegex: String @rename(attribute: "notrun_skipped_details_regex")
 }
 
 
@@ -846,6 +859,12 @@ type Build {
 
   "The number of tests not run for this build."
   notRunTestsCount: Int @rename(attribute: "testnotrun")
+
+  """
+  The number of not-run tests counted as warnings (excludes tests whose details match the
+  project's skipped-test pattern).
+  """
+  notRunTestsWarningCount: Int! @method(name: "notRunTestsWarningCount")
 
   "The duration of the test step in seconds."
   testDuration: Int! @rename(attribute: "testduration")

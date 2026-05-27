@@ -276,6 +276,7 @@ import BuildSidebar from './shared/BuildSidebar.vue';
 import gql from 'graphql-tag';
 import {getRepository} from './shared/RepositoryIntegrations';
 import Utils from './shared/Utils';
+import {testStatusToTextColorClass} from './shared/TestDisplay';
 
 export default {
   name: 'TestDetails',
@@ -322,6 +323,7 @@ export default {
               name
               enableTestTiming
               testTimeStdMultiplier
+              notRunSkippedDetailsRegex
               vcsViewer
               vcsUrl
               cmakeProjectRoot
@@ -473,16 +475,15 @@ export default {
      * TODO: Convert these to Tailwind colors
      */
     testStatusColorClass() {
-      switch (this.test.status) {
-      case 'PASSED':
-        return 'normal-text';
-      case 'FAILED':
-        return 'error-text';
-      case 'NOT_RUN':
-        return 'warning-text';
-      default:
+      if (!this.test) {
         return '';
       }
+
+      return testStatusToTextColorClass(
+        this.test.status,
+        this.test.details,
+        this.build?.project?.notRunSkippedDetailsRegex ?? '*skip*',
+      );
     },
 
     testTimeStatus() {
