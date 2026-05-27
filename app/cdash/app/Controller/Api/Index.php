@@ -17,6 +17,7 @@
 
 namespace CDash\Controller\Api;
 
+use App\Models\Build as EloquentBuild;
 use App\Utils\TestingDay;
 use CDash\Database;
 use CDash\Model\BuildGroup;
@@ -1098,6 +1099,7 @@ class Index extends ResultsApi
             }
 
             $test_response['notrun'] = $nnotrun;
+            $test_response['notrunwarning'] = $this->computeNotRunTestsWarningCount((int) $buildid, $nnotrun);
             $test_response['fail'] = $nfail;
             $test_response['pass'] = $npass;
 
@@ -1554,5 +1556,17 @@ class Index extends ResultsApi
     public function recordGenerationTime(array &$response): void
     {
         $this->pageTimer->end($response);
+    }
+
+    /**
+     * Count not-run tests that should display as warnings on the index page.
+     */
+    private function computeNotRunTestsWarningCount(int $buildid, int $notRunCount): int
+    {
+        if ($notRunCount <= 0) {
+            return 0;
+        }
+
+        return EloquentBuild::find($buildid)?->notRunTestsWarningCount() ?? 0;
     }
 }

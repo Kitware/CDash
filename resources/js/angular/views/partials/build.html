@@ -329,7 +329,7 @@
   </div>
 </td>
 
-<td ng-if="::buildgroup.hastestdata" align="center" ng-class="::{'warning': build.test.notrun > 0, 'normal': build.test.notrun == 0}">
+<td ng-if="::buildgroup.hastestdata" align="center" ng-class="::{'warning': build.test.notrunwarning > 0, 'normal': build.test.notrunwarning == 0}">
   <div ng-if="::build.hastest"
        ng-class="::{'valuewithsub': build.test.nnotrundiffp > 0 || build.test.nnotrundiffn > 0}">
     <a class="cdash-link" ng-href="{{ 'builds/' + build.id + '/tests?filters=%7B%22all%22%3A%5B%7B%22eq%22%3A%7B%22status%22%3A%22NOT_RUN%22%7D%7D%5D%7D' }}">

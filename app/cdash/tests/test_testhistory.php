@@ -134,6 +134,9 @@ class TestHistoryTestCase extends KWWebTestCase
                   <FullName>./notrun</FullName>
                   <FullCommandLine></FullCommandLine>
                   <Results>
+                    <NamedMeasurement type="text/string" name="Exit Code">
+                      <Value>Skipped</Value>
+                    </NamedMeasurement>
                     <NamedMeasurement type="text/string" name="Command Line">
                       <Value></Value>
                     </NamedMeasurement>
