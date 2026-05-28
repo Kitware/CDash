@@ -1128,6 +1128,265 @@ class FilterTest extends TestCase
         ]);
     }
 
+    public function testOrderProjectsAscending(): void
+    {
+        $this->actingAs($this->users['admin'])->graphQL('
+            query {
+                projects(orderBy: [{column: NAME, order: ASC}]) {
+                    edges {
+                        node {
+                            name
+                        }
+                    }
+                }
+            }
+        ')->assertExactJson([
+            'data' => [
+                'projects' => [
+                    'edges' => [
+                        [
+                            'node' => [
+                                'name' => 'private1',
+                            ],
+                        ],
+                        [
+                            'node' => [
+                                'name' => 'private2',
+                            ],
+                        ],
+                        [
+                            'node' => [
+                                'name' => 'public1',
+                            ],
+                        ],
+                        [
+                            'node' => [
+                                'name' => 'public2',
+                            ],
+                        ],
+                        [
+                            'node' => [
+                                'name' => 'public3',
+                            ],
+                        ],
+                        [
+                            'node' => [
+                                'name' => 'public4',
+                            ],
+                        ],
+                        [
+                            'node' => [
+                                'name' => 'public5',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+    }
+
+    public function testOrderProjectsDescending(): void
+    {
+        $this->actingAs($this->users['admin'])->graphQL('
+            query {
+                projects(orderBy: [{column: NAME, order: DESC}]) {
+                    edges {
+                        node {
+                            name
+                        }
+                    }
+                }
+            }
+        ')->assertExactJson([
+            'data' => [
+                'projects' => [
+                    'edges' => [
+                        [
+                            'node' => [
+                                'name' => 'public5',
+                            ],
+                        ],
+                        [
+                            'node' => [
+                                'name' => 'public4',
+                            ],
+                        ],
+                        [
+                            'node' => [
+                                'name' => 'public3',
+                            ],
+                        ],
+                        [
+                            'node' => [
+                                'name' => 'public2',
+                            ],
+                        ],
+                        [
+                            'node' => [
+                                'name' => 'public1',
+                            ],
+                        ],
+                        [
+                            'node' => [
+                                'name' => 'private2',
+                            ],
+                        ],
+                        [
+                            'node' => [
+                                'name' => 'private1',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+    }
+
+    public function testOrderBuildsWithinProject(): void
+    {
+        // Generate 3 random UUIDs and sort them so we know the expected ASC order
+        $names = [
+            Str::uuid()->toString(),
+            Str::uuid()->toString(),
+            Str::uuid()->toString(),
+        ];
+        sort($names);
+        [$nameFirst, $nameSecond, $nameThird] = $names;
+
+        // Insert in non-sorted order to verify ordering is applied by the query
+        $this->projects['public1']->builds()->create([
+            'name' => $nameSecond,
+            'uuid' => Str::uuid()->toString(),
+        ]);
+        $this->projects['public1']->builds()->create([
+            'name' => $nameThird,
+            'uuid' => Str::uuid()->toString(),
+        ]);
+        $this->projects['public1']->builds()->create([
+            'name' => $nameFirst,
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        $this->actingAs($this->users['admin'])->graphQL('
+            query($projectId: ID!) {
+                project(id: $projectId) {
+                    builds(orderBy: [{column: NAME, order: ASC}]) {
+                        edges {
+                            node {
+                                name
+                            }
+                        }
+                    }
+                }
+            }
+        ', [
+            'projectId' => $this->projects['public1']->id,
+        ])->assertExactJson([
+            'data' => [
+                'project' => [
+                    'builds' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'name' => $nameFirst,
+                                ],
+                            ],
+                            [
+                                'node' => [
+                                    'name' => $nameSecond,
+                                ],
+                            ],
+                            [
+                                'node' => [
+                                    'name' => $nameThird,
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+    }
+
+    public function testOrderByAndFilterCanBeUsedTogether(): void
+    {
+        // Use a shared prefix so the filter can match all three builds
+        $prefix = 'build-';
+
+        // Generate 4 random suffixes and sort so we know the expected ASC order
+        $suffixes = [
+            Str::uuid()->toString(),
+            Str::uuid()->toString(),
+            Str::uuid()->toString(),
+            Str::uuid()->toString(),
+        ];
+        sort($suffixes);
+        [$suffixFirst, $suffixSecond, $suffixThird, $suffixFourth] = $suffixes;
+
+        // Insert in non-sorted order to verify ordering is applied by the query
+        $this->projects['public1']->builds()->create([
+            'name' => $prefix . $suffixSecond,
+            'uuid' => Str::uuid()->toString(),
+        ]);
+        $this->projects['public1']->builds()->create([
+            'name' => $prefix . $suffixFirst,
+            'uuid' => Str::uuid()->toString(),
+        ]);
+        $this->projects['public1']->builds()->create([
+            'name' => $suffixThird,
+            'uuid' => Str::uuid()->toString(),
+        ]);
+        $this->projects['public1']->builds()->create([
+            'name' => $prefix . $suffixFourth,
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        // Filter to only include builds with the shared prefix, ordered DESC
+        $this->actingAs($this->users['admin'])->graphQL('
+            query($projectId: ID!, $prefix: String!) {
+                project(id: $projectId) {
+                    builds(
+                        filters: {contains: {name: $prefix}}
+                        orderBy: [{column: NAME, order: DESC}]
+                    ) {
+                        edges {
+                            node {
+                                name
+                            }
+                        }
+                    }
+                }
+            }
+        ', [
+            'projectId' => $this->projects['public1']->id,
+            'prefix' => $prefix,
+        ])->assertExactJson([
+            'data' => [
+                'project' => [
+                    'builds' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'name' => $prefix . $suffixFourth,
+                                ],
+                            ],
+                            [
+                                'node' => [
+                                    'name' => $prefix . $suffixSecond,
+                                ],
+                            ],
+                            [
+                                'node' => [
+                                    'name' => $prefix . $suffixFirst,
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+    }
+
     public function testFilterByBelongsToRelationship(): void
     {
         $site1 = $this->makeSite(['name' => 'site1']);

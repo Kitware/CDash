@@ -113,14 +113,14 @@ class TestMeasurementTypeTest extends TestCase
                                                     'name' => 'test1',
                                                     'testMeasurements' => [
                                                         [
-                                                            'name' => 'measurement 2',
-                                                            'type' => 'numeric/double',
-                                                            'value' => '6',
-                                                        ],
-                                                        [
                                                             'name' => 'measurement 1',
                                                             'type' => 'text/string',
                                                             'value' => 'test',
+                                                        ],
+                                                        [
+                                                            'name' => 'measurement 2',
+                                                            'type' => 'numeric/double',
+                                                            'value' => '6',
                                                         ],
                                                     ],
                                                 ],

@@ -405,12 +405,12 @@
                                 "edges": [
                                   {
                                     "node": {
-                                      "text": "Label4"
+                                      "text": "MakeTable"
                                     }
                                   },
                                   {
                                     "node": {
-                                      "text": "MakeTable"
+                                      "text": "Label4"
                                     }
                                   }
                                 ]
@@ -679,12 +679,12 @@
                                 "edges": [
                                   {
                                     "node": {
-                                      "text": "Label3"
+                                      "text": "MathFunctions"
                                     }
                                   },
                                   {
                                     "node": {
-                                      "text": "MathFunctions"
+                                      "text": "Label3"
                                     }
                                   }
                                 ]
@@ -999,12 +999,12 @@
                                 "edges": [
                                   {
                                     "node": {
-                                      "text": "Label3"
+                                      "text": "MathFunctions"
                                     }
                                   },
                                   {
                                     "node": {
-                                      "text": "MathFunctions"
+                                      "text": "Label3"
                                     }
                                   }
                                 ]
@@ -1568,7 +1568,7 @@
                                 "edges": [
                                   {
                                     "node": {
-                                      "text": "Label2"
+                                      "text": "Tutorial"
                                     }
                                   },
                                   {
@@ -1578,7 +1578,7 @@
                                   },
                                   {
                                     "node": {
-                                      "text": "Tutorial"
+                                      "text": "Label2"
                                     }
                                   }
                                 ]
