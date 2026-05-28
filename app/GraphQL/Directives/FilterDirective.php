@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\GraphQL\Directives;
 
+use GraphQL\Error\InvariantViolation;
 use GraphQL\Error\SyntaxError;
 use GraphQL\Language\AST\FieldDefinitionNode;
 use GraphQL\Language\AST\InputObjectTypeDefinitionNode;
@@ -20,11 +21,13 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 use JsonException;
+use Nuwave\Lighthouse\OrderBy\OrderByDirective;
 use Nuwave\Lighthouse\Schema\AST\ASTHelper;
 use Nuwave\Lighthouse\Schema\AST\DocumentAST;
 use Nuwave\Lighthouse\Schema\Directives\BaseDirective;
 use Nuwave\Lighthouse\Support\Contracts\ArgBuilderDirective;
 use Nuwave\Lighthouse\Support\Contracts\ArgManipulator;
+use Nuwave\Lighthouse\Support\Utils;
 
 final class FilterDirective extends BaseDirective implements ArgBuilderDirective, ArgManipulator
 {
@@ -41,6 +44,7 @@ final class FilterDirective extends BaseDirective implements ArgBuilderDirective
     /**
      * @throws SyntaxError
      * @throws JsonException
+     * @throws InvariantViolation
      */
     public function manipulateArgDefinition(
         DocumentAST &$documentAST,
@@ -91,6 +95,130 @@ final class FilterDirective extends BaseDirective implements ArgBuilderDirective
                     $subFilterableFields
                 )
             );
+        }
+
+        // For list/Connection fields, inject an orderBy argument covering all @filterable fields.
+        $isListField = $parentField->type instanceof ListTypeNode
+            || Str::endsWith(ASTHelper::getUnderlyingTypeName($parentField), 'Connection');
+
+        if ($isListField) {
+            $this->injectOrderByArgument($documentAST, $parentField, $parentType);
+        }
+    }
+
+    /**
+     * Inject an orderBy argument into $parentField for all @filterable fields on the return type,
+     * then invoke OrderByDirective's manipulateArgDefinition so the enum types are generated.
+     *
+     * @throws InvariantViolation
+     * @throws SyntaxError
+     * @throws JsonException
+     */
+    private function injectOrderByArgument(
+        DocumentAST &$documentAST,
+        FieldDefinitionNode &$parentField,
+        ObjectTypeDefinitionNode|InterfaceTypeDefinitionNode &$parentType,
+    ): void {
+        // Avoid injecting twice if @filter is somehow applied more than once on this field
+        foreach ($parentField->arguments as $existingArg) {
+            if ($existingArg->name->value === 'orderBy') {
+                return;
+            }
+        }
+
+        $returnTypeName = Str::replaceEnd('Connection', '', ASTHelper::getUnderlyingTypeName($parentField));
+        $returnType = $documentAST->types[$returnTypeName] ?? null;
+
+        if (!$returnType instanceof ObjectTypeDefinitionNode && !$returnType instanceof InterfaceTypeDefinitionNode) {
+            return;
+        }
+
+        // Collect filterable fields: GraphQL field name -> DB column name
+        /** @var array<string, string> $filterableFields fieldName => dbColumn */
+        $filterableFields = [];
+        foreach ($returnType->fields as $field) {
+            $isFilterable = false;
+            foreach ($field->directives as $directive) {
+                if ($directive->name->value === 'filterable') {
+                    $isFilterable = true;
+                    break;
+                }
+            }
+
+            if (!$isFilterable) {
+                continue;
+            }
+
+            $graphqlFieldName = $field->name->value;
+
+            // Use @rename attribute value as the DB column name, otherwise use the field name
+            $dbColumn = $graphqlFieldName;
+            foreach ($field->directives as $directive) {
+                if ($directive->name->value === 'rename') {
+                    $renameValue = $directive->arguments[0]->value;
+                    if (property_exists($renameValue, 'value')) {
+                        $dbColumn = (string) $renameValue->value;
+                    }
+                    break;
+                }
+            }
+
+            $filterableFields[$graphqlFieldName] = $dbColumn;
+        }
+
+        if ($filterableFields === []) {
+            return;
+        }
+
+        // Build a custom columns enum using GraphQL field names as user-visible enum values,
+        // with @enum(value: "dbColumn") to map each to the actual database column.
+        $placeholderArg = Parser::inputValueDefinition('orderBy: _');
+        $enumName = ASTHelper::qualifiedArgType(
+            $placeholderArg,
+            $parentField,
+            $parentType,
+        ) . 'OrderByColumn';
+
+        $enumValues = [];
+        foreach ($filterableFields as $fieldName => $dbColumn) {
+            $enumValueName = Utils::toEnumValueName($fieldName);
+            $enumValues[] = "{$enumValueName} @enum(value: \"{$dbColumn}\")";
+        }
+        $enumValuesString = implode("\n    ", $enumValues);
+
+        $documentAST->setTypeDefinition(Parser::enumTypeDefinition(/* @lang GraphQL */ <<<GRAPHQL
+                "Allowed columns for orderBy on this field."
+                enum {$enumName} {
+                    {$enumValuesString}
+                }
+            GRAPHQL));
+
+        // Default to ascending order by id if id is a filterable field
+        $idEnumName = isset($filterableFields['id']) ? Utils::toEnumValueName('id') : null;
+        $defaultValue = $idEnumName !== null ? " = [{column: {$idEnumName}, order: ASC}]" : '';
+
+        $orderByArg = Parser::inputValueDefinition(/* @lang GraphQL */ <<<GRAPHQL
+                "Sort the results by one or more filterable fields."
+                orderBy: _{$defaultValue} @orderBy(columnsEnum: "{$enumName}")
+            GRAPHQL);
+
+        $parentField->arguments[] = $orderByArg;
+
+        // Manually invoke OrderByDirective's manipulateArgDefinition so it generates the enum types.
+        // hydrate() expects the DirectiveNode itself (the @orderBy node on the arg) plus the node it is attached to.
+        $orderByDirectiveNode = null;
+        foreach ($orderByArg->directives as $directive) {
+            if ($directive->name->value === 'orderBy') {
+                $orderByDirectiveNode = $directive;
+                break;
+            }
+        }
+
+        if ($orderByDirectiveNode !== null) {
+            /** @var OrderByDirective $orderByDirective */
+            $orderByDirective = app(OrderByDirective::class);
+            $orderByDirective->hydrate($orderByDirectiveNode, $orderByArg);
+            $orderByDirective->manipulateArgDefinition($documentAST, $orderByArg, $parentField, $parentType);
         }
     }
 

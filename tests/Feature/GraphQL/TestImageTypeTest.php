@@ -111,16 +111,16 @@ class TestImageTypeTest extends TestCase
                                                         'edges' => [
                                                             [
                                                                 'node' => [
-                                                                    'id' => (string) $testImageWithImage->id,
-                                                                    'role' => $testImageWithImage->role,
-                                                                    'url' => url('/image/' . $this->image->id),
+                                                                    'id' => (string) $testImageNoImage->id,
+                                                                    'role' => $testImageNoImage->role,
+                                                                    'url' => null,
                                                                 ],
                                                             ],
                                                             [
                                                                 'node' => [
-                                                                    'id' => (string) $testImageNoImage->id,
-                                                                    'role' => $testImageNoImage->role,
-                                                                    'url' => null,
+                                                                    'id' => (string) $testImageWithImage->id,
+                                                                    'role' => $testImageWithImage->role,
+                                                                    'url' => url('/image/' . $this->image->id),
                                                                 ],
                                                             ],
                                                         ],
