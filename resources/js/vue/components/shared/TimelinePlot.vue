@@ -6,7 +6,6 @@
     :update-options="{ notMerge: true }"
     autoresize
     @click="onClick"
-    @dblclick="onDblClick"
   />
 </template>
 
@@ -169,13 +168,6 @@ export default {
     onClick(params) {
       if (params.data && params.data[2]) {
         window.location.href = params.data[2];
-      }
-    },
-    onDblClick() {
-      if (this.$refs.chart) {
-        this.$refs.chart.dispatchAction({
-          type: 'restore',
-        });
       }
     },
   },
