@@ -63,10 +63,9 @@ class DoneHandler extends AbstractXmlHandler
             $this->Build->UpdateBuild($this->Build->Id, -1, -1);
             $this->Build->MarkAsDone(true);
 
-            // Should we re-run any checks that were previously marked
-            // as pending?
-            if ($pendingSubmissionsModel !== null && $pendingSubmissionsModel->recheck) {
-                $revision = \App\Models\Build::findOrFail((int) $this->Build->Id)->updateStep->revision ?? '';
+            // Create or update the GitHub check for this commit.
+            $revision = \App\Models\Build::findOrFail((int) $this->Build->Id)->updateStep->revision ?? '';
+            if ($revision !== '') {
                 Repository::createOrUpdateCheck($revision);
             }
 
