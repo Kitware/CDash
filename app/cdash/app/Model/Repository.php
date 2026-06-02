@@ -70,7 +70,11 @@ class Repository
         $project = new Project();
         $project->Id = $projectid;
         $project->Fill();
-        $repositoryInterface = self::getRepositoryInterface($project);
+        try {
+            $repositoryInterface = self::getRepositoryInterface($project);
+        } catch (Exception $e) {
+            return;
+        }
         $repositoryInterface->createCheck($sha);
     }
 
