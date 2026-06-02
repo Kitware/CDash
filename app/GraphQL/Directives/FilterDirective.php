@@ -285,6 +285,8 @@ final class FilterDirective extends BaseDirective implements ArgBuilderDirective
                 'ne' => '!=',
                 'gt' => '>',
                 'lt' => '<',
+                'ge' => '>=',
+                'le' => '<=',
             ];
 
             foreach ($operators as $operator => $sqlOperator) {
@@ -330,7 +332,7 @@ final class FilterDirective extends BaseDirective implements ArgBuilderDirective
     {
         if ($relationshipFilterName !== null) {
             $hasFilter = '"Find nodes which have one or more related notes which match the provided filter."' . PHP_EOL;
-            $hasFilter .= 'has: ' . $relationshipFilterName . '@rules(apply: ["prohibits:any,all,eq,ne,gt,lt,contains"])';
+            $hasFilter .= 'has: ' . $relationshipFilterName . '@rules(apply: ["prohibits:any,all,eq,ne,gt,lt,ge,le,contains"])';
         } else {
             $hasFilter = '';
         }
@@ -338,20 +340,24 @@ final class FilterDirective extends BaseDirective implements ArgBuilderDirective
         return Parser::inputObjectTypeDefinition(/* @lang GraphQL */ <<<GRAPHQL
                 input {$multiFilterName} {
                     "Find nodes which match at least one of the provided filters."
-                    any: [{$multiFilterName}] @rules(apply: ["prohibits:all,has,eq,ne,gt,lt,contains"])
+                    any: [{$multiFilterName}] @rules(apply: ["prohibits:all,has,eq,ne,gt,lt,ge,le,contains"])
                     "Find nodes which match all of the provided filters."
-                    all: [{$multiFilterName}] @rules(apply: ["prohibits:any,has,eq,ne,gt,lt,contains"])
+                    all: [{$multiFilterName}] @rules(apply: ["prohibits:any,has,eq,ne,gt,lt,ge,le,contains"])
                     {$hasFilter}
                     "Find nodes where the provided field is equal to the provided value."
-                    eq: {$filterName} @rules(apply: ["prohibits:any,all,has,ne,gt,lt,contains"])
+                    eq: {$filterName} @rules(apply: ["prohibits:any,all,has,ne,gt,lt,ge,le,contains"])
                     "Find nodes where the provided field is not equal to the provided value."
-                    ne: {$filterName} @rules(apply: ["prohibits:any,all,has,eq,gt,lt,contains"])
+                    ne: {$filterName} @rules(apply: ["prohibits:any,all,has,eq,gt,lt,ge,le,contains"])
                     "Find nodes where the provided field is greater than the provided value."
-                    gt: {$filterName} @rules(apply: ["prohibits:any,all,has,eq,ne,lt,contains"])
+                    gt: {$filterName} @rules(apply: ["prohibits:any,all,has,eq,ne,lt,ge,le,contains"])
                     "Find nodes where the provided field is less than the provided value."
-                    lt: {$filterName} @rules(apply: ["prohibits:any,all,has,eq,ne,gt,contains"])
+                    lt: {$filterName} @rules(apply: ["prohibits:any,all,has,eq,ne,gt,ge,le,contains"])
+                    "Find nodes where the provided field is greater than or equal to the provided value."
+                    ge: {$filterName} @rules(apply: ["prohibits:any,all,has,eq,ne,gt,lt,le,contains"])
+                    "Find nodes where the provided field is less than or equal to the provided value."
+                    le: {$filterName} @rules(apply: ["prohibits:any,all,has,eq,ne,gt,lt,ge,contains"])
                     "Find nodes where the provided field contains the provided value."
-                    contains: {$filterName} @rules(apply: ["prohibits:any,all,has,eq,ne,gt,lt"])
+                    contains: {$filterName} @rules(apply: ["prohibits:any,all,has,eq,ne,gt,lt,ge,le"])
                 }
             GRAPHQL
         );
