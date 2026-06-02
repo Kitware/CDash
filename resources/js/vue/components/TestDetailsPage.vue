@@ -3,9 +3,9 @@
     :build-id="buildId"
     active-tab="tests"
   >
-    <build-summary-card :build-id="buildId" />
+    <BuildSummaryCard :build-id="buildId" />
 
-    <loading-indicator :is-loading="!build || !test">
+    <LoadingIndicator :is-loading="!build || !test">
       <div
         id="executiontime"
         class="tw-flex tw-flex-row tw-gap-1"
@@ -159,7 +159,7 @@
         </a>
       </div>
       <div v-if="showcommandline">
-        <code-box
+        <CodeBox
           id="commandline"
           :text="test.command"
         />
@@ -187,7 +187,7 @@
         </a>
       </div>
       <div v-if="showenvironment">
-        <code-box
+        <CodeBox
           id="environment"
           :text="environment"
         />
@@ -238,7 +238,7 @@
       />
       <div id="tooltip" />
 
-      <test-history-plot
+      <TestHistoryPlot
         v-if="graphSelection === 'status'"
         :base-url="$baseURL"
         :project-id="build.project.id"
@@ -249,7 +249,7 @@
 
       <br>
       <b>Test Output</b>
-      <code-box
+      <CodeBox
         id="test_output"
         :text="test.output"
       />
@@ -257,10 +257,10 @@
 
       <div v-for="preformattedMeasurement in preformattedMeasurements">
         <b>{{ preformattedMeasurement.name }}</b>
-        <code-box :text="preformattedMeasurement.value" />
+        <CodeBox :text="preformattedMeasurement.value" />
         <br>
       </div>
-    </loading-indicator>
+    </LoadingIndicator>
   </BuildSidebar>
 </template>
 

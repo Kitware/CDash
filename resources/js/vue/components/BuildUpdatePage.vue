@@ -4,9 +4,9 @@
     active-tab="update"
   >
     <section class="tw-flex tw-flex-col tw-w-full tw-gap-4">
-      <build-summary-card :build-id="buildId" />
+      <BuildSummaryCard :build-id="buildId" />
 
-      <loading-indicator :is-loading="!update">
+      <LoadingIndicator :is-loading="!update">
         <div>
           <div v-if="update.revision">
             <b>Revision: </b>
@@ -61,9 +61,9 @@
         >
           {{ update.status }}
         </h3>
-      </loading-indicator>
+      </LoadingIndicator>
 
-      <loading-indicator :is-loading="!updateFiles">
+      <LoadingIndicator :is-loading="!updateFiles">
         <div class="tw-flex tw-flex-col tw-gap-4">
           <CommitCard
             v-for="commitFiles in commits"
@@ -72,7 +72,7 @@
             :repository="repository"
           />
         </div>
-      </loading-indicator>
+      </LoadingIndicator>
     </section>
   </BuildSidebar>
 </template>

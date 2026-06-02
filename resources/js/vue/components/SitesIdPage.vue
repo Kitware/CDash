@@ -8,7 +8,7 @@
         <div class="tw-text-2xl tw-font-black">
           Site Details
         </div>
-        <loading-indicator :is-loading="$apollo.queries.mostRecentInformation.loading">
+        <LoadingIndicator :is-loading="$apollo.queries.mostRecentInformation.loading">
           <template v-if="mostRecentInformation === null">
             No information available for this site.
           </template>
@@ -76,7 +76,7 @@
                       data-test="edit-description-button"
                       @click="editDescription"
                     >
-                      <font-awesome-icon :icon="FA.faPencil" /> Edit
+                      <FontAwesomeIcon :icon="FA.faPencil" /> Edit
                     </button>
                   </div>
                 </div>
@@ -106,13 +106,13 @@
               </div>
             </div>
           </template>
-        </loading-indicator>
+        </LoadingIndicator>
       </div>
       <div class="tw-flex tw-flex-col tw-border tw-rounded tw-p-4">
         <div class="tw-text-2xl tw-font-black">
           Projects
         </div>
-        <loading-indicator :is-loading="!projects">
+        <LoadingIndicator :is-loading="!projects">
           <table
             class="tw-table"
             data-test="site-projects-table"
@@ -133,7 +133,7 @@
               </tr>
             </tbody>
           </table>
-        </loading-indicator>
+        </LoadingIndicator>
       </div>
       <div class="tw-flex tw-flex-col tw-border tw-rounded tw-p-4">
         <div class="tw-flex tw-flex-row">
@@ -159,7 +159,7 @@
             </button>
           </template>
         </div>
-        <loading-indicator :is-loading="!siteMaintainers">
+        <LoadingIndicator :is-loading="!siteMaintainers">
           <table
             class="tw-table"
             data-test="site-maintainers-table"
@@ -175,7 +175,7 @@
               </tr>
             </tbody>
           </table>
-        </loading-indicator>
+        </LoadingIndicator>
       </div>
     </div>
     <div
@@ -185,14 +185,14 @@
       <div class="tw-text-2xl tw-font-black">
         History
       </div>
-      <loading-indicator :is-loading="!site">
+      <LoadingIndicator :is-loading="!site">
         <ul class="tw-timeline tw-timeline-snap-icon tw-timeline-compact tw-timeline-vertical">
           <li
             v-for="(information, index) in deduplicatedInformation"
             data-test="site-history-item"
           >
             <div class="tw-timeline-middle">
-              <font-awesome-icon :icon="FA.faCircleCheck" />
+              <FontAwesomeIcon :icon="FA.faCircleCheck" />
             </div>
             <div class="tw-timeline-end tw-mb-4">
               <time class="tw-font-mono tw-italic tw-text-neutral-500">{{ humanReadableTimestamp(information.node.timestamp) }}</time>
@@ -267,7 +267,7 @@
             <hr>
           </li>
         </ul>
-      </loading-indicator>
+      </LoadingIndicator>
     </div>
   </div>
 </template>

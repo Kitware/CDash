@@ -16,7 +16,7 @@
         <span class="tw-text-gray-700">{{ type }}</span>
       </div>
     </div>
-    <flame-chart
+    <FlameChart
       class="tw-w-full tw-p-0 tw-flex-grow"
       :data="processedChartData.data"
       :tracks="processedChartData.tracks"
@@ -29,7 +29,7 @@
     />
     <template v-if="selectedCommandId">
       <div class="tw-divider" />
-      <command-info-card :command-id="selectedCommandId" />
+      <CommandInfoCard :command-id="selectedCommandId" />
     </template>
   </div>
 </template>

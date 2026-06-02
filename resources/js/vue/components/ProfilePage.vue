@@ -159,7 +159,7 @@
               data-test="create-token-button"
               @click="createAuthenticationToken"
             >
-              <font-awesome-icon :icon="FA.faPlus" /> Create Token
+              <FontAwesomeIcon :icon="FA.faPlus" /> Create Token
             </button>
           </div>
 
@@ -190,7 +190,7 @@
                 data-test="copy-token-button"
                 @click="copyToken"
               >
-                <font-awesome-icon
+                <FontAwesomeIcon
                   v-if="!copied"
                   :icon="FA.faCopy"
                 />
@@ -269,7 +269,7 @@
                   data-test="delete-token-button"
                   @click="deleteAuthenticationToken(token.id)"
                 >
-                  <font-awesome-icon :icon="FA.faTrashCan" />
+                  <FontAwesomeIcon :icon="FA.faTrashCan" />
                 </button>
               </td>
             </tr>

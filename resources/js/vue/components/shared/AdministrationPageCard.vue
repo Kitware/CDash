@@ -7,7 +7,7 @@
       v-if="icon"
       class="tw-flex-shrink-0 tw-flex tw-items-center tw-justify-center"
     >
-      <font-awesome-icon
+      <FontAwesomeIcon
         :icon="icon"
         class="tw-h-8 tw-w-8 tw-text-black"
       />

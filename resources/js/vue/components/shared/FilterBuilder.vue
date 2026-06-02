@@ -4,9 +4,9 @@
       class="table-heading1 tw-font-bold"
       style="font-size: 16px; padding: 6px;"
     >
-      <font-awesome-icon :icon="FA.faFilter" /> Filters
+      <FontAwesomeIcon :icon="FA.faFilter" /> Filters
     </div>
-    <filter-group
+    <FilterGroup
       :type="filterType"
       :primary-record-name="primaryRecordName"
       :initial-filters="initialFilters"
@@ -18,7 +18,7 @@
         class="tw-btn tw-btn-xs"
         :href="executeQueryLink"
       >
-        <font-awesome-icon :icon="FA.faMagnifyingGlass" /> Apply
+        <FontAwesomeIcon :icon="FA.faMagnifyingGlass" /> Apply
       </a>
     </div>
   </div>

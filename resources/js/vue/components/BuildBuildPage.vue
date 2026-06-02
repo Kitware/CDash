@@ -4,9 +4,9 @@
     active-tab="build"
   >
     <div class="tw-flex tw-flex-col tw-w-full tw-gap-4">
-      <build-summary-card :build-id="buildId" />
+      <BuildSummaryCard :build-id="buildId" />
 
-      <loading-indicator :is-loading="!build">
+      <LoadingIndicator :is-loading="!build">
         <div
           class="tw-border tw-p-2 tw-rounded-lg tw-flex tw-flex-col tw-gap-2"
           data-test="build-info"
@@ -18,7 +18,7 @@
             <div class="tw-font-bold">
               Compiler
             </div>
-            <code-box :text="build.compilerName" />
+            <CodeBox :text="build.compilerName" />
           </div>
 
           <div
@@ -28,7 +28,7 @@
             <div class="tw-font-bold">
               Compiler Version
             </div>
-            <code-box :text="build.compilerVersion" />
+            <CodeBox :text="build.compilerVersion" />
           </div>
 
           <div
@@ -38,7 +38,7 @@
             <div class="tw-font-bold">
               Generator
             </div>
-            <code-box :text="build.generator" />
+            <CodeBox :text="build.generator" />
           </div>
 
           <div
@@ -48,7 +48,7 @@
             <div class="tw-font-bold">
               Source Directory
             </div>
-            <code-box :text="build.sourceDirectory" />
+            <CodeBox :text="build.sourceDirectory" />
           </div>
 
           <div
@@ -58,7 +58,7 @@
             <div class="tw-font-bold">
               Binary Directory
             </div>
-            <code-box :text="build.binaryDirectory" />
+            <CodeBox :text="build.binaryDirectory" />
           </div>
 
           <div
@@ -68,12 +68,12 @@
             <div class="tw-font-bold">
               Build Command
             </div>
-            <code-box :text="build.command" />
+            <CodeBox :text="build.command" />
           </div>
         </div>
-      </loading-indicator>
+      </LoadingIndicator>
 
-      <loading-indicator :is-loading="!buildWithErrors">
+      <LoadingIndicator :is-loading="!buildWithErrors">
         <div
           v-if="buildWithErrors.children.edges.length > 0"
           class="tw-join tw-join-vertical tw-w-full"
@@ -89,15 +89,15 @@
                 v-if="childBuild.buildErrorsCount > 0"
                 class="tw-badge tw-ml-2 tw-bg-error"
                 :data-test="'errors-' + childBuild.subProject.id"
-              ><font-awesome-icon :icon="FA.faCircleExclamation" /> {{ childBuild.buildErrorsCount }}</span>
+              ><FontAwesomeIcon :icon="FA.faCircleExclamation" /> {{ childBuild.buildErrorsCount }}</span>
               <span
                 v-if="childBuild.buildWarningsCount > 0"
                 class="tw-badge tw-ml-1 tw-bg-warning"
                 :data-test="'warnings-' + childBuild.subProject.id"
-              ><font-awesome-icon :icon="FA.faTriangleExclamation" /> {{ childBuild.buildWarningsCount }}</span>
+              ><FontAwesomeIcon :icon="FA.faTriangleExclamation" /> {{ childBuild.buildWarningsCount }}</span>
             </summary>
             <div class="tw-collapse-content">
-              <build-error-list
+              <BuildErrorList
                 :build-id="parseInt(childBuild.id)"
                 :previous-build-id="buildIdsToPreviousBuildIds[parseInt(childBuild.id)] ?? null"
                 :show-new-errors="showNewErrors"
@@ -110,7 +110,7 @@
           </details>
         </div>
         <div v-else>
-          <build-error-list
+          <BuildErrorList
             :build-id="buildId"
             :previous-build-id="previousBuildId"
             :show-new-errors="showNewErrors"
@@ -120,7 +120,7 @@
             :repository-cmake-project-root="repositoryCmakeProjectRoot"
           />
         </div>
-      </loading-indicator>
+      </LoadingIndicator>
     </div>
   </BuildSidebar>
 </template>

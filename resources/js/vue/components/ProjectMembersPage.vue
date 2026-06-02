@@ -86,7 +86,7 @@
             Email
           </div>
           <label class="tw-input tw-input-bordered tw-flex tw-items-center tw-w-full tw-gap-2">
-            <font-awesome-icon :icon="FA.faEnvelope" />
+            <FontAwesomeIcon :icon="FA.faEnvelope" />
             <input
               v-model="inviteMembersModalEmail"
               type="email"
@@ -141,11 +141,11 @@
         <button>Cancel</button>
       </form>
     </dialog>
-    <loading-indicator
+    <LoadingIndicator
       v-if="canInviteUsers"
       :is-loading="!projectInvitations"
     >
-      <data-table
+      <DataTable
         :column-groups="[
           {
             displayName: 'Invitations',
@@ -186,13 +186,13 @@
             data-test="revoke-invitation-button"
             @click="revokeInvitation(invite)"
           >
-            Revoke Invitation <font-awesome-icon :icon="FA.faTrash" />
+            Revoke Invitation <FontAwesomeIcon :icon="FA.faTrash" />
           </button>
         </template>
-      </data-table>
-    </loading-indicator>
-    <loading-indicator :is-loading="!projectAdministrators || !projectUsers">
-      <data-table
+      </DataTable>
+    </LoadingIndicator>
+    <LoadingIndicator :is-loading="!projectAdministrators || !projectUsers">
+      <DataTable
         :column-groups="[
           {
             displayName: 'Members',
@@ -247,12 +247,12 @@
             data-test="remove-user-button"
             @click="removeUser(user)"
           >
-            Remove User <font-awesome-icon :icon="FA.faTrash" />
+            Remove User <FontAwesomeIcon :icon="FA.faTrash" />
           </button>
           <span v-else />
         </template>
-      </data-table>
-    </loading-indicator>
+      </DataTable>
+    </LoadingIndicator>
   </div>
 </template>
 

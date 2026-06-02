@@ -12,8 +12,8 @@
     >
       <BuildSummaryCard :build-id="buildid" />
 
-      <loading-indicator :is-loading="loading">
-        <data-table
+      <LoadingIndicator :is-loading="loading">
+        <DataTable
           :columns="columns"
           :column-groups="columnGroups"
           :rows="rows"
@@ -21,7 +21,7 @@
           initial-sort-column="status"
           test-id="dynamic-analysis-table"
         />
-      </loading-indicator>
+      </LoadingIndicator>
     </section>
   </BuildSidebar>
 </template>

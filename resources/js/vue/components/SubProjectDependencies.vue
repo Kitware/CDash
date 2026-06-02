@@ -30,8 +30,8 @@
       </span>
     </div>
     <div class="text-center">
-      <loading-indicator :is-loading="graphLoading">
-        <v-chart
+      <LoadingIndicator :is-loading="graphLoading">
+        <VChart
           id="chart_placeholder"
           :option="chartOption"
           autoresize
@@ -39,7 +39,7 @@
           @mouseover="onMouseOver"
           @mouseout="onMouseOut"
         />
-      </loading-indicator>
+      </LoadingIndicator>
     </div>
   </section>
 </template>

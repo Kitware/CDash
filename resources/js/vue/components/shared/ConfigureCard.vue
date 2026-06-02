@@ -3,7 +3,7 @@
     <div class="tw-font-bold">
       Configure Command
     </div>
-    <code-box :text="command" />
+    <CodeBox :text="command" />
     <br>
     <div class="tw-flex tw-flex-row tw-gap-1">
       <span class="tw-font-bold">Return Value:</span>
@@ -13,7 +13,7 @@
     <div class="tw-font-bold">
       Configure Log
     </div>
-    <code-box :text="log" />
+    <CodeBox :text="log" />
   </div>
 </template>
 

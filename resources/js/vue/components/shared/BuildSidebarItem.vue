@@ -11,7 +11,7 @@
     :title="title"
   >
     <div class="tw-relative">
-      <font-awesome-icon
+      <FontAwesomeIcon
         :icon="icon"
         class="tw-w-5 tw-h-5 tw-mb-1"
       />
@@ -25,7 +25,7 @@
           class="tw-flex tw-items-center tw-justify-center tw-min-w-[1rem] tw-h-3.5 tw-px-1 tw-text-[8px] tw-font-bold tw-rounded-full tw-gap-0.5"
           :class="[badge.colorClass, badge.textClass || 'tw-text-white']"
         >
-          <font-awesome-icon
+          <FontAwesomeIcon
             v-if="badge.icon"
             :icon="badge.icon"
           />

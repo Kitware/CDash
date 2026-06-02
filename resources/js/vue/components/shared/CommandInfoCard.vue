@@ -1,6 +1,6 @@
 <template>
   <div>
-    <loading-indicator :is-loading="!buildCommand">
+    <LoadingIndicator :is-loading="!buildCommand">
       <div class="tw-font-bold tw-text-lg">
         Details
       </div>
@@ -106,7 +106,7 @@
           </tbody>
         </table>
       </template>
-    </loading-indicator>
+    </LoadingIndicator>
   </div>
 </template>
 

@@ -4,9 +4,9 @@
     active-tab="dynamic_analysis"
   >
     <div class="tw-flex tw-flex-col tw-w-full tw-gap-4">
-      <build-summary-card :build-id="buildId" />
+      <BuildSummaryCard :build-id="buildId" />
 
-      <loading-indicator :is-loading="!dynamicAnalysis">
+      <LoadingIndicator :is-loading="!dynamicAnalysis">
         <div class="tw-border-base-300 tw-bg-base-200 tw-border tw-rounded tw-p-2 tw-flex tw-flex-row tw-w-full tw-gap-1">
           <div class="tw-font-mono tw-link tw-link-hover">
             <a :href="link">
@@ -21,8 +21,8 @@
           <span>{{ status }}</span>
         </div>
 
-        <code-box :text="dynamicAnalysis.log" />
-      </loading-indicator>
+        <CodeBox :text="dynamicAnalysis.log" />
+      </LoadingIndicator>
     </div>
   </BuildSidebar>
 </template>

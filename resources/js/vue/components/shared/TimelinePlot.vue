@@ -1,5 +1,5 @@
 <template>
-  <v-chart
+  <VChart
     ref="chart"
     class="chart"
     :option="chartOption"

@@ -1,5 +1,5 @@
 <template>
-  <v-chart
+  <VChart
     class="tw-w-full tw-h-60"
     :option="chartOption"
     autoresize

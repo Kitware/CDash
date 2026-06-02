@@ -60,7 +60,7 @@
                   {{ note.node.name }}
                 </h3>
                 <hr>
-                <code-box
+                <CodeBox
                   :text="note.node.text"
                   :bordered="false"
                 />

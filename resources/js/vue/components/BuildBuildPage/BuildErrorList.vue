@@ -1,6 +1,6 @@
 <template>
   <div class="tw-flex tw-flex-col tw-gap-4">
-    <loading-indicator :is-loading="!build || (!previousBuild && previousBuildId !== null)">
+    <LoadingIndicator :is-loading="!build || (!previousBuild && previousBuildId !== null)">
       <div
         v-if="filteredWarnings.length === 0 && filteredErrors.length === 0"
         class="tw-self-center"
@@ -20,7 +20,7 @@
             :key="buildError.id"
             class="tw-p-2 tw-border-2 tw-rounded-md"
           >
-            <build-error-item
+            <BuildErrorItem
               :build-error="buildError"
               :source-directory="build.sourceDirectory"
               :repository-type="repositoryType"
@@ -44,7 +44,7 @@
             :key="buildWarning.id"
             class="tw-p-2 tw-border-2 tw-rounded-md"
           >
-            <build-error-item
+            <BuildErrorItem
               :build-error="buildWarning"
               :source-directory="build.sourceDirectory"
               :repository-type="repositoryType"
@@ -55,7 +55,7 @@
           </div>
         </div>
       </div>
-    </loading-indicator>
+    </LoadingIndicator>
   </div>
 </template>
 

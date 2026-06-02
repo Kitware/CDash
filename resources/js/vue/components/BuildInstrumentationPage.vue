@@ -15,9 +15,9 @@
           @change-filters="filters => changedFilters = filters"
         />
 
-        <loading-indicator :is-loading="!allCommands">
+        <LoadingIndicator :is-loading="!allCommands">
           <CommandFlameChart :commands="formattedChartCommands" />
-        </loading-indicator>
+        </LoadingIndicator>
       </div>
 
       <div class="tw-w-full tw-bg-base-100 tw-flex tw-flex-col tw-rounded-lg tw-border tw-border-gray-200 tw-p-4">
@@ -25,7 +25,7 @@
           Memory
         </h3>
 
-        <loading-indicator :is-loading="!allCommands">
+        <LoadingIndicator :is-loading="!allCommands">
           <LineChart
             v-if="memoryChartData.length > 0"
             y-label="Memory (GB)"
@@ -34,7 +34,7 @@
           <div v-else>
             No data available.
           </div>
-        </loading-indicator>
+        </LoadingIndicator>
       </div>
     </div>
   </BuildSidebar>
