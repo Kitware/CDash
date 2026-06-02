@@ -20,9 +20,9 @@ class RepositoryUtils
             return true;
         }
         $enterpriseUrl = config('cdash.github_enterprise_url');
-        if ($enterpriseUrl !== null) {
+        if (is_string($enterpriseUrl)) {
             $host = parse_url($enterpriseUrl, PHP_URL_HOST);
-            return $host !== false && str_contains($url, $host);
+            return is_string($host) && str_contains($url, $host);
         }
         return false;
     }
@@ -160,15 +160,17 @@ class RepositoryUtils
     public static function get_github_api_url($github_url): string
     {
         $enterpriseUrl = config('cdash.github_enterprise_url');
-        if ($enterpriseUrl !== null) {
+        if (is_string($enterpriseUrl)) {
             $host = parse_url($enterpriseUrl, PHP_URL_HOST);
-            if ($host !== false && str_contains($github_url, $host)) {
-                // For GHE, ...://<host>/<user>/<repo> becomes ...://<host>/api/v3/repos/<user>/<repo>
+            if (is_string($host)) {
                 $idx = strpos($github_url, $host);
-                $idx2 = $idx + strlen($host) + 1;
-                $api_url = substr($github_url, 0, $idx) . $host . '/api/v3/repos/';
-                $api_url .= substr($github_url, $idx2);
-                return $api_url;
+                if ($idx !== false) {
+                    // For GHE, ...://<host>/<user>/<repo> becomes ...://<host>/api/v3/repos/<user>/<repo>
+                    $idx2 = $idx + strlen($host) + 1;
+                    $api_url = substr($github_url, 0, $idx) . $host . '/api/v3/repos/';
+                    $api_url .= substr($github_url, $idx2);
+                    return $api_url;
+                }
             }
         }
         /*

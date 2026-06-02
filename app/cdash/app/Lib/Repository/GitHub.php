@@ -94,7 +94,7 @@ class GitHub implements RepositoryInterface
     {
         $builder = new GitHubBuilder();
         $enterpriseUrl = config('cdash.github_enterprise_url');
-        $apiClient = new GitHubClient($builder, null, $enterpriseUrl);
+        $apiClient = new GitHubClient($builder, null, is_string($enterpriseUrl) ? $enterpriseUrl : null);
         $this->setApiClient($apiClient);
     }
 
@@ -669,9 +669,9 @@ class GitHub implements RepositoryInterface
             return true;
         }
         $enterpriseUrl = config('cdash.github_enterprise_url');
-        if ($enterpriseUrl !== null) {
+        if (is_string($enterpriseUrl)) {
             $host = parse_url($enterpriseUrl, PHP_URL_HOST);
-            return $host !== false && str_contains($url, $host);
+            return is_string($host) && str_contains($url, $host);
         }
         return false;
     }
