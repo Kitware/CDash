@@ -28,6 +28,31 @@ describe('RepositoryIntegrations', () => {
       const repo = getRepository('bitbucket', 'https://bitbucket.org/foo/bar', '');
       expect(repo).toBeNull();
     });
+
+    it('returns null when repositoryType is null', () => {
+      const repo = getRepository(null, 'https://github.com/foo/bar', '');
+      expect(repo).toBeNull();
+    });
+
+    it('returns null when repositoryType is undefined', () => {
+      const repo = getRepository(undefined, 'https://github.com/foo/bar', '');
+      expect(repo).toBeNull();
+    });
+
+    it('returns null when repositoryType is an empty string', () => {
+      const repo = getRepository('', 'https://github.com/foo/bar', '');
+      expect(repo).toBeNull();
+    });
+
+    it('returns null when repositoryUrl is null', () => {
+      const repo = getRepository('github', null, '');
+      expect(repo).toBeNull();
+    });
+
+    it('returns null when both repositoryUrl and repositoryType are null', () => {
+      const repo = getRepository(null, null, '');
+      expect(repo).toBeNull();
+    });
   });
 
   describe('GitHub', () => {
