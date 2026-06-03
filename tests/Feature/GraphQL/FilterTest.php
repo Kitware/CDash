@@ -177,6 +177,34 @@ class FilterTest extends TestCase
         ]);
     }
 
+    public function testGreaterThanOrEqualOperator(): void
+    {
+        $this->constructNameFilterQuery('
+            ge: {
+                name: "public4"
+            }
+        ', [
+            'public4',
+            'public5',
+        ]);
+    }
+
+    public function testLessThanOrEqualOperator(): void
+    {
+        $this->constructNameFilterQuery('
+            le: {
+                name: "public4"
+            }
+        ', [
+            'public1',
+            'public2',
+            'public4',
+            'public3',
+            'private1',
+            'private2',
+        ]);
+    }
+
     public function testContainsOperator(): void
     {
         $this->constructNameFilterQuery('
