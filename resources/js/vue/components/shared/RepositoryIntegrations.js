@@ -76,7 +76,7 @@ export class GitLab extends Repository {
  * @return ?Repository
  */
 export function getRepository(repositoryType, repositoryUrl, repositoryCmakeProjectRoot) {
-  if (!repositoryUrl) {
+  if (!repositoryUrl || !repositoryType) {
     return null;
   }
 
