@@ -70,7 +70,7 @@
               >
               <div>
                 <span class="tw-label-text">
-                  <font-awesome-icon :icon="FA.faEarthAmericas" /> Public
+                  <FontAwesomeIcon :icon="FA.faEarthAmericas" /> Public
                 </span>
                 <div class="tw-text-xs tw-text-neutral-500">
                   Does not require authentication to access.
@@ -87,7 +87,7 @@
               >
               <div>
                 <span class="tw-label-text">
-                  <font-awesome-icon :icon="FA.faShieldHalved" /> Protected
+                  <FontAwesomeIcon :icon="FA.faShieldHalved" /> Protected
                 </span>
                 <div class="tw-text-xs tw-text-neutral-500">
                   Access limited to authenticated users.
@@ -104,7 +104,7 @@
               >
               <div>
                 <span class="tw-label-text">
-                  <font-awesome-icon :icon="FA.faLock" /> Private
+                  <FontAwesomeIcon :icon="FA.faLock" /> Private
                 </span>
                 <div class="tw-text-xs tw-text-neutral-500">
                   Requires access to be granted explicitly.

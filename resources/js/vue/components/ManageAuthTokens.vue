@@ -1,6 +1,6 @@
 <template>
-  <loading-indicator :is-loading="!authenticationTokens">
-    <data-table
+  <LoadingIndicator :is-loading="!authenticationTokens">
+    <DataTable
       :column-groups="[
         {
           displayName: 'Authentication Tokens',
@@ -58,11 +58,11 @@
           @click="revokeToken(token)"
         >
           Revoke Token
-          <font-awesome-icon :icon="FA.faTrash" />
+          <FontAwesomeIcon :icon="FA.faTrash" />
         </button>
       </template>
-    </data-table>
-  </loading-indicator>
+    </DataTable>
+  </LoadingIndicator>
 </template>
 <script>
 

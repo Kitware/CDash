@@ -35,7 +35,7 @@
               Email
             </div>
             <label class="tw-input tw-input-bordered tw-flex tw-items-center tw-w-full tw-gap-2">
-              <font-awesome-icon :icon="FA.faEnvelope" />
+              <FontAwesomeIcon :icon="FA.faEnvelope" />
               <input
                 v-model="inviteUsersModalEmail"
                 type="email"
@@ -95,11 +95,11 @@
         </form>
       </dialog>
     </div>
-    <loading-indicator
+    <LoadingIndicator
       v-if="canInviteUsers"
       :is-loading="!invitations"
     >
-      <data-table
+      <DataTable
         :column-groups="[
           {
             displayName: 'Invitations',
@@ -140,13 +140,13 @@
             data-test="revoke-invitation-button"
             @click="revokeInvitation(invite)"
           >
-            Revoke Invitation <font-awesome-icon :icon="FA.faTrash" />
+            Revoke Invitation <FontAwesomeIcon :icon="FA.faTrash" />
           </button>
         </template>
-      </data-table>
-    </loading-indicator>
-    <loading-indicator :is-loading="!users">
-      <data-table
+      </DataTable>
+    </LoadingIndicator>
+    <LoadingIndicator :is-loading="!users">
+      <DataTable
         :column-groups="[
           {
             displayName: 'Users',
@@ -214,12 +214,12 @@
             :data-test="'remove-user-button-' + user.id"
             @click="removeUser(user)"
           >
-            Remove User <font-awesome-icon :icon="FA.faTrash" />
+            Remove User <FontAwesomeIcon :icon="FA.faTrash" />
           </button>
           <span v-else />
         </template>
-      </data-table>
-    </loading-indicator>
+      </DataTable>
+    </LoadingIndicator>
   </div>
 </template>
 

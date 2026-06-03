@@ -1,5 +1,5 @@
 <template>
-  <v-chart
+  <VChart
     class="tw-w-full"
     :option="chartOptions"
     :style="{ height: height + 'px' }"

@@ -1,7 +1,7 @@
 <template>
   <div data-test="all-sites-table">
-    <loading-indicator :is-loading="!allSites">
-      <data-table
+    <LoadingIndicator :is-loading="!allSites">
+      <DataTable
         :column-groups="[
           {
             displayName: 'All Sites',
@@ -34,7 +34,7 @@
         :rows="formattedSiteRows"
         :full-width="true"
       />
-    </loading-indicator>
+    </LoadingIndicator>
   </div>
 </template>
 

@@ -40,7 +40,7 @@
               data-test="delete-repository-button"
               @click="deleteRepository(repository.id)"
             >
-              <font-awesome-icon :icon="FA.faTrashCan" />
+              <FontAwesomeIcon :icon="FA.faTrashCan" />
             </button>
           </div>
         </div>

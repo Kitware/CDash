@@ -5,7 +5,7 @@
         class="tw-truncate"
         :title="node.name"
       >
-        <font-awesome-icon :icon="FA.faFile" />
+        <FontAwesomeIcon :icon="FA.faFile" />
         {{ node.name }}
       </span>
       <span
@@ -23,7 +23,7 @@
         class="tw-truncate"
         :title="node.name"
       >
-        <font-awesome-icon :icon="FA.faFolderOpen" />
+        <FontAwesomeIcon :icon="FA.faFolderOpen" />
         {{ node.name }}
       </summary>
       <ul>

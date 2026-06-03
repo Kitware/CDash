@@ -7,9 +7,9 @@
       <p>{{ cdash.error }}</p>
     </section>
     <section v-else>
-      <build-summary-card :build-id="buildId" />
+      <BuildSummaryCard :build-id="buildId" />
 
-      <loading-indicator :is-loading="loading">
+      <LoadingIndicator :is-loading="loading">
         <!-- Display link to create bug tracker issue if supported. -->
         <div v-if="cdash.newissueurl">
           <a
@@ -433,7 +433,7 @@
         <br>
 
         <!-- Display comments for this build -->
-        <loading-indicator :is-loading="!comments">
+        <LoadingIndicator :is-loading="!comments">
           <div
             v-if="comments.length > 0 || cdash.user.id > 0"
             class="title-divider"
@@ -444,7 +444,7 @@
           <div v-if="comments.length > 0">
             <div v-for="{node: comment} in comments">
               <b>{{ comment.user.firstname }} {{ comment.user.lastname }}</b> {{ Utils.formatRelativeTimestamp(comment.timestamp) }}
-              <code-box :text="comment.text" />
+              <CodeBox :text="comment.text" />
               <hr>
             </div>
             <br>
@@ -503,7 +503,7 @@
             </div>
             <br>
           </div>
-        </loading-indicator>
+        </LoadingIndicator>
 
         <!-- Graphs -->
         <div class="title-divider">
@@ -618,7 +618,7 @@
           />
         </div>
         <br>
-      </loading-indicator>
+      </LoadingIndicator>
     </section>
   </BuildSidebar>
 </template>

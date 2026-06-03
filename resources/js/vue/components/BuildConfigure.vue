@@ -4,13 +4,13 @@
     active-tab="configure"
   >
     <div class="tw-flex tw-flex-col tw-w-full tw-gap-4">
-      <build-summary-card :build-id="buildId" />
+      <BuildSummaryCard :build-id="buildId" />
 
-      <loading-indicator :is-loading="!configures">
+      <LoadingIndicator :is-loading="!configures">
         <div v-if="configures.length === 0">
           No configure found for this build.
         </div>
-        <configure-card
+        <ConfigureCard
           v-else-if="hasSingleConfigure"
           :return-value="configures[0].configure.returnValue"
           :log="configures[0].configure.log"
@@ -31,15 +31,15 @@
                 v-if="configure.configureErrorsCount > 0"
                 class="tw-badge tw-ml-2 tw-bg-red-400"
                 :data-test="'errors-' + configure.subProject.id"
-              ><font-awesome-icon :icon="FA.faCircleExclamation" /> {{ configure.configureErrorsCount }}</span>
+              ><FontAwesomeIcon :icon="FA.faCircleExclamation" /> {{ configure.configureErrorsCount }}</span>
               <span
                 v-if="configure.configureWarningsCount > 0"
                 class="tw-badge tw-ml-1 tw-bg-orange-400"
                 :data-test="'warnings-' + configure.subProject.id"
-              ><font-awesome-icon :icon="FA.faTriangleExclamation" /> {{ configure.configureWarningsCount }}</span>
+              ><FontAwesomeIcon :icon="FA.faTriangleExclamation" /> {{ configure.configureWarningsCount }}</span>
             </summary>
             <div class="tw-collapse-content">
-              <configure-card
+              <ConfigureCard
                 :return-value="configure.configure.returnValue"
                 :log="configure.configure.log"
                 :command="configure.configure.command"
@@ -47,7 +47,7 @@
             </div>
           </details>
         </div>
-      </loading-indicator>
+      </LoadingIndicator>
     </div>
   </BuildSidebar>
 </template>

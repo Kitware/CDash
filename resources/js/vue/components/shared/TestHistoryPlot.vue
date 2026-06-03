@@ -17,7 +17,7 @@
         ›
       </button>
     </div>
-    <loading-indicator :is-loading="!testStatuses" />
+    <LoadingIndicator :is-loading="!testStatuses" />
     <div
       ref="chart"
       class="chart"

@@ -8,7 +8,7 @@
   >
     <div class="tw-text-small tw-font-medium tw-text-neutral-500 tw-flex tw-flex-row tw-gap-2 group-hover:tw-font-bold">
       <div>
-        <font-awesome-icon :icon="FA.faLink" />
+        <FontAwesomeIcon :icon="FA.faLink" />
         {{ upperLeftText }}
       </div>
       <div

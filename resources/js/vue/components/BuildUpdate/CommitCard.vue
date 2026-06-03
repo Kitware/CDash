@@ -26,7 +26,7 @@
         class="tw-w-1/2"
       />
       <ul class="tw-menu tw-menu-xs tw-bg-base-200 tw-rounded-lg tw-w-1/2">
-        <commit-file-tree-node
+        <CommitFileTreeNode
           v-for="node in fileTree"
           :key="node.name"
           :node="node"

@@ -27,7 +27,7 @@
           data-cy="column-header"
           @click="toggleSort(column.name)"
         >
-          <font-awesome-icon
+          <FontAwesomeIcon
             v-if="sortable"
             :icon="sortColumn === column.name ? (sortAsc ? FA.faCaretUp : FA.faCaretDown) : FA.faSort"
           />

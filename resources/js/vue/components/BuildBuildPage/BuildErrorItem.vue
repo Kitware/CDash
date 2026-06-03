@@ -5,7 +5,7 @@
         class="tw-mr-1"
         :class="buildError.type === 'ERROR' ? 'tw-text-error' : 'tw-text-warning'"
       >
-        <font-awesome-icon :icon="buildError.type === 'ERROR' ? FA.faCircleExclamation : FA.faTriangleExclamation" />
+        <FontAwesomeIcon :icon="buildError.type === 'ERROR' ? FA.faCircleExclamation : FA.faTriangleExclamation" />
       </span>
       {{ buildError.type === 'ERROR' ? 'Error' : 'Warning' }}
       <template v-if="buildError.outputFile">
@@ -27,9 +27,9 @@
         class="tw-font-bold tw-cursor-pointer"
         @click="showStdError = !showStdError"
       >
-        Standard Error <font-awesome-icon :icon="showStdError ? FA.faChevronDown : FA.faChevronRight" />
+        Standard Error <FontAwesomeIcon :icon="showStdError ? FA.faChevronDown : FA.faChevronRight" />
       </div>
-      <code-box
+      <CodeBox
         v-if="showStdError"
         :text="buildError.stdError"
         :links="getLinksFromText(buildError.stdError)"
@@ -42,9 +42,9 @@
         data-test="stdout"
         @click="showStdOutput = !showStdOutput"
       >
-        Standard Output <font-awesome-icon :icon="showStdOutput ? FA.faChevronDown : FA.faChevronRight" />
+        Standard Output <FontAwesomeIcon :icon="showStdOutput ? FA.faChevronDown : FA.faChevronRight" />
       </div>
-      <code-box
+      <CodeBox
         v-if="showStdOutput"
         :text="buildError.stdOutput"
         :links="getLinksFromText(buildError.stdOutput)"
@@ -56,9 +56,9 @@
         class="tw-font-bold tw-cursor-pointer"
         @click="showCommand = !showCommand"
       >
-        Command <font-awesome-icon :icon="showCommand ? FA.faChevronDown : FA.faChevronRight" />
+        Command <FontAwesomeIcon :icon="showCommand ? FA.faChevronDown : FA.faChevronRight" />
       </div>
-      <code-box
+      <CodeBox
         v-if="showCommand"
         :text="buildError.command"
       />

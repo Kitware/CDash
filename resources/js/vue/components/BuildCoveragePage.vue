@@ -10,7 +10,7 @@
         <span class="tw-font-bold tw-text-xl">
           Coverage Summary
         </span>
-        <loading-indicator :is-loading="!coverage">
+        <LoadingIndicator :is-loading="!coverage">
           <table class="tw-table tw-table-sm tw-w-auto">
             <tbody>
               <tr>
@@ -51,10 +51,10 @@
               </tr>
             </tbody>
           </table>
-        </loading-indicator>
+        </LoadingIndicator>
       </div>
 
-      <filter-builder
+      <FilterBuilder
         filter-type="BuildCoverageFiltersMultiFilterInput"
         primary-record-name="coverage files"
         :initial-filters="initialFilters"
@@ -70,7 +70,7 @@
             data-test="breadcrumbs-back-button"
             @click="currentPrefix = directoryAbovePath(currentPrefix)"
           >
-            <font-awesome-icon :icon="FA.faReply" />
+            <FontAwesomeIcon :icon="FA.faReply" />
             Back
           </button>
           <div
@@ -93,7 +93,7 @@
                   href=""
                   @click.prevent="currentPrefix = currentPrefix.split('/').slice(0, index + 1).join('/') + '/'"
                 >
-                  <font-awesome-icon
+                  <FontAwesomeIcon
                     :icon="FA.faFolder"
                     class="tw-mr-1"
                   />
@@ -103,8 +103,8 @@
             </ul>
           </div>
         </div>
-        <loading-indicator :is-loading="!coverage">
-          <data-table
+        <LoadingIndicator :is-loading="!coverage">
+          <DataTable
             :columns="[
               ...(hasSubProjects ? [{
                 name: 'subProject',
@@ -144,14 +144,14 @@
                 data-test="coverage-directory-link"
                 @click.prevent="currentPrefix += obj.path + '/';"
               >
-                <font-awesome-icon :icon="FA.faFolder" /> {{ obj.path }}
+                <FontAwesomeIcon :icon="FA.faFolder" /> {{ obj.path }}
               </a>
               <a
                 v-else
                 :href="`${$baseURL}/builds/${buildId}/coverage/${obj.fileId}`"
                 data-test="coverage-file-link"
               >
-                <font-awesome-icon :icon="FA.faFile" /> {{ obj.path }}
+                <FontAwesomeIcon :icon="FA.faFile" /> {{ obj.path }}
               </a>
             </template>
             <template #linePercentage="{ props: { text: pct } }">
@@ -170,8 +170,8 @@
                 max="100"
               /> {{ pct }}%
             </template>
-          </data-table>
-        </loading-indicator>
+          </DataTable>
+        </LoadingIndicator>
       </div>
     </div>
   </BuildSidebar>

@@ -4,7 +4,7 @@
       class="tw-btn tw-btn-xs"
       @click="$emit('delete')"
     >
-      <font-awesome-icon :icon="FA.faTrash" /> Delete
+      <FontAwesomeIcon :icon="FA.faTrash" /> Delete
     </button>
     <!-- Field chooser -->
     <select
@@ -45,7 +45,7 @@
       type="text"
       class="tw-input tw-input-xs tw-input-bordered tw-w-full"
     >
-    <date-time-selector
+    <DateTimeSelector
       v-else-if="selectedField.type === FilterType.DATETIME"
       v-model="selectedValue"
     />

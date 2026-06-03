@@ -35,7 +35,7 @@
           @delete="changeRow('deleted', index)"
           @change-filters="newEntry => changeRow(newEntry, index)"
         />
-        <filter-row
+        <FilterRow
           v-else-if="entry !== 'deleted'"
           :fields="availableFields"
           :initial-field="filterRowFromGraphQLFilter(entry).field"
@@ -50,19 +50,19 @@
           class="tw-btn tw-btn-xs"
           @click="addFilter"
         >
-          <font-awesome-icon :icon="FA.faPlus" /> Add Filter
+          <FontAwesomeIcon :icon="FA.faPlus" /> Add Filter
         </button>
         <button
           class="tw-btn tw-btn-xs"
           @click="addGroup"
         >
-          <font-awesome-icon :icon="FA.faBarsStaggered" /> Add Group
+          <FontAwesomeIcon :icon="FA.faBarsStaggered" /> Add Group
         </button>
         <button
           class="tw-btn tw-btn-xs"
           @click="$emit('delete')"
         >
-          <font-awesome-icon :icon="FA.faTrash" /> Delete Group
+          <FontAwesomeIcon :icon="FA.faTrash" /> Delete Group
         </button>
       </div>
     </div>

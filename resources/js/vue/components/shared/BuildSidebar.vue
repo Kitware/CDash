@@ -5,7 +5,7 @@
   >
     <aside class="tw-shrink-0 tw-bg-base-200 tw-border tw-border-base-300 tw-rounded-lg tw-overflow-hidden tw-sticky tw-top-[100px] tw-max-h-[calc(100vh-100px)] tw-overflow-y-auto tw-z-10">
       <nav class="tw-flex tw-flex-col tw-py-2">
-        <build-sidebar-item
+        <BuildSidebarItem
           :href="`${$baseURL}/builds/${buildId}`"
           title="Summary"
           :icon="FA.faCircleInfo"
@@ -13,7 +13,7 @@
           :disabled="summaryDisabled"
           data-test="sidebar-summary"
         />
-        <build-sidebar-item
+        <BuildSidebarItem
           :href="`${$baseURL}/builds/${buildId}/update`"
           title="Update"
           :icon="FA.faCodePullRequest"
@@ -21,7 +21,7 @@
           :disabled="updateDisabled"
           data-test="sidebar-update"
         />
-        <build-sidebar-item
+        <BuildSidebarItem
           :href="`${$baseURL}/builds/${buildId}/configure`"
           title="Configure"
           :icon="FA.faWrench"
@@ -30,7 +30,7 @@
           :badges="configureBadges"
           data-test="sidebar-configure"
         />
-        <build-sidebar-item
+        <BuildSidebarItem
           :href="`${$baseURL}/builds/${buildId}/build`"
           title="Build"
           :icon="FA.faHammer"
@@ -39,7 +39,7 @@
           :badges="errorsBadges"
           data-test="sidebar-build"
         />
-        <build-sidebar-item
+        <BuildSidebarItem
           :href="`${$baseURL}/builds/${buildId}/tests`"
           title="Tests"
           :icon="FA.faFlask"
@@ -48,7 +48,7 @@
           :badges="testsBadges"
           data-test="sidebar-tests"
         />
-        <build-sidebar-item
+        <BuildSidebarItem
           :href="`${$baseURL}/builds/${buildId}/coverage`"
           title="Coverage"
           :icon="FA.faUmbrella"
@@ -56,7 +56,7 @@
           :disabled="coverageDisabled"
           data-test="sidebar-coverage"
         />
-        <build-sidebar-item
+        <BuildSidebarItem
           :href="`${$baseURL}/builds/${buildId}/dynamic_analysis`"
           title="Dynamic Analysis"
           :icon="FA.faBug"
@@ -64,7 +64,7 @@
           :disabled="dynamicAnalysisDisabled"
           data-test="sidebar-dynamic-analysis"
         />
-        <build-sidebar-item
+        <BuildSidebarItem
           :href="`${$baseURL}/builds/${buildId}/files`"
           title="Uploads"
           :icon="FA.faFileArrowUp"
@@ -72,7 +72,7 @@
           :disabled="filesDisabled"
           data-test="sidebar-files"
         />
-        <build-sidebar-item
+        <BuildSidebarItem
           :href="`${$baseURL}/builds/${buildId}/notes`"
           title="Notes"
           :icon="FA.faNoteSticky"
@@ -80,7 +80,7 @@
           :disabled="notesDisabled"
           data-test="sidebar-notes"
         />
-        <build-sidebar-item
+        <BuildSidebarItem
           :href="`${$baseURL}/builds/${buildId}/instrumentation`"
           title="Instrumentation"
           :icon="FA.faGaugeHigh"
@@ -88,7 +88,7 @@
           :disabled="instrumentationDisabled"
           data-test="sidebar-instrumentation"
         />
-        <build-sidebar-item
+        <BuildSidebarItem
           :href="`${$baseURL}/builds/${buildId}/targets`"
           title="Targets"
           :icon="FA.faBullseye"

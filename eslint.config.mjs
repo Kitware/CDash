@@ -28,6 +28,7 @@ export default defineConfig([
     },
     rules: {
       'indent': ['error', 2],
+      'vue/component-name-in-template-casing': ['error', 'PascalCase'],
       'vue/no-v-html': 'off',
       'vue/require-v-for-key': 'off',
       'eqeqeq': ['error', 'always'],

@@ -6,21 +6,21 @@
     <div class="tw-flex tw-flex-col tw-w-full tw-gap-4">
       <BuildSummaryCard :build-id="buildId" />
 
-      <filter-builder
+      <FilterBuilder
         filter-type="BuildTestsFiltersMultiFilterInput"
         primary-record-name="tests"
         :initial-filters="initialFilters"
         :execute-query-link="executeQueryLink"
         @change-filters="filters => changedFilters = filters"
       />
-      <loading-indicator :is-loading="!tests || (onlyDelta && !previousTests && previousBuildId !== null)">
+      <LoadingIndicator :is-loading="!tests || (onlyDelta && !previousTests && previousBuildId !== null)">
         <div
           v-if="onlyDelta && tests && filteredTests.length === 0"
           class="tw-self-center"
         >
           No tests with changed state for this build.
         </div>
-        <data-table
+        <DataTable
           v-if="!onlyDelta || filteredTests.length > 0"
           :columns="[
             ...(hasSubProjects ? [{
@@ -59,7 +59,7 @@
           initial-sort-column="status"
           test-id="tests-table"
         />
-      </loading-indicator>
+      </LoadingIndicator>
     </div>
   </BuildSidebar>
 </template>

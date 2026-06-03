@@ -19,7 +19,7 @@
             class="tw-flex tw-flex-row tw-items-center tw-justify-between tw-p-3 tw-border tw-border-base-300 tw-rounded-lg tw-bg-base-100"
           >
             <div class="tw-flex tw-items-center tw-gap-4 tw-flex-grow">
-              <font-awesome-icon
+              <FontAwesomeIcon
                 :icon="FA.faBars"
                 class="tw-handle tw-cursor-move tw-text-neutral-500"
               />
@@ -32,7 +32,7 @@
               data-test="delete-test-measurement-button"
               @click="deleteTestMeasurement(element.id)"
             >
-              <font-awesome-icon :icon="FA.faTrash" />
+              <FontAwesomeIcon :icon="FA.faTrash" />
             </button>
           </div>
         </template>
@@ -67,7 +67,7 @@
             v-if="createLoading"
             class="tw-loading tw-loading-spinner"
           />
-          <font-awesome-icon :icon="FA.faPlus" />
+          <FontAwesomeIcon :icon="FA.faPlus" />
           Add
         </button>
       </div>
@@ -76,7 +76,7 @@
         class="tw-text-error tw-text-sm"
         data-test="error-message"
       >
-        <font-awesome-icon :icon="FA.faCircleXmark" /> {{ errorMessage }}
+        <FontAwesomeIcon :icon="FA.faCircleXmark" /> {{ errorMessage }}
       </div>
     </div>
 

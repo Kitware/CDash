@@ -13,8 +13,8 @@
         No URLs or files were uploaded for this build.
       </div>
 
-      <loading-indicator :is-loading="!urls">
-        <data-table
+      <LoadingIndicator :is-loading="!urls">
+        <DataTable
           v-if="urls.edges.length > 0"
           :column-groups="[
             {
@@ -32,10 +32,10 @@
           :full-width="true"
           test-id="urls-table"
         />
-      </loading-indicator>
+      </LoadingIndicator>
 
-      <loading-indicator :is-loading="!files">
-        <data-table
+      <LoadingIndicator :is-loading="!files">
+        <DataTable
           v-if="files.edges.length > 0"
           :column-groups="[
             {
@@ -61,7 +61,7 @@
           :full-width="true"
           test-id="files-table"
         />
-      </loading-indicator>
+      </LoadingIndicator>
     </div>
   </BuildSidebar>
 </template>

@@ -49,7 +49,7 @@
           Create Project
         </a>
       </div>
-      <loading-indicator :is-loading="projects === null">
+      <LoadingIndicator :is-loading="projects === null">
         <div
           v-if="noProjectsMessage !== null"
           class="tw-italic tw-font-medium tw-text-neutral-500"
@@ -68,7 +68,7 @@
               data-test="projects-table-row"
             >
               <td>
-                <project-logo
+                <ProjectLogo
                   :image-url="project.logoUrl"
                   :project-name="project.name"
                   class="tw-w-8 tw-h-8"
@@ -82,7 +82,7 @@
                     data-test="project-name"
                   >
                     {{ project.name }}
-                    <font-awesome-icon
+                    <FontAwesomeIcon
                       :icon="projectVisibilityToIcon(project.visibility)"
                       class="tw-text-neutral-500"
                     />
@@ -100,13 +100,13 @@
                   v-if="project.mostRecentBuild"
                   class="tw-text-nowrap tw-text-neutral-500"
                 >
-                  <font-awesome-icon :icon="FA.faCalendar" /> {{ DateTime.fromISO(project.mostRecentBuild?.submissionTime).toRelative() }}
+                  <FontAwesomeIcon :icon="FA.faCalendar" /> {{ DateTime.fromISO(project.mostRecentBuild?.submissionTime).toRelative() }}
                 </span>
               </td>
             </tr>
           </tbody>
         </table>
-      </loading-indicator>
+      </LoadingIndicator>
     </div>
   </div>
 </template>

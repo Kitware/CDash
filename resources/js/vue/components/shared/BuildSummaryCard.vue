@@ -1,5 +1,5 @@
 <template>
-  <loading-indicator :is-loading="!build">
+  <LoadingIndicator :is-loading="!build">
     <details class="tw-collapse tw-collapse-arrow tw-border-base-300 tw-bg-base-200 tw-border tw-group/collapse">
       <summary class="tw-collapse-title">
         <div class="tw-text-lg tw-font-medium tw-truncate tw-text-nowrap group-open/collapse:tw-text-wrap">
@@ -16,23 +16,23 @@
             :href="`${$baseURL}/sites/${build.site.id}`"
             class="tw-truncate"
           >
-            <font-awesome-icon :icon="FA.faComputer" /> {{ build.site.name }}
+            <FontAwesomeIcon :icon="FA.faComputer" /> {{ build.site.name }}
           </a>
           &bull;
           <span
             v-if="build.operatingSystemName"
             class="tw-truncate"
           >
-            <font-awesome-icon
+            <FontAwesomeIcon
               v-if="build.operatingSystemName === 'Windows'"
               :icon="FA.faWindows"
             />
             <!-- TODO: Add more specific Linux types. May require CTest work. -->
-            <font-awesome-icon
+            <FontAwesomeIcon
               v-else-if="build.operatingSystemName === 'Linux'"
               :icon="FA.faLinux"
             />
-            <font-awesome-icon
+            <FontAwesomeIcon
               v-else-if="build.operatingSystemName === 'Darwin' || build.operatingSystemName === 'OSX'"
               :icon="FA.faApple"
             />
@@ -65,36 +65,36 @@
           <div class="tw-flex tw-flex-row tw-gap-4">
             <div class="tw-flex tw-flex-col">
               <div class="tw-bg-white tw-divide-y tw-rounded tw-shadow tw-text-left">
-                <build-summary-card-step-summary
+                <BuildSummaryCardStepSummary
                   upper-left-text="Start"
                   :upper-right-text="humanReadableOverallStartTime"
                 />
-                <build-summary-card-step-summary
+                <BuildSummaryCardStepSummary
                   upper-left-text="Configure"
                   :upper-right-text="hasConfigure ? humanReadableConfigureDuration : null"
                   :main-text="configureText"
                   :link="hasConfigure ? `${$baseURL}/builds/${build.id}/configure` : null"
                   :highlight-color="configureHighlightColor"
                 />
-                <build-summary-card-step-summary
+                <BuildSummaryCardStepSummary
                   upper-left-text="Build"
                   :upper-right-text="hasBuild ? humanReadableBuildDuration : null"
                   :main-text="buildText"
                   :link="hasBuild ? `${$baseURL}/builds/${build.id}` : null"
                   :highlight-color="buildHighlightColor"
                 />
-                <build-summary-card-step-summary
+                <BuildSummaryCardStepSummary
                   upper-left-text="Test"
                   :upper-right-text="hasTest ? humanReadableTestDuration : null"
                   :main-text="testText"
                   :link="hasTest ? `${$baseURL}/builds/${build.id}/tests` : null"
                   :highlight-color="testHighlightColor"
                 />
-                <build-summary-card-step-summary
+                <BuildSummaryCardStepSummary
                   upper-left-text="End"
                   :upper-right-text="humanReadableOverallEndTime"
                 />
-                <build-summary-card-step-summary
+                <BuildSummaryCardStepSummary
                   upper-left-text="Submitted"
                   :upper-right-text="humanReadableSubmissionTime"
                 />
@@ -127,7 +127,7 @@
               :href="`${$baseURL}/sites/${build.site.id}`"
               class="tw-link tw-link-hover"
             >
-              <font-awesome-icon :icon="FA.faComputer" /> {{ build.site.name }}
+              <FontAwesomeIcon :icon="FA.faComputer" /> {{ build.site.name }}
             </a>
           </div>
           <div class="tw-flex tw-flex-row tw-gap-4">
@@ -291,7 +291,7 @@
         </div>
       </div>
     </details>
-  </loading-indicator>
+  </LoadingIndicator>
 </template>
 
 <script>
