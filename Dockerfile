@@ -180,7 +180,6 @@ RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then \
           --nodocs \
           --noplugins \
           --setopt=install_weak_deps=0 \
-          php-xdebug \
           rsync \
       #> A horrible hack to get a newer version of CMake.  As of the time of this
       #> writing, Red Hat UBI uses CMake 3.20, while our scripts require CMake>=3.22.
