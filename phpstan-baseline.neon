@@ -1204,9 +1204,9 @@ parameters:
 			path: app/Http/Controllers/ProjectOverviewController.php
 
 		-
-			rawMessage: 'Offset ''loctested'' might not exist on array{}|array{loctested?: (array|float|int), locuntested?: (array|float|int)}.'
+			rawMessage: 'Offset ''loctested'' might not exist on array{}|array{loctested: (array|float|int), locuntested?: (array|float|int)}.'
 			identifier: offsetAccess.notFound
-			count: 6
+			count: 5
 			path: app/Http/Controllers/ProjectOverviewController.php
 
 		-
@@ -1222,7 +1222,7 @@ parameters:
 			path: app/Http/Controllers/ProjectOverviewController.php
 
 		-
-			rawMessage: 'Offset ''locuntested'' might not exist on array{}|array{loctested?: (array|float|int), locuntested?: (array|float|int)}.'
+			rawMessage: 'Offset ''locuntested'' might not exist on array{}|array{loctested: (array|float|int), locuntested?: (array|float|int)}.'
 			identifier: offsetAccess.notFound
 			count: 2
 			path: app/Http/Controllers/ProjectOverviewController.php
@@ -1248,7 +1248,7 @@ parameters:
 		-
 			rawMessage: 'Only numeric types are allowed in +, (array|float|int) given on the left side.'
 			identifier: plus.leftNonNumeric
-			count: 8
+			count: 6
 			path: app/Http/Controllers/ProjectOverviewController.php
 
 		-
@@ -7141,69 +7141,21 @@ parameters:
 			path: app/cdash/app/Controller/Api/TestOverview.php
 
 		-
-			rawMessage: 'Offset ''failed'' might not exist on non-empty-array{failed?: int<0, max>, timeout?: int<0, max>, time?: mixed, passed?: int<0, max>, name?: mixed, subproject?: mixed}.'
-			identifier: offsetAccess.notFound
-			count: 3
-			path: app/cdash/app/Controller/Api/TestOverview.php
-
-		-
-			rawMessage: 'Offset ''failed'' might not exist on non-empty-array{name?: mixed, subproject?: mixed, passed?: int<0, max>, failed?: int<0, max>, timeout?: int<0, max>, time?: mixed}.'
-			identifier: offsetAccess.notFound
-			count: 1
-			path: app/cdash/app/Controller/Api/TestOverview.php
-
-		-
-			rawMessage: 'Offset ''passed'' might not exist on non-empty-array{failed?: int<0, max>, timeout?: int<0, max>, time?: mixed, passed?: int<0, max>, name?: mixed, subproject?: mixed}.'
-			identifier: offsetAccess.notFound
-			count: 1
-			path: app/cdash/app/Controller/Api/TestOverview.php
-
-		-
-			rawMessage: 'Offset ''passed'' might not exist on non-empty-array{name?: mixed, subproject?: mixed, passed?: int<0, max>, failed?: int<0, max>, timeout?: int<0, max>, time?: mixed}.'
-			identifier: offsetAccess.notFound
-			count: 1
-			path: app/cdash/app/Controller/Api/TestOverview.php
-
-		-
-			rawMessage: 'Offset ''subproject'' might not exist on non-empty-array{failed?: int<0, max>, timeout?: int<0, max>, time?: mixed, passed?: int<0, max>, name?: mixed, subproject?: mixed}.'
-			identifier: offsetAccess.notFound
-			count: 1
-			path: app/cdash/app/Controller/Api/TestOverview.php
-
-		-
-			rawMessage: 'Offset ''time'' might not exist on non-empty-array{failed?: int<0, max>, timeout?: int<0, max>, time?: mixed, passed?: int<0, max>, name?: mixed, subproject?: mixed}.'
-			identifier: offsetAccess.notFound
-			count: 2
-			path: app/cdash/app/Controller/Api/TestOverview.php
-
-		-
-			rawMessage: 'Offset ''time'' might not exist on non-empty-array{name?: mixed, subproject?: mixed, passed?: int<0, max>, failed?: int<0, max>, timeout?: int<0, max>, time?: mixed}.'
-			identifier: offsetAccess.notFound
-			count: 1
-			path: app/cdash/app/Controller/Api/TestOverview.php
-
-		-
-			rawMessage: 'Offset ''timeout'' might not exist on array{failed: 0, timeout?: int<0, max>, time?: mixed, passed?: int<0, max>, name?: mixed, subproject?: mixed}.'
-			identifier: offsetAccess.notFound
-			count: 1
-			path: app/cdash/app/Controller/Api/TestOverview.php
-
-		-
-			rawMessage: 'Offset ''timeout'' might not exist on non-empty-array{failed?: int<0, max>, timeout?: int<0, max>, time?: mixed, passed?: int<0, max>, name?: mixed, subproject?: mixed}.'
-			identifier: offsetAccess.notFound
-			count: 2
-			path: app/cdash/app/Controller/Api/TestOverview.php
-
-		-
-			rawMessage: 'Offset ''timeout'' might not exist on non-empty-array{name?: mixed, subproject?: mixed, passed?: int<0, max>, failed?: int<0, max>, timeout?: int<0, max>, time?: mixed}.'
-			identifier: offsetAccess.notFound
-			count: 1
-			path: app/cdash/app/Controller/Api/TestOverview.php
-
-		-
 			rawMessage: 'Only booleans are allowed in an if condition, int|string given.'
 			identifier: if.condNotBoolean
 			count: 1
+			path: app/cdash/app/Controller/Api/TestOverview.php
+
+		-
+			rawMessage: 'Only numeric types are allowed in +, (array|float|int) given on the left side.'
+			identifier: plus.leftNonNumeric
+			count: 1
+			path: app/cdash/app/Controller/Api/TestOverview.php
+
+		-
+			rawMessage: 'Only numeric types are allowed in /, (array|float|int<min, -1>|int<1, max>) given on the right side.'
+			identifier: div.rightNonNumeric
+			count: 2
 			path: app/cdash/app/Controller/Api/TestOverview.php
 
 		-
@@ -7656,12 +7608,6 @@ parameters:
 		-
 			rawMessage: 'Method CDash\Model\Build::GetDiffWithPreviousBuild() return type has no value type specified in iterable type array.'
 			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			rawMessage: 'Method CDash\Model\Build::GetErrorDifferences() should return array{builderrorspositive: int, builderrorsnegative: int, buildwarningspositive: int, buildwarningsnegative: int, configureerrors: int, configurewarnings: int, testpassedpositive: int, testpassednegative: int, ...}|false but returns non-empty-array<''builderrorsnegative''|''builderrorspositive''|''buildwarningsnegati…''|''buildwarningspositi…''|''configureerrors''|''configurewarnings''|''testfailednegative''|''testfailedpositive''|''testnotrunnegative''|''testnotrunpositive''|''testpassednegative''|''testpassedpositive'', int>.'
-			identifier: return.type
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
