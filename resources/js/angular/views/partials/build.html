@@ -313,7 +313,7 @@
       {{::build.compilation.warning}}
     </a>
 
-    <a ng-if="::build.compilation.nwarningdiffp > 0" class="sup cdash-link" ng-href="builds/{{::build.id}}errors?onlydeltap">
+    <a ng-if="::build.compilation.nwarningdiffp > 0" class="sup cdash-link" ng-href="builds/{{::build.id}}/build?onlydeltap">
       +{{::build.compilation.nwarningdiffp}}
     </a>
     <a class="cdash-link" ng-if="::build.compilation.nwarningdiffn > 0" ng-href="builds/{{::build.id}}/build?onlydeltan">
