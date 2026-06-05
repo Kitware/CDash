@@ -227,6 +227,7 @@
         v-show="rawdatalink != ''"
         :href="rawdatalink"
         target="_blank"
+        rel="noopener noreferrer"
       >
         View Graph Data as JSON
       </a>
