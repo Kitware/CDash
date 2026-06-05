@@ -48,6 +48,7 @@ export default defineConfig([
       'vue/no-unused-properties': 'error',
       'vue/no-unused-refs': 'error',
       'vue/no-use-v-else-with-v-for': 'error',
+      'vue/no-useless-mustaches': 'error',
       'eqeqeq': ['error', 'always'],
       'arrow-spacing': ['error'],
       'block-spacing': ['error'],
