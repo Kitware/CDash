@@ -34,6 +34,7 @@ export default defineConfig([
       'vue/match-component-import-name': 'error',
       'vue/no-duplicate-class-names': 'error',
       'vue/no-empty-component-block': 'error',
+      'vue/no-import-compiler-macros': 'error',
       'eqeqeq': ['error', 'always'],
       'arrow-spacing': ['error'],
       'block-spacing': ['error'],
