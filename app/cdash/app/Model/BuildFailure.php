@@ -41,13 +41,6 @@ class BuildFailure
     public string $OutputType = '';
     public array $Labels = [];
 
-    private $PDO;
-
-    public function __construct()
-    {
-        $this->PDO = Database::getInstance()->getPdo();
-    }
-
     public function AddLabel($label): void
     {
         $this->Labels[] = $label;

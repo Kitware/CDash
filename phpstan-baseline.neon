@@ -7413,7 +7413,7 @@ parameters:
 				v2.5.0 01/22/2018
 			'''
 			identifier: function.deprecated
-			count: 13
+			count: 10
 			path: app/cdash/app/Model/Build.php
 
 		-
@@ -8020,12 +8020,6 @@ parameters:
 			path: app/cdash/app/Model/BuildConfigure.php
 
 		-
-			rawMessage: 'Method CDash\Model\BuildConfigure::marshal() has parameter $data with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Model/BuildConfigure.php
-
-		-
 			rawMessage: 'Parameter #1 $stmt of function pdo_execute expects PDOStatement, (PDOStatement|false) given.'
 			identifier: argument.type
 			count: 1
@@ -8267,15 +8261,6 @@ parameters:
 
 		-
 			rawMessage: '''
-				Call to deprecated method getPdo() of class CDash\Database:
-				04/22/2023  Use Laravel query builder or Eloquent instead
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/app/Model/BuildFailure.php
-
-		-
-			rawMessage: '''
 				Call to deprecated method richAlerts() of class App\Models\Build:
 				02/09/2026 Use buildErrors() instead
 			'''
@@ -8304,18 +8289,6 @@ parameters:
 		-
 			rawMessage: Property CDash\Model\BuildFailure::$Labels type has no value type specified in iterable type array.
 			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/app/Model/BuildFailure.php
-
-		-
-			rawMessage: Property CDash\Model\BuildFailure::$PDO has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/app/Model/BuildFailure.php
-
-		-
-			rawMessage: 'Property CDash\Model\BuildFailure::$PDO is never read, only written.'
-			identifier: property.onlyWritten
 			count: 1
 			path: app/cdash/app/Model/BuildFailure.php
 
@@ -9223,18 +9196,6 @@ parameters:
 			path: app/cdash/app/Model/Project.php
 
 		-
-			rawMessage: 'Method CDash\Model\Project::AddLogo() has no return type specified.'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
-			rawMessage: 'Method CDash\Model\Project::AddLogo() has parameter $contents with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
 			rawMessage: 'Method CDash\Model\Project::ComputeTestingDayBounds() has parameter $date with no type specified.'
 			identifier: missingType.parameter
 			count: 1
@@ -9421,12 +9382,6 @@ parameters:
 			path: app/cdash/app/Model/Project.php
 
 		-
-			rawMessage: 'Variable property access on $this(CDash\Model\Project).'
-			identifier: property.dynamicName
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
 			rawMessage: 'Call to an undefined method CDash\Lib\Repository\RepositoryInterface::compareCommits().'
 			identifier: method.notFound
 			count: 1
@@ -9478,12 +9433,6 @@ parameters:
 			path: app/cdash/app/Model/Repository.php
 
 		-
-			rawMessage: 'Method CDash\Model\Repository::getViewers() return type has no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/app/Model/Repository.php
-
-		-
 			rawMessage: 'Method CDash\Model\Repository::setStatus() has parameter $complete with no type specified.'
 			identifier: missingType.parameter
 			count: 1
@@ -9498,12 +9447,6 @@ parameters:
 		-
 			rawMessage: 'Parameter #1 $stmt of method CDash\Database::execute() expects PDOStatement, PDOStatement|false given.'
 			identifier: argument.type
-			count: 1
-			path: app/cdash/app/Model/Repository.php
-
-		-
-			rawMessage: Possibly invalid array key type mixed.
-			identifier: offsetAccess.invalidOffset
 			count: 1
 			path: app/cdash/app/Model/Repository.php
 
@@ -20381,18 +20324,6 @@ parameters:
 			identifier: missingType.property
 			count: 1
 			path: app/cdash/tests/test_projectindb.php
-
-		-
-			rawMessage: 'Call to function in_array() requires parameter #3 to be set.'
-			identifier: function.strict
-			count: 1
-			path: app/cdash/tests/test_projectmodel.php
-
-		-
-			rawMessage: 'Method ProjectModelTestCase::testProjectModel() has no return type specified.'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_projectmodel.php
 
 		-
 			rawMessage: '''

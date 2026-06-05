@@ -30,12 +30,9 @@ use DateTime;
 use DateTimeZone;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use PDO;
-use ReflectionObject;
-use ReflectionProperty;
 use RuntimeException;
 
 /** Main project class */
@@ -163,16 +160,6 @@ class Project
         return false;
     }
 
-    /** Get the logo id */
-    private function GetLogoId(): ?int
-    {
-        if (!$this->Filled) {
-            $this->Fill();
-        }
-
-        return $this->Id > 0 ? $this->ImageId : null;
-    }
-
     /** Fill in all the information from the database */
     public function Fill(): void
     {
@@ -252,33 +239,6 @@ class Project
 
         // Use the project's timezone by default.
         date_default_timezone_set($timezone_name);
-    }
-
-    /**
-     * Add a logo
-     */
-    public function AddLogo($contents, string $filetype)
-    {
-        if (strlen($contents) === 0) {
-            return;
-        }
-
-        $image = new Image();
-        $image->Data = $contents;
-        $image->Checksum = crc32($contents);
-        $image->Extension = $filetype;
-
-        $imgid = $this->GetLogoId();
-        if ($imgid !== null) {
-            $image->Id = $imgid;
-        }
-
-        if ($image->Save(true)) {
-            $project = EloquentProject::findOrFail((int) $this->Id);
-            $project->imageid = $image->Id;
-            $project->save();
-        }
-        return $image->Id;
     }
 
     /** Get the repositories */
@@ -527,42 +487,6 @@ class Project
                 AND build.starttime <= ?
                 AND build.parentid IN (-1, 0)
         ', [(int) $this->Id, $startUTCdate, $endUTCdate])[0]->s;
-    }
-
-    /**
-     * Return a JSON representation of this object.
-     *
-     * @return array<string,mixed>
-     */
-    public function ConvertToJSON(): array
-    {
-        $response = [];
-        $clone = new ReflectionObject($this);
-        $properties = $clone->getProperties(ReflectionProperty::IS_PUBLIC);
-        foreach ($properties as $property) {
-            $k = $property->getName();
-            $v = $this->$k;
-            $response[$k] = $v;
-        }
-        $response['name_encoded'] = urlencode($this->Name ?? '');
-
-        $user = Auth::user();
-        $includeQuota = !(bool) config('cdash.user_create_projects') || ($user !== null && $user->admin);
-
-        if ($includeQuota) {
-            $uploadQuotaGB = 0;
-
-            if ($this->UploadQuota > 0) {
-                $uploadQuotaGB = $this->UploadQuota / (1024 * 1024 * 1024);
-            }
-
-            $max = config('cdash.max_upload_quota');
-            $response['UploadQuota'] = min($uploadQuotaGB, $max);
-            $response['MaxUploadQuota'] = $max;
-        } else {
-            unset($response['UploadQuota']);
-        }
-        return $response;
     }
 
     /** Delete old builds if this project has too many. */

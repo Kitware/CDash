@@ -21,25 +21,11 @@ use CDash\Lib\Repository\GitHub;
 use CDash\Lib\Repository\RepositoryInterface;
 use CDash\Service\RepositoryService;
 use Exception;
-use ReflectionClass;
 
 class Repository
 {
     public const VIEWER_GITHUB = 'GitHub';
     public const VIEWER_GITLAB = 'GitLab';
-
-    public static function getViewers(): array
-    {
-        $self = new ReflectionClass(__CLASS__);
-        $viewers = [];
-        foreach ($self->getConstants() as $key => $text) {
-            if (str_starts_with($key, 'VIEWER_')) {
-                $value = strtolower(substr($key, strlen('VIEWER_')));
-                $viewers[$text] = $value;
-            }
-        }
-        return $viewers;
-    }
 
     public static function setStatus(Build $build, $complete = true): void
     {

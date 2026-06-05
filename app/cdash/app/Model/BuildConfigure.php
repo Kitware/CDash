@@ -314,27 +314,6 @@ class BuildConfigure
     }
 
     /**
-     * @return array<string, mixed>
-     */
-    public static function marshal($data): array
-    {
-        $response = [
-            'status' => $data['status'],
-            'command' => $data['command'],
-            'output' => $data['log'],
-            'configureerrors' => $data['configureerrors'],
-            'configurewarnings' => $data['configurewarnings'],
-        ];
-
-        if (isset($data['subprojectid'])) {
-            $response['subprojectid'] = $data['subprojectid'];
-            $response['subprojectname'] = $data['subprojectname'];
-        }
-
-        return $response;
-    }
-
-    /**
      * Returns the current BuildConfigure's Label property as a LabelCollection.
      */
     public function GetLabelCollection(): Collection
