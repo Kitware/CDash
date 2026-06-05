@@ -36,6 +36,7 @@ export default defineConfig([
       'vue/no-empty-component-block': 'error',
       'vue/no-import-compiler-macros': 'error',
       'vue/no-ref-object-reactivity-loss': 'error',
+      'vue/no-root-v-if': 'error',
       'eqeqeq': ['error', 'always'],
       'arrow-spacing': ['error'],
       'block-spacing': ['error'],
