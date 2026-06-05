@@ -32,6 +32,7 @@ export default defineConfig([
       'vue/no-v-html': 'off',
       'vue/require-v-for-key': 'off',
       'vue/match-component-import-name': 'error',
+      'vue/no-duplicate-class-names': 'error',
       'eqeqeq': ['error', 'always'],
       'arrow-spacing': ['error'],
       'block-spacing': ['error'],
