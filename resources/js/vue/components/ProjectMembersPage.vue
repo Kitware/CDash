@@ -307,11 +307,6 @@ export default {
     },
   },
 
-  setup(props) {
-    // Basic sanity checks...
-    console.assert(!(props.canJoinProject && props.canLeaveProject));
-  },
-
   data() {
     const user_types = Object.freeze({
       USER: 'USER',
