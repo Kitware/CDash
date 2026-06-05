@@ -30,7 +30,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 final class SubmissionController extends AbstractProjectController
 {
-    public function submit(): Response|JsonResponse
+    public function __invoke(): Response|JsonResponse
     {
         // If we have a POST or PUT we defer to the unparsed submission processor.
         try {

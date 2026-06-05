@@ -6,7 +6,7 @@ use Illuminate\Http\JsonResponse;
 
 final class FilterController extends AbstractController
 {
-    public function getFilterDataArray(): JsonResponse
+    public function __invoke(): JsonResponse
     {
         $page_id = $_GET['page_id'] ?? '';
         $filterdata = get_filterdata_from_request($page_id);

@@ -9,7 +9,7 @@ use Illuminate\View\View;
 
 final class UsersController extends AbstractController
 {
-    public function users(): View
+    public function __invoke(): View
     {
         return $this->vue('users-page', 'Users', [
             'can-invite-users' => auth()->user()?->can('createInvitation', GlobalInvitation::class) ?? false,

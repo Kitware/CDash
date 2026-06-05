@@ -7,7 +7,7 @@ use Illuminate\View\View;
 
 final class SiteController extends AbstractController
 {
-    public function viewSite(Site $site): View
+    public function __invoke(Site $site): View
     {
         return $this->vue('sites-id-page', $site->name, [
             'site-id' => $site->id,

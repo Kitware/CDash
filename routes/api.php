@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\ExpectedBuildController;
+use App\Http\Controllers\FilterController;
+use App\Http\Controllers\TimelineController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,7 +22,7 @@ Route::get('/v1/testDetails.php', 'TestDetailsController@apiTestDetails');
 
 Route::match(['get', 'post', 'delete'], '/v1/build.php', 'BuildController@restApi');
 
-Route::get('/v1/filterdata.php', 'FilterController@getFilterDataArray');
+Route::get('/v1/filterdata.php', FilterController::class);
 
 Route::get('/v1/viewSubProjects.php', 'SubProjectController@apiViewSubProjects');
 
@@ -39,11 +42,11 @@ Route::get('/v1/buildUpdateGraph.php', 'BuildController@apiBuildUpdateGraph');
 
 Route::get('/v1/overview.php', 'ProjectOverviewController@apiOverview');
 
-Route::get('/v1/timeline.php', 'TimelineController@apiTimeline');
+Route::get('/v1/timeline.php', TimelineController::class);
 
 Route::get('/v1/testOverview.php', 'TestController@apiTestOverview');
 
-Route::match(['get', 'post', 'delete'], '/v1/expectedbuild.php', 'ExpectedBuildController@apiResponse');
+Route::match(['get', 'post', 'delete'], '/v1/expectedbuild.php', ExpectedBuildController::class);
 
 Route::middleware(['auth'])->group(function (): void {
     Route::get('/v1/manageSubProject.php', 'SubProjectController@apiManageSubProject');

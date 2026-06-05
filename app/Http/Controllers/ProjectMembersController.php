@@ -10,7 +10,7 @@ use Illuminate\View\View;
 
 final class ProjectMembersController extends AbstractProjectController
 {
-    public function members(int $project_id): View
+    public function __invoke(int $project_id): View
     {
         $this->setProjectById($project_id);
 

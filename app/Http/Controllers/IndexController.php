@@ -7,7 +7,7 @@ use Illuminate\View\View;
 
 final class IndexController extends AbstractProjectController
 {
-    public function showIndexPage(): View|RedirectResponse
+    public function __invoke(): View|RedirectResponse
     {
         if (!isset($_GET['project'])) {
             $default_project = config('cdash.default_project');

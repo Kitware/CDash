@@ -12,7 +12,7 @@ final class ImageController extends AbstractController
     /**
      * @throws HttpException
      */
-    public function image(Image $image): StreamedResponse
+    public function __invoke(Image $image): StreamedResponse
     {
         if (Gate::denies('view-image', $image)) {
             abort(404);

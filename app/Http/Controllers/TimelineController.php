@@ -8,7 +8,7 @@ use Illuminate\Http\JsonResponse;
 
 final class TimelineController extends AbstractProjectController
 {
-    public function apiTimeline(): JsonResponse
+    public function __invoke(): JsonResponse
     {
         $this->setProjectByName(request()->input('project', ''));
         $controller = new LegacyTimelineController(Database::getInstance(), $this->project);

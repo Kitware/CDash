@@ -8,7 +8,7 @@ use Illuminate\View\View;
 
 final class AuthTokenController extends AbstractController
 {
-    public function manage(): View
+    public function __invoke(): View
     {
         return $this->vue('manage-auth-tokens', 'Authentication Tokens');
     }
