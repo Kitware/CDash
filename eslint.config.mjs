@@ -39,6 +39,7 @@ export default defineConfig([
       'vue/no-setup-props-reactivity-loss': 'error',
       'vue/no-root-v-if': 'error',
       'vue/no-template-target-blank': 'error',
+      'vue/no-this-in-before-route-enter': 'error',
       'eqeqeq': ['error', 'always'],
       'arrow-spacing': ['error'],
       'block-spacing': ['error'],
