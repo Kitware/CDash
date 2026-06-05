@@ -1,4 +1,5 @@
 <template>
+  <!-- eslint-disable vue/no-unused-refs -->
   <VChart
     ref="chart"
     class="chart"
@@ -7,6 +8,7 @@
     autoresize
     @click="onClick"
   />
+  <!-- eslint-enable vue/no-unused-refs -->
 </template>
 
 <script>
