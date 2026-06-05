@@ -7,7 +7,7 @@ use Illuminate\Http\Response;
 
 final class CTestConfigurationController extends AbstractProjectController
 {
-    public function get(int $id): Response
+    public function __invoke(int $id): Response
     {
         $this->setProjectById($id);
 

@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Gate;
 
 final class ExpectedBuildController extends AbstractProjectController
 {
-    public function apiResponse(Request $request): JsonResponse
+    public function __invoke(Request $request): JsonResponse
     {
         $required_params = ['siteid', 'groupid', 'name', 'type'];
         foreach ($required_params as $param) {

@@ -11,7 +11,7 @@ use Illuminate\View\View;
 
 final class ViewProjectsController extends AbstractController
 {
-    public function viewProjects(): View|RedirectResponse
+    public function __invoke(): View|RedirectResponse
     {
         $num_public_projects = (int) DB::select('
                                      SELECT COUNT(*) AS c FROM project WHERE public=?

@@ -16,7 +16,7 @@ final class SubscribeProjectController extends AbstractProjectController
      *       to a proper Blade template with Laravel-based DB queries eventually.  This contents
      *       this function are originally from subscribeProject.php and have been copied (almost) as-is.
      */
-    public function subscribeProject(): View|RedirectResponse
+    public function __invoke(): View|RedirectResponse
     {
         /** @var User $user */
         $user = Auth::user();

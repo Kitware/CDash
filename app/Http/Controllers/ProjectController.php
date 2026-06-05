@@ -8,7 +8,7 @@ use Illuminate\View\View;
 
 final class ProjectController extends AbstractProjectController
 {
-    public function sites(int $project_id): View
+    public function __invoke(int $project_id): View
     {
         $this->setProjectById($project_id);
 

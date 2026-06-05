@@ -12,12 +12,23 @@
 */
 
 use App\Http\Controllers\AdministrationController;
+use App\Http\Controllers\AuthTokenController;
 use App\Http\Controllers\CoverageFileController;
 use App\Http\Controllers\CreateProjectController;
+use App\Http\Controllers\CTestConfigurationController;
 use App\Http\Controllers\GlobalInvitationController;
+use App\Http\Controllers\ImageController;
+use App\Http\Controllers\IndexController;
+use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProjectInvitationController;
+use App\Http\Controllers\ProjectMembersController;
 use App\Http\Controllers\ProjectSettingsController;
+use App\Http\Controllers\SiteController;
+use App\Http\Controllers\SubmissionController;
+use App\Http\Controllers\SubscribeProjectController;
 use App\Http\Controllers\UpdateProjectLogoController;
+use App\Http\Controllers\UsersController;
+use App\Http\Controllers\ViewProjectsController;
 use App\Models\DynamicAnalysis;
 use App\Models\Project;
 use App\Models\Test;
@@ -61,12 +72,12 @@ Route::get('ping', function (Response $response) {
     return $response;
 });
 
-Route::get('/index.php', 'IndexController@showIndexPage');
-Route::get('/', 'IndexController@showIndexPage');
+Route::get('/index.php', IndexController::class);
+Route::get('/', IndexController::class);
 
-Route::any('/submit.php', 'SubmissionController@submit');
+Route::any('/submit.php', SubmissionController::class);
 
-Route::get('/image/{image}', 'ImageController@image')
+Route::get('/image/{image}', ImageController::class)
     ->whereNumber('image');
 Route::get('/displayImage.php', function (Request $request) {
     $imgid = $request->query('imgid');
@@ -190,7 +201,7 @@ Route::permanentRedirect('/projects/{id}/edit', url('/projects/{id}/settings'));
 Route::permanentRedirect('/projects/{id}/testmeasurements', url('/projects/{id}/settings'));
 Route::permanentRedirect('/project/{id}/testmeasurements', url('/projects/{id}/settings'));
 
-Route::get('/projects/{id}/ctest_configuration', 'CTestConfigurationController@get')
+Route::get('/projects/{id}/ctest_configuration', CTestConfigurationController::class)
     ->whereNumber('id');
 Route::permanentRedirect('/project/{id}/ctest_configuration', url('/projects/{id}/ctest_configuration'));
 Route::get('/generateCTestConfig.php', function (Request $request) {
@@ -201,7 +212,7 @@ Route::get('/generateCTestConfig.php', function (Request $request) {
     return redirect("/projects/{$projectid}/ctest_configuration", 301);
 });
 
-Route::get('/projects/{project_id}/sites', 'ProjectController@sites')
+Route::get('/projects/{project_id}/sites', ProjectController::class)
     ->whereNumber('project_id');
 Route::get('/viewMap.php', function (Request $request) {
     $project = Project::where('name', $request->query('project'))->first();
@@ -229,7 +240,7 @@ Route::get('/overview.php', 'ProjectOverviewController@overview');
 // TODO: (williamjallen) This should be in the auth section, but needs to be here until we get rid of Protractor..
 Route::get('/manageOverview.php', 'ProjectOverviewController@manageOverview');
 
-Route::match(['get', 'post'], '/projects', 'ViewProjectsController@viewProjects');
+Route::match(['get', 'post'], '/projects', ViewProjectsController::class);
 Route::permanentRedirect('/viewProjects.php', url('/projects'));
 Route::permanentRedirect('/projects/all', url('/projects'));
 
@@ -269,7 +280,7 @@ Route::get('/viewSubProjectDependenciesGraph.php', function (Request $request) {
     return redirect("/projects/{$project}/subprojects/dependencies", 301);
 });
 
-Route::match(['get', 'post'], '/sites/{site}', 'SiteController@viewSite')
+Route::match(['get', 'post'], '/sites/{site}', SiteController::class)
     ->whereNumber('site');
 Route::get('/viewSite.php', function (Request $request) {
     $siteid = $request->query('siteid');
@@ -278,9 +289,9 @@ Route::get('/viewSite.php', function (Request $request) {
 
 Route::get('/manageBuildGroup.php', 'BuildController@manageBuildGroup');
 
-Route::get('/users', 'UsersController@users');
+Route::get('/users', UsersController::class);
 
-Route::get('/projects/{project_id}/members', 'ProjectMembersController@members')
+Route::get('/projects/{project_id}/members', ProjectMembersController::class)
     ->whereNumber('project_id');
 
 Route::get('/invitations/{invitationId}', GlobalInvitationController::class)
@@ -299,8 +310,8 @@ Route::middleware(['auth'])->group(function (): void {
     Route::permanentRedirect('/editUser.php', url('/profile'));
 
     // TODO: (williamjallen) send the POST route to a different function
-    Route::get('/subscribeProject.php', 'SubscribeProjectController@subscribeProject');
-    Route::post('/subscribeProject.php', 'SubscribeProjectController@subscribeProject');
+    Route::get('/subscribeProject.php', SubscribeProjectController::class);
+    Route::post('/subscribeProject.php', SubscribeProjectController::class);
 
     Route::get('/manageProjectRoles.php', function (Request $request) {
         if (!$request->has('projectid')) {
@@ -317,7 +328,7 @@ Route::middleware(['auth'])->group(function (): void {
     Route::middleware(['admin'])->group(function (): void {
         Route::get('/administration', AdministrationController::class);
 
-        Route::get('/authtokens/manage', 'AuthTokenController@manage');
+        Route::get('/authtokens/manage', AuthTokenController::class);
 
         Route::get('/monitor', 'MonitorController@monitor');
         Route::get('/monitor.php', fn () => redirect('/monitor', 301));
