@@ -45,6 +45,7 @@ export default defineConfig([
       'vue/no-undef-properties': 'off', // Disabled until Apollo properties are addressed
       'vue/no-unsupported-features': 'error',
       'vue/no-unused-emit-declarations': 'error',
+      'vue/no-unused-properties': 'error',
       'eqeqeq': ['error', 'always'],
       'arrow-spacing': ['error'],
       'block-spacing': ['error'],
