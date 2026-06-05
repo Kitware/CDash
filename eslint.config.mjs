@@ -41,6 +41,7 @@ export default defineConfig([
       'vue/no-template-target-blank': 'error',
       'vue/no-this-in-before-route-enter': 'error',
       'vue/no-undef-components': 'error',
+      'vue/no-undef-directives': 'error',
       'eqeqeq': ['error', 'always'],
       'arrow-spacing': ['error'],
       'block-spacing': ['error'],
