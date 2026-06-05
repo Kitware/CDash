@@ -31,6 +31,7 @@ export default defineConfig([
       'vue/component-name-in-template-casing': ['error', 'PascalCase'],
       'vue/no-v-html': 'off',
       'vue/require-v-for-key': 'off',
+      'vue/match-component-import-name': 'error',
       'eqeqeq': ['error', 'always'],
       'arrow-spacing': ['error'],
       'block-spacing': ['error'],
