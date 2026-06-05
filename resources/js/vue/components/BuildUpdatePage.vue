@@ -10,24 +10,28 @@
         <div>
           <div v-if="update.revision">
             <b>Revision: </b>
+            <!-- eslint-disable-next-line vue/no-undef-components -->
             <tt v-if="repository">
               <a
                 class="tw-link tw-link-hover tw-link-info"
                 :href="revisionUrl"
               >{{ update.revision }}</a>
             </tt>
+            <!-- eslint-disable-next-line vue/no-undef-components -->
             <tt v-else>
               {{ update.revision }}
             </tt>
           </div>
           <div v-if="update.priorRevision">
             <b>Prior Revision: </b>
+            <!-- eslint-disable-next-line vue/no-undef-components -->
             <tt v-if="repository">
               <a
                 class="tw-link tw-link-hover tw-link-info"
                 :href="repository?.getCommitUrl(update.priorRevision) ?? ''"
               >{{ update.priorRevision }}</a>
             </tt>
+            <!-- eslint-disable-next-line vue/no-undef-components -->
             <tt v-else>
               {{ update.priorRevision }}
             </tt>
