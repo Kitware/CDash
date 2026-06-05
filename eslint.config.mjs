@@ -93,5 +93,5 @@ export default defineConfig([
         ...globals.node,
       },
     },
-  }
+  },
 ]);
