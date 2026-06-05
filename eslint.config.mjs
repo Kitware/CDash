@@ -43,6 +43,7 @@ export default defineConfig([
       'vue/no-undef-components': 'error',
       'vue/no-undef-directives': 'error',
       'vue/no-undef-properties': 'off', // Disabled until Apollo properties are addressed
+      'vue/no-unsupported-features': 'error',
       'eqeqeq': ['error', 'always'],
       'arrow-spacing': ['error'],
       'block-spacing': ['error'],
