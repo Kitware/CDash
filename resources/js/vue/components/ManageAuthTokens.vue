@@ -64,6 +64,7 @@
     </DataTable>
   </LoadingIndicator>
 </template>
+
 <script>
 
 import DataTable from './shared/DataTable.vue';

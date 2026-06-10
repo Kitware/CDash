@@ -34,6 +34,7 @@
     </p>
   </section>
 </template>
+
 <script>
 import ApiLoader from './shared/ApiLoader';
 import TimelinePlot from './shared/TimelinePlot';
