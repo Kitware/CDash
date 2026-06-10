@@ -63,6 +63,7 @@ export default defineConfig([
       'vue/prefer-single-event-payload': 'error',
       'vue/prefer-v-model': 'error',
       'vue/require-emit-validator': 'error',
+      'vue/require-name-property': 'error',
       'eqeqeq': ['error', 'always'],
       'arrow-spacing': ['error'],
       'block-spacing': ['error'],
