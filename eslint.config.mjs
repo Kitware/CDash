@@ -50,6 +50,7 @@ export default defineConfig([
       'vue/no-use-v-else-with-v-for': 'error',
       'vue/no-useless-mustaches': 'error',
       'vue/no-useless-v-bind': 'error',
+      'vue/padding-line-between-blocks': 'error',
       'eqeqeq': ['error', 'always'],
       'arrow-spacing': ['error'],
       'block-spacing': ['error'],
