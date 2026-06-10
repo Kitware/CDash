@@ -60,6 +60,7 @@ export default defineConfig([
       }],
       'vue/prefer-prop-type-boolean-first': 'error',
       'vue/prefer-separate-static-class': 'error',
+      'vue/prefer-single-event-payload': 'error',
       'eqeqeq': ['error', 'always'],
       'arrow-spacing': ['error'],
       'block-spacing': ['error'],
