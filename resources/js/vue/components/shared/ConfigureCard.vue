@@ -22,6 +22,7 @@ import CodeBox from './CodeBox.vue';
 
 export default {
   components: {CodeBox},
+
   props: {
     command: {
       type: String,

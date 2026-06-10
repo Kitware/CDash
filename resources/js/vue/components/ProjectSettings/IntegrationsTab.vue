@@ -128,6 +128,7 @@ export default {
     InputField,
     TabContent,
   },
+
   props: {
     projectId: {
       type: Number,

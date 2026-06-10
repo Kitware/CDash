@@ -94,13 +94,16 @@ import { DateTime } from 'luxon';
 
 export default {
   name: 'DateTimeSelector',
+
   props: {
     modelValue: {
       type: String,
       default: '',
     },
   },
+
   emits: ['update:modelValue'],
+
   data() {
     let dt = DateTime.fromISO(this.modelValue, { setZone: true });
     if (!dt.isValid) {
@@ -117,6 +120,7 @@ export default {
       lastEmittedValue: this.modelValue,
     };
   },
+
   computed: {
     yearOptions() {
       const currentYear = DateTime.now().year;
@@ -162,6 +166,7 @@ export default {
       });
     },
   },
+
   watch: {
     year() {
       this.clampDay();
@@ -198,9 +203,11 @@ export default {
       }
     },
   },
+
   mounted() {
     this.updateDateTime();
   },
+
   methods: {
     getOffsetString(offsetHours) {
       return `UTC${offsetHours === 0 ? '' : (offsetHours > 0 ? '+' : '') + offsetHours}`;

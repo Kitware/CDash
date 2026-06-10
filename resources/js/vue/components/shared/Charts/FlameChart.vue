@@ -30,9 +30,11 @@ use([
 
 export default {
   name: 'FlameChart',
+
   components: {
     VChart,
   },
+
   props: {
     data: {
       type: Array,
@@ -63,7 +65,9 @@ export default {
       required: true,
     },
   },
+
   emits: ['click'],
+
   computed: {
     chartOptions() {
       return {

@@ -47,9 +47,11 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 export default {
   name: 'BuildSidebarItem',
+
   components: {
     FontAwesomeIcon,
   },
+
   props: {
     href: {
       type: String,

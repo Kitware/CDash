@@ -484,6 +484,7 @@ export default {
   components: {
     LoadingIndicator,
     TabContent, SelectField, CheckboxField, TextAreaField, InputField, FontAwesomeIcon, FormSection},
+
   props: {
     projectId: {
       type: Number,

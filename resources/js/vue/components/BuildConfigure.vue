@@ -66,6 +66,7 @@ import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 
 export default {
   components: {FontAwesomeIcon, ConfigureCard, LoadingIndicator, BuildSummaryCard, BuildSidebar},
+
   props: {
     buildId: {
       type: Number,

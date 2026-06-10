@@ -45,6 +45,7 @@ import CommitFileTreeNode from './CommitFileTreeNode.vue';
 
 export default {
   components: {CodeBox, CommitFileTreeNode},
+
   props: {
     commitFiles: {
       type: Array,

@@ -26,9 +26,11 @@ import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 
 export default {
   name: 'AdministrationPageCard',
+
   components: {
     FontAwesomeIcon,
   },
+
   props: {
     href: {
       type: String,

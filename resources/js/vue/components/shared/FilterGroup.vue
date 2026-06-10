@@ -122,7 +122,6 @@ const AVAILABLE_FILTERS = Object.freeze({
 
 export default {
   name: 'FilterGroup',
-
   components: { FontAwesomeIcon, FilterRow },
 
   props: {

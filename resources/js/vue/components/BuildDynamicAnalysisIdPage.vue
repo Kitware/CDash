@@ -40,6 +40,7 @@ import CodeBox from './shared/CodeBox.vue';
 
 export default {
   components: {CodeBox, LoadingIndicator, BuildSummaryCard, BuildSidebar},
+
   props: {
     buildId: {
       type: Number,

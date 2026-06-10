@@ -28,6 +28,7 @@ use([
 
 export default {
   name: 'LineChart',
+
   components: {
     VChart,
   },

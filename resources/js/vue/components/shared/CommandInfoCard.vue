@@ -118,6 +118,7 @@ import Utils from './Utils';
 
 export default {
   components: {LoadingIndicator},
+
   props: {
     commandId: {
       type: Number,

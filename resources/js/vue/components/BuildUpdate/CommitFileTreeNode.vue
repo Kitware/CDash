@@ -46,6 +46,7 @@ import {faFolderOpen, faFile} from '@fortawesome/free-regular-svg-icons';
 export default {
   name: 'CommitFileTreeNode',
   components: {FontAwesomeIcon},
+
   props: {
     node: {
       type: Object,
@@ -56,6 +57,7 @@ export default {
       required: true,
     },
   },
+
   computed: {
     FA() {
       return {

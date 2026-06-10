@@ -36,9 +36,11 @@ use([
 
 export default {
   name: 'TimelinePlot',
+
   components: {
     VChart,
   },
+
   props: {
     plotData: {
       type: Object,
@@ -57,6 +59,7 @@ export default {
       required: true,
     },
   },
+
   computed: {
     chartOption() {
       if (!this.plotData || !Array.isArray(this.plotData)) {
@@ -166,6 +169,7 @@ export default {
       return option;
     },
   },
+
   methods: {
     onClick(params) {
       if (params.data && params.data[2]) {
