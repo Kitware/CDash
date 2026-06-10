@@ -14,13 +14,19 @@ use PDO;
 
 class RepositoryUtils
 {
+    public static function getEnterpriseUrl(): ?string
+    {
+        $url = config('cdash.github_enterprise_url');
+        return is_string($url) && $url !== '' ? $url : null;
+    }
+
     private static function isGitHubUrl(string $url): bool
     {
         if (str_contains($url, 'github.com')) {
             return true;
         }
-        $enterpriseUrl = config('cdash.github_enterprise_url');
-        if (is_string($enterpriseUrl)) {
+        $enterpriseUrl = self::getEnterpriseUrl();
+        if ($enterpriseUrl !== null) {
             $host = parse_url($enterpriseUrl, PHP_URL_HOST);
             return is_string($host) && str_contains($url, $host);
         }
@@ -159,8 +165,8 @@ class RepositoryUtils
     /** Convert GitHub repository viewer URL into corresponding API URL. */
     public static function get_github_api_url($github_url): string
     {
-        $enterpriseUrl = config('cdash.github_enterprise_url');
-        if (is_string($enterpriseUrl)) {
+        $enterpriseUrl = self::getEnterpriseUrl();
+        if ($enterpriseUrl !== null) {
             $host = parse_url($enterpriseUrl, PHP_URL_HOST);
             if (is_string($host)) {
                 $idx = strpos($github_url, $host);
