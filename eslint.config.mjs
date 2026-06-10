@@ -64,6 +64,7 @@ export default defineConfig([
       'vue/prefer-v-model': 'error',
       'vue/require-emit-validator': 'error',
       'vue/require-name-property': 'error',
+      'vue/slot-name-casing': 'error',
       'eqeqeq': ['error', 'always'],
       'arrow-spacing': ['error'],
       'block-spacing': ['error'],
