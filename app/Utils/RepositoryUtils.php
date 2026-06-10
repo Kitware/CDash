@@ -20,7 +20,7 @@ class RepositoryUtils
         return is_string($url) && $url !== '' ? $url : null;
     }
 
-    private static function isGitHubUrl(string $url): bool
+    public static function isGitHubUrl(string $url): bool
     {
         if (str_contains($url, 'github.com')) {
             return true;
