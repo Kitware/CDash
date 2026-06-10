@@ -77,6 +77,7 @@ export default {
   },
 
   emits: [
+    // eslint-disable-next-line vue/require-emit-validator
     'changeFilters',
   ],
 

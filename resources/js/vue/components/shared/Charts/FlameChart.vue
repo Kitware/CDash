@@ -66,6 +66,7 @@ export default {
     },
   },
 
+  // eslint-disable-next-line vue/require-emit-validator
   emits: ['click'],
 
   computed: {

@@ -149,7 +149,9 @@ export default {
   },
 
   emits: [
+    // eslint-disable-next-line vue/require-emit-validator
     'changeFilters',
+    // eslint-disable-next-line vue/require-emit-validator
     'delete',
   ],
 
