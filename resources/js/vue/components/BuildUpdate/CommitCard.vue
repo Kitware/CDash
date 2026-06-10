@@ -44,6 +44,7 @@ import CodeBox from '../shared/CodeBox.vue';
 import CommitFileTreeNode from './CommitFileTreeNode.vue';
 
 export default {
+  name: 'CommitCard',
   components: {CodeBox, CommitFileTreeNode},
 
   props: {

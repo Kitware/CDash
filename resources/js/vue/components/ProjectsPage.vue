@@ -150,6 +150,7 @@ const PROJECT_LIST_QUERY = `
 `;
 
 export default {
+  name: 'ProjectsPage',
   components: {FontAwesomeIcon, ProjectLogo, LoadingIndicator},
 
   props: {

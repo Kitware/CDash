@@ -51,6 +51,8 @@ import { DateTime, Duration } from 'luxon';
 import LineChart from './shared/Charts/LineChart.vue';
 
 export default {
+  name: 'BuildInstrumentationPage',
+
   components: {
     LineChart,
     CommandFlameChart,

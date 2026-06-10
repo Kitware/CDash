@@ -309,6 +309,7 @@ import {
 import Utils from './Utils';
 
 export default {
+  name: 'BuildSummaryCard',
   components: {BuildSummaryCardStepSummary, LoadingIndicator, FontAwesomeIcon},
 
   props: {

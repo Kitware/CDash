@@ -45,6 +45,8 @@ import gql from 'graphql-tag';
 import LoadingIndicator from './shared/LoadingIndicator.vue';
 
 export default {
+  name: 'ProjectSitesPage',
+
   components: {
     LoadingIndicator,
     DataTable,

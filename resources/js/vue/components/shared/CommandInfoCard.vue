@@ -117,6 +117,7 @@ import { DateTime } from 'luxon';
 import Utils from './Utils';
 
 export default {
+  name: 'CommandInfoCard',
   components: {LoadingIndicator},
 
   props: {

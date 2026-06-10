@@ -21,6 +21,7 @@
 import CodeBox from './CodeBox.vue';
 
 export default {
+  name: 'ConfigureCard',
   components: {CodeBox},
 
   props: {

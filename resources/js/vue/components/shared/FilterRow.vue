@@ -73,6 +73,7 @@ import DateTimeSelector from './DateTimeSelector.vue';
 import {FilterField, FilterType} from './Filters/FilterUtils';
 
 export default {
+  name: 'FilterRow',
   components: {FontAwesomeIcon, DateTimeSelector},
 
   props: {

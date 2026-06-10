@@ -120,6 +120,7 @@ const BUILD_QUERY = gql`
 `;
 
 export default {
+  name: 'BuildErrorList',
   components: {BuildErrorItem, LoadingIndicator},
 
   props: {

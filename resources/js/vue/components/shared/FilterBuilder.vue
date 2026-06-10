@@ -34,6 +34,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 export default {
+  name: 'FilterBuilder',
   components: { FilterGroup, FontAwesomeIcon },
 
   props: {

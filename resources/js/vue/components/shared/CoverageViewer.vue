@@ -72,6 +72,8 @@ function buildDecorations(coverageMap, doc) {
 }
 
 export default {
+  name: 'CoverageViewer',
+
   props: {
     file: { type: String, required: true },
     coverageLines: { type: Array, required: true },

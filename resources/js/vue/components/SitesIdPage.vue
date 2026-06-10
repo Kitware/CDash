@@ -342,6 +342,8 @@ const SITE_INFORMATION_QUERY = gql`
 `;
 
 export default {
+  name: 'SitesIdPage',
+
   components: {
     LoadingIndicator,
     FontAwesomeIcon,

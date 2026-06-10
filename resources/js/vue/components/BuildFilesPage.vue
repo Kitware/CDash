@@ -74,6 +74,7 @@ import BuildSidebar from './shared/BuildSidebar.vue';
 import gql from 'graphql-tag';
 
 export default {
+  name: 'BuildFilesPage',
   components: {LoadingIndicator, DataTable, BuildSummaryCard, BuildSidebar},
 
   props: {

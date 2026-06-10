@@ -66,6 +66,8 @@ import { DateTime, Duration } from 'luxon';
 import Utils from './shared/Utils';
 
 export default {
+  name: 'BuildTargetsPage',
+
   components: {
     CommandFlameChart,
     FilterBuilder,

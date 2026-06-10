@@ -269,6 +269,8 @@ import {
 import { DateTime } from 'luxon';
 
 export default {
+  name: 'ProjectMembersPage',
+
   components: {
     DataTable,
     LoadingIndicator,

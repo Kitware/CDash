@@ -12,6 +12,8 @@
 
 <script>
 export default {
+  name: 'TabContent',
+
   props: {
     title: {
       type: String,

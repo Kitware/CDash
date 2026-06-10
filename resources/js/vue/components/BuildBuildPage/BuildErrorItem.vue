@@ -106,6 +106,7 @@ import {getRepository} from '../shared/RepositoryIntegrations';
 import 'core-js/actual/regexp/escape';
 
 export default {
+  name: 'BuildErrorItem',
   components: {FontAwesomeIcon, CodeBox},
 
   props: {

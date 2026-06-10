@@ -236,6 +236,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 export default {
+  name: 'UsersPage',
+
   components: {
     DataTable,
     LoadingIndicator,

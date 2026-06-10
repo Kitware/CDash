@@ -189,6 +189,7 @@ import {faFile} from '@fortawesome/free-regular-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 
 export default {
+  name: 'BuildCoveragePage',
   components: {FontAwesomeIcon, FilterBuilder, LoadingIndicator, DataTable, BuildSummaryCard, BuildSidebar},
 
   props: {
