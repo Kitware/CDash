@@ -59,6 +59,7 @@ export default defineConfig([
         groupSingleLineProperties: true,
       }],
       'vue/prefer-prop-type-boolean-first': 'error',
+      'vue/prefer-separate-static-class': 'error',
       'eqeqeq': ['error', 'always'],
       'arrow-spacing': ['error'],
       'block-spacing': ['error'],
