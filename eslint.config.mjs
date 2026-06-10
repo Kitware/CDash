@@ -51,6 +51,13 @@ export default defineConfig([
       'vue/no-useless-mustaches': 'error',
       'vue/no-useless-v-bind': 'error',
       'vue/padding-line-between-blocks': 'error',
+      'vue/padding-lines-in-component-definition': ['error', {
+        betweenOptions: 'always',
+        withinOption: {
+          apollo: 'ignore',
+        },
+        groupSingleLineProperties: true,
+      }],
       'eqeqeq': ['error', 'always'],
       'arrow-spacing': ['error'],
       'block-spacing': ['error'],
