@@ -19,6 +19,8 @@
 <script>
 
 export default {
+  name: 'ProjectLogo',
+
   props: {
     projectName: {
       type: String,

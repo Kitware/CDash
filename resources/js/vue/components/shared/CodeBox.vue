@@ -19,6 +19,7 @@ import { AnsiUp } from 'ansi_up';
 
 export default {
   name: 'CodeBox',
+
   props: {
     text: {
       type: String,

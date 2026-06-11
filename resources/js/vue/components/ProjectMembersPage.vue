@@ -269,6 +269,8 @@ import {
 import { DateTime } from 'luxon';
 
 export default {
+  name: 'ProjectMembersPage',
+
   components: {
     DataTable,
     LoadingIndicator,
@@ -305,11 +307,6 @@ export default {
       type: Boolean,
       required: true,
     },
-  },
-
-  setup(props) {
-    // Basic sanity checks...
-    console.assert(!(props.canJoinProject && props.canLeaveProject));
   },
 
   data() {

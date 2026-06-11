@@ -481,9 +481,12 @@ import TabContent from './TabContent.vue';
 import LoadingIndicator from '../shared/LoadingIndicator.vue';
 
 export default {
+  name: 'GeneralTab',
+
   components: {
     LoadingIndicator,
     TabContent, SelectField, CheckboxField, TextAreaField, InputField, FontAwesomeIcon, FormSection},
+
   props: {
     projectId: {
       type: Number,

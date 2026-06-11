@@ -13,6 +13,8 @@
 
 <script>
 export default {
+  name: 'LoadingIndicator',
+
   props: {
     isLoading: {
       type: Boolean,

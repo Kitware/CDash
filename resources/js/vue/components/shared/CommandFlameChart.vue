@@ -41,10 +41,12 @@ import Utils from './Utils';
 
 export default {
   name: 'CommandFlameChart',
+
   components: {
     CommandInfoCard,
     FlameChart,
   },
+
   props: {
     /**
      * An array of command objects. Each object is expected to have the following properties:
@@ -66,6 +68,7 @@ export default {
       required: true,
     },
   },
+
   data() {
     return {
       colors: {
@@ -82,6 +85,7 @@ export default {
       selectedCommandId: null,
     };
   },
+
   computed: {
     processedChartData() {
       if (!this.commands || this.commands.length === 0) {
@@ -159,6 +163,7 @@ export default {
       return (this.commandBarHeight + this.commandBarSpacing) * numtracks + 60;
     },
   },
+
   methods: {
     getTooltipElement(params) {
       if (!params.data.value || !Array.isArray(params.data.value)) {

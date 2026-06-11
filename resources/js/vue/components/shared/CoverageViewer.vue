@@ -72,11 +72,15 @@ function buildDecorations(coverageMap, doc) {
 }
 
 export default {
+  name: 'CoverageViewer',
+
   props: {
     file: { type: String, required: true },
     coverageLines: { type: Array, required: true },
   },
+
   data: () => ({ view: null }),
+
   computed: {
     coverageMap() {
       const map = {};
@@ -88,6 +92,7 @@ export default {
       return map;
     },
   },
+
   watch: {
     coverageMap: {
       handler(newMap) {
@@ -98,6 +103,7 @@ export default {
       immediate: true,
     },
   },
+
   mounted() {
     class CoverageGutterMarker extends GutterMarker {
       constructor(coverage) {
@@ -159,6 +165,7 @@ export default {
       parent: this.$refs.editor,
     });
   },
+
   beforeUnmount() {
     if (this.view) {
       this.view.destroy();

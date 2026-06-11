@@ -30,9 +30,11 @@ use([
 
 export default {
   name: 'FlameChart',
+
   components: {
     VChart,
   },
+
   props: {
     data: {
       type: Array,
@@ -63,7 +65,10 @@ export default {
       required: true,
     },
   },
+
+  // eslint-disable-next-line vue/require-emit-validator
   emits: ['click'],
+
   computed: {
     chartOptions() {
       return {

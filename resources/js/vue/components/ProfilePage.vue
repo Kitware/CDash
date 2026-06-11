@@ -300,12 +300,14 @@ import { faTrashCan, faPlus, faCopy } from '@fortawesome/free-solid-svg-icons';
 
 export default {
   name: 'ProfilePage',
+
   components: {
     InputField,
     SelectField,
     FormSection,
     FontAwesomeIcon,
   },
+
   props: {
     user: {
       type: Object,

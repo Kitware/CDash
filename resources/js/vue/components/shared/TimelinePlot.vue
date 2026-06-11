@@ -1,4 +1,5 @@
 <template>
+  <!-- eslint-disable vue/no-unused-refs -->
   <VChart
     ref="chart"
     class="chart"
@@ -7,6 +8,7 @@
     autoresize
     @click="onClick"
   />
+  <!-- eslint-enable vue/no-unused-refs -->
 </template>
 
 <script>
@@ -34,9 +36,11 @@ use([
 
 export default {
   name: 'TimelinePlot',
+
   components: {
     VChart,
   },
+
   props: {
     plotData: {
       type: Object,
@@ -55,6 +59,7 @@ export default {
       required: true,
     },
   },
+
   computed: {
     chartOption() {
       if (!this.plotData || !Array.isArray(this.plotData)) {
@@ -164,6 +169,7 @@ export default {
       return option;
     },
   },
+
   methods: {
     onClick(params) {
       if (params.data && params.data[2]) {

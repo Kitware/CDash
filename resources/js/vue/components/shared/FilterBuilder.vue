@@ -34,6 +34,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 export default {
+  name: 'FilterBuilder',
   components: { FilterGroup, FontAwesomeIcon },
 
   props: {
@@ -77,6 +78,7 @@ export default {
   },
 
   emits: [
+    // eslint-disable-next-line vue/require-emit-validator
     'changeFilters',
   ],
 

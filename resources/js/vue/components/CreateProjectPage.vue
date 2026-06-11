@@ -154,6 +154,7 @@ import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 import gql from 'graphql-tag';
 
 export default {
+  name: 'CreateProjectPage',
   components: {FontAwesomeIcon},
 
   props: {

@@ -37,6 +37,7 @@ import CoverageViewer from './shared/CoverageViewer.vue';
 import BuildSidebar from './shared/BuildSidebar.vue';
 
 export default {
+  name: 'CoverageFilePage',
   components: {BuildSidebar, CoverageViewer, LoadingIndicator, BuildSummaryCard},
 
   props: {

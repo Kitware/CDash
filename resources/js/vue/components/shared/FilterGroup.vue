@@ -121,6 +121,7 @@ const AVAILABLE_FILTERS = Object.freeze({
 });
 
 export default {
+  name: 'FilterGroup',
   components: { FontAwesomeIcon, FilterRow },
 
   props: {
@@ -148,7 +149,9 @@ export default {
   },
 
   emits: [
+    // eslint-disable-next-line vue/require-emit-validator
     'changeFilters',
+    // eslint-disable-next-line vue/require-emit-validator
     'delete',
   ],
 

@@ -125,9 +125,11 @@ import {
 
 export default {
   name: 'BuildSidebar',
+
   components: {
     BuildSidebarItem,
   },
+
   props: {
     buildId: {
       type: Number,
@@ -138,11 +140,13 @@ export default {
       default: '',
     },
   },
+
   data() {
     return {
       build: null,
     };
   },
+
   apollo: {
     build: {
       query: gql`
@@ -204,6 +208,7 @@ export default {
       },
     },
   },
+
   computed: {
     FA() {
       return {

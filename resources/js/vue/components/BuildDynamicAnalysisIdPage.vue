@@ -39,7 +39,9 @@ import {
 import CodeBox from './shared/CodeBox.vue';
 
 export default {
+  name: 'BuildDynamicAnalysisIdPage',
   components: {CodeBox, LoadingIndicator, BuildSummaryCard, BuildSidebar},
+
   props: {
     buildId: {
       type: Number,

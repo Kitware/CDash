@@ -38,9 +38,11 @@ import {
 
 export default {
   name: 'AdministrationPage',
+
   components: {
     AdministrationPageCard,
   },
+
   computed: {
     FA() {
       return {

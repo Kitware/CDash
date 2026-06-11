@@ -35,6 +35,7 @@ import DataTable from './shared/DataTable.vue';
 
 export default {
   name: 'ViewDynamicAnalysis',
+
   components: {
     BuildSidebar,
     BuildSummaryCard,

@@ -160,6 +160,8 @@ const BUILD_ERRORS_QUERY = gql`
 `;
 
 export default {
+  name: 'BuildBuildPage',
+
   components: {
     CodeBox,
     BuildErrorList,

@@ -107,6 +107,8 @@ import TabContent from './TabContent.vue';
 import InputField from '../shared/FormInputs/InputField.vue';
 
 export default {
+  name: 'TestMeasurementsTab',
+
   components: {
     LoadingIndicator,
     TabContent,

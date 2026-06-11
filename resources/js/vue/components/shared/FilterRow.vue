@@ -73,6 +73,7 @@ import DateTimeSelector from './DateTimeSelector.vue';
 import {FilterField, FilterType} from './Filters/FilterUtils';
 
 export default {
+  name: 'FilterRow',
   components: {FontAwesomeIcon, DateTimeSelector},
 
   props: {
@@ -99,7 +100,9 @@ export default {
   },
 
   emits: [
+    // eslint-disable-next-line vue/require-emit-validator
     'changeFilters',
+    // eslint-disable-next-line vue/require-emit-validator
     'delete',
   ],
 

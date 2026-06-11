@@ -122,12 +122,15 @@ import {
 import LoadingIndicator from '../shared/LoadingIndicator.vue';
 
 export default {
+  name: 'IntegrationsTab',
+
   components: {
     LoadingIndicator,
     FontAwesomeIcon,
     InputField,
     TabContent,
   },
+
   props: {
     projectId: {
       type: Number,
