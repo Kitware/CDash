@@ -126,7 +126,7 @@ import {
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 
 const PROJECT_LIST_QUERY = `
-  projects {
+  projects(after: $after) {
     edges {
       node {
         id
@@ -145,6 +145,10 @@ const PROJECT_LIST_QUERY = `
           submissionTime
         }
       }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
     }
   }
 `;
@@ -174,20 +178,30 @@ export default {
   apollo: {
     allVisibleProjects: {
       query: gql`
-        query allVisibleProjects($countBuildsSince: DateTimeTz!) {
+        query allVisibleProjects($countBuildsSince: DateTimeTz!, $after: String) {
           allVisibleProjects: ${PROJECT_LIST_QUERY}
         }
       `,
       variables() {
         return {
           countBuildsSince: this.oneDayAgo,
+          after: null,
         };
+      },
+      result({data}) {
+        if (data && data.allVisibleProjects.pageInfo.hasNextPage) {
+          this.$apollo.queries.allVisibleProjects.fetchMore({
+            variables: {
+              after: data.allVisibleProjects.pageInfo.endCursor,
+            },
+          });
+        }
       },
     },
 
     myProjects: {
       query: gql`
-        query myProjects($countBuildsSince: DateTimeTz!) {
+        query myProjects($countBuildsSince: DateTimeTz!, $after: String) {
           me {
             id
             ${PROJECT_LIST_QUERY}
@@ -198,7 +212,17 @@ export default {
       variables() {
         return {
           countBuildsSince: this.oneDayAgo,
+          after: null,
         };
+      },
+      result({data}) {
+        if (data && data.me?.projects.pageInfo.hasNextPage) {
+          this.$apollo.queries.myProjects.fetchMore({
+            variables: {
+              after: data.me.projects.pageInfo.endCursor,
+            },
+          });
+        }
       },
     },
   },

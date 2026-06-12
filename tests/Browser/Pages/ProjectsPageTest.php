@@ -287,4 +287,57 @@ class ProjectsPageTest extends BrowserTestCase
                 });
         });
     }
+
+    public function testPaginationLoadsAllProjects(): void
+    {
+        $this->users['admin'] = $this->makeAdminUser();
+
+        // Create 110 public projects, each with a recent build so they appear on the active tab
+        for ($i = 1; $i <= 110; $i++) {
+            $project = $this->makePublicProject();
+            $this->projects["project{$i}"] = $project;
+
+            $project->builds()->create([
+                'siteid' => $this->site->id,
+                'name' => Str::uuid()->toString(),
+                'uuid' => Str::uuid()->toString(),
+                'submittime' => Carbon::now(),
+            ]);
+
+            $project->users()->attach($this->users['admin'], ['role' => Project::PROJECT_USER]);
+        }
+
+        // The first project created has the lowest ID (first pagination page) and the last has
+        // the highest ID (final pagination page).  Waiting for the last project's name guarantees
+        // all pages have been fetched before asserting.
+        $firstProjectName = $this->projects['project1']->name;
+        $lastProjectName = $this->projects['project110']->name;
+
+        $this->browse(function (Browser $browser) use ($firstProjectName, $lastProjectName): void {
+            $browser->loginAs($this->users['admin'])
+                ->visit('/projects')
+                ->whenAvailable('@projects-page', function (Browser $browser) use ($firstProjectName, $lastProjectName): void {
+                    // Test "All" tab shows projects with lowest and highest IDs
+                    $browser->click('@all-tab')
+                        ->waitFor('@projects-table')
+                        ->waitForText($lastProjectName)
+                        ->assertSeeIn('@projects-table', $firstProjectName)
+                        ->assertSeeIn('@projects-table', $lastProjectName);
+
+                    // Test "Active" tab shows projects with lowest and highest IDs
+                    $browser->click('@active-tab')
+                        ->waitFor('@projects-table')
+                        ->waitForText($lastProjectName)
+                        ->assertSeeIn('@projects-table', $firstProjectName)
+                        ->assertSeeIn('@projects-table', $lastProjectName);
+
+                    // Test "Member" tab shows projects with lowest and highest IDs
+                    $browser->click('@member-tab')
+                        ->waitFor('@projects-table')
+                        ->waitForText($lastProjectName)
+                        ->assertSeeIn('@projects-table', $firstProjectName)
+                        ->assertSeeIn('@projects-table', $lastProjectName);
+                });
+        });
+    }
 }
