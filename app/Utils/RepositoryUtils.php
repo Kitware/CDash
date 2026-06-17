@@ -176,10 +176,9 @@ class RepositoryUtils
         if (is_string($host) && str_contains($github_url, $host)) {
             // GHE uses <host>/api/v3/repos/ as the API base
             return Str::replaceFirst($host . '/', $host . '/api/v3/repos/', $github_url);
-        } else {
-            // GitHub.com uses api.github.com/repos/ as the API base
-            return Str::replaceFirst('github.com/', 'api.github.com/repos/', $github_url);
         }
+        // GitHub.com uses api.github.com/repos/ as the API base
+        return Str::replaceFirst('github.com/', 'api.github.com/repos/', $github_url);
     }
 
     public static function post_github_pull_request_comment(Project $project, $pull_request, $comment, $cdash_url): void
