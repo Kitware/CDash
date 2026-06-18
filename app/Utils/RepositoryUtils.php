@@ -10,10 +10,31 @@ use CDash\Model\Build;
 use CDash\Model\Project;
 use CDash\ServiceContainer;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+use Illuminate\Support\Uri;
 use PDO;
 
 class RepositoryUtils
 {
+    public static function getEnterpriseUrl(): ?string
+    {
+        $url = config('cdash.github_enterprise_url');
+        return is_string($url) && $url !== '' ? $url : null;
+    }
+
+    public static function isGitHubUrl(string $url): bool
+    {
+        if (str_contains($url, 'github.com')) {
+            return true;
+        }
+        $enterpriseUrl = self::getEnterpriseUrl();
+        if ($enterpriseUrl !== null) {
+            $host = Uri::of($enterpriseUrl)->host();
+            return is_string($host) && str_contains($url, $host);
+        }
+        return false;
+    }
+
     /** Return the GitHub diff URL */
     public static function get_github_diff_url($projecturl, $directory, $file, $revision)
     {
@@ -143,22 +164,21 @@ class RepositoryUtils
         }
     }
 
-    /** Convert GitHub repository viewer URL into corresponding API URL. */
-    public static function get_github_api_url($github_url): string
+    /**
+     * Convert a GitHub repository viewer URL (e.g. https://<host>/<user>/<repo>)
+     * into the corresponding REST API URL.
+     */
+    public static function get_github_api_url(string $github_url): string
     {
-        /*
-         * For a URL of the form:
-         * ...://github.com/<user>/<repo>
-         * We return:
-         * ...://api.github.com/repos/<user>/<repo>
-         */
-        $idx1 = strpos($github_url, 'github.com');
-        $idx2 = $idx1 + strlen('github.com/');
-        $api_url = substr($github_url, 0, $idx2);
-        $api_url = str_replace('github.com', 'api.github.com', $api_url);
-        $api_url .= 'repos/';
-        $api_url .= substr($github_url, $idx2);
-        return $api_url;
+        $enterpriseUrl = self::getEnterpriseUrl();
+        $host = $enterpriseUrl !== null ? Uri::of($enterpriseUrl)->host() : null;
+
+        if (is_string($host) && str_contains($github_url, $host)) {
+            // GHE uses <host>/api/v3/repos/ as the API base
+            return Str::replaceFirst($host . '/', $host . '/api/v3/repos/', $github_url);
+        }
+        // GitHub.com uses api.github.com/repos/ as the API base
+        return Str::replaceFirst('github.com/', 'api.github.com/repos/', $github_url);
     }
 
     public static function post_github_pull_request_comment(Project $project, $pull_request, $comment, $cdash_url): void
@@ -166,7 +186,7 @@ class RepositoryUtils
         $repo = null;
         $repositories = $project->GetRepositories();
         foreach ($repositories as $repository) {
-            if (str_contains($repository['url'], 'github.com')) {
+            if (self::isGitHubUrl($repository['url'])) {
                 $repo = $repository;
                 break;
             }

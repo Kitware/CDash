@@ -5437,12 +5437,6 @@ parameters:
 			path: app/Utils/RepositoryUtils.php
 
 		-
-			rawMessage: 'Method App\Utils\RepositoryUtils::get_github_api_url() has parameter $github_url with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
 			rawMessage: 'Method App\Utils\RepositoryUtils::get_github_diff_url() has no return type specified.'
 			identifier: missingType.return
 			count: 1
@@ -5625,12 +5619,6 @@ parameters:
 		-
 			rawMessage: 'Only booleans are allowed in an if condition, bool|string given.'
 			identifier: if.condNotBoolean
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
-			rawMessage: 'Only numeric types are allowed in +, int<0, max>|false given on the left side.'
-			identifier: plus.leftNonNumeric
 			count: 1
 			path: app/Utils/RepositoryUtils.php
 
