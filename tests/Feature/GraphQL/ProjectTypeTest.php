@@ -1016,6 +1016,198 @@ class ProjectTypeTest extends TestCase
         ]);
     }
 
+    public function testBuildsOnlyParentsArgument(): void
+    {
+        // Create two parent builds
+        $this->projects['public1']->builds()->create([
+            'name' => 'parent1',
+            'uuid' => Str::uuid(),
+        ]);
+        $this->projects['public1']->builds()->create([
+            'name' => 'parent2',
+            'uuid' => Str::uuid(),
+        ]);
+
+        // Create a parent build that will serve as the "real" parent for child builds
+        $parent = $this->projects['public1']->builds()->create([
+            'name' => 'parent3',
+            'uuid' => Str::uuid(),
+        ]);
+
+        // Create a child build
+        $this->projects['public1']->builds()->create([
+            'name' => 'child1',
+            'parentid' => $parent->id,
+            'uuid' => Str::uuid(),
+        ]);
+
+        // Default behavior: only parent builds should be returned
+        $this->graphQL('
+            query($projectId: ID!) {
+                project(id: $projectId) {
+                    builds {
+                        edges {
+                            node {
+                                name
+                            }
+                        }
+                    }
+                }
+            }
+        ', [
+            'projectId' => $this->projects['public1']->id,
+        ])->assertExactJson([
+            'data' => [
+                'project' => [
+                    'builds' => [
+                        'edges' => [
+                            ['node' => ['name' => 'parent1']],
+                            ['node' => ['name' => 'parent2']],
+                            ['node' => ['name' => 'parent3']],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+
+        // Explicit onlyParents: true: same as default
+        $this->graphQL('
+            query($projectId: ID!) {
+                project(id: $projectId) {
+                    builds(onlyParents: true) {
+                        edges {
+                            node {
+                                name
+                            }
+                        }
+                    }
+                }
+            }
+        ', [
+            'projectId' => $this->projects['public1']->id,
+        ])->assertExactJson([
+            'data' => [
+                'project' => [
+                    'builds' => [
+                        'edges' => [
+                            ['node' => ['name' => 'parent1']],
+                            ['node' => ['name' => 'parent2']],
+                            ['node' => ['name' => 'parent3']],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+
+        // onlyParents: false: all builds including child builds are returned
+        $this->graphQL('
+            query($projectId: ID!) {
+                project(id: $projectId) {
+                    builds(onlyParents: false) {
+                        edges {
+                            node {
+                                name
+                            }
+                        }
+                    }
+                }
+            }
+        ', [
+            'projectId' => $this->projects['public1']->id,
+        ])->assertExactJson([
+            'data' => [
+                'project' => [
+                    'builds' => [
+                        'edges' => [
+                            ['node' => ['name' => 'parent1']],
+                            ['node' => ['name' => 'parent2']],
+                            ['node' => ['name' => 'parent3']],
+                            ['node' => ['name' => 'child1']],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+    }
+
+    /**
+     * Tests that the buildCount field respects the onlyParents argument.
+     */
+    public function testBuildCountOnlyParentsArgument(): void
+    {
+        // Create two parent builds
+        $this->projects['public1']->builds()->create([
+            'name' => 'parent1',
+            'uuid' => Str::uuid(),
+        ]);
+        $this->projects['public1']->builds()->create([
+            'name' => 'parent2',
+            'uuid' => Str::uuid(),
+        ]);
+
+        // Create a parent build that will serve as the "real" parent for child builds
+        $parent = $this->projects['public1']->builds()->create([
+            'name' => 'parent3',
+            'uuid' => Str::uuid(),
+        ]);
+
+        // Create a child build
+        $this->projects['public1']->builds()->create([
+            'name' => 'child1',
+            'parentid' => $parent->id,
+            'uuid' => Str::uuid(),
+        ]);
+
+        // Default behavior: only parent builds counted
+        $this->graphQL('
+            query($projectId: ID!) {
+                project(id: $projectId) {
+                    buildCount
+                }
+            }
+        ', [
+            'projectId' => $this->projects['public1']->id,
+        ])->assertExactJson([
+            'data' => [
+                'project' => [
+                    'buildCount' => 3,
+                ],
+            ],
+        ]);
+
+        // Explicit onlyParents: true: same as default
+        $this->graphQL('
+            query($projectId: ID!) {
+                project(id: $projectId) {
+                    buildCount(onlyParents: true)
+                }
+            }
+        ', [
+            'projectId' => $this->projects['public1']->id,
+        ])->assertExactJson([
+            'data' => [
+                'project' => [
+                    'buildCount' => 3,
+                ],
+            ],
+        ]);
+
+        // onlyParents: false: all builds counted including child builds
+        $this->graphQL('
+            query($projectId: ID!) {
+                project(id: $projectId) {
+                    buildCount(onlyParents: false)
+                }
+            }
+        ', ['projectId' => $this->projects['public1']->id])->assertExactJson([
+            'data' => [
+                'project' => [
+                    'buildCount' => 4,
+                ],
+            ],
+        ]);
+    }
+
     public function testBuildCountFieldWithFilters(): void
     {
         $this->projects['public1']->builds()->create([

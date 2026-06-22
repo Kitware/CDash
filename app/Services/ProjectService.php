@@ -146,6 +146,7 @@ class ProjectService extends AbstractService
 
         $starttime = Project::findOrFail($projectid)
             ->builds()
+            ->onlyParents()
             ->max('starttime');
 
         if ($starttime === null) {

@@ -359,6 +359,8 @@ type Project {
 
   builds(
     filters: _ @filter
+    "When true (default), only return parent builds. When false, return all builds including child builds."
+    onlyParents: Boolean = true @scope
   ): [Build!]! @hasMany(type: CONNECTION)
 
   """
@@ -366,6 +368,8 @@ type Project {
   """
   buildCount(
     filters: _ @filter(inputType: "BuildFilterInput")
+    "When true (default), only count parent builds. When false, count all builds including child builds."
+    onlyParents: Boolean = true @scope
   ): Int! @count(relation: "builds")
 
   """

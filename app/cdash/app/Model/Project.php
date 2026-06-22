@@ -502,7 +502,7 @@ class Project
         }
 
         $project = EloquentProject::findOrFail((int) $this->Id);
-        $num_builds = $project->builds()->count();
+        $num_builds = $project->builds()->onlyParents()->count();
 
         // The +1 here is to account for the build we're currently inserting.
         if ($num_builds < ($max_builds + 1)) {
