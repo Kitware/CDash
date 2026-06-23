@@ -629,6 +629,36 @@ export function IndexController($scope, $rootScope, $location, $http, $filter, $
     });
   };
 
+  $scope.bulkDeleteBuilds = function(buildgroup) {
+    if (buildgroup.selectedBuilds.length === 0) {
+      return;
+    }
+
+    if (!confirm('Are you sure you want to delete ' + buildgroup.selectedBuilds.length + ' build(s)? This action cannot be undone.')) {
+      return;
+    }
+
+    var deletePromises = [];
+
+    // Delete each selected build using the build API
+    for (var i = 0; i < buildgroup.selectedBuilds.length; i++) {
+      var build = buildgroup.selectedBuilds[i];
+      deletePromises.push($http({
+        url: 'api/v1/build.php',
+        method: 'DELETE',
+        params: { buildid: build.id }
+      }));
+    }
+
+    // Wait for all deletions to complete, then reload
+    $q.all(deletePromises).then(function() {
+      window.location.reload();
+    }).catch(function(error) {
+      console.error('Error deleting builds:', error);
+      alert('An error occurred while deleting builds. Please try again.');
+    });
+  };
+
   $scope.colorblind_toggle = function() {
     if ($scope.cdash.filterdata.colorblind) {
       $rootScope.cssfile = "colorblind";
