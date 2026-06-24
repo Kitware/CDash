@@ -4954,6 +4954,12 @@ parameters:
 			path: app/Models/Project.php
 
 		-
+			rawMessage: 'Call to an undefined method Illuminate\Database\Eloquent\Builder::onlyParents().'
+			identifier: method.notFound
+			count: 1
+			path: app/Models/Project.php
+
+		-
 			rawMessage: Cannot cast mixed to int.
 			identifier: cast.int
 			count: 2

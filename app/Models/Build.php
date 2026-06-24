@@ -51,6 +51,7 @@ use Illuminate\Support\Str;
  * @property ?string $binarydirectory
  *
  * @method static Builder<Build> betweenDates(?Carbon $starttime, ?Carbon $endtime)
+ * @method static Builder<Build> onlyParents(bool $onlyParents = true)
  *
  * @mixin Builder<Build>
  */
@@ -162,6 +163,19 @@ class Build extends Model
 
         if ($endtime !== null) {
             $query->where('endtime', '<=', $endtime);
+        }
+    }
+
+    /**
+     * @param Builder<self> $query
+     */
+    public function scopeOnlyParents(Builder $query, bool $onlyParents = true): void
+    {
+        if ($onlyParents) {
+            $query->where(function (Builder $q): void {
+                $q->where('parentid', 0)
+                    ->orWhere('parentid', -1);
+            });
         }
     }
 
