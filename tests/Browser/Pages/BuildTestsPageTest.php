@@ -524,4 +524,50 @@ class BuildTestsPageTest extends BrowserTestCase
             ;
         });
     }
+
+    public function testNotRunMatchingSkippedPatternShownInGreen(): void
+    {
+        $this->project->notrun_skipped_details_regex = '*skip*';
+        $this->project->save();
+
+        /** @var Build $build */
+        $build = $this->project->builds()->create([
+            'siteid' => $this->site->id,
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        /** @var Test $skipped_not_run_test */
+        $skipped_not_run_test = $build->tests()->create([
+            'testname' => Str::uuid()->toString(),
+            'status' => 'notrun',
+            'details' => 'Test SKIPPED intentionally',
+            'outputid' => $this->testOutput->id,
+        ]);
+
+        /** @var Test $warning_not_run_test */
+        $warning_not_run_test = $build->tests()->create([
+            'testname' => Str::uuid()->toString(),
+            'status' => 'notrun',
+            'details' => 'Unable to find executable',
+            'outputid' => $this->testOutput->id,
+        ]);
+
+        $this->browse(function (Browser $browser) use ($skipped_not_run_test, $warning_not_run_test, $build): void {
+            $browser->visit("/builds/{$build->id}/tests")
+                ->waitFor('@tests-table')
+                ->waitForText($skipped_not_run_test->testname)
+            ;
+
+            self::assertTrue($browser->script(
+                'return document.querySelector(\'a[href*="/tests/' . $skipped_not_run_test->id . '"]\')'
+                . '?.closest("tr")?.querySelector("td.normal") !== null',
+            )[0]);
+
+            self::assertTrue($browser->script(
+                'return document.querySelector(\'a[href*="/tests/' . $warning_not_run_test->id . '"]\')'
+                . '?.closest("tr")?.querySelector("td.warning") !== null',
+            )[0]);
+        });
+    }
 }

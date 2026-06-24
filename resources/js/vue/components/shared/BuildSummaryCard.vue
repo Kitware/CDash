@@ -348,6 +348,7 @@ export default {
             passedTestsCount
             failedTestsCount
             notRunTestsCount
+            notRunTestsWarningCount
             site {
               id
               name
@@ -455,9 +456,15 @@ export default {
         return 'No Submission';
       }
 
+      const notRunWarningCount = Math.max(0, this.build.notRunTestsWarningCount);
+      const notRunSkippedCount = Math.max(0, this.build.notRunTestsCount - notRunWarningCount);
+
       let retval = '';
-      if (this.build.notRunTestsCount > 0) {
-        retval += `${this.build.notRunTestsCount} Not Run${this.commaSeparator(this.build.failedTestsCount > 0 || this.build.passedTestsCount)}`;
+      if (notRunWarningCount > 0) {
+        retval += `${notRunWarningCount} Not Run${this.commaSeparator(this.build.failedTestsCount > 0 || this.build.passedTestsCount > 0 || notRunSkippedCount > 0)}`;
+      }
+      if (notRunSkippedCount > 0) {
+        retval += `${notRunSkippedCount} Skipped${this.commaSeparator(this.build.failedTestsCount > 0 || this.build.passedTestsCount > 0)}`;
       }
       if (this.build.failedTestsCount > 0) {
         retval += `${this.build.failedTestsCount} Failed${this.commaSeparator(this.build.passedTestsCount)}`;
@@ -576,21 +583,25 @@ export default {
       if (this.build.failedTestsCount > 0) {
         return 'tw-bg-red-400';
       }
-      else {
-        return 'tw-bg-green-400';
+      if (this.build.notRunTestsWarningCount > 0) {
+        return 'tw-bg-orange-400';
       }
+
+      return 'tw-bg-green-400';
     },
 
     testHighlightColor() {
       if (!this.hasTest) {
         return 'tw-border-x-gray-400';
       }
-      else if (this.build.failedTestsCount > 0) {
+      if (this.build.failedTestsCount > 0) {
         return 'tw-border-x-red-400';
       }
-      else {
-        return 'tw-border-x-green-400';
+      if (this.build.notRunTestsWarningCount > 0) {
+        return 'tw-border-x-orange-400';
       }
+
+      return 'tw-border-x-green-400';
     },
 
     /**
