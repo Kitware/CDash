@@ -56,7 +56,6 @@ export default {
   computed: {
     chartOption() {
       const hasData = this.data && this.data.length > 0;
-      let chartData = [];
 
       const baseOption = {
         animation: false,
@@ -79,7 +78,7 @@ export default {
       if (hasData) {
         const overallStartTime = Math.min(...this.data.map(p => p.x.toMillis()));
 
-        chartData = this.data.map(point => [point.x.toMillis() - overallStartTime, point.y]);
+        const chartData = this.data.map(point => [point.x.toMillis() - overallStartTime, point.y]);
 
         return {
           ...baseOption,
