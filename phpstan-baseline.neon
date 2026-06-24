@@ -7978,12 +7978,6 @@ parameters:
 			path: app/cdash/app/Model/BuildConfigure.php
 
 		-
-			rawMessage: If condition is always false.
-			identifier: if.alwaysFalse
-			count: 1
-			path: app/cdash/app/Model/BuildConfigure.php
-
-		-
 			rawMessage: 'Method CDash\Model\BuildConfigure::AddLabel() has parameter $label with no type specified.'
 			identifier: missingType.parameter
 			count: 1
