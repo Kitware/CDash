@@ -809,7 +809,7 @@ type Build {
 
   # TODO: Determine if there are more specific values we can use for this
   "Type."
-  buildType: String! @rename(attribute: "type")
+  buildType: String! @rename(attribute: "type") @filterable
 
   "The version of CTest used to generate this build. Example: ctest-2.9.20091218"
   generator: String! @filterable
@@ -924,7 +924,7 @@ type Build {
 
   files: [UploadedFile!]! @hasMany(relation: "uploadedFiles", type: CONNECTION, scopes: ["files"]) @orderBy(column: "id", direction: ASC)
 
-  subProject: SubProject! @belongsTo
+  subProject: SubProject @belongsTo
 
   configure: Configure @hasOneThrough
 
@@ -1437,9 +1437,9 @@ type UploadedFile @model(class: "App\\Models\\UploadFile") {
 # TODO: add the rest of the fields once types and relationships are solidified.
 type SubProject {
   "Unique primary key."
-  id: ID!
+  id: ID! @filterable
 
-  name: String!
+  name: String! @filterable
 }
 
 
