@@ -418,20 +418,6 @@
         </table>
         <br>
 
-        <!-- Display the history table -->
-        <div class="title-divider">
-          History
-        </div>
-
-        <a
-          class="tw-link tw-link-hover"
-          :href="$baseURL + '/index.php?project=' + cdash.projectname_encoded + '&filtercount=4&showfilters=1&filtercombine=and&field1=site&compare1=61&value1=' + cdash.build.sitename_encoded + '&field2=buildname&compare2=61&value2=' + cdash.build.name + '&field3=buildtype&compare3=61&value3=' + cdash.build.type + '&field4=buildstarttime&compare4=84&value4=' + cdash.build.starttime"
-        >
-          Show Build History
-        </a>
-        <br>
-        <br>
-
         <!-- Display comments for this build -->
         <LoadingIndicator :is-loading="!comments">
           <div
@@ -506,140 +492,54 @@
         </LoadingIndicator>
 
         <!-- Graphs -->
-        <div class="title-divider">
-          Graphs
+        <div class="tw-border tw-border-base-300 tw-rounded-lg tw-overflow-hidden">
+          <div class="tw-flex tw-items-center tw-justify-between tw-px-3 tw-py-1 tw-bg-base-200">
+            <span class="tw-text-base tw-font-bold">Build History</span>
+            <a
+              class="tw-btn tw-btn-sm tw-btn-outline"
+              data-test="build-history-link"
+              :href="$baseURL + '/index.php?project=' + cdash.projectname_encoded + '&filtercount=4&showfilters=1&filtercombine=and&field1=site&compare1=61&value1=' + cdash.build.sitename_encoded + '&field2=buildname&compare2=61&value2=' + cdash.build.name + '&field3=buildtype&compare3=61&value3=' + cdash.build.type + '&field4=buildstarttime&compare4=84&value4=' + cdash.build.starttime"
+            >
+              <FontAwesomeIcon :icon="FA.faLink" />
+              Show History
+            </a>
+          </div>
+          <div class="tw-p-1">
+            <LoadingIndicator :is-loading="!buildTimeData">
+              <BuildTimeChart :data="buildTimeData" />
+            </LoadingIndicator>
+          </div>
         </div>
-
-        <div class="tw-flex tw-flex-row">
-          <img
-            width="20"
-            height="20"
-            :src="$baseURL + '/img/graph.png'"
-            title="graph"
-          >
-          <a
-            id="toggle_time_graph"
-            class="tw-link tw-link-hover"
-            @click="toggleTimeGraph()"
-          >
-            Show Build Time Graph
-          </a>
-        </div>
-        <div style="text-align: center;">
-          <img
-            v-show="showTimeGraph && graphLoading"
-            :src="$baseURL + '/img/loading.gif'"
-          >
-          <div
-            v-show="showTimeGraph"
-            id="buildtimegrapholder"
-            class="graph_holder"
-          />
-        </div>
-
-        <div class="tw-flex tw-flex-row">
-          <img
-            width="20"
-            height="20"
-            :src="$baseURL + '/img/graph.png'"
-            title="graph"
-          >
-          <a
-            id="toggle_error_graph"
-            class="tw-link tw-link-hover"
-            @click="toggleErrorGraph()"
-          >
-            Show Build Errors Graph
-          </a>
-        </div>
-        <div style="text-align: center;">
-          <img
-            v-show="showErrorGraph && graphLoading"
-            :src="$baseURL + '/img/loading.gif'"
-          >
-          <div
-            v-show="showErrorGraph"
-            id="builderrorsgrapholder"
-            class="graph_holder"
-          />
-        </div>
-
-        <div class="tw-flex tw-flex-row">
-          <img
-            width="20"
-            height="20"
-            :src="$baseURL + '/img/graph.png'"
-            title="graph"
-          >
-          <a
-            id="toggle_warning_graph"
-            class="tw-link tw-link-hover"
-            @click="toggleWarningGraph()"
-          >
-            Show Build Warnings Graph
-          </a>
-        </div>
-        <div style="text-align: center;">
-          <img
-            v-show="showWarningGraph && graphLoading"
-            :src="$baseURL + '/img/loading.gif'"
-          >
-          <div
-            v-show="showWarningGraph"
-            id="buildwarningsgrapholder"
-            class="graph_holder"
-          />
-        </div>
-
-        <div class="tw-flex tw-flex-row">
-          <img
-            width="20"
-            height="20"
-            :src="$baseURL + '/img/graph.png'"
-            title="graph"
-          >
-          <a
-            id="toggle_test_graph"
-            class="tw-link tw-link-hover"
-            @click="toggleTestGraph()"
-          >
-            Show Build Tests Failed Graph
-          </a>
-        </div>
-        <div style="text-align: center;">
-          <img
-            v-show="showTestGraph && graphLoading"
-            :src="$baseURL + '/img/loading.gif'"
-          >
-          <div
-            v-show="showTestGraph"
-            id="buildtestsfailedgrapholder"
-            class="graph_holder"
-          />
-        </div>
-        <br>
       </LoadingIndicator>
     </section>
   </BuildSidebar>
 </template>
 
 <script>
-import $ from 'jquery';
 import {
   faQuestionCircle,
+  faLink,
 } from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 import CodeBox from './shared/CodeBox.vue';
 import LoadingIndicator from './shared/LoadingIndicator.vue';
 import BuildSummaryCard from './shared/BuildSummaryCard.vue';
 import BuildSidebar from './shared/BuildSidebar.vue';
 import gql from 'graphql-tag';
 import Utils from './shared/Utils';
+import BuildTimeChart from './BuildSummaryPage/BuildTimeChart.vue';
+import { DateTime, Duration } from 'luxon';
 
 export default {
   name: 'BuildSummary',
-  components: {BuildSummaryCard, LoadingIndicator, CodeBox, BuildSidebar},
+  components: {BuildTimeChart, BuildSummaryCard, LoadingIndicator, CodeBox, BuildSidebar, FontAwesomeIcon},
 
   props: {
+    projectId: {
+      type: Number,
+      required: true,
+    },
+
     buildId: {
       type: Number,
       required: true,
@@ -676,22 +576,7 @@ export default {
       commentText: '',
 
       // Booleans controlling whether a section should be displayed or not.
-      showErrorGraph: false,
-      showTestGraph: false,
-      showTimeGraph: false,
-      showWarningGraph: false,
       showComments: false,
-
-      // Graph data.
-      graphLoading: false,
-      graphLoaded: false,
-      graphData: [],
-      graphRendered: {
-        'time': false,
-        'errors': false,
-        'warnings': false,
-        'tests': false,
-      },
     };
   },
 
@@ -713,6 +598,9 @@ export default {
             site {
               id
               name
+            }
+            subProject {
+              id
             }
             project {
               id
@@ -852,229 +740,102 @@ export default {
         };
       },
     },
+
+    buildHistory: {
+      query: gql`
+        query($projectId: ID, $filters: ProjectBuildsFiltersMultiFilterInput, $onlyParents: Boolean) {
+          project(id: $projectId) {
+            id
+            builds(
+              first: 100,
+              orderBy: [{column: START_TIME, order: DESC}],
+              filters: $filters
+              onlyParents: $onlyParents
+            ) {
+              edges {
+                node {
+                  id
+                  startTime
+                  configureDuration
+                  buildDuration
+                  testDuration
+                  configureErrorsCount
+                  buildErrorsCount
+                  failedTestsCount
+                }
+              }
+            }
+          }
+        }
+      `,
+      update: data => data?.project?.builds.edges,
+      variables() {
+        return {
+          projectId: this.projectId,
+          filters: this.buildHistoryFilters,
+          onlyParents: this.isParentBuild,
+        };
+      },
+      skip() {
+        return !this.buildData;
+      },
+    },
   },
 
   computed: {
     FA() {
       return {
         faQuestionCircle,
+        faLink,
       };
     },
 
     Utils() {
       return Utils;
     },
-  },
 
-  async mounted () {
-    // Ensure jQuery is globally available before loading plugins
-    window.jQuery = $;
-    await import('flot/dist/es5/jquery.flot');
+    isParentBuild() {
+      return !(this.buildData && this.buildData.subProject);
+    },
+
+    buildHistoryFilters() {
+      if (!this.buildData) {
+        return null;
+      }
+      const build = this.buildData;
+      const conditions = [
+        { eq: { name: build.name } },
+        { eq: { buildType: build.buildType } },
+        { has: { site: { eq: { id: build.site.id } } } },
+        { le: { startTime: build.startTime } },
+      ];
+      if (build.subProject) {
+        conditions.push({ has: { subProject: { eq: { id: build.subProject.id } } } });
+      }
+      return { all: conditions };
+    },
+
+    buildTimeData() {
+      if (!this.buildHistory) {
+        return [];
+      }
+      return [...this.buildHistory].reverse().map(edge => {
+        const build = edge.node;
+        return {
+          buildId: build.id,
+          configureTime: Duration.fromObject({ seconds: Math.max(build.configureDuration, 0) }),
+          buildTime: Duration.fromObject({ seconds: Math.max(build.buildDuration, 0) }),
+          testTime: Duration.fromObject({ seconds: Math.max(build.testDuration, 0) }),
+          startTimestamp: DateTime.fromISO(build.startTime),
+          configureFailed: (build.configureErrorsCount ?? 0) > 0,
+          buildFailed: (build.buildErrorsCount ?? 0) > 0,
+          testFailed: (build.failedTestsCount ?? 0) > 0,
+        };
+      });
+    },
   },
 
   methods: {
-    loadGraphData: function(graphType) {
-      this.graphLoading = true;
-      this.$axios
-        .get(`/api/v1/getPreviousBuilds.php?buildid=${this.buildId}`)
-        .then(response => {
-          this.cdash.buildtimes = [];
-          this.cdash.builderrors = [];
-          this.cdash.buildwarnings = [];
-          this.cdash.testfailed = [];
-          this.cdash.buildids = [];
-          this.cdash.buildhistory = [];
-
-          // Isolate data for each graph.
-          const builds = response.data['builds'];
-          for (let i = 0, len = builds.length; i < len; i++) {
-            const build = builds[i];
-            const t = build['timestamp'];
-
-            this.cdash.buildtimes.push([t, build['time'] / 60]);
-            this.cdash.builderrors.push([t, Math.max(0, build['builderrors'])]);
-            this.cdash.buildwarnings.push([t, Math.max(0, build['buildwarnings'])]);
-            this.cdash.testfailed.push([t, Math.max(0, build['testfailed'])]);
-            this.cdash.buildids[t] = build['id'];
-
-            const history_build = [];
-            history_build['id'] = build['id'];
-            history_build['nfiles'] = Math.max(0, build['nfiles']);
-            history_build['configureerrors'] = Math.max(0, build['configureerrors']);
-            history_build['configurewarnings'] = Math.max(0, build['configurewarnings']);
-            history_build['builderrors'] = Math.max(0, build['builderrors']);
-            history_build['buildwarnings'] = Math.max(0, build['buildwarnings']);
-            history_build['testfailed'] = Math.max(0, build['testfailed']);
-            history_build['starttime'] = build['starttime'];
-            this.cdash.buildhistory.push(history_build);
-          }
-          this.graphLoaded = true;
-          if (graphType) {
-            // Render the graph that triggered this call.
-            this.renderGraph(graphType);
-          }
-        })
-        .finally(() => this.graphLoading = false);
-    },
-
-    renderGraph: function (graphType) {
-      if (this.graphRendered[graphType]) {
-        // Already rendered, abort early.
-        return;
-      }
-
-      // Options shared by all four graphs.
-      let data, element, label;
-      const options = {
-        lines: {show: true},
-        points: {show: true},
-        xaxis: {
-          mode: 'time',
-          timeformat: '%Y/%m/%d %H:%M',
-          timeBase: 'milliseconds',
-        },
-        grid: {
-          backgroundColor: '#fffaff',
-          clickable: true,
-          hoverable: true,
-          hoverFill: '#444',
-          hoverRadius: 4,
-        },
-        selection: {mode: 'x'},
-      };
-
-      switch (graphType) {
-      case 'time':
-        options['colors'] = ['#41A317'];
-        options['yaxis'] = {
-          tickFormatter: function (v, axis) {
-            return `${v.toFixed(axis.tickDecimals)} mins`;
-          },
-        };
-        data = this.cdash.buildtimes;
-        element = '#buildtimegrapholder';
-        label = 'Build Time';
-        break;
-      case 'errors':
-        options['colors'] = ['#FF0000'];
-        options['yaxis'] = {minTickSize: 1};
-        data = this.cdash.builderrors;
-        element = '#builderrorsgrapholder';
-        label = '# errors';
-        break;
-      case 'warnings':
-        options['colors'] = ['#FDD017'];
-        options['yaxis'] = {minTickSize: 1};
-        data = this.cdash.buildwarnings;
-        element = '#buildwarningsgrapholder';
-        label = '# warnings';
-        break;
-      case 'tests':
-        options['colors'] = ['#0000FF'];
-        options['yaxis'] = {minTickSize: 1};
-        data = this.cdash.testfailed;
-        element = '#buildtestsfailedgrapholder';
-        label = '# tests failed';
-        break;
-      default:
-        return;
-      }
-
-      // Render the graph.
-      const plot = $.plot($(element), [{label: label, data: data}],
-        options);
-
-      $(element).bind('selected', (event, area) => {
-        // Set axis range to highlighted section and redraw plot.
-        const axes = plot.getAxes(),
-          xaxis = axes.xaxis.options;
-        xaxis.min = area.x1;
-        xaxis.max = area.x2;
-        plot.clearSelection();
-        plot.setupGrid();
-        plot.draw();
-      });
-
-      const vm = this;
-      $(element).bind('plotclick', (e, pos, item) => {
-        if (item) {
-          plot.highlight(item.series, item.datapoint);
-          const buildid = vm.cdash.buildids[item.datapoint[0]];
-          window.location = `${vm.$baseURL}/builds/${buildid}`;
-        }
-      });
-
-      $(element).bind('dblclick', () => {
-        // Set axis range to null.  This makes all data points visible.
-        const axes = plot.getAxes(),
-          xaxis = axes.xaxis.options,
-          yaxis = axes.yaxis.options;
-        xaxis.min = null;
-        xaxis.max = null;
-        yaxis.min = null;
-        yaxis.max = null;
-
-        // Redraw the plot.
-        plot.setupGrid();
-        plot.draw();
-      });
-
-      this.graphRendered[graphType] = true;
-    },
-
-    // Show/hide our various history graphs.
-    toggleTimeGraph: function() {
-      this.showTimeGraph = !this.showTimeGraph;
-      // Use a 1 ms timeout before loading graph data.
-      // This gives the holder div a chance to become visible before the graph
-      // is drawn.  Otherwise flot has trouble drawing the graph with the
-      // correct dimensions.
-      setTimeout(() => {
-        if (!this.graphLoaded) {
-          this.loadGraphData('time');
-        }
-        else {
-          this.renderGraph('time');
-        }
-      }, 1);
-    },
-
-    toggleErrorGraph: function() {
-      this.showErrorGraph = !this.showErrorGraph;
-      setTimeout(() => {
-        if (!this.graphLoaded) {
-          this.loadGraphData('errors');
-        }
-        else {
-          this.renderGraph('errors');
-        }
-      }, 1);
-    },
-
-    toggleWarningGraph: function() {
-      this.showWarningGraph = !this.showWarningGraph;
-      setTimeout(() => {
-        if (!this.graphLoaded) {
-          this.loadGraphData('warnings');
-        }
-        else {
-          this.renderGraph('warnings');
-        }
-      }, 1);
-    },
-
-    toggleTestGraph: function() {
-      this.showTestGraph = !this.showTestGraph;
-      setTimeout(() => {
-        if (!this.graphLoaded) {
-          this.loadGraphData('tests');
-        }
-        else {
-          this.renderGraph('tests');
-        }
-      }, 1);
-    },
-
     toggleComments: function() {
       this.showComments = !this.showComments;
     },

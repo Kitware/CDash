@@ -64,6 +64,33 @@ class BuildSummaryPageTest extends BrowserTestCase
         });
     }
 
+    public function testShowsHistoryLink(): void
+    {
+        $buildName = 'TestBuild_' . Str::uuid()->toString();
+        $buildType = 'Nightly';
+        $startTime = '2024-03-15T08:30:00+00:00';
+
+        /** @var Build $build */
+        $build = $this->project->builds()->create([
+            'siteid' => $this->site->id,
+            'name' => $buildName,
+            'type' => $buildType,
+            'starttime' => $startTime,
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        $this->browse(function (Browser $browser) use ($build, $buildName, $buildType, $startTime): void {
+            $browser->visit("/builds/{$build->id}")
+                ->waitForText('Show History')
+                ->assertAttributeContains('@build-history-link', 'href', 'project=' . urlencode($this->project->name))
+                ->assertAttributeContains('@build-history-link', 'href', 'value1=' . urlencode($this->site->name))
+                ->assertAttributeContains('@build-history-link', 'href', 'value2=' . $buildName)
+                ->assertAttributeContains('@build-history-link', 'href', 'value3=' . $buildType)
+                ->assertAttributeContains('@build-history-link', 'href', 'value4=' . $startTime)
+            ;
+        });
+    }
+
     public function testShowsComments(): void
     {
         /** @var Build $build */

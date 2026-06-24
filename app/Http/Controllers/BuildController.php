@@ -117,6 +117,7 @@ final class BuildController extends AbstractBuildController
         }
 
         return $this->vue('build-summary', 'Build Summary', [
+            'project-id' => $this->project->Id,
             'build-id' => $this->build->Id,
             'previous-build-id' => $previous_buildid,
             'next-build-id' => $next_buildid,
