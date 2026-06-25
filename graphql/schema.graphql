@@ -363,6 +363,11 @@ type Project {
     onlyParents: Boolean = true @scope
   ): [Build!]! @hasMany(type: CONNECTION)
 
+  "A shortcut to all tests for this project for convenience.  Not guaranteed to be efficient."
+  tests(
+    filters: _ @filter
+  ): [Test!]! @hasManyThrough(type: CONNECTION)
+
   """
   An efficient way to get the number of builds matching a given filter.
   """
