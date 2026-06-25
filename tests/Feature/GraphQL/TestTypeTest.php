@@ -133,6 +133,58 @@ class TestTypeTest extends TestCase
         ]);
     }
 
+    public function testBuildRelationship(): void
+    {
+        $build = $this->project->builds()->create([
+            'name' => 'build1',
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        $build->tests()->create([
+            'testname' => 'test1',
+            'status' => 'passed',
+            'outputid' => $this->test_output->id,
+        ]);
+
+        $this->graphQL('
+            query build($id: ID) {
+                build(id: $id) {
+                    tests {
+                        edges {
+                            node {
+                                name
+                                build {
+                                    id
+                                    name
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        ', [
+            'id' => $build->id,
+        ])->assertExactJson([
+            'data' => [
+                'build' => [
+                    'tests' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'name' => 'test1',
+                                    'build' => [
+                                        'id' => (string) $build->id,
+                                        'name' => 'build1',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+    }
+
     /**
      * @return array<array<string>>
      */
