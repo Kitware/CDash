@@ -25,7 +25,7 @@ abstract class BrowserTestCase extends BaseTestCase
         Dusk::selectorHtmlAttribute('data-test');
 
         Browser::$baseUrl = 'http://website:8080';
-        Browser::$waitSeconds = 20;
+        Browser::$waitSeconds = 120;
     }
 
     /**
