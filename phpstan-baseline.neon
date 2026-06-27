@@ -22867,12 +22867,6 @@ parameters:
 			path: tests/Feature/LoginAndRegistration.php
 
 		-
-			rawMessage: Using nullsafe property access on non-nullable type App\Models\User. Use -> instead.
-			identifier: nullsafe.neverNull
-			count: 1
-			path: tests/Feature/LoginAndRegistration.php
-
-		-
 			rawMessage: '''
 				Call to deprecated method forceRootUrl() of class Illuminate\Routing\UrlGenerator:
 				Use useOrigin
