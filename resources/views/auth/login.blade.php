@@ -59,6 +59,10 @@
                                 </span>
                         @endif
                     </label>
+                    <label class="tw-label tw-cursor-pointer tw-justify-start tw-gap-2">
+                        <input type="checkbox" name="remember" value="1" {{ old('remember') ? 'checked' : '' }} class="tw-checkbox" />
+                        <span class="tw-label-text">Remember me</span>
+                    </label>
                     <button class="tw-btn tw-btn-block tw-mt-2" type="submit">Sign In</button>
                 </form>
             @endif

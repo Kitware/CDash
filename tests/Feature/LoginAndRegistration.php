@@ -81,11 +81,49 @@ class LoginAndRegistration extends TestCase
 
         // Verify that users can login with their username and password.
         $response = $this->post('/login', [
-            'email' => $this->user?->email,
+            'email' => $this->user->email,
             'password' => '12345',
         ]);
         $this->assertModelExists($this->user);
         $this->assertAuthenticatedAs($this->user);
+    }
+
+    public function testLoginFormHasRememberMe(): void
+    {
+        // Verify that the login form displays a "remember me" checkbox.
+        $response = $this->get('/login');
+        $response->assertOk();
+        $response->assertSeeText('Remember me');
+        $response->assertSee('name="remember"', false);
+    }
+
+    public function testUserCanLoginWithRememberMe(): void
+    {
+        $this->user = $this->makeNormalUser(password: '12345');
+        $this->assertModelExists($this->user);
+
+        // Verify that logging in with "remember me" checked sets the recaller cookie.
+        $response = $this->post('/login', [
+            'email' => $this->user->email,
+            'password' => '12345',
+            'remember' => '1',
+        ]);
+        $this->assertAuthenticatedAs($this->user);
+        $response->assertCookie(Auth::guard()->getRecallerName());
+    }
+
+    public function testUserCanLoginWithoutRememberMe(): void
+    {
+        $this->user = $this->makeNormalUser(password: '12345');
+        $this->assertModelExists($this->user);
+
+        // Verify that logging in without "remember me" does not set the recaller cookie.
+        $response = $this->post('/login', [
+            'email' => $this->user->email,
+            'password' => '12345',
+        ]);
+        $this->assertAuthenticatedAs($this->user);
+        $response->assertCookieMissing(Auth::guard()->getRecallerName());
     }
 
     public function testUserCannotLoginWithIncorrectCredentials(): void
