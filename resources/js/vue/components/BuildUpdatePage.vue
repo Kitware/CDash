@@ -36,27 +36,6 @@
               {{ update.priorRevision }}
             </tt>
           </div>
-
-          <a
-            class="tw-link tw-link-hover tw-link-info"
-            @click="toggleGraph()"
-          >
-            <span v-text="showGraph ? 'Hide Activity Graph' : 'Show Activity Graph'" />
-          </a>
-          <div v-if="graphLoading">
-            <img
-              id="spinner"
-              :src="$baseURL + '/img/loading.gif'"
-            >
-          </div>
-          <div v-show="graphLoaded && showGraph">
-            <div id="graphoptions" />
-            <div id="graph" />
-            <div
-              id="graph_holder"
-              class="center-text"
-            />
-          </div>
         </div>
 
         <h3
@@ -82,7 +61,6 @@
 </template>
 
 <script>
-import $ from 'jquery';
 import BuildSummaryCard from './shared/BuildSummaryCard.vue';
 import LoadingIndicator from './shared/LoadingIndicator.vue';
 import BuildSidebar from './shared/BuildSidebar.vue';
@@ -110,24 +88,6 @@ export default {
       type: String,
       required: true,
     },
-  },
-
-  data() {
-    return {
-      // Booleans controlling whether a section should be displayed or not.
-      showGraph: false,
-
-      // Graph data.
-      graphLoading: false,
-      graphLoaded: false,
-      graphData: [],
-      graphRendered: {
-        'time': false,
-        'errors': false,
-        'warnings': false,
-        'tests': false,
-      },
-    };
   },
 
   apollo: {
@@ -252,70 +212,6 @@ export default {
       });
 
       return commits;
-    },
-  },
-
-  async mounted() {
-    // Ensure jQuery is globally available before loading plugins
-    window.jQuery = $;
-    await import('flot/dist/es5/jquery.flot');
-  },
-
-  methods: {
-    toggleGraph: function() {
-      this.showGraph = !this.showGraph;
-      if (!this.graphLoaded) {
-        this.loadGraph();
-      }
-    },
-
-    loadGraph: function() {
-      this.graphLoading = true;
-      this.$axios
-        .get(`/api/v1/buildUpdateGraph.php?buildid=${this.buildId}`)
-        .then(response => {
-          this.initializeGraph(response.data);
-          this.graphLoaded = true;
-        })
-        .finally(() => this.graphLoading = false);
-    },
-
-    initializeGraph: function(data) {
-      const options = {
-        lines: {show: true},
-        points: {show: true},
-        xaxis: {
-          mode: 'time',
-          timeformat: '%Y/%m/%d %H:%M',
-          timeBase: 'milliseconds',
-        },
-        grid: {
-          backgroundColor: '#fffaff',
-          clickable: true,
-          hoverable: true,
-          hoverFill: '#444',
-          hoverRadius: 4,
-        },
-        selection: {mode: 'x'},
-        colors: ['#0000FF', '#dba255', '#919733'],
-      };
-
-      let plot = $.plot($('#graph_holder'), [{label: 'Number of changed files', data: data.data}], options);
-
-      $('#graph_holder').bind('selected', (event, area) => {
-        plot = $.plot($('#graph_holder'), [{
-          label: 'Number of changed files',
-          data: data.data,
-        }], $.extend(true, {}, options, {xaxis: {min: area.x1, max: area.x2}}));
-      });
-
-      const baseURL = this.$baseURL;
-      $('#graph_holder').bind('plotclick', (e, pos, item) => {
-        if (item) {
-          plot.highlight(item.series, item.datapoint);
-          window.location = `${baseURL}/builds/${data.buildids[item.datapoint[0]]}`;
-        }
-      });
     },
   },
 };
