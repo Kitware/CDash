@@ -265,6 +265,7 @@ final class BuildController extends AbstractBuildController
         ]);
 
         $response = [];
+        $response['deprecated'] = 'This endpoint will be removed in the next major version of CDash.';
         $response['data'] = [];
         $response['buildids'] = [];
 
