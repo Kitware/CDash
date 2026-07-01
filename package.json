@@ -42,7 +42,7 @@
     "echarts": "^6.1.0",
     "flot": "^4.2.6",
     "graphql": "^16.14.0",
-    "graphql-tag": "^2.12.6",
+    "graphql-tag": "^2.12.7",
     "jquery": "^3.7",
     "jquery-ui-dist": "^1.13.3",
     "jquery.cookie": "^1.4.1",
