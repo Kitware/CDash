@@ -37,7 +37,7 @@
     "nuwave/lighthouse": "6.65.0",
     "pear/archive_tar": "1.6.0",
     "php-di/php-di": "7.1.1",
-    "ramsey/uuid": "4.9.2",
+    "ramsey/uuid": "4.9.3",
     "sebastian/diff": "7.0.0",
     "socialiteproviders/github": "4.1.0",
     "socialiteproviders/gitlab": "4.1.0",
