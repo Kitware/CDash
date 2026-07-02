@@ -652,7 +652,7 @@ class BazelJSONHandler extends AbstractSubmissionHandler
         if (array_key_exists('', $this->Builds)) {
             $this->ParentBuild = $this->Builds[''];
             unset($this->Builds['']);
-            \App\Models\Build::where('id', $this->ParentBuild->Id)->update(['parentid' => Build::PARENT_BUILD]);
+            \App\Models\Build::whereKey($this->ParentBuild->Id)->update(['parentid' => Build::PARENT_BUILD]);
             $this->ParentBuild->SetParentId(Build::PARENT_BUILD);
         }
 

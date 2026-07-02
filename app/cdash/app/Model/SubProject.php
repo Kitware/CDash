@@ -420,7 +420,7 @@ class SubProject
         // If the dependency already exists, exit early
         $dependency_exists = EloquentSubProject::findOrFail($this->Id)
             ->children()
-            ->where('id', $subprojectid)
+            ->whereKey($subprojectid)
             ->exists();
         if ($dependency_exists) {
             return;

@@ -35,7 +35,7 @@ final class ProjectInvitationController extends AbstractController
             abort(401, 'Membership is managed by LDAP for this project.');
         }
 
-        if ($user->projects()->where('id', $user_invite->project_id)->exists()) {
+        if ($user->projects()->whereKey($user_invite->project_id)->exists()) {
             $user_invite->deleteOrFail();
             abort(401, 'You are already registered for this project.');
         }

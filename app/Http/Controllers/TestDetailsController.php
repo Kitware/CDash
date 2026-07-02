@@ -44,7 +44,7 @@ final class TestDetailsController extends AbstractBuildController
             abort(400, 'A valid test was not specified.');
         }
 
-        $buildtest = Test::where('id', '=', $buildtestid)->first();
+        $buildtest = Test::whereKey($buildtestid)->first();
         if ($buildtest === null) {
             // Create a dummy project object to prevent information leakage between different error cases
             $project = new Project();
