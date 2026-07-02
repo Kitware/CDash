@@ -93,11 +93,9 @@ class ProjectTypeTest extends TestCase
     }
 
     /**
-     * @return array{
-     *     array{
-     *         string, mixed, string, mixed,
-     *     }
-     * }
+     * @return array<array{
+     *     string, mixed, string, mixed,
+     * }>
      */
     public static function fieldValues(): array
     {
@@ -199,11 +197,9 @@ class ProjectTypeTest extends TestCase
     }
 
     /**
-     * @return array{
-     *     array{
-     *         string|null, array<string>
-     *     }
-     * }
+     * @return array<array{
+     *     string|null, array<string>,
+     * }>
      */
     public static function projectAccessByUser(): array
     {
@@ -242,11 +238,9 @@ class ProjectTypeTest extends TestCase
     }
 
     /**
-     * @return array{
-     *     array{
-     *         string|null, string, bool
-     *     }
-     * }
+     * @return array<array{
+     *     string|null, string, bool,
+     * }>
      */
     public static function perProjectAccess(): array
     {

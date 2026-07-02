@@ -21,11 +21,9 @@ class BuildErrorTypeTest extends TestCase
     use DatabaseTransactions;
 
     /**
-     * @return array{
-     *     array{
-     *         string, mixed, string, mixed,
-     *     }
-     * }
+     * @return array<array{
+     *     string, mixed, string, mixed,
+     * }>
      *
      * @throws RandomException
      */

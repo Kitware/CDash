@@ -195,14 +195,12 @@ class CreateProjectTest extends TestCase
     }
 
     /**
-     * @return array{
-     *     array{
-     *         string,
-     *         string,
-     *         string,
-     *         bool
-     *     }
-     * }
+     * @return array<array{
+     *     string,
+     *     string,
+     *     string,
+     *     bool,
+     * }>
      */
     public static function createProjectVisibilityRules(): array
     {
@@ -272,14 +270,12 @@ class CreateProjectTest extends TestCase
     }
 
     /**
-     * @return array{
-     *     array{
-     *         string,
-     *         bool,
-     *         bool,
-     *         bool
-     *     }
-     * }
+     * @return array<array{
+     *     string,
+     *     bool,
+     *     bool,
+     *     bool,
+     * }>
      */
     public static function authenticatedSubmissionRules(): array
     {

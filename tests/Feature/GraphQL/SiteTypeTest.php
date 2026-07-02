@@ -347,11 +347,9 @@ class SiteTypeTest extends TestCase
     }
 
     /**
-     * @return array{
-     *     array{
-     *         array<string,mixed>
-     *     }
-     * }
+     * @return array<array{
+     *     array<string, mixed>
+     * }>
      */
     public static function nullabilityTestCases(): array
     {

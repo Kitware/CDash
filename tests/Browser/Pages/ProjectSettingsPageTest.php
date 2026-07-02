@@ -85,11 +85,9 @@ class ProjectSettingsPageTest extends BrowserTestCase
     }
 
     /**
-     * @return array{
-     *     array{
-     *         string, mixed, string, mixed,
-     *     }
-     * }
+     * @return array<array{
+     *     string, mixed, string, mixed, string,
+     * }>
      */
     public static function canChangeGeneralTabFieldCases(): array
     {
