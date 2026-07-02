@@ -1537,12 +1537,6 @@ parameters:
 			path: app/Http/Controllers/UserController.php
 
 		-
-			rawMessage: 'Parameter #1 $password of function password_hash expects string, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/UserController.php
-
-		-
 			rawMessage: 'Parameter #1 $password of function password_verify expects string, mixed given.'
 			identifier: argument.type
 			count: 1
@@ -2280,6 +2274,12 @@ parameters:
 		-
 			rawMessage: 'Parameter #2 $offset of function substr expects int, float|int given.'
 			identifier: argument.type
+			count: 1
+			path: app/Http/Submission/Handlers/BuildHandler.php
+
+		-
+			rawMessage: 'Property App\Http\Submission\Handlers\BuildHandler::$BuildCommands (array<array{command: App\Models\BuildCommand, targetname?: string, measurements?: array<App\Models\BuildMeasurement>}>) does not accept non-empty-array<array{command: App\Models\BuildCommand, targetname?: string, measurements?: array<App\Models\BuildMeasurement>, outputs?: array<App\Models\BuildCommandOutput>}>.'
+			identifier: assign.propertyType
 			count: 1
 			path: app/Http/Submission/Handlers/BuildHandler.php
 
@@ -5605,7 +5605,7 @@ parameters:
 			path: app/Utils/RepositoryUtils.php
 
 		-
-			rawMessage: 'Offset 1 might not exist on array{}|array{non-falsy-string, numeric-string}.'
+			rawMessage: 'Offset 1 might not exist on array{}|array{non-falsy-string, decimal-int-string}.'
 			identifier: offsetAccess.notFound
 			count: 1
 			path: app/Utils/RepositoryUtils.php
@@ -7602,6 +7602,12 @@ parameters:
 		-
 			rawMessage: 'Method CDash\Model\Build::GetDiffWithPreviousBuild() return type has no value type specified in iterable type array.'
 			identifier: missingType.iterableValue
+			count: 1
+			path: app/cdash/app/Model/Build.php
+
+		-
+			rawMessage: 'Method CDash\Model\Build::GetErrorDifferences() should return array{builderrorspositive: int, builderrorsnegative: int, buildwarningspositive: int, buildwarningsnegative: int, configureerrors: int, configurewarnings: int, testpassedpositive: int, testpassednegative: int, ...}|false but returns non-empty-array<''builderrorsnegative''|''builderrorspositive''|''buildwarningsnegati…''|''buildwarningspositi…''|''configureerrors''|''configurewarnings''|''testfailednegative''|''testfailedpositive''|''testnotrunnegative''|''testnotrunpositive''|''testpassednegative''|''testpassedpositive'', int>.'
+			identifier: return.type
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -12895,7 +12901,7 @@ parameters:
 			path: app/cdash/public/api/v1/index.php
 
 		-
-			rawMessage: 'Offset ''loctested'' might not exist on array{}|array{thresholdgreen?: int|null, thresholdyellow?: float, label?: string, loctested?: int, locuntested?: int, position?: int, coverages?: list<array{buildid: int, childlink?: non-falsy-string, percentage: float, locuntested: int, loctested: int, datefull: int|false, date: string, dateelapsed: string, ...}|array{buildid: int, childlink?: non-falsy-string, percentage: float, locuntested: int, loctested: int, percentagediff: float, locuntesteddiff: int, loctesteddiff: int<1, max>, ...}>}.'
+			rawMessage: 'Offset ''loctested'' might not exist on array{thresholdgreen?: int|null, thresholdyellow?: float, label?: string, loctested?: int, locuntested?: int, position?: int, coverages?: list<array{buildid: int, childlink?: non-falsy-string, percentage: float, locuntested: int, loctested: int, datefull: int|false, date: string, dateelapsed: string, ...}|array{buildid: int, childlink?: non-falsy-string, percentage: float, locuntested: int, loctested: int, percentagediff: float, locuntesteddiff: int, loctesteddiff: int<1, max>, ...}>}.'
 			identifier: offsetAccess.notFound
 			count: 2
 			path: app/cdash/public/api/v1/index.php
@@ -12907,13 +12913,13 @@ parameters:
 			path: app/cdash/public/api/v1/index.php
 
 		-
-			rawMessage: 'Offset ''locuntested'' might not exist on array{}|array{thresholdgreen?: int|null, thresholdyellow?: float, label?: string, loctested?: int, locuntested?: int, position?: int, coverages?: list<array{buildid: int, childlink?: non-falsy-string, percentage: float, locuntested: int, loctested: int, datefull: int|false, date: string, dateelapsed: string, ...}|array{buildid: int, childlink?: non-falsy-string, percentage: float, locuntested: int, loctested: int, percentagediff: float, locuntesteddiff: int, loctesteddiff: int<1, max>, ...}>}.'
+			rawMessage: 'Offset ''locuntested'' might not exist on array{thresholdgreen?: int|null, thresholdyellow?: float, label?: string, loctested?: int, locuntested?: int, position?: int, coverages?: list<array{buildid: int, childlink?: non-falsy-string, percentage: float, locuntested: int, loctested: int, datefull: int|false, date: string, dateelapsed: string, ...}|array{buildid: int, childlink?: non-falsy-string, percentage: float, locuntested: int, loctested: int, percentagediff: float, locuntesteddiff: int, loctesteddiff: int<1, max>, ...}>}.'
 			identifier: offsetAccess.notFound
 			count: 1
 			path: app/cdash/public/api/v1/index.php
 
 		-
-			rawMessage: 'Offset ''thresholdgreen'' might not exist on array{}|array{thresholdgreen?: int|null, thresholdyellow?: float, label?: string, loctested?: int, locuntested?: int, position?: int, coverages?: list<array{buildid: int, childlink?: non-falsy-string, percentage: float, locuntested: int, loctested: int, datefull: int|false, date: string, dateelapsed: string, ...}|array{buildid: int, childlink?: non-falsy-string, percentage: float, locuntested: int, loctested: int, percentagediff: float, locuntesteddiff: int, loctesteddiff: int<1, max>, ...}>}.'
+			rawMessage: 'Offset ''thresholdgreen'' might not exist on array{thresholdgreen?: int|null, thresholdyellow?: float, label?: string, loctested?: int, locuntested?: int, position?: int, coverages?: list<array{buildid: int, childlink?: non-falsy-string, percentage: float, locuntested: int, loctested: int, datefull: int|false, date: string, dateelapsed: string, ...}|array{buildid: int, childlink?: non-falsy-string, percentage: float, locuntested: int, loctested: int, percentagediff: float, locuntesteddiff: int, loctesteddiff: int<1, max>, ...}>}.'
 			identifier: offsetAccess.notFound
 			count: 1
 			path: app/cdash/public/api/v1/index.php
@@ -15094,7 +15100,7 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			rawMessage: 'Offset 1 on array{non-falsy-string, numeric-string} in isset() always exists and is not nullable.'
+			rawMessage: 'Offset 1 on array{non-falsy-string, decimal-int-string} in isset() always exists and is not nullable.'
 			identifier: isset.offset
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
