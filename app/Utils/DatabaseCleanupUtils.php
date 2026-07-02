@@ -11,7 +11,6 @@ use App\Models\Configure;
 use App\Models\CoverageFile;
 use App\Models\Image;
 use App\Models\Note;
-use App\Models\TestOutput;
 use App\Models\UploadFile;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
@@ -156,12 +155,6 @@ class DatabaseCleanupUtils
         })->delete();
 
         Image::whereHas('tests.build', function (Builder $query) use ($buildids): void {
-            $query->whereIn('build.id', $buildids);
-        })->whereDoesntHave('tests.build', function (Builder $query) use ($buildids): void {
-            $query->whereNotIn('build.id', $buildids);
-        })->delete();
-
-        TestOutput::whereHas('tests.build', function (Builder $query) use ($buildids): void {
             $query->whereIn('build.id', $buildids);
         })->whereDoesntHave('tests.build', function (Builder $query) use ($buildids): void {
             $query->whereNotIn('build.id', $buildids);
