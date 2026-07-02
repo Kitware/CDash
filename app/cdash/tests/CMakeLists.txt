@@ -753,5 +753,29 @@ set_tests_properties(/Feature/SubProjectDependencies PROPERTIES DEPENDS notespar
 add_php_test(misassignedconfigure)
 set_tests_properties(misassignedconfigure PROPERTIES DEPENDS /Feature/SubProjectDependencies)
 
+# These tests should go last so the removal of builds doesn't clobber other tests
+# TODO: Some of these dependencies may not be necessary.
+add_php_test(deletesubproject)
+set_property(TEST deletesubproject PROPERTY DEPENDS
+  cypress/e2e/manage-overview
+  cypress/e2e/manage-build-group
+  cypress/e2e/manage-sub-project
+  cypress/e2e/sort-index
+  cypress/e2e/expected-build
+  cypress/e2e/remove-build
+  cypress/e2e/view-sub-projects
+  cypress/e2e/query-tests
+  cypress/e2e/filter-labels
+  cypress/e2e/done-build
+  cypress/e2e/sub-project-group-order
+  cypress/e2e/calendar
+  cypress/e2e/colorblind
+  cypress/e2e/daterange
+  cypress/e2e/sites
+  cypress/e2e/tests
+)
+
+add_php_test(removebuilds)
+set_tests_properties(removebuilds PROPERTIES DEPENDS deletesubproject)
+
 add_subdirectory(ctest)
-add_subdirectory(autoremovebuilds)
