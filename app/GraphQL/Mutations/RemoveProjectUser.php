@@ -38,7 +38,7 @@ final class RemoveProjectUser extends AbstractMutation
                 $userToRemove->id !== $user->id
                 && $user->cannot('removeUser', $project)
             )
-            || !$project->users()->where('id', $userToRemove->id)->exists()
+            || !$project->users()->whereKey($userToRemove->id)->exists()
         ) {
             throw new GraphQLMutationException('This action is unauthorized.');
         }

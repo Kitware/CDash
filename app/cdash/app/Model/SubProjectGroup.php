@@ -249,7 +249,7 @@ class SubProjectGroup
         // Make sure there's only one default group per project.
         if ($this->IsDefault) {
             EloquentSubProjectGroup::where('projectid', $this->ProjectId)
-                ->where('id', '!=', $this->Id)
+                ->whereKeyNot($this->Id)
                 ->update([
                     'is_default' => 0,
                 ]);

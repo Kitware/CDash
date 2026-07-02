@@ -34,7 +34,7 @@ class ProjectPolicy
         }
 
         // Private projects can only be viewed by members who are explicitly added.
-        if ($project->public === Project::ACCESS_PRIVATE && $project->users()->where('id', $user->id)->exists()) {
+        if ($project->public === Project::ACCESS_PRIVATE && $project->users()->whereKey($user->id)->exists()) {
             return true;
         }
 
@@ -68,7 +68,7 @@ class ProjectPolicy
         }
 
         // Users can edit projects they administer
-        if ($project->administrators()->where('id', $user->id)->exists()) {
+        if ($project->administrators()->whereKey($user->id)->exists()) {
             return true;
         }
 
@@ -83,7 +83,7 @@ class ProjectPolicy
         }
 
         // Can't change the role for users who aren't in the project...
-        if (!$project->users()->where('id', $userToChange->id)->exists()) {
+        if (!$project->users()->whereKey($userToChange->id)->exists()) {
             return false;
         }
 
@@ -133,12 +133,12 @@ class ProjectPolicy
             return false;
         }
 
-        return !$project->users()->where('id', $currentUser->id)->exists();
+        return !$project->users()->whereKey($currentUser->id)->exists();
     }
 
     public function leave(User $currentUser, Project $project): bool
     {
-        return !$this->isLdapControlledMembership($project) && $project->users()->where('id', $currentUser->id)->exists();
+        return !$this->isLdapControlledMembership($project) && $project->users()->whereKey($currentUser->id)->exists();
     }
 
     public function createPinnedTestMeasurement(User $currentUser, Project $project): bool
@@ -168,12 +168,12 @@ class ProjectPolicy
 
     public function createAuthToken(User $currentUser, Project $project): bool
     {
-        return $currentUser->admin || $project->users()->where('id', $currentUser->id)->exists();
+        return $currentUser->admin || $project->users()->whereKey($currentUser->id)->exists();
     }
 
     public function createCoverageDiff(User $user, Project $project): bool
     {
-        return $user->admin || $project->users()->where('id', $user->id)->exists();
+        return $user->admin || $project->users()->whereKey($user->id)->exists();
     }
 
     private function isLdapControlledMembership(Project $project): bool
