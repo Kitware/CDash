@@ -32,11 +32,9 @@ class CommentTypeTest extends TestCase
     }
 
     /**
-     * @return array{
-     *     array{
-     *         string, mixed, string, mixed,
-     *     }
-     * }
+     * @return array<array{
+     *     string, mixed, string, mixed,
+     * }>
      */
     public static function fieldValues(): array
     {

@@ -103,11 +103,9 @@ class BuildDynamicAnalysisIdPageTest extends BrowserTestCase
     }
 
     /**
-     * @return array{
-     *     array{
-     *         string, string
-     *     }
-     * }
+     * @return array<array{
+     *     string, string,
+     * }>
      */
     public static function statuses(): array
     {
