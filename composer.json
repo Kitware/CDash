@@ -48,7 +48,7 @@
     "ext-zip": "*",
     "fakerphp/faker": "1.24.1",
     "friendsofphp/php-cs-fixer": "3.95.10",
-    "larastan/larastan": "3.9.6",
+    "larastan/larastan": "3.10.0",
     "laravel/dusk": "8.6.0",
     "mockery/mockery": "1.6.12",
     "phpstan/extension-installer": "1.4.3",
