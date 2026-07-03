@@ -35,10 +35,6 @@ body {
  font-family: Courier;
 }
 
-.cdashfilter {
-  font-size: 11px;
-}
-
 .cdash-link a:link, .cdash-link a:visited, .cdash-link a:active{
  font-size:14px;
  color:#3B5998; /* 4A4A4A */
@@ -49,14 +45,6 @@ body {
 .cdash-link a:hover{
  /* color:#000000; */
  text-decoration: underline;
-}
-
-.paddr {
-  margin: 0px;
-  padding-top: 0px;
-  padding-right: 11px;
-  padding-bottom: 0px;
-  padding-left: 0px;
 }
 
 .na { background-color : #cccccc; }
@@ -276,9 +264,6 @@ div.tab_help{
   float:right;
   width:320px;
 }
-span.help_content{
-  display:none;
-}
 #wizard{
     margin-left:auto;
     margin-right:auto;
@@ -292,18 +277,6 @@ span.help_content{
       padding:2px 5px;
       color:#333;
       display:none;
-}
-
-span.lineNoCov {
-  background-color : #ff6666;
-}
-
-span.lineCov {
-  background-color: #669933; /* #92ca89*/
-}
-
-span.lineNum {
-  background-color : #fdba76;
 }
 
 .valuewithsub{
@@ -446,16 +419,6 @@ div#div_showfilters {
   text-align: center;
 }
 
-#showold {
-  padding-right: 5px;
-  padding-top: 5px;
-}
-
-.ui-tooltip-blue .ui-tooltip-content{
-  border-color: #244FB1 !important;
-  color: #000000 !important;
-}
-
 /** CALENDAR */
 div#calendar{
   position:absolute;
@@ -503,20 +466,8 @@ img {
   padding-right: 3px;
 }
 
-textarea {
-  font-size: 14px;
-  font-family: Courier New, Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono, monospace;
-}
-
 .parent_row {
  font-weight: bold;
-}
-
-.compiler-output {
-  font-size: 14px;
-  font-family: Courier New, Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono, monospace;
-  overflow-x:scroll;
-  max-height:350px;
 }
 
 .nobr {
@@ -636,12 +587,6 @@ textarea {
 }
 .spacer {
   margin-top: 20px;
-}
-.spacer-bottom {
-  margin-bottom: 20px;
-}
-.spacer50 {
-  margin-top: 50px;
 }
 
 .pad4 {
@@ -1267,10 +1212,3 @@ background-color: #adcae6
   clear:both;
   display:table;
 }
-
-/* https://github.com/flot/flot/issues/1708. Needed to stop entirely black background on legend */
-.legendLayer .background {
-  fill: rgba(255, 255, 255, 0.85);
-  stroke: rgba(0, 0, 0, 0.85);
-  stroke-width: 1;
-  }
