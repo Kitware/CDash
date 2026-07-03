@@ -27,7 +27,6 @@ mix.css('resources/css/cdash.css', 'public/assets/css/cdash.css');
 mix.css('resources/css/colorblind.css', 'public/assets/css/colorblind.css');
 
 mix.css('resources/css/legacy.css', 'public/assets/css/legacy.css');
-mix.css('resources/css/legacy_vue.css', 'public/assets/css/legacy_vue.css');
 mix.sass('resources/sass/app.scss', 'public/assets/css/app.css');
 
 // Boilerplate.
