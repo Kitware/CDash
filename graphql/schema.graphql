@@ -967,6 +967,8 @@ type Test {
 
   output: String @with(relation: "testOutput")
 
+  build: Build! @belongsTo
+
   testMeasurements(
     filters: _ @filter
   ): [TestMeasurement!]! @hasMany
