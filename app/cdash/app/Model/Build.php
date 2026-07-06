@@ -319,7 +319,7 @@ class Build
             return false;
         }
 
-        return EloquentBuild::where('id', $this->Id)->update([
+        return EloquentBuild::whereKey($this->Id)->update([
             'endtime' => $end_time,
         ]) > 0;
     }
@@ -684,7 +684,7 @@ class Build
             return false;
         }
 
-        return EloquentBuild::where('id', $this->Id)->exists();
+        return EloquentBuild::whereKey($this->Id)->exists();
     }
 
     public function Save()
@@ -811,7 +811,7 @@ class Build
         $this->SetParentId($this->LookupParentBuildId());
         $this->UpdateParentTestNumbers($newFailed, $newNotRun, $newPassed);
 
-        EloquentBuild::where('id', $this->Id)->update([
+        EloquentBuild::whereKey($this->Id)->update([
             'testnotrun' => $numberTestsNotRun,
             'testfailed' => $numberTestsFailed,
             'testpassed' => $numberTestsPassed,
@@ -1225,7 +1225,7 @@ class Build
             }
         }
 
-        return EloquentBuild::where('id', $this->Id)->update([
+        return EloquentBuild::whereKey($this->Id)->update([
             'testtimestatusfailed' => $testtimestatusfailed,
         ]) > 0;
     }
@@ -1656,7 +1656,7 @@ class Build
             return;
         }
 
-        EloquentBuild::where('id', (int) $this->Id)->update([
+        EloquentBuild::whereKey((int) $this->Id)->update([
             'configurewarnings' => $numWarnings,
         ]);
     }
@@ -1668,7 +1668,7 @@ class Build
             return;
         }
 
-        EloquentBuild::where('id', (int) $this->Id)->update([
+        EloquentBuild::whereKey((int) $this->Id)->update([
             'configureerrors' => $numErrors,
         ]);
 
@@ -1762,7 +1762,7 @@ class Build
 
         DB::transaction(function () use ($field, $duration, $update_parent): void {
             // Update duration of specified step for this build.
-            EloquentBuild::where('id', $this->Id)
+            EloquentBuild::whereKey($this->Id)
                 ->increment("{$field}duration", $duration);
 
             if (!$update_parent) {
@@ -1773,7 +1773,7 @@ class Build
             $this->SetParentId($this->LookupParentBuildId());
             if ($this->ParentId > 0) {
                 // Update duration of specified step for this build.
-                EloquentBuild::where('id', $this->ParentId)
+                EloquentBuild::whereKey($this->ParentId)
                     ->increment("{$field}duration", $duration);
             }
         }, 5);
@@ -1825,7 +1825,7 @@ class Build
     /** Set (or unset) the done bit in the database for this build. */
     public function MarkAsDone(bool $done): void
     {
-        EloquentBuild::where('id', $this->Id)->update([
+        EloquentBuild::whereKey($this->Id)->update([
             'done' => $done,
         ]);
     }
@@ -2152,7 +2152,7 @@ class Build
 
         // Add the subproject relationship if necessary.
         if ($this->SubProjectId) {
-            EloquentBuild::where('id', $this->Id)->update(['subprojectid' => $this->SubProjectId]);
+            EloquentBuild::whereKey($this->Id)->update(['subprojectid' => $this->SubProjectId]);
         }
     }
 

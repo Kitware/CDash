@@ -16,7 +16,7 @@ if (isset($project)) {
 
     $currentDateString = Carbon::parse($eloquentProject->builds()->max('starttime'))->toDateString();
 
-    $userInProject = auth()->user() !== null && $eloquentProject->users()->where('id', auth()->user()->id)->exists();
+    $userInProject = auth()->user() !== null && $eloquentProject->users()->whereKey(auth()->user()->id)->exists();
 }
 
 $showHeaderNav = isset($build);

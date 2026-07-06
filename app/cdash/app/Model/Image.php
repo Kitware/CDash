@@ -50,7 +50,7 @@ class Image
     /** Check if exists */
     private function Exists(): bool
     {
-        $model = EloquentImage::where('id', (int) $this->Id)
+        $model = EloquentImage::whereKey((int) $this->Id)
             ->orWhere('checksum', $this->Checksum)
             ->first();
         if ($model === null) {

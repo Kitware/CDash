@@ -228,7 +228,7 @@ Route::permanentRedirect('/test/{id}', url('/tests/{id}'));
 Route::get('/testDetails.php', function (Request $request) {
     $buildid = $request->query('build');
     $testid = $request->query('test');
-    $buildtest = Test::where('buildid', $buildid)->where('id', $testid)->first();
+    $buildtest = Test::where('buildid', $buildid)->whereKey($testid)->first();
     if ($buildtest !== null) {
         return redirect("/tests/{$buildtest->id}", 301);
     }
