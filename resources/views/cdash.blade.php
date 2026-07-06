@@ -38,7 +38,7 @@
         @if(isset($daisyui) && $daisyui === true)
             <link rel="stylesheet" type="text/css" href="{{ asset(mix('assets/css/app.css')) }}"/>
         @else
-            <link rel="stylesheet" type="text/css" href="{{ asset(mix('assets/css/legacy_vue.css')) }}"/>
+            <link rel="stylesheet" type="text/css" href="{{ asset(mix('assets/css/legacy.css')) }}"/>
         @endif
         <script src="{{ asset(mix('assets/js/app.js')) }}" type="text/javascript" defer></script>
     @else
