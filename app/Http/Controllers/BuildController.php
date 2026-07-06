@@ -197,9 +197,10 @@ final class BuildController extends AbstractBuildController
 
         /** @var ?UploadFile $file */
         $file = EloquentBuild::findOrFail($build_id)->uploadedFiles()->find($file_id);
+        $filePath = "upload/{$file?->sha1sum}";
 
         // Validate that the file is associated with the build.
-        if ($file === null) {
+        if ($file === null || Storage::missing($filePath)) {
             abort(404, 'File not found');
         }
 
@@ -207,7 +208,7 @@ final class BuildController extends AbstractBuildController
         // 1) Render text and images in browser (as opposed to forcing a download).
         // 2) Download other files to the proper filename (not a numeric identifier).
         // 3) Support downloading files that are larger than the PHP memory_limit.
-        $fp = Storage::readStream("upload/{$file->sha1sum}");
+        $fp = Storage::readStream($filePath);
         if ($fp === null) {
             abort(404, 'File not found');
         }
