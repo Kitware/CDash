@@ -3,6 +3,7 @@
 namespace Tests\Feature\GraphQL;
 
 use App\Models\Project;
+use App\Models\TestOutput;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
@@ -1267,5 +1268,190 @@ class ProjectTypeTest extends TestCase
                 ],
             ],
         ]);
+    }
+
+    public function testTestsRelationship(): void
+    {
+        $output = TestOutput::create([
+            'path' => 'a',
+            'command' => 'b',
+            'output' => 'c',
+        ]);
+
+        // First build with two tests.
+        $this->projects['public1']->builds()->create([
+            'name' => 'build1',
+            'uuid' => Str::uuid(),
+        ])->tests()->createMany([
+            [
+                'testname' => 'test1',
+                'status' => 'passed',
+                'outputid' => $output->id,
+            ],
+            [
+                'testname' => 'test2',
+                'status' => 'failed',
+                'outputid' => $output->id,
+            ],
+        ]);
+
+        // Second build with a single test.
+        $this->projects['public1']->builds()->create([
+            'name' => 'build2',
+            'uuid' => Str::uuid(),
+        ])->tests()->create([
+            'testname' => 'test3',
+            'status' => 'notrun',
+            'outputid' => $output->id,
+        ]);
+
+        // A test belonging to a different project should not be returned.
+        $this->projects['public2']->builds()->create([
+            'name' => 'build3',
+            'uuid' => Str::uuid(),
+        ])->tests()->create([
+            'testname' => 'test4',
+            'status' => 'passed',
+            'outputid' => $output->id,
+        ]);
+
+        $this->graphQL('
+            query($projectId: ID!) {
+                project(id: $projectId) {
+                    tests {
+                        edges {
+                            node {
+                                name
+                                status
+                            }
+                        }
+                    }
+                }
+            }
+        ', [
+            'projectId' => $this->projects['public1']->id,
+        ])->assertExactJson([
+            'data' => [
+                'project' => [
+                    'tests' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'name' => 'test1',
+                                    'status' => 'PASSED',
+                                ],
+                            ],
+                            [
+                                'node' => [
+                                    'name' => 'test2',
+                                    'status' => 'FAILED',
+                                ],
+                            ],
+                            [
+                                'node' => [
+                                    'name' => 'test3',
+                                    'status' => 'NOT_RUN',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+
+        $output->delete();
+    }
+
+    /**
+     * Tests that a project with no builds (and therefore no tests) returns an
+     * empty tests relationship.
+     */
+    public function testTestsRelationshipEmpty(): void
+    {
+        $this->graphQL('
+            query($projectId: ID!) {
+                project(id: $projectId) {
+                    tests {
+                        edges {
+                            node {
+                                name
+                            }
+                        }
+                    }
+                }
+            }
+        ', [
+            'projectId' => $this->projects['public1']->id,
+        ])->assertExactJson([
+            'data' => [
+                'project' => [
+                    'tests' => [
+                        'edges' => [],
+                    ],
+                ],
+            ],
+        ]);
+    }
+
+    /**
+     * Tests that the project's tests relationship can be filtered.
+     */
+    public function testTestsRelationshipWithFilters(): void
+    {
+        $output = TestOutput::create([
+            'path' => 'a',
+            'command' => 'b',
+            'output' => 'c',
+        ]);
+
+        $this->projects['public1']->builds()->create([
+            'name' => 'build1',
+            'uuid' => Str::uuid(),
+        ])->tests()->createMany([
+            [
+                'testname' => 'passing_test',
+                'status' => 'passed',
+                'outputid' => $output->id,
+            ],
+            [
+                'testname' => 'failing_test',
+                'status' => 'failed',
+                'outputid' => $output->id,
+            ],
+        ]);
+
+        $this->graphQL('
+            query($projectId: ID!) {
+                project(id: $projectId) {
+                    tests(filters: { eq: { status: FAILED } }) {
+                        edges {
+                            node {
+                                name
+                                status
+                            }
+                        }
+                    }
+                }
+            }
+        ', [
+            'projectId' => $this->projects['public1']->id,
+        ])->assertExactJson([
+            'data' => [
+                'project' => [
+                    'tests' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'name' => 'failing_test',
+                                    'status' => 'FAILED',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+
+        $output->delete();
     }
 }
