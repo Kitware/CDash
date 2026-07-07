@@ -369,7 +369,7 @@ class BuildGroup
                 ])->first();
             }
 
-            $newGroup?->builds()->attach($oldbuild);
+            $newGroup?->builds()->syncWithoutDetaching($oldbuild);
         }
 
         // We delete the buildgroup
