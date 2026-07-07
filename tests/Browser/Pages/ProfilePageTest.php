@@ -61,6 +61,7 @@ class ProfilePageTest extends BrowserTestCase
         $this->browse(function (Browser $browser): void {
             $browser->loginAs($this->users['admin'])
                 ->visit('/profile')
+                ->waitFor('@fname-input')
                 ->assertInputValue('@fname-input', 'admin')
                 ->assertInputValue('@lname-input', 'admin')
                 ->assertInputValue('@email-input', 'admin@example.com')
@@ -85,6 +86,7 @@ class ProfilePageTest extends BrowserTestCase
             $browser->logout()
                 ->loginAs($user)
                 ->visit('/profile')
+                ->waitFor('@fname-input')
 
                 ->assertInputValue('@fname-input', 'first name here')
                 ->clear('@fname-input')
@@ -109,6 +111,7 @@ class ProfilePageTest extends BrowserTestCase
             $browser->logout()
                 ->loginAs($user)
                 ->visit('/profile')
+                ->waitFor('@fname-input')
                 ->assertInputValue('@fname-input', 'admin')
                 ->assertInputValue('@lname-input', 'admin')
                 ->assertInputValue('@email-input', 'admin@example.com')
@@ -123,6 +126,7 @@ class ProfilePageTest extends BrowserTestCase
         $this->browse(function (Browser $browser): void {
             $browser->loginAs($this->users['admin'])
                 ->visit('/profile')
+                ->waitFor('@oldpasswd-input')
                 ->assertInputValue('@oldpasswd-input', '')
                 ->assertInputValue('@passwd-input', '')
                 ->assertInputValue('@passwd2-input', '')
@@ -145,6 +149,7 @@ class ProfilePageTest extends BrowserTestCase
         $this->browse(function (Browser $browser) use ($password): void {
             $browser->loginAs($this->users['admin'])
                 ->visit('/profile')
+                ->waitFor('@oldpasswd-input')
                 ->assertInputValue('@oldpasswd-input', '')
                 ->assertInputValue('@passwd-input', '')
                 ->assertInputValue('@passwd2-input', '')
@@ -167,6 +172,7 @@ class ProfilePageTest extends BrowserTestCase
         $this->browse(function (Browser $browser) use ($password): void {
             $browser->loginAs($this->users['admin'])
                 ->visit('/profile')
+                ->waitFor('@oldpasswd-input')
                 ->assertInputValue('@oldpasswd-input', '')
                 ->assertInputValue('@passwd-input', '')
                 ->assertInputValue('@passwd2-input', '')
@@ -185,6 +191,7 @@ class ProfilePageTest extends BrowserTestCase
             $browser->logout()
                 ->loginAs($user)
                 ->visit('/profile')
+                ->waitFor('@oldpasswd-input')
                 ->assertInputValue('@oldpasswd-input', '')
                 ->assertInputValue('@passwd-input', '')
                 ->assertInputValue('@passwd2-input', '')
