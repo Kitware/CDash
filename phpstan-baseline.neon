@@ -22522,6 +22522,24 @@ parameters:
 			path: tests/Browser/Pages/UsersPageTest.php
 
 		-
+			rawMessage: 'Call to internal method PHPUnit\Framework\TestCase::name() from outside its root namespace PHPUnit.'
+			identifier: method.internal
+			count: 1
+			path: tests/BrowserTestCase.php
+
+		-
+			rawMessage: 'Method Tests\BrowserTestCase::captureFailuresFor() has parameter $browsers with generic class Illuminate\Support\Collection but does not specify its types: TKey, TValue'
+			identifier: missingType.generics
+			count: 1
+			path: tests/BrowserTestCase.php
+
+		-
+			rawMessage: 'Parameter #1 $callback of method Illuminate\Support\Collection<(int|string),mixed>::each() expects callable(mixed, int|string): mixed, Closure(Laravel\Dusk\Browser, int): void given.'
+			identifier: argument.type
+			count: 1
+			path: tests/BrowserTestCase.php
+
+		-
 			rawMessage: Access to an undefined property CDash\Model\Build::$Endime.
 			identifier: property.notFound
 			count: 2

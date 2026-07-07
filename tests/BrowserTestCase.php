@@ -48,4 +48,29 @@ abstract class BrowserTestCase extends BaseTestCase
             )
         );
     }
+
+    /**
+     * Capture screenshots and console logs for failed tests.
+     *
+     * @param Collection $browsers
+     */
+    protected function captureFailuresFor($browsers): void
+    {
+        $browsers->each(function (Browser $browser, int $key): void {
+            $name = str_replace('\\', '_', static::class) . '_' . $this->name();
+            $screenshotName = 'failure-' . $name . '-' . $key;
+            $browser->screenshot($screenshotName);
+            $browser->storeConsoleLog($screenshotName);
+
+            $screenshotPath = base_path("tests/Browser/screenshots/{$screenshotName}.png");
+            if (file_exists($screenshotPath)) {
+                fwrite(STDOUT, "\n<CTestMeasurementFile name=\"TestImage\" type=\"image/png\">$screenshotPath</CTestMeasurementFile>\n");
+            }
+
+            $consoleLogPath = base_path("tests/Browser/console/{$screenshotName}.log");
+            if (file_exists($consoleLogPath)) {
+                fwrite(STDOUT, "\n<CTestMeasurementFile name=\"ConsoleLog\" type=\"text/plain\">$consoleLogPath</CTestMeasurementFile>\n");
+            }
+        });
+    }
 }
