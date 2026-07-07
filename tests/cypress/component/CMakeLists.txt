@@ -8,7 +8,7 @@ function(add_cypress_component_test TestName)
   )
   # Cypress tries to put stuff in our home directory, which doesn't work for /var/www.
   set_tests_properties(cypress/component/${TestName} PROPERTIES
-    ENVIRONMENT "HOME=${CDash_BINARY_DIR};"
+    ENVIRONMENT "HOME=${CDash_BINARY_DIR};FORCE_COLOR=1"
     DISABLED "$<STREQUAL:${CDASH_IMAGE},ubi>"
     RESOURCE_LOCK "cypress"
     PROCESSORS 2
