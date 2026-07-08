@@ -12,8 +12,10 @@ module.exports = defineConfig({
   defaultCommandTimeout: 120000,
   retries: 2,
   e2e: {
-    setupNodeEvents() {
-      // implement node event listeners here
+    setupNodeEvents(on) {
+      on('after:screenshot', (details) => {
+        console.log(`\n<CTestMeasurementFile name="TestImage" type="image/png">${details.path}</CTestMeasurementFile>\n`);
+      });
     },
     baseUrl: 'http://localhost:8080',
     specPattern: 'tests/cypress/e2e/**/*.cy.{js,jsx,ts,tsx}',
@@ -24,6 +26,11 @@ module.exports = defineConfig({
     specPattern: 'tests/cypress/component/**/*.cy.{js,jsx,ts,tsx}',
     supportFile: 'tests/cypress/support/component.js',
     indexHtmlFile: 'tests/cypress/support/component-index.html',
+    setupNodeEvents(on) {
+      on('after:screenshot', (details) => {
+        console.log(`\n<CTestMeasurementFile name="TestImage" type="image/png">${details.path}</CTestMeasurementFile>\n`);
+      });
+    },
     devServer: {
       framework: 'vue',
       bundler: 'webpack',
