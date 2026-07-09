@@ -29,6 +29,7 @@ const app = Vue.createApp({
     BuildFilesPage: Vue.defineAsyncComponent(() => import('./components/BuildFilesPage.vue')),
     BuildTargetsPage: Vue.defineAsyncComponent(() => import('./components/BuildTargetsPage.vue')),
     BuildInstrumentationPage: Vue.defineAsyncComponent(() => import('./components/BuildInstrumentationPage.vue')),
+    BuildCommentsPage: Vue.defineAsyncComponent(() => import('./components/BuildCommentsPage.vue')),
     BuildBuildPage: Vue.defineAsyncComponent(() => import('./components/BuildBuildPage.vue')),
     CoverageFilePage: Vue.defineAsyncComponent(() => import('./components/CoverageFilePage.vue')),
     BuildCoveragePage: Vue.defineAsyncComponent(() => import('./components/BuildCoveragePage.vue')),

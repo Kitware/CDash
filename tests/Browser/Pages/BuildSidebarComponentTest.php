@@ -14,21 +14,25 @@ use App\Models\Project;
 use App\Models\Site;
 use App\Models\SiteInformation;
 use App\Models\UploadFile;
+use App\Models\User;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Laravel\Dusk\Browser;
 use Tests\BrowserTestCase;
 use Tests\Traits\CreatesProjects;
 use Tests\Traits\CreatesSites;
+use Tests\Traits\CreatesUsers;
 
 class BuildSidebarComponentTest extends BrowserTestCase
 {
     use CreatesProjects;
     use CreatesSites;
+    use CreatesUsers;
     use UpdatesSiteInformation;
 
     private Project $project;
     private Site $site;
+    private User $user;
 
     public function setUp(): void
     {
@@ -38,12 +42,15 @@ class BuildSidebarComponentTest extends BrowserTestCase
 
         $this->site = $this->makeSite();
         $this->updateSiteInfoIfChanged($this->site, new SiteInformation([]));
+
+        $this->user = $this->makeNormalUser();
     }
 
     public function tearDown(): void
     {
         $this->project->delete();
         $this->site->delete();
+        $this->user->delete();
 
         parent::tearDown();
     }
@@ -73,6 +80,29 @@ class BuildSidebarComponentTest extends BrowserTestCase
 
         $this->browse(function (Browser $browser) use ($build): void {
             $this->assertNotDisabled($browser, "/builds/{$build->id}", '@sidebar-summary', "/builds/{$build->id}");
+        });
+    }
+
+    public function testCommentsItem(): void
+    {
+        /** @var Build $build */
+        $build = $this->project->builds()->create([
+            'siteid' => $this->site->id,
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        $this->browse(function (Browser $browser) use ($build): void {
+            $this->assertNotDisabled($browser, "/builds/{$build->id}", '@sidebar-comments', "/builds/{$build->id}/comments");
+
+            $build->comments()->create([
+                'userid' => $this->user->id,
+                'text' => 'test comment',
+            ]);
+
+            $browser->visit("/builds/{$build->id}")
+                ->waitFor('@sidebar-loaded')
+                ->assertSeeIn('@sidebar-comments', '1');
         });
     }
 

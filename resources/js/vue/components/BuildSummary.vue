@@ -418,79 +418,6 @@
         </table>
         <br>
 
-        <!-- Display comments for this build -->
-        <LoadingIndicator :is-loading="!comments">
-          <div
-            v-if="comments.length > 0 || cdash.user.id > 0"
-            class="title-divider"
-          >
-            Comments ({{ comments.length }})
-          </div>
-
-          <div v-if="comments.length > 0">
-            <div v-for="{node: comment} in comments">
-              <b>{{ comment.user.firstname }} {{ comment.user.lastname }}</b> {{ Utils.formatRelativeTimestamp(comment.timestamp) }}
-              <CodeBox :text="comment.text" />
-              <hr>
-            </div>
-            <br>
-          </div>
-
-          <div v-if="cdash.user.id > 0">
-            <!-- Add Comments -->
-            <div class="tw-flex tw-flex-row">
-              <img
-                width="20"
-                height="20"
-                :src="$baseURL + '/img/document.png'"
-                title="graph"
-              >
-              <a
-                id="toggle_comments"
-                class="tw-link tw-link-hover"
-                @click="toggleComments()"
-              >
-                Add a comment to this Build
-              </a>
-            </div>
-            <div
-              v-show="showComments"
-              id="new_comment_div"
-            >
-              <table>
-                <tbody>
-                  <tr>
-                    <td><b>Comment:</b></td>
-                    <td>
-                      <textarea
-                        id="comment_text"
-                        v-model="commentText"
-                        class="tw-textarea tw-textarea-bordered"
-                        cols="50"
-                        rows="5"
-                      />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td />
-                    <td>
-                      <button
-                        id="add_comment"
-                        class="tw-btn"
-                        :disabled="!commentText"
-                        @click="addComment()"
-                      >
-                        Add Comment
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <br>
-          </div>
-        </LoadingIndicator>
-
         <!-- Graphs -->
         <div class="tw-border tw-border-base-300 tw-rounded-lg tw-overflow-hidden">
           <div class="tw-flex tw-items-center tw-justify-between tw-px-3 tw-py-1 tw-bg-base-200">
@@ -521,7 +448,6 @@ import {
   faLink,
 } from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
-import CodeBox from './shared/CodeBox.vue';
 import LoadingIndicator from './shared/LoadingIndicator.vue';
 import BuildSummaryCard from './shared/BuildSummaryCard.vue';
 import BuildSidebar from './shared/BuildSidebar.vue';
@@ -532,7 +458,7 @@ import { DateTime, Duration } from 'luxon';
 
 export default {
   name: 'BuildSummary',
-  components: {BuildTimeChart, BuildSummaryCard, LoadingIndicator, CodeBox, BuildSidebar, FontAwesomeIcon},
+  components: {BuildTimeChart, BuildSummaryCard, LoadingIndicator, BuildSidebar, FontAwesomeIcon},
 
   props: {
     projectId: {
@@ -572,11 +498,6 @@ export default {
       cdash: {},
       loading: true,
       errored: false,
-
-      commentText: '',
-
-      // Booleans controlling whether a section should be displayed or not.
-      showComments: false,
     };
   },
 
@@ -711,36 +632,6 @@ export default {
         this.loading = false;
       },
     },
-    comments: {
-      query: gql`
-        query($buildId: ID) {
-          build(id: $buildId) {
-            id
-            comments {
-              edges {
-                node {
-                  id
-                  text
-                  timestamp
-                  user {
-                    id
-                    firstname
-                    lastname
-                  }
-                }
-              }
-            }
-          }
-        }
-      `,
-      update: data => data?.build?.comments?.edges,
-      variables() {
-        return {
-          buildId: this.buildId,
-        };
-      },
-    },
-
     buildHistory: {
       query: gql`
         query($projectId: ID, $filters: ProjectBuildsFiltersMultiFilterInput, $onlyParents: Boolean) {
@@ -836,41 +727,6 @@ export default {
   },
 
   methods: {
-    toggleComments: function() {
-      this.showComments = !this.showComments;
-    },
-
-    addComment: function() {
-      this.$apollo
-        .mutate({
-          mutation: gql`
-            mutation createComment($input: CreateCommentInput!) {
-              createComment(input: $input) {
-                comment {
-                  id
-                }
-              }
-            }
-          `,
-          variables: {
-            input: {
-              buildId: this.buildId,
-              text: this.commentText,
-            },
-          },
-        })
-        .then(() => {
-          // Add the newly created comment to our list.
-          this.$apollo.queries.comments.refetch();
-          this.commentText = '';
-          this.showComments = false;
-        })
-        .catch(error => {
-          // Display the error.
-          this.cdash.error = error;
-          console.log(error);
-        });
-    },
   },
 };
 </script>

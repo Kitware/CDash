@@ -14,6 +14,15 @@
           data-test="sidebar-summary"
         />
         <BuildSidebarItem
+          :href="`${$baseURL}/builds/${buildId}/comments`"
+          title="Comments"
+          :icon="FA.faComments"
+          :selected="activeTab === 'comments'"
+          :disabled="commentsDisabled"
+          :badges="commentsBadges"
+          data-test="sidebar-comments"
+        />
+        <BuildSidebarItem
           :href="`${$baseURL}/builds/${buildId}/update`"
           title="Update"
           :icon="FA.faCodePullRequest"
@@ -122,6 +131,7 @@ import {
   faNoteSticky,
   faGaugeHigh,
   faBullseye,
+  faComments,
 } from '@fortawesome/free-solid-svg-icons';
 
 export default {
@@ -154,6 +164,11 @@ export default {
         query($buildid: ID) {
           build(id: $buildid) {
             id
+            comments {
+              pageInfo {
+                total
+              }
+            }
             updateStep {
               id
             }
@@ -226,9 +241,13 @@ export default {
         faNoteSticky,
         faGaugeHigh,
         faBullseye,
+        faComments,
       };
     },
     summaryDisabled() {
+      return !this.build;
+    },
+    commentsDisabled() {
       return !this.build;
     },
     updateDisabled() {
@@ -267,6 +286,16 @@ export default {
     },
     targetsDisabled() {
       return !this.build || !this.build.targets || this.build.targets.pageInfo.total === 0;
+    },
+    commentsBadges() {
+      if (!this.build || !this.build.comments || this.build.comments.pageInfo.total === 0) {
+        return [];
+      }
+      return [{
+        count: this.build.comments.pageInfo.total,
+        colorClass: 'tw-bg-info',
+        textClass: 'tw-text-info-content',
+      }];
     },
     errorsBadges() {
       if (!this.build) {
