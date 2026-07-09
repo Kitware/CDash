@@ -127,6 +127,16 @@ final class BuildController extends AbstractBuildController
         ]);
     }
 
+    public function comments(int $build_id): View
+    {
+        $this->setBuildById($build_id);
+
+        return $this->vue('build-comments-page', 'Comments', [
+            'build-id' => $this->build->Id,
+            'user-id' => Auth::id() ?? 0,
+        ]);
+    }
+
     public function update(int $build_id): View
     {
         $this->setBuildById($build_id);

@@ -86,6 +86,8 @@ Route::get('/displayImage.php', function (Request $request) {
 
 Route::get('/builds/{id}', 'BuildController@summary')
     ->whereNumber('id');
+Route::get('/builds/{id}/comments', 'BuildController@comments')
+    ->whereNumber('id');
 Route::permanentRedirect('/build/{id}', url('/builds/{id}'));
 Route::get('/buildSummary.php', function (Request $request) {
     $buildid = $request->query('buildid');

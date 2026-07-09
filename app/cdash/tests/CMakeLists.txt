@@ -429,6 +429,8 @@ add_browser_test(/Browser/Pages/BuildDynamicAnalysisIdPageTest)
 
 add_browser_test(/Browser/Pages/BuildSummaryPageTest)
 
+add_browser_test(/Browser/Pages/BuildCommentsPageTest)
+
 add_browser_test(/Browser/Pages/BuildSidebarComponentTest)
 
 add_browser_test(/Browser/Pages/ProjectSettingsPageTest)
