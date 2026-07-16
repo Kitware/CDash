@@ -28,6 +28,13 @@ abstract class BrowserTestCase extends BaseTestCase
         Browser::$waitSeconds = 20;
     }
 
+    public function tearDown(): void
+    {
+        $this->browse(fn (Browser $browser) => $browser->logout());
+
+        parent::tearDown();
+    }
+
     /**
      * Create the RemoteWebDriver instance.
      */
