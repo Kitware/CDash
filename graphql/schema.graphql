@@ -1165,7 +1165,7 @@ type Site {
   longitude: String! @filterable
 
   "Every edit of this site's information."
-  information: [SiteInformation!]! @hasMany(type: CONNECTION) @orderBy(column: "timestamp", direction: DESC)
+  information: [SiteInformation!]! @hasMany(type: CONNECTION) @orderBy(column: "timestamp", direction: DESC) @orderBy(column: "id", direction: DESC)
 
   "The most recent information we have about this site."
   # TODO: Figure out how to support the date parameter. Perhaps it would be better to use a scope instead.
