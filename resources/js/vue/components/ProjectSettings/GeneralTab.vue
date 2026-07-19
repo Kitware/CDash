@@ -362,7 +362,8 @@
       </FormSection>
 
       <FormSection
-        title="Tests"
+        title="Testing"
+        section-id="Testing"
       >
         <CheckboxField
           v-model="form.enableTestTiming"
@@ -415,6 +416,14 @@
           type="number"
           min="0"
           test-id="test-time-std-multiplier-input"
+        />
+
+        <TextAreaField
+          v-model="form.notRunSkippedDetailsRegex"
+          :validation-error="validationErrors?.notRunSkippedDetailsRegex?.[0]"
+          label="Skipped Not Run Test Details Pattern"
+          description="One pattern per line. When a not-run test's details match a pattern, it is shown in green. Glob wildcards (*) are supported; the default *skip* matches skip case-insensitively."
+          test-id="not-run-skipped-details-regex-input"
         />
       </FormSection>
 
@@ -536,6 +545,7 @@ export default {
         fileUploadLimit: 50,
         showCoverageCode: true,
         banner: '',
+        notRunSkippedDetailsRegex: '*skip*',
       },
       validationErrors: {},
       fatalError: null,
@@ -579,6 +589,7 @@ export default {
             fileUploadLimit
             showCoverageCode
             banner
+            notRunSkippedDetailsRegex
           }
         }
       `,

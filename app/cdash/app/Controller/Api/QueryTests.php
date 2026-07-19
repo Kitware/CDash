@@ -20,6 +20,7 @@ namespace CDash\Controller\Api;
 use App\Models\PinnedTestMeasurement;
 use App\Models\Project as EloquentProject;
 use App\Models\TestMeasurement;
+use App\Utils\TestDisplay;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\Project;
@@ -375,6 +376,7 @@ class QueryTests extends ResultsApi
                 ", $query_params);
 
         // Rows of test data to be displayed to the user.
+        $notRunSkippedDetailsRegex = EloquentProject::findOrFail($this->project->Id)->notrun_skipped_details_regex;
         $tests = [];
         foreach ($rows as $row) {
             $test = [];
@@ -423,7 +425,11 @@ class QueryTests extends ResultsApi
 
                 case 'notrun':
                     $test['status'] = 'Not Run';
-                    $test['statusclass'] = 'warning';
+                    $test['statusclass'] = TestDisplay::statusColorClass(
+                        'notrun',
+                        $row->details,
+                        $notRunSkippedDetailsRegex,
+                    );
                     break;
             }
 

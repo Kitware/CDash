@@ -516,6 +516,7 @@ export default {
             buildWarningsCount
             failedTestsCount
             notRunTestsCount
+            notRunTestsWarningCount
             site {
               id
               name
@@ -539,6 +540,7 @@ export default {
             buildWarningsCount
             failedTestsCount
             notRunTestsCount
+            notRunTestsWarningCount
           }
           nextBuild: build(id: $nextId) @include(if: $hasNext) {
             id
@@ -548,6 +550,7 @@ export default {
             buildWarningsCount
             failedTestsCount
             notRunTestsCount
+            notRunTestsWarningCount
           }
         }
       `,
@@ -576,7 +579,7 @@ export default {
             nerrors: Math.max(0, prev.buildErrorsCount),
             nwarnings: Math.max(0, prev.buildWarningsCount),
             ntestfailed: Math.max(0, prev.failedTestsCount),
-            ntestnotrun: Math.max(0, prev.notRunTestsCount),
+            ntestnotrun: Math.max(0, prev.notRunTestsWarningCount),
           };
         }
         else {
@@ -592,7 +595,7 @@ export default {
             nerrors: Math.max(0, next.buildErrorsCount),
             nwarnings: Math.max(0, next.buildWarningsCount),
             ntestfailed: Math.max(0, next.failedTestsCount),
-            ntestnotrun: Math.max(0, next.notRunTestsCount),
+            ntestnotrun: Math.max(0, next.notRunTestsWarningCount),
           };
         }
         else {
@@ -618,7 +621,7 @@ export default {
 
         this.cdash.test = {
           nfailed: Math.max(0, build.failedTestsCount),
-          nnotrun: Math.max(0, build.notRunTestsCount),
+          nnotrun: Math.max(0, build.notRunTestsWarningCount),
         };
 
         this.cdash.projectname_encoded = encodeURIComponent(build.project.name);

@@ -166,6 +166,8 @@ class ProjectTypeTest extends TestCase
             ['showcoveragecode', false, 'showCoverageCode', false],
             ['banner', 'test', 'banner', 'test'],
             ['banner', null, 'banner', null],
+            ['notrun_skipped_details_regex', '*skip*', 'notRunSkippedDetailsRegex', '*skip*'],
+            ['notrun_skipped_details_regex', 'Disabled', 'notRunSkippedDetailsRegex', 'Disabled'],
         ];
     }
 
