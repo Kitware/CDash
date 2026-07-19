@@ -77,4 +77,65 @@ describe('CodeBox', () => {
     cy.get('a').eq(0).should('have.attr', 'href', 'https://example.com');
     cy.get('a').eq(1).should('have.attr', 'href', 'https://example.com');
   });
+
+  it('shows the copy button by default when text is present', () => {
+    cy.mount(CodeBox, {
+      props: {
+        text: 'some text',
+      },
+    });
+
+    cy.get('[data-test="copy-button"]').should('exist');
+  });
+
+  it('hides the copy button when showCopyButton is false', () => {
+    cy.mount(CodeBox, {
+      props: {
+        text: 'some text',
+        showCopyButton: false,
+      },
+    });
+
+    cy.get('[data-test="copy-button"]').should('not.exist');
+  });
+
+  it('hides the copy button when the text is empty', () => {
+    cy.mount(CodeBox, {
+      props: {
+        text: '',
+      },
+    });
+
+    cy.get('[data-test="copy-button"]').should('not.exist');
+  });
+
+  it('hides the copy button when the text becomes empty', () => {
+    cy.mount(CodeBox, {
+      props: {
+        text: 'some text',
+      },
+    }).then(({ wrapper }) => {
+      cy.get('[data-test="copy-button"]').should('exist').then(() => {
+        wrapper.setProps({ text: '' });
+        cy.get('[data-test="copy-button"]').should('not.exist');
+      });
+    });
+  });
+
+  it('copies the text to the clipboard when the copy button is clicked', () => {
+    const code = 'const message = "Hello, World!";';
+
+    cy.mount(CodeBox, {
+      props: {
+        text: code,
+      },
+    }).then(() => {
+      cy.window().then((win) => {
+        cy.stub(win.navigator.clipboard, 'writeText').resolves().as('writeText');
+      });
+
+      cy.get('[data-test="copy-button"]').click();
+      cy.get('@writeText').should('have.been.calledWith', code);
+    });
+  });
 });
