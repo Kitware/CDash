@@ -17,17 +17,15 @@ namespace App\Http\Submission\Handlers;
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-use App\Http\Submission\Traits\UpdatesSiteInformation;
 use App\Models\Site;
 use App\Models\SiteInformation;
+use App\Services\SiteService;
 use App\Utils\SubmissionUtils;
 use App\Utils\TestCreator;
 use CDash\Model\Project;
 
 class TestingJUnitHandler extends AbstractXmlHandler
 {
-    use UpdatesSiteInformation;
-
     private int $StartTimeStamp;
     private int $EndTimeStamp;
     // Should we update the end time of the build?
@@ -95,7 +93,7 @@ class TestingJUnitHandler extends AbstractXmlHandler
                 }
             }
 
-            $this->updateSiteInfoIfChanged($this->Site, $siteInformation);
+            SiteService::updateSiteInfoIfChanged($this->Site, $siteInformation);
 
             $this->Build->SiteId = $this->Site->id;
             $this->Build->Name = $attributes['BUILDNAME'];

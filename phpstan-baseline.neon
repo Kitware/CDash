@@ -22999,12 +22999,6 @@ parameters:
 			path: tests/Feature/RouteAccessTest.php
 
 		-
-			rawMessage: 'You should use assertSame() instead of assertEquals(), because both values are scalars of the same type'
-			identifier: phpunit.assertEquals
-			count: 6
-			path: tests/Feature/Traits/UpdatesSiteInformationTest.php
-
-		-
 			rawMessage: Cannot access property $admin on App\Models\User|null.
 			identifier: property.nonObject
 			count: 1

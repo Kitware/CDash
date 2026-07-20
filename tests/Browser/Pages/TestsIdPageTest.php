@@ -2,7 +2,6 @@
 
 namespace Tests\Browser\Pages;
 
-use App\Http\Submission\Traits\UpdatesSiteInformation;
 use App\Models\Build;
 use App\Models\Image;
 use App\Models\Project;
@@ -10,6 +9,7 @@ use App\Models\Site;
 use App\Models\SiteInformation;
 use App\Models\Test;
 use App\Models\TestOutput;
+use App\Services\SiteService;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Laravel\Dusk\Browser;
@@ -23,7 +23,6 @@ class TestsIdPageTest extends BrowserTestCase
 {
     use CreatesProjects;
     use CreatesSites;
-    use UpdatesSiteInformation;
 
     private Project $project;
     private Build $build;
@@ -35,7 +34,7 @@ class TestsIdPageTest extends BrowserTestCase
 
         $this->project = $this->makePublicProject();
         $this->site = $this->makeSite();
-        $this->updateSiteInfoIfChanged($this->site, new SiteInformation([]));
+        SiteService::updateSiteInfoIfChanged($this->site, new SiteInformation([]));
 
         $this->build = $this->project->builds()->create([
             'siteid' => $this->site->id,

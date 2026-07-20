@@ -2,13 +2,13 @@
 
 namespace Tests\Browser\Pages;
 
-use App\Http\Submission\Traits\UpdatesSiteInformation;
 use App\Models\Build;
 use App\Models\BuildUpdate;
 use App\Models\BuildUpdateFile;
 use App\Models\Project;
 use App\Models\Site;
 use App\Models\SiteInformation;
+use App\Services\SiteService;
 use Illuminate\Support\Str;
 use Laravel\Dusk\Browser;
 use Tests\BrowserTestCase;
@@ -19,7 +19,6 @@ class BuildUpdatePageTest extends BrowserTestCase
 {
     use CreatesProjects;
     use CreatesSites;
-    use UpdatesSiteInformation;
 
     private Project $project;
 
@@ -36,7 +35,7 @@ class BuildUpdatePageTest extends BrowserTestCase
         $this->project = $this->makePublicProject();
 
         $this->site = $this->makeSite();
-        $this->updateSiteInfoIfChanged($this->site, new SiteInformation([]));
+        SiteService::updateSiteInfoIfChanged($this->site, new SiteInformation([]));
 
         $this->update = BuildUpdate::factory()->create();
 

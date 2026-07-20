@@ -1,17 +1,19 @@
 <?php
 
-namespace App\Http\Submission\Traits;
+declare(strict_types=1);
+
+namespace App\Services;
 
 use App\Models\Site;
 use App\Models\SiteInformation;
 
-trait UpdatesSiteInformation
+class SiteService extends AbstractService
 {
     /**
      * Saves a new site information record if $newInformation is different from the most recent
      * information recorded for the site.
      */
-    protected function updateSiteInfoIfChanged(Site $site, SiteInformation $newInformation): void
+    public static function updateSiteInfoIfChanged(Site $site, SiteInformation $newInformation): void
     {
         if ($site->information()->doesntExist()) {
             // No existing information, so save whatever we're given, regardless of whether it's all null.

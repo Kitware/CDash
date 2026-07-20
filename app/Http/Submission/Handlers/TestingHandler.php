@@ -2,10 +2,10 @@
 
 namespace App\Http\Submission\Handlers;
 
-use App\Http\Submission\Traits\UpdatesSiteInformation;
 use App\Models\Site;
 use App\Models\SiteInformation;
 use App\Models\TestMeasurement;
+use App\Services\SiteService;
 use App\Utils\SubmissionUtils;
 use App\Utils\TestCreator;
 use Carbon\Carbon;
@@ -29,7 +29,6 @@ use CDash\Submission\CommitAuthorHandlerTrait;
 class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterface, CommitAuthorHandlerInterface
 {
     use CommitAuthorHandlerTrait;
-    use UpdatesSiteInformation;
 
     protected static ?string $schema_file = '/app/Validators/Schemas/Test.xsd';
     private int $StartTimeStamp = 0;
@@ -122,7 +121,7 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
             if (empty($this->BuildName)) {
                 $this->BuildName = '(empty)';
             }
-            $this->updateSiteInfoIfChanged($this->Site, $siteInformation);
+            SiteService::updateSiteInfoIfChanged($this->Site, $siteInformation);
         } elseif ($name === 'SUBPROJECT') {
             $this->SubProjectName = $attributes['NAME'];
             if (!array_key_exists($this->SubProjectName, $this->SubProjects)) {
