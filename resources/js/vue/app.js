@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import * as Vue from 'vue';
 import axios from 'axios';
 import { ApolloClient, InMemoryCache } from '@apollo/client/core';
@@ -40,7 +39,7 @@ const app = Vue.createApp({
   },
 });
 
-app.config.globalProperties.$baseURL = $('#app').attr('data-app-url');
+app.config.globalProperties.$baseURL = document.getElementById('app').getAttribute('data-app-url');
 
 axios.defaults.baseURL = app.config.globalProperties.$baseURL;
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
