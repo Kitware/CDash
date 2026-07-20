@@ -12,7 +12,4 @@ module.exports = {
   transformIgnorePatterns: [
     '/node_modules/(?!echarts|zrender|jquery)/',
   ],
-  moduleNameMapper: {
-    'flot': '<rootDir>/tests/__mocks__/fileMock.js',
-  },
 };
