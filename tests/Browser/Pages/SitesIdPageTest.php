@@ -10,13 +10,11 @@ use Illuminate\Support\Str;
 use Laravel\Dusk\Browser;
 use Tests\BrowserTestCase;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesSites;
 use Tests\Traits\CreatesUsers;
 
 class SitesIdPageTest extends BrowserTestCase
 {
     use CreatesProjects;
-    use CreatesSites;
     use CreatesUsers;
 
     /**
@@ -56,7 +54,7 @@ class SitesIdPageTest extends BrowserTestCase
 
     public function testMostRecentSiteDetails(): void
     {
-        $this->sites['site1'] = $this->makeSite();
+        $this->sites['site1'] = Site::factory()->create();
         $this->sites['site1']->information()->createMany([
             [
                 'totalphysicalmemory' => 5678,
@@ -100,7 +98,7 @@ class SitesIdPageTest extends BrowserTestCase
 
     public function testProjectsList(): void
     {
-        $this->sites['site1'] = $this->makeSite();
+        $this->sites['site1'] = Site::factory()->create();
 
         $this->projects['public1'] = $this->makePublicProject();
         $this->projects['public1']->description = Str::uuid()->toString();
@@ -133,7 +131,7 @@ class SitesIdPageTest extends BrowserTestCase
 
     public function testHistoryList(): void
     {
-        $this->sites['site1'] = $this->makeSite();
+        $this->sites['site1'] = Site::factory()->create();
         $this->sites['site1']->information()->forceCreate([
             'timestamp' => Carbon::now()->subMinutes(5),
             'totalphysicalmemory' => 5678,
@@ -196,7 +194,7 @@ class SitesIdPageTest extends BrowserTestCase
      */
     public function testHistoryDeduplication(): void
     {
-        $this->sites['site1'] = $this->makeSite();
+        $this->sites['site1'] = Site::factory()->create();
         $this->sites['site1']->information()->forceCreate([
             'timestamp' => Carbon::now()->subMinutes(5),
             'totalphysicalmemory' => 5678,
@@ -245,7 +243,7 @@ class SitesIdPageTest extends BrowserTestCase
 
     public function testSiteWithNoInformation(): void
     {
-        $this->sites['site1'] = $this->makeSite();
+        $this->sites['site1'] = Site::factory()->create();
 
         $this->browse(function (Browser $browser): void {
             $browser->visit("/sites/{$this->sites['site1']->id}")
@@ -258,7 +256,7 @@ class SitesIdPageTest extends BrowserTestCase
 
     public function testClaimSiteFunctionality(): void
     {
-        $this->sites['site1'] = $this->makeSite();
+        $this->sites['site1'] = Site::factory()->create();
         $this->users['user'] = $this->makeNormalUser();
 
         $this->browse(function (Browser $browser): void {
@@ -296,7 +294,7 @@ class SitesIdPageTest extends BrowserTestCase
 
     public function testEditSiteDescription(): void
     {
-        $this->sites['site1'] = $this->makeSite();
+        $this->sites['site1'] = Site::factory()->create();
         $this->sites['site1']->information()->create();
         $this->users['user'] = $this->makeNormalUser();
 

@@ -11,13 +11,11 @@ use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesSites;
 use Tests\Traits\CreatesUsers;
 
 class CreateCoverageDiffMutationTest extends TestCase
 {
     use CreatesProjects;
-    use CreatesSites;
     use CreatesUsers;
     use DatabaseTransactions;
 
@@ -30,7 +28,7 @@ class CreateCoverageDiffMutationTest extends TestCase
         parent::setUp();
         $this->project = $this->makePublicProject();
         $this->user = $this->makeNormalUser();
-        $this->site = $this->makeSite();
+        $this->site = Site::factory()->create();
     }
 
     private function coverageDiffMutation(): string

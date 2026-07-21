@@ -14,12 +14,10 @@ use Illuminate\Support\Str;
 use Laravel\Dusk\Browser;
 use Tests\BrowserTestCase;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesSites;
 
 class BuildConfigurePageTest extends BrowserTestCase
 {
     use CreatesProjects;
-    use CreatesSites;
 
     private Project $project;
 
@@ -57,7 +55,7 @@ class BuildConfigurePageTest extends BrowserTestCase
             'groupid' => $buildgroup2->id,
         ]);
 
-        $this->site = $this->makeSite();
+        $this->site = Site::factory()->create();
         SiteService::updateSiteInfoIfChanged($this->site, new SiteInformation([]));
     }
 

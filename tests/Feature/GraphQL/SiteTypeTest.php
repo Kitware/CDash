@@ -11,13 +11,11 @@ use Illuminate\Support\Str;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesSites;
 use Tests\Traits\CreatesUsers;
 
 class SiteTypeTest extends TestCase
 {
     use CreatesProjects;
-    use CreatesSites;
     use CreatesUsers;
     use DatabaseTransactions;
 
@@ -88,7 +86,7 @@ class SiteTypeTest extends TestCase
 
     public function testBasicFieldAccess(): void
     {
-        $this->sites['site1'] = $this->makeSite([
+        $this->sites['site1'] = Site::factory()->create([
             'name' => Str::uuid()->toString(),
             'ip' => '8.8.8.8',
             'latitude' => '12.3',
@@ -140,8 +138,8 @@ class SiteTypeTest extends TestCase
 
     public function testTopLevelSiteField(): void
     {
-        $this->sites['site1'] = $this->makeSite();
-        $this->sites['site2'] = $this->makeSite();
+        $this->sites['site1'] = Site::factory()->create();
+        $this->sites['site2'] = Site::factory()->create();
 
         $this->graphQL('
             query ($id: ID!) {
@@ -180,7 +178,7 @@ class SiteTypeTest extends TestCase
 
     public function testSiteBuildRelationship(): void
     {
-        $this->sites['site1'] = $this->makeSite();
+        $this->sites['site1'] = Site::factory()->create();
 
         $this->projects['public1']->builds()->create([
             'name' => 'build1',
@@ -236,7 +234,7 @@ class SiteTypeTest extends TestCase
      */
     public function testBasicSiteInformationRelationship(): void
     {
-        $this->sites['site1'] = $this->makeSite([
+        $this->sites['site1'] = Site::factory()->create([
             'name' => 'site1',
         ]);
 
@@ -377,7 +375,7 @@ class SiteTypeTest extends TestCase
     #[DataProvider('nullabilityTestCases')]
     public function testSiteInformationColumnNullability(array $params): void
     {
-        $this->sites['site1'] = $this->makeSite([
+        $this->sites['site1'] = Site::factory()->create([
             'name' => 'site1',
         ]);
 
@@ -474,7 +472,7 @@ class SiteTypeTest extends TestCase
 
     public function testSiteInformationTimestampDefault(): void
     {
-        $this->sites['site1'] = $this->makeSite([
+        $this->sites['site1'] = Site::factory()->create([
             'name' => 'site1',
         ]);
 
@@ -520,7 +518,7 @@ class SiteTypeTest extends TestCase
 
     public function testMultipleSiteInformation(): void
     {
-        $this->sites['site1'] = $this->makeSite([
+        $this->sites['site1'] = Site::factory()->create([
             'name' => 'site1',
         ]);
 
@@ -614,7 +612,7 @@ class SiteTypeTest extends TestCase
 
     public function testNoSiteInformationReturnsEmptyArray(): void
     {
-        $this->sites['site1'] = $this->makeSite([
+        $this->sites['site1'] = Site::factory()->create([
             'name' => 'site1',
         ]);
 
@@ -677,7 +675,7 @@ class SiteTypeTest extends TestCase
 
     public function testMostRecentSiteInformation(): void
     {
-        $this->sites['site1'] = $this->makeSite([
+        $this->sites['site1'] = Site::factory()->create([
             'name' => 'site1',
         ]);
 
@@ -741,7 +739,7 @@ class SiteTypeTest extends TestCase
 
     public function testMostRecentSiteInformationReturnsNull(): void
     {
-        $this->sites['site1'] = $this->makeSite([
+        $this->sites['site1'] = Site::factory()->create([
             'name' => 'site1',
         ]);
 
@@ -803,14 +801,14 @@ class SiteTypeTest extends TestCase
      */
     public function testBasicSiteFiltering(): void
     {
-        $this->sites['site1'] = $this->makeSite();
+        $this->sites['site1'] = Site::factory()->create();
         $this->projects['public1']->builds()->create([
             'name' => 'build1',
             'uuid' => Str::uuid(),
             'siteid' => $this->sites['site1']->id,
         ]);
 
-        $this->sites['site2'] = $this->makeSite();
+        $this->sites['site2'] = Site::factory()->create();
         $this->projects['public1']->builds()->create([
             'name' => 'build2',
             'uuid' => Str::uuid(),
@@ -822,7 +820,7 @@ class SiteTypeTest extends TestCase
             'siteid' => $this->sites['site2']->id,
         ]);
 
-        $this->sites['site3'] = $this->makeSite();
+        $this->sites['site3'] = Site::factory()->create();
         $this->projects['private1']->builds()->create([
             'name' => 'build4',
             'uuid' => Str::uuid(),
@@ -899,7 +897,7 @@ class SiteTypeTest extends TestCase
 
     public function testNoSiteMaintainers(): void
     {
-        $this->sites['site1'] = $this->makeSite();
+        $this->sites['site1'] = Site::factory()->create();
 
         $this->projects['public1']->builds()->create([
             'name' => 'build1',
@@ -952,7 +950,7 @@ class SiteTypeTest extends TestCase
 
     public function testSiteMaintainer(): void
     {
-        $this->sites['site1'] = $this->makeSite();
+        $this->sites['site1'] = Site::factory()->create();
 
         $this->sites['site1']->maintainers()->attach($this->users['normal']);
 
@@ -1013,7 +1011,7 @@ class SiteTypeTest extends TestCase
 
     public function testFilterSiteMaintainers(): void
     {
-        $this->sites['site1'] = $this->makeSite();
+        $this->sites['site1'] = Site::factory()->create();
 
         $this->sites['site1']->maintainers()->attach($this->users['normal']);
         $this->sites['site1']->maintainers()->attach($this->users['admin']);
@@ -1056,7 +1054,7 @@ class SiteTypeTest extends TestCase
 
     public function testClaimSiteMutationRejectsUnauthenticatedUser(): void
     {
-        $this->sites['site1'] = $this->makeSite();
+        $this->sites['site1'] = Site::factory()->create();
 
         $this->graphQL('
             mutation ($siteid: ID!) {
@@ -1102,7 +1100,7 @@ class SiteTypeTest extends TestCase
 
     public function testClaimSiteMutationAcceptsValidRequest(): void
     {
-        $this->sites['site1'] = $this->makeSite();
+        $this->sites['site1'] = Site::factory()->create();
 
         self::assertNotContains($this->users['normal']->id, $this->sites['site1']->maintainers()->pluck('id'));
 
@@ -1141,7 +1139,7 @@ class SiteTypeTest extends TestCase
 
     public function testClaimSiteMutationAcceptsClaimForPreviouslyClaimedSite(): void
     {
-        $this->sites['site1'] = $this->makeSite();
+        $this->sites['site1'] = Site::factory()->create();
         $this->sites['site1']->maintainers()->attach($this->users['normal']);
 
         self::assertContains($this->users['normal']->id, $this->sites['site1']->maintainers()->pluck('id'));
@@ -1181,7 +1179,7 @@ class SiteTypeTest extends TestCase
 
     public function testUnclaimSiteMutationRejectsUnauthenticatedUser(): void
     {
-        $this->sites['site1'] = $this->makeSite();
+        $this->sites['site1'] = Site::factory()->create();
         $this->sites['site1']->maintainers()->attach($this->users['normal']);
 
         $this->graphQL('
@@ -1228,7 +1226,7 @@ class SiteTypeTest extends TestCase
 
     public function testUnclaimSiteMutationAcceptsValidRequest(): void
     {
-        $this->sites['site1'] = $this->makeSite();
+        $this->sites['site1'] = Site::factory()->create();
         $this->sites['site1']->maintainers()->attach($this->users['normal']);
 
         self::assertContains($this->users['normal']->id, $this->sites['site1']->maintainers()->pluck('id'));
@@ -1268,7 +1266,7 @@ class SiteTypeTest extends TestCase
 
     public function testUnclaimSiteMutationAcceptsUnclaimWhenNotClaimed(): void
     {
-        $this->sites['site1'] = $this->makeSite();
+        $this->sites['site1'] = Site::factory()->create();
 
         self::assertNotContains($this->users['normal']->id, $this->sites['site1']->maintainers()->pluck('id'));
 

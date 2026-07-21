@@ -13,12 +13,10 @@ use Illuminate\Support\Str;
 use Laravel\Dusk\Browser;
 use Tests\BrowserTestCase;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesSites;
 
 class BuildUpdatePageTest extends BrowserTestCase
 {
     use CreatesProjects;
-    use CreatesSites;
 
     private Project $project;
 
@@ -34,7 +32,7 @@ class BuildUpdatePageTest extends BrowserTestCase
 
         $this->project = $this->makePublicProject();
 
-        $this->site = $this->makeSite();
+        $this->site = Site::factory()->create();
         SiteService::updateSiteInfoIfChanged($this->site, new SiteInformation([]));
 
         $this->update = BuildUpdate::factory()->create();
