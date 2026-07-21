@@ -17,9 +17,9 @@ namespace App\Http\Submission\Handlers;
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-use App\Http\Submission\Traits\UpdatesSiteInformation;
 use App\Models\Site;
 use App\Models\SiteInformation;
+use App\Services\SiteService;
 use App\Utils\SubmissionUtils;
 use CDash\Model\Coverage;
 use CDash\Model\CoverageFile;
@@ -29,8 +29,6 @@ use CDash\Model\Project;
 
 class CoverageJUnitHandler extends AbstractXmlHandler
 {
-    use UpdatesSiteInformation;
-
     private int $StartTimeStamp;
     private int $EndTimeStamp;
 
@@ -83,7 +81,7 @@ class CoverageJUnitHandler extends AbstractXmlHandler
                 }
             }
 
-            $this->updateSiteInfoIfChanged($this->Site, $siteInformation);
+            SiteService::updateSiteInfoIfChanged($this->Site, $siteInformation);
 
             $this->Build->SiteId = $this->Site->id;
             $this->Build->Name = $attributes['BUILDNAME'];

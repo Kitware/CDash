@@ -17,10 +17,10 @@ namespace App\Http\Submission\Handlers;
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-use App\Http\Submission\Traits\UpdatesSiteInformation;
 use App\Models\DynamicAnalysisDefect;
 use App\Models\Site;
 use App\Models\SiteInformation;
+use App\Services\SiteService;
 use App\Utils\SubmissionUtils;
 use CDash\Collection\BuildCollection;
 use CDash\Collection\SubscriptionBuilderCollection;
@@ -38,8 +38,6 @@ use CDash\Model\Subscriber;
 
 class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBuildInterface
 {
-    use UpdatesSiteInformation;
-
     private int $StartTimeStamp;
     private int $EndTimeStamp;
     private string $Checker;
@@ -114,7 +112,7 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
             if (empty($this->BuildName)) {
                 $this->BuildName = '(empty)';
             }
-            $this->updateSiteInfoIfChanged($this->Site, $siteInformation);
+            SiteService::updateSiteInfoIfChanged($this->Site, $siteInformation);
         } elseif ($name === 'SUBPROJECT') {
             $this->SubProjectName = $attributes['NAME'];
             if (!array_key_exists($this->SubProjectName, $this->SubProjects)) {

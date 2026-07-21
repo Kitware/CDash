@@ -2,11 +2,11 @@
 
 namespace Tests\Browser\Pages;
 
-use App\Http\Submission\Traits\UpdatesSiteInformation;
 use App\Models\Project;
 use App\Models\Site;
 use App\Models\SiteInformation;
 use App\Models\User;
+use App\Services\SiteService;
 use Illuminate\Foundation\Testing\DatabaseTruncation;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
@@ -22,7 +22,6 @@ class ProjectsPageTest extends BrowserTestCase
     use CreatesSites;
     use CreatesUsers;
     use DatabaseTruncation;
-    use UpdatesSiteInformation;
 
     /**
      * @var array<User>
@@ -41,7 +40,7 @@ class ProjectsPageTest extends BrowserTestCase
         parent::setUp();
 
         $this->site = $this->makeSite();
-        $this->updateSiteInfoIfChanged($this->site, new SiteInformation([]));
+        SiteService::updateSiteInfoIfChanged($this->site, new SiteInformation([]));
     }
 
     public function tearDown(): void

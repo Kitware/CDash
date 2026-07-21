@@ -17,10 +17,10 @@ namespace App\Http\Submission\Handlers;
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-use App\Http\Submission\Traits\UpdatesSiteInformation;
 use App\Models\Site;
 use App\Models\SiteInformation;
 use App\Models\UploadFile;
+use App\Services\SiteService;
 use App\Utils\SubmissionUtils;
 use CDash\Model\Label;
 use CDash\Model\Project;
@@ -45,8 +45,6 @@ use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
  */
 class UploadHandler extends AbstractXmlHandler
 {
-    use UpdatesSiteInformation;
-
     private UploadFile $UploadFile;
     private string $TmpFilename = '';
     private $Base64TmpFileWriteHandle = 0;
@@ -106,7 +104,7 @@ class UploadHandler extends AbstractXmlHandler
                 }
             }
 
-            $this->updateSiteInfoIfChanged($this->Site, $siteInformation);
+            SiteService::updateSiteInfoIfChanged($this->Site, $siteInformation);
 
             $this->Build->SiteId = $this->Site->id;
             $this->Build->Name = $attributes['BUILDNAME'];

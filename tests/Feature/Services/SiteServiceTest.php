@@ -1,20 +1,19 @@
 <?php
 
-namespace Tests\Feature\Traits;
+namespace Tests\Feature\Services;
 
-use App\Http\Submission\Traits\UpdatesSiteInformation;
 use App\Models\Site;
 use App\Models\SiteInformation;
+use App\Services\SiteService;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Carbon;
 use Tests\TestCase;
 use Tests\Traits\CreatesSites;
 
-class UpdatesSiteInformationTest extends TestCase
+class SiteServiceTest extends TestCase
 {
     use CreatesSites;
     use DatabaseTransactions;
-    use UpdatesSiteInformation;
 
     private Site $site;
 
@@ -39,10 +38,10 @@ class UpdatesSiteInformationTest extends TestCase
         $site_information = new SiteInformation([
             'processorclockfrequency' => 1234,
         ]);
-        $this->updateSiteInfoIfChanged($this->site, $site_information);
+        SiteService::updateSiteInfoIfChanged($this->site, $site_information);
 
         $this->site->refresh();
-        self::assertEquals(1234, $this->site->mostRecentInformation?->processorclockfrequency);
+        self::assertSame(1234, $this->site->mostRecentInformation?->processorclockfrequency);
     }
 
     public function testUpdatesWhenChangedInformation(): void
@@ -57,10 +56,10 @@ class UpdatesSiteInformationTest extends TestCase
         $site_information = new SiteInformation([
             'processorclockfrequency' => 2345,
         ]);
-        $this->updateSiteInfoIfChanged($this->site, $site_information);
+        SiteService::updateSiteInfoIfChanged($this->site, $site_information);
 
         $this->site->refresh();
-        self::assertEquals(2345, $this->site->mostRecentInformation?->processorclockfrequency);
+        self::assertSame(2345, $this->site->mostRecentInformation?->processorclockfrequency);
         self::assertCount(2, $this->site->information()->get());
     }
 
@@ -71,15 +70,15 @@ class UpdatesSiteInformationTest extends TestCase
         ]);
         $this->site->refresh();
         self::assertCount(1, $this->site->information()->get());
-        self::assertEquals(1234, $this->site->mostRecentInformation?->processorclockfrequency);
+        self::assertSame(1234, $this->site->mostRecentInformation?->processorclockfrequency);
 
         $site_information = new SiteInformation([
             'processorclockfrequency' => 1234,
         ]);
-        $this->updateSiteInfoIfChanged($this->site, $site_information);
+        SiteService::updateSiteInfoIfChanged($this->site, $site_information);
 
         $this->site->refresh();
-        self::assertEquals(1234, $this->site->mostRecentInformation?->processorclockfrequency);
+        self::assertSame(1234, $this->site->mostRecentInformation?->processorclockfrequency);
         self::assertCount(1, $this->site->information()->get());
     }
 
@@ -90,18 +89,18 @@ class UpdatesSiteInformationTest extends TestCase
         ]);
         $this->site->refresh();
         self::assertCount(1, $this->site->information()->get());
-        self::assertEquals(1234, $this->site->mostRecentInformation?->processorclockfrequency);
+        self::assertSame(1234, $this->site->mostRecentInformation?->processorclockfrequency);
 
-        $this->updateSiteInfoIfChanged($this->site, new SiteInformation());
+        SiteService::updateSiteInfoIfChanged($this->site, new SiteInformation());
 
         $this->site->refresh();
-        self::assertEquals(1234, $this->site->mostRecentInformation?->processorclockfrequency);
+        self::assertSame(1234, $this->site->mostRecentInformation?->processorclockfrequency);
         self::assertCount(1, $this->site->information()->get());
     }
 
     public function testCreatesInitialInformationWhenAllNull(): void
     {
-        $this->updateSiteInfoIfChanged($this->site, new SiteInformation());
+        SiteService::updateSiteInfoIfChanged($this->site, new SiteInformation());
 
         $this->site->refresh();
         self::assertCount(1, $this->site->information()->get());

@@ -2,7 +2,6 @@
 
 namespace Tests\Browser\Pages;
 
-use App\Http\Submission\Traits\UpdatesSiteInformation;
 use App\Models\Build;
 use App\Models\Project;
 use App\Models\Site;
@@ -10,6 +9,7 @@ use App\Models\SiteInformation;
 use App\Models\SubProject;
 use App\Models\Test;
 use App\Models\TestOutput;
+use App\Services\SiteService;
 use Illuminate\Support\Str;
 use Laravel\Dusk\Browser;
 use Tests\BrowserTestCase;
@@ -20,7 +20,6 @@ class BuildTestsPageTest extends BrowserTestCase
 {
     use CreatesProjects;
     use CreatesSites;
-    use UpdatesSiteInformation;
 
     private Project $project;
 
@@ -41,7 +40,7 @@ class BuildTestsPageTest extends BrowserTestCase
         ]);
 
         $this->site = $this->makeSite();
-        $this->updateSiteInfoIfChanged($this->site, new SiteInformation([]));
+        SiteService::updateSiteInfoIfChanged($this->site, new SiteInformation([]));
     }
 
     public function tearDown(): void

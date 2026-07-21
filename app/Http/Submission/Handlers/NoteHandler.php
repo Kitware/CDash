@@ -17,9 +17,9 @@ namespace App\Http\Submission\Handlers;
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-use App\Http\Submission\Traits\UpdatesSiteInformation;
 use App\Models\Site;
 use App\Models\SiteInformation;
+use App\Services\SiteService;
 use App\Utils\NoteCreator;
 use App\Utils\SubmissionUtils;
 use CDash\Model\Project;
@@ -27,8 +27,6 @@ use Illuminate\Support\Facades\Log;
 
 class NoteHandler extends AbstractXmlHandler
 {
-    use UpdatesSiteInformation;
-
     private bool $AdjustStartTime = false;
     private NoteCreator $NoteCreator;
     protected static ?string $schema_file = '/app/Validators/Schemas/Notes.xsd';
@@ -76,7 +74,7 @@ class NoteHandler extends AbstractXmlHandler
                 }
             }
 
-            $this->updateSiteInfoIfChanged($this->Site, $siteInformation);
+            SiteService::updateSiteInfoIfChanged($this->Site, $siteInformation);
 
             $this->Build->SiteId = $this->Site->id;
             $this->Build->Name = $attributes['BUILDNAME'];

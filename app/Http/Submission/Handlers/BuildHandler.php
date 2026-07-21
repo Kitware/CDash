@@ -19,7 +19,6 @@ namespace App\Http\Submission\Handlers;
 
 use App\Enums\BuildCommandType;
 use App\Enums\TargetType;
-use App\Http\Submission\Traits\UpdatesSiteInformation;
 use App\Models\Build as EloquentBuild;
 use App\Models\BuildCommand;
 use App\Models\BuildCommandOutput;
@@ -28,6 +27,7 @@ use App\Models\Label as EloquentLabel;
 use App\Models\Site;
 use App\Models\SiteInformation;
 use App\Models\Target;
+use App\Services\SiteService;
 use App\Utils\SubmissionUtils;
 use Carbon\Carbon;
 use CDash\Collection\BuildCollection;
@@ -51,7 +51,6 @@ use RuntimeException;
 class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterface, CommitAuthorHandlerInterface
 {
     use CommitAuthorHandlerTrait;
-    use UpdatesSiteInformation;
 
     private int $StartTimeStamp = -1;
     private int $EndTimeStamp = -1;
@@ -177,7 +176,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
                 $this->BuildName = '(empty)';
             }
 
-            $this->updateSiteInfoIfChanged($this->Site, $siteInformation);
+            SiteService::updateSiteInfoIfChanged($this->Site, $siteInformation);
         } elseif ($name === 'SUBPROJECT') {
             $this->SubProjectName = $attributes['NAME'];
             if (!array_key_exists($this->SubProjectName, $this->SubProjects)) {

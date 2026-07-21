@@ -4,7 +4,6 @@ namespace Tests\Browser\Pages;
 
 use App\Enums\BuildCommandType;
 use App\Enums\TargetType;
-use App\Http\Submission\Traits\UpdatesSiteInformation;
 use App\Models\Build;
 use App\Models\BuildUpdate;
 use App\Models\CoverageFile;
@@ -15,6 +14,7 @@ use App\Models\Site;
 use App\Models\SiteInformation;
 use App\Models\UploadFile;
 use App\Models\User;
+use App\Services\SiteService;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Laravel\Dusk\Browser;
@@ -28,7 +28,6 @@ class BuildSidebarComponentTest extends BrowserTestCase
     use CreatesProjects;
     use CreatesSites;
     use CreatesUsers;
-    use UpdatesSiteInformation;
 
     private Project $project;
     private Site $site;
@@ -41,7 +40,7 @@ class BuildSidebarComponentTest extends BrowserTestCase
         $this->project = $this->makePublicProject();
 
         $this->site = $this->makeSite();
-        $this->updateSiteInfoIfChanged($this->site, new SiteInformation([]));
+        SiteService::updateSiteInfoIfChanged($this->site, new SiteInformation([]));
 
         $this->user = $this->makeNormalUser();
     }

@@ -280,8 +280,6 @@ add_feature_test_in_transaction(/Feature/GraphQL/Mutations/ChangeProjectRoleTest
 
 add_feature_test_in_transaction(/Feature/GraphQL/Mutations/RemoveProjectUserTest)
 
-add_feature_test_in_transaction(/Feature/Traits/UpdatesSiteInformationTest)
-
 add_feature_test_in_transaction(/Feature/GraphQL/Mutations/ChangeGlobalRoleTest)
 
 add_feature_test_in_transaction(/Feature/GraphQL/Mutations/JoinProjectTest)
@@ -321,6 +319,8 @@ add_feature_test_in_transaction(/Feature/Jobs/PruneEmailsTest)
 add_feature_test_in_transaction(/Feature/Jobs/ComputeCoverageDifferenceTest)
 
 add_feature_test_in_transaction(/Feature/Services/ProjectServiceTest)
+
+add_feature_test_in_transaction(/Feature/Services/SiteServiceTest)
 
 add_feature_test_in_transaction(/Feature/AutoRemoveBuildsCommand)
 
