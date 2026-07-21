@@ -14,12 +14,10 @@ use Illuminate\Support\Str;
 use InvalidArgumentException;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesSites;
 
 class ComputeCoverageDifferenceTest extends TestCase
 {
     use CreatesProjects;
-    use CreatesSites;
     use DatabaseTransactions;
 
     private Project $project;
@@ -29,7 +27,7 @@ class ComputeCoverageDifferenceTest extends TestCase
     {
         parent::setUp();
         $this->project = $this->makePublicProject();
-        $this->site = $this->makeSite();
+        $this->site = Site::factory()->create();
     }
 
     /**

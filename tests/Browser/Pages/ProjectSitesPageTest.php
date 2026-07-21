@@ -8,12 +8,10 @@ use Illuminate\Support\Str;
 use Laravel\Dusk\Browser;
 use Tests\BrowserTestCase;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesSites;
 
 class ProjectSitesPageTest extends BrowserTestCase
 {
     use CreatesProjects;
-    use CreatesSites;
 
     /**
      * @var array<Project>
@@ -44,7 +42,7 @@ class ProjectSitesPageTest extends BrowserTestCase
     {
         $project = $this->makePublicProject();
         $this->projects[] = $project;
-        $site = $this->makeSite();
+        $site = Site::factory()->create();
         $this->sites[] = $site;
         $site->information()->createMany([
             [
@@ -77,7 +75,7 @@ class ProjectSitesPageTest extends BrowserTestCase
         $this->projects[] = $project;
         $sites = [];
         for ($i = 0; $i < 120; $i++) {
-            $sites[$i] = $this->makeSite();
+            $sites[$i] = Site::factory()->create();
         }
         $this->sites = $sites;
 

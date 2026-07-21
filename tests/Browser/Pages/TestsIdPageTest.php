@@ -17,12 +17,10 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use Random\RandomException;
 use Tests\BrowserTestCase;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesSites;
 
 class TestsIdPageTest extends BrowserTestCase
 {
     use CreatesProjects;
-    use CreatesSites;
 
     private Project $project;
     private Build $build;
@@ -33,7 +31,7 @@ class TestsIdPageTest extends BrowserTestCase
         parent::setUp();
 
         $this->project = $this->makePublicProject();
-        $this->site = $this->makeSite();
+        $this->site = Site::factory()->create();
         SiteService::updateSiteInfoIfChanged($this->site, new SiteInformation([]));
 
         $this->build = $this->project->builds()->create([

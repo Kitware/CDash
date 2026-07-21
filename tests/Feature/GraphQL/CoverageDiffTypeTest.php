@@ -9,12 +9,10 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesSites;
 
 class CoverageDiffTypeTest extends TestCase
 {
     use CreatesProjects;
-    use CreatesSites;
     use DatabaseTransactions;
 
     private Project $project;
@@ -24,7 +22,7 @@ class CoverageDiffTypeTest extends TestCase
     {
         parent::setUp();
         $this->project = $this->makePublicProject();
-        $this->site = $this->makeSite();
+        $this->site = Site::factory()->create();
     }
 
     public function testQueryCoverageDiffFields(): void

@@ -17,12 +17,10 @@ use Laravel\Dusk\Browser;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\BrowserTestCase;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesSites;
 
 class BuildBuildPageTest extends BrowserTestCase
 {
     use CreatesProjects;
-    use CreatesSites;
 
     private Project $project;
 
@@ -57,7 +55,7 @@ class BuildBuildPageTest extends BrowserTestCase
             'groupid' => $buildgroup2->id,
         ]);
 
-        $this->site = $this->makeSite();
+        $this->site = Site::factory()->create();
         SiteService::updateSiteInfoIfChanged($this->site, new SiteInformation([]));
     }
 

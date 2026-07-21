@@ -13,12 +13,10 @@ use Laravel\Dusk\Browser;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\BrowserTestCase;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesSites;
 
 class BuildDynamicAnalysisIdPageTest extends BrowserTestCase
 {
     use CreatesProjects;
-    use CreatesSites;
 
     private Project $project;
     private Site $site;
@@ -29,7 +27,7 @@ class BuildDynamicAnalysisIdPageTest extends BrowserTestCase
 
         $this->project = $this->makePublicProject();
 
-        $this->site = $this->makeSite();
+        $this->site = Site::factory()->create();
         SiteService::updateSiteInfoIfChanged($this->site, new SiteInformation([]));
     }
 

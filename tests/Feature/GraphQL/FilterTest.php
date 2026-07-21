@@ -14,13 +14,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesSites;
 use Tests\Traits\CreatesUsers;
 
 class FilterTest extends TestCase
 {
     use CreatesProjects;
-    use CreatesSites;
     use CreatesUsers;
     use DatabaseTransactions;
 
@@ -848,7 +846,7 @@ class FilterTest extends TestCase
 
     public function testFilterByAnyMultipleRelationships(): void
     {
-        $this->sites['site1'] = $this->makeSite();
+        $this->sites['site1'] = Site::factory()->create();
 
         $build1uuid = Str::uuid()->toString();
         $this->projects['public1']->builds()->create([
@@ -918,7 +916,7 @@ class FilterTest extends TestCase
 
     public function testFilterByAllMultipleRelationships(): void
     {
-        $this->sites['site1'] = $this->makeSite();
+        $this->sites['site1'] = Site::factory()->create();
 
         $build1uuid = Str::uuid()->toString();
         $this->projects['public1']->builds()->create([
@@ -1417,14 +1415,14 @@ class FilterTest extends TestCase
 
     public function testFilterByBelongsToRelationship(): void
     {
-        $site1 = $this->makeSite(['name' => 'site1']);
+        $site1 = Site::factory()->create(['name' => 'site1']);
         $build1 = $this->projects['public1']->builds()->create([
             'name' => Str::uuid()->toString(),
             'uuid' => Str::uuid()->toString(),
             'siteid' => $site1->id,
         ]);
 
-        $site2 = $this->makeSite(['name' => 'site2']);
+        $site2 = Site::factory()->create(['name' => 'site2']);
         $build2 = $this->projects['public1']->builds()->create([
             'name' => Str::uuid()->toString(),
             'uuid' => Str::uuid()->toString(),

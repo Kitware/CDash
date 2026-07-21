@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use Database\Factories\SiteFactory;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -22,6 +24,9 @@ use Illuminate\Support\Carbon;
  */
 class Site extends Model
 {
+    /** @use HasFactory<SiteFactory> */
+    use HasFactory;
+
     protected $table = 'site';
 
     public $timestamps = false;

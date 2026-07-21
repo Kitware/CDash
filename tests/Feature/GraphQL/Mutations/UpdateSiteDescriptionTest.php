@@ -8,12 +8,10 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Tests\TestCase;
-use Tests\Traits\CreatesSites;
 use Tests\Traits\CreatesUsers;
 
 class UpdateSiteDescriptionTest extends TestCase
 {
-    use CreatesSites;
     use CreatesUsers;
     use DatabaseTransactions;
 
@@ -25,7 +23,7 @@ class UpdateSiteDescriptionTest extends TestCase
     {
         parent::setUp();
 
-        $this->site = $this->makeSite();
+        $this->site = Site::factory()->create();
         $this->user = $this->makeNormalUser();
     }
 

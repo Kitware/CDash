@@ -8,11 +8,9 @@ use App\Services\SiteService;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Carbon;
 use Tests\TestCase;
-use Tests\Traits\CreatesSites;
 
 class SiteServiceTest extends TestCase
 {
-    use CreatesSites;
     use DatabaseTransactions;
 
     private Site $site;
@@ -21,7 +19,7 @@ class SiteServiceTest extends TestCase
     {
         parent::setUp();
 
-        $this->site = $this->makeSite();
+        $this->site = Site::factory()->create();
     }
 
     protected function tearDown(): void
