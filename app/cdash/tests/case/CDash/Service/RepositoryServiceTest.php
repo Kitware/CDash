@@ -20,8 +20,8 @@ use CDash\Model\Build;
 use CDash\Model\BuildUpdate;
 use CDash\Service\RepositoryService;
 use CDash\Test\CDashTestCase;
+use Illuminate\Support\Str;
 use PHPUnit\Framework\MockObject\MockObject;
-use Ramsey\Uuid\Uuid;
 
 class RepositoryServiceTest extends CDashTestCase
 {
@@ -46,7 +46,7 @@ class RepositoryServiceTest extends CDashTestCase
     {
         $sut = new RepositoryService($this->repository);
 
-        $hash = str_replace('-', '', Uuid::uuid4()->toString());
+        $hash = str_replace('-', '', Str::uuid()->toString());
 
         $buildUpdate = new BuildUpdate();
         $buildUpdate->Revision = $hash;

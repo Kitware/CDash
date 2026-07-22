@@ -23,8 +23,8 @@ use Github\Api\Repo;
 use Github\Api\Repository\Statuses;
 use Github\Client;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use PHPUnit\Framework\MockObject\MockObject;
-use Ramsey\Uuid\Uuid;
 use Tests\TestCase;
 
 class GitHubTest extends TestCase
@@ -46,7 +46,7 @@ class GitHubTest extends TestCase
     {
         $sut = $this->setupAuthentication();
         $options = [
-            'commit_hash' => str_replace('-', '', Uuid::uuid4()->toString()),
+            'commit_hash' => str_replace('-', '', Str::uuid()->toString()),
             'context' => 'CDash by Kitware',
             'description' => 'Build suchnsuch from site sonso',
             'state' => 'pending',
@@ -355,7 +355,7 @@ class GitHubTest extends TestCase
     public function testCreateCheck(): void
     {
         $sut = $this->setupAuthentication();
-        $sut->createCheck(str_replace('-', '', Uuid::uuid4()->toString()));
+        $sut->createCheck(str_replace('-', '', Str::uuid()->toString()));
     }
 
     public function testDisablePullRequestComments(): void
