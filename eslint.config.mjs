@@ -67,6 +67,7 @@ export default defineConfig([
       '@stylistic/member-delimiter-style': 'error',
       '@stylistic/new-parens': 'error',
       '@stylistic/no-extra-semi': 'error',
+      '@stylistic/no-floating-decimal': 'error',
       '@stylistic/space-before-blocks': ['error', 'always'],
       '@stylistic/linebreak-style': ['error', 'unix'],
       '@stylistic/no-trailing-spaces': 'error',
