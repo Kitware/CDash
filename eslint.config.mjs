@@ -54,6 +54,7 @@ export default defineConfig([
       '@stylistic/dot-location': ['error', 'property'],
       '@stylistic/eol-last': 'error',
       '@stylistic/function-call-argument-newline': ['error', 'consistent'],
+      '@stylistic/function-call-spacing': 'error',
       '@stylistic/keyword-spacing': ['error', {'before': true, 'after': true}],
       '@stylistic/space-before-blocks': ['error', 'always'],
       '@stylistic/linebreak-style': ['error', 'unix'],
