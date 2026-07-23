@@ -46,7 +46,6 @@ export default defineConfig([
       '@stylistic/arrow-spacing': 'error',
       '@stylistic/block-spacing': 'error',
       '@stylistic/brace-style': 'error',
-      '@stylistic/indent': ['error', 2],
       '@stylistic/comma-dangle': ['error', 'always-multiline'],
       '@stylistic/eol-last': 'error',
       '@stylistic/keyword-spacing': ['error', {'before': true, 'after': true}],
@@ -57,6 +56,7 @@ export default defineConfig([
       '@stylistic/semi': ['error', 'always'],
       '@stylistic/semi-style': ['error', 'last'],
       '@stylistic/template-curly-spacing': ['error', 'never'],
+      '@stylistic/indent': ['error', 2],
 
       'vue/component-name-in-template-casing': ['error', 'PascalCase'],
       'vue/no-v-html': 'off',
