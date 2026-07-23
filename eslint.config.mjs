@@ -58,6 +58,7 @@ export default defineConfig([
       '@stylistic/function-paren-newline': ['error', 'multiline-arguments'],
       '@stylistic/generator-star-spacing': 'error',
       '@stylistic/implicit-arrow-linebreak': 'error',
+      '@stylistic/indent': ['error', 2],
       '@stylistic/keyword-spacing': ['error', {'before': true, 'after': true}],
       '@stylistic/space-before-blocks': ['error', 'always'],
       '@stylistic/linebreak-style': ['error', 'unix'],
@@ -66,7 +67,6 @@ export default defineConfig([
       '@stylistic/semi': ['error', 'always'],
       '@stylistic/semi-style': ['error', 'last'],
       '@stylistic/template-curly-spacing': ['error', 'never'],
-      '@stylistic/indent': ['error', 2],
 
       'vue/component-name-in-template-casing': ['error', 'PascalCase'],
       'vue/no-v-html': 'off',
