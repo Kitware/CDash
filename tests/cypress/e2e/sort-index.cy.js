@@ -3,7 +3,7 @@ describe('sort_index', () => {
   // these two "verify_<>_cell" functions help getting the text from all
   // child elements of the td, since it may contain links, formatting, etc.
   function _verify_cell(position, td_alias, expected_value) {
-    cy.get(td_alias).invoke(position).invoke('text').then(td_text => {
+    cy.get(td_alias).invoke(position).invoke('text').then((td_text) => {
       cy.wrap(td_text.trim()).should('contain', expected_value);
     });
   }

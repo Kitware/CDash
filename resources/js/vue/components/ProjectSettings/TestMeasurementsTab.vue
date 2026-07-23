@@ -159,7 +159,7 @@ export default {
       },
       result({ data }) {
         if (data && data.project) {
-          this.testMeasurements = [...data.project.pinnedTestMeasurements.edges.map(edge => edge.node)].sort((a, b) => a.position - b.position);
+          this.testMeasurements = [...data.project.pinnedTestMeasurements.edges.map((edge) => edge.node)].sort((a, b) => a.position - b.position);
         }
       },
     },
@@ -247,7 +247,7 @@ export default {
 
     async updateOrder() {
       this.errorMessage = '';
-      const pinnedTestMeasurementIds = this.testMeasurements.map(m => m.id);
+      const pinnedTestMeasurementIds = this.testMeasurements.map((m) => m.id);
       try {
         const result = await this.$apollo.mutate({
           mutation: gql`

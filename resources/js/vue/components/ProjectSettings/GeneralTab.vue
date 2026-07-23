@@ -648,7 +648,7 @@ export default {
       } catch (error) {
         this.projectUpdateFailed = true;
         if (error.graphQLErrors) {
-          error.graphQLErrors.forEach(e => {
+          error.graphQLErrors.forEach((e) => {
             if (e.extensions && e.extensions.validation) {
               this.validationErrors = Object.keys(e.extensions.validation).reduce((acc, key) => {
                 acc[key.replace('input.', '')] = e.extensions.validation[key];

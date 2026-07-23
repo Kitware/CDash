@@ -79,12 +79,12 @@ export default {
     fileTree() {
       const tree = [];
 
-      this.commitFiles.forEach(file => {
+      this.commitFiles.forEach((file) => {
         const parts = file.fileName.split('/');
         let currentLevel = tree;
 
         parts.forEach((part, index) => {
-          const existingPath = currentLevel.find(item => item.name === part);
+          const existingPath = currentLevel.find((item) => item.name === part);
 
           if (existingPath) {
             currentLevel = existingPath.children;

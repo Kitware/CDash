@@ -23,8 +23,8 @@ export const getEnumValues = (apolloClient, enumName) => {
   return apolloClient.query({
     query,
     variables: { name: enumName },
-  }).then(result => {
-    return result.data.__type.enumValues.map(enumValue => enumValue.name);
+  }).then((result) => {
+    return result.data.__type.enumValues.map((enumValue) => enumValue.name);
   });
 };
 
@@ -42,7 +42,7 @@ export class FilterField {
     if (this.type === FilterType.ENUM && typeof this.values === 'function') {
       const result = this.values();
       if (result instanceof Promise) {
-        result.then(v => {
+        result.then((v) => {
           this.loadedValues.splice(0, this.loadedValues.length, ...v);
         });
       } else {

@@ -347,7 +347,7 @@ export default {
           }
         }
       `,
-      update: data => data?.project?.administrators,
+      update: (data) => data?.project?.administrators,
       variables() {
         return {
           projectid: this.projectId,
@@ -388,7 +388,7 @@ export default {
           }
         }
       `,
-      update: data => data?.project?.basicUsers,
+      update: (data) => data?.project?.basicUsers,
       variables() {
         return {
           projectid: this.projectId,
@@ -435,7 +435,7 @@ export default {
           }
         }
       `,
-      update: data => data?.project?.invitations,
+      update: (data) => data?.project?.invitations,
       variables() {
         return {
           projectid: this.projectId,
@@ -466,7 +466,7 @@ export default {
     },
 
     formattedUserRows() {
-      return this.projectAdministrators.edges?.map(edge => {
+      return this.projectAdministrators.edges?.map((edge) => {
         return {
           name: `${edge.node.firstname} ${edge.node.lastname}`,
           role: {
@@ -477,7 +477,7 @@ export default {
             user: edge.node,
           },
         };
-      }).concat(this.projectUsers.edges?.map(edge => {
+      }).concat(this.projectUsers.edges?.map((edge) => {
         return {
           name: `${edge.node.firstname} ${edge.node.lastname}`,
           role: {
@@ -492,7 +492,7 @@ export default {
     },
 
     formattedInvitationRows() {
-      return this.projectInvitations.edges?.map(edge => {
+      return this.projectInvitations.edges?.map((edge) => {
         return {
           email: edge.node.email,
           role: this.humanReadableRole(edge.node.role),

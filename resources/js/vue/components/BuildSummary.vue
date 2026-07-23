@@ -657,7 +657,7 @@ export default {
           }
         }
       `,
-      update: data => data?.project?.builds.edges,
+      update: (data) => data?.project?.builds.edges,
       variables() {
         return {
           projectId: this.projectId,
@@ -708,7 +708,7 @@ export default {
       if (!this.buildHistory) {
         return [];
       }
-      return [...this.buildHistory].reverse().map(edge => {
+      return [...this.buildHistory].reverse().map((edge) => {
         const build = edge.node;
         return {
           buildId: build.id,

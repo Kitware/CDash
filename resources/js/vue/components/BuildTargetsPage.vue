@@ -131,11 +131,11 @@ export default {
           }
         }
       `,
-      update: data => {
+      update: (data) => {
         let targets = data?.build?.targets?.edges || [];
 
         if (data?.build?.children) {
-          data.build.children.edges.forEach(childEdge => {
+          data.build.children.edges.forEach((childEdge) => {
             targets = targets.concat(childEdge?.node?.targets?.edges || []);
           });
         }
@@ -214,7 +214,7 @@ export default {
     },
 
     formattedTargetRows() {
-      return this.targets.edges?.map(edge => {
+      return this.targets.edges?.map((edge) => {
         return {
           name: {
             value: edge.node.name,
@@ -236,7 +236,7 @@ export default {
       if (!this.targets || !this.targets.edges) {
         return new Set();
       }
-      return new Set(this.targets.edges.map(edge => edge.node.id));
+      return new Set(this.targets.edges.map((edge) => edge.node.id));
     },
 
     formattedCommands() {
@@ -248,7 +248,7 @@ export default {
 
       const visibleIds = this.visibleTargetIds;
 
-      return commands?.map(edge => {
+      return commands?.map((edge) => {
         const targetId = edge.node.target?.id;
         return {
           id: edge.node.id,

@@ -208,7 +208,7 @@ export default {
           }
         }
       `,
-      update: data => data?.me?.projects,
+      update: (data) => data?.me?.projects,
       variables() {
         return {
           countBuildsSince: this.oneDayAgo,
@@ -244,11 +244,11 @@ export default {
     projects() {
       let edges;
       if (this.currentTab === 'MEMBER') {
-        edges = this.myProjects?.edges.map(x => x);
+        edges = this.myProjects?.edges.map((x) => x);
       } else if (this.currentTab === 'ACTIVE') {
         edges = this.allVisibleProjects?.edges.filter(({node: project}) => project.buildCount > 0);
       } else {
-        edges = this.allVisibleProjects?.edges.map(x => x);
+        edges = this.allVisibleProjects?.edges.map((x) => x);
       }
 
       if (edges === null || edges === undefined) {

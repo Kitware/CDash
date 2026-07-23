@@ -93,7 +93,7 @@ export default {
           }
         }
       `,
-      update: data => data?.build?.coverage?.edges?.[0]?.node,
+      update: (data) => data?.build?.coverage?.edges?.[0]?.node,
       variables() {
         return {
           buildId: this.buildId,

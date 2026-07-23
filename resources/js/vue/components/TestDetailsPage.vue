@@ -588,10 +588,10 @@ export default {
       const order = ['numeric/', 'file', 'text/link', 'text/string', 'text/preformatted'];
       const excludedNames = ['Environment', 'Command Line'];
       return [...this.test.testMeasurements]
-        .filter(measurement => !(measurement.type === 'text/string' && excludedNames.includes(measurement.name)))
+        .filter((measurement) => !(measurement.type === 'text/string' && excludedNames.includes(measurement.name)))
         .sort((measurementA, measurementB) => {
           const getOrder = (type) => {
-            const index = order.findIndex(orderItem => type.startsWith(orderItem));
+            const index = order.findIndex((orderItem) => type.startsWith(orderItem));
             return index === -1 ? 999 : index;
           };
           const orderA = getOrder(measurementA.type);
@@ -612,7 +612,7 @@ export default {
 
   methods: {
     getFileIndex(measurement) {
-      return this.files.findIndex(file => file.id === measurement.id);
+      return this.files.findIndex((file) => file.id === measurement.id);
     },
 
     initializeJeCompare() {

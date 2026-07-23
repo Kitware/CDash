@@ -3,7 +3,7 @@ export default {
     vm.start = new Date().getTime();
     vm.$axios
       .get(endpoint_path)
-      .then(response => {
+      .then((response) => {
         // Pre-assigment hook for components.
         if (typeof vm.preSetup === 'function') {
           vm.preSetup(response);
@@ -42,7 +42,7 @@ export default {
           document.getElementById('testing-day').textContent = `| Testing day ${vm.cdash.currentdate} started at ${vm.cdash.nightlytime}`;
         }
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
         vm.errored = true;
       })

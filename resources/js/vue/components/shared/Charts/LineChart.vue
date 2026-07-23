@@ -76,9 +76,9 @@ export default {
       };
 
       if (hasData) {
-        const overallStartTime = Math.min(...this.data.map(p => p.x.toMillis()));
+        const overallStartTime = Math.min(...this.data.map((p) => p.x.toMillis()));
 
-        const chartData = this.data.map(point => [point.x.toMillis() - overallStartTime, point.y]);
+        const chartData = this.data.map((point) => [point.x.toMillis() - overallStartTime, point.y]);
 
         return {
           ...baseOption,

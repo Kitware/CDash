@@ -360,7 +360,7 @@ export default {
 
     formattedTableRows() {
       const coverageByPrefix = {};
-      this.coverage?.filter(edge => {
+      this.coverage?.filter((edge) => {
         return edge.node.filePath.startsWith(this.currentPrefix) || edge.node.filePath.startsWith(`./${this.currentPrefix}`);
       }).forEach((edge) => {
         const pathWithoutPrefix = edge.node.filePath.replace(/^.\//, '').slice(this.currentPrefix.length);
@@ -390,7 +390,7 @@ export default {
         }
       });
 
-      return Object.values(coverageByPrefix).map(obj => {
+      return Object.values(coverageByPrefix).map((obj) => {
         const linePct = this.computePercentage(obj.linesOfCodeTested, obj.linesOfCodeUntested);
         const branchPct = this.computePercentage(obj.branchesTested, obj.branchesUntested);
 

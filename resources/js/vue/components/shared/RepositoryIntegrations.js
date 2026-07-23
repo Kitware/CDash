@@ -4,8 +4,8 @@
  * @param {...String} components
  */
 function makeUrlFromComponents(...components) {
-  return components.filter(component => component !== null)
-    .map(part => part.replace(/\/+$|^\/+/, ''))
+  return components.filter((component) => component !== null)
+    .map((part) => part.replace(/\/+$|^\/+/, ''))
     .join('/');
 }
 

@@ -114,7 +114,7 @@ export default {
 
   computed: {
     formattedSiteRows() {
-      return this.allSites.sites.edges?.map(edge => {
+      return this.allSites.sites.edges?.map((edge) => {
         return {
           name: {
             value: edge.node.name,
@@ -129,7 +129,7 @@ export default {
             value: edge.node.mostRecentInformation?.totalPhysicalMemory,
             text: this.humanReadableMemory(edge.node.mostRecentInformation?.totalPhysicalMemory),
           },
-          maintainers: edge.node.maintainers.edges.map(maintainer => {
+          maintainers: edge.node.maintainers.edges.map((maintainer) => {
             let maintainerName = '';
             if (maintainer.node.firstname) {
               maintainerName += maintainer.node.firstname;

@@ -195,9 +195,9 @@ export default {
         }
       `,
       variables() {
-        const measurementNames = this.numericMeasurements.map(measurement => measurement.name);
+        const measurementNames = this.numericMeasurements.map((measurement) => measurement.name);
         const measurementFilters = measurementNames.length > 0
-          ? { any: measurementNames.map(name => ({ eq: { name } })) }
+          ? { any: measurementNames.map((name) => ({ eq: { name } })) }
           : { eq: { name: 'NonExistentMeasurementToReturnNothing' } };
 
         return {
@@ -219,9 +219,9 @@ export default {
         }
         // Flatten the builds -> tests structure
         const tests = [];
-        data.project.builds.edges.forEach(buildEdge => {
+        data.project.builds.edges.forEach((buildEdge) => {
           const build = buildEdge.node;
-          build.tests.edges.forEach(testEdgeRecord => {
+          build.tests.edges.forEach((testEdgeRecord) => {
             const testRecord = testEdgeRecord.node;
             tests.push({
               ...testRecord,
@@ -254,10 +254,10 @@ export default {
       if (!this.history) {
         return [];
       }
-      return this.history.map(testRecord => {
+      return this.history.map((testRecord) => {
         const measurement = this.selectedMeasurement === 'time'
           ? null
-          : testRecord.testMeasurements.find(measurement => measurement.name === this.selectedMeasurement);
+          : testRecord.testMeasurements.find((measurement) => measurement.name === this.selectedMeasurement);
 
         return {
           x: testRecord.startTimeTimestamp,
@@ -275,7 +275,7 @@ export default {
       if (!this.chartData || this.chartData.length === 0) {
         return 1;
       }
-      let max = Math.max(...this.chartData.map(dataPoint => dataPoint.y));
+      let max = Math.max(...this.chartData.map((dataPoint) => dataPoint.y));
       if (this.selectedMeasurement === 'time' && this.enableTestTiming) {
         const historicalMax = this.chartData.reduce((maxVal, dataPoint) => {
           if (dataPoint.status !== 'PASSED') {
@@ -290,7 +290,7 @@ export default {
     },
 
     barSeriesData() {
-      return this.chartData.map(dataPoint => {
+      return this.chartData.map((dataPoint) => {
         const isFailed = dataPoint.status && dataPoint.status.toLowerCase() === 'failed';
         return {
           value: dataPoint.y,
@@ -340,7 +340,7 @@ export default {
         },
         xAxis: {
           type: 'category',
-          data: this.chartData.map(dataPoint => dataPoint.buildtestid),
+          data: this.chartData.map((dataPoint) => dataPoint.buildtestid),
           axisLabel: {
             show: false,
           },

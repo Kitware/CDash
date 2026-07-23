@@ -230,7 +230,7 @@ export default {
       if (!this.filteredCommands) {
         return new Set();
       }
-      return new Set(this.filteredCommands.map(edge => edge.node.id));
+      return new Set(this.filteredCommands.map((edge) => edge.node.id));
     },
 
     formattedChartCommands() {
@@ -238,7 +238,7 @@ export default {
         return [];
       }
 
-      return this.allCommands?.map(edge => {
+      return this.allCommands?.map((edge) => {
         return {
           id: edge.node.id,
           startTime: DateTime.fromISO(edge.node.startTime),
@@ -259,11 +259,11 @@ export default {
       }
 
       const memoryData = [];
-      this.allCommands.forEach(edge => {
+      this.allCommands.forEach((edge) => {
         const command = edge.node;
         if (command.measurements.edges && command.measurements.edges.length > 0) {
           const memoryMeasurement = command.measurements.edges.find(
-            m => m.node.name === 'BeforeHostMemoryUsed' || m.node.name === 'AfterHostMemoryUsed',
+            (m) => m.node.name === 'BeforeHostMemoryUsed' || m.node.name === 'AfterHostMemoryUsed',
           );
 
           if (memoryMeasurement) {

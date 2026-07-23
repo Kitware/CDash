@@ -99,7 +99,7 @@ export default {
           ...baseOption,
           xAxis: {
             type: 'category',
-            data: this.data.map(d => d.buildId),
+            data: this.data.map((d) => d.buildId),
             axisLabel: {
               show: false,
             },
@@ -109,21 +109,21 @@ export default {
               name: 'Configure',
               type: 'bar',
               stack: 'total',
-              data: this.data.map(d => d.configureTime.toMillis()),
+              data: this.data.map((d) => d.configureTime.toMillis()),
               color: '#bce784',
             },
             {
               name: 'Build',
               type: 'bar',
               stack: 'total',
-              data: this.data.map(d => d.buildTime.toMillis()),
+              data: this.data.map((d) => d.buildTime.toMillis()),
               color: '#5dd39e',
             },
             {
               name: 'Test',
               type: 'bar',
               stack: 'total',
-              data: this.data.map(d => d.testTime.toMillis()),
+              data: this.data.map((d) => d.testTime.toMillis()),
               color: '#348aa7',
               markArea: {
                 silent: true,

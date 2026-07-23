@@ -356,7 +356,7 @@ export default {
     },
 
     formattedUserRows() {
-      return this.users.edges?.map(edge => {
+      return this.users.edges?.map((edge) => {
         return {
           id: edge.node.id,
           name: `${edge.node.firstname} ${edge.node.lastname}`,
@@ -373,7 +373,7 @@ export default {
     },
 
     formattedInvitationRows() {
-      return this.invitations.edges?.map(edge => {
+      return this.invitations.edges?.map((edge) => {
         return {
           email: edge.node.email,
           role: this.humanReadableRole(edge.node.role),

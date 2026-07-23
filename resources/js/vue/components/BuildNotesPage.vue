@@ -122,7 +122,7 @@ export default {
           }
         }
       `,
-      update: data => data?.build?.notes,
+      update: (data) => data?.build?.notes,
       variables() {
         return {
           buildId: this.buildId,

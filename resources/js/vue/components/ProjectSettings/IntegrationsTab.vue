@@ -217,7 +217,7 @@ export default {
         });
       } catch (error) {
         if (error.graphQLErrors) {
-          error.graphQLErrors.forEach(e => {
+          error.graphQLErrors.forEach((e) => {
             if (e.extensions && e.extensions.validation) {
               this.validationErrors = Object.keys(e.extensions.validation).reduce((acc, key) => {
                 acc[key.replace('input.', '')] = e.extensions.validation[key];
@@ -270,7 +270,7 @@ export default {
         });
       } catch (error) {
         if (error.graphQLErrors) {
-          error.graphQLErrors.forEach(e => {
+          error.graphQLErrors.forEach((e) => {
             this.fatalError = e.message;
           });
         } else {

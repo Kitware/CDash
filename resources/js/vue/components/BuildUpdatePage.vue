@@ -108,7 +108,7 @@ export default {
           }
         }
       `,
-      update: data => data?.build?.updateStep,
+      update: (data) => data?.build?.updateStep,
       variables() {
         return {
           buildId: this.buildId,
@@ -144,7 +144,7 @@ export default {
           }
         }
       `,
-      update: data => data?.build?.updateStep?.updateFiles?.edges,
+      update: (data) => data?.build?.updateStep?.updateFiles?.edges,
       variables() {
         return {
           buildId: this.buildId,
@@ -185,7 +185,7 @@ export default {
       const commits = Object.values(groups);
 
       // Sort files within each commit
-      commits.forEach(commitFiles => {
+      commits.forEach((commitFiles) => {
         commitFiles.sort((a, b) => a.fileName.localeCompare(b.fileName));
       });
 

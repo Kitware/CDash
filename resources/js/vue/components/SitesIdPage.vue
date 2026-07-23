@@ -410,7 +410,7 @@ export default {
           }
         }
       `,
-      update: data => data?.site?.mostRecentInformation,
+      update: (data) => data?.site?.mostRecentInformation,
       variables() {
         return {
           siteid: this.siteId,
@@ -420,7 +420,7 @@ export default {
 
     siteMaintainers: {
       query: SITE_MAINTAINERS_QUERY,
-      update: data => data,
+      update: (data) => data,
       variables() {
         return {
           siteid: this.siteId,

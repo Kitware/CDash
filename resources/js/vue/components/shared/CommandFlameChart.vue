@@ -108,14 +108,14 @@ export default {
         };
       });
 
-      const overallStartTime = Math.min(...rawCommandData.map(cmd => cmd.startTime));
-      const overallEndTime = Math.max(...rawCommandData.map(cmd => cmd.endTime));
+      const overallStartTime = Math.min(...rawCommandData.map((cmd) => cmd.startTime));
+      const overallEndTime = Math.max(...rawCommandData.map((cmd) => cmd.endTime));
 
       const trackEndTimes = [];
       const processedData = [];
       const sortedData = rawCommandData.slice().sort((a, b) => a.startTime - b.startTime);
 
-      sortedData.forEach(command => {
+      sortedData.forEach((command) => {
         let placed = false;
         let trackIndex = -1;
         for (let i = 0; i < trackEndTimes.length; i++) {

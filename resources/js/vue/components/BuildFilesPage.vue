@@ -107,7 +107,7 @@ export default {
           }
         }
       `,
-      update: data => data?.build?.urls,
+      update: (data) => data?.build?.urls,
       variables() {
         return {
           buildId: this.buildId,
@@ -149,7 +149,7 @@ export default {
           }
         }
       `,
-      update: data => data?.build?.files,
+      update: (data) => data?.build?.files,
       variables() {
         return {
           buildId: this.buildId,
@@ -170,7 +170,7 @@ export default {
 
   computed: {
     formattedUrlRows() {
-      return this.urls.edges?.map(edge => {
+      return this.urls.edges?.map((edge) => {
         return {
           url: {
             value: edge.node.href,
@@ -182,7 +182,7 @@ export default {
     },
 
     formattedFileRows() {
-      return this.files.edges?.map(edge => {
+      return this.files.edges?.map((edge) => {
         return {
           name: {
             value: edge.node.name,

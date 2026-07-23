@@ -97,7 +97,7 @@ export default {
       if (!this.cdash.dynamicanalyses) {
         return [];
       }
-      return this.cdash.dynamicanalyses.map(DA => {
+      return this.cdash.dynamicanalyses.map((DA) => {
         const row = {
           name: {
             text: DA.name,

@@ -412,7 +412,7 @@ export default {
           }
         }
       `,
-      update: data => data?.me?.authenticationTokens?.edges,
+      update: (data) => data?.me?.authenticationTokens?.edges,
     },
     projects: {
       query: gql`
@@ -429,7 +429,7 @@ export default {
           }
         }
       `,
-      update: data => data?.me?.projects?.edges,
+      update: (data) => data?.me?.projects?.edges,
     },
   },
 
@@ -490,7 +490,7 @@ export default {
         }
       } catch (error) {
         if (error.graphQLErrors) {
-          error.graphQLErrors.forEach(e => {
+          error.graphQLErrors.forEach((e) => {
             if (e.extensions && e.extensions.validation) {
               this.newTokenValidationErrors = Object.keys(e.extensions.validation).reduce((acc, key) => {
                 acc[key.replace('input.', '')] = e.extensions.validation[key];

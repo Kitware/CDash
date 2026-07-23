@@ -215,14 +215,14 @@ export default {
       const categoryMap = {};
 
       // Grouping logic
-      data.forEach(item => {
+      data.forEach((item) => {
         if (item.group && !categoryMap[item.group]) {
           categoryMap[item.group] = categories.length;
           categories.push({ name: item.group });
         }
       });
 
-      data.forEach(item => {
+      data.forEach((item) => {
         nodes.push({
           name: item.name,
           category: item.group ? categoryMap[item.group] : undefined,
@@ -230,9 +230,9 @@ export default {
         });
       });
 
-      data.forEach(item => {
+      data.forEach((item) => {
         if (item.depends) {
-          item.depends.forEach(dep => {
+          item.depends.forEach((dep) => {
             links.push({
               source: item.name,
               target: dep,

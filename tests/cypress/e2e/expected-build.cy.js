@@ -4,7 +4,7 @@ describe('expected_build', () => {
     cy.login();
     cy.visit('index.php?project=InsightExample&date=2018-08-09');
     cy.get('[data-cy="build-admin-options"]').first().click();
-    cy.get('table.animate-show').find('tr').eq(2).then(row => {
+    cy.get('table.animate-show').find('tr').eq(2).then((row) => {
       if (row.find('[data-cy="mark-as-non-expected-btn"]').length > 0) {
         row.find('button').click();
       }
@@ -67,7 +67,7 @@ describe('expected_build', () => {
     cy.contains('2 build(s) selected').should('be.visible');
 
     // click the "Mark as Expected" button in the bulk actions toolbar
-    cy.window().then(w => w.beforeReload1 = true);
+    cy.window().then((w) => w.beforeReload1 = true);
     cy.get('[data-cy="bulk-mark-expected-btn"]').click();
 
     // wait for page reload
@@ -98,7 +98,7 @@ describe('expected_build', () => {
     cy.get('#project_5_13').find('tbody').find('tr').eq(1).find('[data-cy="build-selection-checkbox"]').check();
 
     // mark them as not expected
-    cy.window().then(w => w.beforeReload2 = true);
+    cy.window().then((w) => w.beforeReload2 = true);
     cy.get('[data-cy="bulk-mark-not-expected-btn"]').click();
 
     // wait for page reload

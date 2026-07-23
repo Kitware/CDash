@@ -276,12 +276,12 @@ export default {
         return [];
       }
 
-      const previousTestsMap = new Map(this.previousTests.map(test => [
+      const previousTestsMap = new Map(this.previousTests.map((test) => [
         `${test.subProject}:${test.node.name}`,
         test.node.status,
       ]));
 
-      return this.tests.filter(test => {
+      return this.tests.filter((test) => {
         const key = `${test.subProject}:${test.node.name}`;
         const previousStatus = previousTestsMap.get(key);
         return previousStatus !== test.node.status;
@@ -308,7 +308,7 @@ export default {
     },
 
     formattedTestRows() {
-      return this.filteredTests?.map(edge => {
+      return this.filteredTests?.map((edge) => {
         return {
           name: {
             value: edge.node.name,

@@ -7,7 +7,7 @@ import { EditorView, lineNumbers, gutter, GutterMarker, Decoration } from '@code
 import { EditorState, Facet, StateField, RangeSetBuilder } from '@codemirror/state';
 
 const coverageData = Facet.define({
-  combine: values => values[0] || {},
+  combine: (values) => values[0] || {},
 });
 
 const coverageThemes = EditorView.baseTheme({
@@ -25,12 +25,12 @@ const coverageHighlightField = StateField.define({
     return buildDecorations(state.facet(coverageData), state.doc);
   },
   update(decorations, transaction) {
-    if (transaction.docChanged || transaction.effects.some(e => e.is(coverageData.reconfigure))) {
+    if (transaction.docChanged || transaction.effects.some((e) => e.is(coverageData.reconfigure))) {
       return buildDecorations(transaction.state.facet(coverageData), transaction.state.doc);
     }
     return decorations.map(transaction.changes);
   },
-  provide: f => EditorView.decorations.from(f),
+  provide: (f) => EditorView.decorations.from(f),
 });
 
 function buildDecorations(coverageMap, doc) {
