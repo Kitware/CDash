@@ -3,6 +3,7 @@ import globals from 'globals';
 import pluginVue from 'eslint-plugin-vue';
 import pluginCypress from 'eslint-plugin-cypress';
 import pluginJest from 'eslint-plugin-jest';
+import stylistic from '@stylistic/eslint-plugin';
 import { defineConfig, globalIgnores } from 'eslint/config';
 
 export default defineConfig([
@@ -26,8 +27,11 @@ export default defineConfig([
         ...globals.browser,
       },
     },
+    plugins: {
+      '@stylistic': stylistic,
+    },
     rules: {
-      'indent': ['error', 2],
+      '@stylistic/indent': ['error', 2, { SwitchCase: 0 }],
       'vue/component-name-in-template-casing': ['error', 'PascalCase'],
       'vue/no-v-html': 'off',
       'vue/require-v-for-key': 'off',
@@ -66,25 +70,25 @@ export default defineConfig([
       'vue/require-name-property': 'error',
       'vue/slot-name-casing': 'error',
       'eqeqeq': ['error', 'always'],
-      'arrow-spacing': ['error'],
-      'block-spacing': ['error'],
-      'brace-style': ['error', 'stroustrup'],
-      'comma-dangle': ['error', 'always-multiline'],
+      '@stylistic/arrow-spacing': ['error'],
+      '@stylistic/block-spacing': ['error'],
+      '@stylistic/brace-style': ['error', 'stroustrup'],
+      '@stylistic/comma-dangle': ['error', 'always-multiline'],
       'curly' : ['error'],
       'default-param-last': ['error'],
-      'eol-last': ['error'],
-      'keyword-spacing': ['error', {'before': true, 'after': true}],
-      'space-before-blocks': ['error', 'always'],
-      'linebreak-style': ['error', 'unix'],
-      'no-trailing-spaces': ['error'],
+      '@stylistic/eol-last': ['error'],
+      '@stylistic/keyword-spacing': ['error', {'before': true, 'after': true}],
+      '@stylistic/space-before-blocks': ['error', 'always'],
+      '@stylistic/linebreak-style': ['error', 'unix'],
+      '@stylistic/no-trailing-spaces': ['error'],
       'no-var': ['error'],
       'prefer-arrow-callback': ['error'],
       'prefer-const': ['error'],
       'prefer-template': ['error'],
-      'quotes': ['error', 'single', {'avoidEscape': true}],
-      'semi': ['error', 'always'],
-      'semi-style': ['error', 'last'],
-      'template-curly-spacing': ['error', 'never'],
+      '@stylistic/quotes': ['error', 'single', {'avoidEscape': true}],
+      '@stylistic/semi': ['error', 'always'],
+      '@stylistic/semi-style': ['error', 'last'],
+      '@stylistic/template-curly-spacing': ['error', 'never'],
     },
   },
   {
