@@ -50,6 +50,7 @@ export default defineConfig([
       '@stylistic/comma-spacing': 'error',
       '@stylistic/comma-style': 'error',
       '@stylistic/computed-property-spacing': 'error',
+      '@stylistic/curly-newline': 'error',
       '@stylistic/eol-last': 'error',
       '@stylistic/keyword-spacing': ['error', {'before': true, 'after': true}],
       '@stylistic/space-before-blocks': ['error', 'always'],
