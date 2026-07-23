@@ -107,6 +107,7 @@ export default {
         super();
         this.coverage = coverage;
       }
+
       toDOM() {
         const element = document.createElement('span');
 

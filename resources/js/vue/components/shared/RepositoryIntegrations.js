@@ -64,6 +64,7 @@ export class GitLab extends Repository {
   getComparisonUrl(commit1, commit2) {
     return makeUrlFromComponents(this.repositoryUrl, '-', 'compare', `${commit1}...${commit2}`);
   }
+
   getFileUrl(commit, path) {
     return makeUrlFromComponents(this.repositoryUrl, '-', 'blob', commit, this.repositoryCmakeProjectRoot, path);
   }
