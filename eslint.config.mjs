@@ -39,7 +39,7 @@ export default defineConfig([
       'prefer-const': 'error',
       'prefer-template': 'error',
 
-      '@stylistic/indent': ['error', 2, { SwitchCase: 0 }],
+      '@stylistic/indent': ['error', 2],
       '@stylistic/arrow-spacing': 'error',
       '@stylistic/block-spacing': 'error',
       '@stylistic/brace-style': 'error',
