@@ -75,6 +75,7 @@ export default defineConfig([
       '@stylistic/no-trailing-spaces': 'error',
       '@stylistic/no-whitespace-before-property': 'error',
       '@stylistic/object-curly-newline': 'error',
+      '@stylistic/object-curly-spacing': ['error', 'always'],
       '@stylistic/space-before-blocks': ['error', 'always'],
       '@stylistic/linebreak-style': ['error', 'unix'],
       '@stylistic/quotes': ['error', 'single', {'avoidEscape': true}],
