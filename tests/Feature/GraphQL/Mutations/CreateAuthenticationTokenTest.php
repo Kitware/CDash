@@ -4,6 +4,7 @@ namespace Tests\Feature\GraphQL\Mutations;
 
 use App\Models\AuthToken;
 use App\Models\Project;
+use App\Models\User;
 use Exception;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Carbon;
@@ -12,17 +13,16 @@ use Illuminate\Support\Str;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesUsers;
 
 class CreateAuthenticationTokenTest extends TestCase
 {
     use CreatesProjects;
-    use CreatesUsers;
+
     use DatabaseTransactions;
 
     public function testCannotCreateProjectSpecificSubmitOnlyAuthTokenWhenProjectDoesNotExist(): void
     {
-        $user = $this->makeAdminUser();
+        $user = User::factory()->adminUser()->create();
 
         $this->actingAs($user)->graphQL('
             mutation ($input: CreateAuthenticationTokenInput!) {
@@ -70,9 +70,9 @@ class CreateAuthenticationTokenTest extends TestCase
         $project = $this->makePublicProject();
 
         if ($user === 'normal') {
-            $user = $this->makeNormalUser();
+            $user = User::factory()->create();
         } elseif ($user === 'admin') {
-            $user = $this->makeAdminUser();
+            $user = User::factory()->adminUser()->create();
         } elseif ($user !== null) {
             throw new Exception('Invalid user provided.');
         }
@@ -148,9 +148,9 @@ class CreateAuthenticationTokenTest extends TestCase
         bool $canCreateAuthToken,
     ): void {
         if ($user === 'normal') {
-            $user = $this->makeNormalUser();
+            $user = User::factory()->create();
         } elseif ($user === 'admin') {
-            $user = $this->makeAdminUser();
+            $user = User::factory()->adminUser()->create();
         } elseif ($user !== null) {
             throw new Exception('Invalid user provided.');
         }
@@ -223,7 +223,7 @@ class CreateAuthenticationTokenTest extends TestCase
     ): void {
         Config::set($configKey, $configValue);
 
-        $user = $this->makeAdminUser();
+        $user = User::factory()->adminUser()->create();
         $project = $this->makePublicProject();
         $project->users()->attach($user, ['role' => Project::PROJECT_USER]);
 
@@ -311,7 +311,7 @@ class CreateAuthenticationTokenTest extends TestCase
      */
     public function testRejectsFullAccessScopeWhenProjectProvided(): void
     {
-        $user = $this->makeAdminUser();
+        $user = User::factory()->adminUser()->create();
         $project = $this->makePublicProject();
         $project->users()->attach($user, ['role' => Project::PROJECT_USER]);
 
@@ -338,7 +338,7 @@ class CreateAuthenticationTokenTest extends TestCase
 
     public function testCanSetDescription(): void
     {
-        $user = $this->makeAdminUser();
+        $user = User::factory()->adminUser()->create();
 
         self::assertDatabaseEmpty(AuthToken::class);
 
@@ -401,7 +401,7 @@ class CreateAuthenticationTokenTest extends TestCase
     ): void {
         Config::set('cdash.token_duration', $tokenDurationConfig);
 
-        $user = $this->makeAdminUser();
+        $user = User::factory()->adminUser()->create();
 
         self::assertDatabaseEmpty(AuthToken::class);
 

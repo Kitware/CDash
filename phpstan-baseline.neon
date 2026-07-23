@@ -22326,6 +22326,12 @@ parameters:
 		-
 			rawMessage: 'Method Database\Factories\UserFactory::definition() throws checked exception OverflowException but it''s missing from the PHPDoc @throws tag.'
 			identifier: missingType.checkedException
+			count: 4
+			path: database/factories/UserFactory.php
+
+		-
+			rawMessage: 'Only booleans are allowed in &&, string given on the left side.'
+			identifier: booleanAnd.leftNotBoolean
 			count: 1
 			path: database/factories/UserFactory.php
 

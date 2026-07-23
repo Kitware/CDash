@@ -9,12 +9,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesUsers;
 
 class ProjectPermissions extends TestCase
 {
     use CreatesProjects;
-    use CreatesUsers;
+
     use DatabaseTransactions;
 
     protected Project $public_project;
@@ -33,8 +32,8 @@ class ProjectPermissions extends TestCase
         $this->private_project1 = $this->makePrivateProject();
         $this->private_project2 = $this->makePrivateProject();
 
-        $this->normal_user = $this->makeNormalUser();
-        $this->admin_user = $this->makeAdminUser();
+        $this->normal_user = User::factory()->create();
+        $this->admin_user = User::factory()->adminUser()->create();
     }
 
     protected function tearDown(): void

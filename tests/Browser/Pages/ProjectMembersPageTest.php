@@ -9,12 +9,10 @@ use Illuminate\Support\Carbon;
 use Laravel\Dusk\Browser;
 use Tests\BrowserTestCase;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesUsers;
 
 class ProjectMembersPageTest extends BrowserTestCase
 {
     use CreatesProjects;
-    use CreatesUsers;
 
     private Project $project;
 
@@ -44,7 +42,7 @@ class ProjectMembersPageTest extends BrowserTestCase
 
     private function addUserToProject(bool $admin = false): User
     {
-        $user = $this->makeNormalUser();
+        $user = User::factory()->create();
         $this->users[] = $user;
 
         $this->project->users()->attach($user->id, [
@@ -62,7 +60,7 @@ class ProjectMembersPageTest extends BrowserTestCase
 
     public function testGlobalAdminsCanSeeInviteMembersButton(): void
     {
-        $this->users['admin'] = $this->makeAdminUser();
+        $this->users['admin'] = User::factory()->adminUser()->create();
 
         $this->browse(function (Browser $browser): void {
             $browser->loginAs($this->users['admin'])
@@ -75,7 +73,7 @@ class ProjectMembersPageTest extends BrowserTestCase
 
     public function testProjectAdminsCanSeeInviteMembersButton(): void
     {
-        $this->users['normal'] = $this->makeNormalUser();
+        $this->users['normal'] = User::factory()->create();
 
         $this->project
             ->users()
@@ -98,7 +96,7 @@ class ProjectMembersPageTest extends BrowserTestCase
 
     public function testProjectUsersCannotSeeInviteMembersButton(): void
     {
-        $this->users['normal'] = $this->makeNormalUser();
+        $this->users['normal'] = User::factory()->create();
 
         $this->project
             ->users()
@@ -131,7 +129,7 @@ class ProjectMembersPageTest extends BrowserTestCase
 
     public function testGlobalAdminsCanSeeInvitationsTable(): void
     {
-        $this->users['admin'] = $this->makeAdminUser();
+        $this->users['admin'] = User::factory()->adminUser()->create();
 
         $this->browse(function (Browser $browser): void {
             $browser->loginAs($this->users['admin'])
@@ -145,7 +143,7 @@ class ProjectMembersPageTest extends BrowserTestCase
 
     public function testProjectAdminsCanSeeInvitationsTable(): void
     {
-        $this->users['normal'] = $this->makeNormalUser();
+        $this->users['normal'] = User::factory()->create();
 
         $this->project
             ->users()
@@ -169,7 +167,7 @@ class ProjectMembersPageTest extends BrowserTestCase
 
     public function testProjectMembersCannotSeeInvitationsTable(): void
     {
-        $this->users['normal'] = $this->makeNormalUser();
+        $this->users['normal'] = User::factory()->create();
 
         $this->project
             ->users()
@@ -202,7 +200,7 @@ class ProjectMembersPageTest extends BrowserTestCase
 
     public function testFullInvitationWorkflow(): void
     {
-        $this->users['admin'] = $this->makeAdminUser();
+        $this->users['admin'] = User::factory()->adminUser()->create();
 
         $fakeEmail = fake()->unique()->email();
 
@@ -244,7 +242,7 @@ class ProjectMembersPageTest extends BrowserTestCase
 
     public function testInvitationTablePagination(): void
     {
-        $this->users['admin'] = $this->makeAdminUser();
+        $this->users['admin'] = User::factory()->adminUser()->create();
 
         $email = '';
         for ($i = 0; $i < 120; $i++) {
@@ -269,7 +267,7 @@ class ProjectMembersPageTest extends BrowserTestCase
 
     public function testProjectAdminsCannotChangeOwnRole(): void
     {
-        $this->users['normal'] = $this->makeNormalUser();
+        $this->users['normal'] = User::factory()->create();
 
         $this->project
             ->users()
@@ -293,8 +291,8 @@ class ProjectMembersPageTest extends BrowserTestCase
 
     public function testAdminsCanChangeUserRole(): void
     {
-        $this->users['admin'] = $this->makeAdminUser();
-        $this->users['normal'] = $this->makeNormalUser();
+        $this->users['admin'] = User::factory()->adminUser()->create();
+        $this->users['normal'] = User::factory()->create();
 
         $this->project
             ->users()
@@ -329,8 +327,8 @@ class ProjectMembersPageTest extends BrowserTestCase
 
     public function testBasicUsersCannotChangeUserRole(): void
     {
-        $this->users['normal1'] = $this->makeNormalUser();
-        $this->users['normal2'] = $this->makeNormalUser();
+        $this->users['normal1'] = User::factory()->create();
+        $this->users['normal2'] = User::factory()->create();
 
         $this->project
             ->users()
@@ -364,8 +362,8 @@ class ProjectMembersPageTest extends BrowserTestCase
 
     public function testNonMembersCannotChangeUserRole(): void
     {
-        $this->users['normal1'] = $this->makeNormalUser();
-        $this->users['normal2'] = $this->makeNormalUser();
+        $this->users['normal1'] = User::factory()->create();
+        $this->users['normal2'] = User::factory()->create();
 
         $this->project
             ->users()
@@ -390,7 +388,7 @@ class ProjectMembersPageTest extends BrowserTestCase
     public function testMembersListPagination(): void
     {
         for ($i = 0; $i < 120; $i++) {
-            $this->users[$i] = $this->makeNormalUser();
+            $this->users[$i] = User::factory()->create();
             $this->project
                 ->users()
                 ->attach($this->users[$i]->id, [
@@ -416,7 +414,7 @@ class ProjectMembersPageTest extends BrowserTestCase
 
     public function testHandlesMisformattedEmail(): void
     {
-        $this->users['admin'] = $this->makeAdminUser();
+        $this->users['admin'] = User::factory()->adminUser()->create();
 
         $fakeEmail = fake()->unique()->email();
 
@@ -445,7 +443,7 @@ class ProjectMembersPageTest extends BrowserTestCase
 
     public function testDeleteRegularProjectMember(): void
     {
-        $this->users['admin'] = $this->makeAdminUser();
+        $this->users['admin'] = User::factory()->adminUser()->create();
         $userToDelete = $this->addUserToProject();
 
         $this->browse(function (Browser $browser): void {
@@ -463,7 +461,7 @@ class ProjectMembersPageTest extends BrowserTestCase
 
     public function testDeleteAdminProjectMember(): void
     {
-        $this->users['admin'] = $this->makeAdminUser();
+        $this->users['admin'] = User::factory()->adminUser()->create();
         $userToDelete = $this->addUserToProject(true);
 
         $this->browse(function (Browser $browser): void {
@@ -507,7 +505,7 @@ class ProjectMembersPageTest extends BrowserTestCase
 
     public function testJoinLeaveWorkflow(): void
     {
-        $user = $this->makeNormalUser();
+        $user = User::factory()->create();
         $this->users[] = $user;
 
         self::assertEmpty($this->project->users()->get());

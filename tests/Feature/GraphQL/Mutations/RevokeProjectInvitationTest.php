@@ -10,12 +10,11 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Carbon;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesUsers;
 
 class RevokeProjectInvitationTest extends TestCase
 {
     use CreatesProjects;
-    use CreatesUsers;
+
     use DatabaseTransactions;
 
     private Project $project;
@@ -32,8 +31,8 @@ class RevokeProjectInvitationTest extends TestCase
         $this->project = $this->makePublicProject();
 
         $this->users = [
-            'admin' => $this->makeAdminUser(),
-            'normal' => $this->makeNormalUser(),
+            'admin' => User::factory()->adminUser()->create(),
+            'normal' => User::factory()->create(),
         ];
     }
 

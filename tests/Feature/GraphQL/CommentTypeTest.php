@@ -12,12 +12,11 @@ use Illuminate\Support\Str;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesUsers;
 
 class CommentTypeTest extends TestCase
 {
     use CreatesProjects;
-    use CreatesUsers;
+
     use DatabaseTransactions;
 
     private Project $project;
@@ -28,7 +27,7 @@ class CommentTypeTest extends TestCase
         parent::setUp();
 
         $this->project = $this->makePublicProject();
-        $this->user = $this->makeNormalUser();
+        $this->user = User::factory()->create();
     }
 
     /**

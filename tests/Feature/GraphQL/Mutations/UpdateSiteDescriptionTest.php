@@ -8,11 +8,9 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Tests\TestCase;
-use Tests\Traits\CreatesUsers;
 
 class UpdateSiteDescriptionTest extends TestCase
 {
-    use CreatesUsers;
     use DatabaseTransactions;
 
     private Site $site;
@@ -24,7 +22,7 @@ class UpdateSiteDescriptionTest extends TestCase
         parent::setUp();
 
         $this->site = Site::factory()->create();
-        $this->user = $this->makeNormalUser();
+        $this->user = User::factory()->create();
     }
 
     protected function tearDown(): void

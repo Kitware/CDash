@@ -10,11 +10,9 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Tests\TestCase;
-use Tests\Traits\CreatesUsers;
 
 class GlobalInvitationTypeTest extends TestCase
 {
-    use CreatesUsers;
     use DatabaseTransactions;
 
     private User $normalUser;
@@ -27,8 +25,8 @@ class GlobalInvitationTypeTest extends TestCase
     {
         parent::setUp();
 
-        $this->normalUser = $this->makeNormalUser();
-        $this->adminUser = $this->makeAdminUser();
+        $this->normalUser = User::factory()->create();
+        $this->adminUser = User::factory()->adminUser()->create();
     }
 
     protected function tearDown(): void

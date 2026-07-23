@@ -18,12 +18,10 @@ use Psr\SimpleCache\InvalidArgumentException;
 use Slides\Saml2\Events\SignedIn as Saml2SignedInEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Tests\TestCase;
-use Tests\Traits\CreatesUsers;
 use Throwable;
 
 class LoginAndRegistration extends TestCase
 {
-    use CreatesUsers;
     use DatabaseTransactions;
 
     protected static string $email = 'logintest@user.com';
@@ -76,7 +74,7 @@ class LoginAndRegistration extends TestCase
 
     public function testUserCanLoginWithCorrectCredentials(): void
     {
-        $this->user = $this->makeNormalUser(password: '12345');
+        $this->user = User::factory()->create(['password' => '12345']);
         $this->assertModelExists($this->user);
 
         // Verify that users can login with their username and password.
@@ -99,7 +97,7 @@ class LoginAndRegistration extends TestCase
 
     public function testUserCanLoginWithRememberMe(): void
     {
-        $this->user = $this->makeNormalUser(password: '12345');
+        $this->user = User::factory()->create(['password' => '12345']);
         $this->assertModelExists($this->user);
 
         // Verify that logging in with "remember me" checked sets the recaller cookie.
@@ -114,7 +112,7 @@ class LoginAndRegistration extends TestCase
 
     public function testUserCanLoginWithoutRememberMe(): void
     {
-        $this->user = $this->makeNormalUser(password: '12345');
+        $this->user = User::factory()->create(['password' => '12345']);
         $this->assertModelExists($this->user);
 
         // Verify that logging in without "remember me" does not set the recaller cookie.
@@ -128,7 +126,7 @@ class LoginAndRegistration extends TestCase
 
     public function testUserCannotLoginWithIncorrectCredentials(): void
     {
-        $this->user = $this->makeNormalUser(password: '12345');
+        $this->user = User::factory()->create(['password' => '12345']);
 
         // Test the incorrect password workflow.
         $response = $this->post('/login', [
@@ -151,7 +149,7 @@ class LoginAndRegistration extends TestCase
 
     public function testUserCannotLoginWithDisabledLoginForm(): void
     {
-        $this->user = $this->makeNormalUser(password: '12345');
+        $this->user = User::factory()->create(['password' => '12345']);
 
         // Verify that we can't login by POSTing to /login when the
         // relevant config setting is disabled.

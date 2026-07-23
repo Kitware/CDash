@@ -2,23 +2,23 @@
 
 namespace Tests\Feature\GraphQL\Mutations;
 
+use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesUsers;
 
 class UpdatePinnedTestMeasurementOrderTest extends TestCase
 {
     use CreatesProjects;
-    use CreatesUsers;
+
     use DatabaseTransactions;
 
     public function testFailsWhenIdsDontMatchProject(): void
     {
         $project1 = $this->makePublicProject();
         $project2 = $this->makePublicProject();
-        $user = $this->makeAdminUser();
+        $user = User::factory()->adminUser()->create();
 
         $measurement1 = $project1->pinnedTestMeasurements()->create([
             'name' => Str::uuid()->toString(),
@@ -52,7 +52,7 @@ class UpdatePinnedTestMeasurementOrderTest extends TestCase
     public function testFailsWhenMissingIds(): void
     {
         $project = $this->makePublicProject();
-        $user = $this->makeAdminUser();
+        $user = User::factory()->adminUser()->create();
 
         $measurement1 = $project->pinnedTestMeasurements()->create([
             'name' => Str::uuid()->toString(),
@@ -89,7 +89,7 @@ class UpdatePinnedTestMeasurementOrderTest extends TestCase
     public function testFailsWhenNoMeasurements(): void
     {
         $project = $this->makePublicProject();
-        $user = $this->makeAdminUser();
+        $user = User::factory()->adminUser()->create();
 
         $this->actingAs($user)->graphQL('
             mutation updatePinnedTestMeasurementOrder($input: UpdatePinnedTestMeasurementOrderInput!) {
@@ -144,7 +144,7 @@ class UpdatePinnedTestMeasurementOrderTest extends TestCase
     public function testFailsWhenNormalUser(): void
     {
         $project = $this->makePublicProject();
-        $user = $this->makeNormalUser();
+        $user = User::factory()->create();
         $measurement = $project->pinnedTestMeasurements()->create([
             'name' => Str::uuid()->toString(),
             'position' => 1,
@@ -175,7 +175,7 @@ class UpdatePinnedTestMeasurementOrderTest extends TestCase
     public function testFailsWithDuplicateIds(): void
     {
         $project = $this->makePublicProject();
-        $user = $this->makeAdminUser();
+        $user = User::factory()->adminUser()->create();
 
         $measurement = $project->pinnedTestMeasurements()->create([
             'name' => Str::uuid()->toString(),
@@ -207,7 +207,7 @@ class UpdatePinnedTestMeasurementOrderTest extends TestCase
     public function testSucceedsWhenAdminUser(): void
     {
         $project = $this->makePublicProject();
-        $user = $this->makeAdminUser();
+        $user = User::factory()->adminUser()->create();
 
         $measurement1 = $project->pinnedTestMeasurements()->create([
             'name' => 'Measurement 1',

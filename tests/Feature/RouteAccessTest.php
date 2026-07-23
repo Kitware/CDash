@@ -11,12 +11,11 @@ use Mockery\Exception\InvalidCountException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesUsers;
 
 class RouteAccessTest extends TestCase
 {
     use CreatesProjects;
-    use CreatesUsers;
+
     use DatabaseTransactions;
 
     private User $normal_user;
@@ -29,10 +28,10 @@ class RouteAccessTest extends TestCase
 
         URL::forceRootUrl('http://localhost');
 
-        $this->normal_user = $this->makeNormalUser();
+        $this->normal_user = User::factory()->create();
         $this->assertDatabaseHas('users', ['email' => $this->normal_user->email]);
 
-        $this->admin_user = $this->makeAdminUser();
+        $this->admin_user = User::factory()->adminUser()->create();
         $this->assertDatabaseHas('users', ['email' => $this->admin_user->email, 'admin' => '1']);
 
         $this->public_project = $this->makePublicProject();

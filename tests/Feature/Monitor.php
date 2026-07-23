@@ -11,11 +11,9 @@ use Illuminate\Support\Facades\URL;
 use LogicException;
 use Mockery\Exception\InvalidCountException;
 use Tests\TestCase;
-use Tests\Traits\CreatesUsers;
 
 class Monitor extends TestCase
 {
-    use CreatesUsers;
     use DatabaseTransactions;
 
     protected User $normal_user;
@@ -27,8 +25,8 @@ class Monitor extends TestCase
 
         URL::forceRootUrl('http://localhost');
 
-        $this->normal_user = $this->makeNormalUser();
-        $this->admin_user = $this->makeAdminUser();
+        $this->normal_user = User::factory()->create();
+        $this->admin_user = User::factory()->adminUser()->create();
     }
 
     /**

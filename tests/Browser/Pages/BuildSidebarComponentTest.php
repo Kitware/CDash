@@ -20,12 +20,10 @@ use Illuminate\Support\Str;
 use Laravel\Dusk\Browser;
 use Tests\BrowserTestCase;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesUsers;
 
 class BuildSidebarComponentTest extends BrowserTestCase
 {
     use CreatesProjects;
-    use CreatesUsers;
 
     private Project $project;
     private Site $site;
@@ -40,7 +38,7 @@ class BuildSidebarComponentTest extends BrowserTestCase
         $this->site = Site::factory()->create();
         SiteService::updateSiteInfoIfChanged($this->site, new SiteInformation([]));
 
-        $this->user = $this->makeNormalUser();
+        $this->user = User::factory()->create();
     }
 
     public function tearDown(): void

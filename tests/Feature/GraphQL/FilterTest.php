@@ -14,12 +14,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesUsers;
 
 class FilterTest extends TestCase
 {
     use CreatesProjects;
-    use CreatesUsers;
+
     use DatabaseTransactions;
 
     /**
@@ -54,8 +53,8 @@ class FilterTest extends TestCase
         $this->projects['private2'] = $this->makePrivateProject('private2');
 
         $this->users = [
-            'normal' => $this->makeNormalUser(),
-            'admin' => $this->makeAdminUser(),
+            'normal' => User::factory()->create(),
+            'admin' => User::factory()->adminUser()->create(),
         ];
 
         $this->testOutput = TestOutput::create([

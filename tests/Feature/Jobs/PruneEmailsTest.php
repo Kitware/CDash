@@ -10,12 +10,11 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesUsers;
 
 class PruneEmailsTest extends TestCase
 {
     use CreatesProjects;
-    use CreatesUsers;
+
     use DatabaseTransactions;
 
     protected Project $project;
@@ -26,7 +25,7 @@ class PruneEmailsTest extends TestCase
         parent::setUp();
 
         $this->project = $this->makePublicProject();
-        $this->user = $this->makeNormalUser();
+        $this->user = User::factory()->create();
     }
 
     public function tearDown(): void

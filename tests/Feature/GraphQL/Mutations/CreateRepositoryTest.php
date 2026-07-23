@@ -4,21 +4,21 @@ namespace Tests\Feature\GraphQL\Mutations;
 
 use App\Models\Project;
 use App\Models\Repository;
+use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesUsers;
 
 class CreateRepositoryTest extends TestCase
 {
     use CreatesProjects;
-    use CreatesUsers;
+
     use DatabaseTransactions;
 
     public function testCannotCreateRepositoryWhenProjectDoesNotExist(): void
     {
-        $user = $this->makeAdminUser();
+        $user = User::factory()->adminUser()->create();
 
         $this->actingAs($user)->graphQL('
             mutation createRepository($input: CreateRepositoryInput!) {
@@ -71,7 +71,7 @@ class CreateRepositoryTest extends TestCase
     public function testCannotCreateRepositoryAsNormalUser(): void
     {
         $project = $this->makePublicProject();
-        $user = $this->makeNormalUser();
+        $user = User::factory()->create();
 
         $this->actingAs($user)->graphQL('
             mutation createRepository($input: CreateRepositoryInput!) {
@@ -98,7 +98,7 @@ class CreateRepositoryTest extends TestCase
     public function testCannotCreateRepositoryAsNormalProjectUser(): void
     {
         $project = $this->makePublicProject();
-        $user = $this->makeNormalUser();
+        $user = User::factory()->create();
         $project->users()->attach($user, ['role' => Project::PROJECT_USER]);
 
         $this->actingAs($user)->graphQL('
@@ -126,7 +126,7 @@ class CreateRepositoryTest extends TestCase
     public function testCanCreateRepositoryAsProjectAdmin(): void
     {
         $project = $this->makePublicProject();
-        $user = $this->makeNormalUser();
+        $user = User::factory()->create();
         $project->users()->attach($user, ['role' => Project::PROJECT_ADMIN]);
 
         $url = fake()->url();
@@ -181,7 +181,7 @@ class CreateRepositoryTest extends TestCase
     public function testCanCreateRepositoryAsGlobalAdmin(): void
     {
         $project = $this->makePublicProject();
-        $user = $this->makeAdminUser();
+        $user = User::factory()->adminUser()->create();
 
         $url = fake()->url();
         $username = Str::uuid()->toString();

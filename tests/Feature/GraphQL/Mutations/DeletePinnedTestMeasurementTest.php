@@ -3,21 +3,21 @@
 namespace Tests\Feature\GraphQL\Mutations;
 
 use App\Models\PinnedTestMeasurement;
+use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesUsers;
 
 class DeletePinnedTestMeasurementTest extends TestCase
 {
     use CreatesProjects;
-    use CreatesUsers;
+
     use DatabaseTransactions;
 
     public function testFailsWhenNoMeasurement(): void
     {
-        $user = $this->makeAdminUser();
+        $user = User::factory()->adminUser()->create();
 
         $this->actingAs($user)->graphQL('
             mutation deletePinnedTestMeasurement($input: DeletePinnedTestMeasurementInput!) {
@@ -60,7 +60,7 @@ class DeletePinnedTestMeasurementTest extends TestCase
     public function testFailsWhenBasicUser(): void
     {
         $project = $this->makePublicProject();
-        $user = $this->makeNormalUser();
+        $user = User::factory()->create();
 
         /** @var PinnedTestMeasurement $measurement */
         $measurement = $project->pinnedTestMeasurements()->create([
@@ -86,7 +86,7 @@ class DeletePinnedTestMeasurementTest extends TestCase
     public function testSucceedsWhenAdminUser(): void
     {
         $project = $this->makePublicProject();
-        $user = $this->makeAdminUser();
+        $user = User::factory()->adminUser()->create();
 
         /** @var PinnedTestMeasurement $measurement */
         $measurement = $project->pinnedTestMeasurements()->create([

@@ -13,12 +13,10 @@ use Illuminate\Support\Str;
 use Laravel\Dusk\Browser;
 use Tests\BrowserTestCase;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesUsers;
 
 class BuildCommentsPageTest extends BrowserTestCase
 {
     use CreatesProjects;
-    use CreatesUsers;
 
     private Project $project;
     private Site $site;
@@ -30,7 +28,7 @@ class BuildCommentsPageTest extends BrowserTestCase
 
         $this->project = $this->makePublicProject();
 
-        $this->user = $this->makeNormalUser();
+        $this->user = User::factory()->create();
 
         $this->site = Site::factory()->create();
         SiteService::updateSiteInfoIfChanged($this->site, new SiteInformation([]));

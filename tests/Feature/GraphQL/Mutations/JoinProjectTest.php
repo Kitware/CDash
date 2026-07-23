@@ -7,12 +7,11 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesUsers;
 
 class JoinProjectTest extends TestCase
 {
     use CreatesProjects;
-    use CreatesUsers;
+
     use DatabaseTransactions;
 
     private ?Project $project = null;
@@ -30,7 +29,7 @@ class JoinProjectTest extends TestCase
     public function testCanJoinPublicProject(): void
     {
         $this->project = $this->makePublicProject();
-        $this->user = $this->makeNormalUser();
+        $this->user = User::factory()->create();
 
         self::assertEmpty($this->project->users()->get());
 
@@ -59,7 +58,7 @@ class JoinProjectTest extends TestCase
     public function testCanJoinProtectedProject(): void
     {
         $this->project = $this->makeProtectedProject();
-        $this->user = $this->makeNormalUser();
+        $this->user = User::factory()->create();
 
         self::assertEmpty($this->project->users()->get());
 
@@ -88,7 +87,7 @@ class JoinProjectTest extends TestCase
     public function testCannotJoinPrivateProject(): void
     {
         $this->project = $this->makePrivateProject();
-        $this->user = $this->makeNormalUser();
+        $this->user = User::factory()->create();
 
         self::assertEmpty($this->project->users()->get());
 
@@ -132,7 +131,7 @@ class JoinProjectTest extends TestCase
 
     public function testCannotJoinMissingProject(): void
     {
-        $this->user = $this->makeNormalUser();
+        $this->user = User::factory()->create();
 
         $this->actingAs($this->user)->graphQL('
             mutation ($projectId: ID!) {

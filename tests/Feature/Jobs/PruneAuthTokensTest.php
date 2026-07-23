@@ -11,11 +11,9 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Tests\TestCase;
-use Tests\Traits\CreatesUsers;
 
 class PruneAuthTokensTest extends TestCase
 {
-    use CreatesUsers;
     use DatabaseTransactions;
 
     protected User $user;
@@ -24,7 +22,7 @@ class PruneAuthTokensTest extends TestCase
     {
         parent::setUp();
 
-        $this->user = $this->makeNormalUser();
+        $this->user = User::factory()->create();
     }
 
     public function tearDown(): void

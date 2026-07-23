@@ -3,23 +3,23 @@
 namespace Tests\Feature\GraphQL\Mutations;
 
 use App\Models\Project;
+use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesUsers;
 
 class UpdateProjectTest extends TestCase
 {
     use CreatesProjects;
-    use CreatesUsers;
+
     use DatabaseTransactions;
 
     public function testCannotUpdateNonExistentProject(): void
     {
-        $user = $this->makeAdminUser();
+        $user = User::factory()->adminUser()->create();
         $this->actingAs($user)->graphQL('
             mutation updateProject($input: UpdateProjectInput!) {
                 updateProject(input: $input) {
@@ -63,7 +63,7 @@ class UpdateProjectTest extends TestCase
     {
         $project = $this->makePublicProject();
         $original_name = $project->name;
-        $user = $this->makeNormalUser();
+        $user = User::factory()->create();
         $this->actingAs($user)->graphQL('
             mutation updateProject($input: UpdateProjectInput!) {
                 updateProject(input: $input) {
@@ -86,7 +86,7 @@ class UpdateProjectTest extends TestCase
     {
         $project = $this->makePublicProject();
         $original_name = $project->name;
-        $user = $this->makeNormalUser();
+        $user = User::factory()->create();
         $project->users()->attach($user, ['role' => Project::PROJECT_USER]);
 
         $this->actingAs($user)->graphQL('
@@ -110,7 +110,7 @@ class UpdateProjectTest extends TestCase
     public function testCanUpdateProjectAsProjectAdmin(): void
     {
         $project = $this->makePublicProject();
-        $user = $this->makeNormalUser();
+        $user = User::factory()->create();
         $project->users()->attach($user, ['role' => Project::PROJECT_ADMIN]);
 
         $name = Str::uuid()->toString();
@@ -144,7 +144,7 @@ class UpdateProjectTest extends TestCase
     public function testCanUpdateProjectAsGlobalAdmin(): void
     {
         $project = $this->makePublicProject();
-        $user = $this->makeAdminUser();
+        $user = User::factory()->adminUser()->create();
         $name = Str::uuid()->toString();
 
         $this->actingAs($user)->graphQL('
@@ -214,7 +214,7 @@ class UpdateProjectTest extends TestCase
     public function testUpdateEachField(string $gqlField, mixed $value, string $dbField, mixed $expected): void
     {
         $project = $this->makePublicProject();
-        $user = $this->makeAdminUser();
+        $user = User::factory()->adminUser()->create();
 
         $this->actingAs($user)->graphQL("
             mutation updateProject(\$input: UpdateProjectInput!) {
@@ -249,7 +249,7 @@ class UpdateProjectTest extends TestCase
         $project1 = $this->makePublicProject();
         $original_name = $project1->name;
         $project2 = $this->makePublicProject();
-        $user = $this->makeAdminUser();
+        $user = User::factory()->adminUser()->create();
 
         $this->actingAs($user)->graphQL('
             mutation updateProject($input: UpdateProjectInput!) {
@@ -273,7 +273,7 @@ class UpdateProjectTest extends TestCase
     {
         $project = $this->makePublicProject();
         $original_name = $project->name;
-        $user = $this->makeAdminUser();
+        $user = User::factory()->adminUser()->create();
 
         $this->actingAs($user)->graphQL('
             mutation updateProject($input: UpdateProjectInput!) {
@@ -296,7 +296,7 @@ class UpdateProjectTest extends TestCase
     public function testCanChangeNameToCurrentName(): void
     {
         $project = $this->makePublicProject();
-        $user = $this->makeAdminUser();
+        $user = User::factory()->adminUser()->create();
 
         $this->actingAs($user)->graphQL('
             mutation updateProject($input: UpdateProjectInput!) {
@@ -350,11 +350,11 @@ class UpdateProjectTest extends TestCase
 
         $user = null;
         if ($userRole === 'normal') {
-            $user = $this->makeNormalUser();
+            $user = User::factory()->create();
         } elseif ($userRole === 'admin') {
-            $user = $this->makeAdminUser();
+            $user = User::factory()->adminUser()->create();
         } elseif ($userRole === 'project_admin') {
-            $user = $this->makeNormalUser();
+            $user = User::factory()->create();
             $project->users()->attach($user, ['role' => Project::PROJECT_ADMIN]);
         }
 
@@ -410,9 +410,9 @@ class UpdateProjectTest extends TestCase
 
         $user = null;
         if ($userRole === 'admin') {
-            $user = $this->makeAdminUser();
+            $user = User::factory()->adminUser()->create();
         } elseif ($userRole === 'project_admin') {
-            $user = $this->makeNormalUser();
+            $user = User::factory()->create();
             $project->users()->attach($user, ['role' => Project::PROJECT_ADMIN]);
         }
 

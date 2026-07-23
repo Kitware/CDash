@@ -10,12 +10,10 @@ use Illuminate\Support\Str;
 use Laravel\Dusk\Browser;
 use Tests\BrowserTestCase;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesUsers;
 
 class SitesIdPageTest extends BrowserTestCase
 {
     use CreatesProjects;
-    use CreatesUsers;
 
     /**
      * @var array<Project>
@@ -257,7 +255,7 @@ class SitesIdPageTest extends BrowserTestCase
     public function testClaimSiteFunctionality(): void
     {
         $this->sites['site1'] = Site::factory()->create();
-        $this->users['user'] = $this->makeNormalUser();
+        $this->users['user'] = User::factory()->create();
 
         $this->browse(function (Browser $browser): void {
             // We shouldn't see the claim/unclaim site button when we're logged out
@@ -296,7 +294,7 @@ class SitesIdPageTest extends BrowserTestCase
     {
         $this->sites['site1'] = Site::factory()->create();
         $this->sites['site1']->information()->create();
-        $this->users['user'] = $this->makeNormalUser();
+        $this->users['user'] = User::factory()->create();
 
         $this->browse(function (Browser $browser): void {
             // We shouldn't see buttons to edit the description if we are logged out

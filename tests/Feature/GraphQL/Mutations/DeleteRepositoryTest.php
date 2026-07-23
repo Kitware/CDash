@@ -4,20 +4,20 @@ namespace Tests\Feature\GraphQL\Mutations;
 
 use App\Models\Project;
 use App\Models\Repository;
+use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesUsers;
 
 class DeleteRepositoryTest extends TestCase
 {
     use CreatesProjects;
-    use CreatesUsers;
+
     use DatabaseTransactions;
 
     public function testCannotDeleteNonexistentRepository(): void
     {
-        $user = $this->makeAdminUser();
+        $user = User::factory()->adminUser()->create();
 
         $this->actingAs($user)->graphQL('
             mutation deleteRepository($input: DeleteRepositoryInput!) {
@@ -59,7 +59,7 @@ class DeleteRepositoryTest extends TestCase
 
     public function testCannotDeleteRepositoryAsNormalUser(): void
     {
-        $user = $this->makeNormalUser();
+        $user = User::factory()->create();
         $project = $this->makePublicProject();
         $repository = $project->repositories()->save(Repository::factory()->make());
         self::assertInstanceOf(Repository::class, $repository);
@@ -83,7 +83,7 @@ class DeleteRepositoryTest extends TestCase
 
     public function testCannotDeleteRepositoryAsNormalProjectUser(): void
     {
-        $user = $this->makeNormalUser();
+        $user = User::factory()->create();
         $project = $this->makePublicProject();
         $repository = $project->repositories()->save(Repository::factory()->make());
         $project->users()->attach($user, ['role' => Project::PROJECT_USER]);
@@ -108,7 +108,7 @@ class DeleteRepositoryTest extends TestCase
 
     public function testCanDeleteRepositoryAsProjectAdmin(): void
     {
-        $user = $this->makeNormalUser();
+        $user = User::factory()->create();
         $project = $this->makePublicProject();
         $repository = $project->repositories()->save(Repository::factory()->make());
         $project->users()->attach($user, ['role' => Project::PROJECT_ADMIN]);
@@ -139,7 +139,7 @@ class DeleteRepositoryTest extends TestCase
 
     public function testCanDeleteRepositoryAsGlobalAdmin(): void
     {
-        $user = $this->makeAdminUser();
+        $user = User::factory()->adminUser()->create();
         $project = $this->makePublicProject();
         $repository = $project->repositories()->save(Repository::factory()->make());
         self::assertInstanceOf(Repository::class, $repository);

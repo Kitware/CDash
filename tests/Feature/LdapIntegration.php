@@ -3,18 +3,15 @@
 namespace Tests\Feature;
 
 use App\Models\Project;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use LdapRecord\LdapRecordException;
 use LdapRecord\Models\ModelDoesNotExistException;
-use LdapRecord\Models\OpenLDAP\Group;
 use LdapRecord\Models\OpenLDAP\User;
 use Mockery;
 use Mockery\Exception\InvalidCountException;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesUsers;
 
 /**
  * Tests in this file connect to a live LDAP server running in the development environment.
@@ -22,7 +19,6 @@ use Tests\Traits\CreatesUsers;
 class LdapIntegration extends TestCase
 {
     use CreatesProjects;
-    use CreatesUsers;
 
     /**
      * @var array<string,User>
@@ -289,7 +285,7 @@ class LdapIntegration extends TestCase
 
     public function testArtisanSyncsGuid(): void
     {
-        $user = $this->makeNormalUser();
+        $user = \App\Models\User::factory()->create();
         $user->email = $this->users['group_1_only_1']->getAttribute('uid')[0];
         $user->save();
         $this->database_users[] = $user;

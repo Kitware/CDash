@@ -4,20 +4,20 @@ namespace Tests\Feature\GraphQL\Mutations;
 
 use App\Models\AuthToken;
 use App\Models\Project;
+use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesUsers;
 
 class DeleteAuthenticationTokenTest extends TestCase
 {
     use CreatesProjects;
-    use CreatesUsers;
+
     use DatabaseTransactions;
 
     public function testCannotDeleteMissingToken(): void
     {
-        $user = $this->makeAdminUser();
+        $user = User::factory()->adminUser()->create();
         $user->authenticationTokens()->save(AuthToken::factory()->make());
 
         self::assertDatabaseCount(AuthToken::class, 1);
@@ -39,7 +39,7 @@ class DeleteAuthenticationTokenTest extends TestCase
 
     public function testAnonymousUserCannotDeleteToken(): void
     {
-        $user = $this->makeAdminUser();
+        $user = User::factory()->adminUser()->create();
         /** @var AuthToken $authToken */
         $authToken = $user->authenticationTokens()->save(AuthToken::factory()->make());
 
@@ -62,13 +62,13 @@ class DeleteAuthenticationTokenTest extends TestCase
 
     public function testNormalUserCannotDeleteTokenOwnedByAnotherUser(): void
     {
-        $user = $this->makeAdminUser();
+        $user = User::factory()->adminUser()->create();
         /** @var AuthToken $authToken */
         $authToken = $user->authenticationTokens()->save(AuthToken::factory()->make());
 
         self::assertDatabaseCount(AuthToken::class, 1);
 
-        $this->actingAs($this->makeNormalUser())->graphQL('
+        $this->actingAs(User::factory()->create())->graphQL('
             mutation ($input: DeleteAuthenticationTokenInput!) {
                 deleteAuthenticationToken(input: $input) {
                     message
@@ -85,7 +85,7 @@ class DeleteAuthenticationTokenTest extends TestCase
 
     public function testNormalUserCanDeleteOwnTokens(): void
     {
-        $user = $this->makeNormalUser();
+        $user = User::factory()->create();
         /** @var AuthToken $authToken */
         $authToken = $user->authenticationTokens()->save(AuthToken::factory()->make());
 
@@ -114,13 +114,13 @@ class DeleteAuthenticationTokenTest extends TestCase
 
     public function testAdminCanDeleteTokenOwnedByAnotherUser(): void
     {
-        $user = $this->makeAdminUser();
+        $user = User::factory()->adminUser()->create();
         /** @var AuthToken $authToken */
         $authToken = $user->authenticationTokens()->save(AuthToken::factory()->make());
 
         self::assertDatabaseCount(AuthToken::class, 1);
 
-        $this->actingAs($this->makeAdminUser())->graphQL('
+        $this->actingAs(User::factory()->adminUser()->create())->graphQL('
             mutation ($input: DeleteAuthenticationTokenInput!) {
                 deleteAuthenticationToken(input: $input) {
                     message
@@ -143,7 +143,7 @@ class DeleteAuthenticationTokenTest extends TestCase
 
     public function testProjectAdminCanDeleteProjectScopedTokenOwnedByAnotherUser(): void
     {
-        $user = $this->makeAdminUser();
+        $user = User::factory()->adminUser()->create();
         $project = $this->makePublicProject();
         /** @var AuthToken $authToken */
         $authToken = $user->authenticationTokens()->save(AuthToken::factory()->make([
@@ -151,7 +151,7 @@ class DeleteAuthenticationTokenTest extends TestCase
             'projectid' => $project->id,
         ]));
 
-        $projectUser = $this->makeNormalUser();
+        $projectUser = User::factory()->create();
         $project->users()->attach($projectUser, ['role' => Project::PROJECT_ADMIN]);
 
         self::assertDatabaseCount(AuthToken::class, 1);
@@ -179,7 +179,7 @@ class DeleteAuthenticationTokenTest extends TestCase
 
     public function testNormalProjectUserCannotDeleteProjectScopedTokenOwnedByAnotherUser(): void
     {
-        $user = $this->makeAdminUser();
+        $user = User::factory()->adminUser()->create();
         $project = $this->makePublicProject();
         /** @var AuthToken $authToken */
         $authToken = $user->authenticationTokens()->save(AuthToken::factory()->make([
@@ -187,7 +187,7 @@ class DeleteAuthenticationTokenTest extends TestCase
             'projectid' => $project->id,
         ]));
 
-        $projectUser = $this->makeNormalUser();
+        $projectUser = User::factory()->create();
         $project->users()->attach($projectUser, ['role' => Project::PROJECT_USER]);
 
         self::assertDatabaseCount(AuthToken::class, 1);

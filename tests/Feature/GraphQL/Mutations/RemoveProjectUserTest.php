@@ -8,12 +8,11 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Config;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesUsers;
 
 class RemoveProjectUserTest extends TestCase
 {
     use CreatesProjects;
-    use CreatesUsers;
+
     use DatabaseTransactions;
 
     private Project $project;
@@ -44,7 +43,7 @@ class RemoveProjectUserTest extends TestCase
 
     private function addUserToProject(bool $admin = false): User
     {
-        $user = $this->makeNormalUser();
+        $user = User::factory()->create();
         $this->users[] = $user;
 
         $this->project->users()->attach($user->id, [
@@ -68,7 +67,7 @@ class RemoveProjectUserTest extends TestCase
 
     public function testAdminUserCanDeleteProjectMembers(): void
     {
-        $this->users['admin'] = $this->makeAdminUser();
+        $this->users['admin'] = User::factory()->adminUser()->create();
         $userToDelete = $this->addUserToProject();
 
         $this->assertProjectMember($userToDelete);
@@ -98,7 +97,7 @@ class RemoveProjectUserTest extends TestCase
 
     public function testNormalNonmemberUserCannotDeleteProjectMembers(): void
     {
-        $this->users['normal'] = $this->makeNormalUser();
+        $this->users['normal'] = User::factory()->create();
         $userToDelete = $this->addUserToProject();
 
         $this->assertProjectMember($userToDelete);
@@ -231,8 +230,8 @@ class RemoveProjectUserTest extends TestCase
 
     public function testCannotDeleteNonmemberUser(): void
     {
-        $this->users['admin'] = $this->makeAdminUser();
-        $this->users['normal'] = $this->makeNormalUser();
+        $this->users['admin'] = User::factory()->adminUser()->create();
+        $this->users['normal'] = User::factory()->create();
 
         self::assertTrue($this->users['normal']->refresh()->exists());
 
@@ -256,7 +255,7 @@ class RemoveProjectUserTest extends TestCase
 
     public function testCannotDeleteMissingUser(): void
     {
-        $this->users['admin'] = $this->makeAdminUser();
+        $this->users['admin'] = User::factory()->adminUser()->create();
 
         $this->actingAs($this->users['admin'])->graphQL('
             mutation ($userId: ID!, $projectId: ID!) {
@@ -276,8 +275,8 @@ class RemoveProjectUserTest extends TestCase
 
     public function testHandlesMissingProject(): void
     {
-        $this->users['admin'] = $this->makeAdminUser();
-        $this->users['normal'] = $this->makeNormalUser();
+        $this->users['admin'] = User::factory()->adminUser()->create();
+        $this->users['normal'] = User::factory()->create();
 
         $this->actingAs($this->users['admin'])->graphQL('
             mutation ($userId: ID!, $projectId: ID!) {
@@ -297,7 +296,7 @@ class RemoveProjectUserTest extends TestCase
 
     public function testCannotDeleteProjectMembersIfManagedByLdap(): void
     {
-        $this->users['admin'] = $this->makeAdminUser();
+        $this->users['admin'] = User::factory()->adminUser()->create();
         $userToDelete = $this->addUserToProject();
 
         $this->assertProjectMember($userToDelete);
@@ -326,7 +325,7 @@ class RemoveProjectUserTest extends TestCase
 
     public function testCanDeleteProjectMemberWhenLdapEnabledButNoLdapFilter(): void
     {
-        $this->users['admin'] = $this->makeAdminUser();
+        $this->users['admin'] = User::factory()->adminUser()->create();
         $userToDelete = $this->addUserToProject();
 
         $this->assertProjectMember($userToDelete);

@@ -13,12 +13,11 @@ use Illuminate\Support\Str;
 use Laravel\Dusk\Browser;
 use Tests\BrowserTestCase;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesUsers;
 
 class ProjectsPageTest extends BrowserTestCase
 {
     use CreatesProjects;
-    use CreatesUsers;
+
     use DatabaseTruncation;
 
     /**
@@ -60,8 +59,8 @@ class ProjectsPageTest extends BrowserTestCase
 
     public function testCreateProjectButtonOnlyVisibleToAdminsByDefault(): void
     {
-        $this->users['admin'] = $this->makeAdminUser();
-        $this->users['normal'] = $this->makeNormalUser();
+        $this->users['admin'] = User::factory()->adminUser()->create();
+        $this->users['normal'] = User::factory()->create();
 
         $this->browse(function (Browser $browser): void {
             $browser->loginAs($this->users['admin'])
@@ -85,7 +84,7 @@ class ProjectsPageTest extends BrowserTestCase
 
     public function testShowsMessageWhenNoProjects(): void
     {
-        $this->users['admin'] = $this->makeAdminUser();
+        $this->users['admin'] = User::factory()->adminUser()->create();
 
         $this->browse(function (Browser $browser): void {
             $browser->loginAs($this->users['admin'])
@@ -151,7 +150,7 @@ class ProjectsPageTest extends BrowserTestCase
 
     public function testShowsMessageWhenNoMemberProjects(): void
     {
-        $this->users['admin'] = $this->makeAdminUser();
+        $this->users['admin'] = User::factory()->adminUser()->create();
         $this->projects['project1'] = $this->makePublicProject();
 
         $this->browse(function (Browser $browser): void {
@@ -183,7 +182,7 @@ class ProjectsPageTest extends BrowserTestCase
 
     public function testOnlyShowsMemberTabWhenLoggedIn(): void
     {
-        $this->users['admin'] = $this->makeAdminUser();
+        $this->users['admin'] = User::factory()->adminUser()->create();
         $this->projects['project1'] = $this->makePublicProject();
 
         $this->browse(function (Browser $browser): void {
@@ -287,7 +286,7 @@ class ProjectsPageTest extends BrowserTestCase
 
     public function testPaginationLoadsAllProjects(): void
     {
-        $this->users['admin'] = $this->makeAdminUser();
+        $this->users['admin'] = User::factory()->adminUser()->create();
 
         // Create 110 public projects, each with a recent build so they appear on the active tab
         for ($i = 1; $i <= 110; $i++) {

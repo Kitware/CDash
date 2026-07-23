@@ -3,16 +3,16 @@
 namespace Tests\Feature\GraphQL\Mutations;
 
 use App\Models\Build;
+use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesUsers;
 
 class CreateCommentTest extends TestCase
 {
     use CreatesProjects;
-    use CreatesUsers;
+
     use DatabaseTransactions;
 
     public function testCreateComment(): void
@@ -25,7 +25,7 @@ class CreateCommentTest extends TestCase
             'uuid' => Str::uuid()->toString(),
         ]);
 
-        $user = $this->makeNormalUser();
+        $user = User::factory()->create();
 
         $text = Str::uuid()->toString();
         $response = $this->actingAs($user)->graphQL('
@@ -104,7 +104,7 @@ class CreateCommentTest extends TestCase
             'uuid' => Str::uuid()->toString(),
         ]);
 
-        $user = $this->makeNormalUser();
+        $user = User::factory()->create();
         $this->actingAs($user)->graphQL('
             mutation CreateComment($input: CreateCommentInput!) {
                 createComment(input: $input) {

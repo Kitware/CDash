@@ -5,11 +5,9 @@ namespace Tests\Feature\GraphQL\Mutations;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
-use Tests\Traits\CreatesUsers;
 
 class RemoveUserTest extends TestCase
 {
-    use CreatesUsers;
     use DatabaseTransactions;
 
     /**
@@ -22,8 +20,8 @@ class RemoveUserTest extends TestCase
         parent::setUp();
 
         $this->users = [
-            'admin' => $this->makeAdminUser(),
-            'normal' => $this->makeNormalUser(),
+            'admin' => User::factory()->adminUser()->create(),
+            'normal' => User::factory()->create(),
         ];
     }
 

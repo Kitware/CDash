@@ -11,12 +11,11 @@ use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesUsers;
 
 class CreateCoverageDiffMutationTest extends TestCase
 {
     use CreatesProjects;
-    use CreatesUsers;
+
     use DatabaseTransactions;
 
     private Project $project;
@@ -27,7 +26,7 @@ class CreateCoverageDiffMutationTest extends TestCase
     {
         parent::setUp();
         $this->project = $this->makePublicProject();
-        $this->user = $this->makeNormalUser();
+        $this->user = User::factory()->create();
         $this->site = Site::factory()->create();
     }
 
@@ -154,7 +153,7 @@ class CreateCoverageDiffMutationTest extends TestCase
 
         // Admins bypass the null-project policy check, so they proceed to the
         // same-project validation which fails when the builds do not exist.
-        $this->actingAs($this->makeAdminUser())
+        $this->actingAs(User::factory()->adminUser()->create())
             ->graphQL($this->coverageDiffMutation(), [
                 'input' => [
                     'baseBuildId' => 999,
@@ -206,7 +205,7 @@ class CreateCoverageDiffMutationTest extends TestCase
             'siteid' => $this->site->id,
         ]);
 
-        $this->actingAs($this->makeAdminUser())
+        $this->actingAs(User::factory()->adminUser()->create())
             ->graphQL($this->coverageDiffMutation(), [
                 'input' => [
                     'baseBuildId' => $baseBuild->id,

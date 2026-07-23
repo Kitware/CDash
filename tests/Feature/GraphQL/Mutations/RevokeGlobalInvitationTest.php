@@ -10,11 +10,9 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Tests\TestCase;
-use Tests\Traits\CreatesUsers;
 
 class RevokeGlobalInvitationTest extends TestCase
 {
-    use CreatesUsers;
     use DatabaseTransactions;
 
     /**
@@ -32,8 +30,8 @@ class RevokeGlobalInvitationTest extends TestCase
         parent::setUp();
 
         $this->users = [
-            'admin' => $this->makeAdminUser(),
-            'normal' => $this->makeNormalUser(),
+            'admin' => User::factory()->adminUser()->create(),
+            'normal' => User::factory()->create(),
         ];
     }
 
