@@ -40,9 +40,9 @@ export default defineConfig([
       'prefer-template': 'error',
 
       '@stylistic/array-bracket-newline': ['error', 'consistent'],
-      '@stylistic/array-bracket-spacing': ['error', 'never'],
+      '@stylistic/array-bracket-spacing': 'error',
       '@stylistic/array-element-newline': ['error', 'consistent'],
-      '@stylistic/arrow-parens': ['error', 'always'],
+      '@stylistic/arrow-parens': 'error',
       '@stylistic/arrow-spacing': 'error',
       '@stylistic/block-spacing': 'error',
       '@stylistic/indent': ['error', 2],
