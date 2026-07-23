@@ -42,7 +42,7 @@ export default defineConfig([
       '@stylistic/indent': ['error', 2, { SwitchCase: 0 }],
       '@stylistic/arrow-spacing': 'error',
       '@stylistic/block-spacing': 'error',
-      '@stylistic/brace-style': ['error', 'stroustrup'],
+      '@stylistic/brace-style': 'error',
       '@stylistic/comma-dangle': ['error', 'always-multiline'],
       '@stylistic/eol-last': 'error',
       '@stylistic/keyword-spacing': ['error', {'before': true, 'after': true}],
