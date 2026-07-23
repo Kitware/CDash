@@ -51,15 +51,12 @@ function buildDecorations(coverageMap, doc) {
       if (hasBranches) {
         if (lineData.branchesHit === lineData.totalBranches) {
           className = 'cm-line-hit';
-        }
-        else if (lineData.branchesHit > 0) {
+        } else if (lineData.branchesHit > 0) {
           className = 'cm-line-partial';
-        }
-        else {
+        } else {
           className = 'cm-line-miss';
         }
-      }
-      else if (typeof lineData.timesHit === 'number') {
+      } else if (typeof lineData.timesHit === 'number') {
         className = lineData.timesHit > 0 ? 'cm-line-hit' : 'cm-line-miss';
       }
 
@@ -120,15 +117,12 @@ export default {
           element.textContent = `${this.coverage.branchesHit}/${this.coverage.totalBranches}`;
           if (this.coverage.branchesHit === this.coverage.totalBranches) {
             statusClass = 'cm-coverage-gutter-hit';
-          }
-          else if (this.coverage.branchesHit > 0) {
+          } else if (this.coverage.branchesHit > 0) {
             statusClass = 'cm-coverage-gutter-partial';
-          }
-          else {
+          } else {
             statusClass = 'cm-coverage-gutter-miss';
           }
-        }
-        else if (typeof this.coverage.timesHit === 'number') {
+        } else if (typeof this.coverage.timesHit === 'number') {
           element.textContent = this.coverage.timesHit;
           statusClass = this.coverage.timesHit > 0 ? 'cm-coverage-gutter-hit' : 'cm-coverage-gutter-miss';
         }

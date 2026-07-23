@@ -45,8 +45,7 @@ export class FilterField {
         result.then(v => {
           this.loadedValues.splice(0, this.loadedValues.length, ...v);
         });
-      }
-      else {
+      } else {
         this.loadedValues.splice(0, this.loadedValues.length, ...result);
       }
     }

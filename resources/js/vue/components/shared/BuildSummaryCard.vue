@@ -517,11 +517,9 @@ export default {
     configureColor() {
       if (this.build.configureErrorsCount > 0) {
         return 'tw-bg-red-400';
-      }
-      else if (this.build.configureWarningsCount > 0) {
+      } else if (this.build.configureWarningsCount > 0) {
         return 'tw-bg-orange-400';
-      }
-      else {
+      } else {
         return 'tw-bg-green-400';
       }
     },
@@ -533,14 +531,11 @@ export default {
     configureHighlightColor() {
       if (!this.hasConfigure) {
         return 'tw-border-x-gray-400';
-      }
-      else if (this.build.configureErrorsCount > 0) {
+      } else if (this.build.configureErrorsCount > 0) {
         return 'tw-border-x-red-400';
-      }
-      else if (this.build.configureWarningsCount > 0) {
+      } else if (this.build.configureWarningsCount > 0) {
         return 'tw-border-x-orange-400';
-      }
-      else {
+      } else {
         return 'tw-border-x-green-400';
       }
     },
@@ -548,11 +543,9 @@ export default {
     buildColor() {
       if (this.build.buildErrorsCount > 0) {
         return 'tw-bg-red-400';
-      }
-      else if (this.build.buildWarningsCount > 0) {
+      } else if (this.build.buildWarningsCount > 0) {
         return 'tw-bg-orange-400';
-      }
-      else {
+      } else {
         return 'tw-bg-green-400';
       }
     },
@@ -560,14 +553,11 @@ export default {
     buildHighlightColor() {
       if (!this.hasBuild) {
         return 'tw-border-x-gray-400';
-      }
-      else if (this.build.buildErrorsCount > 0) {
+      } else if (this.build.buildErrorsCount > 0) {
         return 'tw-border-x-red-400';
-      }
-      else if (this.build.buildWarningsCount > 0) {
+      } else if (this.build.buildWarningsCount > 0) {
         return 'tw-border-x-orange-400';
-      }
-      else {
+      } else {
         return 'tw-border-x-green-400';
       }
     },
@@ -575,8 +565,7 @@ export default {
     testColor() {
       if (this.build.failedTestsCount > 0) {
         return 'tw-bg-red-400';
-      }
-      else {
+      } else {
         return 'tw-bg-green-400';
       }
     },
@@ -584,11 +573,9 @@ export default {
     testHighlightColor() {
       if (!this.hasTest) {
         return 'tw-border-x-gray-400';
-      }
-      else if (this.build.failedTestsCount > 0) {
+      } else if (this.build.failedTestsCount > 0) {
         return 'tw-border-x-red-400';
-      }
-      else {
+      } else {
         return 'tw-border-x-green-400';
       }
     },
@@ -606,8 +593,7 @@ export default {
       const clockFrequency = this.build.site.mostRecentInformation.processorClockFrequency;
       if (clockFrequency > 1000) {
         return `${clockFrequency / 1000} GHz`;
-      }
-      else {
+      } else {
         return `${clockFrequency} MHz`;
       }
     },
@@ -625,11 +611,9 @@ export default {
     humanReadableMemory(inputInMiB) {
       if (inputInMiB < 1024) {
         return `${inputInMiB} MiB`;
-      }
-      else if (inputInMiB < 1024 * 1024) {
+      } else if (inputInMiB < 1024 * 1024) {
         return `${(inputInMiB / 1024).toFixed(2)} GiB`;
-      }
-      else {
+      } else {
         return `${(inputInMiB / (1024 * 1024)).toFixed(2)} TiB`;
       }
     },

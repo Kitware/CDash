@@ -243,8 +243,7 @@ export default {
         const return_modifier = this.sortAsc ? 1 : -1;
         if (row1_sort > row2_sort) {
           return 1 * return_modifier;
-        }
-        else if (row1_sort < row2_sort) {
+        } else if (row1_sort < row2_sort) {
           return -1 * return_modifier;
         }
         return 0;
@@ -256,8 +255,7 @@ export default {
     toggleSort(column_name) {
       if (this.sortColumn === column_name) {
         this.sortAsc = !this.sortAsc;
-      }
-      else {
+      } else {
         this.sortAsc = true;
         this.sortColumn = column_name;
       }

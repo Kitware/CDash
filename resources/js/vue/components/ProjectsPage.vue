@@ -245,11 +245,9 @@ export default {
       let edges;
       if (this.currentTab === 'MEMBER') {
         edges = this.myProjects?.edges.map(x => x);
-      }
-      else if (this.currentTab === 'ACTIVE') {
+      } else if (this.currentTab === 'ACTIVE') {
         edges = this.allVisibleProjects?.edges.filter(({node: project}) => project.buildCount > 0);
-      }
-      else {
+      } else {
         edges = this.allVisibleProjects?.edges.map(x => x);
       }
 

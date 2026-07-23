@@ -207,16 +207,13 @@ export default {
         });
         if (result.data.createPinnedTestMeasurement.message) {
           this.errorMessage = result.data.createPinnedTestMeasurement.message;
-        }
-        else {
+        } else {
           this.newTestMeasurementName = '';
           this.$apollo.queries.project.refetch();
         }
-      }
-      catch (error) {
+      } catch (error) {
         this.errorMessage = error.message;
-      }
-      finally {
+      } finally {
         this.createLoading = false;
       }
     },
@@ -240,12 +237,10 @@ export default {
         });
         if (result.data.deletePinnedTestMeasurement.message) {
           this.errorMessage = result.data.deletePinnedTestMeasurement.message;
-        }
-        else {
+        } else {
           this.$apollo.queries.project.refetch();
         }
-      }
-      catch (error) {
+      } catch (error) {
         this.errorMessage = error.message;
       }
     },
@@ -278,8 +273,7 @@ export default {
           this.errorMessage = result.data.updatePinnedTestMeasurementOrder.message;
           this.$apollo.queries.project.refetch();
         }
-      }
-      catch (error) {
+      } catch (error) {
         this.errorMessage = error.message;
         this.$apollo.queries.project.refetch();
       }

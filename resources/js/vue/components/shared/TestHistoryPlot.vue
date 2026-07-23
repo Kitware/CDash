@@ -291,8 +291,7 @@ export default {
           }
           if (item.status === 'passed') {
             acc[dateStr].numpassing++;
-          }
-          else if (item.status === 'failed') {
+          } else if (item.status === 'failed') {
             acc[dateStr].numfailing++;
           }
           return acc;
@@ -391,11 +390,9 @@ export default {
               let value = 0;
               if (num_passing > 0 && num_failing === 0) {
                 value = 1; // Passing
-              }
-              else if (num_passing === 0 && num_failing > 0) {
+              } else if (num_passing === 0 && num_failing > 0) {
                 value = 2; // Failing
-              }
-              else if (num_passing > 0 && num_failing > 0) {
+              } else if (num_passing > 0 && num_failing > 0) {
                 value = 3; // Both
               }
 
@@ -411,15 +408,13 @@ export default {
                   shape: { x, y, width: shapeWidth, height: shapeHeight, r: 3 },
                   style: { fill: '#52c41a' },
                 };
-              }
-              else if (value === 2) { // Failing
+              } else if (value === 2) { // Failing
                 return {
                   type: 'rect',
                   shape: { x, y, width: shapeWidth, height: shapeHeight, r: 3 },
                   style: { fill: '#f5222d', decal: decalPattern },
                 };
-              }
-              else if (value === 3) { // Both
+              } else if (value === 3) { // Both
                 return {
                   type: 'group',
                   clipPath: { type: 'rect', shape: { x, y, width: shapeWidth, height: shapeHeight, r: 3 } },

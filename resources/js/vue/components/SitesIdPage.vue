@@ -510,11 +510,9 @@ export default {
 
       if (inputInMiB < 1024) {
         return `${inputInMiB} MiB`;
-      }
-      else if (inputInMiB < 1024 * 1024) {
+      } else if (inputInMiB < 1024 * 1024) {
         return `${(inputInMiB / 1024).toFixed(2)} GiB`;
-      }
-      else {
+      } else {
         return `${(inputInMiB / (1024 * 1024)).toFixed(2)} TiB`;
       }
     },
@@ -522,8 +520,7 @@ export default {
     humanReadableClockFrequency(inputInMhz) {
       if (inputInMhz > 1000) {
         return `${inputInMhz / 1000} GHz`;
-      }
-      else {
+      } else {
         return `${inputInMhz} MHz`;
       }
     },

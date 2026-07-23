@@ -215,8 +215,7 @@ export default {
             },
           },
         });
-      }
-      catch (error) {
+      } catch (error) {
         if (error.graphQLErrors) {
           error.graphQLErrors.forEach(e => {
             if (e.extensions && e.extensions.validation) {
@@ -224,22 +223,18 @@ export default {
                 acc[key.replace('input.', '')] = e.extensions.validation[key];
                 return acc;
               }, {});
-            }
-            else if (e.extensions && e.extensions.debugMessage && e.extensions.debugMessage.includes('got invalid value')) {
+            } else if (e.extensions && e.extensions.debugMessage && e.extensions.debugMessage.includes('got invalid value')) {
               const fieldMatch = e.extensions.debugMessage.match(/at "input\.([^"]+)"/);
               if (fieldMatch && fieldMatch[1]) {
                 this.validationErrors[fieldMatch[1]] = ['Invalid format.'];
-              }
-              else {
+              } else {
                 this.fatalError = e.extensions.debugMessage;
               }
-            }
-            else {
+            } else {
               this.fatalError = e.message;
             }
           });
-        }
-        else {
+        } else {
           this.fatalError = error.message;
         }
         return;
@@ -273,14 +268,12 @@ export default {
             },
           },
         });
-      }
-      catch (error) {
+      } catch (error) {
         if (error.graphQLErrors) {
           error.graphQLErrors.forEach(e => {
             this.fatalError = e.message;
           });
-        }
-        else {
+        } else {
           this.fatalError = error.message;
         }
         return;

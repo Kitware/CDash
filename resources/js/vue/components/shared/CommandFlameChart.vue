@@ -192,12 +192,10 @@ export default {
             valueNode = document.createElement('div');
             valueNode.className = 'tw-font-mono tw-bg-gray-100 tw-p-1 tw-rounded tw-whitespace-pre-wrap tw-break-all !tw-mt-0';
             valueNode.textContent = value;
-          }
-          else if (isBold) {
+          } else if (isBold) {
             valueNode = document.createElement('b');
             valueNode.textContent = value;
-          }
-          else {
+          } else {
             valueNode = document.createTextNode(value);
           }
           container.appendChild(valueNode);
@@ -226,8 +224,7 @@ export default {
       const clickedCommandId = parseInt(params.data.value[11]);
       if (this.selectedCommandId === clickedCommandId) {
         this.selectedCommandId = null;
-      }
-      else {
+      } else {
         this.selectedCommandId = clickedCommandId;
       }
     },

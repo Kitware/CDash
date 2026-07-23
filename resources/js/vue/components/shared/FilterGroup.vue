@@ -198,8 +198,7 @@ export default {
           operator: filterField.getOperatorFromFilter(filter),
           value: filterField.getValueFromFilter(filter),
         };
-      }
-      else {
+      } else {
         const field = this.availableFields[0];
 
         return {

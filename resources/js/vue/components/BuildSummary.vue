@@ -578,8 +578,7 @@ export default {
             ntestfailed: Math.max(0, prev.failedTestsCount),
             ntestnotrun: Math.max(0, prev.notRunTestsCount),
           };
-        }
-        else {
+        } else {
           this.cdash.previousbuild = null;
         }
 
@@ -594,8 +593,7 @@ export default {
             ntestfailed: Math.max(0, next.failedTestsCount),
             ntestnotrun: Math.max(0, next.notRunTestsCount),
           };
-        }
-        else {
+        } else {
           this.cdash.nextbuild = null;
         }
 

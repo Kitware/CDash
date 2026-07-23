@@ -88,16 +88,14 @@ export default {
 
           if (existingPath) {
             currentLevel = existingPath.children;
-          }
-          else {
+          } else {
             const newNode = {
               name: part,
             };
 
             if (index < parts.length - 1) {
               newNode.children = [];
-            }
-            else {
+            } else {
               newNode.file = file;
             }
 

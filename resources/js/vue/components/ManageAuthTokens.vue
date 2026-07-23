@@ -151,8 +151,7 @@ export default {
           },
         });
         await this.$apollo.queries.authenticationTokens.refetch();
-      }
-      catch (error) {
+      } catch (error) {
         console.error(error);
       }
     },

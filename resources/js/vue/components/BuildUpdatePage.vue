@@ -161,8 +161,7 @@ export default {
     revisionUrl() {
       if (this.update.priorRevision) {
         return this.repository?.getComparisonUrl(this.update.revision, this.update.priorRevision) ?? '';
-      }
-      else {
+      } else {
         return this.repository?.getCommitUrl(this.update.revision) ?? '';
       }
     },

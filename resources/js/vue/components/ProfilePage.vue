@@ -478,8 +478,7 @@ export default {
 
         if (response.data.createAuthenticationToken.message) {
           this.newTokenError = response.data.createAuthenticationToken.message;
-        }
-        else {
+        } else {
           this.newTokenRaw = response.data.createAuthenticationToken.rawToken;
           this.newTokenForm = {
             description: '',
@@ -489,8 +488,7 @@ export default {
           };
           await this.$apollo.queries.authenticationTokens.refetch();
         }
-      }
-      catch (error) {
+      } catch (error) {
         if (error.graphQLErrors) {
           error.graphQLErrors.forEach(e => {
             if (e.extensions && e.extensions.validation) {
@@ -498,13 +496,11 @@ export default {
                 acc[key.replace('input.', '')] = e.extensions.validation[key];
                 return acc;
               }, {});
-            }
-            else {
+            } else {
               this.newTokenError = e.message;
             }
           });
-        }
-        else {
+        } else {
           this.newTokenError = error.message;
         }
       }
@@ -527,8 +523,7 @@ export default {
           },
         });
         await this.$apollo.queries.authenticationTokens.refetch();
-      }
-      catch (error) {
+      } catch (error) {
         console.error(error);
       }
     },
@@ -540,8 +535,7 @@ export default {
         setTimeout(() => {
           this.copied = false;
         }, 2000);
-      }
-      catch (err) {
+      } catch (err) {
         console.error('Failed to copy: ', err);
       }
     },

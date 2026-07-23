@@ -645,8 +645,7 @@ export default {
           },
         });
         this.projectSaved = true;
-      }
-      catch (error) {
+      } catch (error) {
         this.projectUpdateFailed = true;
         if (error.graphQLErrors) {
           error.graphQLErrors.forEach(e => {
@@ -655,13 +654,11 @@ export default {
                 acc[key.replace('input.', '')] = e.extensions.validation[key];
                 return acc;
               }, {});
-            }
-            else {
+            } else {
               this.fatalError = e.message;
             }
           });
-        }
-        else {
+        } else {
           this.fatalError = error.message;
         }
       }

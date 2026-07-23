@@ -21,8 +21,7 @@ export default {
     const startTime = DateTime.fromISO(iso8601TimestampString);
     if (startTime < DateTime.now().minus({months: 1})) {
       return startTime.toLocaleString(DateTime.DATE_MED);
-    }
-    else {
+    } else {
       return startTime.toRelative();
     }
   },

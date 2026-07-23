@@ -569,8 +569,7 @@ export default {
       this.test.testImages.edges.forEach(({ node: image }) => {
         if (image.role === 'ValidImage') {
           validImages.push(image);
-        }
-        else if (image.role === 'TestImage') {
+        } else if (image.role === 'TestImage') {
           testImages.push(image);
         }
       });

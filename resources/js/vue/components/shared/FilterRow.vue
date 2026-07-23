@@ -159,8 +159,7 @@ export default {
     onFieldChange() {
       if (this.selectedField.type === FilterType.ENUM) {
         this.selectedValue = this.selectedField.getPossibleValues()[0] || '';
-      }
-      else {
+      } else {
         this.selectedValue = '';
       }
       this.selectedOperator = this.selectedField.getOperators()[0];

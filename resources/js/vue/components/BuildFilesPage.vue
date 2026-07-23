@@ -206,17 +206,13 @@ export default {
     humanReadableFileSize(bytes) {
       if (bytes < 1024) {
         return `${bytes} bytes`;
-      }
-      else if (bytes < 1024 * 1024) {
+      } else if (bytes < 1024 * 1024) {
         return `${(bytes / 1024).toFixed(2)} KiB`;
-      }
-      else if (bytes < 1024 * 1024 * 1024) {
+      } else if (bytes < 1024 * 1024 * 1024) {
         return `${(bytes / (1024 * 1024)).toFixed(2)} MiB`;
-      }
-      else if (bytes < 1024 * 1024 * 1024 * 1024) {
+      } else if (bytes < 1024 * 1024 * 1024 * 1024) {
         return `${(bytes / (1024 * 1024 * 1024)).toFixed(2)} GiB`;
-      }
-      else {
+      } else {
         return `${(bytes / (1024 * 1024 * 1024 * 1024)).toFixed(2)} TiB`;
       }
     },

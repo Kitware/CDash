@@ -373,8 +373,7 @@ export default {
           coverageByPrefix[cleanedPath].linesOfCodeUntested += edge.node.linesOfCodeUntested;
           coverageByPrefix[cleanedPath].branchesTested += edge.node.branchesTested;
           coverageByPrefix[cleanedPath].branchesUntested += edge.node.branchesUntested;
-        }
-        else {
+        } else {
           coverageByPrefix[cleanedPath] = {
             subProject: !isDirectory && edge.subProject ? edge.subProject : '',
             path: {
@@ -430,11 +429,9 @@ export default {
     percentToProgressBarColorClass(pct) {
       if (pct >= this.coveragePercentCutoff) {
         return 'tw-progress-success';
-      }
-      else if (pct >= 0.7 * this.coveragePercentCutoff) {
+      } else if (pct >= 0.7 * this.coveragePercentCutoff) {
         return 'tw-progress-warning';
-      }
-      else {
+      } else {
         return 'tw-progress-error';
       }
     },

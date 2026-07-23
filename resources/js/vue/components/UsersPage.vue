@@ -455,8 +455,7 @@ export default {
       }).then((mutationResult) => {
         if (mutationResult.data.createGlobalInvitation.message !== null) {
           this.inviteUsersModalError = mutationResult.data.createGlobalInvitation.message;
-        }
-        else {
+        } else {
           // eslint-disable-next-line no-undef
           invite_users_modal.close();
           this.inviteUsersModalEmail = '';
