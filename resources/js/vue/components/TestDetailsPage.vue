@@ -505,40 +505,40 @@ export default {
 
     testStatus() {
       switch (this.test.status) {
-      case 'PASSED':
-        return 'Passed';
-      case 'FAILED':
-        return 'Failed';
-      case 'NOT_RUN':
-        return 'Not Run';
-      default:
-        return this.test.status;
+        case 'PASSED':
+          return 'Passed';
+        case 'FAILED':
+          return 'Failed';
+        case 'NOT_RUN':
+          return 'Not Run';
+        default:
+          return this.test.status;
       }
     },
 
     testStatusPillClass() {
       switch (this.test.status) {
-      case 'PASSED':
-        return 'tw-bg-success tw-text-success-content';
-      case 'FAILED':
-        return 'tw-bg-error tw-text-error-content';
-      case 'NOT_RUN':
-        return 'tw-bg-warning tw-text-warning-content';
-      default:
-        return 'tw-bg-neutral tw-text-neutral-content';
+        case 'PASSED':
+          return 'tw-bg-success tw-text-success-content';
+        case 'FAILED':
+          return 'tw-bg-error tw-text-error-content';
+        case 'NOT_RUN':
+          return 'tw-bg-warning tw-text-warning-content';
+        default:
+          return 'tw-bg-neutral tw-text-neutral-content';
       }
     },
 
     testStatusIcon() {
       switch (this.test.status) {
-      case 'PASSED':
-        return faCircleCheck;
-      case 'FAILED':
-        return faCircleXmark;
-      case 'NOT_RUN':
-        return faCircleExclamation;
-      default:
-        return faCircleQuestion;
+        case 'PASSED':
+          return faCircleCheck;
+        case 'FAILED':
+          return faCircleXmark;
+        case 'NOT_RUN':
+          return faCircleExclamation;
+        default:
+          return faCircleQuestion;
       }
     },
 
@@ -549,12 +549,12 @@ export default {
         return 'tw-bg-gray-200 tw-text-gray-500';
       }
       switch (this.test.timeStatusCategory) {
-      case 'PASSED':
-        return 'tw-bg-green-100 tw-text-green-600';
-      case 'FAILED':
-        return 'tw-bg-red-100 tw-text-red-600';
-      default:
-        return 'tw-bg-gray-200 tw-text-gray-500';
+        case 'PASSED':
+          return 'tw-bg-green-100 tw-text-green-600';
+        case 'FAILED':
+          return 'tw-bg-red-100 tw-text-red-600';
+        default:
+          return 'tw-bg-gray-200 tw-text-gray-500';
       }
     },
 

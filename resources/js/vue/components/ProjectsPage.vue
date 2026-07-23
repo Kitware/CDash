@@ -265,14 +265,14 @@ export default {
       }
 
       switch (this.currentTab) {
-      case 'MEMBER':
-        return 'You are not a member of any projects yet...';
-      case 'ACTIVE':
-        return 'No projects with builds in the last 24 hours...';
-      case 'ALL':
-        return 'No projects to display...';
-      default:
-        return null;
+        case 'MEMBER':
+          return 'You are not a member of any projects yet...';
+        case 'ACTIVE':
+          return 'No projects with builds in the last 24 hours...';
+        case 'ALL':
+          return 'No projects to display...';
+        default:
+          return null;
       }
     },
 
@@ -284,14 +284,14 @@ export default {
   methods: {
     projectVisibilityToIcon(visibility) {
       switch (visibility) {
-      case 'PUBLIC':
-        return this.FA.faEarthAmericas;
-      case 'PROTECTED':
-        return this.FA.faShieldHalved;
-      case 'PRIVATE':
-        return this.FA.faLock;
-      default:
-        throw `Invalid visibility ${visibility}`;
+        case 'PUBLIC':
+          return this.FA.faEarthAmericas;
+        case 'PROTECTED':
+          return this.FA.faShieldHalved;
+        case 'PRIVATE':
+          return this.FA.faLock;
+        default:
+          throw `Invalid visibility ${visibility}`;
       }
     },
   },

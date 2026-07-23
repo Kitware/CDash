@@ -89,27 +89,27 @@ export default {
 
     status() {
       switch (this.dynamicAnalysis.status) {
-      case 'passed':
-        return 'Passed';
-      case 'notrun':
-        return 'Not Run';
-      case 'failed':
-        return 'Failed';
-      default:
-        return this.dynamicAnalysis.status;
+        case 'passed':
+          return 'Passed';
+        case 'notrun':
+          return 'Not Run';
+        case 'failed':
+          return 'Failed';
+        default:
+          return this.dynamicAnalysis.status;
       }
     },
 
     statusColor() {
       switch (this.dynamicAnalysis.status) {
-      case 'passed':
-        return 'tw-bg-green-400';
-      case 'notrun':
-        return 'tw-bg-orange-400';
-      case 'failed':
-        return 'tw-bg-red-400';
-      default:
-        return this.dynamicAnalysis.status;
+        case 'passed':
+          return 'tw-bg-green-400';
+        case 'notrun':
+          return 'tw-bg-orange-400';
+        case 'failed':
+          return 'tw-bg-red-400';
+        default:
+          return this.dynamicAnalysis.status;
       }
     },
   },

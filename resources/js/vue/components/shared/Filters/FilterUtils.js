@@ -53,33 +53,33 @@ export class FilterField {
 
   getOperators() {
     switch (this.type) {
-    case FilterType.TEXT:
-      return [
-        'eq',
-        'ne',
-        'contains',
-      ];
-    case FilterType.NUMBER:
-      return [
-        'eq',
-        'ne',
-        'gt',
-        'lt',
-      ];
-    case FilterType.DATETIME:
-      return [
-        'eq',
-        'ne',
-        'gt',
-        'lt',
-      ];
-    case FilterType.ENUM:
-      return [
-        'eq',
-        'ne',
-      ];
-    default:
-      return [];
+      case FilterType.TEXT:
+        return [
+          'eq',
+          'ne',
+          'contains',
+        ];
+      case FilterType.NUMBER:
+        return [
+          'eq',
+          'ne',
+          'gt',
+          'lt',
+        ];
+      case FilterType.DATETIME:
+        return [
+          'eq',
+          'ne',
+          'gt',
+          'lt',
+        ];
+      case FilterType.ENUM:
+        return [
+          'eq',
+          'ne',
+        ];
+      default:
+        return [];
     }
   }
 

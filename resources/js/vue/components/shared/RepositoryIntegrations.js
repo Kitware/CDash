@@ -81,11 +81,11 @@ export function getRepository(repositoryType, repositoryUrl, repositoryCmakeProj
   }
 
   switch (repositoryType.toLowerCase()) {
-  case 'github':
-    return new GitHub(repositoryUrl, repositoryCmakeProjectRoot);
-  case 'gitlab':
-    return new GitLab(repositoryUrl, repositoryCmakeProjectRoot);
-  default:
-    return null;
+    case 'github':
+      return new GitHub(repositoryUrl, repositoryCmakeProjectRoot);
+    case 'gitlab':
+      return new GitLab(repositoryUrl, repositoryCmakeProjectRoot);
+    default:
+      return null;
   }
 }

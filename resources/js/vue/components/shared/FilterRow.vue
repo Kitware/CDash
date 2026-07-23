@@ -171,16 +171,16 @@ export default {
      */
     humanReadableOperator(operator) {
       switch (operator) {
-      case 'eq':
-        return 'equal to';
-      case 'ne':
-        return 'not equal to';
-      case 'lt':
-        return 'less than';
-      case 'gt':
-        return 'greater than';
-      default:
-        return operator;
+        case 'eq':
+          return 'equal to';
+        case 'ne':
+          return 'not equal to';
+        case 'lt':
+          return 'less than';
+        case 'gt':
+          return 'greater than';
+        default:
+          return operator;
       }
     },
 

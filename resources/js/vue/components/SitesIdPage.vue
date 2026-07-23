@@ -547,43 +547,43 @@ export default {
 
     humanReadableSiteFieldName(name) {
       switch (name) {
-      case 'processorVendor':
-        return 'Processor Vendor';
-      case 'processorVendorId':
-        return 'Processor Vendor ID';
-      case 'processorFamilyId':
-        return 'Processor Family ID';
-      case 'processorModelId':
-        return 'Processor Model ID';
-      case 'processorModelName':
-        return 'Processor Model Name';
-      case 'processorCacheSize':
-        return 'Processor Cache Size';
-      case 'numberLogicalCpus':
-        return 'Logical CPUs';
-      case 'numberPhysicalCpus':
-        return 'Physical CPUs';
-      case 'totalVirtualMemory':
-        return 'Virtual Memory';
-      case 'totalPhysicalMemory':
-        return 'Physical Memory';
-      case 'processorClockFrequency':
-        return 'Clock Frequency';
-      default:
-        return name;
+        case 'processorVendor':
+          return 'Processor Vendor';
+        case 'processorVendorId':
+          return 'Processor Vendor ID';
+        case 'processorFamilyId':
+          return 'Processor Family ID';
+        case 'processorModelId':
+          return 'Processor Model ID';
+        case 'processorModelName':
+          return 'Processor Model Name';
+        case 'processorCacheSize':
+          return 'Processor Cache Size';
+        case 'numberLogicalCpus':
+          return 'Logical CPUs';
+        case 'numberPhysicalCpus':
+          return 'Physical CPUs';
+        case 'totalVirtualMemory':
+          return 'Virtual Memory';
+        case 'totalPhysicalMemory':
+          return 'Physical Memory';
+        case 'processorClockFrequency':
+          return 'Clock Frequency';
+        default:
+          return name;
       }
     },
 
     humanReadableSiteFieldValue(field, value) {
       switch (field) {
-      case 'totalVirtualMemory':
-        return this.humanReadableMemory(value);
-      case 'totalPhysicalMemory':
-        return this.humanReadableMemory(value);
-      case 'processorClockFrequency':
-        return this.humanReadableClockFrequency(value);
-      default:
-        return value;
+        case 'totalVirtualMemory':
+          return this.humanReadableMemory(value);
+        case 'totalPhysicalMemory':
+          return this.humanReadableMemory(value);
+        case 'processorClockFrequency':
+          return this.humanReadableClockFrequency(value);
+        default:
+          return value;
       }
     },
 

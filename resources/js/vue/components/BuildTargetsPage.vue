@@ -268,22 +268,22 @@ export default {
   methods: {
     humanReadableTargetType(type) {
       switch (type) {
-      case 'UNKNOWN':
-        return 'Unknown';
-      case 'STATIC_LIBRARY':
-        return 'Static Library';
-      case 'MODULE_LIBRARY':
-        return 'Module Library';
-      case 'SHARED_LIBRARY':
-        return 'Shared Library';
-      case 'OBJECT_LIBRARY':
-        return 'Object Library';
-      case 'INTERFACE_LIBRARY':
-        return 'Interface Library';
-      case 'EXECUTABLE':
-        return 'Executable';
-      default:
-        return type;
+        case 'UNKNOWN':
+          return 'Unknown';
+        case 'STATIC_LIBRARY':
+          return 'Static Library';
+        case 'MODULE_LIBRARY':
+          return 'Module Library';
+        case 'SHARED_LIBRARY':
+          return 'Shared Library';
+        case 'OBJECT_LIBRARY':
+          return 'Object Library';
+        case 'INTERFACE_LIBRARY':
+          return 'Interface Library';
+        case 'EXECUTABLE':
+          return 'Executable';
+        default:
+          return type;
       }
     },
   },

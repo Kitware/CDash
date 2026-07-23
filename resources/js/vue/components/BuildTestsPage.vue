@@ -351,27 +351,27 @@ export default {
   methods: {
     testStatusToColorClass(status) {
       switch (status) {
-      case 'PASSED':
-        return 'normal';
-      case 'FAILED':
-        return 'error';
-      case 'NOT_RUN':
-        return 'warning';
-      default:
-        return '';
+        case 'PASSED':
+          return 'normal';
+        case 'FAILED':
+          return 'error';
+        case 'NOT_RUN':
+          return 'warning';
+        default:
+          return '';
       }
     },
 
     humanReadableTestStatus(status) {
       switch (status) {
-      case 'PASSED':
-        return 'Passed';
-      case 'FAILED':
-        return 'Failed';
-      case 'NOT_RUN':
-        return 'Not Run';
-      default:
-        return status;
+        case 'PASSED':
+          return 'Passed';
+        case 'FAILED':
+          return 'Failed';
+        case 'NOT_RUN':
+          return 'Not Run';
+        default:
+          return status;
       }
     },
   },
