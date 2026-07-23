@@ -65,6 +65,7 @@ export default defineConfig([
       '@stylistic/lines-between-class-members': 'error',
       '@stylistic/max-statements-per-line': 'error',
       '@stylistic/member-delimiter-style': 'error',
+      '@stylistic/new-parens': 'error',
       '@stylistic/space-before-blocks': ['error', 'always'],
       '@stylistic/linebreak-style': ['error', 'unix'],
       '@stylistic/no-trailing-spaces': 'error',
