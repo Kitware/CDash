@@ -51,6 +51,7 @@ export default defineConfig([
       '@stylistic/comma-style': 'error',
       '@stylistic/computed-property-spacing': 'error',
       '@stylistic/curly-newline': 'error',
+      '@stylistic/dot-location': ['error', 'property'],
       '@stylistic/eol-last': 'error',
       '@stylistic/keyword-spacing': ['error', {'before': true, 'after': true}],
       '@stylistic/space-before-blocks': ['error', 'always'],
