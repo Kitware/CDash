@@ -44,7 +44,7 @@ export default {
   computed: {
     ansiText() {
       const escapedText = String(this.text).replace(/\[NON-XML-CHAR-0x1B\]/g, '\x1B') ?? '';
-      return (new AnsiUp).ansi_to_html(escapedText);
+      return (new AnsiUp()).ansi_to_html(escapedText);
     },
 
     textSegments() {
