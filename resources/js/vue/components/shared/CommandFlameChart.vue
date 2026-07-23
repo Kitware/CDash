@@ -160,7 +160,7 @@ export default {
 
     totalChartHeight() {
       const numtracks = this.processedChartData.tracks.length;
-      return (this.commandBarHeight + this.commandBarSpacing) * numtracks + 60;
+      return ((this.commandBarHeight + this.commandBarSpacing) * numtracks) + 60;
     },
   },
 
@@ -267,7 +267,7 @@ export default {
         type: 'rect',
         shape: {
           x: start[0],
-          y: start[1] - height / 2,
+          y: start[1] - (height / 2),
           width: end[0] - start[0],
           height: height,
         },

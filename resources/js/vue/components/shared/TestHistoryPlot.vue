@@ -399,8 +399,8 @@ export default {
               const gap = 2;
               const shapeWidth = cellWidth - gap;
               const shapeHeight = cellHeight - gap;
-              const x = cellPoint[0] - cellWidth / 2 + gap / 2;
-              const y = cellPoint[1] - cellHeight / 2 + gap / 2;
+              const x = (cellPoint[0] - (cellWidth / 2)) + (gap / 2);
+              const y = (cellPoint[1] - (cellHeight / 2)) + (gap / 2);
 
               if (value === 1) { // Passing
                 return {

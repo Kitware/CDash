@@ -435,7 +435,7 @@ export default {
       const xCenter = chartApi.coord([index, 0])[0];
       const fullWidth = chartApi.size([1, 0])[0];
       const barWidth = fullWidth * 0.7;
-      const xLeft = xCenter - barWidth / 2;
+      const xLeft = xCenter - (barWidth / 2);
       const threshold = chartApi.value(1);
       const yThreshold = chartApi.coord([0, threshold])[1];
       const yZero = chartApi.coord([0, 0])[1];
@@ -459,7 +459,7 @@ export default {
       if (previousIndex >= 0) {
         const prevDataItem = this.chartData[previousIndex];
         const prevXCenter = chartApi.coord([previousIndex, 0])[0];
-        const prevXRight = prevXCenter + barWidth / 2;
+        const prevXRight = prevXCenter + (barWidth / 2);
         const prevThreshold = this.getUpperThreshold(prevDataItem);
         const prevYThreshold = chartApi.coord([0, prevThreshold])[1];
 
@@ -495,8 +495,8 @@ export default {
       const xCenter = chartApi.coord([index, 0])[0];
       const fullWidth = chartApi.size([1, 0])[0];
       const barWidth = fullWidth * 0.7;
-      const xLeft = xCenter - barWidth / 2;
-      const xRight = xCenter + barWidth / 2;
+      const xLeft = xCenter - (barWidth / 2);
+      const xRight = xCenter + (barWidth / 2);
       const threshold = chartApi.value(1);
       const yThreshold = chartApi.coord([0, threshold])[1];
 
@@ -520,7 +520,7 @@ export default {
       if (previousIndex >= 0) {
         const prevDataItem = this.chartData[previousIndex];
         const prevXCenter = chartApi.coord([previousIndex, 0])[0];
-        const prevXRight = prevXCenter + barWidth / 2;
+        const prevXRight = prevXCenter + (barWidth / 2);
         const prevThreshold = this.getUpperThreshold(prevDataItem);
         const prevYThreshold = chartApi.coord([0, prevThreshold])[1];
 
