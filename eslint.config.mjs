@@ -60,6 +60,7 @@ export default defineConfig([
       '@stylistic/implicit-arrow-linebreak': 'error',
       '@stylistic/indent': ['error', 2],
       '@stylistic/indent-binary-ops': ['error', 2],
+      '@stylistic/key-spacing': 'error',
       '@stylistic/keyword-spacing': ['error', {'before': true, 'after': true}],
       '@stylistic/space-before-blocks': ['error', 'always'],
       '@stylistic/linebreak-style': ['error', 'unix'],
