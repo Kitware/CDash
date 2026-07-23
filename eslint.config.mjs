@@ -70,6 +70,7 @@ export default defineConfig([
       '@stylistic/no-floating-decimal': 'error',
       '@stylistic/no-mixed-operators': 'error',
       '@stylistic/no-multi-spaces': 'error',
+      '@stylistic/no-multiple-empty-lines': 'error',
       '@stylistic/space-before-blocks': ['error', 'always'],
       '@stylistic/linebreak-style': ['error', 'unix'],
       '@stylistic/no-trailing-spaces': 'error',
