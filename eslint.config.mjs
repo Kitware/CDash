@@ -73,6 +73,7 @@ export default defineConfig([
       '@stylistic/no-multiple-empty-lines': 'error',
       '@stylistic/no-tabs': 'error',
       '@stylistic/no-trailing-spaces': 'error',
+      '@stylistic/no-whitespace-before-property': 'error',
       '@stylistic/space-before-blocks': ['error', 'always'],
       '@stylistic/linebreak-style': ['error', 'unix'],
       '@stylistic/quotes': ['error', 'single', {'avoidEscape': true}],
