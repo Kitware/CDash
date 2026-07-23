@@ -60,6 +60,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@stylistic/eslint-plugin": "^5.10.0",
     "@vue/test-utils": "^2.4.11",
     "@vue/vue3-jest": "^29.2.6",
     "babel-core": "^7.0.0-bridge.0",
