@@ -484,7 +484,13 @@ export default {
   name: 'GeneralTab',
 
   components: { LoadingIndicator,
-    TabContent, SelectField, CheckboxField, TextAreaField, InputField, FontAwesomeIcon, FormSection },
+    TabContent,
+    SelectField,
+    CheckboxField,
+    TextAreaField,
+    InputField,
+    FontAwesomeIcon,
+    FormSection },
 
   props: {
     projectId: {
