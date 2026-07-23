@@ -483,8 +483,7 @@ import LoadingIndicator from '../shared/LoadingIndicator.vue';
 export default {
   name: 'GeneralTab',
 
-  components: {
-    LoadingIndicator,
+  components: {LoadingIndicator,
     TabContent, SelectField, CheckboxField, TextAreaField, InputField, FontAwesomeIcon, FormSection},
 
   props: {
