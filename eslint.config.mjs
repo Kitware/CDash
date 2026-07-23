@@ -42,6 +42,7 @@ export default defineConfig([
       '@stylistic/array-bracket-newline': ['error', 'consistent'],
       '@stylistic/array-bracket-spacing': ['error', 'never'],
       '@stylistic/array-element-newline': ['error', 'consistent'],
+      '@stylistic/arrow-parens': ['error', 'always'],
       '@stylistic/indent': ['error', 2],
       '@stylistic/arrow-spacing': 'error',
       '@stylistic/block-spacing': 'error',
