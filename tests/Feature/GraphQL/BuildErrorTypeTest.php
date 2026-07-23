@@ -12,12 +12,11 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use Random\RandomException;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesUsers;
 
 class BuildErrorTypeTest extends TestCase
 {
     use CreatesProjects;
-    use CreatesUsers;
+
     use DatabaseTransactions;
 
     /**

@@ -8,12 +8,11 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesUsers;
 
 class ChangeProjectRoleTest extends TestCase
 {
     use CreatesProjects;
-    use CreatesUsers;
+
     use DatabaseTransactions;
 
     private Project $project;
@@ -30,10 +29,10 @@ class ChangeProjectRoleTest extends TestCase
         $this->project = $this->makePublicProject();
 
         $this->users = [
-            'admin' => $this->makeAdminUser(),
-            'projectMember' => $this->makeNormalUser(),
-            'projectAdmin' => $this->makeNormalUser(),
-            'nonmemberUser' => $this->makeNormalUser(),
+            'admin' => User::factory()->adminUser()->create(),
+            'projectMember' => User::factory()->create(),
+            'projectAdmin' => User::factory()->create(),
+            'nonmemberUser' => User::factory()->create(),
         ];
 
         $this->project

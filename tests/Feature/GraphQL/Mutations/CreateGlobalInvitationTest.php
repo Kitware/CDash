@@ -11,11 +11,9 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Mail;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
-use Tests\Traits\CreatesUsers;
 
 class CreateGlobalInvitationTest extends TestCase
 {
-    use CreatesUsers;
     use DatabaseTransactions;
 
     /**
@@ -33,8 +31,8 @@ class CreateGlobalInvitationTest extends TestCase
         parent::setUp();
 
         $this->users = [
-            'admin' => $this->makeAdminUser(),
-            'normal' => $this->makeNormalUser(),
+            'admin' => User::factory()->adminUser()->create(),
+            'normal' => User::factory()->create(),
         ];
     }
 

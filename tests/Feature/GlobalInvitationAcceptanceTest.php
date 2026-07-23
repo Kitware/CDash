@@ -11,11 +11,9 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Tests\TestCase;
-use Tests\Traits\CreatesUsers;
 
 class GlobalInvitationAcceptanceTest extends TestCase
 {
-    use CreatesUsers;
     use DatabaseTransactions;
 
     /**
@@ -33,8 +31,8 @@ class GlobalInvitationAcceptanceTest extends TestCase
         parent::setUp();
 
         $this->users = [
-            'admin' => $this->makeAdminUser(),
-            'normal' => $this->makeNormalUser(),
+            'admin' => User::factory()->adminUser()->create(),
+            'normal' => User::factory()->create(),
         ];
     }
 

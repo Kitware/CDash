@@ -10,12 +10,11 @@ use Illuminate\Support\Str;
 use Random\RandomException;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesUsers;
 
 class TestImageTypeTest extends TestCase
 {
     use CreatesProjects;
-    use CreatesUsers;
+
     use DatabaseTransactions;
 
     private Project $project;

@@ -6,12 +6,9 @@ use App\Utils\RepositoryUtils;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\Project;
-use Tests\Traits\CreatesUsers;
 
 class IssueCreationTestCase extends KWWebTestCase
 {
-    use CreatesUsers;
-
     protected $PDO;
     protected $Builds;
     protected $Projects;
@@ -23,7 +20,7 @@ class IssueCreationTestCase extends KWWebTestCase
         $this->Builds = [];
         $this->Projects = [];
         $this->PDO = Database::getInstance()->getPdo();
-        $this->user = $this->makeAdminUser();
+        $this->user = User::factory()->adminUser()->create();
     }
 
     public function __destruct()

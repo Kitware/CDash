@@ -10,12 +10,10 @@ use Laravel\Dusk\Browser;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\BrowserTestCase;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesUsers;
 
 class ProjectSettingsPageTest extends BrowserTestCase
 {
     use CreatesProjects;
-    use CreatesUsers;
 
     private Project $project;
     private User $admin;
@@ -27,7 +25,7 @@ class ProjectSettingsPageTest extends BrowserTestCase
         parent::setUp();
 
         $this->project = $this->makePublicProject();
-        $this->admin = $this->makeAdminUser();
+        $this->admin = User::factory()->adminUser()->create();
     }
 
     public function tearDown(): void

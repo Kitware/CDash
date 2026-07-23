@@ -17,12 +17,11 @@ use Illuminate\Support\Str;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesUsers;
 
 class QueryTypeTest extends TestCase
 {
     use CreatesProjects;
-    use CreatesUsers;
+
     use DatabaseTransactions;
 
     /** @var array<User> */
@@ -48,7 +47,7 @@ class QueryTypeTest extends TestCase
 
     public function testMeFieldWhenSignedIn(): void
     {
-        $user = $this->makeNormalUser();
+        $user = User::factory()->create();
         $this->users[] = $user;
 
         $this->actingAs($user)->graphQL('
@@ -100,7 +99,7 @@ class QueryTypeTest extends TestCase
 
     public function testUserFieldValidUser(): void
     {
-        $user = $this->makeNormalUser();
+        $user = User::factory()->create();
         $this->users[] = $user;
 
         $this->graphQL('
@@ -124,8 +123,8 @@ class QueryTypeTest extends TestCase
 
     public function testUsersFieldBasicAccess(): void
     {
-        $user1 = $this->makeNormalUser();
-        $user2 = $this->makeNormalUser();
+        $user1 = User::factory()->create();
+        $user2 = User::factory()->create();
         $this->users[] = $user1;
         $this->users[] = $user2;
 
@@ -177,7 +176,7 @@ class QueryTypeTest extends TestCase
 
     public function testBuildCommandFieldRestrictsAccessByProject(): void
     {
-        $user = $this->makeNormalUser();
+        $user = User::factory()->create();
         $this->users[] = $user;
 
         $project1 = $this->makePrivateProject();
@@ -251,7 +250,7 @@ class QueryTypeTest extends TestCase
 
     public function testDynamicAnalysisFieldRestrictsAccessByProject(): void
     {
-        $user = $this->makeNormalUser();
+        $user = User::factory()->create();
         $this->users[] = $user;
 
         $project1 = $this->makePrivateProject();
@@ -339,16 +338,16 @@ class QueryTypeTest extends TestCase
         ?string $user,
         bool $canSeeAuthToken,
     ): void {
-        $tokenOwner = $this->makeNormalUser();
+        $tokenOwner = User::factory()->create();
         /** @var AuthToken $authToken */
         $authToken = $tokenOwner->authenticationTokens()->save(AuthToken::factory()->make());
 
         if ($user === 'normal') {
-            $user = $this->makeNormalUser();
+            $user = User::factory()->create();
         } elseif ($user === 'self') {
             $user = $tokenOwner;
         } elseif ($user === 'admin') {
-            $user = $this->makeAdminUser();
+            $user = User::factory()->adminUser()->create();
         } elseif ($user === null) {
             $user = null;
         } else {
@@ -390,7 +389,7 @@ class QueryTypeTest extends TestCase
 
     public function testTestFieldRestrictsAccessByProject(): void
     {
-        $user = $this->makeNormalUser();
+        $user = User::factory()->create();
         $this->users[] = $user;
 
         $testOutput = TestOutput::create([

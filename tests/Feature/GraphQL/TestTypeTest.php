@@ -11,12 +11,11 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use Random\RandomException;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesUsers;
 
 class TestTypeTest extends TestCase
 {
     use CreatesProjects;
-    use CreatesUsers;
+
     use DatabaseTransactions;
 
     private Project $project;

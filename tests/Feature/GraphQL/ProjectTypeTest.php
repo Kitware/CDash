@@ -10,12 +10,11 @@ use Illuminate\Support\Str;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesUsers;
 
 class ProjectTypeTest extends TestCase
 {
     use CreatesProjects;
-    use CreatesUsers;
+
     use DatabaseTransactions;
 
     /**
@@ -46,8 +45,8 @@ class ProjectTypeTest extends TestCase
         User::query()->delete();
 
         $this->users = [
-            'normal' => $this->makeNormalUser(),
-            'admin' => $this->makeAdminUser(),
+            'normal' => User::factory()->create(),
+            'admin' => User::factory()->adminUser()->create(),
         ];
 
         $user2project_data = [

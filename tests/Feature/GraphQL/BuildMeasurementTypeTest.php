@@ -6,12 +6,10 @@ use App\Models\Build;
 use App\Models\Project;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesUsers;
 
 class BuildMeasurementTypeTest extends TestCase
 {
     use CreatesProjects;
-    use CreatesUsers;
 
     private Project $project;
 

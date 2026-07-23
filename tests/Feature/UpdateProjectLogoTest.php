@@ -3,22 +3,22 @@
 namespace Tests\Feature;
 
 use App\Models\Project;
+use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesUsers;
 
 class UpdateProjectLogoTest extends TestCase
 {
     use CreatesProjects;
-    use CreatesUsers;
+
     use DatabaseTransactions;
 
     public function testCannotUploadToNonExistentProject(): void
     {
-        $user = $this->makeAdminUser();
+        $user = User::factory()->adminUser()->create();
         $response = $this->actingAs($user)->postJson('/projects/123456789/logo', [
             'logo' => UploadedFile::fake()->image('logo.jpg'),
         ]);
@@ -27,7 +27,7 @@ class UpdateProjectLogoTest extends TestCase
 
     public function testCannotUseNonIntegerProjectId(): void
     {
-        $user = $this->makeAdminUser();
+        $user = User::factory()->adminUser()->create();
         $response = $this->actingAs($user)->postJson('/projects/abc/logo', [
             'logo' => UploadedFile::fake()->image('logo.jpg'),
         ]);
@@ -49,7 +49,7 @@ class UpdateProjectLogoTest extends TestCase
     public function testCannotUploadAsNormalUser(): void
     {
         $project = $this->makePublicProject();
-        $user = $this->makeNormalUser();
+        $user = User::factory()->create();
 
         $response = $this->actingAs($user)->postJson("/projects/{$project->id}/logo", [
             'logo' => UploadedFile::fake()->image('logo.jpg'),
@@ -62,7 +62,7 @@ class UpdateProjectLogoTest extends TestCase
     public function testCannotUploadAsProjectUser(): void
     {
         $project = $this->makePublicProject();
-        $user = $this->makeNormalUser();
+        $user = User::factory()->create();
         $project->users()->attach($user, ['role' => Project::PROJECT_USER]);
 
         $response = $this->actingAs($user)->postJson("/projects/{$project->id}/logo", [
@@ -77,7 +77,7 @@ class UpdateProjectLogoTest extends TestCase
     {
         Storage::fake('public');
         $project = $this->makePublicProject();
-        $user = $this->makeNormalUser();
+        $user = User::factory()->create();
         $project->users()->attach($user, ['role' => Project::PROJECT_ADMIN]);
 
         $response = $this->actingAs($user)->postJson("/projects/{$project->id}/logo", [
@@ -91,7 +91,7 @@ class UpdateProjectLogoTest extends TestCase
     public function testCanUploadAsGlobalAdmin(): void
     {
         $project = $this->makePublicProject();
-        $user = $this->makeAdminUser();
+        $user = User::factory()->adminUser()->create();
 
         $response = $this->actingAs($user)->postJson("/projects/{$project->id}/logo", [
             'logo' => UploadedFile::fake()->image('logo.jpg'),
@@ -104,7 +104,7 @@ class UpdateProjectLogoTest extends TestCase
     public function testCannotUploadNonImage(): void
     {
         $project = $this->makePublicProject();
-        $user = $this->makeAdminUser();
+        $user = User::factory()->adminUser()->create();
 
         $response = $this->actingAs($user)->postJson("/projects/{$project->id}/logo", [
             'logo' => UploadedFile::fake()->create('document.pdf'),
@@ -117,7 +117,7 @@ class UpdateProjectLogoTest extends TestCase
     public function testCannotUploadSvg(): void
     {
         $project = $this->makePublicProject();
-        $user = $this->makeAdminUser();
+        $user = User::factory()->adminUser()->create();
 
         $response = $this->actingAs($user)->postJson("/projects/{$project->id}/logo", [
             'logo' => UploadedFile::fake()->create('logo.svg'),

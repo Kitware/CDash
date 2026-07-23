@@ -9,11 +9,9 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
-use Tests\Traits\CreatesUsers;
 
 class CreateProjectTest extends TestCase
 {
-    use CreatesUsers;
     use DatabaseTransactions;
 
     /**
@@ -68,7 +66,7 @@ class CreateProjectTest extends TestCase
 
     public function testCreateProjectUnauthorizedUser(): void
     {
-        $this->users['normal'] = $this->makeNormalUser();
+        $this->users['normal'] = User::factory()->create();
 
         $name = 'test-project' . Str::uuid();
         $this->actingAs($this->users['normal'])->graphQL('
@@ -124,7 +122,7 @@ class CreateProjectTest extends TestCase
     {
         Config::set('cdash.user_create_projects', true);
 
-        $this->users['normal'] = $this->makeNormalUser();
+        $this->users['normal'] = User::factory()->create();
 
         $name = 'test-project' . Str::uuid();
         $response = $this->actingAs($this->users['normal'])->graphQL('
@@ -160,7 +158,7 @@ class CreateProjectTest extends TestCase
 
     public function testCreateProjectAdmin(): void
     {
-        $this->users['admin'] = $this->makeAdminUser();
+        $this->users['admin'] = User::factory()->adminUser()->create();
 
         $name = 'test-project' . Str::uuid();
         $response = $this->actingAs($this->users['admin'])->graphQL('
@@ -232,8 +230,8 @@ class CreateProjectTest extends TestCase
         Config::set('cdash.user_create_projects', true);
         Config::set('cdash.max_project_visibility', $max_visibility);
 
-        $this->users['normal'] = $this->makeNormalUser();
-        $this->users['admin'] = $this->makeAdminUser();
+        $this->users['normal'] = User::factory()->create();
+        $this->users['admin'] = User::factory()->adminUser()->create();
 
         $name = 'test-project' . Str::uuid();
         $response = $this->actingAs($this->users[$user])->graphQL('
@@ -302,8 +300,8 @@ class CreateProjectTest extends TestCase
         Config::set('cdash.user_create_projects', true);
         Config::set('cdash.require_authenticated_submissions', $require_authenticated_submissions);
 
-        $this->users['normal'] = $this->makeNormalUser();
-        $this->users['admin'] = $this->makeAdminUser();
+        $this->users['normal'] = User::factory()->create();
+        $this->users['admin'] = User::factory()->adminUser()->create();
 
         $name = 'test-project' . Str::uuid();
         $response = $this->actingAs($this->users[$user])->graphQL('

@@ -9,12 +9,10 @@ use Laravel\Dusk\Browser;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\BrowserTestCase;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesUsers;
 
 class CreateProjectPageTest extends BrowserTestCase
 {
     use CreatesProjects;
-    use CreatesUsers;
 
     /**
      * @var array<User>
@@ -43,8 +41,8 @@ class CreateProjectPageTest extends BrowserTestCase
 
     public function testReturns403WhenInsufficientPermissions(): void
     {
-        $this->users['normal'] = $this->makeNormalUser();
-        $this->users['admin'] = $this->makeAdminUser();
+        $this->users['normal'] = User::factory()->create();
+        $this->users['admin'] = User::factory()->adminUser()->create();
 
         $this->browse(function (Browser $browser): void {
             $browser->visit('/projects/new')
@@ -65,7 +63,7 @@ class CreateProjectPageTest extends BrowserTestCase
 
     public function testShowsErrorWhenInvalidProjectNameProvided(): void
     {
-        $this->users['admin'] = $this->makeAdminUser();
+        $this->users['admin'] = User::factory()->adminUser()->create();
 
         $this->browse(function (Browser $browser): void {
             $browser->loginAs($this->users['admin'])
@@ -83,7 +81,7 @@ class CreateProjectPageTest extends BrowserTestCase
 
     public function testShowsErrorWhenProjectAlreadyExists(): void
     {
-        $this->users['admin'] = $this->makeAdminUser();
+        $this->users['admin'] = User::factory()->adminUser()->create();
 
         $project_name = Str::uuid()->toString();
 
@@ -105,7 +103,7 @@ class CreateProjectPageTest extends BrowserTestCase
 
     public function testCreateProjectSetDescription(): void
     {
-        $this->users['admin'] = $this->makeAdminUser();
+        $this->users['admin'] = User::factory()->adminUser()->create();
 
         $name = Str::uuid()->toString();
         $description = Str::uuid()->toString();
@@ -131,7 +129,7 @@ class CreateProjectPageTest extends BrowserTestCase
 
     public function testCreateProjectSetAuthenticatedSubmissions(): void
     {
-        $this->users['admin'] = $this->makeAdminUser();
+        $this->users['admin'] = User::factory()->adminUser()->create();
 
         $name = Str::uuid()->toString();
 
@@ -169,7 +167,7 @@ class CreateProjectPageTest extends BrowserTestCase
     #[DataProvider('visibilities')]
     public function testCreateProjectSetVisibility(string $fieldname, int $role): void
     {
-        $this->users['admin'] = $this->makeAdminUser();
+        $this->users['admin'] = User::factory()->adminUser()->create();
 
         $name = Str::uuid()->toString();
 

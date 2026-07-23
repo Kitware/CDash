@@ -3,12 +3,12 @@
 namespace Tests\Feature;
 
 use App\Http\Controllers\CDash;
+use App\Models\User;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Tests\TestCase;
-use Tests\Traits\CreatesUsers;
 
 /**
  * A general place to test the CDash installation on-top of Laravel
@@ -17,8 +17,6 @@ use Tests\Traits\CreatesUsers;
  */
 class CDashTest extends TestCase
 {
-    use CreatesUsers;
-
     public function testCDashFilesystemConfigExists(): void
     {
         $expected = [
@@ -87,7 +85,7 @@ class CDashTest extends TestCase
         URL::forceRootUrl('http://localhost');
         $this->get('/projects')->assertRedirect('/login');
 
-        $normal_user = $this->makeNormalUser();
+        $normal_user = User::factory()->create();
         $this->actingAs($normal_user)->get('/projects')->assertOk();
         $normal_user->delete();
     }

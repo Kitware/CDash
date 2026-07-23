@@ -9,11 +9,9 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Tests\TestCase;
-use Tests\Traits\CreatesUsers;
 
 class AuthTokenExpiringTest extends TestCase
 {
-    use CreatesUsers;
     use DatabaseTransactions;
 
     protected User $user;
@@ -22,7 +20,7 @@ class AuthTokenExpiringTest extends TestCase
     {
         parent::setUp();
 
-        $this->user = $this->makeNormalUser();
+        $this->user = User::factory()->create();
     }
 
     protected function tearDown(): void

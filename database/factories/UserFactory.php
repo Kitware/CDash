@@ -20,13 +20,27 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'firstname' => fake()->firstName(),
-            'lastname' => fake()->lastName(),
+            'firstname' => fake()->unique()->firstName(),
+            'lastname' => fake()->unique()->lastName(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
-            'password' => Hash::make('password'),
+            'password' => 'password',
+            'institution' => fake()->unique()->company(),
             'remember_token' => Str::random(10),
+            'admin' => false,
         ];
+    }
+
+    /**
+     * Configure the model factory.
+     */
+    public function configure(): static
+    {
+        return $this->afterMaking(function (User $user): void {
+            if ($user->password && Hash::needsRehash($user->password)) {
+                $user->password = Hash::make($user->password);
+            }
+        });
     }
 
     public function unverified(): static

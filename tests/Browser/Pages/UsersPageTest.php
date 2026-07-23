@@ -10,12 +10,9 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Laravel\Dusk\Browser;
 use Tests\BrowserTestCase;
-use Tests\Traits\CreatesUsers;
 
 class UsersPageTest extends BrowserTestCase
 {
-    use CreatesUsers;
-
     /**
      * @var array<User>
      */
@@ -62,7 +59,7 @@ class UsersPageTest extends BrowserTestCase
 
     public function testAdminsCanSeeInviteUsersButton(): void
     {
-        $this->users['admin'] = $this->makeAdminUser();
+        $this->users['admin'] = User::factory()->adminUser()->create();
 
         $this->browse(function (Browser $browser): void {
             $browser->loginAs($this->users['admin'])
@@ -75,7 +72,7 @@ class UsersPageTest extends BrowserTestCase
 
     public function testInviteUsersButtonNotVisibleToRegularUsers(): void
     {
-        $this->users['normal'] = $this->makeNormalUser();
+        $this->users['normal'] = User::factory()->create();
         $this->browse(function (Browser $browser): void {
             $browser->loginAs($this->users['normal'])
                 ->visit('/users')
@@ -97,7 +94,7 @@ class UsersPageTest extends BrowserTestCase
 
     public function testAdminsCanSeeInvitationsTable(): void
     {
-        $this->users['admin'] = $this->makeAdminUser();
+        $this->users['admin'] = User::factory()->adminUser()->create();
 
         $this->browse(function (Browser $browser): void {
             $browser->loginAs($this->users['admin'])
@@ -111,7 +108,7 @@ class UsersPageTest extends BrowserTestCase
 
     public function testRegularUsersCannotSeeInvitationsTable(): void
     {
-        $this->users['normal'] = $this->makeNormalUser();
+        $this->users['normal'] = User::factory()->create();
 
         $this->browse(function (Browser $browser): void {
             $browser->loginAs($this->users['normal'])
@@ -134,7 +131,7 @@ class UsersPageTest extends BrowserTestCase
 
     public function testFullInvitationWorkflow(): void
     {
-        $this->users['admin'] = $this->makeAdminUser();
+        $this->users['admin'] = User::factory()->adminUser()->create();
 
         $fakeEmail = fake()->unique()->email();
 
@@ -166,7 +163,7 @@ class UsersPageTest extends BrowserTestCase
 
     public function testInvitationTablePagination(): void
     {
-        $this->users['admin'] = $this->makeAdminUser();
+        $this->users['admin'] = User::factory()->adminUser()->create();
 
         for ($i = 0; $i < 105; $i++) {
             $this->createInvitation();
@@ -186,10 +183,10 @@ class UsersPageTest extends BrowserTestCase
 
     public function testUsersTablePagination(): void
     {
-        $this->users['admin'] = $this->makeAdminUser();
+        $this->users['admin'] = User::factory()->adminUser()->create();
 
         for ($i = 0; $i < 105; $i++) {
-            $this->users[] = $this->makeNormalUser();
+            $this->users[] = User::factory()->create();
         }
 
         $this->browse(function (Browser $browser): void {
@@ -206,7 +203,7 @@ class UsersPageTest extends BrowserTestCase
 
     public function testAdminsCannotChangeOwnRole(): void
     {
-        $this->users['admin'] = $this->makeAdminUser();
+        $this->users['admin'] = User::factory()->adminUser()->create();
 
         $this->browse(function (Browser $browser): void {
             $browser->loginAs($this->users['admin'])
@@ -219,8 +216,8 @@ class UsersPageTest extends BrowserTestCase
 
     public function testAdminsCanChangeRoleForOtherUsers(): void
     {
-        $this->users['admin'] = $this->makeAdminUser();
-        $this->users['normal'] = $this->makeNormalUser();
+        $this->users['admin'] = User::factory()->adminUser()->create();
+        $this->users['normal'] = User::factory()->create();
 
         $this->browse(function (Browser $browser): void {
             $browser->loginAs($this->users['admin'])
@@ -239,8 +236,8 @@ class UsersPageTest extends BrowserTestCase
 
     public function testNormalUsersCannotChangeRole(): void
     {
-        $this->users['normal1'] = $this->makeNormalUser();
-        $this->users['normal2'] = $this->makeNormalUser();
+        $this->users['normal1'] = User::factory()->create();
+        $this->users['normal2'] = User::factory()->create();
 
         $this->browse(function (Browser $browser): void {
             $browser->loginAs($this->users['normal1'])
@@ -253,7 +250,7 @@ class UsersPageTest extends BrowserTestCase
 
     public function testAnonymousUsersCannotChangeRole(): void
     {
-        $this->users['normal'] = $this->makeNormalUser();
+        $this->users['normal'] = User::factory()->create();
 
         $this->browse(function (Browser $browser): void {
             $browser
@@ -266,8 +263,8 @@ class UsersPageTest extends BrowserTestCase
 
     public function testRemoveUserButtonAppearsForAdmins(): void
     {
-        $this->users['admin1'] = $this->makeAdminUser();
-        $this->users['admin2'] = $this->makeAdminUser();
+        $this->users['admin1'] = User::factory()->adminUser()->create();
+        $this->users['admin2'] = User::factory()->adminUser()->create();
 
         $this->browse(function (Browser $browser): void {
             $browser->loginAs($this->users['admin1'])
@@ -280,8 +277,8 @@ class UsersPageTest extends BrowserTestCase
 
     public function testRegularUsersDontSeeRemoveUserButton(): void
     {
-        $this->users['admin'] = $this->makeAdminUser();
-        $this->users['normal'] = $this->makeNormalUser();
+        $this->users['admin'] = User::factory()->adminUser()->create();
+        $this->users['normal'] = User::factory()->create();
 
         $this->browse(function (Browser $browser): void {
             $browser->loginAs($this->users['normal'])
@@ -294,7 +291,7 @@ class UsersPageTest extends BrowserTestCase
 
     public function testAnonymousUsersDontSeeRemoveUserButton(): void
     {
-        $this->users['admin'] = $this->makeAdminUser();
+        $this->users['admin'] = User::factory()->adminUser()->create();
 
         $this->browse(function (Browser $browser): void {
             $browser->visit('/users')
@@ -306,7 +303,7 @@ class UsersPageTest extends BrowserTestCase
 
     public function testCannotRemoveSelf(): void
     {
-        $this->users['admin'] = $this->makeAdminUser();
+        $this->users['admin'] = User::factory()->adminUser()->create();
 
         $this->browse(function (Browser $browser): void {
             $browser->loginAs($this->users['admin'])
@@ -319,8 +316,8 @@ class UsersPageTest extends BrowserTestCase
 
     public function testAdminCanRemoveUser(): void
     {
-        $this->users['admin'] = $this->makeAdminUser();
-        $this->users['normal'] = $this->makeNormalUser();
+        $this->users['admin'] = User::factory()->adminUser()->create();
+        $this->users['normal'] = User::factory()->create();
 
         self::assertContains($this->users['normal']->id, User::pluck('id'));
 

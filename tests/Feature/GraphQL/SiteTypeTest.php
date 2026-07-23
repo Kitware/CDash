@@ -11,12 +11,11 @@ use Illuminate\Support\Str;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesUsers;
 
 class SiteTypeTest extends TestCase
 {
     use CreatesProjects;
-    use CreatesUsers;
+
     use DatabaseTransactions;
 
     /**
@@ -44,8 +43,8 @@ class SiteTypeTest extends TestCase
         ];
 
         $this->users = [
-            'normal' => $this->makeNormalUser(),
-            'admin' => $this->makeAdminUser(),
+            'normal' => User::factory()->create(),
+            'admin' => User::factory()->adminUser()->create(),
         ];
 
         $user2project_data = [

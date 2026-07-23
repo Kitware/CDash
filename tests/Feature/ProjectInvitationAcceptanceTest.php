@@ -10,12 +10,11 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Carbon;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesUsers;
 
 class ProjectInvitationAcceptanceTest extends TestCase
 {
     use CreatesProjects;
-    use CreatesUsers;
+
     use DatabaseTransactions;
 
     protected Project $project;
@@ -31,8 +30,8 @@ class ProjectInvitationAcceptanceTest extends TestCase
 
         $this->project = $this->makePublicProject();
 
-        $this->users['admin'] = $this->makeAdminUser();
-        $this->users['normal'] = $this->makeNormalUser();
+        $this->users['admin'] = User::factory()->adminUser()->create();
+        $this->users['normal'] = User::factory()->create();
     }
 
     protected function tearDown(): void

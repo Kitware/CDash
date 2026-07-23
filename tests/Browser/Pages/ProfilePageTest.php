@@ -8,12 +8,10 @@ use Illuminate\Support\Str;
 use Laravel\Dusk\Browser;
 use Tests\BrowserTestCase;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesUsers;
 
 class ProfilePageTest extends BrowserTestCase
 {
     use CreatesProjects;
-    use CreatesUsers;
 
     /**
      * @var array<User>
@@ -50,13 +48,12 @@ class ProfilePageTest extends BrowserTestCase
 
     public function testCanChangeNameAndEmail(): void
     {
-        $this->users['admin'] = $this->makeAdminUser(
-            'admin',
-            'admin',
-            'admin@example.com',
-            null,
-            'testing',
-        );
+        $this->users['admin'] = User::factory()->adminUser()->create([
+            'firstname' => 'admin',
+            'lastname' => 'admin',
+            'email' => 'admin@example.com',
+            'institution' => 'testing',
+        ]);
 
         $this->browse(function (Browser $browser): void {
             $browser->loginAs($this->users['admin'])
@@ -121,7 +118,7 @@ class ProfilePageTest extends BrowserTestCase
 
     public function testIncorrectPasswordPreventsPasswordReset(): void
     {
-        $this->users['admin'] = $this->makeAdminUser();
+        $this->users['admin'] = User::factory()->adminUser()->create();
 
         $this->browse(function (Browser $browser): void {
             $browser->loginAs($this->users['admin'])
@@ -142,7 +139,7 @@ class ProfilePageTest extends BrowserTestCase
     public function testShortPasswordPreventsPasswordReset(): void
     {
         $password = Str::random(10);
-        $this->users['admin'] = clone $this->makeAdminUser();
+        $this->users['admin'] = clone User::factory()->adminUser()->create();
         $this->users['admin']->password = bcrypt($password);
         $this->users['admin']->save();
 
@@ -165,7 +162,7 @@ class ProfilePageTest extends BrowserTestCase
     public function testCanChangePassword(): void
     {
         $password = Str::random(10);
-        $this->users['admin'] = clone $this->makeAdminUser();
+        $this->users['admin'] = clone User::factory()->adminUser()->create();
         $this->users['admin']->password = bcrypt($password);
         $this->users['admin']->save();
 
@@ -209,7 +206,7 @@ class ProfilePageTest extends BrowserTestCase
 
     public function testCreateFullAccessToken(): void
     {
-        $this->users['admin'] = $this->makeAdminUser();
+        $this->users['admin'] = User::factory()->adminUser()->create();
         $description = Str::uuid()->toString();
 
         $this->browse(function (Browser $browser) use ($description): void {
@@ -236,7 +233,7 @@ class ProfilePageTest extends BrowserTestCase
 
     public function testCreateSubmitOnlyAllProjectsToken(): void
     {
-        $this->users['admin'] = $this->makeAdminUser();
+        $this->users['admin'] = User::factory()->adminUser()->create();
         $description = Str::uuid()->toString();
 
         $this->browse(function (Browser $browser) use ($description): void {
@@ -262,7 +259,7 @@ class ProfilePageTest extends BrowserTestCase
 
     public function testCreateProjectScopedSubmitOnlyToken(): void
     {
-        $this->users['admin'] = $this->makeAdminUser();
+        $this->users['admin'] = User::factory()->adminUser()->create();
         $this->projects['project'] = $this->makePublicProject();
         $this->projects['project']->users()->attach($this->users['admin'], ['role' => Project::PROJECT_USER]);
         $description = Str::uuid()->toString();
@@ -292,7 +289,7 @@ class ProfilePageTest extends BrowserTestCase
 
     public function testDeleteToken(): void
     {
-        $this->users['admin'] = $this->makeAdminUser();
+        $this->users['admin'] = User::factory()->adminUser()->create();
         $description = Str::uuid()->toString();
 
         $this->browse(function (Browser $browser) use ($description): void {

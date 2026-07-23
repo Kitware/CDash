@@ -4,22 +4,22 @@ namespace Tests\Feature\GraphQL;
 
 use App\Models\AuthToken;
 use App\Models\Project;
+use App\Models\User;
 use Exception;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesUsers;
 
 class UserTypeTest extends TestCase
 {
     use CreatesProjects;
-    use CreatesUsers;
+
     use DatabaseTransactions;
 
     public function testBasicFieldAccess(): void
     {
-        $normalUser = $this->makeNormalUser();
+        $normalUser = User::factory()->create();
 
         $this->actingAs($normalUser)->graphQL('
             query {
@@ -68,7 +68,7 @@ class UserTypeTest extends TestCase
 
     public function testCanSeeOwnEmail(): void
     {
-        $normalUser = $this->makeNormalUser();
+        $normalUser = User::factory()->create();
 
         $this->actingAs($normalUser)->graphQL('
             query($userid: ID) {
@@ -91,8 +91,8 @@ class UserTypeTest extends TestCase
 
     public function testCannotSeeEmailForOtherUsers(): void
     {
-        $normalUser = $this->makeNormalUser();
-        $adminUser = $this->makeNormalUser();
+        $normalUser = User::factory()->create();
+        $adminUser = User::factory()->create();
 
         $this->actingAs($normalUser)->graphQL('
             query($userid: ID) {
@@ -115,7 +115,7 @@ class UserTypeTest extends TestCase
 
     public function testAnonUsersCannotSeeEmails(): void
     {
-        $normalUser = $this->makeNormalUser();
+        $normalUser = User::factory()->create();
 
         $this->graphQL('
             query($userid: ID) {
@@ -138,8 +138,8 @@ class UserTypeTest extends TestCase
 
     public function testAdminCanSeeAllEmails(): void
     {
-        $normalUser = $this->makeNormalUser();
-        $adminUser = $this->makeAdminUser();
+        $normalUser = User::factory()->create();
+        $adminUser = User::factory()->adminUser()->create();
 
         $this->actingAs($adminUser)->graphQL('
             query($userid: ID) {
@@ -185,25 +185,25 @@ class UserTypeTest extends TestCase
         $protectedProject = $this->makeProtectedProject();
         $privateProject = $this->makePrivateProject();
 
-        $projectUser = $this->makeNormalUser();
+        $projectUser = User::factory()->create();
         $publicProject->users()->attach($projectUser, ['role' => Project::PROJECT_USER]);
         $protectedProject->users()->attach($projectUser, ['role' => Project::PROJECT_USER]);
         $privateProject->users()->attach($projectUser, ['role' => Project::PROJECT_USER]);
 
         if ($user === 'normal') {
-            $user = $this->makeNormalUser();
+            $user = User::factory()->create();
         } elseif ($user === 'project_member') {
-            $user = $this->makeNormalUser();
+            $user = User::factory()->create();
             $publicProject->users()->attach($user, ['role' => Project::PROJECT_USER]);
             $protectedProject->users()->attach($user, ['role' => Project::PROJECT_USER]);
             $privateProject->users()->attach($user, ['role' => Project::PROJECT_USER]);
         } elseif ($user === 'project_admin') {
-            $user = $this->makeNormalUser();
+            $user = User::factory()->create();
             $publicProject->users()->attach($user, ['role' => Project::PROJECT_ADMIN]);
             $protectedProject->users()->attach($user, ['role' => Project::PROJECT_ADMIN]);
             $privateProject->users()->attach($user, ['role' => Project::PROJECT_ADMIN]);
         } elseif ($user === 'admin') {
-            $user = $this->makeAdminUser();
+            $user = User::factory()->adminUser()->create();
         } elseif ($user === null) {
             $user = null;
         } else {
@@ -260,19 +260,19 @@ class UserTypeTest extends TestCase
         bool $canSeeAuthToken,
     ): void {
         AuthToken::factory()->create([
-            'userid' => $this->makeNormalUser()->id,
+            'userid' => User::factory()->create()->id,
         ]);
 
-        $tokenOwner = $this->makeNormalUser();
+        $tokenOwner = User::factory()->create();
         /** @var AuthToken $authToken */
         $authToken = $tokenOwner->authenticationTokens()->save(AuthToken::factory()->make());
 
         if ($user === 'normal') {
-            $user = $this->makeNormalUser();
+            $user = User::factory()->create();
         } elseif ($user === 'self') {
             $user = $tokenOwner;
         } elseif ($user === 'admin') {
-            $user = $this->makeAdminUser();
+            $user = User::factory()->adminUser()->create();
         } elseif ($user === null) {
             $user = null;
         } else {
