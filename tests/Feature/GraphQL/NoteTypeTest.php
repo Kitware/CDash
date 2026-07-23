@@ -45,20 +45,9 @@ class NoteTypeTest extends TestCase
         $this->public_project = $this->makePublicProject();
         $this->private_project = $this->makePrivateProject();
 
-        $this->note1 = Note::create([
-            'name' => Str::uuid()->toString(),
-            'text' => Str::uuid()->toString(),
-        ]);
-
-        $this->note2 = Note::create([
-            'name' => Str::uuid()->toString(),
-            'text' => Str::uuid()->toString(),
-        ]);
-
-        $this->note3 = Note::create([
-            'name' => Str::uuid()->toString(),
-            'text' => Str::uuid()->toString(),
-        ]);
+        $this->note1 = Note::factory()->create();
+        $this->note2 = Note::factory()->create();
+        $this->note3 = Note::factory()->create();
 
         $this->public_project->builds()->create([
             'name' => 'build1',
