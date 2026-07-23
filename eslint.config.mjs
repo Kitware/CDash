@@ -62,6 +62,7 @@ export default defineConfig([
       '@stylistic/indent-binary-ops': ['error', 2],
       '@stylistic/key-spacing': 'error',
       '@stylistic/keyword-spacing': 'error',
+      '@stylistic/lines-between-class-members': 'error',
       '@stylistic/space-before-blocks': ['error', 'always'],
       '@stylistic/linebreak-style': ['error', 'unix'],
       '@stylistic/no-trailing-spaces': 'error',
