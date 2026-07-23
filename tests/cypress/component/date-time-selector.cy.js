@@ -18,12 +18,12 @@ describe('DateTimeSelector', () => {
       },
     });
 
-    cy.get('select').eq(0).should('have.value', '12');   // Month
-    cy.get('select').eq(1).should('have.value', '29');   // Day
+    cy.get('select').eq(0).should('have.value', '12'); // Month
+    cy.get('select').eq(1).should('have.value', '29'); // Day
     cy.get('select').eq(2).should('have.value', '2025'); // Year
-    cy.get('select').eq(3).should('have.value', '14');   // Hour
-    cy.get('select').eq(4).should('have.value', '30');   // Minute
-    cy.get('select').eq(5).should('have.value', '45');   // Second
+    cy.get('select').eq(3).should('have.value', '14'); // Hour
+    cy.get('select').eq(4).should('have.value', '30'); // Minute
+    cy.get('select').eq(5).should('have.value', '45'); // Second
   });
 
   it('populates the year dropdown correctly', () => {
@@ -148,12 +148,12 @@ describe('DateTimeSelector', () => {
     cy.get('select').eq(6).select('UTC-8');
 
     // Verify other values remain unchanged
-    cy.get('select').eq(0).should('have.value', '12');   // Month
-    cy.get('select').eq(1).should('have.value', '29');   // Day
+    cy.get('select').eq(0).should('have.value', '12'); // Month
+    cy.get('select').eq(1).should('have.value', '29'); // Day
     cy.get('select').eq(2).should('have.value', '2025'); // Year
-    cy.get('select').eq(3).should('have.value', '14');   // Hour
-    cy.get('select').eq(4).should('have.value', '30');   // Minute
-    cy.get('select').eq(5).should('have.value', '45');   // Second
+    cy.get('select').eq(3).should('have.value', '14'); // Hour
+    cy.get('select').eq(4).should('have.value', '30'); // Minute
+    cy.get('select').eq(5).should('have.value', '45'); // Second
   });
 
   it('clamps the day when changing to a month with fewer days', () => {
