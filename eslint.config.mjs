@@ -56,6 +56,7 @@ export default defineConfig([
       '@stylistic/function-call-argument-newline': ['error', 'consistent'],
       '@stylistic/function-call-spacing': 'error',
       '@stylistic/function-paren-newline': ['error', 'multiline-arguments'],
+      '@stylistic/generator-star-spacing': 'error',
       '@stylistic/keyword-spacing': ['error', {'before': true, 'after': true}],
       '@stylistic/space-before-blocks': ['error', 'always'],
       '@stylistic/linebreak-style': ['error', 'unix'],
