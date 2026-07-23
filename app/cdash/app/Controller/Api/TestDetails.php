@@ -17,7 +17,6 @@
 
 namespace CDash\Controller\Api;
 
-use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -54,6 +53,6 @@ class TestDetails extends BuildTestApi
             );
         }
 
-        throw new Exception('fileid query parameter is required');
+        abort(400, 'fileid query parameter is required');
     }
 }
