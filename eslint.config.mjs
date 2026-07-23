@@ -39,6 +39,7 @@ export default defineConfig([
       'prefer-const': 'error',
       'prefer-template': 'error',
 
+      '@stylistic/array-bracket-newline': ['error', 'consistent'],
       '@stylistic/indent': ['error', 2],
       '@stylistic/arrow-spacing': 'error',
       '@stylistic/block-spacing': 'error',
