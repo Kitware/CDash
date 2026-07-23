@@ -150,12 +150,12 @@ import {
   faShieldHalved,
   faLock,
 } from '@fortawesome/free-solid-svg-icons';
-import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import gql from 'graphql-tag';
 
 export default {
   name: 'CreateProjectPage',
-  components: {FontAwesomeIcon},
+  components: { FontAwesomeIcon },
 
   props: {
     maxProjectVisibility: {

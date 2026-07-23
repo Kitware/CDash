@@ -318,7 +318,7 @@ import LoadingIndicator from './shared/LoadingIndicator.vue';
 import BuildSidebar from './shared/BuildSidebar.vue';
 import gql from 'graphql-tag';
 import Utils from './shared/Utils';
-import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import {
   faCircleCheck,
   faCircleXmark,
@@ -619,7 +619,7 @@ export default {
       if (this.jeCompareInitialized) {
         return;
       }
-      $('.je_compare').je_compare({caption: true});
+      $('.je_compare').je_compare({ caption: true });
       this.jeCompareInitialized = true;
     },
   },

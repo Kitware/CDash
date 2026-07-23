@@ -472,7 +472,7 @@ import {
   faLink,
   faCheck,
 } from '@fortawesome/free-solid-svg-icons';
-import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import InputField from '../shared/FormInputs/InputField.vue';
 import TextAreaField from '../shared/FormInputs/TextAreaField.vue';
 import CheckboxField from '../shared/FormInputs/CheckboxField.vue';
@@ -483,8 +483,8 @@ import LoadingIndicator from '../shared/LoadingIndicator.vue';
 export default {
   name: 'GeneralTab',
 
-  components: {LoadingIndicator,
-    TabContent, SelectField, CheckboxField, TextAreaField, InputField, FontAwesomeIcon, FormSection},
+  components: { LoadingIndicator,
+    TabContent, SelectField, CheckboxField, TextAreaField, InputField, FontAwesomeIcon, FormSection },
 
   props: {
     projectId: {

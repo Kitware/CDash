@@ -39,13 +39,13 @@
 </template>
 
 <script>
-import {Repository} from '../shared/RepositoryIntegrations';
-import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
-import {faFolderOpen, faFile} from '@fortawesome/free-regular-svg-icons';
+import { Repository } from '../shared/RepositoryIntegrations';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { faFolderOpen, faFile } from '@fortawesome/free-regular-svg-icons';
 
 export default {
   name: 'CommitFileTreeNode',
-  components: {FontAwesomeIcon},
+  components: { FontAwesomeIcon },
 
   props: {
     node: {

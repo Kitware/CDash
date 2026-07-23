@@ -100,7 +100,7 @@ export default {
           projectid: this.projectId,
         };
       },
-      result({data}) {
+      result({ data }) {
         if (data && data.allSites.sites.pageInfo.hasNextPage) {
           this.$apollo.queries.allSites.fetchMore({
             variables: {

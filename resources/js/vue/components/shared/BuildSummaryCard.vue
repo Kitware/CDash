@@ -296,7 +296,7 @@
 
 <script>
 import gql from 'graphql-tag';
-import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import LoadingIndicator from './LoadingIndicator.vue';
 import { DateTime, Interval, Duration } from 'luxon';
 import BuildSummaryCardStepSummary from './BuildSummaryCardStepSummary.vue';
@@ -310,7 +310,7 @@ import Utils from './Utils';
 
 export default {
   name: 'BuildSummaryCard',
-  components: {BuildSummaryCardStepSummary, LoadingIndicator, FontAwesomeIcon},
+  components: { BuildSummaryCardStepSummary, LoadingIndicator, FontAwesomeIcon },
 
   props: {
     buildId: {

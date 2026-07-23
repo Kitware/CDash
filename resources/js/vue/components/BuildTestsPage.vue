@@ -72,7 +72,7 @@ import FilterBuilder from './shared/FilterBuilder.vue';
 import LoadingIndicator from './shared/LoadingIndicator.vue';
 import BuildSummaryCard from './shared/BuildSummaryCard.vue';
 import BuildSidebar from './shared/BuildSidebar.vue';
-import {DateTime} from 'luxon';
+import { DateTime } from 'luxon';
 
 const TEST_QUERY = gql`
   query(

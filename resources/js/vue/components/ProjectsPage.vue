@@ -115,7 +115,7 @@
 
 import LoadingIndicator from './shared/LoadingIndicator.vue';
 import gql from 'graphql-tag';
-import {DateTime} from 'luxon';
+import { DateTime } from 'luxon';
 import ProjectLogo from './shared/ProjectLogo.vue';
 import {
   faCalendar,
@@ -123,7 +123,7 @@ import {
   faShieldHalved,
   faLock,
 } from '@fortawesome/free-solid-svg-icons';
-import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const PROJECT_LIST_QUERY = `
   projects(after: $after) {
@@ -155,7 +155,7 @@ const PROJECT_LIST_QUERY = `
 
 export default {
   name: 'ProjectsPage',
-  components: {FontAwesomeIcon, ProjectLogo, LoadingIndicator},
+  components: { FontAwesomeIcon, ProjectLogo, LoadingIndicator },
 
   props: {
     isLoggedIn: {
@@ -188,7 +188,7 @@ export default {
           after: null,
         };
       },
-      result({data}) {
+      result({ data }) {
         if (data && data.allVisibleProjects.pageInfo.hasNextPage) {
           this.$apollo.queries.allVisibleProjects.fetchMore({
             variables: {
@@ -215,7 +215,7 @@ export default {
           after: null,
         };
       },
-      result({data}) {
+      result({ data }) {
         if (data && data.me?.projects.pageInfo.hasNextPage) {
           this.$apollo.queries.myProjects.fetchMore({
             variables: {
@@ -246,7 +246,7 @@ export default {
       if (this.currentTab === 'MEMBER') {
         edges = this.myProjects?.edges.map((x) => x);
       } else if (this.currentTab === 'ACTIVE') {
-        edges = this.allVisibleProjects?.edges.filter(({node: project}) => project.buildCount > 0);
+        edges = this.allVisibleProjects?.edges.filter(({ node: project }) => project.buildCount > 0);
       } else {
         edges = this.allVisibleProjects?.edges.map((x) => x);
       }
@@ -277,7 +277,7 @@ export default {
     },
 
     oneDayAgo() {
-      return DateTime.now().minus({days: 1}).startOf('second').toISO({suppressMilliseconds: true});
+      return DateTime.now().minus({ days: 1 }).startOf('second').toISO({ suppressMilliseconds: true });
     },
   },
 

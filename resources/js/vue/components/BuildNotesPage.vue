@@ -82,7 +82,7 @@ import BuildSidebar from './shared/BuildSidebar.vue';
 
 export default {
   name: 'BuildNotesPage',
-  components: {CodeBox, LoadingIndicator, BuildSummaryCard, BuildSidebar},
+  components: { CodeBox, LoadingIndicator, BuildSummaryCard, BuildSidebar },
 
   props: {
     buildId: {
@@ -128,7 +128,7 @@ export default {
           buildId: this.buildId,
         };
       },
-      result({data}) {
+      result({ data }) {
         if (data && data.build.notes.pageInfo.hasNextPage) {
           this.$apollo.queries.notes.fetchMore({
             variables: {

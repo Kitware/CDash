@@ -469,7 +469,7 @@ export default {
           variables: {
             input: {
               description: this.newTokenForm.description,
-              expiration: DateTime.fromISO(this.newTokenForm.expiration, {zone: 'utc'}).plus({ days: 1 }).startOf('day').set({ millisecond: 0 }).toISO({ suppressMilliseconds: true }),
+              expiration: DateTime.fromISO(this.newTokenForm.expiration, { zone: 'utc' }).plus({ days: 1 }).startOf('day').set({ millisecond: 0 }).toISO({ suppressMilliseconds: true }),
               scope: this.newTokenForm.scope,
               projectId: this.newTokenForm.projectId,
             },

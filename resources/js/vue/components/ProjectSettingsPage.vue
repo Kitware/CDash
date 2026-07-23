@@ -78,7 +78,7 @@ import TestMeasurementsTab from './ProjectSettings/TestMeasurementsTab.vue';
 
 export default {
   name: 'ProjectSettingsPage',
-  components: {GeneralTab, IntegrationsTab, TestMeasurementsTab},
+  components: { GeneralTab, IntegrationsTab, TestMeasurementsTab },
 
   props: {
     projectId: {

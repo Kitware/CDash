@@ -68,15 +68,15 @@
 <script>
 
 import DataTable from './shared/DataTable.vue';
-import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
-import {faTrash} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import gql from 'graphql-tag';
 import LoadingIndicator from './shared/LoadingIndicator.vue';
-import {DateTime} from 'luxon';
+import { DateTime } from 'luxon';
 
 export default {
   name: 'ManageAuthTokens',
-  components: {LoadingIndicator, FontAwesomeIcon, DataTable},
+  components: { LoadingIndicator, FontAwesomeIcon, DataTable },
 
   apollo: {
     authenticationTokens: {
@@ -115,7 +115,7 @@ export default {
     },
 
     formattedAuthTokenRows() {
-      return (this.authenticationTokens?.edges ?? []).map(({node: token}) => {
+      return (this.authenticationTokens?.edges ?? []).map(({ node: token }) => {
         return {
           owner: `${token.user?.firstname} ${token.user?.lastname}`,
           description: token.description,

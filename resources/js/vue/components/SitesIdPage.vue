@@ -376,7 +376,7 @@ export default {
           siteid: this.siteId,
         };
       },
-      result({data}) {
+      result({ data }) {
         if (data && data.site.information.pageInfo.hasNextPage) {
           this.$apollo.queries.site.fetchMore({
             variables: {
@@ -426,7 +426,7 @@ export default {
           siteid: this.siteId,
         };
       },
-      result({data}) {
+      result({ data }) {
         if (data && data.site.maintainers.pageInfo.hasNextPage) {
           this.$apollo.queries.siteMaintainers.site.maintainers.fetchMore({
             variables: {
@@ -473,7 +473,7 @@ export default {
           siteid: this.siteId,
         };
       },
-      result({data}) {
+      result({ data }) {
         if (data && data.projects.pageInfo.hasNextPage) {
           this.$apollo.queries.projects.fetchMore({
             variables: {

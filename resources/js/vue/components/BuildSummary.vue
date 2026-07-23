@@ -447,7 +447,7 @@ import {
   faQuestionCircle,
   faLink,
 } from '@fortawesome/free-solid-svg-icons';
-import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import LoadingIndicator from './shared/LoadingIndicator.vue';
 import BuildSummaryCard from './shared/BuildSummaryCard.vue';
 import BuildSidebar from './shared/BuildSidebar.vue';
@@ -458,7 +458,7 @@ import { DateTime, Duration } from 'luxon';
 
 export default {
   name: 'BuildSummary',
-  components: {BuildTimeChart, BuildSummaryCard, LoadingIndicator, BuildSidebar, FontAwesomeIcon},
+  components: { BuildTimeChart, BuildSummaryCard, LoadingIndicator, BuildSidebar, FontAwesomeIcon },
 
   props: {
     projectId: {

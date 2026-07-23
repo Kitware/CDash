@@ -1,4 +1,4 @@
-import {DateTime, Duration} from 'luxon';
+import { DateTime, Duration } from 'luxon';
 
 export default {
   formatDuration(ms) {
@@ -19,7 +19,7 @@ export default {
    */
   formatRelativeTimestamp(iso8601TimestampString) {
     const startTime = DateTime.fromISO(iso8601TimestampString);
-    if (startTime < DateTime.now().minus({months: 1})) {
+    if (startTime < DateTime.now().minus({ months: 1 })) {
       return startTime.toLocaleString(DateTime.DATE_MED);
     } else {
       return startTime.toRelative();

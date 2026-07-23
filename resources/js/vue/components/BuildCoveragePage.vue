@@ -184,13 +184,13 @@ import LoadingIndicator from './shared/LoadingIndicator.vue';
 import BuildSidebar from './shared/BuildSidebar.vue';
 import gql from 'graphql-tag';
 import FilterBuilder from './shared/FilterBuilder.vue';
-import {faFolder, faReply} from '@fortawesome/free-solid-svg-icons';
-import {faFile} from '@fortawesome/free-regular-svg-icons';
-import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
+import { faFolder, faReply } from '@fortawesome/free-solid-svg-icons';
+import { faFile } from '@fortawesome/free-regular-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 export default {
   name: 'BuildCoveragePage',
-  components: {FontAwesomeIcon, FilterBuilder, LoadingIndicator, DataTable, BuildSummaryCard, BuildSidebar},
+  components: { FontAwesomeIcon, FilterBuilder, LoadingIndicator, DataTable, BuildSummaryCard, BuildSidebar },
 
   props: {
     buildId: {

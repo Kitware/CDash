@@ -72,8 +72,8 @@
 import VChart from 'vue-echarts';
 import Utils from './shared/Utils';
 import gql from 'graphql-tag';
-import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
-import {faLink} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { faLink } from '@fortawesome/free-solid-svg-icons';
 
 import * as echarts from 'echarts/core';
 import { CanvasRenderer } from 'echarts/renderers';

@@ -26,9 +26,9 @@
 </template>
 
 <script>
-import {DateTime} from 'luxon';
+import { DateTime } from 'luxon';
 import * as echarts from 'echarts/core';
-import {CanvasRenderer} from 'echarts/renderers';
+import { CanvasRenderer } from 'echarts/renderers';
 import {
   CalendarComponent,
   LegendComponent,
@@ -36,7 +36,7 @@ import {
   TooltipComponent,
   VisualMapComponent,
 } from 'echarts/components';
-import {CustomChart, ScatterChart} from 'echarts/charts';
+import { CustomChart, ScatterChart } from 'echarts/charts';
 import gql from 'graphql-tag';
 import LoadingIndicator from './LoadingIndicator.vue';
 
@@ -64,7 +64,7 @@ echarts.use([
 
 export default {
   name: 'TestHistoryPlot',
-  components: {LoadingIndicator},
+  components: { LoadingIndicator },
 
   props: {
     baseUrl: {

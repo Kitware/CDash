@@ -64,14 +64,14 @@
 import BuildSummaryCard from './shared/BuildSummaryCard.vue';
 import LoadingIndicator from './shared/LoadingIndicator.vue';
 import BuildSidebar from './shared/BuildSidebar.vue';
-import {getRepository} from './shared/RepositoryIntegrations';
+import { getRepository } from './shared/RepositoryIntegrations';
 import gql from 'graphql-tag';
 import { DateTime } from 'luxon';
 import CommitCard from './BuildUpdate/CommitCard.vue';
 
 export default {
   name: 'BuildUpdate',
-  components: {CommitCard, LoadingIndicator, BuildSummaryCard, BuildSidebar},
+  components: { CommitCard, LoadingIndicator, BuildSummaryCard, BuildSidebar },
 
   props: {
     buildId: {

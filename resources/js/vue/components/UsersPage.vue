@@ -283,7 +283,7 @@ export default {
           }
         }
       `,
-      result({data}) {
+      result({ data }) {
         if (data && data.users.pageInfo.hasNextPage) {
           this.$apollo.queries.users.fetchMore({
             variables: {
@@ -335,7 +335,7 @@ export default {
           }
         }
       `,
-      result({data}) {
+      result({ data }) {
         if (data && data.invitations.pageInfo.hasNextPage) {
           this.$apollo.queries.invitations.fetchMore({
             variables: {

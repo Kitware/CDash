@@ -67,14 +67,14 @@
 </template>
 
 <script>
-import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
-import {faTrash} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import DateTimeSelector from './DateTimeSelector.vue';
-import {FilterField, FilterType} from './Filters/FilterUtils';
+import { FilterField, FilterType } from './Filters/FilterUtils';
 
 export default {
   name: 'FilterRow',
-  components: {FontAwesomeIcon, DateTimeSelector},
+  components: { FontAwesomeIcon, DateTimeSelector },
 
   props: {
     fields: {

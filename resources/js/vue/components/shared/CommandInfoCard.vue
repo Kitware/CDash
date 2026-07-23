@@ -118,7 +118,7 @@ import Utils from './Utils';
 
 export default {
   name: 'CommandInfoCard',
-  components: {LoadingIndicator},
+  components: { LoadingIndicator },
 
   props: {
     commandId: {

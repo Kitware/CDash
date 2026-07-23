@@ -71,13 +71,13 @@
 
 <script>
 import FilterRow from './FilterRow.vue';
-import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import {
   faPlus,
   faBarsStaggered,
   faTrash,
 } from '@fortawesome/free-solid-svg-icons';
-import {BasicFilterField, FilterType, getEnumValues, RelationshipFilterField} from './Filters/FilterUtils';
+import { BasicFilterField, FilterType, getEnumValues, RelationshipFilterField } from './Filters/FilterUtils';
 
 const AVAILABLE_FILTERS = Object.freeze({
   BuildTestsFiltersMultiFilterInput: (apolloClient) => [

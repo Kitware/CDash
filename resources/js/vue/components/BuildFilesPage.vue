@@ -75,7 +75,7 @@ import gql from 'graphql-tag';
 
 export default {
   name: 'BuildFilesPage',
-  components: {LoadingIndicator, DataTable, BuildSummaryCard, BuildSidebar},
+  components: { LoadingIndicator, DataTable, BuildSummaryCard, BuildSidebar },
 
   props: {
     buildId: {
@@ -113,7 +113,7 @@ export default {
           buildId: this.buildId,
         };
       },
-      result({data}) {
+      result({ data }) {
         if (data && data.build.urls.pageInfo.hasNextPage) {
           this.$apollo.queries.urls.fetchMore({
             variables: {
@@ -155,7 +155,7 @@ export default {
           buildId: this.buildId,
         };
       },
-      result({data}) {
+      result({ data }) {
         if (data && data.build.files.pageInfo.hasNextPage) {
           this.$apollo.queries.files.fetchMore({
             variables: {

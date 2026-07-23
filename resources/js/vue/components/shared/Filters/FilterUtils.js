@@ -1,7 +1,7 @@
 
 import gql from 'graphql-tag';
 
-import {reactive} from 'vue';
+import { reactive } from 'vue';
 
 export const FilterType = Object.freeze({
   TEXT: 'text',

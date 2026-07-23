@@ -39,13 +39,13 @@
 
 <script>
 
-import {Repository} from '../shared/RepositoryIntegrations';
+import { Repository } from '../shared/RepositoryIntegrations';
 import CodeBox from '../shared/CodeBox.vue';
 import CommitFileTreeNode from './CommitFileTreeNode.vue';
 
 export default {
   name: 'CommitCard',
-  components: {CodeBox, CommitFileTreeNode},
+  components: { CodeBox, CommitFileTreeNode },
 
   props: {
     commitFiles: {

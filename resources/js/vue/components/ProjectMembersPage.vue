@@ -353,7 +353,7 @@ export default {
           projectid: this.projectId,
         };
       },
-      result({data}) {
+      result({ data }) {
         if (data && data.project.administrators.pageInfo.hasNextPage) {
           this.$apollo.queries.projectAdministrators.fetchMore({
             variables: {
@@ -394,7 +394,7 @@ export default {
           projectid: this.projectId,
         };
       },
-      result({data}) {
+      result({ data }) {
         if (data && data.project.basicUsers.pageInfo.hasNextPage) {
           this.$apollo.queries.projectUsers.fetchMore({
             variables: {
@@ -441,7 +441,7 @@ export default {
           projectid: this.projectId,
         };
       },
-      result({data}) {
+      result({ data }) {
         if (data && data.project.invitations.pageInfo.hasNextPage) {
           this.$apollo.queries.projectInvitations.fetchMore({
             variables: {
