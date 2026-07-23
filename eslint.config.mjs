@@ -47,6 +47,7 @@ export default defineConfig([
       '@stylistic/block-spacing': 'error',
       '@stylistic/brace-style': 'error',
       '@stylistic/comma-dangle': ['error', 'always-multiline'],
+      '@stylistic/comma-spacing': 'error',
       '@stylistic/eol-last': 'error',
       '@stylistic/keyword-spacing': ['error', {'before': true, 'after': true}],
       '@stylistic/space-before-blocks': ['error', 'always'],
