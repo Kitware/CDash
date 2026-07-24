@@ -93,6 +93,7 @@ export default defineConfig([
         asyncArrow: 'always',
         catch: 'always',
       }],
+      '@stylistic/space-in-parens': 'error',
       '@stylistic/linebreak-style': ['error', 'unix'],
       '@stylistic/template-curly-spacing': ['error', 'never'],
 
