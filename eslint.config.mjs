@@ -98,8 +98,8 @@ export default defineConfig([
       '@stylistic/space-unary-ops': ['error', { words: true, nonwords: false }],
       '@stylistic/spaced-comment': 'error',
       '@stylistic/switch-colon-spacing': 'error',
+      '@stylistic/template-curly-spacing': 'error',
       '@stylistic/linebreak-style': ['error', 'unix'],
-      '@stylistic/template-curly-spacing': ['error', 'never'],
 
       'vue/component-name-in-template-casing': ['error', 'PascalCase'],
       'vue/no-v-html': 'off',
