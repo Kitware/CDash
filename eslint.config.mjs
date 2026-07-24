@@ -80,6 +80,7 @@ export default defineConfig([
       '@stylistic/one-var-declaration-per-line': 'error',
       '@stylistic/operator-linebreak': ['error', 'before'],
       '@stylistic/padded-blocks': ['error', 'never'],
+      '@stylistic/quote-props': ['error', 'as-needed'],
       '@stylistic/space-before-blocks': ['error', 'always'],
       '@stylistic/linebreak-style': ['error', 'unix'],
       '@stylistic/quotes': ['error', 'single', {'avoidEscape': true}],
