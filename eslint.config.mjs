@@ -99,6 +99,7 @@ export default defineConfig([
       '@stylistic/spaced-comment': 'error',
       '@stylistic/switch-colon-spacing': 'error',
       '@stylistic/template-curly-spacing': 'error',
+      '@stylistic/template-tag-spacing': 'error',
       '@stylistic/linebreak-style': ['error', 'unix'],
 
       'vue/component-name-in-template-casing': ['error', 'PascalCase'],
