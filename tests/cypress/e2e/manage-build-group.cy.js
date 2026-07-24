@@ -72,7 +72,7 @@ describe('manageBuildGroup', () => {
 
     // TODO: (sbelsk) cypress can't see the value bounded by Angular.
     //       Uncomment this once this page is reimplemented in Vue.
-    //cy.get('@build_group_form').find('input[name="name"]').should('contain', 'aNewBuildGroup');
+    // cy.get('@build_group_form').find('input[name="name"]').should('contain', 'aNewBuildGroup');
 
     // cy.get('@build_group_form').find('input[name="description"]').should('contain', '');
     cy.get('@build_group_form').find('input[name="description"]').type('temporary BuildGroup for testing');
