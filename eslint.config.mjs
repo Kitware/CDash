@@ -104,6 +104,7 @@ export default defineConfig([
       '@stylistic/type-generic-spacing': 'error',
       '@stylistic/type-named-tuple-spacing': 'error',
       '@stylistic/wrap-regex': 'error',
+      '@stylistic/yield-star-spacing': 'error',
       '@stylistic/linebreak-style': ['error', 'unix'],
 
       'vue/component-name-in-template-casing': ['error', 'PascalCase'],
