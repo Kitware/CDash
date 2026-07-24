@@ -103,6 +103,7 @@ export default defineConfig([
       '@stylistic/type-annotation-spacing': 'error',
       '@stylistic/type-generic-spacing': 'error',
       '@stylistic/type-named-tuple-spacing': 'error',
+      '@stylistic/wrap-regex': 'error',
       '@stylistic/linebreak-style': ['error', 'unix'],
 
       'vue/component-name-in-template-casing': ['error', 'PascalCase'],
