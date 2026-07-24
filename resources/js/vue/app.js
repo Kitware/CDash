@@ -8,6 +8,8 @@ import { relayStylePagination } from '@apollo/client/utilities';
 import { DefaultApolloClient } from '@vue/apollo-composable';
 
 const app = createApp({
+  name: 'App',
+
   components: {
     BuildConfigure: defineAsyncComponent(() => import('./components/BuildConfigure')),
     BuildNotesPage: defineAsyncComponent(() => import('./components/BuildNotesPage.vue')),
