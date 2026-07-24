@@ -1,5 +1,4 @@
 describe('subProjectGroupOrder', () => {
-
   it('can change the group order', () => {
     cy.login();
     cy.visit('manageSubProject.php?projectid=14');

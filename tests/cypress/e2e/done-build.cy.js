@@ -1,5 +1,4 @@
 describe('done_build', () => {
-
   function toggle_done(index_url, is_done_by_default) {
     cy.login();
     cy.visit(index_url);

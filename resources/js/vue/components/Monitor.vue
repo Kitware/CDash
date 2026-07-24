@@ -61,7 +61,6 @@ export default {
 
   methods: {
     postSetup: function() {
-
       // perform data marshalling before sending data to plot template
       const formatted_data = [];
       this.cdash.time_chart_data.data.forEach((line) => {

@@ -1,5 +1,4 @@
 describe('sort_index', () => {
-
   // these two "verify_<>_cell" functions help getting the text from all
   // child elements of the td, since it may contain links, formatting, etc.
   function _verify_cell(position, td_alias, expected_value) {
@@ -155,5 +154,4 @@ describe('sort_index', () => {
     verify_first_cell('@files_column_tds', files_last_value);
     verify_last_cell('@files_column_tds', files_first_value);
   });
-
 });

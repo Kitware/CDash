@@ -1,5 +1,4 @@
 describe('manageBuildGroup', () => {
-
   it('is protected by login', () => {
     cy.visit('manageBuildGroup.php?projectid=5');
     cy.get('#subheadername').contains('Login');
@@ -211,5 +210,4 @@ describe('manageBuildGroup', () => {
     deleteBuildGroup('aNewBuildGroup');
     deleteBuildGroup('latestBuildGroup');
   });
-
 });

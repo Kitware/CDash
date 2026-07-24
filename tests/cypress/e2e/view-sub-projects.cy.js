@@ -1,5 +1,4 @@
 describe('viewSubProjects', () => {
-
   it('navigates between SubProjects', () => {
     cy.visit('viewSubProjects.php?project=SubProjectExample');
 
@@ -12,5 +11,4 @@ describe('viewSubProjects', () => {
     cy.get('table#subproject').contains('td', 'Teuchos').find('a').click();
     cy.url().should('contain', 'index.php?subproject=Teuchos&project=SubProjectExample');
   });
-
 });
