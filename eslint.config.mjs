@@ -100,6 +100,7 @@ export default defineConfig([
       '@stylistic/switch-colon-spacing': 'error',
       '@stylistic/template-curly-spacing': 'error',
       '@stylistic/template-tag-spacing': 'error',
+      '@stylistic/type-annotation-spacing': 'error',
       '@stylistic/linebreak-style': ['error', 'unix'],
 
       'vue/component-name-in-template-casing': ['error', 'PascalCase'],
