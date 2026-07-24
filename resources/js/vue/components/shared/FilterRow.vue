@@ -137,7 +137,7 @@ export default {
       immediate: true,
     },
 
-    'selectedField': {
+    selectedField: {
       handler(newField) {
         if (newField.type === FilterType.ENUM && (this.selectedValue === '' || this.selectedValue === null)) {
           this.selectedValue = newField.getPossibleValues()[0] || '';

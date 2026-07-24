@@ -73,12 +73,12 @@ export default {
     return {
       colors: {
         // TODO: Use Tailwind for these colors instead.
-        'COMPILE': '#0072B2',
-        'LINK': '#009E73',
-        'CUSTOM': '#D55E00',
-        'CMAKE_BUILD': '#F0E442',
-        'CMAKE_INSTALL': '#CC79A7',
-        'INSTALL': '#56B4E9',
+        COMPILE: '#0072B2',
+        LINK: '#009E73',
+        CUSTOM: '#D55E00',
+        CMAKE_BUILD: '#F0E442',
+        CMAKE_INSTALL: '#CC79A7',
+        INSTALL: '#56B4E9',
       },
       commandBarHeight: 15,
       commandBarSpacing: 5,
