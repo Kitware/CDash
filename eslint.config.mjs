@@ -83,9 +83,9 @@ export default defineConfig([
       '@stylistic/quote-props': ['error', 'as-needed'],
       '@stylistic/quotes': ['error', 'single', { avoidEscape: true, allowTemplateLiterals: 'avoidEscape' }],
       '@stylistic/rest-spread-spacing': 'error',
+      '@stylistic/semi': ['error', 'always'],
       '@stylistic/space-before-blocks': ['error', 'always'],
       '@stylistic/linebreak-style': ['error', 'unix'],
-      '@stylistic/semi': ['error', 'always'],
       '@stylistic/semi-style': ['error', 'last'],
       '@stylistic/template-curly-spacing': ['error', 'never'],
 
