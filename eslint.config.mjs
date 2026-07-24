@@ -85,9 +85,9 @@ export default defineConfig([
       '@stylistic/rest-spread-spacing': 'error',
       '@stylistic/semi': ['error', 'always'],
       '@stylistic/semi-spacing': 'error',
+      '@stylistic/semi-style': 'error',
       '@stylistic/space-before-blocks': ['error', 'always'],
       '@stylistic/linebreak-style': ['error', 'unix'],
-      '@stylistic/semi-style': ['error', 'last'],
       '@stylistic/template-curly-spacing': ['error', 'never'],
 
       'vue/component-name-in-template-casing': ['error', 'PascalCase'],
