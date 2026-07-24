@@ -1,7 +1,17 @@
+import axios from 'axios';
+
+axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+const token = document.head.querySelector('meta[name="csrf-token"]');
+if (token) {
+  axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
+} else {
+  console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
+}
+
 export default {
   loadPageData: function (vm, endpoint_path) {
     vm.start = new Date().getTime();
-    vm.$axios
+    axios
       .get(endpoint_path)
       .then((response) => {
         // Pre-assigment hook for components.

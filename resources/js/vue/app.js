@@ -1,56 +1,48 @@
-import * as Vue from 'vue';
-import axios from 'axios';
+import {
+  createApp,
+  defineAsyncComponent,
+} from 'vue';
 import { ApolloClient, InMemoryCache } from '@apollo/client/core';
 import { createApolloProvider } from '@vue/apollo-option';
-import VueApolloComponents from '@vue/apollo-components';
 import { relayStylePagination } from '@apollo/client/utilities';
 import { DefaultApolloClient } from '@vue/apollo-composable';
 
-const app = Vue.createApp({
+const app = createApp({
+  name: 'App',
+
   components: {
-    BuildConfigure: Vue.defineAsyncComponent(() => import('./components/BuildConfigure')),
-    BuildNotesPage: Vue.defineAsyncComponent(() => import('./components/BuildNotesPage.vue')),
-    BuildSummary: Vue.defineAsyncComponent(() => import('./components/BuildSummary')),
-    BuildUpdatePage: Vue.defineAsyncComponent(() => import('./components/BuildUpdatePage.vue')),
-    ManageAuthTokens: Vue.defineAsyncComponent(() => import('./components/ManageAuthTokens.vue')),
-    Monitor: Vue.defineAsyncComponent(() => import('./components/Monitor')),
-    TestDetailsPage: Vue.defineAsyncComponent(() => import('./components/TestDetailsPage.vue')),
-    HeaderNav: Vue.defineAsyncComponent(() => import('./components/page-header/HeaderNav.vue')),
-    ViewDynamicAnalysis: Vue.defineAsyncComponent(() => import('./components/ViewDynamicAnalysis.vue')),
-    BuildDynamicAnalysisIdPage: Vue.defineAsyncComponent(() => import('./components/BuildDynamicAnalysisIdPage.vue')),
-    ProjectsPage: Vue.defineAsyncComponent(() => import('./components/ProjectsPage.vue')),
-    SubProjectDependencies: Vue.defineAsyncComponent(() => import('./components/SubProjectDependencies.vue')),
-    BuildTestsPage: Vue.defineAsyncComponent(() => import('./components/BuildTestsPage.vue')),
-    ProjectSitesPage: Vue.defineAsyncComponent(() => import('./components/ProjectSitesPage.vue')),
-    SitesIdPage: Vue.defineAsyncComponent(() => import('./components/SitesIdPage.vue')),
-    ProjectMembersPage: Vue.defineAsyncComponent(() => import('./components/ProjectMembersPage.vue')),
-    UsersPage: Vue.defineAsyncComponent(() => import('./components/UsersPage.vue')),
-    BuildFilesPage: Vue.defineAsyncComponent(() => import('./components/BuildFilesPage.vue')),
-    BuildTargetsPage: Vue.defineAsyncComponent(() => import('./components/BuildTargetsPage.vue')),
-    BuildInstrumentationPage: Vue.defineAsyncComponent(() => import('./components/BuildInstrumentationPage.vue')),
-    BuildCommentsPage: Vue.defineAsyncComponent(() => import('./components/BuildCommentsPage.vue')),
-    BuildBuildPage: Vue.defineAsyncComponent(() => import('./components/BuildBuildPage.vue')),
-    CoverageFilePage: Vue.defineAsyncComponent(() => import('./components/CoverageFilePage.vue')),
-    BuildCoveragePage: Vue.defineAsyncComponent(() => import('./components/BuildCoveragePage.vue')),
-    CreateProjectPage: Vue.defineAsyncComponent(() => import('./components/CreateProjectPage.vue')),
-    AdministrationPage: Vue.defineAsyncComponent(() => import('./components/AdministrationPage.vue')),
-    ProjectSettingsPage: Vue.defineAsyncComponent(() => import('./components/ProjectSettingsPage.vue')),
-    ProfilePage: Vue.defineAsyncComponent(() => import('./components/ProfilePage.vue')),
+    BuildConfigure: defineAsyncComponent(() => import('./components/BuildConfigure')),
+    BuildNotesPage: defineAsyncComponent(() => import('./components/BuildNotesPage.vue')),
+    BuildSummary: defineAsyncComponent(() => import('./components/BuildSummary')),
+    BuildUpdatePage: defineAsyncComponent(() => import('./components/BuildUpdatePage.vue')),
+    ManageAuthTokens: defineAsyncComponent(() => import('./components/ManageAuthTokens.vue')),
+    Monitor: defineAsyncComponent(() => import('./components/Monitor')),
+    TestDetailsPage: defineAsyncComponent(() => import('./components/TestDetailsPage.vue')),
+    HeaderNav: defineAsyncComponent(() => import('./components/page-header/HeaderNav.vue')),
+    ViewDynamicAnalysis: defineAsyncComponent(() => import('./components/ViewDynamicAnalysis.vue')),
+    BuildDynamicAnalysisIdPage: defineAsyncComponent(() => import('./components/BuildDynamicAnalysisIdPage.vue')),
+    ProjectsPage: defineAsyncComponent(() => import('./components/ProjectsPage.vue')),
+    SubProjectDependencies: defineAsyncComponent(() => import('./components/SubProjectDependencies.vue')),
+    BuildTestsPage: defineAsyncComponent(() => import('./components/BuildTestsPage.vue')),
+    ProjectSitesPage: defineAsyncComponent(() => import('./components/ProjectSitesPage.vue')),
+    SitesIdPage: defineAsyncComponent(() => import('./components/SitesIdPage.vue')),
+    ProjectMembersPage: defineAsyncComponent(() => import('./components/ProjectMembersPage.vue')),
+    UsersPage: defineAsyncComponent(() => import('./components/UsersPage.vue')),
+    BuildFilesPage: defineAsyncComponent(() => import('./components/BuildFilesPage.vue')),
+    BuildTargetsPage: defineAsyncComponent(() => import('./components/BuildTargetsPage.vue')),
+    BuildInstrumentationPage: defineAsyncComponent(() => import('./components/BuildInstrumentationPage.vue')),
+    BuildCommentsPage: defineAsyncComponent(() => import('./components/BuildCommentsPage.vue')),
+    BuildBuildPage: defineAsyncComponent(() => import('./components/BuildBuildPage.vue')),
+    CoverageFilePage: defineAsyncComponent(() => import('./components/CoverageFilePage.vue')),
+    BuildCoveragePage: defineAsyncComponent(() => import('./components/BuildCoveragePage.vue')),
+    CreateProjectPage: defineAsyncComponent(() => import('./components/CreateProjectPage.vue')),
+    AdministrationPage: defineAsyncComponent(() => import('./components/AdministrationPage.vue')),
+    ProjectSettingsPage: defineAsyncComponent(() => import('./components/ProjectSettingsPage.vue')),
+    ProfilePage: defineAsyncComponent(() => import('./components/ProfilePage.vue')),
   },
 });
 
 app.config.globalProperties.$baseURL = document.getElementById('app').getAttribute('data-app-url');
-
-axios.defaults.baseURL = app.config.globalProperties.$baseURL;
-axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-const token = document.head.querySelector('meta[name="csrf-token"]');
-if (token) {
-  axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
-} else {
-  console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
-}
-
-app.config.globalProperties.$axios = axios;
 
 const apolloClient = new ApolloClient({
   cache: new InMemoryCache({
@@ -102,8 +94,6 @@ const apolloProvider = createApolloProvider({
 });
 
 app.use(apolloProvider);
-app.use(VueApolloComponents);
 app.provide(DefaultApolloClient, apolloClient);
 
-window.Vue = Vue;
 app.mount('#app');
