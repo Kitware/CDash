@@ -2,7 +2,6 @@ import {
   createApp,
   defineAsyncComponent,
 } from 'vue';
-import axios from 'axios';
 import { ApolloClient, InMemoryCache } from '@apollo/client/core';
 import { createApolloProvider } from '@vue/apollo-option';
 import VueApolloComponents from '@vue/apollo-components';
@@ -43,17 +42,6 @@ const app = createApp({
 });
 
 app.config.globalProperties.$baseURL = document.getElementById('app').getAttribute('data-app-url');
-
-axios.defaults.baseURL = app.config.globalProperties.$baseURL;
-axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-const token = document.head.querySelector('meta[name="csrf-token"]');
-if (token) {
-  axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
-} else {
-  console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
-}
-
-app.config.globalProperties.$axios = axios;
 
 const apolloClient = new ApolloClient({
   cache: new InMemoryCache({
