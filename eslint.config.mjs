@@ -86,7 +86,7 @@ export default defineConfig([
       '@stylistic/semi': ['error', 'always'],
       '@stylistic/semi-spacing': 'error',
       '@stylistic/semi-style': 'error',
-      '@stylistic/space-before-blocks': ['error', 'always'],
+      '@stylistic/space-before-blocks': 'error',
       '@stylistic/linebreak-style': ['error', 'unix'],
       '@stylistic/template-curly-spacing': ['error', 'never'],
 
