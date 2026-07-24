@@ -62,6 +62,7 @@ export default defineConfig([
       '@stylistic/indent-binary-ops': ['error', 2],
       '@stylistic/key-spacing': 'error',
       '@stylistic/keyword-spacing': 'error',
+      '@stylistic/linebreak-style': 'error',
       '@stylistic/lines-between-class-members': 'error',
       '@stylistic/max-statements-per-line': 'error',
       '@stylistic/member-delimiter-style': 'error',
@@ -105,7 +106,6 @@ export default defineConfig([
       '@stylistic/type-named-tuple-spacing': 'error',
       '@stylistic/wrap-regex': 'error',
       '@stylistic/yield-star-spacing': 'error',
-      '@stylistic/linebreak-style': ['error', 'unix'],
 
       'vue/component-name-in-template-casing': ['error', 'PascalCase'],
       'vue/no-v-html': 'off',
