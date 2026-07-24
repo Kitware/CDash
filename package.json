@@ -40,7 +40,7 @@
     "d3": "^3.5.17",
     "daisyui": "^4.12.23",
     "echarts": "^6.1.0",
-    "graphql": "^16.14.0",
+    "graphql": "^17.0.2",
     "graphql-tag": "^2.12.7",
     "jquery": "^3.7",
     "jquery-ui-dist": "^1.13.3",
