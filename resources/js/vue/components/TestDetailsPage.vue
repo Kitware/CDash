@@ -441,7 +441,7 @@ export default {
     },
   },
 
-  data () {
+  data() {
     return {
       jeCompareInitialized: false,
     };
@@ -604,7 +604,7 @@ export default {
     },
   },
 
-  async mounted () {
+  async mounted() {
     // Ensure jQuery is globally available before loading plugins
     window.jQuery = $;
     await import('../../angular/je_compare.js');

@@ -50,7 +50,7 @@ export default {
     },
   },
 
-  data () {
+  data() {
     return {
       // API results.
       cdash: {},
@@ -140,7 +140,7 @@ export default {
     },
   },
 
-  mounted () {
+  mounted() {
     ApiLoader.loadPageData(this, `/api/v1/viewDynamicAnalysis.php?buildid=${this.buildid}`);
   },
 };

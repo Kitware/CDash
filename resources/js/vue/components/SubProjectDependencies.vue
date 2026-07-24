@@ -78,7 +78,7 @@ export default {
     },
   },
 
-  data () {
+  data() {
     return {
       // API results.
       cdash: {},
@@ -91,7 +91,7 @@ export default {
     };
   },
 
-  mounted () {
+  mounted() {
     ApiLoader.loadPageData(this, `/api/v1/getSubProjectDependencies.php?project=${encodeURIComponent(this.projectName)}&date=${this.date}`);
   },
 

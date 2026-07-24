@@ -492,7 +492,7 @@ export default {
     },
   },
 
-  data () {
+  data() {
     return {
       // API results.
       cdash: {},
