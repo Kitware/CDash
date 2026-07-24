@@ -95,6 +95,7 @@ export default defineConfig([
       }],
       '@stylistic/space-in-parens': 'error',
       '@stylistic/space-infix-ops': 'error',
+      '@stylistic/space-unary-ops': ['error', { words: true, nonwords: false }],
       '@stylistic/linebreak-style': ['error', 'unix'],
       '@stylistic/template-curly-spacing': ['error', 'never'],
 
