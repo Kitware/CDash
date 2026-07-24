@@ -94,6 +94,7 @@ export default defineConfig([
         catch: 'always',
       }],
       '@stylistic/space-in-parens': 'error',
+      '@stylistic/space-infix-ops': 'error',
       '@stylistic/linebreak-style': ['error', 'unix'],
       '@stylistic/template-curly-spacing': ['error', 'never'],
 
