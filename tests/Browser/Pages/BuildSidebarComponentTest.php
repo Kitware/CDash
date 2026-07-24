@@ -346,10 +346,7 @@ class BuildSidebarComponentTest extends BrowserTestCase
             $this->assertDisabled($browser, "/builds/{$build->id}", '@sidebar-notes');
 
             $build->notes()->attach(
-                Note::create([
-                    'name' => Str::uuid()->toString(),
-                    'text' => Str::uuid()->toString(),
-                ])
+                Note::factory()->create()
             );
 
             $this->assertNotDisabled($browser, "/builds/{$build->id}", '@sidebar-notes', "/builds/{$build->id}/notes");

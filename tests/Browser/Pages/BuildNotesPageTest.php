@@ -64,10 +64,7 @@ class BuildNotesPageTest extends BrowserTestCase
 
     private function addNote(): Note
     {
-        $note = Note::create([
-            'name' => Str::uuid()->toString(),
-            'text' => Str::uuid()->toString(),
-        ]);
+        $note = Note::factory()->create();
 
         $this->build->notes()->attach($note);
 
