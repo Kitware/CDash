@@ -38,7 +38,7 @@ import BuildSidebar from './shared/BuildSidebar.vue';
 
 export default {
   name: 'CoverageFilePage',
-  components: {BuildSidebar, CoverageViewer, LoadingIndicator, BuildSummaryCard},
+  components: { BuildSidebar, CoverageViewer, LoadingIndicator, BuildSummaryCard },
 
   props: {
     buildId: {
@@ -93,7 +93,7 @@ export default {
           }
         }
       `,
-      update: data => data?.build?.coverage?.edges?.[0]?.node,
+      update: (data) => data?.build?.coverage?.edges?.[0]?.node,
       variables() {
         return {
           buildId: this.buildId,

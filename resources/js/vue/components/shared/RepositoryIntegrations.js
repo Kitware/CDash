@@ -4,8 +4,8 @@
  * @param {...String} components
  */
 function makeUrlFromComponents(...components) {
-  return components.filter(component => component !== null)
-    .map(part => part.replace(/\/+$|^\/+/, ''))
+  return components.filter((component) => component !== null)
+    .map((part) => part.replace(/\/+$|^\/+/, ''))
     .join('/');
 }
 
@@ -64,6 +64,7 @@ export class GitLab extends Repository {
   getComparisonUrl(commit1, commit2) {
     return makeUrlFromComponents(this.repositoryUrl, '-', 'compare', `${commit1}...${commit2}`);
   }
+
   getFileUrl(commit, path) {
     return makeUrlFromComponents(this.repositoryUrl, '-', 'blob', commit, this.repositoryCmakeProjectRoot, path);
   }
@@ -81,11 +82,11 @@ export function getRepository(repositoryType, repositoryUrl, repositoryCmakeProj
   }
 
   switch (repositoryType.toLowerCase()) {
-  case 'github':
-    return new GitHub(repositoryUrl, repositoryCmakeProjectRoot);
-  case 'gitlab':
-    return new GitLab(repositoryUrl, repositoryCmakeProjectRoot);
-  default:
-    return null;
+    case 'github':
+      return new GitHub(repositoryUrl, repositoryCmakeProjectRoot);
+    case 'gitlab':
+      return new GitLab(repositoryUrl, repositoryCmakeProjectRoot);
+    default:
+      return null;
   }
 }

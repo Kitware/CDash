@@ -283,7 +283,7 @@ export default {
           }
         }
       `,
-      result({data}) {
+      result({ data }) {
         if (data && data.users.pageInfo.hasNextPage) {
           this.$apollo.queries.users.fetchMore({
             variables: {
@@ -335,7 +335,7 @@ export default {
           }
         }
       `,
-      result({data}) {
+      result({ data }) {
         if (data && data.invitations.pageInfo.hasNextPage) {
           this.$apollo.queries.invitations.fetchMore({
             variables: {
@@ -356,7 +356,7 @@ export default {
     },
 
     formattedUserRows() {
-      return this.users.edges?.map(edge => {
+      return this.users.edges?.map((edge) => {
         return {
           id: edge.node.id,
           name: `${edge.node.firstname} ${edge.node.lastname}`,
@@ -373,7 +373,7 @@ export default {
     },
 
     formattedInvitationRows() {
-      return this.invitations.edges?.map(edge => {
+      return this.invitations.edges?.map((edge) => {
         return {
           email: edge.node.email,
           role: this.humanReadableRole(edge.node.role),
@@ -455,8 +455,7 @@ export default {
       }).then((mutationResult) => {
         if (mutationResult.data.createGlobalInvitation.message !== null) {
           this.inviteUsersModalError = mutationResult.data.createGlobalInvitation.message;
-        }
-        else {
+        } else {
           // eslint-disable-next-line no-undef
           invite_users_modal.close();
           this.inviteUsersModalEmail = '';

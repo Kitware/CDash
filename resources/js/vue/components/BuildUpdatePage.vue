@@ -64,14 +64,14 @@
 import BuildSummaryCard from './shared/BuildSummaryCard.vue';
 import LoadingIndicator from './shared/LoadingIndicator.vue';
 import BuildSidebar from './shared/BuildSidebar.vue';
-import {getRepository} from './shared/RepositoryIntegrations';
+import { getRepository } from './shared/RepositoryIntegrations';
 import gql from 'graphql-tag';
 import { DateTime } from 'luxon';
 import CommitCard from './BuildUpdate/CommitCard.vue';
 
 export default {
   name: 'BuildUpdate',
-  components: {CommitCard, LoadingIndicator, BuildSummaryCard, BuildSidebar},
+  components: { CommitCard, LoadingIndicator, BuildSummaryCard, BuildSidebar },
 
   props: {
     buildId: {
@@ -108,7 +108,7 @@ export default {
           }
         }
       `,
-      update: data => data?.build?.updateStep,
+      update: (data) => data?.build?.updateStep,
       variables() {
         return {
           buildId: this.buildId,
@@ -144,7 +144,7 @@ export default {
           }
         }
       `,
-      update: data => data?.build?.updateStep?.updateFiles?.edges,
+      update: (data) => data?.build?.updateStep?.updateFiles?.edges,
       variables() {
         return {
           buildId: this.buildId,
@@ -161,8 +161,7 @@ export default {
     revisionUrl() {
       if (this.update.priorRevision) {
         return this.repository?.getComparisonUrl(this.update.revision, this.update.priorRevision) ?? '';
-      }
-      else {
+      } else {
         return this.repository?.getCommitUrl(this.update.revision) ?? '';
       }
     },
@@ -186,7 +185,7 @@ export default {
       const commits = Object.values(groups);
 
       // Sort files within each commit
-      commits.forEach(commitFiles => {
+      commits.forEach((commitFiles) => {
         commitFiles.sort((a, b) => a.fileName.localeCompare(b.fileName));
       });
 

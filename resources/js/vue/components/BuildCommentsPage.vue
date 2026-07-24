@@ -167,7 +167,7 @@ export default {
           }
         }
       `,
-      update: data => data?.build?.comments?.edges,
+      update: (data) => data?.build?.comments?.edges,
       variables() {
         return {
           buildId: this.buildId,
@@ -202,7 +202,7 @@ export default {
           this.commentText = '';
           this.submitting = false;
         })
-        .catch(error => {
+        .catch((error) => {
           console.error(error);
           this.submitting = false;
           alert('Failed to add comment. Please try again.');

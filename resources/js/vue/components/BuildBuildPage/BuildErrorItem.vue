@@ -101,13 +101,13 @@ import {
   faCircleExclamation,
   faTriangleExclamation,
 } from '@fortawesome/free-solid-svg-icons';
-import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
-import {getRepository} from '../shared/RepositoryIntegrations';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { getRepository } from '../shared/RepositoryIntegrations';
 import 'core-js/actual/regexp/escape';
 
 export default {
   name: 'BuildErrorItem',
-  components: {FontAwesomeIcon, CodeBox},
+  components: { FontAwesomeIcon, CodeBox },
 
   props: {
     buildError: {

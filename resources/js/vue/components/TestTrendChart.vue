@@ -72,8 +72,8 @@
 import VChart from 'vue-echarts';
 import Utils from './shared/Utils';
 import gql from 'graphql-tag';
-import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
-import {faLink} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { faLink } from '@fortawesome/free-solid-svg-icons';
 
 import * as echarts from 'echarts/core';
 import { CanvasRenderer } from 'echarts/renderers';
@@ -195,9 +195,9 @@ export default {
         }
       `,
       variables() {
-        const measurementNames = this.numericMeasurements.map(measurement => measurement.name);
+        const measurementNames = this.numericMeasurements.map((measurement) => measurement.name);
         const measurementFilters = measurementNames.length > 0
-          ? { any: measurementNames.map(name => ({ eq: { name } })) }
+          ? { any: measurementNames.map((name) => ({ eq: { name } })) }
           : { eq: { name: 'NonExistentMeasurementToReturnNothing' } };
 
         return {
@@ -219,9 +219,9 @@ export default {
         }
         // Flatten the builds -> tests structure
         const tests = [];
-        data.project.builds.edges.forEach(buildEdge => {
+        data.project.builds.edges.forEach((buildEdge) => {
           const build = buildEdge.node;
-          build.tests.edges.forEach(testEdgeRecord => {
+          build.tests.edges.forEach((testEdgeRecord) => {
             const testRecord = testEdgeRecord.node;
             tests.push({
               ...testRecord,
@@ -254,10 +254,10 @@ export default {
       if (!this.history) {
         return [];
       }
-      return this.history.map(testRecord => {
+      return this.history.map((testRecord) => {
         const measurement = this.selectedMeasurement === 'time'
           ? null
-          : testRecord.testMeasurements.find(measurement => measurement.name === this.selectedMeasurement);
+          : testRecord.testMeasurements.find((measurement) => measurement.name === this.selectedMeasurement);
 
         return {
           x: testRecord.startTimeTimestamp,
@@ -275,7 +275,7 @@ export default {
       if (!this.chartData || this.chartData.length === 0) {
         return 1;
       }
-      let max = Math.max(...this.chartData.map(dataPoint => dataPoint.y));
+      let max = Math.max(...this.chartData.map((dataPoint) => dataPoint.y));
       if (this.selectedMeasurement === 'time' && this.enableTestTiming) {
         const historicalMax = this.chartData.reduce((maxVal, dataPoint) => {
           if (dataPoint.status !== 'PASSED') {
@@ -290,7 +290,7 @@ export default {
     },
 
     barSeriesData() {
-      return this.chartData.map(dataPoint => {
+      return this.chartData.map((dataPoint) => {
         const isFailed = dataPoint.status && dataPoint.status.toLowerCase() === 'failed';
         return {
           value: dataPoint.y,
@@ -340,7 +340,7 @@ export default {
         },
         xAxis: {
           type: 'category',
-          data: this.chartData.map(dataPoint => dataPoint.buildtestid),
+          data: this.chartData.map((dataPoint) => dataPoint.buildtestid),
           axisLabel: {
             show: false,
           },
@@ -435,7 +435,7 @@ export default {
       const xCenter = chartApi.coord([index, 0])[0];
       const fullWidth = chartApi.size([1, 0])[0];
       const barWidth = fullWidth * 0.7;
-      const xLeft = xCenter - barWidth / 2;
+      const xLeft = xCenter - (barWidth / 2);
       const threshold = chartApi.value(1);
       const yThreshold = chartApi.coord([0, threshold])[1];
       const yZero = chartApi.coord([0, 0])[1];
@@ -459,7 +459,7 @@ export default {
       if (previousIndex >= 0) {
         const prevDataItem = this.chartData[previousIndex];
         const prevXCenter = chartApi.coord([previousIndex, 0])[0];
-        const prevXRight = prevXCenter + barWidth / 2;
+        const prevXRight = prevXCenter + (barWidth / 2);
         const prevThreshold = this.getUpperThreshold(prevDataItem);
         const prevYThreshold = chartApi.coord([0, prevThreshold])[1];
 
@@ -495,8 +495,8 @@ export default {
       const xCenter = chartApi.coord([index, 0])[0];
       const fullWidth = chartApi.size([1, 0])[0];
       const barWidth = fullWidth * 0.7;
-      const xLeft = xCenter - barWidth / 2;
-      const xRight = xCenter + barWidth / 2;
+      const xLeft = xCenter - (barWidth / 2);
+      const xRight = xCenter + (barWidth / 2);
       const threshold = chartApi.value(1);
       const yThreshold = chartApi.coord([0, threshold])[1];
 
@@ -520,7 +520,7 @@ export default {
       if (previousIndex >= 0) {
         const prevDataItem = this.chartData[previousIndex];
         const prevXCenter = chartApi.coord([previousIndex, 0])[0];
-        const prevXRight = prevXCenter + barWidth / 2;
+        const prevXRight = prevXCenter + (barWidth / 2);
         const prevThreshold = this.getUpperThreshold(prevDataItem);
         const prevYThreshold = chartApi.coord([0, prevThreshold])[1];
 

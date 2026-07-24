@@ -45,7 +45,7 @@ export default {
     TimelinePlot,
   },
 
-  data () {
+  data() {
     return {
       // API results.
       cdash: {},
@@ -55,13 +55,12 @@ export default {
     };
   },
 
-  mounted () {
+  mounted() {
     ApiLoader.loadPageData(this, '/api/monitor');
   },
 
   methods: {
-    postSetup: function() {
-
+    postSetup: function () {
       // perform data marshalling before sending data to plot template
       const formatted_data = [];
       this.cdash.time_chart_data.data.forEach((line) => {
@@ -70,7 +69,7 @@ export default {
           name: line.name,
           values: line.values.map((d) => {
             // converts UNIX epoch format from API to JS date object
-            return { x: new Date(d[0]*1000), y: d[1] };
+            return { x: new Date(d[0] * 1000), y: d[1] };
           }),
         });
       });

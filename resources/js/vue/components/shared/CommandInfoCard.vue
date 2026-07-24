@@ -118,7 +118,7 @@ import Utils from './Utils';
 
 export default {
   name: 'CommandInfoCard',
-  components: {LoadingIndicator},
+  components: { LoadingIndicator },
 
   props: {
     commandId: {
@@ -194,17 +194,13 @@ export default {
 
       if (inputInBytes < 1024) {
         return `${inputInBytes} Bytes`;
-      }
-      else if (inputInBytes < 1024 ** 2) {
+      } else if (inputInBytes < 1024 ** 2) {
         return `${(inputInBytes / 1024).toFixed(2)} KiB`;
-      }
-      else if (inputInBytes < 1024 ** 3) {
+      } else if (inputInBytes < 1024 ** 3) {
         return `${(inputInBytes / (1024 ** 2)).toFixed(2)} MiB`;
-      }
-      else if (inputInBytes < 1024 ** 4) {
+      } else if (inputInBytes < 1024 ** 4) {
         return `${(inputInBytes / (1024 ** 3)).toFixed(2)} GiB`;
-      }
-      else {
+      } else {
         return `${(inputInBytes / (1024 ** 4)).toFixed(2)} TiB`;
       }
     },

@@ -376,7 +376,7 @@ export default {
           siteid: this.siteId,
         };
       },
-      result({data}) {
+      result({ data }) {
         if (data && data.site.information.pageInfo.hasNextPage) {
           this.$apollo.queries.site.fetchMore({
             variables: {
@@ -410,7 +410,7 @@ export default {
           }
         }
       `,
-      update: data => data?.site?.mostRecentInformation,
+      update: (data) => data?.site?.mostRecentInformation,
       variables() {
         return {
           siteid: this.siteId,
@@ -420,13 +420,13 @@ export default {
 
     siteMaintainers: {
       query: SITE_MAINTAINERS_QUERY,
-      update: data => data,
+      update: (data) => data,
       variables() {
         return {
           siteid: this.siteId,
         };
       },
-      result({data}) {
+      result({ data }) {
         if (data && data.site.maintainers.pageInfo.hasNextPage) {
           this.$apollo.queries.siteMaintainers.site.maintainers.fetchMore({
             variables: {
@@ -473,7 +473,7 @@ export default {
           siteid: this.siteId,
         };
       },
-      result({data}) {
+      result({ data }) {
         if (data && data.projects.pageInfo.hasNextPage) {
           this.$apollo.queries.projects.fetchMore({
             variables: {
@@ -510,11 +510,9 @@ export default {
 
       if (inputInMiB < 1024) {
         return `${inputInMiB} MiB`;
-      }
-      else if (inputInMiB < 1024 * 1024) {
+      } else if (inputInMiB < 1024 * 1024) {
         return `${(inputInMiB / 1024).toFixed(2)} GiB`;
-      }
-      else {
+      } else {
         return `${(inputInMiB / (1024 * 1024)).toFixed(2)} TiB`;
       }
     },
@@ -522,8 +520,7 @@ export default {
     humanReadableClockFrequency(inputInMhz) {
       if (inputInMhz > 1000) {
         return `${inputInMhz / 1000} GHz`;
-      }
-      else {
+      } else {
         return `${inputInMhz} MHz`;
       }
     },
@@ -550,43 +547,43 @@ export default {
 
     humanReadableSiteFieldName(name) {
       switch (name) {
-      case 'processorVendor':
-        return 'Processor Vendor';
-      case 'processorVendorId':
-        return 'Processor Vendor ID';
-      case 'processorFamilyId':
-        return 'Processor Family ID';
-      case 'processorModelId':
-        return 'Processor Model ID';
-      case 'processorModelName':
-        return 'Processor Model Name';
-      case 'processorCacheSize':
-        return 'Processor Cache Size';
-      case 'numberLogicalCpus':
-        return 'Logical CPUs';
-      case 'numberPhysicalCpus':
-        return 'Physical CPUs';
-      case 'totalVirtualMemory':
-        return 'Virtual Memory';
-      case 'totalPhysicalMemory':
-        return 'Physical Memory';
-      case 'processorClockFrequency':
-        return 'Clock Frequency';
-      default:
-        return name;
+        case 'processorVendor':
+          return 'Processor Vendor';
+        case 'processorVendorId':
+          return 'Processor Vendor ID';
+        case 'processorFamilyId':
+          return 'Processor Family ID';
+        case 'processorModelId':
+          return 'Processor Model ID';
+        case 'processorModelName':
+          return 'Processor Model Name';
+        case 'processorCacheSize':
+          return 'Processor Cache Size';
+        case 'numberLogicalCpus':
+          return 'Logical CPUs';
+        case 'numberPhysicalCpus':
+          return 'Physical CPUs';
+        case 'totalVirtualMemory':
+          return 'Virtual Memory';
+        case 'totalPhysicalMemory':
+          return 'Physical Memory';
+        case 'processorClockFrequency':
+          return 'Clock Frequency';
+        default:
+          return name;
       }
     },
 
     humanReadableSiteFieldValue(field, value) {
       switch (field) {
-      case 'totalVirtualMemory':
-        return this.humanReadableMemory(value);
-      case 'totalPhysicalMemory':
-        return this.humanReadableMemory(value);
-      case 'processorClockFrequency':
-        return this.humanReadableClockFrequency(value);
-      default:
-        return value;
+        case 'totalVirtualMemory':
+          return this.humanReadableMemory(value);
+        case 'totalPhysicalMemory':
+          return this.humanReadableMemory(value);
+        case 'processorClockFrequency':
+          return this.humanReadableClockFrequency(value);
+        default:
+          return value;
       }
     },
 
@@ -739,16 +736,16 @@ export default {
                 timestamp: DateTime.now().toISODate(),
                 description: this.currentDescription,
                 processorVendor: this.mostRecentInformation.processorVendor,
-                processorVendorId:  this.mostRecentInformation.processorVendorId,
-                processorFamilyId:  this.mostRecentInformation.processorFamilyId,
-                processorModelId:  this.mostRecentInformation.processorModelId,
-                processorModelName:  this.mostRecentInformation.processorModelName,
-                processorCacheSize:  this.mostRecentInformation.processorCacheSize,
-                numberLogicalCpus:  this.mostRecentInformation.numberLogicalCpus,
-                numberPhysicalCpus:  this.mostRecentInformation.numberPhysicalCpus,
-                totalVirtualMemory:  this.mostRecentInformation.totalVirtualMemory,
-                totalPhysicalMemory:  this.mostRecentInformation.totalPhysicalMemory,
-                processorClockFrequency:  this.mostRecentInformation.processorClockFrequency,
+                processorVendorId: this.mostRecentInformation.processorVendorId,
+                processorFamilyId: this.mostRecentInformation.processorFamilyId,
+                processorModelId: this.mostRecentInformation.processorModelId,
+                processorModelName: this.mostRecentInformation.processorModelName,
+                processorCacheSize: this.mostRecentInformation.processorCacheSize,
+                numberLogicalCpus: this.mostRecentInformation.numberLogicalCpus,
+                numberPhysicalCpus: this.mostRecentInformation.numberPhysicalCpus,
+                totalVirtualMemory: this.mostRecentInformation.totalVirtualMemory,
+                totalPhysicalMemory: this.mostRecentInformation.totalPhysicalMemory,
+                processorClockFrequency: this.mostRecentInformation.processorClockFrequency,
               },
             },
           },

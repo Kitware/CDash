@@ -71,13 +71,13 @@
 
 <script>
 import FilterRow from './FilterRow.vue';
-import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import {
   faPlus,
   faBarsStaggered,
   faTrash,
 } from '@fortawesome/free-solid-svg-icons';
-import {BasicFilterField, FilterType, getEnumValues, RelationshipFilterField} from './Filters/FilterUtils';
+import { BasicFilterField, FilterType, getEnumValues, RelationshipFilterField } from './Filters/FilterUtils';
 
 const AVAILABLE_FILTERS = Object.freeze({
   BuildTestsFiltersMultiFilterInput: (apolloClient) => [
@@ -190,7 +190,7 @@ export default {
     },
 
     filterRowFromGraphQLFilter(filter) {
-      const filterField = this.availableFields.find(field => field.isMatch(filter));
+      const filterField = this.availableFields.find((field) => field.isMatch(filter));
 
       if (filterField) {
         return {
@@ -198,8 +198,7 @@ export default {
           operator: filterField.getOperatorFromFilter(filter),
           value: filterField.getValueFromFilter(filter),
         };
-      }
-      else {
+      } else {
         const field = this.availableFields[0];
 
         return {
@@ -224,7 +223,7 @@ export default {
 
     emitChange() {
       this.$emit('changeFilters', JSON.parse(JSON.stringify({
-        [this.currentCombineType]: this.filters[this.currentCombineType].filter(r => r !== 'deleted'),
+        [this.currentCombineType]: this.filters[this.currentCombineType].filter((r) => r !== 'deleted'),
       })));
     },
   },

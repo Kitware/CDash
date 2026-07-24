@@ -26,9 +26,9 @@
 </template>
 
 <script>
-import {DateTime} from 'luxon';
+import { DateTime } from 'luxon';
 import * as echarts from 'echarts/core';
-import {CanvasRenderer} from 'echarts/renderers';
+import { CanvasRenderer } from 'echarts/renderers';
 import {
   CalendarComponent,
   LegendComponent,
@@ -36,7 +36,7 @@ import {
   TooltipComponent,
   VisualMapComponent,
 } from 'echarts/components';
-import {CustomChart, ScatterChart} from 'echarts/charts';
+import { CustomChart, ScatterChart } from 'echarts/charts';
 import gql from 'graphql-tag';
 import LoadingIndicator from './LoadingIndicator.vue';
 
@@ -64,7 +64,7 @@ echarts.use([
 
 export default {
   name: 'TestHistoryPlot',
-  components: {LoadingIndicator},
+  components: { LoadingIndicator },
 
   props: {
     baseUrl: {
@@ -246,12 +246,12 @@ export default {
         return [];
       }
 
-      const passed = this.testStatuses.buildsWhereTestPassed.edges.map(edge => ({
+      const passed = this.testStatuses.buildsWhereTestPassed.edges.map((edge) => ({
         date: edge.node.startTime,
         status: 'passed',
       }));
 
-      const failed = this.testStatuses.buildsWhereTestFailed.edges.map(edge => ({
+      const failed = this.testStatuses.buildsWhereTestFailed.edges.map((edge) => ({
         date: edge.node.startTime,
         status: 'failed',
       }));
@@ -263,7 +263,7 @@ export default {
       if (!this.history || this.history.length === 0) {
         return [];
       }
-      const years = new Set(this.history.map(item => parseInt(item.date.substring(0, 4), 10)));
+      const years = new Set(this.history.map((item) => parseInt(item.date.substring(0, 4), 10)));
       return Array.from(years).sort();
     },
 
@@ -283,7 +283,7 @@ export default {
       }
 
       const dailyBins = this.history
-        .filter(item => parseInt(item.date.substring(0, 4), 10) === this.currentYear)
+        .filter((item) => parseInt(item.date.substring(0, 4), 10) === this.currentYear)
         .reduce((acc, item) => {
           const dateStr = item.date.substring(0, 10);
           if (!acc[dateStr]) {
@@ -291,8 +291,7 @@ export default {
           }
           if (item.status === 'passed') {
             acc[dateStr].numpassing++;
-          }
-          else if (item.status === 'failed') {
+          } else if (item.status === 'failed') {
             acc[dateStr].numfailing++;
           }
           return acc;
@@ -391,19 +390,17 @@ export default {
               let value = 0;
               if (num_passing > 0 && num_failing === 0) {
                 value = 1; // Passing
-              }
-              else if (num_passing === 0 && num_failing > 0) {
+              } else if (num_passing === 0 && num_failing > 0) {
                 value = 2; // Failing
-              }
-              else if (num_passing > 0 && num_failing > 0) {
+              } else if (num_passing > 0 && num_failing > 0) {
                 value = 3; // Both
               }
 
               const gap = 2;
               const shapeWidth = cellWidth - gap;
               const shapeHeight = cellHeight - gap;
-              const x = cellPoint[0] - cellWidth / 2 + gap / 2;
-              const y = cellPoint[1] - cellHeight / 2 + gap / 2;
+              const x = (cellPoint[0] - (cellWidth / 2)) + (gap / 2);
+              const y = (cellPoint[1] - (cellHeight / 2)) + (gap / 2);
 
               if (value === 1) { // Passing
                 return {
@@ -411,15 +408,13 @@ export default {
                   shape: { x, y, width: shapeWidth, height: shapeHeight, r: 3 },
                   style: { fill: '#52c41a' },
                 };
-              }
-              else if (value === 2) { // Failing
+              } else if (value === 2) { // Failing
                 return {
                   type: 'rect',
                   shape: { x, y, width: shapeWidth, height: shapeHeight, r: 3 },
                   style: { fill: '#f5222d', decal: decalPattern },
                 };
-              }
-              else if (value === 3) { // Both
+              } else if (value === 3) { // Both
                 return {
                   type: 'group',
                   clipPath: { type: 'rect', shape: { x, y, width: shapeWidth, height: shapeHeight, r: 3 } },
@@ -463,7 +458,7 @@ export default {
   mounted() {
     this.chart = echarts.init(this.$refs.chart);
     this.chart.on('click', this.handleChartClick);
-    this.chart.getZr().on('mousemove', params => {
+    this.chart.getZr().on('mousemove', (params) => {
       const pixel = [params.offsetX, params.offsetY];
       const seriesIndex = this.chart.convertFromPixel('grid', pixel);
       if (seriesIndex) {

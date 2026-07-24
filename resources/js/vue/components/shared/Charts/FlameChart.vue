@@ -88,7 +88,7 @@ export default {
           max: this.overallEndTime,
           type: 'time',
           axisLabel: {
-            formatter: val => {
+            formatter: (val) => {
               const relativeTime = val - this.overallStartTime;
               return Utils.formatDuration(relativeTime);
             },

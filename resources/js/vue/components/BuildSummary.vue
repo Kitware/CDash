@@ -447,7 +447,7 @@ import {
   faQuestionCircle,
   faLink,
 } from '@fortawesome/free-solid-svg-icons';
-import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import LoadingIndicator from './shared/LoadingIndicator.vue';
 import BuildSummaryCard from './shared/BuildSummaryCard.vue';
 import BuildSidebar from './shared/BuildSidebar.vue';
@@ -458,7 +458,7 @@ import { DateTime, Duration } from 'luxon';
 
 export default {
   name: 'BuildSummary',
-  components: {BuildTimeChart, BuildSummaryCard, LoadingIndicator, BuildSidebar, FontAwesomeIcon},
+  components: { BuildTimeChart, BuildSummaryCard, LoadingIndicator, BuildSidebar, FontAwesomeIcon },
 
   props: {
     projectId: {
@@ -492,7 +492,7 @@ export default {
     },
   },
 
-  data () {
+  data() {
     return {
       // API results.
       cdash: {},
@@ -578,8 +578,7 @@ export default {
             ntestfailed: Math.max(0, prev.failedTestsCount),
             ntestnotrun: Math.max(0, prev.notRunTestsCount),
           };
-        }
-        else {
+        } else {
           this.cdash.previousbuild = null;
         }
 
@@ -594,8 +593,7 @@ export default {
             ntestfailed: Math.max(0, next.failedTestsCount),
             ntestnotrun: Math.max(0, next.notRunTestsCount),
           };
-        }
-        else {
+        } else {
           this.cdash.nextbuild = null;
         }
 
@@ -659,7 +657,7 @@ export default {
           }
         }
       `,
-      update: data => data?.project?.builds.edges,
+      update: (data) => data?.project?.builds.edges,
       variables() {
         return {
           projectId: this.projectId,
@@ -710,7 +708,7 @@ export default {
       if (!this.buildHistory) {
         return [];
       }
-      return [...this.buildHistory].reverse().map(edge => {
+      return [...this.buildHistory].reverse().map((edge) => {
         const build = edge.node;
         return {
           buildId: build.id,

@@ -84,15 +84,15 @@ export default {
   },
 
   computed: {
-    previousClass () {
+    previousClass() {
       return this.previousUrl === null ? 'btn-disabled' : 'btn-enabled';
     },
 
-    latestClass () {
+    latestClass() {
       return this.latestUrl === null ? 'btn-disabled' : 'btn-enabled';
     },
 
-    nextClass () {
+    nextClass() {
       return this.nextUrl === null ? 'btn-disabled' : 'btn-enabled';
     },
   },

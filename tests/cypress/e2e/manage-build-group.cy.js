@@ -1,5 +1,4 @@
 describe('manageBuildGroup', () => {
-
   it('is protected by login', () => {
     cy.visit('manageBuildGroup.php?projectid=5');
     cy.get('#subheadername').contains('Login');
@@ -73,7 +72,7 @@ describe('manageBuildGroup', () => {
 
     // TODO: (sbelsk) cypress can't see the value bounded by Angular.
     //       Uncomment this once this page is reimplemented in Vue.
-    //cy.get('@build_group_form').find('input[name="name"]').should('contain', 'aNewBuildGroup');
+    // cy.get('@build_group_form').find('input[name="name"]').should('contain', 'aNewBuildGroup');
 
     // cy.get('@build_group_form').find('input[name="description"]').should('contain', '');
     cy.get('@build_group_form').find('input[name="description"]').type('temporary BuildGroup for testing');
@@ -211,5 +210,4 @@ describe('manageBuildGroup', () => {
     deleteBuildGroup('aNewBuildGroup');
     deleteBuildGroup('latestBuildGroup');
   });
-
 });

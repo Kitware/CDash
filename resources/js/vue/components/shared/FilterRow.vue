@@ -67,14 +67,14 @@
 </template>
 
 <script>
-import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
-import {faTrash} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import DateTimeSelector from './DateTimeSelector.vue';
-import {FilterField, FilterType} from './Filters/FilterUtils';
+import { FilterField, FilterType } from './Filters/FilterUtils';
 
 export default {
   name: 'FilterRow',
-  components: {FontAwesomeIcon, DateTimeSelector},
+  components: { FontAwesomeIcon, DateTimeSelector },
 
   props: {
     fields: {
@@ -137,7 +137,7 @@ export default {
       immediate: true,
     },
 
-    'selectedField': {
+    selectedField: {
       handler(newField) {
         if (newField.type === FilterType.ENUM && (this.selectedValue === '' || this.selectedValue === null)) {
           this.selectedValue = newField.getPossibleValues()[0] || '';
@@ -159,8 +159,7 @@ export default {
     onFieldChange() {
       if (this.selectedField.type === FilterType.ENUM) {
         this.selectedValue = this.selectedField.getPossibleValues()[0] || '';
-      }
-      else {
+      } else {
         this.selectedValue = '';
       }
       this.selectedOperator = this.selectedField.getOperators()[0];
@@ -172,16 +171,16 @@ export default {
      */
     humanReadableOperator(operator) {
       switch (operator) {
-      case 'eq':
-        return 'equal to';
-      case 'ne':
-        return 'not equal to';
-      case 'lt':
-        return 'less than';
-      case 'gt':
-        return 'greater than';
-      default:
-        return operator;
+        case 'eq':
+          return 'equal to';
+        case 'ne':
+          return 'not equal to';
+        case 'lt':
+          return 'less than';
+        case 'gt':
+          return 'greater than';
+        default:
+          return operator;
       }
     },
 

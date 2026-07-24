@@ -1,7 +1,7 @@
 
 import gql from 'graphql-tag';
 
-import {reactive} from 'vue';
+import { reactive } from 'vue';
 
 export const FilterType = Object.freeze({
   TEXT: 'text',
@@ -23,8 +23,8 @@ export const getEnumValues = (apolloClient, enumName) => {
   return apolloClient.query({
     query,
     variables: { name: enumName },
-  }).then(result => {
-    return result.data.__type.enumValues.map(enumValue => enumValue.name);
+  }).then((result) => {
+    return result.data.__type.enumValues.map((enumValue) => enumValue.name);
   });
 };
 
@@ -42,11 +42,10 @@ export class FilterField {
     if (this.type === FilterType.ENUM && typeof this.values === 'function') {
       const result = this.values();
       if (result instanceof Promise) {
-        result.then(v => {
+        result.then((v) => {
           this.loadedValues.splice(0, this.loadedValues.length, ...v);
         });
-      }
-      else {
+      } else {
         this.loadedValues.splice(0, this.loadedValues.length, ...result);
       }
     }
@@ -54,33 +53,33 @@ export class FilterField {
 
   getOperators() {
     switch (this.type) {
-    case FilterType.TEXT:
-      return [
-        'eq',
-        'ne',
-        'contains',
-      ];
-    case FilterType.NUMBER:
-      return [
-        'eq',
-        'ne',
-        'gt',
-        'lt',
-      ];
-    case FilterType.DATETIME:
-      return [
-        'eq',
-        'ne',
-        'gt',
-        'lt',
-      ];
-    case FilterType.ENUM:
-      return [
-        'eq',
-        'ne',
-      ];
-    default:
-      return [];
+      case FilterType.TEXT:
+        return [
+          'eq',
+          'ne',
+          'contains',
+        ];
+      case FilterType.NUMBER:
+        return [
+          'eq',
+          'ne',
+          'gt',
+          'lt',
+        ];
+      case FilterType.DATETIME:
+        return [
+          'eq',
+          'ne',
+          'gt',
+          'lt',
+        ];
+      case FilterType.ENUM:
+        return [
+          'eq',
+          'ne',
+        ];
+      default:
+        return [];
     }
   }
 

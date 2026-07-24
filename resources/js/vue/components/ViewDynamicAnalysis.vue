@@ -50,7 +50,7 @@ export default {
     },
   },
 
-  data () {
+  data() {
     return {
       // API results.
       cdash: {},
@@ -97,7 +97,7 @@ export default {
       if (!this.cdash.dynamicanalyses) {
         return [];
       }
-      return this.cdash.dynamicanalyses.map(DA => {
+      return this.cdash.dynamicanalyses.map((DA) => {
         const row = {
           name: {
             text: DA.name,
@@ -140,7 +140,7 @@ export default {
     },
   },
 
-  mounted () {
+  mounted() {
     ApiLoader.loadPageData(this, `/api/v1/viewDynamicAnalysis.php?buildid=${this.buildid}`);
   },
 };

@@ -62,11 +62,11 @@ import {
   faCircleExclamation,
   faTriangleExclamation,
 } from '@fortawesome/free-solid-svg-icons';
-import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 export default {
   name: 'BuildConfigure',
-  components: {FontAwesomeIcon, ConfigureCard, LoadingIndicator, BuildSummaryCard, BuildSidebar},
+  components: { FontAwesomeIcon, ConfigureCard, LoadingIndicator, BuildSummaryCard, BuildSidebar },
 
   props: {
     buildId: {
@@ -110,7 +110,7 @@ export default {
         }
       `,
       update: (data) => {
-        let configures = data.build.configure !== null ? [{configure: data.build.configure}] : [];
+        let configures = data.build.configure !== null ? [{ configure: data.build.configure }] : [];
         data.build.children.edges.forEach((child) => {
           configures = configures.concat({
             ...child.node,

@@ -412,7 +412,7 @@ export default {
           }
         }
       `,
-      update: data => data?.me?.authenticationTokens?.edges,
+      update: (data) => data?.me?.authenticationTokens?.edges,
     },
     projects: {
       query: gql`
@@ -429,7 +429,7 @@ export default {
           }
         }
       `,
-      update: data => data?.me?.projects?.edges,
+      update: (data) => data?.me?.projects?.edges,
     },
   },
 
@@ -469,7 +469,7 @@ export default {
           variables: {
             input: {
               description: this.newTokenForm.description,
-              expiration: DateTime.fromISO(this.newTokenForm.expiration, {zone: 'utc'}).plus({ days: 1 }).startOf('day').set({ millisecond: 0 }).toISO({ suppressMilliseconds: true }),
+              expiration: DateTime.fromISO(this.newTokenForm.expiration, { zone: 'utc' }).plus({ days: 1 }).startOf('day').set({ millisecond: 0 }).toISO({ suppressMilliseconds: true }),
               scope: this.newTokenForm.scope,
               projectId: this.newTokenForm.projectId,
             },
@@ -478,8 +478,7 @@ export default {
 
         if (response.data.createAuthenticationToken.message) {
           this.newTokenError = response.data.createAuthenticationToken.message;
-        }
-        else {
+        } else {
           this.newTokenRaw = response.data.createAuthenticationToken.rawToken;
           this.newTokenForm = {
             description: '',
@@ -489,22 +488,19 @@ export default {
           };
           await this.$apollo.queries.authenticationTokens.refetch();
         }
-      }
-      catch (error) {
+      } catch (error) {
         if (error.graphQLErrors) {
-          error.graphQLErrors.forEach(e => {
+          error.graphQLErrors.forEach((e) => {
             if (e.extensions && e.extensions.validation) {
               this.newTokenValidationErrors = Object.keys(e.extensions.validation).reduce((acc, key) => {
                 acc[key.replace('input.', '')] = e.extensions.validation[key];
                 return acc;
               }, {});
-            }
-            else {
+            } else {
               this.newTokenError = e.message;
             }
           });
-        }
-        else {
+        } else {
           this.newTokenError = error.message;
         }
       }
@@ -527,8 +523,7 @@ export default {
           },
         });
         await this.$apollo.queries.authenticationTokens.refetch();
-      }
-      catch (error) {
+      } catch (error) {
         console.error(error);
       }
     },
@@ -540,8 +535,7 @@ export default {
         setTimeout(() => {
           this.copied = false;
         }, 2000);
-      }
-      catch (err) {
+      } catch (err) {
         console.error('Failed to copy: ', err);
       }
     },

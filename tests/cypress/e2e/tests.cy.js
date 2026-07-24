@@ -16,7 +16,7 @@ describe('the test page', () => {
 
     cy.get('#queryTestsTable').find('tbody').find('tr').eq(2).find('td').eq(3).as('test_td');
 
-    cy.get('@test_td').find('a').invoke('attr', 'href').then(test_url => {
+    cy.get('@test_td').find('a').invoke('attr', 'href').then((test_url) => {
       const test_id = test_url.match(/tests?\/([0-9]+)/)[1];
       // visit a test page
       cy.visit(`tests/${test_id}`);

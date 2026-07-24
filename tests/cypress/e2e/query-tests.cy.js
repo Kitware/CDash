@@ -36,7 +36,7 @@ describe('query tests', () => {
     filter_test('time', '41', '0', 4);
 
     // make sure all filtered tests actually have 'Time' equal to zero
-    cy.get('#queryTestsTable').find('tbody').find('tr').each(row => {
+    cy.get('#queryTestsTable').find('tbody').find('tr').each((row) => {
       cy.wrap(row).find('td').eq(4).should('contain', '0s');
     });
   });

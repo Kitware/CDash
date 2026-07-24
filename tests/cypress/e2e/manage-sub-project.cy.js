@@ -1,5 +1,4 @@
 describe('manageSubProject', () => {
-
   it('is protected by login', () => {
     cy.visit('manageSubProject.php?projectid=8');
     cy.get('#subheadername').contains('Login');

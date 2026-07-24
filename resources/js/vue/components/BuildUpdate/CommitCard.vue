@@ -39,13 +39,13 @@
 
 <script>
 
-import {Repository} from '../shared/RepositoryIntegrations';
+import { Repository } from '../shared/RepositoryIntegrations';
 import CodeBox from '../shared/CodeBox.vue';
 import CommitFileTreeNode from './CommitFileTreeNode.vue';
 
 export default {
   name: 'CommitCard',
-  components: {CodeBox, CommitFileTreeNode},
+  components: { CodeBox, CommitFileTreeNode },
 
   props: {
     commitFiles: {
@@ -79,25 +79,23 @@ export default {
     fileTree() {
       const tree = [];
 
-      this.commitFiles.forEach(file => {
+      this.commitFiles.forEach((file) => {
         const parts = file.fileName.split('/');
         let currentLevel = tree;
 
         parts.forEach((part, index) => {
-          const existingPath = currentLevel.find(item => item.name === part);
+          const existingPath = currentLevel.find((item) => item.name === part);
 
           if (existingPath) {
             currentLevel = existingPath.children;
-          }
-          else {
+          } else {
             const newNode = {
               name: part,
             };
 
             if (index < parts.length - 1) {
               newNode.children = [];
-            }
-            else {
+            } else {
               newNode.file = file;
             }
 

@@ -75,7 +75,7 @@ import gql from 'graphql-tag';
 
 export default {
   name: 'BuildFilesPage',
-  components: {LoadingIndicator, DataTable, BuildSummaryCard, BuildSidebar},
+  components: { LoadingIndicator, DataTable, BuildSummaryCard, BuildSidebar },
 
   props: {
     buildId: {
@@ -107,13 +107,13 @@ export default {
           }
         }
       `,
-      update: data => data?.build?.urls,
+      update: (data) => data?.build?.urls,
       variables() {
         return {
           buildId: this.buildId,
         };
       },
-      result({data}) {
+      result({ data }) {
         if (data && data.build.urls.pageInfo.hasNextPage) {
           this.$apollo.queries.urls.fetchMore({
             variables: {
@@ -149,13 +149,13 @@ export default {
           }
         }
       `,
-      update: data => data?.build?.files,
+      update: (data) => data?.build?.files,
       variables() {
         return {
           buildId: this.buildId,
         };
       },
-      result({data}) {
+      result({ data }) {
         if (data && data.build.files.pageInfo.hasNextPage) {
           this.$apollo.queries.files.fetchMore({
             variables: {
@@ -170,7 +170,7 @@ export default {
 
   computed: {
     formattedUrlRows() {
-      return this.urls.edges?.map(edge => {
+      return this.urls.edges?.map((edge) => {
         return {
           url: {
             value: edge.node.href,
@@ -182,7 +182,7 @@ export default {
     },
 
     formattedFileRows() {
-      return this.files.edges?.map(edge => {
+      return this.files.edges?.map((edge) => {
         return {
           name: {
             value: edge.node.name,
@@ -206,17 +206,13 @@ export default {
     humanReadableFileSize(bytes) {
       if (bytes < 1024) {
         return `${bytes} bytes`;
-      }
-      else if (bytes < 1024 * 1024) {
+      } else if (bytes < 1024 * 1024) {
         return `${(bytes / 1024).toFixed(2)} KiB`;
-      }
-      else if (bytes < 1024 * 1024 * 1024) {
+      } else if (bytes < 1024 * 1024 * 1024) {
         return `${(bytes / (1024 * 1024)).toFixed(2)} MiB`;
-      }
-      else if (bytes < 1024 * 1024 * 1024 * 1024) {
+      } else if (bytes < 1024 * 1024 * 1024 * 1024) {
         return `${(bytes / (1024 * 1024 * 1024)).toFixed(2)} GiB`;
-      }
-      else {
+      } else {
         return `${(bytes / (1024 * 1024 * 1024 * 1024)).toFixed(2)} TiB`;
       }
     },

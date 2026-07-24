@@ -100,7 +100,7 @@ export default {
           projectid: this.projectId,
         };
       },
-      result({data}) {
+      result({ data }) {
         if (data && data.allSites.sites.pageInfo.hasNextPage) {
           this.$apollo.queries.allSites.fetchMore({
             variables: {
@@ -114,7 +114,7 @@ export default {
 
   computed: {
     formattedSiteRows() {
-      return this.allSites.sites.edges?.map(edge => {
+      return this.allSites.sites.edges?.map((edge) => {
         return {
           name: {
             value: edge.node.name,
@@ -129,7 +129,7 @@ export default {
             value: edge.node.mostRecentInformation?.totalPhysicalMemory,
             text: this.humanReadableMemory(edge.node.mostRecentInformation?.totalPhysicalMemory),
           },
-          maintainers: edge.node.maintainers.edges.map(maintainer => {
+          maintainers: edge.node.maintainers.edges.map((maintainer) => {
             let maintainerName = '';
             if (maintainer.node.firstname) {
               maintainerName += maintainer.node.firstname;
@@ -159,11 +159,9 @@ export default {
 
       if (inputInMiB < 1024) {
         return `${inputInMiB} MiB`;
-      }
-      else if (inputInMiB < 1024 * 1024) {
+      } else if (inputInMiB < 1024 * 1024) {
         return `${(inputInMiB / 1024).toFixed(2)} GiB`;
-      }
-      else {
+      } else {
         return `${(inputInMiB / (1024 * 1024)).toFixed(2)} TiB`;
       }
     },

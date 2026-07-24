@@ -318,7 +318,7 @@ import LoadingIndicator from './shared/LoadingIndicator.vue';
 import BuildSidebar from './shared/BuildSidebar.vue';
 import gql from 'graphql-tag';
 import Utils from './shared/Utils';
-import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import {
   faCircleCheck,
   faCircleXmark,
@@ -441,7 +441,7 @@ export default {
     },
   },
 
-  data () {
+  data() {
     return {
       jeCompareInitialized: false,
     };
@@ -505,40 +505,40 @@ export default {
 
     testStatus() {
       switch (this.test.status) {
-      case 'PASSED':
-        return 'Passed';
-      case 'FAILED':
-        return 'Failed';
-      case 'NOT_RUN':
-        return 'Not Run';
-      default:
-        return this.test.status;
+        case 'PASSED':
+          return 'Passed';
+        case 'FAILED':
+          return 'Failed';
+        case 'NOT_RUN':
+          return 'Not Run';
+        default:
+          return this.test.status;
       }
     },
 
     testStatusPillClass() {
       switch (this.test.status) {
-      case 'PASSED':
-        return 'tw-bg-success tw-text-success-content';
-      case 'FAILED':
-        return 'tw-bg-error tw-text-error-content';
-      case 'NOT_RUN':
-        return 'tw-bg-warning tw-text-warning-content';
-      default:
-        return 'tw-bg-neutral tw-text-neutral-content';
+        case 'PASSED':
+          return 'tw-bg-success tw-text-success-content';
+        case 'FAILED':
+          return 'tw-bg-error tw-text-error-content';
+        case 'NOT_RUN':
+          return 'tw-bg-warning tw-text-warning-content';
+        default:
+          return 'tw-bg-neutral tw-text-neutral-content';
       }
     },
 
     testStatusIcon() {
       switch (this.test.status) {
-      case 'PASSED':
-        return faCircleCheck;
-      case 'FAILED':
-        return faCircleXmark;
-      case 'NOT_RUN':
-        return faCircleExclamation;
-      default:
-        return faCircleQuestion;
+        case 'PASSED':
+          return faCircleCheck;
+        case 'FAILED':
+          return faCircleXmark;
+        case 'NOT_RUN':
+          return faCircleExclamation;
+        default:
+          return faCircleQuestion;
       }
     },
 
@@ -549,12 +549,12 @@ export default {
         return 'tw-bg-gray-200 tw-text-gray-500';
       }
       switch (this.test.timeStatusCategory) {
-      case 'PASSED':
-        return 'tw-bg-green-100 tw-text-green-600';
-      case 'FAILED':
-        return 'tw-bg-red-100 tw-text-red-600';
-      default:
-        return 'tw-bg-gray-200 tw-text-gray-500';
+        case 'PASSED':
+          return 'tw-bg-green-100 tw-text-green-600';
+        case 'FAILED':
+          return 'tw-bg-red-100 tw-text-red-600';
+        default:
+          return 'tw-bg-gray-200 tw-text-gray-500';
       }
     },
 
@@ -569,8 +569,7 @@ export default {
       this.test.testImages.edges.forEach(({ node: image }) => {
         if (image.role === 'ValidImage') {
           validImages.push(image);
-        }
-        else if (image.role === 'TestImage') {
+        } else if (image.role === 'TestImage') {
           testImages.push(image);
         }
       });
@@ -589,10 +588,10 @@ export default {
       const order = ['numeric/', 'file', 'text/link', 'text/string', 'text/preformatted'];
       const excludedNames = ['Environment', 'Command Line'];
       return [...this.test.testMeasurements]
-        .filter(measurement => !(measurement.type === 'text/string' && excludedNames.includes(measurement.name)))
+        .filter((measurement) => !(measurement.type === 'text/string' && excludedNames.includes(measurement.name)))
         .sort((measurementA, measurementB) => {
           const getOrder = (type) => {
-            const index = order.findIndex(orderItem => type.startsWith(orderItem));
+            const index = order.findIndex((orderItem) => type.startsWith(orderItem));
             return index === -1 ? 999 : index;
           };
           const orderA = getOrder(measurementA.type);
@@ -605,7 +604,7 @@ export default {
     },
   },
 
-  async mounted () {
+  async mounted() {
     // Ensure jQuery is globally available before loading plugins
     window.jQuery = $;
     await import('../../angular/je_compare.js');
@@ -613,14 +612,14 @@ export default {
 
   methods: {
     getFileIndex(measurement) {
-      return this.files.findIndex(file => file.id === measurement.id);
+      return this.files.findIndex((file) => file.id === measurement.id);
     },
 
     initializeJeCompare() {
       if (this.jeCompareInitialized) {
         return;
       }
-      $('.je_compare').je_compare({caption: true});
+      $('.je_compare').je_compare({ caption: true });
       this.jeCompareInitialized = true;
     },
   },

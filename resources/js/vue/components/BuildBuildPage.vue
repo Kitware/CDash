@@ -134,7 +134,7 @@ import {
   faCircleExclamation,
   faTriangleExclamation,
 } from '@fortawesome/free-solid-svg-icons';
-import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import BuildErrorList from './BuildBuildPage/BuildErrorList.vue';
 import CodeBox from './shared/CodeBox.vue';
 
@@ -271,9 +271,9 @@ export default {
       };
 
       if (this.previousBuildWithErrors) {
-        this.buildWithErrors.children.edges.forEach(({node: currentBuildNode}) => {
+        this.buildWithErrors.children.edges.forEach(({ node: currentBuildNode }) => {
           if (currentBuildNode.subProject) {
-            this.previousBuildWithErrors.children.edges.forEach(({node: previousBuildNode}) => {
+            this.previousBuildWithErrors.children.edges.forEach(({ node: previousBuildNode }) => {
               if (parseInt(currentBuildNode.subProject.id) === parseInt(previousBuildNode.subProject.id)) {
                 retVal[parseInt(currentBuildNode.id)] = parseInt(previousBuildNode.id);
               }

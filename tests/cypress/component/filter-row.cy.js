@@ -81,7 +81,7 @@ describe('FilterRow', () => {
         fields,
         initialField: fields[1], // TEXT
         initialOperator: 'eq',
-        'onChangeFilters': onChangeSpy,
+        onChangeFilters: onChangeSpy,
       },
     });
 
@@ -98,7 +98,7 @@ describe('FilterRow', () => {
         fields,
         initialField: fields[1], // TEXT
         initialValue: 'test',
-        'onChangeFilters': onChangeSpy,
+        onChangeFilters: onChangeSpy,
       },
     });
 
@@ -115,7 +115,7 @@ describe('FilterRow', () => {
         fields,
         initialField: fields[1], // TEXT
         initialValue: 'test',
-        'onChangeFilters': onChangeSpy,
+        onChangeFilters: onChangeSpy,
       },
     });
 
@@ -132,7 +132,7 @@ describe('FilterRow', () => {
       props: {
         fields,
         initialField: fields[1], // TEXT
-        'onChangeFilters': onChangeSpy,
+        onChangeFilters: onChangeSpy,
       },
     });
 
@@ -151,7 +151,7 @@ describe('FilterRow', () => {
       props: {
         fields,
         initialField: fields[1],
-        'onDelete': onDeleteSpy,
+        onDelete: onDeleteSpy,
       },
     });
 
@@ -165,7 +165,7 @@ describe('FilterRow', () => {
       props: {
         fields,
         initialField: fields[1], // TEXT
-        'onChangeFilters': onChangeSpy,
+        onChangeFilters: onChangeSpy,
       },
     });
 

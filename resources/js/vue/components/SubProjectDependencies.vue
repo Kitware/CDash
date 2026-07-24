@@ -78,7 +78,7 @@ export default {
     },
   },
 
-  data () {
+  data() {
     return {
       // API results.
       cdash: {},
@@ -91,7 +91,7 @@ export default {
     };
   },
 
-  mounted () {
+  mounted() {
     ApiLoader.loadPageData(this, `/api/v1/getSubProjectDependencies.php?project=${encodeURIComponent(this.projectName)}&date=${this.date}`);
   },
 
@@ -140,8 +140,7 @@ export default {
             width: 4,
           };
           targetNodeNames.add(link.target);
-        }
-        else if (link.target === nodeName) {
+        } else if (link.target === nodeName) {
           // Incoming - Green
           link.lineStyle = {
             color: '#2ca02c',
@@ -149,8 +148,7 @@ export default {
             width: 4,
           };
           sourceNodeNames.add(link.source);
-        }
-        else {
+        } else {
           link.lineStyle = {
             color: '#ccc',
             opacity: 0.05,
@@ -167,8 +165,7 @@ export default {
             fontWeight: 'bold',
             color: '#000',
           };
-        }
-        else if (sourceNodeNames.has(node.name)) {
+        } else if (sourceNodeNames.has(node.name)) {
           // Dependent (Incoming source)
           node.itemStyle = {
             color: '#2ca02c',
@@ -178,8 +175,7 @@ export default {
             fontWeight: 'bold',
             color: '#000',
           };
-        }
-        else if (targetNodeNames.has(node.name)) {
+        } else if (targetNodeNames.has(node.name)) {
           // Dependency (Outgoing target)
           node.itemStyle = {
             color: '#d62728',
@@ -189,8 +185,7 @@ export default {
             fontWeight: 'bold',
             color: '#000',
           };
-        }
-        else {
+        } else {
           node.itemStyle = {
             opacity: 0.1,
           };
@@ -207,8 +202,7 @@ export default {
       const selected = e.target.value;
       if (parseInt(selected) === 1) {
         this.depData.sort(this.sort_by_id);
-      }
-      else if (parseInt(selected) === 0) {
+      } else if (parseInt(selected) === 0) {
         this.depData.sort(this.sort_by_name);
       }
       this.chartOption = this.getChartOption(this.depData);
@@ -221,14 +215,14 @@ export default {
       const categoryMap = {};
 
       // Grouping logic
-      data.forEach(item => {
+      data.forEach((item) => {
         if (item.group && !categoryMap[item.group]) {
           categoryMap[item.group] = categories.length;
           categories.push({ name: item.group });
         }
       });
 
-      data.forEach(item => {
+      data.forEach((item) => {
         nodes.push({
           name: item.name,
           category: item.group ? categoryMap[item.group] : undefined,
@@ -236,9 +230,9 @@ export default {
         });
       });
 
-      data.forEach(item => {
+      data.forEach((item) => {
         if (item.depends) {
-          item.depends.forEach(dep => {
+          item.depends.forEach((dep) => {
             links.push({
               source: item.name,
               target: dep,

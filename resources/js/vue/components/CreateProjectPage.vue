@@ -150,12 +150,12 @@ import {
   faShieldHalved,
   faLock,
 } from '@fortawesome/free-solid-svg-icons';
-import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import gql from 'graphql-tag';
 
 export default {
   name: 'CreateProjectPage',
-  components: {FontAwesomeIcon},
+  components: { FontAwesomeIcon },
 
   props: {
     maxProjectVisibility: {
@@ -215,22 +215,19 @@ export default {
         if (response.data.createProject) {
           window.location.href = `${this.$baseURL}/projects/${response.data.createProject.id}/settings`;
         }
-      }
-      catch (error) {
+      } catch (error) {
         if (error.graphQLErrors) {
-          error.graphQLErrors.forEach(e => {
+          error.graphQLErrors.forEach((e) => {
             if (e.extensions && e.extensions.validation) {
               this.validationErrors = Object.keys(e.extensions.validation).reduce((acc, key) => {
                 acc[key.replace('input.', '')] = e.extensions.validation[key];
                 return acc;
               }, {});
-            }
-            else {
+            } else {
               this.fatalError = e.message;
             }
           });
-        }
-        else {
+        } else {
           this.fatalError = error.message;
         }
       }

@@ -73,12 +73,12 @@ export default {
     return {
       colors: {
         // TODO: Use Tailwind for these colors instead.
-        'COMPILE': '#0072B2',
-        'LINK': '#009E73',
-        'CUSTOM': '#D55E00',
-        'CMAKE_BUILD': '#F0E442',
-        'CMAKE_INSTALL': '#CC79A7',
-        'INSTALL': '#56B4E9',
+        COMPILE: '#0072B2',
+        LINK: '#009E73',
+        CUSTOM: '#D55E00',
+        CMAKE_BUILD: '#F0E442',
+        CMAKE_INSTALL: '#CC79A7',
+        INSTALL: '#56B4E9',
       },
       commandBarHeight: 15,
       commandBarSpacing: 5,
@@ -108,14 +108,14 @@ export default {
         };
       });
 
-      const overallStartTime = Math.min(...rawCommandData.map(cmd => cmd.startTime));
-      const overallEndTime = Math.max(...rawCommandData.map(cmd => cmd.endTime));
+      const overallStartTime = Math.min(...rawCommandData.map((cmd) => cmd.startTime));
+      const overallEndTime = Math.max(...rawCommandData.map((cmd) => cmd.endTime));
 
       const trackEndTimes = [];
       const processedData = [];
       const sortedData = rawCommandData.slice().sort((a, b) => a.startTime - b.startTime);
 
-      sortedData.forEach(command => {
+      sortedData.forEach((command) => {
         let placed = false;
         let trackIndex = -1;
         for (let i = 0; i < trackEndTimes.length; i++) {
@@ -160,7 +160,7 @@ export default {
 
     totalChartHeight() {
       const numtracks = this.processedChartData.tracks.length;
-      return (this.commandBarHeight + this.commandBarSpacing) * numtracks + 60;
+      return ((this.commandBarHeight + this.commandBarSpacing) * numtracks) + 60;
     },
   },
 
@@ -192,12 +192,10 @@ export default {
             valueNode = document.createElement('div');
             valueNode.className = 'tw-font-mono tw-bg-gray-100 tw-p-1 tw-rounded tw-whitespace-pre-wrap tw-break-all !tw-mt-0';
             valueNode.textContent = value;
-          }
-          else if (isBold) {
+          } else if (isBold) {
             valueNode = document.createElement('b');
             valueNode.textContent = value;
-          }
-          else {
+          } else {
             valueNode = document.createTextNode(value);
           }
           container.appendChild(valueNode);
@@ -226,8 +224,7 @@ export default {
       const clickedCommandId = parseInt(params.data.value[11]);
       if (this.selectedCommandId === clickedCommandId) {
         this.selectedCommandId = null;
-      }
-      else {
+      } else {
         this.selectedCommandId = clickedCommandId;
       }
     },
@@ -270,7 +267,7 @@ export default {
         type: 'rect',
         shape: {
           x: start[0],
-          y: start[1] - height / 2,
+          y: start[1] - (height / 2),
           width: end[0] - start[0],
           height: height,
         },

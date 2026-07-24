@@ -115,7 +115,7 @@
 
 import LoadingIndicator from './shared/LoadingIndicator.vue';
 import gql from 'graphql-tag';
-import {DateTime} from 'luxon';
+import { DateTime } from 'luxon';
 import ProjectLogo from './shared/ProjectLogo.vue';
 import {
   faCalendar,
@@ -123,7 +123,7 @@ import {
   faShieldHalved,
   faLock,
 } from '@fortawesome/free-solid-svg-icons';
-import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const PROJECT_LIST_QUERY = `
   projects(after: $after) {
@@ -155,7 +155,7 @@ const PROJECT_LIST_QUERY = `
 
 export default {
   name: 'ProjectsPage',
-  components: {FontAwesomeIcon, ProjectLogo, LoadingIndicator},
+  components: { FontAwesomeIcon, ProjectLogo, LoadingIndicator },
 
   props: {
     isLoggedIn: {
@@ -188,7 +188,7 @@ export default {
           after: null,
         };
       },
-      result({data}) {
+      result({ data }) {
         if (data && data.allVisibleProjects.pageInfo.hasNextPage) {
           this.$apollo.queries.allVisibleProjects.fetchMore({
             variables: {
@@ -208,14 +208,14 @@ export default {
           }
         }
       `,
-      update: data => data?.me?.projects,
+      update: (data) => data?.me?.projects,
       variables() {
         return {
           countBuildsSince: this.oneDayAgo,
           after: null,
         };
       },
-      result({data}) {
+      result({ data }) {
         if (data && data.me?.projects.pageInfo.hasNextPage) {
           this.$apollo.queries.myProjects.fetchMore({
             variables: {
@@ -244,13 +244,11 @@ export default {
     projects() {
       let edges;
       if (this.currentTab === 'MEMBER') {
-        edges = this.myProjects?.edges.map(x => x);
-      }
-      else if (this.currentTab === 'ACTIVE') {
-        edges = this.allVisibleProjects?.edges.filter(({node: project}) => project.buildCount > 0);
-      }
-      else {
-        edges = this.allVisibleProjects?.edges.map(x => x);
+        edges = this.myProjects?.edges.map((x) => x);
+      } else if (this.currentTab === 'ACTIVE') {
+        edges = this.allVisibleProjects?.edges.filter(({ node: project }) => project.buildCount > 0);
+      } else {
+        edges = this.allVisibleProjects?.edges.map((x) => x);
       }
 
       if (edges === null || edges === undefined) {
@@ -267,33 +265,33 @@ export default {
       }
 
       switch (this.currentTab) {
-      case 'MEMBER':
-        return 'You are not a member of any projects yet...';
-      case 'ACTIVE':
-        return 'No projects with builds in the last 24 hours...';
-      case 'ALL':
-        return 'No projects to display...';
-      default:
-        return null;
+        case 'MEMBER':
+          return 'You are not a member of any projects yet...';
+        case 'ACTIVE':
+          return 'No projects with builds in the last 24 hours...';
+        case 'ALL':
+          return 'No projects to display...';
+        default:
+          return null;
       }
     },
 
     oneDayAgo() {
-      return DateTime.now().minus({days: 1}).startOf('second').toISO({suppressMilliseconds: true});
+      return DateTime.now().minus({ days: 1 }).startOf('second').toISO({ suppressMilliseconds: true });
     },
   },
 
   methods: {
     projectVisibilityToIcon(visibility) {
       switch (visibility) {
-      case 'PUBLIC':
-        return this.FA.faEarthAmericas;
-      case 'PROTECTED':
-        return this.FA.faShieldHalved;
-      case 'PRIVATE':
-        return this.FA.faLock;
-      default:
-        throw `Invalid visibility ${visibility}`;
+        case 'PUBLIC':
+          return this.FA.faEarthAmericas;
+        case 'PROTECTED':
+          return this.FA.faShieldHalved;
+        case 'PRIVATE':
+          return this.FA.faLock;
+        default:
+          throw `Invalid visibility ${visibility}`;
       }
     },
   },

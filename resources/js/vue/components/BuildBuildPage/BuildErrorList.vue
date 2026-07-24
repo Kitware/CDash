@@ -121,7 +121,7 @@ const BUILD_QUERY = gql`
 
 export default {
   name: 'BuildErrorList',
-  components: {BuildErrorItem, LoadingIndicator},
+  components: { BuildErrorItem, LoadingIndicator },
 
   props: {
     buildId: {
@@ -215,15 +215,13 @@ export default {
         return currentErrorList.filter(({ node }) => {
           return !previousErrorSet.has(this.stringifyError(node));
         });
-      }
-      else if (this.showFixedErrors) {
+      } else if (this.showFixedErrors) {
         // Note: showing the fixed errors actually shows errors for the previous build.
         // This may be confusing to users and should be re-evaluated in the future.
         return previousErrorList.filter(({ node }) => {
           return !currentErrorSet.has(this.stringifyError(node));
         });
-      }
-      else {
+      } else {
         throw 'Invalid state.';
       }
     },

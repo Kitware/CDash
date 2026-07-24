@@ -184,13 +184,13 @@ import LoadingIndicator from './shared/LoadingIndicator.vue';
 import BuildSidebar from './shared/BuildSidebar.vue';
 import gql from 'graphql-tag';
 import FilterBuilder from './shared/FilterBuilder.vue';
-import {faFolder, faReply} from '@fortawesome/free-solid-svg-icons';
-import {faFile} from '@fortawesome/free-regular-svg-icons';
-import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
+import { faFolder, faReply } from '@fortawesome/free-solid-svg-icons';
+import { faFile } from '@fortawesome/free-regular-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 export default {
   name: 'BuildCoveragePage',
-  components: {FontAwesomeIcon, FilterBuilder, LoadingIndicator, DataTable, BuildSummaryCard, BuildSidebar},
+  components: { FontAwesomeIcon, FilterBuilder, LoadingIndicator, DataTable, BuildSummaryCard, BuildSidebar },
 
   props: {
     buildId: {
@@ -360,7 +360,7 @@ export default {
 
     formattedTableRows() {
       const coverageByPrefix = {};
-      this.coverage?.filter(edge => {
+      this.coverage?.filter((edge) => {
         return edge.node.filePath.startsWith(this.currentPrefix) || edge.node.filePath.startsWith(`./${this.currentPrefix}`);
       }).forEach((edge) => {
         const pathWithoutPrefix = edge.node.filePath.replace(/^.\//, '').slice(this.currentPrefix.length);
@@ -373,8 +373,7 @@ export default {
           coverageByPrefix[cleanedPath].linesOfCodeUntested += edge.node.linesOfCodeUntested;
           coverageByPrefix[cleanedPath].branchesTested += edge.node.branchesTested;
           coverageByPrefix[cleanedPath].branchesUntested += edge.node.branchesUntested;
-        }
-        else {
+        } else {
           coverageByPrefix[cleanedPath] = {
             subProject: !isDirectory && edge.subProject ? edge.subProject : '',
             path: {
@@ -391,7 +390,7 @@ export default {
         }
       });
 
-      return Object.values(coverageByPrefix).map(obj => {
+      return Object.values(coverageByPrefix).map((obj) => {
         const linePct = this.computePercentage(obj.linesOfCodeTested, obj.linesOfCodeUntested);
         const branchPct = this.computePercentage(obj.branchesTested, obj.branchesUntested);
 
@@ -430,11 +429,9 @@ export default {
     percentToProgressBarColorClass(pct) {
       if (pct >= this.coveragePercentCutoff) {
         return 'tw-progress-success';
-      }
-      else if (pct >= 0.7 * this.coveragePercentCutoff) {
+      } else if (pct >= 0.7 * this.coveragePercentCutoff) {
         return 'tw-progress-warning';
-      }
-      else {
+      } else {
         return 'tw-progress-error';
       }
     },

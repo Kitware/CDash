@@ -54,12 +54,12 @@
 </template>
 
 <script>
-import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
-import {faLink} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { faLink } from '@fortawesome/free-solid-svg-icons';
 
 export default {
   name: 'BuildSummaryCardStepSummary',
-  components: {FontAwesomeIcon},
+  components: { FontAwesomeIcon },
 
   props: {
     upperRightText: {

@@ -72,7 +72,7 @@ import FilterBuilder from './shared/FilterBuilder.vue';
 import LoadingIndicator from './shared/LoadingIndicator.vue';
 import BuildSummaryCard from './shared/BuildSummaryCard.vue';
 import BuildSidebar from './shared/BuildSidebar.vue';
-import {DateTime} from 'luxon';
+import { DateTime } from 'luxon';
 
 const TEST_QUERY = gql`
   query(
@@ -276,12 +276,12 @@ export default {
         return [];
       }
 
-      const previousTestsMap = new Map(this.previousTests.map(test => [
+      const previousTestsMap = new Map(this.previousTests.map((test) => [
         `${test.subProject}:${test.node.name}`,
         test.node.status,
       ]));
 
-      return this.tests.filter(test => {
+      return this.tests.filter((test) => {
         const key = `${test.subProject}:${test.node.name}`;
         const previousStatus = previousTestsMap.get(key);
         return previousStatus !== test.node.status;
@@ -308,7 +308,7 @@ export default {
     },
 
     formattedTestRows() {
-      return this.filteredTests?.map(edge => {
+      return this.filteredTests?.map((edge) => {
         return {
           name: {
             value: edge.node.name,
@@ -351,27 +351,27 @@ export default {
   methods: {
     testStatusToColorClass(status) {
       switch (status) {
-      case 'PASSED':
-        return 'normal';
-      case 'FAILED':
-        return 'error';
-      case 'NOT_RUN':
-        return 'warning';
-      default:
-        return '';
+        case 'PASSED':
+          return 'normal';
+        case 'FAILED':
+          return 'error';
+        case 'NOT_RUN':
+          return 'warning';
+        default:
+          return '';
       }
     },
 
     humanReadableTestStatus(status) {
       switch (status) {
-      case 'PASSED':
-        return 'Passed';
-      case 'FAILED':
-        return 'Failed';
-      case 'NOT_RUN':
-        return 'Not Run';
-      default:
-        return status;
+        case 'PASSED':
+          return 'Passed';
+        case 'FAILED':
+          return 'Failed';
+        case 'NOT_RUN':
+          return 'Not Run';
+        default:
+          return status;
       }
     },
   },

@@ -26,7 +26,7 @@
 
 <script>
 import FilterGroup from './FilterGroup.vue';
-import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import {
   faMagnifyingGlass,
   faTerminal,

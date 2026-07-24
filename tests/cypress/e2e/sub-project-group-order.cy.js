@@ -1,5 +1,4 @@
 describe('subProjectGroupOrder', () => {
-
   it('can change the group order', () => {
     cy.login();
     cy.visit('manageSubProject.php?projectid=14');
@@ -22,7 +21,7 @@ describe('subProjectGroupOrder', () => {
     cy.get('@drop_position').trigger('mousemove');
     // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(200);
-    cy.get('@drop_position').trigger('mouseup', {force: true});
+    cy.get('@drop_position').trigger('mouseup', { force: true });
 
     cy.contains('button', 'Save Order').as('save_order_button').click();
 
@@ -54,7 +53,7 @@ describe('subProjectGroupOrder', () => {
     cy.get('@drop_position').trigger('mousemove');
     // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(200);
-    cy.get('@drop_position').trigger('mouseup', {force: true});
+    cy.get('@drop_position').trigger('mouseup', { force: true });
     cy.get('@save_order_button').click();
 
     // verify that we restored it

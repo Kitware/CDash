@@ -159,7 +159,7 @@ export default {
       },
       result({ data }) {
         if (data && data.project) {
-          this.testMeasurements = [...data.project.pinnedTestMeasurements.edges.map(edge => edge.node)].sort((a, b) => a.position - b.position);
+          this.testMeasurements = [...data.project.pinnedTestMeasurements.edges.map((edge) => edge.node)].sort((a, b) => a.position - b.position);
         }
       },
     },
@@ -207,16 +207,13 @@ export default {
         });
         if (result.data.createPinnedTestMeasurement.message) {
           this.errorMessage = result.data.createPinnedTestMeasurement.message;
-        }
-        else {
+        } else {
           this.newTestMeasurementName = '';
           this.$apollo.queries.project.refetch();
         }
-      }
-      catch (error) {
+      } catch (error) {
         this.errorMessage = error.message;
-      }
-      finally {
+      } finally {
         this.createLoading = false;
       }
     },
@@ -240,19 +237,17 @@ export default {
         });
         if (result.data.deletePinnedTestMeasurement.message) {
           this.errorMessage = result.data.deletePinnedTestMeasurement.message;
-        }
-        else {
+        } else {
           this.$apollo.queries.project.refetch();
         }
-      }
-      catch (error) {
+      } catch (error) {
         this.errorMessage = error.message;
       }
     },
 
     async updateOrder() {
       this.errorMessage = '';
-      const pinnedTestMeasurementIds = this.testMeasurements.map(m => m.id);
+      const pinnedTestMeasurementIds = this.testMeasurements.map((m) => m.id);
       try {
         const result = await this.$apollo.mutate({
           mutation: gql`
@@ -278,8 +273,7 @@ export default {
           this.errorMessage = result.data.updatePinnedTestMeasurementOrder.message;
           this.$apollo.queries.project.refetch();
         }
-      }
-      catch (error) {
+      } catch (error) {
         this.errorMessage = error.message;
         this.$apollo.queries.project.refetch();
       }

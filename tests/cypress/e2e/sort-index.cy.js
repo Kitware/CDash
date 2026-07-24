@@ -1,9 +1,8 @@
 describe('sort_index', () => {
-
   // these two "verify_<>_cell" functions help getting the text from all
   // child elements of the td, since it may contain links, formatting, etc.
   function _verify_cell(position, td_alias, expected_value) {
-    cy.get(td_alias).invoke(position).invoke('text').then(td_text => {
+    cy.get(td_alias).invoke(position).invoke('text').then((td_text) => {
       cy.wrap(td_text.trim()).should('contain', expected_value);
     });
   }
@@ -29,7 +28,7 @@ describe('sort_index', () => {
     cy.get('@header').find('span').should('have.class', 'glyphicon-chevron-down');
 
     // filter out the table cells from the targeted column
-    cy.get('tbody').find(`tr td:visible:nth-child(${column_index+1})`).as('column_tds');
+    cy.get('tbody').find(`tr td:visible:nth-child(${column_index + 1})`).as('column_tds');
 
     // check that the expected value is at the top of the list
     verify_first_cell('@column_tds', first_value);
@@ -38,7 +37,7 @@ describe('sort_index', () => {
     // reverse order & check values again
     cy.get('@header').click();
     cy.get('@header').find('span').should('have.class', 'glyphicon-chevron-up');
-    cy.get('tbody').find(`tr td:visible:nth-child(${column_index+1})`).as('column_tds');
+    cy.get('tbody').find(`tr td:visible:nth-child(${column_index + 1})`).as('column_tds');
     verify_first_cell('@column_tds', last_value);
     verify_last_cell('@column_tds', first_value);
 
@@ -123,8 +122,8 @@ describe('sort_index', () => {
     cy.get('@files_header').find('span').should('have.class', 'glyphicon-chevron-down');
 
     // get cells from each of the two columns
-    cy.get('tbody').find(`tr td:visible:nth-child(${time_col+1})`).as('time_column_tds');
-    cy.get('tbody').find(`tr td:visible:nth-child(${files_col+1})`).as('files_column_tds');
+    cy.get('tbody').find(`tr td:visible:nth-child(${time_col + 1})`).as('time_column_tds');
+    cy.get('tbody').find(`tr td:visible:nth-child(${files_col + 1})`).as('files_column_tds');
 
     // check for the expected Build Time values
     verify_first_cell('@time_column_tds', time_first_value);
@@ -141,8 +140,8 @@ describe('sort_index', () => {
     cy.get('@buildtime_header').find('span').should('have.class', 'glyphicon-chevron-up');
     cy.get('@files_header').find('span').should('have.class', 'glyphicon-chevron-up');
     // verify values
-    cy.get('tbody').find(`tr td:visible:nth-child(${time_col+1})`).as('time_column_tds');
-    cy.get('tbody').find(`tr td:visible:nth-child(${files_col+1})`).as('files_column_tds');
+    cy.get('tbody').find(`tr td:visible:nth-child(${time_col + 1})`).as('time_column_tds');
+    cy.get('tbody').find(`tr td:visible:nth-child(${files_col + 1})`).as('files_column_tds');
     verify_first_cell('@time_column_tds', time_last_value);
     verify_last_cell('@time_column_tds', time_first_value);
     verify_first_cell('@files_column_tds', files_last_value);
@@ -155,5 +154,4 @@ describe('sort_index', () => {
     verify_first_cell('@files_column_tds', files_last_value);
     verify_last_cell('@files_column_tds', files_first_value);
   });
-
 });
