@@ -38,7 +38,7 @@
     "bootstrap": "^4.6.2",
     "core-js": "^3.49.0",
     "d3": "^3.5.17",
-    "daisyui": "^4.12.23",
+    "daisyui": "^5.6.18",
     "echarts": "^6.1.0",
     "graphql": "^16.14.0",
     "graphql-tag": "^2.12.7",
