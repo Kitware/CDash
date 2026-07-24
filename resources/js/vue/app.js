@@ -4,7 +4,6 @@ import {
 } from 'vue';
 import { ApolloClient, InMemoryCache } from '@apollo/client/core';
 import { createApolloProvider } from '@vue/apollo-option';
-import VueApolloComponents from '@vue/apollo-components';
 import { relayStylePagination } from '@apollo/client/utilities';
 import { DefaultApolloClient } from '@vue/apollo-composable';
 
@@ -93,7 +92,6 @@ const apolloProvider = createApolloProvider({
 });
 
 app.use(apolloProvider);
-app.use(VueApolloComponents);
 app.provide(DefaultApolloClient, apolloClient);
 
 app.mount('#app');
