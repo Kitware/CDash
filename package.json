@@ -73,6 +73,6 @@
     "globals": "^17.7.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^30.4.1",
-    "postcss": "^8.5.15"
+    "postcss": "^8.5.23"
   }
 }
