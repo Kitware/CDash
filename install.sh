@@ -79,8 +79,20 @@ php artisan lighthouse:cache
 if $DEVELOPMENT; then
   # Wipe the cache in case we're coming from a non-dev install
   php artisan config:clear
+  php artisan route:clear
 else
   php artisan config:cache
+
+  # Cache routes if we are at the root path (e.g., https://example.com)
+  # but not if we are in a subdirectory (e.g., https://example.com/cdash).
+  # Laravel does not support route caching when the app is hosted in a subdirectory.
+  APP_URL=$(php artisan config:show app.url)
+  SLASH_COUNT=$(echo "$APP_URL" | grep -o "/" | wc -l)
+  if [[ "$SLASH_COUNT" -eq 2 ]]; then
+    php artisan route:cache
+  else
+    php artisan route:clear
+  fi
 fi
 
 if $INITIAL_DOCKER_INSTALL; then
