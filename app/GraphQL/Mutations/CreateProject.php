@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\GraphQL\Mutations;
 
+use App\Enums\ProjectRole;
 use App\Models\Project;
 use App\Services\ProjectService;
 use Illuminate\Support\Facades\Gate;
@@ -25,7 +26,7 @@ class CreateProject
             'emailcategory' => 62,
             'emailsuccess' => false,
             'emailmissingsites' => false,
-            'role' => Project::PROJECT_ADMIN,
+            'role' => ProjectRole::ADMINISTRATOR,
         ]);
 
         $user = auth()->user();

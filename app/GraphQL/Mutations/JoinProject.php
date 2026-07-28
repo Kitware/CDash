@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\GraphQL\Mutations;
 
+use App\Enums\ProjectRole;
 use App\Exceptions\GraphQLMutationException;
 use App\Models\Project;
 use App\Models\User;
@@ -39,7 +40,7 @@ final class JoinProject extends AbstractMutation
                 'emailcategory' => 62,
                 'emailsuccess' => false,
                 'emailmissingsites' => false,
-                'role' => Project::PROJECT_USER,
+                'role' => ProjectRole::USER,
             ]);
 
         Log::info("User {$user->id} joined project {$project->id}.");

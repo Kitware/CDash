@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\ProjectRole;
 use App\Enums\TestDiffType;
 use App\Models\Site;
 use App\Models\User;
@@ -44,7 +45,7 @@ class EmailTestCase extends KWWebTestCase
         }
 
         $user->projects()->attach($this->project, [
-            'role' => 0,
+            'role' => ProjectRole::USER,
             'emailtype' => 1,
             'emailcategory' => 126,
             'emailsuccess' => 1,
@@ -77,7 +78,7 @@ class EmailTestCase extends KWWebTestCase
                 role,
                 emailtype
             ) VALUES (?, ?, ?, ?)
-        ', [$user->id, $this->project, 0, 0]);
+        ', [$user->id, $this->project, ProjectRole::USER->value, 0]);
     }
 
     public function testSubmissionFirstBuild(): void

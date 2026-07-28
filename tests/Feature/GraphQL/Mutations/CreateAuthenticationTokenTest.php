@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\GraphQL\Mutations;
 
+use App\Enums\ProjectRole;
 use App\Models\AuthToken;
 use App\Models\Project;
 use App\Models\User;
@@ -53,10 +54,10 @@ class CreateAuthenticationTokenTest extends TestCase
         return [
             [null, null, false],
             ['normal', null, false],
-            ['normal', Project::PROJECT_USER, true],
-            ['normal', Project::PROJECT_ADMIN, true],
-            ['admin', Project::PROJECT_USER, true],
-            ['admin', Project::PROJECT_ADMIN, true],
+            ['normal', ProjectRole::USER, true],
+            ['normal', ProjectRole::ADMINISTRATOR, true],
+            ['admin', ProjectRole::USER, true],
+            ['admin', ProjectRole::ADMINISTRATOR, true],
             ['admin', null, true],
         ];
     }
@@ -64,7 +65,7 @@ class CreateAuthenticationTokenTest extends TestCase
     #[DataProvider('projectScopedSubmitOnlyTokenCreationPermissionsCases')]
     public function testProjectScopedSubmitOnlyTokenCreationPermissions(
         ?string $user,
-        ?int $projectRole,
+        ?ProjectRole $projectRole,
         bool $canCreateAuthToken,
     ): void {
         $project = $this->makePublicProject();
@@ -225,7 +226,7 @@ class CreateAuthenticationTokenTest extends TestCase
 
         $user = User::factory()->adminUser()->create();
         $project = $this->makePublicProject();
-        $project->users()->attach($user, ['role' => Project::PROJECT_USER]);
+        $project->users()->attach($user, ['role' => ProjectRole::USER]);
 
         self::assertDatabaseEmpty(AuthToken::class);
 
@@ -313,7 +314,7 @@ class CreateAuthenticationTokenTest extends TestCase
     {
         $user = User::factory()->adminUser()->create();
         $project = $this->makePublicProject();
-        $project->users()->attach($user, ['role' => Project::PROJECT_USER]);
+        $project->users()->attach($user, ['role' => ProjectRole::USER]);
 
         self::assertDatabaseEmpty(AuthToken::class);
 

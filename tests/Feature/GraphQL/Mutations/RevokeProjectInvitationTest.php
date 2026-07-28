@@ -154,7 +154,7 @@ class RevokeProjectInvitationTest extends TestCase
                 'emailcategory' => 0,
                 'emailsuccess' => true,
                 'emailmissingsites' => true,
-                'role' => Project::PROJECT_USER,
+                'role' => ProjectRole::USER,
             ]);
 
         self::assertCount(1, $this->project->invitations()->get());
@@ -192,7 +192,7 @@ class RevokeProjectInvitationTest extends TestCase
                 'emailcategory' => 0,
                 'emailsuccess' => true,
                 'emailmissingsites' => true,
-                'role' => Project::PROJECT_ADMIN,
+                'role' => ProjectRole::ADMINISTRATOR,
             ]);
 
         self::assertCount(1, $this->project->invitations()->get());

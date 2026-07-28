@@ -23,6 +23,7 @@ define('FMT_DATETIMETZ', 'Y-m-d\TH:i:s T');  // date and time with time zone
 define('FMT_DATETIMEMS', 'Y-m-d\TH:i:s.u');  // date and time with milliseconds
 define('FMT_DATETIMEDISPLAY', 'M d, Y - H:i T');  // date and time standard
 
+use App\Enums\ProjectRole;
 use App\Http\Controllers\AbstractController;
 use App\Models\Site;
 use App\Utils\DatabaseCleanupUtils;
@@ -609,8 +610,8 @@ function get_dashboard_JSON($projectname, $date, &$response): void
     $userid = Auth::id();
     if ($userid) {
         $project = App\Models\Project::findOrFail((int) $project->Id);
-        $response['projectrole'] = (int) ($project->users()->withPivot('role')->find((int) $userid)->pivot->role ?? 0);
-        if ($response['projectrole'] === App\Models\Project::PROJECT_ADMIN) {
+        $response['projectrole'] = $project->users()->withPivot('role')->find((int) $userid)->pivot->role ?? ProjectRole::USER;
+        if ($response['projectrole'] === ProjectRole::ADMINISTRATOR) {
             $response['user']['admin'] = 1;
         }
     }

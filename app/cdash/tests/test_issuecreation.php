@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\ProjectRole;
 use App\Models\Project as EloquentProject;
 use App\Models\User;
 use App\Utils\RepositoryUtils;
@@ -96,7 +97,7 @@ class IssueCreationTestCase extends KWWebTestCase
                 'emailcategory' => 126,
                 'emailsuccess' => false,
                 'emailmissingsites' => false,
-                'role' => EloquentProject::PROJECT_ADMIN,
+                'role' => ProjectRole::ADMINISTRATOR,
             ]);
 
         // Setup subprojects.

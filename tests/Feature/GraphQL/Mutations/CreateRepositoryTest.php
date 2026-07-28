@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\GraphQL\Mutations;
 
-use App\Models\Project;
+use App\Enums\ProjectRole;
 use App\Models\Repository;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -99,7 +99,7 @@ class CreateRepositoryTest extends TestCase
     {
         $project = $this->makePublicProject();
         $user = User::factory()->create();
-        $project->users()->attach($user, ['role' => Project::PROJECT_USER]);
+        $project->users()->attach($user, ['role' => ProjectRole::USER]);
 
         $this->actingAs($user)->graphQL('
             mutation createRepository($input: CreateRepositoryInput!) {
@@ -127,7 +127,7 @@ class CreateRepositoryTest extends TestCase
     {
         $project = $this->makePublicProject();
         $user = User::factory()->create();
-        $project->users()->attach($user, ['role' => Project::PROJECT_ADMIN]);
+        $project->users()->attach($user, ['role' => ProjectRole::ADMINISTRATOR]);
 
         $url = fake()->url();
         $username = Str::uuid()->toString();

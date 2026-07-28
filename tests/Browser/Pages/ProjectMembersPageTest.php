@@ -46,7 +46,7 @@ class ProjectMembersPageTest extends BrowserTestCase
         $this->users[] = $user;
 
         $this->project->users()->attach($user->id, [
-            'role' => $admin ? Project::PROJECT_ADMIN : Project::PROJECT_USER,
+            'role' => $admin ? ProjectRole::ADMINISTRATOR : ProjectRole::USER,
         ]);
 
         return $user;
@@ -82,7 +82,7 @@ class ProjectMembersPageTest extends BrowserTestCase
                 'emailcategory' => 0,
                 'emailsuccess' => true,
                 'emailmissingsites' => true,
-                'role' => Project::PROJECT_ADMIN,
+                'role' => ProjectRole::ADMINISTRATOR,
             ]);
 
         $this->browse(function (Browser $browser): void {
@@ -105,7 +105,7 @@ class ProjectMembersPageTest extends BrowserTestCase
                 'emailcategory' => 0,
                 'emailsuccess' => true,
                 'emailmissingsites' => true,
-                'role' => Project::PROJECT_USER,
+                'role' => ProjectRole::USER,
             ]);
 
         $this->browse(function (Browser $browser): void {
@@ -152,7 +152,7 @@ class ProjectMembersPageTest extends BrowserTestCase
                 'emailcategory' => 0,
                 'emailsuccess' => true,
                 'emailmissingsites' => true,
-                'role' => Project::PROJECT_ADMIN,
+                'role' => ProjectRole::ADMINISTRATOR,
             ]);
 
         $this->browse(function (Browser $browser): void {
@@ -176,7 +176,7 @@ class ProjectMembersPageTest extends BrowserTestCase
                 'emailcategory' => 0,
                 'emailsuccess' => true,
                 'emailmissingsites' => true,
-                'role' => Project::PROJECT_USER,
+                'role' => ProjectRole::USER,
             ]);
 
         $this->browse(function (Browser $browser): void {
@@ -276,7 +276,7 @@ class ProjectMembersPageTest extends BrowserTestCase
                 'emailcategory' => 0,
                 'emailsuccess' => true,
                 'emailmissingsites' => true,
-                'role' => Project::PROJECT_ADMIN,
+                'role' => ProjectRole::ADMINISTRATOR,
             ]);
 
         $this->browse(function (Browser $browser): void {
@@ -301,7 +301,7 @@ class ProjectMembersPageTest extends BrowserTestCase
                 'emailcategory' => 0,
                 'emailsuccess' => true,
                 'emailmissingsites' => true,
-                'role' => Project::PROJECT_USER,
+                'role' => ProjectRole::USER,
             ]);
 
         self::assertNotContains($this->users['normal']->id, $this->project->administrators()->pluck('id'));
@@ -337,7 +337,7 @@ class ProjectMembersPageTest extends BrowserTestCase
                 'emailcategory' => 0,
                 'emailsuccess' => true,
                 'emailmissingsites' => true,
-                'role' => Project::PROJECT_USER,
+                'role' => ProjectRole::USER,
             ]);
 
         $this->project
@@ -347,7 +347,7 @@ class ProjectMembersPageTest extends BrowserTestCase
                 'emailcategory' => 0,
                 'emailsuccess' => true,
                 'emailmissingsites' => true,
-                'role' => Project::PROJECT_USER,
+                'role' => ProjectRole::USER,
             ]);
 
         $this->browse(function (Browser $browser): void {
@@ -372,7 +372,7 @@ class ProjectMembersPageTest extends BrowserTestCase
                 'emailcategory' => 0,
                 'emailsuccess' => true,
                 'emailmissingsites' => true,
-                'role' => Project::PROJECT_USER,
+                'role' => ProjectRole::USER,
             ]);
 
         $this->browse(function (Browser $browser): void {
@@ -396,7 +396,7 @@ class ProjectMembersPageTest extends BrowserTestCase
                     'emailcategory' => 0,
                     'emailsuccess' => true,
                     'emailmissingsites' => true,
-                    'role' => Project::PROJECT_USER,
+                    'role' => ProjectRole::USER,
                 ]);
         }
 

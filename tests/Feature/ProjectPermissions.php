@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\ProjectRole;
 use App\Models\Project;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -99,7 +100,7 @@ class ProjectPermissions extends TestCase
         DB::table('user2project')->insert([
             'userid' => $this->normal_user->id,
             'projectid' => $this->private_project1->id,
-            'role' => 0,
+            'role' => ProjectRole::USER,
             'emailtype' => 0,
             'emailcategory' => 0,
             'emailsuccess' => 0,

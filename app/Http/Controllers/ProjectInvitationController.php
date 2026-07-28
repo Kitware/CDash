@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ProjectRole;
-use App\Models\Project;
 use App\Models\ProjectInvitation;
 use App\Models\User;
 use Exception;
@@ -45,7 +44,7 @@ final class ProjectInvitationController extends AbstractController
             abort(401, 'Cannot accept self-invitation.');
         }
 
-        $role = $user_invite->role === ProjectRole::ADMINISTRATOR ? Project::PROJECT_ADMIN : Project::PROJECT_USER;
+        $role = $user_invite->role === ProjectRole::ADMINISTRATOR ? ProjectRole::ADMINISTRATOR : ProjectRole::USER;
 
         $user->projects()->attach($user_invite->project_id, [
             'role' => $role,
