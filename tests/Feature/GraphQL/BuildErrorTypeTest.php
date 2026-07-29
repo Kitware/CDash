@@ -202,12 +202,8 @@ class BuildErrorTypeTest extends TestCase
             'uuid' => Str::uuid()->toString(),
         ]);
 
-        $label1 = Label::create([
-            'text' => Str::uuid()->toString(),
-        ]);
-        $label2 = Label::create([
-            'text' => Str::uuid()->toString(),
-        ]);
+        $label1 = Label::factory()->create();
+        $label2 = Label::factory()->create();
 
         /** @var BuildError $buildError */
         $buildError = $build->buildErrors()->save(BuildError::factory()->make());

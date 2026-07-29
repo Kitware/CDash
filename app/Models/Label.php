@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use Database\Factories\LabelFactory;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -18,6 +20,9 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Label extends Model
 {
+    /** @use HasFactory<LabelFactory> */
+    use HasFactory;
+
     protected $table = 'label';
 
     public $timestamps = false;

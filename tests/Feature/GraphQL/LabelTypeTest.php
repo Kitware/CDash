@@ -49,9 +49,7 @@ class LabelTypeTest extends TestCase
             'uuid' => Str::uuid()->toString(),
         ]);
 
-        $this->labels['label1'] = $build->labels()->create([
-            'text' => Str::uuid()->toString(),
-        ]);
+        $this->labels['label1'] = $build->labels()->save(Label::factory()->make());
 
         $this->graphQL('
             query build($id: ID) {
@@ -93,13 +91,9 @@ class LabelTypeTest extends TestCase
             'uuid' => Str::uuid()->toString(),
         ]);
 
-        $this->labels['label1'] = $build->labels()->create([
-            'text' => Str::uuid()->toString(),
-        ]);
+        $this->labels['label1'] = $build->labels()->save(Label::factory()->make());
 
-        $this->labels['label2'] = $build->labels()->create([
-            'text' => Str::uuid()->toString(),
-        ]);
+        $this->labels['label2'] = $build->labels()->save(Label::factory()->make());
 
         $this->graphQL('
             query build($id: ID, $labeltext: String!) {
@@ -153,9 +147,7 @@ class LabelTypeTest extends TestCase
             'type' => TargetType::UNKNOWN,
         ]);
 
-        $this->labels['label1'] = $target->labels()->create([
-            'text' => Str::uuid()->toString(),
-        ]);
+        $this->labels['label1'] = $target->labels()->save(Label::factory()->make());
 
         $this->graphQL('
             query build($id: ID) {
@@ -213,9 +205,7 @@ class LabelTypeTest extends TestCase
             'log' => Str::uuid()->toString(),
         ]);
 
-        $this->labels['label1'] = $da->labels()->create([
-            'text' => Str::uuid()->toString(),
-        ]);
+        $this->labels['label1'] = $da->labels()->save(Label::factory()->make());
 
         $this->graphQL('
             query build($id: ID) {

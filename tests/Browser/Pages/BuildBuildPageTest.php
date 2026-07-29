@@ -570,13 +570,9 @@ class BuildBuildPageTest extends BrowserTestCase
         $buildError1 = $build->buildErrors()->save(BuildError::factory()->make());
 
         /** @var Label $label1 */
-        $label1 = $buildError1->labels()->create([
-            'text' => Str::uuid()->toString(),
-        ]);
+        $label1 = $buildError1->labels()->save(Label::factory()->make());
         /** @var Label $label2 */
-        $label2 = $buildError1->labels()->create([
-            'text' => Str::uuid()->toString(),
-        ]);
+        $label2 = $buildError1->labels()->save(Label::factory()->make());
 
         $this->browse(function (Browser $browser) use ($label2, $label1, $build): void {
             $browser->visit("/builds/{$build->id}/build")
