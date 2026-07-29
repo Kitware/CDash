@@ -5143,6 +5143,12 @@ parameters:
 			path: app/Utils/DatabaseCleanupUtils.php
 
 		-
+			rawMessage: Cannot access property $name on mixed.
+			identifier: property.nonObject
+			count: 1
+			path: app/Utils/LdapUtils.php
+
+		-
 			rawMessage: Property App\Utils\NoteCreator::$buildid has no type specified.
 			identifier: missingType.property
 			count: 1
@@ -22840,9 +22846,21 @@ parameters:
 			path: tests/Feature/Jobs/ComputeCoverageDifferenceTest.php
 
 		-
+			rawMessage: Access to an undefined property Illuminate\Database\Eloquent\Relations\Pivot::$role.
+			identifier: property.notFound
+			count: 3
+			path: tests/Feature/LdapIntegration.php
+
+		-
 			rawMessage: Cannot access offset 0 on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 49
+			count: 52
+			path: tests/Feature/LdapIntegration.php
+
+		-
+			rawMessage: 'Cannot access property $pivot on (App\Models\User&object{pivot: Illuminate\Database\Eloquent\Relations\Pivot})|null.'
+			identifier: property.nonObject
+			count: 3
 			path: tests/Feature/LdapIntegration.php
 
 		-
