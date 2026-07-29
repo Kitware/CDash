@@ -6,6 +6,7 @@ namespace App\Utils;
 
 use App\Enums\ProjectRole;
 use App\Models\Project;
+use App\Models\ProjectRoleHistory;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Log;
@@ -58,8 +59,16 @@ class LdapUtils
             }
 
             if ($matches_ldap_filter && !$relationship_already_exists) {
-                $project->users()->attach($user->id, ['role' => ProjectRole::USER]);
-                Log::info("Added user $user->email to project $project->name.");
+                // Find the most recent role for this user and project.
+                $previous_role = ProjectRoleHistory::where('projectid', $project->id)
+                    ->where('userid', $user->id)
+                    ->whereNotNull('role')
+                    ->latest('timestamp')
+                    ->latest('id')
+                    ->value('role') ?? ProjectRole::USER;
+
+                $project->users()->attach($user->id, ['role' => $previous_role]);
+                Log::info("Added user $user->email to project $project->name with role $previous_role->name.");
             } elseif (!$matches_ldap_filter && $relationship_already_exists) {
                 $project->users()->detach($user->id);
                 Log::info("Removed user $user->email from project $project->name.");

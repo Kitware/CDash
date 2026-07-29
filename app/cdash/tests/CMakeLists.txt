@@ -314,6 +314,8 @@ add_feature_test_in_transaction(/Feature/GraphQL/Mutations/CreateCoverageDiffMut
 
 add_feature_test_in_transaction(/Feature/Jobs/PruneBuildsTest)
 
+add_feature_test_in_transaction(/Feature/Database/ProjectRoleHistoryTest)
+
 add_feature_test_in_transaction(/Feature/Jobs/PruneEmailsTest)
 
 add_feature_test_in_transaction(/Feature/Jobs/ComputeCoverageDifferenceTest)

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\ProjectRole;
 use App\Models\Project;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -434,5 +435,40 @@ class LdapIntegration extends TestCase
         $this->projects['only_group_1']->save();
 
         $this->artisan('ldap:sync_projects');
+    }
+
+    public function testRolesAreRestoredFromHistory(): void
+    {
+        // Create the user in the database
+        $this->post('/login', [
+            'email' => $this->users['group_1_only_1']->getAttribute('uid')[0],
+            'password' => $this->users['group_1_only_1']->getAttribute('userpassword')[0],
+        ])->assertRedirect('/');
+
+        $user = \App\Models\User::where(['email' => $this->users['group_1_only_1']->getAttribute('uid')[0]])->firstOrFail();
+        $project = $this->projects['only_group_1'];
+
+        // Initial sync should add the user as a USER
+        $this->artisan('ldap:sync_projects');
+        $this->assertEquals(ProjectRole::USER->value, $project->users()->withPivot('role')->where('userid', $user->id)->first()->pivot->role);
+
+        // Elevate the user to ADMINISTRATOR
+        $project->users()->updateExistingPivot($user->id, ['role' => ProjectRole::ADMINISTRATOR]);
+        $this->assertEquals(ProjectRole::ADMINISTRATOR->value, $project->users()->withPivot('role')->where('userid', $user->id)->first()->pivot->role);
+
+        // Change the LDAP filter so the user is removed
+        $project->ldapfilter = '(uid=nonexistent)';
+        $project->save();
+        $this->artisan('ldap:sync_projects');
+        $this->assertNotContains($user->email, $project->users()->pluck('email'));
+
+        // Change the LDAP filter back so the user is added again
+        $project->ldapfilter = '(uid=*group_1*)';
+        $project->save();
+        $this->artisan('ldap:sync_projects');
+
+        // Verify the user was added back with their previous role (ADMINISTRATOR)
+        $this->assertContains($user->email, $project->users()->pluck('email'));
+        $this->assertEquals(ProjectRole::ADMINISTRATOR->value, $project->users()->withPivot('role')->where('userid', $user->id)->first()->pivot->role);
     }
 }
