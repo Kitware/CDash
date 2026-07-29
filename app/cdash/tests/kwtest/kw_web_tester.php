@@ -24,6 +24,7 @@ if (!defined('LARAVEL_START')) {
     define('LARAVEL_START', microtime(true));
 }
 
+use App\Enums\ProjectRole;
 use App\Http\Kernel;
 use App\Models\User;
 use CDash\Model\Project;
@@ -449,7 +450,7 @@ class KWWebTestCase extends WebTestCase
                     'emailcategory' => 126,
                     'emailsuccess' => false,
                     'emailmissingsites' => false,
-                    'role' => App\Models\Project::PROJECT_ADMIN,
+                    'role' => ProjectRole::ADMINISTRATOR,
                 ]);
 
             $projectid = $eloquent_project->id;

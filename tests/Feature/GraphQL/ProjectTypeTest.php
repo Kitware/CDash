@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\GraphQL;
 
+use App\Enums\ProjectRole;
 use App\Models\Project;
 use App\Models\TestOutput;
 use App\Models\User;
@@ -58,23 +59,23 @@ class ProjectTypeTest extends TestCase
 
         $this->projects['public1']
             ->users()
-            ->attach($this->users['normal']->id, $user2project_data + ['role' => Project::PROJECT_ADMIN]);
+            ->attach($this->users['normal']->id, $user2project_data + ['role' => ProjectRole::ADMINISTRATOR]);
 
         $this->projects['public1']
             ->users()
-            ->attach($this->users['admin']->id, $user2project_data + ['role' => Project::PROJECT_ADMIN]);
+            ->attach($this->users['admin']->id, $user2project_data + ['role' => ProjectRole::ADMINISTRATOR]);
 
         $this->projects['protected2']
             ->users()
-            ->attach($this->users['normal']->id, $user2project_data + ['role' => Project::PROJECT_USER]);
+            ->attach($this->users['normal']->id, $user2project_data + ['role' => ProjectRole::USER]);
 
         $this->projects['private1']
             ->users()
-            ->attach($this->users['normal']->id, $user2project_data + ['role' => Project::PROJECT_USER]);
+            ->attach($this->users['normal']->id, $user2project_data + ['role' => ProjectRole::USER]);
 
         $this->projects['private2']
             ->users()
-            ->attach($this->users['normal']->id, $user2project_data + ['role' => Project::PROJECT_ADMIN]);
+            ->attach($this->users['normal']->id, $user2project_data + ['role' => ProjectRole::ADMINISTRATOR]);
     }
 
     protected function tearDown(): void

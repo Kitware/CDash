@@ -2,6 +2,7 @@
 
 namespace Tests\Browser\Pages;
 
+use App\Enums\ProjectRole;
 use App\Models\Project;
 use App\Models\User;
 use Illuminate\Support\Str;
@@ -261,7 +262,7 @@ class ProfilePageTest extends BrowserTestCase
     {
         $this->users['admin'] = User::factory()->adminUser()->create();
         $this->projects['project'] = $this->makePublicProject();
-        $this->projects['project']->users()->attach($this->users['admin'], ['role' => Project::PROJECT_USER]);
+        $this->projects['project']->users()->attach($this->users['admin'], ['role' => ProjectRole::USER]);
         $description = Str::uuid()->toString();
 
         $this->browse(function (Browser $browser) use ($description): void {

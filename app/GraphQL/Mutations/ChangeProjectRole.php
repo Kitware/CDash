@@ -61,8 +61,8 @@ final class ChangeProjectRole extends AbstractMutation
 
         $rowsEdited = $userToChange->projects()->updateExistingPivot($project->id, [
             'role' => match ($args['role']) {
-                ProjectRole::USER => Project::PROJECT_USER,
-                ProjectRole::ADMINISTRATOR => Project::PROJECT_ADMIN,
+                ProjectRole::USER => ProjectRole::USER,
+                ProjectRole::ADMINISTRATOR => ProjectRole::ADMINISTRATOR,
             },
         ]);
 

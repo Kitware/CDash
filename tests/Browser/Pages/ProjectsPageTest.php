@@ -2,6 +2,7 @@
 
 namespace Tests\Browser\Pages;
 
+use App\Enums\ProjectRole;
 use App\Models\Project;
 use App\Models\Site;
 use App\Models\SiteInformation;
@@ -165,7 +166,7 @@ class ProjectsPageTest extends BrowserTestCase
                     ;
                 });
 
-            $this->projects['project1']->users()->attach($this->users['admin'], ['role' => Project::PROJECT_USER]);
+            $this->projects['project1']->users()->attach($this->users['admin'], ['role' => ProjectRole::USER]);
 
             $browser->loginAs($this->users['admin'])
                 ->visit('/projects')
@@ -300,7 +301,7 @@ class ProjectsPageTest extends BrowserTestCase
                 'submittime' => Carbon::now(),
             ]);
 
-            $project->users()->attach($this->users['admin'], ['role' => Project::PROJECT_USER]);
+            $project->users()->attach($this->users['admin'], ['role' => ProjectRole::USER]);
         }
 
         // The first project created has the lowest ID (first pagination page) and the last has

@@ -42,7 +42,7 @@ class ChangeProjectRoleTest extends TestCase
                 'emailcategory' => 0,
                 'emailsuccess' => true,
                 'emailmissingsites' => true,
-                'role' => Project::PROJECT_USER,
+                'role' => ProjectRole::USER,
             ]);
 
         $this->project
@@ -52,7 +52,7 @@ class ChangeProjectRoleTest extends TestCase
                 'emailcategory' => 0,
                 'emailsuccess' => true,
                 'emailmissingsites' => true,
-                'role' => Project::PROJECT_ADMIN,
+                'role' => ProjectRole::ADMINISTRATOR,
             ]);
     }
 

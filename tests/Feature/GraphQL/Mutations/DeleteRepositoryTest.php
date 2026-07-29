@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\GraphQL\Mutations;
 
-use App\Models\Project;
+use App\Enums\ProjectRole;
 use App\Models\Repository;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -86,7 +86,7 @@ class DeleteRepositoryTest extends TestCase
         $user = User::factory()->create();
         $project = $this->makePublicProject();
         $repository = $project->repositories()->save(Repository::factory()->make());
-        $project->users()->attach($user, ['role' => Project::PROJECT_USER]);
+        $project->users()->attach($user, ['role' => ProjectRole::USER]);
         self::assertInstanceOf(Repository::class, $repository);
 
         self::assertDatabaseCount(Repository::class, 1);
@@ -111,7 +111,7 @@ class DeleteRepositoryTest extends TestCase
         $user = User::factory()->create();
         $project = $this->makePublicProject();
         $repository = $project->repositories()->save(Repository::factory()->make());
-        $project->users()->attach($user, ['role' => Project::PROJECT_ADMIN]);
+        $project->users()->attach($user, ['role' => ProjectRole::ADMINISTRATOR]);
         self::assertInstanceOf(Repository::class, $repository);
 
         self::assertDatabaseCount(Repository::class, 1);

@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\GraphQL;
 
+use App\Enums\ProjectRole;
 use App\Models\AuthToken;
-use App\Models\Project;
 use App\Models\User;
 use Exception;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -186,22 +186,22 @@ class UserTypeTest extends TestCase
         $privateProject = $this->makePrivateProject();
 
         $projectUser = User::factory()->create();
-        $publicProject->users()->attach($projectUser, ['role' => Project::PROJECT_USER]);
-        $protectedProject->users()->attach($projectUser, ['role' => Project::PROJECT_USER]);
-        $privateProject->users()->attach($projectUser, ['role' => Project::PROJECT_USER]);
+        $publicProject->users()->attach($projectUser, ['role' => ProjectRole::USER]);
+        $protectedProject->users()->attach($projectUser, ['role' => ProjectRole::USER]);
+        $privateProject->users()->attach($projectUser, ['role' => ProjectRole::USER]);
 
         if ($user === 'normal') {
             $user = User::factory()->create();
         } elseif ($user === 'project_member') {
             $user = User::factory()->create();
-            $publicProject->users()->attach($user, ['role' => Project::PROJECT_USER]);
-            $protectedProject->users()->attach($user, ['role' => Project::PROJECT_USER]);
-            $privateProject->users()->attach($user, ['role' => Project::PROJECT_USER]);
+            $publicProject->users()->attach($user, ['role' => ProjectRole::USER]);
+            $protectedProject->users()->attach($user, ['role' => ProjectRole::USER]);
+            $privateProject->users()->attach($user, ['role' => ProjectRole::USER]);
         } elseif ($user === 'project_admin') {
             $user = User::factory()->create();
-            $publicProject->users()->attach($user, ['role' => Project::PROJECT_ADMIN]);
-            $protectedProject->users()->attach($user, ['role' => Project::PROJECT_ADMIN]);
-            $privateProject->users()->attach($user, ['role' => Project::PROJECT_ADMIN]);
+            $publicProject->users()->attach($user, ['role' => ProjectRole::ADMINISTRATOR]);
+            $protectedProject->users()->attach($user, ['role' => ProjectRole::ADMINISTRATOR]);
+            $privateProject->users()->attach($user, ['role' => ProjectRole::ADMINISTRATOR]);
         } elseif ($user === 'admin') {
             $user = User::factory()->adminUser()->create();
         } elseif ($user === null) {

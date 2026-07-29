@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\GraphQL;
 
+use App\Enums\ProjectRole;
 use App\Models\Project;
 use App\Models\Site;
 use App\Models\User;
@@ -56,11 +57,11 @@ class SiteTypeTest extends TestCase
 
         $this->projects['public1']
             ->users()
-            ->attach($this->users['normal']->id, $user2project_data + ['role' => Project::PROJECT_USER]);
+            ->attach($this->users['normal']->id, $user2project_data + ['role' => ProjectRole::USER]);
 
         $this->projects['private1']
             ->users()
-            ->attach($this->users['normal']->id, $user2project_data + ['role' => Project::PROJECT_USER]);
+            ->attach($this->users['normal']->id, $user2project_data + ['role' => ProjectRole::USER]);
     }
 
     protected function tearDown(): void

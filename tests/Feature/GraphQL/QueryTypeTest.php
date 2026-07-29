@@ -3,6 +3,7 @@
 namespace Tests\Feature\GraphQL;
 
 use App\Enums\BuildCommandType;
+use App\Enums\ProjectRole;
 use App\Models\AuthToken;
 use App\Models\BuildCommand;
 use App\Models\DynamicAnalysis;
@@ -186,7 +187,7 @@ class QueryTypeTest extends TestCase
                 'emailcategory' => 0,
                 'emailsuccess' => true,
                 'emailmissingsites' => true,
-                'role' => Project::PROJECT_ADMIN,
+                'role' => ProjectRole::ADMINISTRATOR,
             ]);
         /** @var BuildCommand $command1 */
         $command1 = $project1->builds()->create([
@@ -260,7 +261,7 @@ class QueryTypeTest extends TestCase
                 'emailcategory' => 0,
                 'emailsuccess' => true,
                 'emailmissingsites' => true,
-                'role' => Project::PROJECT_ADMIN,
+                'role' => ProjectRole::ADMINISTRATOR,
             ]);
         /** @var DynamicAnalysis $da1 */
         $da1 = $project1->builds()->create([
@@ -401,7 +402,7 @@ class QueryTypeTest extends TestCase
         $project1 = $this->makePrivateProject();
         $project1->users()
             ->attach($user->id, [
-                'role' => Project::PROJECT_ADMIN,
+                'role' => ProjectRole::ADMINISTRATOR,
             ]);
         /** @var Test $test1 */
         $test1 = $project1->builds()->create([

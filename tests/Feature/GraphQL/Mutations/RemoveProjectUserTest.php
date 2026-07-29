@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\GraphQL\Mutations;
 
+use App\Enums\ProjectRole;
 use App\Models\Project;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -47,7 +48,7 @@ class RemoveProjectUserTest extends TestCase
         $this->users[] = $user;
 
         $this->project->users()->attach($user->id, [
-            'role' => $admin ? Project::PROJECT_ADMIN : Project::PROJECT_USER,
+            'role' => $admin ? ProjectRole::ADMINISTRATOR : ProjectRole::USER,
         ]);
 
         return $user;

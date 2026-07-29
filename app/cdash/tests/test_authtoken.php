@@ -2,6 +2,7 @@
 
 require_once __DIR__ . '/cdash_test_case.php';
 
+use App\Enums\ProjectRole;
 use App\Models\AuthToken;
 use App\Models\Project as EloquentProject;
 use App\Models\User;
@@ -60,7 +61,7 @@ class AuthTokenTestCase extends KWWebTestCase
                 'emailcategory' => 126,
                 'emailsuccess' => false,
                 'emailmissingsites' => false,
-                'role' => EloquentProject::PROJECT_USER,
+                'role' => ProjectRole::USER,
             ]);
     }
 

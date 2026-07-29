@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ProjectRole;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
@@ -138,9 +139,6 @@ class Project extends Model
         'authenticatesubmissions' => false,
     ];
 
-    public const PROJECT_ADMIN = 2;
-    public const PROJECT_USER = 0;
-
     public const ACCESS_PRIVATE = 0;
     public const ACCESS_PUBLIC = 1;
     public const ACCESS_PROTECTED = 2;
@@ -194,7 +192,7 @@ class Project extends Model
     public function basicUsers(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'user2project', 'projectid', 'userid')
-            ->wherePivot('role', self::PROJECT_USER);
+            ->wherePivot('role', ProjectRole::USER);
     }
 
     /**
@@ -205,7 +203,7 @@ class Project extends Model
     public function administrators(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'user2project', 'projectid', 'userid')
-            ->wherePivot('role', self::PROJECT_ADMIN);
+            ->wherePivot('role', ProjectRole::ADMINISTRATOR);
     }
 
     /**

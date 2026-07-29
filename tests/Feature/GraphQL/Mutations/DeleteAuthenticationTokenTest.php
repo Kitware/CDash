@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\GraphQL\Mutations;
 
+use App\Enums\ProjectRole;
 use App\Models\AuthToken;
-use App\Models\Project;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
@@ -152,7 +152,7 @@ class DeleteAuthenticationTokenTest extends TestCase
         ]));
 
         $projectUser = User::factory()->create();
-        $project->users()->attach($projectUser, ['role' => Project::PROJECT_ADMIN]);
+        $project->users()->attach($projectUser, ['role' => ProjectRole::ADMINISTRATOR]);
 
         self::assertDatabaseCount(AuthToken::class, 1);
 
@@ -188,7 +188,7 @@ class DeleteAuthenticationTokenTest extends TestCase
         ]));
 
         $projectUser = User::factory()->create();
-        $project->users()->attach($projectUser, ['role' => Project::PROJECT_USER]);
+        $project->users()->attach($projectUser, ['role' => ProjectRole::USER]);
 
         self::assertDatabaseCount(AuthToken::class, 1);
 

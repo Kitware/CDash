@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Models\Project;
+use App\Enums\ProjectRole;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\UploadedFile;
@@ -63,7 +63,7 @@ class UpdateProjectLogoTest extends TestCase
     {
         $project = $this->makePublicProject();
         $user = User::factory()->create();
-        $project->users()->attach($user, ['role' => Project::PROJECT_USER]);
+        $project->users()->attach($user, ['role' => ProjectRole::USER]);
 
         $response = $this->actingAs($user)->postJson("/projects/{$project->id}/logo", [
             'logo' => UploadedFile::fake()->image('logo.jpg'),
@@ -78,7 +78,7 @@ class UpdateProjectLogoTest extends TestCase
         Storage::fake('public');
         $project = $this->makePublicProject();
         $user = User::factory()->create();
-        $project->users()->attach($user, ['role' => Project::PROJECT_ADMIN]);
+        $project->users()->attach($user, ['role' => ProjectRole::ADMINISTRATOR]);
 
         $response = $this->actingAs($user)->postJson("/projects/{$project->id}/logo", [
             'logo' => UploadedFile::fake()->image('logo.jpg'),

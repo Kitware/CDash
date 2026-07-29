@@ -160,7 +160,7 @@ class InviteToProjectTest extends TestCase
                 'emailcategory' => 0,
                 'emailsuccess' => true,
                 'emailmissingsites' => true,
-                'role' => Project::PROJECT_USER,
+                'role' => ProjectRole::USER,
             ]);
 
         $this->actingAs($this->users['normal'])->graphQL('
@@ -202,7 +202,7 @@ class InviteToProjectTest extends TestCase
                 'emailcategory' => 0,
                 'emailsuccess' => true,
                 'emailmissingsites' => true,
-                'role' => Project::PROJECT_ADMIN,
+                'role' => ProjectRole::ADMINISTRATOR,
             ]);
 
         $this->actingAs($this->users['normal'])->graphQL('
@@ -252,7 +252,7 @@ class InviteToProjectTest extends TestCase
                 'emailcategory' => 0,
                 'emailsuccess' => true,
                 'emailmissingsites' => true,
-                'role' => Project::PROJECT_ADMIN,
+                'role' => ProjectRole::ADMINISTRATOR,
             ]);
 
         $this->actingAs($this->users['normal'])->graphQL('
@@ -420,7 +420,7 @@ class InviteToProjectTest extends TestCase
                 'emailcategory' => 0,
                 'emailsuccess' => true,
                 'emailmissingsites' => true,
-                'role' => Project::PROJECT_USER,
+                'role' => ProjectRole::USER,
             ]);
 
         $this->actingAs($this->users['admin'])->graphQL('

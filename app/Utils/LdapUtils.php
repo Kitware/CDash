@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils;
 
+use App\Enums\ProjectRole;
 use App\Models\Project;
 use App\Models\User;
 use Exception;
@@ -57,7 +58,7 @@ class LdapUtils
             }
 
             if ($matches_ldap_filter && !$relationship_already_exists) {
-                $project->users()->attach($user->id, ['role' => Project::PROJECT_USER]);
+                $project->users()->attach($user->id, ['role' => ProjectRole::USER]);
                 Log::info("Added user $user->email to project $project->name.");
             } elseif (!$matches_ldap_filter && $relationship_already_exists) {
                 $project->users()->detach($user->id);

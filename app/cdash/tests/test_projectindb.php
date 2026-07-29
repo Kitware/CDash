@@ -4,6 +4,8 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
+use App\Enums\ProjectRole;
+
 require_once __DIR__ . '/cdash_test_case.php';
 
 class ProjectInDbTestCase extends KWWebTestCase
@@ -63,7 +65,7 @@ class ProjectInDbTestCase extends KWWebTestCase
         $query = 'SELECT userid, role, emailtype, emailcategory FROM user2project WHERE projectid=' . $this->projecttestid;
         $result = $this->db->query($query);
         $expected = ['userid' => 1,
-            'role' => 2,
+            'role' => ProjectRole::ADMINISTRATOR->value,
             'emailtype' => 3,
             'emailcategory' => 126];
         $this->assertEqual($result[0], $expected);

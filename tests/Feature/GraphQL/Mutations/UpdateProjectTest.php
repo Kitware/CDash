@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\GraphQL\Mutations;
 
-use App\Models\Project;
+use App\Enums\ProjectRole;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Config;
@@ -87,7 +87,7 @@ class UpdateProjectTest extends TestCase
         $project = $this->makePublicProject();
         $original_name = $project->name;
         $user = User::factory()->create();
-        $project->users()->attach($user, ['role' => Project::PROJECT_USER]);
+        $project->users()->attach($user, ['role' => ProjectRole::USER]);
 
         $this->actingAs($user)->graphQL('
             mutation updateProject($input: UpdateProjectInput!) {
@@ -111,7 +111,7 @@ class UpdateProjectTest extends TestCase
     {
         $project = $this->makePublicProject();
         $user = User::factory()->create();
-        $project->users()->attach($user, ['role' => Project::PROJECT_ADMIN]);
+        $project->users()->attach($user, ['role' => ProjectRole::ADMINISTRATOR]);
 
         $name = Str::uuid()->toString();
         $this->actingAs($user)->graphQL('
@@ -355,7 +355,7 @@ class UpdateProjectTest extends TestCase
             $user = User::factory()->adminUser()->create();
         } elseif ($userRole === 'project_admin') {
             $user = User::factory()->create();
-            $project->users()->attach($user, ['role' => Project::PROJECT_ADMIN]);
+            $project->users()->attach($user, ['role' => ProjectRole::ADMINISTRATOR]);
         }
 
         $response = $this->actingAs($user)->graphQL('
@@ -413,7 +413,7 @@ class UpdateProjectTest extends TestCase
             $user = User::factory()->adminUser()->create();
         } elseif ($userRole === 'project_admin') {
             $user = User::factory()->create();
-            $project->users()->attach($user, ['role' => Project::PROJECT_ADMIN]);
+            $project->users()->attach($user, ['role' => ProjectRole::ADMINISTRATOR]);
         }
 
         $response = $this->actingAs($user)->graphQL('
