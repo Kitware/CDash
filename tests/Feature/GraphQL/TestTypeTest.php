@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\GraphQL;
 
+use App\Models\Label;
 use App\Models\Project;
 use App\Models\Test;
 use App\Models\TestOutput;
@@ -342,9 +343,7 @@ class TestTypeTest extends TestCase
             'testname' => Str::uuid()->toString(),
             'outputid' => $this->test_output->id,
             'status' => 'passed',
-        ])->labels()->create([
-            'text' => Str::uuid()->toString(),
-        ]);
+        ])->labels()->save(Label::factory()->make());
 
         $this->graphQL('
             query build($id: ID) {
@@ -408,13 +407,9 @@ class TestTypeTest extends TestCase
             'status' => 'passed',
         ]);
 
-        $label1 = $test->labels()->create([
-            'text' => Str::uuid()->toString(),
-        ]);
+        $label1 = $test->labels()->save(Label::factory()->make());
 
-        $label2 = $test->labels()->create([
-            'text' => Str::uuid()->toString(),
-        ]);
+        $label2 = $test->labels()->save(Label::factory()->make());
 
         $this->graphQL('
             query build($id: ID, $labeltext: String!) {

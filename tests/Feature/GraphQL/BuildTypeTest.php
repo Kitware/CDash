@@ -6,6 +6,7 @@ use App\Enums\BuildCommandType;
 use App\Models\Build;
 use App\Models\BuildCommand;
 use App\Models\CoverageFile;
+use App\Models\Label;
 use App\Models\Project;
 use App\Models\Target;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -218,9 +219,7 @@ class BuildTypeTest extends TestCase
             'uuid' => Str::uuid()->toString(),
         ]);
 
-        $label = $build->labels()->create([
-            'text' => Str::uuid()->toString(),
-        ]);
+        $label = $build->labels()->save(Label::factory()->make());
 
         $this->graphQL('
             query build($id: ID) {
@@ -264,13 +263,9 @@ class BuildTypeTest extends TestCase
             'uuid' => Str::uuid()->toString(),
         ]);
 
-        $label1 = $build->labels()->create([
-            'text' => Str::uuid()->toString(),
-        ]);
+        $label1 = $build->labels()->save(Label::factory()->make());
 
-        $label2 = $build->labels()->create([
-            'text' => Str::uuid()->toString(),
-        ]);
+        $label2 = $build->labels()->save(Label::factory()->make());
 
         $this->graphQL('
             query build($id: ID, $labeltext: String!) {

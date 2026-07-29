@@ -4,6 +4,7 @@ namespace Tests\Browser\Pages;
 
 use App\Models\Build;
 use App\Models\Image;
+use App\Models\Label;
 use App\Models\Project;
 use App\Models\Site;
 use App\Models\SiteInformation;
@@ -101,8 +102,8 @@ class TestsIdPageTest extends BrowserTestCase
             'status' => 'failed',
         ]);
 
-        $label1 = $test->labels()->create(['text' => (string) Str::uuid()]);
-        $label2 = $test->labels()->create(['text' => (string) Str::uuid()]);
+        $label1 = $test->labels()->save(Label::factory()->make());
+        $label2 = $test->labels()->save(Label::factory()->make());
 
         $this->browse(function (Browser $browser) use ($test, $label1, $label2): void {
             $browser->visit("/tests/{$test->id}")

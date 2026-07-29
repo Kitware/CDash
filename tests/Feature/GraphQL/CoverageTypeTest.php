@@ -145,9 +145,7 @@ class CoverageTypeTest extends TestCase
             'uuid' => Str::uuid()->toString(),
         ])->coverageResults()->create([
             'fileid' => $coverageFile->id,
-        ])->labels()->create([
-            'text' => Str::uuid()->toString(),
-        ]);
+        ])->labels()->save(Label::factory()->make());
         $this->labels[] = $label;
 
         $this->graphQL('
