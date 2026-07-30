@@ -307,8 +307,9 @@ class ProjectSettingsPageTest extends BrowserTestCase
                 ->waitFor('@test-measurements-tab-link')
                 ->click('@test-measurements-tab-link')
                 ->whenAvailable('@test-measurements-tab', function (Browser $browser) use ($m1, $m2): void {
-                    $browser->assertSee('No pinned test measurements yet.')
+                    $browser->waitForText('No pinned test measurements yet.')
                         ->type('@new-test-measurement-input', $m1)
+                        ->waitFor('@add-test-measurement-button')
                         ->click('@add-test-measurement-button')
                         ->waitForText($m1)
                         ->assertDontSee('No pinned test measurements yet.')
