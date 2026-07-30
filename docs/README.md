@@ -4,3 +4,4 @@
 * [Authentication options](authentication.md)
 * [Submission parsing](submissions.md)
 * [Test measurements](test_measurements.md)
+* [GraphQL API](graphql.md)
