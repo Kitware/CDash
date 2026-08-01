@@ -46,7 +46,7 @@
   "require-dev": {
     "ext-zip": "*",
     "fakerphp/faker": "1.24.1",
-    "friendsofphp/php-cs-fixer": "3.95.10",
+    "friendsofphp/php-cs-fixer": "3.95.17",
     "larastan/larastan": "3.10.0",
     "laravel/dusk": "8.6.0",
     "mockery/mockery": "1.6.12",
