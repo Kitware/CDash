@@ -22,6 +22,7 @@ final class ProjectMembersController extends AbstractProjectController
         return $this->vue('project-members-page', 'Members', [
             'project-id' => $this->project->Id,
             'user-id' => $user?->id,
+            'can-update' => $user?->can('update', $eloquentProject) ?? false,
             'can-invite-users' => $user?->can('inviteUser', $eloquentProject) ?? false,
             'can-remove-users' => $user?->can('removeUser', $eloquentProject) ?? false,
             'can-join-project' => $user?->can('join', $eloquentProject) ?? false,

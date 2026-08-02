@@ -220,7 +220,7 @@
       >
         <template #role="{ props: { user: user, value: role } }">
           <select
-            v-if="canInviteUsers && parseInt(user.id) !== parseInt(userId)"
+            v-if="canUpdate && parseInt(user.id) !== parseInt(userId)"
             class="tw-select tw-select-bordered tw-w-full tw-select-sm"
             data-test="role-select"
             @change="changeUserRole($event, user)"
@@ -285,6 +285,11 @@ export default {
 
     userId: {
       type: [Number, null],
+      required: true,
+    },
+
+    canUpdate: {
+      type: Boolean,
       required: true,
     },
 
