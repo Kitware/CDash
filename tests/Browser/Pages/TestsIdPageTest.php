@@ -330,10 +330,20 @@ class TestsIdPageTest extends BrowserTestCase
         });
     }
 
+    public static function validImageRoleProvider(): array
+    {
+        return [
+            'ValidImage' => ['ValidImage'],
+            // BaselineImage is accepted as an alternative to ValidImage for backwards compatibility.
+            'BaselineImage' => ['BaselineImage'],
+        ];
+    }
+
     /**
      * @throws RandomException
      */
-    public function testImagesSectionVisibility(): void
+    #[DataProvider('validImageRoleProvider')]
+    public function testImagesSectionVisibility(string $validImageRole): void
     {
         /** @var Test $test */
         $test = $this->createTest([
@@ -367,7 +377,7 @@ class TestsIdPageTest extends BrowserTestCase
                 });
         });
 
-        // Add a ValidImage for interactive comparison
+        // Add a ValidImage (or BaselineImage) for interactive comparison
         $image2 = Image::create([
             'img' => (string) Str::uuid(),
             'extension' => 'png',
@@ -375,14 +385,18 @@ class TestsIdPageTest extends BrowserTestCase
         ]);
         $test->testImages()->create([
             'imgid' => $image2->id,
-            'role' => 'ValidImage',
+            'role' => $validImageRole,
         ]);
 
-        $this->browse(function (Browser $browser) use ($test): void {
+        $this->browse(function (Browser $browser) use ($test, $validImageRole): void {
             $browser->visit("/tests/{$test->id}")
                 ->waitForText($test->testname)
                 ->waitFor('@interactive-image')
-                ->assertVisible('@interactive-image');
+                ->assertVisible('@interactive-image')
+                ->within('@interactive-image', function (Browser $browser) use ($validImageRole): void {
+                    $browser->assertPresent('img[alt="TestImage"]')
+                        ->assertPresent('img[alt="' . $validImageRole . '"]');
+                });
         });
     }
 

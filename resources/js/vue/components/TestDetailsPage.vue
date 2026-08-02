@@ -567,7 +567,8 @@ export default {
       const testImages = [];
 
       this.test.testImages.edges.forEach(({ node: image }) => {
-        if (image.role === 'ValidImage') {
+        // BaselineImage is accepted as an alternative to ValidImage for backwards compatibility.
+        if (image.role === 'ValidImage' || image.role === 'BaselineImage') {
           validImages.push(image);
         } else if (image.role === 'TestImage') {
           testImages.push(image);
