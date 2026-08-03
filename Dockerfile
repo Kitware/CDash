@@ -10,7 +10,7 @@ ARG DEVELOPMENT_BUILD
 ###############################################################################
 # The base image for regular Debian-based images
 ###############################################################################
-FROM php:8.3-apache-trixie AS cdash-debian-intermediate
+FROM php:8.4-apache-trixie AS cdash-debian-intermediate
 
 ARG BASE_IMAGE
 ARG DEVELOPMENT_BUILD
@@ -133,7 +133,7 @@ ENTRYPOINT ["/bin/bash", "/cdash/docker/docker-entrypoint.sh"]
 # The base image for UBI-based images
 ###############################################################################
 
-FROM registry.access.redhat.com/ubi9/php-83 AS cdash-ubi-intermediate
+FROM registry.access.redhat.com/ubi10/php-84 AS cdash-ubi-intermediate
 
 ARG BASE_IMAGE
 ARG DEVELOPMENT_BUILD
@@ -164,14 +164,7 @@ RUN dnf install -y \
       git \
       vim \
       unzip \
-      zip \
-      #> cdash
-      php-bcmath \
-      php-gd \
-      php-ldap \
-      php-mbstring \
-      php-pdo \
-      php-opcache
+      zip
 
 RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then \
       dnf install -y \
@@ -181,18 +174,11 @@ RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then \
           --noplugins \
           --setopt=install_weak_deps=0 \
           rsync \
-      #> A horrible hack to get a newer version of CMake.  As of the time of this
-      #> writing, Red Hat UBI uses CMake 3.20, while our scripts require CMake>=3.22.
-      #> This should be replaced with a more acceptable solution at a future point
-      #> in time, whenever Red Had updates the default version of CMake.
-          python-pip && \
-      pip install cmake --upgrade && \
-      dnf remove -y python-pip; \
+          cmake; \
     fi
 
 # certs, timezone, accounts
 RUN chmod -R g=u,o-w /etc/pki/ca-trust/extracted /etc/pki/ca-trust/source/anchors && \
-	  update-ca-trust enable && \
 	  update-ca-trust extract
 
 # Allow PHP to access all environment variables.
