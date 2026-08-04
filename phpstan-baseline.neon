@@ -1537,6 +1537,12 @@ parameters:
 			path: app/Http/Controllers/UserController.php
 
 		-
+			rawMessage: 'Parameter #1 $password of function password_hash expects string, mixed given.'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/UserController.php
+
+		-
 			rawMessage: 'Parameter #1 $password of function password_verify expects string, mixed given.'
 			identifier: argument.type
 			count: 1
@@ -1791,6 +1797,18 @@ parameters:
 		-
 			rawMessage: 'Method App\Http\Submission\Handlers\AbstractXmlHandler::text() has parameter $parser with no type specified.'
 			identifier: missingType.parameter
+			count: 1
+			path: app/Http/Submission/Handlers/AbstractXmlHandler.php
+
+		-
+			rawMessage: 'Parameter #1 $filename of method DOMDocument::load() expects non-empty-string, string given.'
+			identifier: argument.type
+			count: 3
+			path: app/Http/Submission/Handlers/AbstractXmlHandler.php
+
+		-
+			rawMessage: 'Parameter #1 $filename of method DOMDocument::schemaValidate() expects non-empty-string, string given.'
+			identifier: argument.type
 			count: 1
 			path: app/Http/Submission/Handlers/AbstractXmlHandler.php
 
@@ -3097,6 +3115,12 @@ parameters:
 			rawMessage: 'Cannot call method isFile() on mixed.'
 			identifier: method.nonObject
 			count: 1
+			path: app/Http/Submission/Handlers/GcovTarHandler.php
+
+		-
+			rawMessage: Coalesce operator ?? is unnecessary because the left side is always set and the right side is null.
+			identifier: nullCoalesce.unnecessary
+			count: 2
 			path: app/Http/Submission/Handlers/GcovTarHandler.php
 
 		-
@@ -5611,7 +5635,7 @@ parameters:
 			path: app/Utils/RepositoryUtils.php
 
 		-
-			rawMessage: 'Offset 1 might not exist on array{}|array{non-falsy-string, decimal-int-string}.'
+			rawMessage: 'Offset 1 might not exist on array{}|array{non-falsy-string, numeric-string}.'
 			identifier: offsetAccess.notFound
 			count: 1
 			path: app/Utils/RepositoryUtils.php
@@ -5881,7 +5905,7 @@ parameters:
 			path: app/Utils/TestCreator.php
 
 		-
-			rawMessage: 'Parameter #1 $string of function crc32 expects string, string|false given.'
+			rawMessage: 'Parameter #1 $string of function crc32 expects string, (string|false) given.'
 			identifier: argument.type
 			count: 1
 			path: app/Utils/TestCreator.php
@@ -12112,7 +12136,7 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
-			rawMessage: 'Parameter #1 $source of method DOMDocument::loadXML() expects string, string|false given.'
+			rawMessage: 'Parameter #1 $source of method DOMDocument::loadXML() expects non-empty-string, string|false given.'
 			identifier: argument.type
 			count: 1
 			path: app/cdash/include/common.php
@@ -15100,7 +15124,7 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			rawMessage: 'Offset 1 on array{non-falsy-string, decimal-int-string} in isset() always exists and is not nullable.'
+			rawMessage: 'Offset 1 on array{non-falsy-string, numeric-string} in isset() always exists and is not nullable.'
 			identifier: isset.offset
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
@@ -15202,6 +15226,12 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
+			rawMessage: 'Parameter #1 $source of method DOMDocument::loadHTML() expects non-empty-string, string given.'
+			identifier: argument.type
+			count: 1
+			path: app/cdash/tests/kwtest/kw_web_tester.php
+
+		-
 			rawMessage: 'Parameter #1 $stream of function fclose expects resource, resource|false given.'
 			identifier: argument.type
 			count: 2
@@ -15265,6 +15295,12 @@ parameters:
 			rawMessage: 'Part $page (object) of encapsed string cannot be cast to string.'
 			identifier: encapsedStringPart.nonString
 			count: 1
+			path: app/cdash/tests/kwtest/kw_web_tester.php
+
+		-
+			rawMessage: 'Path in require() __DIR__ . ''/../bootstrap/app.php'' is not a file or it does not exist.'
+			identifier: require.fileNotFound
+			count: 2
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
@@ -22702,12 +22738,6 @@ parameters:
 			rawMessage: Using nullsafe property access on non-nullable type App\Models\Project. Use -> instead.
 			identifier: nullsafe.neverNull
 			count: 3
-			path: tests/Feature/GraphQL/Mutations/JoinProjectTest.php
-
-		-
-			rawMessage: Using nullsafe property access on non-nullable type App\Models\User. Use -> instead.
-			identifier: nullsafe.neverNull
-			count: 2
 			path: tests/Feature/GraphQL/Mutations/JoinProjectTest.php
 
 		-
