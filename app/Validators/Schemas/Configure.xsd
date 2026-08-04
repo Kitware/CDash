@@ -55,7 +55,7 @@
                           <xs:attribute name="duration" use="required" type="xs:integer"/>
                           <xs:attribute name="result" use="required"/>
                           <xs:attribute name="timeStart" use="required" type="xs:integer"/>
-                          <xs:attribute name="version" use="optional"  type="xs:integer"/>
+                          <xs:attribute name="version" use="optional" type="xs:integer"/>
                         </xs:complexType>
                       </xs:element>
                     </xs:choice>
