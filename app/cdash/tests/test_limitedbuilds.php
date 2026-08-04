@@ -9,6 +9,7 @@ require_once __DIR__ . '/cdash_test_case.php';
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\Project;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class LimitedBuildsTestCase extends KWWebTestCase
@@ -58,13 +59,20 @@ class LimitedBuildsTestCase extends KWWebTestCase
 
         $project = App\Models\Project::findOrFail((int) $this->Projects[0]->Id);
 
-        // Submit two builds to the 'Limited' project.
-        // The second submission will cause the first build to get deleted.
+        // Submit three builds to the 'Limited' project.
+        // The second submission will not cause the first build to get deleted because it's been
+        // than 10 minutes since the previous build.  Flushing the cache expires the record and
+        // means submitting the 3rd build will cause the first two to be deleted.
         $this->submitBuild(1, 'Limited');
         $this->assertEqual($project->refresh()->builds()->count(), 1);
 
         $this->get_build_stmt->execute([$this->Projects[0]->Id]);
         $buildid1 = $this->get_build_stmt->fetchColumn();
+
+        $this->submitBuild(2, 'Limited');
+        $this->assertEqual($project->refresh()->builds()->count(), 2);
+
+        Cache::flush();
 
         $this->submitBuild(2, 'Limited');
         $this->assertEqual($project->refresh()->builds()->count(), 1);
