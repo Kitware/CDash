@@ -5,10 +5,10 @@ set -e
 # Set job control so we can bg/fg processes
 set -m
 
-php artisan key:check || exit 1
 
 # If the "start-website" argument was provided, start the web server
 if [ "$1" = "start-website" ] ; then
+  php artisan key:check || exit 1
   if [ "$DEVELOPMENT_BUILD" = "1" ]; then
     echo "Skipping background jobs in development mode..."
   else
@@ -42,6 +42,7 @@ if [ "$1" = "start-website" ] ; then
 
 # If the start-worker argument was provided, start a worker process instead
 elif [ "$1" = "start-worker" ] ; then
+  php artisan key:check || exit 1
   php artisan storage:mkdirs
   php -d memory_limit=-1 artisan queue:work --verbose --max-time=3600 --memory=${WORKER_MEMORY_LIMIT:-256}
 
