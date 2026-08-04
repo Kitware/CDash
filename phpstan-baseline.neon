@@ -22894,24 +22894,12 @@ parameters:
 			path: tests/Feature/LdapIntegration.php
 
 		-
-			rawMessage: 'Call to an undefined method Mockery\Expectation::shouldReceive().'
-			identifier: method.notFound
-			count: 2
-			path: tests/Feature/LoginAndRegistration.php
-
-		-
 			rawMessage: '''
 				Call to deprecated method forceRootUrl() of class Illuminate\Routing\UrlGenerator:
 				Use useOrigin
 			'''
 			identifier: staticMethod.deprecated
 			count: 1
-			path: tests/Feature/LoginAndRegistration.php
-
-		-
-			rawMessage: 'Call to method shouldReceive() on an unknown class Laravel\Socialite\PingIdentity\Provider.'
-			identifier: class.notFound
-			count: 2
 			path: tests/Feature/LoginAndRegistration.php
 
 		-
