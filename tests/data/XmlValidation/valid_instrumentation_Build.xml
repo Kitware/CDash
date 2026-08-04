@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="dummy_build_name"
+  BuildStamp="dummy_stamp"
+  Name="dummy_name"
+  >
+	<Build>
+		<StartDateTime>Aug 04 09:20 EDT</StartDateTime>
+		<StartBuildTime>1785849630</StartBuildTime>
+		<SourceDirectory>../cdash-examples/shared-src</SourceDirectory>
+		<BinaryDirectory>../cdash-examples/5-instrumentation/bin</BinaryDirectory>
+		<BuildCommand>cmake --build . --config "Release"</BuildCommand>
+		<Failure type="Error">
+			<!-- Meta-information about the build action -->
+			<Action>
+				<TargetName>error</TargetName>
+				<Language>C++</Language>
+				<SourceFile>error.cxx</SourceFile>
+				<OutputFile>CMakeFiles/error.dir/error.cxx.o</OutputFile>
+				<OutputType>object file</OutputType>
+			</Action>
+			<!-- Details of command -->
+			<Command>
+				<WorkingDirectory>./cdash-examples/5-instrumentation/bin</WorkingDirectory>
+				<Argument>/usr/bin/c++</Argument>
+				<Argument>--coverage</Argument>
+				<Argument>-g</Argument>
+				<Argument>-MD</Argument>
+				<Argument>-MT</Argument>
+				<Argument>CMakeFiles/error.dir/error.cxx.o</Argument>
+				<Argument>-MF</Argument>
+				<Argument>CMakeFiles/error.dir/error.cxx.o.d</Argument>
+				<Argument>-o</Argument>
+				<Argument>CMakeFiles/error.dir/error.cxx.o</Argument>
+				<Argument>-c</Argument>
+				<Argument>../cdash-examples/shared-src/error.cxx</Argument>
+			</Command>
+			<!-- Result of command -->
+			<Result>
+				<StdOut/>
+				<StdErr>../cdash-examples/shared-src/error.cxx: In function ‘int main(int, char**)’:
+../cdash-examples/shared-src/error.cxx:3:3: error: ‘asdf’ was not declared in this scope
+    3 |   asdf();
+      |   ^~~~</StdErr>
+				<ExitCondition>1</ExitCondition>
+			</Result>
+		</Failure>
+		<Targets>
+			<Target name="fails" type="EXECUTABLE">
+				<Commands>
+					<Compile cmakeContent="content/cmake-2026-08-04T13-20-30-0838.json" command="/usr/bin/c++ (truncated)" config="Debug" duration="446" language="C++" result="0" source="/home/softhat/Work/LANL/cdash-examples/shared-src/fails.cxx" timeStart="1785849631748" workingDir="/home/softhat/Work/LANL/cdash-examples/5-instrumentation/bin">
+						<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
+							<Value>1.5283203125</Value>
+						</NamedMeasurement>
+						<Outputs>
+							<Output name="CMakeFiles/fails.dir/fails.cxx.o" size="31464"/>
+						</Outputs>
+					</Compile>
+					<Link cmakeContent="content/cmake-2026-08-04T13-20-30-0838.json" command="/usr/bin/c++ (truncated)" config="Debug" duration="128" language="C++" result="0" timeStart="1785849632222" workingDir="/home/softhat/Work/LANL/cdash-examples/5-instrumentation/bin">
+						<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
+							<Value>1.5283203125</Value>
+						</NamedMeasurement>
+						<Outputs>
+							<Output name="fails" size="43104"/>
+						</Outputs>
+					</Link>
+				</Commands>
+			</Target>
+			<Target name="error" type="EXECUTABLE">
+				<Commands>
+					<Compile cmakeContent="content/cmake-2026-08-04T13-20-30-0838.json" command="/usr/bin/c++ (truncated)" config="Debug" duration="25" language="C++" result="1" source="/home/softhat/Work/LANL/cdash-examples/shared-src/error.cxx" timeStart="1785849632402" workingDir="/home/softhat/Work/LANL/cdash-examples/5-instrumentation/bin">
+						<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
+							<Value>1.5283203125</Value>
+						</NamedMeasurement>
+						<Outputs>
+							<Output name="CMakeFiles/error.dir/error.cxx.o" size="0"/>
+						</Outputs>
+					</Compile>
+				</Commands>
+			</Target>
+			<Target name="passes" type="EXECUTABLE">
+				<Commands>
+					<Link cmakeContent="content/cmake-2026-08-04T13-20-30-0838.json" command="/usr/bin/c++ (truncated)" config="Debug" duration="186" language="C++" result="0" timeStart="1785849631503" workingDir="/home/softhat/Work/LANL/cdash-examples/5-instrumentation/bin">
+						<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
+							<Value>1.5283203125</Value>
+						</NamedMeasurement>
+						<Outputs>
+							<Output name="passes" size="43056"/>
+						</Outputs>
+					</Link>
+					<Compile cmakeContent="content/cmake-2026-08-04T13-20-30-0838.json" command="/usr/bin/c++ (truncated)" config="Debug" duration="513" language="C++" result="0" source="/home/softhat/Work/LANL/cdash-examples/shared-src/passes.cxx" timeStart="1785849630954" workingDir="/home/softhat/Work/LANL/cdash-examples/5-instrumentation/bin">
+						<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
+							<Value>1.5283203125</Value>
+						</NamedMeasurement>
+						<Outputs>
+							<Output name="CMakeFiles/passes.dir/passes.cxx.o" size="31024"/>
+						</Outputs>
+					</Compile>
+				</Commands>
+			</Target>
+		</Targets>
+		<Commands>
+			<CmakeBuild cmakeContent="content/cmake-2026-08-04T13-20-30-0838.json" command="/home/softhat/Work/cmake-build/bin/cmake (truncated)" duration="1566" result="2" timeStart="1785849630867" workingDir="/home/softhat/Work/LANL/cdash-examples/5-instrumentation/bin">
+				<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
+					<Value>1.5283203125</Value>
+				</NamedMeasurement>
+			</CmakeBuild>
+		</Commands>
+		<Log Encoding="base64" Compression="bin/gzip"/>
+		<EndDateTime>Aug 04 09:20 EDT</EndDateTime>
+		<EndBuildTime>1785849632</EndBuildTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Build>
+</Site>
