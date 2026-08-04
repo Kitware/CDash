@@ -123,6 +123,7 @@
                                               <xs:element maxOccurs="unbounded" ref="Outputs"/>
                                             </xs:choice>
                                           </xs:sequence>
+                                          <xs:attribute name="cmakeContent" use="optional"/>
                                           <xs:attribute name="command" use="required"/>
                                           <xs:attribute name="workingDir" use="required"/>
                                           <xs:attribute name="config" use="required"/>
@@ -131,7 +132,7 @@
                                           <xs:attribute name="result" use="required"/>
                                           <xs:attribute name="source" use="required"/>
                                           <xs:attribute name="timeStart" use="required" type="xs:integer"/>
-                                          <xs:attribute name="version" use="required" type="xs:integer"/>
+                                          <xs:attribute name="version" use="optional" type="xs:integer"/>
                                         </xs:complexType>
                                       </xs:element>
                                       <xs:element name="Link">
@@ -142,6 +143,7 @@
                                               <xs:element maxOccurs="unbounded" ref="Outputs"/>
                                             </xs:choice>
                                           </xs:sequence>
+                                          <xs:attribute name="cmakeContent" use="optional"/>
                                           <xs:attribute name="command" use="required"/>
                                           <xs:attribute name="workingDir" use="required"/>
                                           <xs:attribute name="config" use="required"/>
@@ -149,7 +151,7 @@
                                           <xs:attribute name="language" use="required"/>
                                           <xs:attribute name="result" use="required"/>
                                           <xs:attribute name="timeStart" use="required" type="xs:integer"/>
-                                          <xs:attribute name="version" use="required" type="xs:integer"/>
+                                          <xs:attribute name="version" use="optional" type="xs:integer"/>
                                         </xs:complexType>
                                       </xs:element>
                                     </xs:choice>
@@ -173,12 +175,13 @@
                               <xs:sequence>
                                 <xs:element maxOccurs="unbounded" ref="NamedMeasurement"/>
                               </xs:sequence>
+                              <xs:attribute name="cmakeContent" use="optional"/>
                               <xs:attribute name="command" use="required"/>
                               <xs:attribute name="workingDir" use="required"/>
                               <xs:attribute name="duration" use="required" type="xs:integer"/>
                               <xs:attribute name="result" use="required"/>
                               <xs:attribute name="timeStart" use="required" type="xs:integer"/>
-                              <xs:attribute name="version" use="required" type="xs:integer"/>
+                              <xs:attribute name="version" use="optional" type="xs:integer"/>
                             </xs:complexType>
                           </xs:element>
                           <xs:element name="CmakeInstall">
@@ -186,12 +189,13 @@
                               <xs:sequence>
                                 <xs:element maxOccurs="unbounded" ref="NamedMeasurement"/>
                               </xs:sequence>
+                              <xs:attribute name="cmakeContent" use="optional"/>
                               <xs:attribute name="command" use="required"/>
                               <xs:attribute name="workingDir" use="required"/>
                               <xs:attribute name="duration" use="required" type="xs:integer"/>
                               <xs:attribute name="result" use="required"/>
                               <xs:attribute name="timeStart" use="required" type="xs:integer"/>
-                              <xs:attribute name="version" use="required" type="xs:integer"/>
+                              <xs:attribute name="version" use="optional" type="xs:integer"/>
                             </xs:complexType>
                           </xs:element>
                           <xs:element name="Custom">
@@ -202,12 +206,13 @@
                                   <xs:element maxOccurs="unbounded" ref="Outputs"/>
                                 </xs:choice>
                               </xs:sequence>
+                              <xs:attribute name="cmakeContent" use="optional"/>
                               <xs:attribute name="command" use="required"/>
                               <xs:attribute name="workingDir" use="required"/>
                               <xs:attribute name="duration" use="required" type="xs:integer"/>
                               <xs:attribute name="result" use="required"/>
                               <xs:attribute name="timeStart" use="required" type="xs:integer"/>
-                              <xs:attribute name="version" use="required" type="xs:integer"/>
+                              <xs:attribute name="version" use="optional" type="xs:integer"/>
                             </xs:complexType>
                           </xs:element>
                           <xs:element name="Install">
@@ -215,12 +220,13 @@
                               <xs:sequence>
                                 <xs:element maxOccurs="unbounded" ref="NamedMeasurement"/>
                               </xs:sequence>
+                              <xs:attribute name="cmakeContent" use="optional"/>
                               <xs:attribute name="command" use="required"/>
                               <xs:attribute name="workingDir" use="required"/>
                               <xs:attribute name="duration" use="required" type="xs:integer"/>
                               <xs:attribute name="result" use="required"/>
                               <xs:attribute name="timeStart" use="required" type="xs:integer"/>
-                              <xs:attribute name="version" use="required" type="xs:integer"/>
+                              <xs:attribute name="version" use="optional" type="xs:integer"/>
                             </xs:complexType>
                           </xs:element>
                         </xs:choice>
