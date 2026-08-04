@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
+use Laravel\Socialite\Two\User as SocialiteUser;
 use LogicException;
 use Mockery;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -364,23 +365,13 @@ class LoginAndRegistration extends TestCase
      */
     public function testPingIdentityProvider(): void
     {
-        // Stolen from: https://laracasts.com/discuss/channels/testing/testing-laravel-socialite-callback
-        $abstractUser = Mockery::mock('Laravel\Socialite\Two\User');
-        $abstractUser->shouldReceive('getId')
-        ->andReturn(1234567890)
-        ->shouldReceive('getEmail')
-        ->andReturn('cdash@test.com')
-        ->shouldReceive('getNickname')
-        ->andReturn('Pseudo')
-        ->shouldReceive('getName')
-        ->andReturn('Arlette Laguiller')
-        ->shouldReceive('getAvatar')
-        ->andReturn('https://en.gravatar.com/userimage');
-
-        $provider = Mockery::mock('Laravel\Socialite\PingIdentity\Provider');
-        $provider->shouldReceive('user')->andReturn($abstractUser);
-
-        Socialite::shouldReceive('driver')->with('pingidentity')->andReturn($provider);
+        Socialite::fake('pingidentity', SocialiteUser::fake([
+            'id' => 1234567890,
+            'email' => 'cdash@test.com',
+            'nickname' => 'Pseudo',
+            'name' => 'Arlette Laguiller',
+            'avatar' => 'https://en.gravatar.com/userimage',
+        ]));
 
         $response = $this->get('auth/pingidentity/callback');
         $response->assertRedirect('/profile');
@@ -388,23 +379,13 @@ class LoginAndRegistration extends TestCase
 
     public function testNoFullNamePingIdentityProvider(): void
     {
-        // Stolen from: https://laracasts.com/discuss/channels/testing/testing-laravel-socialite-callback
-        $abstractUser = Mockery::mock('Laravel\Socialite\Two\User');
-        $abstractUser->shouldReceive('getId')
-        ->andReturn(1234567890)
-        ->shouldReceive('getEmail')
-        ->andReturn('cdash@test.com')
-        ->shouldReceive('getNickname')
-        ->andReturn('Pseudo')
-        ->shouldReceive('getName')
-        ->andReturn('Pseudo')
-        ->shouldReceive('getAvatar')
-        ->andReturn('https://en.gravatar.com/userimage');
-
-        $provider = Mockery::mock('Laravel\Socialite\PingIdentity\Provider');
-        $provider->shouldReceive('user')->andReturn($abstractUser);
-
-        Socialite::shouldReceive('driver')->with('pingidentity')->andReturn($provider);
+        Socialite::fake('pingidentity', SocialiteUser::fake([
+            'id' => 1234567890,
+            'email' => 'cdash@test.com',
+            'nickname' => 'Pseudo',
+            'name' => 'Pseudo',
+            'avatar' => 'https://en.gravatar.com/userimage',
+        ]));
 
         $response = $this->get('auth/pingidentity/callback');
         $response->assertRedirect('/profile');
