@@ -9220,6 +9220,12 @@ parameters:
 			path: app/cdash/app/Model/Project.php
 
 		-
+			rawMessage: 'Method CDash\Model\Project::CheckForTooManyBuilds() throws checked exception Psr\SimpleCache\InvalidArgumentException but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
+			count: 1
+			path: app/cdash/app/Model/Project.php
+
+		-
 			rawMessage: 'Method CDash\Model\Project::ComputeTestingDayBounds() has parameter $date with no type specified.'
 			identifier: missingType.parameter
 			count: 1

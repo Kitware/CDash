@@ -30,6 +30,7 @@ use DateTime;
 use DateTimeZone;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use PDO;
@@ -500,6 +501,15 @@ class Project
         if ($max_builds === 0 || in_array($this->GetName(), config('cdash.unlimited_projects'))) {
             return false;
         }
+
+        // Fetching the exact build count is expensive, so don't do it if it's been less than
+        // 10 minutes since the last time we checked.  While this means build counts can temporarily
+        // be higher than the limit, it lightens the database load during peak hours.
+        $cache_key = "check_too_many_builds_project_{$this->Id}";
+        if (Cache::has($cache_key)) {
+            return false;
+        }
+        Cache::put($cache_key, true, 10 * 60);
 
         $project = EloquentProject::findOrFail((int) $this->Id);
         $num_builds = $project->builds()->onlyParents()->count();
