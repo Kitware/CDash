@@ -653,11 +653,8 @@ class BuildTypeTest extends TestCase
         ]);
     }
 
-    public function testNotRunTestsWarningCountExcludesSkippedPatterns(): void
+    public function testNotRunTestsWarningCountExcludesDisabledDetails(): void
     {
-        $this->project->notrun_skipped_details_regex = '*skip*';
-        $this->project->save();
-
         $output = TestOutput::create([
             'path' => 'a',
             'command' => 'b',
@@ -666,15 +663,15 @@ class BuildTypeTest extends TestCase
 
         /** @var Build $build */
         $build = $this->project->builds()->create([
-            'name' => 'build-with-skipped-tests',
+            'name' => 'build-with-disabled-tests',
             'uuid' => Str::uuid()->toString(),
             'testnotrun' => 2,
         ]);
 
         $build->tests()->create([
-            'testname' => 'skipped_test',
+            'testname' => 'disabled_test',
             'status' => 'notrun',
-            'details' => 'skipped',
+            'details' => 'Disabled',
             'outputid' => $output->id,
         ]);
 

@@ -376,7 +376,6 @@ class QueryTests extends ResultsApi
                 ", $query_params);
 
         // Rows of test data to be displayed to the user.
-        $notRunSkippedDetailsRegex = EloquentProject::findOrFail($this->project->Id)->notrun_skipped_details_regex;
         $tests = [];
         foreach ($rows as $row) {
             $test = [];
@@ -428,7 +427,6 @@ class QueryTests extends ResultsApi
                     $test['statusclass'] = TestDisplay::statusColorClass(
                         'notrun',
                         $row->details,
-                        $notRunSkippedDetailsRegex,
                     );
                     break;
             }

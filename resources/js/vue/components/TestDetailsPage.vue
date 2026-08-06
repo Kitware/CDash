@@ -334,7 +334,7 @@ import {
   faChartLine,
   faLink,
 } from '@fortawesome/free-solid-svg-icons';
-import { detailsMatchesSkippedPattern } from './shared/TestDisplay';
+import { isAcceptableNotRun } from './shared/TestDisplay';
 
 export default {
   name: 'TestDetails',
@@ -383,7 +383,6 @@ export default {
               enableTestTiming
               testTimeStdMultiplier
               testTimeStdThreshold
-              notRunSkippedDetailsRegex
             }
           }
         }
@@ -523,13 +522,7 @@ export default {
         return 'tw-bg-neutral tw-text-neutral-content';
       }
 
-      if (
-        this.test.status === 'NOT_RUN'
-        && detailsMatchesSkippedPattern(
-          this.test.details,
-          this.build?.project?.notRunSkippedDetailsRegex ?? '*skip*',
-        )
-      ) {
+      if (this.test.status === 'NOT_RUN' && isAcceptableNotRun(this.test.details)) {
         return 'tw-bg-success tw-text-success-content';
       }
 

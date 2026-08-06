@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Enums\ProjectRole;
-use App\Utils\TestDisplay;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
@@ -50,7 +49,6 @@ use Illuminate\Support\Facades\Auth;
  * @property ?string $banner
  * @property ?string $logoUrl
  * @property ?string $cmakeprojectroot
- * @property string $notrun_skipped_details_regex
  *
  * @method Builder<Project> forUser()
  * @method Builder<Project> administeredByUser()
@@ -97,7 +95,6 @@ class Project extends Model
         'ldapfilter',
         'banner',
         'cmakeprojectroot',
-        'notrun_skipped_details_regex',
     ];
 
     protected $casts = [
@@ -140,7 +137,6 @@ class Project extends Model
         'uploadquota' => 10,
         'showcoveragecode' => true,
         'authenticatesubmissions' => false,
-        'notrun_skipped_details_regex' => TestDisplay::DEFAULT_NOTRUN_SKIPPED_DETAILS_REGEX,
     ];
 
     public const ACCESS_PRIVATE = 0;

@@ -9,32 +9,26 @@ use Tests\TestCase;
 
 class TestDisplayTest extends TestCase
 {
-    #[DataProvider('detailsMatchesSkippedPatternCases')]
-    public function testDetailsMatchesSkippedPattern(
-        string $details,
-        string $patternsText,
-        bool $expected,
-    ): void {
-        self::assertSame(
-            $expected,
-            TestDisplay::detailsMatchesSkippedPattern($details, $patternsText),
-        );
+    #[DataProvider('isAcceptableNotRunCases')]
+    public function testIsAcceptableNotRun(?string $details, bool $expected): void
+    {
+        self::assertSame($expected, TestDisplay::isAcceptableNotRun($details));
     }
 
     /**
-     * @return list<array{string, string, bool}>
+     * @return list<array{?string, bool}>
      */
-    public static function detailsMatchesSkippedPatternCases(): array
+    public static function isAcceptableNotRunCases(): array
     {
         return [
-            ['Test skipped by user', '*skip*', true],
-            ['Test SKIPPED by user', '*skip*', true],
-            ['Test SkIpPeD by user', '*skip*', true],
-            ['Disabled', '*skip*', false],
-            ['', '*skip*', false],
-            ['Skipped', 'Skipped', true],
-            ['Skipped', 'Disabled', false],
-            ['foo bar baz', "*bar*", true],
+            ['Disabled', true],
+            ['disabled', false],
+            ['DISABLED', false],
+            ['Test Disabled', false],
+            ['Disabled test', false],
+            ['Skipped', false],
+            ['', false],
+            [null, false],
         ];
     }
 
@@ -42,41 +36,30 @@ class TestDisplayTest extends TestCase
     public function testStatusColorClass(
         string $status,
         ?string $details,
-        string $patternsText,
         string $expected,
     ): void {
         self::assertSame(
             $expected,
-            TestDisplay::statusColorClass($status, $details, $patternsText),
+            TestDisplay::statusColorClass($status, $details),
         );
     }
 
     /**
-     * @return list<array{string, ?string, string, string}>
+     * @return list<array{string, ?string, string}>
      */
     public static function statusColorClassCases(): array
     {
         return [
-            [Test::PASSED, null, '*skip*', 'normal'],
-            [Test::FAILED, null, '*skip*', 'error'],
-            [Test::NOTRUN, 'Some reason', '*skip*', 'warning'],
-            [Test::NOTRUN, 'Test skipped', '*skip*', 'normal'],
-            [Test::NOTRUN, 'Test SKIPPED', '*skip*', 'normal'],
+            [Test::PASSED, null, 'normal'],
+            [Test::FAILED, null, 'error'],
+            [Test::NOTRUN, 'Some reason', 'warning'],
+            [Test::NOTRUN, 'Disabled', 'normal'],
+            [Test::NOTRUN, 'skipped', 'warning'],
         ];
     }
 
-    public function testDefaultPatternConstant(): void
+    public function testDisabledDetailsConstant(): void
     {
-        self::assertSame('*skip*', TestDisplay::DEFAULT_NOTRUN_SKIPPED_DETAILS_REGEX);
-    }
-
-    public function testIsValidPatternsTextRejectsInvalidRegex(): void
-    {
-        self::assertFalse(TestDisplay::isValidPatternsText('('));
-    }
-
-    public function testIsValidPatternsTextAcceptsDefaultPattern(): void
-    {
-        self::assertTrue(TestDisplay::isValidPatternsText('*skip*'));
+        self::assertSame('Disabled', TestDisplay::DISABLED_DETAILS);
     }
 }
