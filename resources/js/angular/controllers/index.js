@@ -201,9 +201,9 @@ export function IndexController($scope, $rootScope, $location, $http, $filter, $
       $scope.cdash.buildgroups[i].builds = $filter('orderBy')($scope.cdash.buildgroups[i].builds, $scope.cdash.buildgroups[i].orderByFields);
       $scope.cdash.buildgroups[i].builds = $filter('showEmptyBuildsLast')($scope.cdash.buildgroups[i].builds, $scope.cdash.buildgroups[i].orderByFields);
 
-      // Initialize expectedInGroup property for each build to avoid checkbox binding conflicts
+      // Initialize per-build admin UI state
       for (var j = 0; j < $scope.cdash.buildgroups[i].builds.length; j++) {
-        $scope.cdash.buildgroups[i].builds[j].expectedInGroup = {};
+        $scope.cdash.buildgroups[i].builds[j].moveTargetGroup = '';
       }
 
       // Initialize bulk selection properties
@@ -491,6 +491,15 @@ export function IndexController($scope, $rootScope, $location, $http, $filter, $
   };
 
   $scope.moveToGroup = function(build, groupid) {
+    if (!groupid) {
+      return;
+    }
+
+    groupid = parseInt(groupid, 10);
+    if (!groupid) {
+      return;
+    }
+
     if (build.expectedandmissing == 1) {
       var parameters = {
         siteid: build.siteid,
@@ -507,16 +516,11 @@ export function IndexController($scope, $rootScope, $location, $http, $filter, $
         alert('An error occurred while moving the build. Please try again.');
       });
     } else {
-      // Use the checkbox value for this specific group, default to current expected value
-      var expectedInNewGroup = build.expectedInGroup && build.expectedInGroup[groupid] !== undefined 
-        ? (build.expectedInGroup[groupid] ? 1 : 0)
-        : build.expected;
-      
-      // Use the build API with the correct parameters
+      // Preserve the build's current expected status when moving groups.
       var parameters = {
         buildid: build.id,
         newgroupid: groupid,
-        expected: expectedInNewGroup
+        expected: build.expected || 0
       };
       $http.post('api/v1/build.php', parameters)
       .then(function success() {
@@ -578,17 +582,13 @@ export function IndexController($scope, $rootScope, $location, $http, $filter, $
     var targetGroupId = parseInt(buildgroup.bulkTargetGroup, 10);
     var movePromises = [];
 
-    // Move each selected build using the build API
+    // Move each selected build using the build API, preserving expected status
     for (var i = 0; i < buildgroup.selectedBuilds.length; i++) {
       var build = buildgroup.selectedBuilds[i];
-      var expectedInNewGroup = build.expectedInGroup && build.expectedInGroup[targetGroupId] !== undefined 
-        ? (build.expectedInGroup[targetGroupId] ? 1 : 0)
-        : (build.expected || 0);
-      
       var parameters = {
         buildid: build.id,
         newgroupid: targetGroupId,
-        expected: expectedInNewGroup
+        expected: build.expected || 0
       };
       movePromises.push($http.post('api/v1/build.php', parameters));
     }
