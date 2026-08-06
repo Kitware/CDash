@@ -1,70 +1,22 @@
 /**
- * @param {string} pattern
- * @returns {RegExp|null}
+ * CTest sets Details="Disabled" for tests marked DISABLED.
  */
-export function patternToRegExp(pattern) {
-  const trimmed = pattern.trim();
-  if (trimmed === '') {
-    return null;
-  }
-
-  if (trimmed.startsWith('/')) {
-    const lastSlash = trimmed.lastIndexOf('/');
-    if (lastSlash > 0) {
-      const body = trimmed.slice(1, lastSlash);
-      const flags = trimmed.slice(lastSlash + 1);
-      try {
-        return new RegExp(body, flags);
-      } catch {
-        return null;
-      }
-    }
-  }
-
-  let regexBody = '';
-  for (const part of trimmed.split(/([*?])/)) {
-    if (part === '*') {
-      regexBody += '.*';
-    } else if (part === '?') {
-      regexBody += '.';
-    } else {
-      regexBody += part.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    }
-  }
-
-  try {
-    return new RegExp(regexBody, 'i');
-  } catch {
-    return null;
-  }
-}
+export const DISABLED_DETAILS = 'Disabled';
 
 /**
- * @param {string} details
- * @param {string} patternsText
+ * @param {string|null|undefined} details
+ * @returns {boolean}
  */
-export function detailsMatchesSkippedPattern(details, patternsText) {
-  if (!details || !patternsText?.trim()) {
-    return false;
-  }
-
-  return patternsText
-    .split(/\r\n|\n|\r/)
-    .map((line) => line.trim())
-    .filter((line) => line.length > 0)
-    .some((pattern) => {
-      const regexp = patternToRegExp(pattern);
-      return regexp !== null && regexp.test(details);
-    });
+export function isAcceptableNotRun(details) {
+  return details === DISABLED_DETAILS;
 }
 
 /**
  * @param {string} status GraphQL TestStatus enum value.
  * @param {string} details
- * @param {string} patternsText
  */
-export function testStatusToColorClass(status, details = '', patternsText = '') {
-  if (status === 'NOT_RUN' && detailsMatchesSkippedPattern(details, patternsText)) {
+export function testStatusToColorClass(status, details = '') {
+  if (status === 'NOT_RUN' && isAcceptableNotRun(details)) {
     return 'normal';
   }
 
@@ -83,10 +35,9 @@ export function testStatusToColorClass(status, details = '', patternsText = '') 
 /**
  * @param {string} status
  * @param {string} details
- * @param {string} patternsText
  */
-export function testStatusToTextColorClass(status, details = '', patternsText = '') {
-  switch (testStatusToColorClass(status, details, patternsText)) {
+export function testStatusToTextColorClass(status, details = '') {
+  switch (testStatusToColorClass(status, details)) {
   case 'normal':
     return 'normal-text';
   case 'warning':

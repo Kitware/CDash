@@ -522,11 +522,8 @@ class BuildTestsPageTest extends BrowserTestCase
         });
     }
 
-    public function testNotRunMatchingSkippedPatternShownInGreen(): void
+    public function testNotRunWithDisabledDetailsShownInGreen(): void
     {
-        $this->project->notrun_skipped_details_regex = '*skip*';
-        $this->project->save();
-
         /** @var Build $build */
         $build = $this->project->builds()->create([
             'siteid' => $this->site->id,
@@ -534,11 +531,11 @@ class BuildTestsPageTest extends BrowserTestCase
             'uuid' => Str::uuid()->toString(),
         ]);
 
-        /** @var Test $skipped_not_run_test */
-        $skipped_not_run_test = $build->tests()->create([
+        /** @var Test $disabled_not_run_test */
+        $disabled_not_run_test = $build->tests()->create([
             'testname' => Str::uuid()->toString(),
             'status' => 'notrun',
-            'details' => 'Test SKIPPED intentionally',
+            'details' => 'Disabled',
             'outputid' => $this->testOutput->id,
         ]);
 
@@ -550,14 +547,14 @@ class BuildTestsPageTest extends BrowserTestCase
             'outputid' => $this->testOutput->id,
         ]);
 
-        $this->browse(function (Browser $browser) use ($skipped_not_run_test, $warning_not_run_test, $build): void {
+        $this->browse(function (Browser $browser) use ($disabled_not_run_test, $warning_not_run_test, $build): void {
             $browser->visit("/builds/{$build->id}/tests")
                 ->waitFor('@tests-table')
-                ->waitForText($skipped_not_run_test->testname)
+                ->waitForText($disabled_not_run_test->testname)
             ;
 
             self::assertTrue($browser->script(
-                'return document.querySelector(\'a[href*="/tests/' . $skipped_not_run_test->id . '"]\')'
+                'return document.querySelector(\'a[href*="/tests/' . $disabled_not_run_test->id . '"]\')'
                 . '?.closest("tr")?.querySelector("td.normal") !== null',
             )[0]);
 

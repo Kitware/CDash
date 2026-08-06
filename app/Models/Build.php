@@ -403,16 +403,13 @@ class Build extends Model
     }
 
     /**
-     * The number of not-run tests whose details do not match the project's skipped pattern.
+     * The number of not-run tests whose details are not "Disabled".
      */
     public function notRunTestsWarningCount(): int
     {
-        $patterns = $this->project?->notrun_skipped_details_regex
-            ?? TestDisplay::DEFAULT_NOTRUN_SKIPPED_DETAILS_REGEX;
-
         $count = 0;
         foreach ($this->tests()->where('status', Test::NOTRUN)->pluck('details') as $details) {
-            if (!TestDisplay::isAcceptableNotRun($details, $patterns)) {
+            if (!TestDisplay::isAcceptableNotRun($details)) {
                 $count++;
             }
         }
