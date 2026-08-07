@@ -201,9 +201,9 @@ export function IndexController($scope, $rootScope, $location, $http, $filter, $
       $scope.cdash.buildgroups[i].builds = $filter('orderBy')($scope.cdash.buildgroups[i].builds, $scope.cdash.buildgroups[i].orderByFields);
       $scope.cdash.buildgroups[i].builds = $filter('showEmptyBuildsLast')($scope.cdash.buildgroups[i].builds, $scope.cdash.buildgroups[i].orderByFields);
 
-      // Initialize per-build admin UI state
+      // Initialize per-build admin UI state (default move target = current group)
       for (var j = 0; j < $scope.cdash.buildgroups[i].builds.length; j++) {
-        $scope.cdash.buildgroups[i].builds[j].moveTargetGroup = '';
+        $scope.cdash.buildgroups[i].builds[j].moveTargetGroup = String($scope.cdash.buildgroups[i].id);
       }
 
       // Initialize bulk selection properties
@@ -496,7 +496,7 @@ export function IndexController($scope, $rootScope, $location, $http, $filter, $
     }
 
     groupid = parseInt(groupid, 10);
-    if (!groupid) {
+    if (!groupid || groupid === parseInt(build.buildgroupid, 10)) {
       return;
     }
 

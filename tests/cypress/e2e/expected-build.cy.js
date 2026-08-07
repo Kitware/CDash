@@ -27,16 +27,16 @@ describe('expected_build', () => {
 
     // status should start as not expected
     cy.get('[data-cy="build-admin-options-panel"]').should('be.visible');
-    cy.get('[data-cy="expected-status-label"]').should('contain', 'This build is not expected to submit');
-    cy.get('[data-cy="mark-as-expected-btn"]').click();
+    cy.get('[data-cy="mark-as-expected-btn"]')
+      .should('contain', 'Mark this build as expected')
+      .click();
 
     // refresh the page to make sure this build is now expected
     cy.reload();
     cy.get('[data-cy="build-admin-options"]').first().click();
-    cy.get('[data-cy="expected-status-label"]').should('contain', 'This build is expected to submit');
     cy.get('[data-cy="mark-as-expected-btn"]').should('not.exist');
     cy.get('[data-cy="mark-as-non-expected-btn"]').should('exist');
-    cy.get('[data-cy="mark-as-non-expected-btn"]').should('contain', 'Mark as Not Expected');
+    cy.get('[data-cy="mark-as-non-expected-btn"]').should('contain', 'Mark this build as not expected');
 
     // 'latest' should now display 'test-build-relationships' with unknown start time
     cy.get('a').contains('Latest').click();
@@ -51,12 +51,11 @@ describe('expected_build', () => {
     // refresh & verify
     cy.reload();
     cy.get('[data-cy="build-admin-options"]').first().click();
-    cy.get('[data-cy="expected-status-label"]').should('contain', 'This build is not expected to submit');
     cy.get('[data-cy="mark-as-non-expected-btn"]').should('not.exist');
     cy.get('[data-cy="mark-as-expected-btn"]').should('exist');
   });
 
-  it('displays move-to dropdown excluding current group', () => {
+  it('defaults move dropdown to the current group and enables Move only for a different group', () => {
     cy.visit('index.php?project=InsightExample&date=2018-08-09');
 
     cy.get('#project_5_15').parents('.buildgroup').first().as('buildgroup');
@@ -67,19 +66,23 @@ describe('expected_build', () => {
       cy.get('@build_td').find('[data-cy="build-admin-options"]').click();
 
       cy.get('[data-cy="build-admin-options-panel"]').should('be.visible');
-      cy.get('[data-cy="expected-status-label"]').should('contain', 'This build is not expected to submit');
-      cy.get('[data-cy="move-to-group-btn"]').should('be.disabled');
+      cy.get('[data-cy="mark-as-expected-btn"]').should('contain', 'Mark this build as expected');
+      cy.get('[data-cy="move-to-group-btn"]').should('contain', 'Move to group').and('be.disabled');
+      cy.contains('-- Select Group --').should('not.exist');
 
       cy.get('[data-cy="move-to-group-select"]').find('option').should('have.length.at.least', 2);
-      cy.get('[data-cy="move-to-group-select"]').find('option').then(($options) => {
-        const optionTexts = [...$options].map((o) => o.textContent.trim());
-        expect(optionTexts).to.not.include(groupName);
-      });
+      cy.get('[data-cy="move-to-group-select"] option:selected')
+        .should('contain', groupName);
 
-      cy.get('[data-cy="move-to-group-select"]').find('option').eq(1).then(($opt) => {
-        cy.get('[data-cy="move-to-group-select"]').select($opt.val());
+      cy.get('[data-cy="move-to-group-select"]').find('option').then(($options) => {
+        const other = [...$options].find((o) => o.textContent.trim() !== groupName);
+        expect(other).to.exist;
+        cy.get('[data-cy="move-to-group-select"]').select(other.value);
       });
       cy.get('[data-cy="move-to-group-btn"]').should('not.be.disabled');
+
+      cy.get('[data-cy="move-to-group-select"]').select(groupName);
+      cy.get('[data-cy="move-to-group-btn"]').should('be.disabled');
     });
   });
 
@@ -95,15 +98,17 @@ describe('expected_build', () => {
       cy.get('@build_td').should('contain', buildName);
       cy.get('@build_td').find('[data-cy="build-admin-options"]').click();
 
-      cy.get('[data-cy="move-to-group-select"]').find('option').eq(1).then(($opt) => {
-        const targetGroupId = $opt.val();
-        const targetGroupName = $opt.text().trim();
+      cy.get('[data-cy="move-to-group-select"]').find('option').then(($options) => {
+        const other = [...$options].find((o) => o.textContent.trim() !== sourceName);
+        expect(other).to.exist;
+        const targetGroupId = other.value;
+        const targetGroupName = other.textContent.trim();
 
         cy.window().then((w) => {
           w.beforeMoveReload = true;
         });
         cy.get('[data-cy="move-to-group-select"]').select(targetGroupId);
-        cy.get('[data-cy="move-to-group-btn"]').click();
+        cy.get('[data-cy="move-to-group-btn"]').should('not.be.disabled').click();
 
         cy.window().should('not.have.property', 'beforeMoveReload');
         cy.url().should('contain', 'index.php?project=InsightExample&date=2018-08-09');
@@ -114,11 +119,14 @@ describe('expected_build', () => {
         // move it back to the original group
         cy.contains('.buildgroup', targetGroupName).within(() => {
           cy.contains('tr', buildName).find('[data-cy="build-admin-options"]').click();
+          cy.get('[data-cy="move-to-group-select"] option:selected')
+            .should('contain', targetGroupName);
+          cy.get('[data-cy="move-to-group-btn"]').should('be.disabled');
           cy.get('[data-cy="move-to-group-select"]').select(sourceName);
           cy.window().then((w) => {
             w.beforeMoveBackReload = true;
           });
-          cy.get('[data-cy="move-to-group-btn"]').click();
+          cy.get('[data-cy="move-to-group-btn"]').should('not.be.disabled').click();
         });
 
         cy.window().should('not.have.property', 'beforeMoveBackReload');
@@ -154,8 +162,8 @@ describe('expected_build', () => {
     // verify first build is now expected
     cy.get('#project_5_13').find('tbody').find('tr').eq(0).find('[data-cy="build-admin-options"]').click();
     cy.get('#project_5_13').find('tbody').find('tr').eq(0).find('[data-cy="build-admin-options-panel"]').should('be.visible');
-    cy.get('[data-cy="expected-status-label"]').first().should('contain', 'This build is expected to submit');
-    cy.get('[data-cy="mark-as-non-expected-btn"]').first().should('exist');
+    cy.get('[data-cy="mark-as-non-expected-btn"]').first().should('exist')
+      .and('contain', 'Mark this build as not expected');
     cy.get('[data-cy="mark-as-expected-btn"]').should('not.exist');
     // close admin options
     cy.get('#project_5_13').find('tbody').find('tr').eq(0).find('[data-cy="build-admin-options"]').click();
@@ -163,7 +171,6 @@ describe('expected_build', () => {
     // Check second build
     cy.get('#project_5_13').find('tbody').find('tr').eq(1).find('[data-cy="build-admin-options"]').click();
     cy.get('#project_5_13').find('tbody').find('tr').eq(1).find('[data-cy="build-admin-options-panel"]').should('be.visible');
-    cy.get('[data-cy="expected-status-label"]').should('contain', 'This build is expected to submit');
     cy.get('[data-cy="mark-as-non-expected-btn"]').should('exist');
     cy.get('[data-cy="mark-as-expected-btn"]').should('not.exist');
     // close admin options
@@ -187,15 +194,14 @@ describe('expected_build', () => {
     // verify first build is now not expected
     cy.get('#project_5_13').find('tbody').find('tr').eq(0).find('[data-cy="build-admin-options"]').click();
     cy.get('#project_5_13').find('tbody').find('tr').eq(0).find('[data-cy="build-admin-options-panel"]').should('be.visible');
-    cy.get('[data-cy="expected-status-label"]').first().should('contain', 'This build is not expected to submit');
-    cy.get('[data-cy="mark-as-expected-btn"]').first().should('exist');
+    cy.get('[data-cy="mark-as-expected-btn"]').first().should('exist')
+      .and('contain', 'Mark this build as expected');
     cy.get('[data-cy="mark-as-non-expected-btn"]').should('not.exist');
     // close admin options
     cy.get('#project_5_13').find('tbody').find('tr').eq(0).find('[data-cy="build-admin-options"]').click();
 
     cy.get('#project_5_13').find('tbody').find('tr').eq(1).find('[data-cy="build-admin-options"]').click();
     cy.get('#project_5_13').find('tbody').find('tr').eq(1).find('[data-cy="build-admin-options-panel"]').should('be.visible');
-    cy.get('[data-cy="expected-status-label"]').should('contain', 'This build is not expected to submit');
     cy.get('[data-cy="mark-as-expected-btn"]').should('exist');
     cy.get('[data-cy="mark-as-non-expected-btn"]').should('not.exist');
     // close admin options
