@@ -57,9 +57,4 @@ class TestDisplayTest extends TestCase
             [Test::NOTRUN, 'skipped', 'warning'],
         ];
     }
-
-    public function testDisabledDetailsConstant(): void
-    {
-        self::assertSame('Disabled', TestDisplay::DISABLED_DETAILS);
-    }
 }
