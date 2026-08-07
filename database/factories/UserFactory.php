@@ -20,12 +20,12 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'firstname' => fake()->unique()->firstName(),
-            'lastname' => fake()->unique()->lastName(),
-            'email' => fake()->unique()->safeEmail(),
+            'firstname' => Str::uuid()->toString(),
+            'lastname' => Str::uuid()->toString(),
+            'email' => Str::uuid()->toString() . '@example.com',
             'email_verified_at' => now(),
-            'password' => 'password',
-            'institution' => fake()->unique()->company(),
+            'password' => Str::uuid()->toString(),
+            'institution' => Str::uuid()->toString(),
             'remember_token' => Str::random(10),
             'admin' => false,
         ];
@@ -47,13 +47,6 @@ class UserFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
-        ]);
-    }
-
-    public function normalUser(): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'admin' => false,
         ]);
     }
 

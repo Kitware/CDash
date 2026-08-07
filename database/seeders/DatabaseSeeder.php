@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->createAdminUser();
-        User::factory(1000)->normalUser()->create();
+        User::factory(1000)->create();
 
         $this->createPublicProject();
         $this->createTrilinosProject();
