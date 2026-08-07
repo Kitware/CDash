@@ -21,14 +21,14 @@ export function testStatusToColorClass(status, details = '') {
   }
 
   switch (status) {
-  case 'PASSED':
-    return 'normal';
-  case 'FAILED':
-    return 'error';
-  case 'NOT_RUN':
-    return 'warning';
-  default:
-    return '';
+    case 'PASSED':
+      return 'normal';
+    case 'FAILED':
+      return 'error';
+    case 'NOT_RUN':
+      return 'warning';
+    default:
+      return '';
   }
 }
 
@@ -38,13 +38,13 @@ export function testStatusToColorClass(status, details = '') {
  */
 export function testStatusToTextColorClass(status, details = '') {
   switch (testStatusToColorClass(status, details)) {
-  case 'normal':
-    return 'normal-text';
-  case 'warning':
-    return 'warning-text';
-  case 'error':
-    return 'error-text';
-  default:
-    return '';
+    case 'normal':
+      return 'normal-text';
+    case 'warning':
+      return 'warning-text';
+    case 'error':
+      return 'error-text';
+    default:
+      return '';
   }
 }
