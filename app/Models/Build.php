@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Utils\TestDisplay;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -399,5 +400,19 @@ class Build extends Model
         }
 
         return ($loctested / $total_lines) * 100;
+    }
+
+    /**
+     * The number of not-run tests whose details are not "Disabled".
+     */
+    public function notRunTestsWarningCount(): int
+    {
+        return $this->tests()
+            ->where('status', Test::NOTRUN)
+            ->where(static function (Builder $query): void {
+                $query->whereNull('details')
+                    ->orWhere('details', '!=', TestDisplay::DISABLED_DETAILS);
+            })
+            ->count();
     }
 }

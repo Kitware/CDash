@@ -362,7 +362,8 @@
       </FormSection>
 
       <FormSection
-        title="Tests"
+        title="Testing"
+        section-id="Testing"
       >
         <CheckboxField
           v-model="form.enableTestTiming"
