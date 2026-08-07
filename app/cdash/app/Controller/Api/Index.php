@@ -248,7 +248,16 @@ class Index extends ResultsApi
             $sql .= ' WHERE ' . implode(' AND ', $whereClauses);
             $sql .= ' AND b.starttime < ? ';
             $params[] = $this->endDate;
-            $sql .= $this->filterSQL;
+            // The API labels a dynamic row with the target group name ($rule->name),
+            // while g.name is the row's source group. Apply group-name filters to
+            // the target group; leave every other filter on the source row.
+            $dynamic_filter_sql = str_replace(
+                'g.name', '?', (string) $this->filterSQL, $group_filter_count);
+            $sql .= $dynamic_filter_sql;
+            $params = array_merge(
+                $params,
+                array_fill(0, $group_filter_count, $rule->name)
+            );
             $sql .= ' ORDER BY b.submittime DESC LIMIT 1 ';
 
             $union_parts[] = "($sql)";
