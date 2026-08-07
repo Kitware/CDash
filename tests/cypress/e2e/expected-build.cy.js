@@ -60,7 +60,7 @@ describe('expected_build', () => {
     cy.visit('index.php?project=InsightExample&date=2018-08-09');
 
     cy.get('#project_5_15').parents('.buildgroup').first().as('buildgroup');
-    cy.get('@buildgroup').find('a.grouptrigger').invoke('text').then(currentGroupName => {
+    cy.get('@buildgroup').find('a.grouptrigger').invoke('text').then((currentGroupName) => {
       const groupName = currentGroupName.trim();
 
       cy.get('#project_5_15').find('tbody').find('tr').first().find('td').eq(1).as('build_td');
@@ -71,12 +71,12 @@ describe('expected_build', () => {
       cy.get('[data-cy="move-to-group-btn"]').should('be.disabled');
 
       cy.get('[data-cy="move-to-group-select"]').find('option').should('have.length.at.least', 2);
-      cy.get('[data-cy="move-to-group-select"]').find('option').then($options => {
-        const optionTexts = [...$options].map(o => o.textContent.trim());
+      cy.get('[data-cy="move-to-group-select"]').find('option').then(($options) => {
+        const optionTexts = [...$options].map((o) => o.textContent.trim());
         expect(optionTexts).to.not.include(groupName);
       });
 
-      cy.get('[data-cy="move-to-group-select"]').find('option').eq(1).then($opt => {
+      cy.get('[data-cy="move-to-group-select"]').find('option').eq(1).then(($opt) => {
         cy.get('[data-cy="move-to-group-select"]').select($opt.val());
       });
       cy.get('[data-cy="move-to-group-btn"]').should('not.be.disabled');
@@ -88,18 +88,18 @@ describe('expected_build', () => {
 
     const buildName = 'test-build-relationships';
     cy.get('#project_5_15').parents('.buildgroup').first().as('source_group');
-    cy.get('@source_group').find('a.grouptrigger').invoke('text').then(sourceGroupName => {
+    cy.get('@source_group').find('a.grouptrigger').invoke('text').then((sourceGroupName) => {
       const sourceName = sourceGroupName.trim();
 
       cy.get('#project_5_15').find('tbody').find('tr').first().find('td').eq(1).as('build_td');
       cy.get('@build_td').should('contain', buildName);
       cy.get('@build_td').find('[data-cy="build-admin-options"]').click();
 
-      cy.get('[data-cy="move-to-group-select"]').find('option').eq(1).then($opt => {
+      cy.get('[data-cy="move-to-group-select"]').find('option').eq(1).then(($opt) => {
         const targetGroupId = $opt.val();
         const targetGroupName = $opt.text().trim();
 
-        cy.window().then(w => {
+        cy.window().then((w) => {
           w.beforeMoveReload = true;
         });
         cy.get('[data-cy="move-to-group-select"]').select(targetGroupId);
@@ -115,7 +115,7 @@ describe('expected_build', () => {
         cy.contains('.buildgroup', targetGroupName).within(() => {
           cy.contains('tr', buildName).find('[data-cy="build-admin-options"]').click();
           cy.get('[data-cy="move-to-group-select"]').select(sourceName);
-          cy.window().then(w => {
+          cy.window().then((w) => {
             w.beforeMoveBackReload = true;
           });
           cy.get('[data-cy="move-to-group-btn"]').click();
