@@ -1099,7 +1099,7 @@ class Index extends ResultsApi
             }
 
             $test_response['notrun'] = $nnotrun;
-            $test_response['notrunwarning'] = $this->computeNotRunTestsWarningCount((int) $buildid, $nnotrun);
+            $test_response['notrunwarning'] = $this->computeNotRunTestsWarningCount($buildid, $nnotrun);
             $test_response['fail'] = $nfail;
             $test_response['pass'] = $npass;
 

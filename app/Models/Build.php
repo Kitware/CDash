@@ -407,13 +407,12 @@ class Build extends Model
      */
     public function notRunTestsWarningCount(): int
     {
-        $count = 0;
-        foreach ($this->tests()->where('status', Test::NOTRUN)->pluck('details') as $details) {
-            if (!TestDisplay::isAcceptableNotRun($details)) {
-                $count++;
-            }
-        }
-
-        return $count;
+        return $this->tests()
+            ->where('status', Test::NOTRUN)
+            ->where(static function (Builder $query): void {
+                $query->whereNull('details')
+                    ->orWhere('details', '!=', TestDisplay::DISABLED_DETAILS);
+            })
+            ->count();
     }
 }
