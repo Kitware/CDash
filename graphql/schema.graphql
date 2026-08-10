@@ -856,6 +856,11 @@ type Build {
   "The number of tests not run for this build."
   notRunTestsCount: Int @rename(attribute: "testnotrun")
 
+  """
+  The number of not-run tests counted as warnings (excludes tests whose details are "Disabled").
+  """
+  notRunTestsWarningCount: Int! @method(name: "notRunTestsWarningCount")
+
   "The duration of the test step in seconds."
   testDuration: Int! @rename(attribute: "testduration")
 

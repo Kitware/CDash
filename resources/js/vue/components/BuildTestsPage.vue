@@ -73,6 +73,7 @@ import LoadingIndicator from './shared/LoadingIndicator.vue';
 import BuildSummaryCard from './shared/BuildSummaryCard.vue';
 import BuildSidebar from './shared/BuildSidebar.vue';
 import { DateTime } from 'luxon';
+import { testStatusToColorClass } from './shared/TestDisplay';
 
 const TEST_QUERY = gql`
   query(
@@ -325,14 +326,14 @@ export default {
             value: edge.node.status,
             text: this.humanReadableTestStatus(edge.node.status),
             href: `${this.$baseURL}/tests/${edge.node.id}`,
-            classes: [this.testStatusToColorClass(edge.node.status)],
+            classes: [testStatusToColorClass(edge.node.status, edge.node.details)],
           },
           subProject: edge.subProject ?? '',
           timeStatus: {
             value: edge.node.timeStatusCategory,
             text: this.humanReadableTestStatus(edge.node.timeStatusCategory),
             href: `${this.$baseURL}/tests/${edge.node.id}?graph=time`,
-            classes: [this.testStatusToColorClass(edge.node.timeStatusCategory)],
+            classes: [testStatusToColorClass(edge.node.timeStatusCategory, edge.node.details)],
           },
           history: {
             value: '',
@@ -349,19 +350,6 @@ export default {
   },
 
   methods: {
-    testStatusToColorClass(status) {
-      switch (status) {
-        case 'PASSED':
-          return 'normal';
-        case 'FAILED':
-          return 'error';
-        case 'NOT_RUN':
-          return 'warning';
-        default:
-          return '';
-      }
-    },
-
     humanReadableTestStatus(status) {
       switch (status) {
         case 'PASSED':

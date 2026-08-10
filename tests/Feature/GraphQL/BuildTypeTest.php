@@ -9,6 +9,7 @@ use App\Models\CoverageFile;
 use App\Models\Label;
 use App\Models\Project;
 use App\Models\Target;
+use App\Models\TestOutput;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
@@ -650,5 +651,55 @@ class BuildTypeTest extends TestCase
                 ],
             ],
         ]);
+    }
+
+    public function testNotRunTestsWarningCountExcludesDisabledDetails(): void
+    {
+        $output = TestOutput::create([
+            'path' => 'a',
+            'command' => 'b',
+            'output' => 'c',
+        ]);
+
+        /** @var Build $build */
+        $build = $this->project->builds()->create([
+            'name' => 'build-with-disabled-tests',
+            'uuid' => Str::uuid()->toString(),
+            'testnotrun' => 2,
+        ]);
+
+        $build->tests()->create([
+            'testname' => 'disabled_test',
+            'status' => 'notrun',
+            'details' => 'Disabled',
+            'outputid' => $output->id,
+        ]);
+
+        $build->tests()->create([
+            'testname' => 'missing_test',
+            'status' => 'notrun',
+            'details' => 'Unable to find executable',
+            'outputid' => $output->id,
+        ]);
+
+        $this->graphQL('
+            query build($id: ID!) {
+                build(id: $id) {
+                    notRunTestsCount
+                    notRunTestsWarningCount
+                }
+            }
+        ', [
+            'id' => $build->id,
+        ])->assertExactJson([
+            'data' => [
+                'build' => [
+                    'notRunTestsCount' => 2,
+                    'notRunTestsWarningCount' => 1,
+                ],
+            ],
+        ]);
+
+        $output->delete();
     }
 }
