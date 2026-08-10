@@ -47,6 +47,13 @@ body {
  text-decoration: underline;
 }
 
+/* Bootstrap forces a focus ring on every a:focus, which shows up on mouse
+   clicks too. Suppress it only when the browser wouldn't draw one itself, so
+   keyboard navigation keeps a visible focus indicator. */
+a.cdash-link:focus:not(:focus-visible) {
+  outline: none;
+}
+
 .na { background-color : #cccccc; }
 .measurement { background-color : #b0c4de; }
 

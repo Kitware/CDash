@@ -175,64 +175,60 @@
     </table>
   </div>
 
-  <!-- admin options table -->
-  <div ng-if="::cdash.user.admin == 1">
-    <div ng-if="build.showAdminOptions == 1" style="margin-top: 8px;">
-      <table width="100%" border="0" class="animate-show">
-        <!-- If user is admin of the project propose to group this build -->
-        <tr ng-repeat="group in ::cdash.all_buildgroups">
-          <td width="35%" style="padding: 4px 0;">
-            <b>{{::group.name}}</b>:
-          </td>
-          <td ng-if="::group.name == buildgroup.name" colspan="2" style="padding: 4px 0;">
-            <button class="btn btn-xs"
-                    ng-class="(build.expected == 1 || build.expectedandmissing == 1) ? 'btn-warning' : 'btn-success'"
-                    ng-click="toggleExpected(build, group.id)"
-                    ng-disabled="build.expectedLoading"
-                    data-cy="{{(build.expected == 1 || build.expectedandmissing == 1) ? 'mark-as-non-expected-btn' : 'mark-as-expected-btn'}}">
-              <span class="glyphicon" ng-class="{
-                'glyphicon-ok': !build.expectedLoading && (build.expected != 1 && build.expectedandmissing != 1),
-                'glyphicon-remove': !build.expectedLoading && (build.expected == 1 || build.expectedandmissing == 1)
-              }"></span>
-              <span ng-if="!build.expectedLoading && (build.expected != 1 && build.expectedandmissing != 1)">Mark as Expected</span>
-              <span ng-if="!build.expectedLoading && (build.expected == 1 || build.expectedandmissing == 1)">Mark as Non Expected</span>
-            </button>
-          </td>
-          <td ng-if="::group.name != buildgroup.name" colspan="2" style="padding: 4px 0;">
-            <label style="font-weight: normal; margin: 0;">
-              <input type="checkbox" ng-model="build.expectedInGroup[group.id]" ng-true-value="true" ng-false-value="false"> expected
-            </label>
-          </td>
-          <td ng-if="::group.name != buildgroup.name" class="nob" style="padding: 4px 0;">
-            <button class="btn btn-xs btn-primary" ng-click="moveToGroup(build, group.id)">
-              <span class="glyphicon glyphicon-arrow-right"></span> Move to Group
-            </button>
-          </td>
-        </tr>
-        <tr>
-          <td colspan="3" class="nob" style="padding: 8px 0;">
-            <button class="btn btn-xs btn-danger" ng-click="showModal(build)">
-              <span class="glyphicon glyphicon-trash"></span> Remove This Build
-            </button>
-          </td>
-        </tr>
-      </table>
-
-      <div tooltip-popup-delay="1500"
-           tooltip-append-to-body="true"
-           uib-tooltip="Done builds will be overwritten if a new one is submitted with the same site, build name, and timestamp."
-           style="margin-top: 4px;"
-           ng-if="build.id && !build.expectedandmissing">
+  <!-- admin options (cleared below the build name / icon row) -->
+  <div ng-if="::cdash.user.admin == 1" style="clear: both;">
+    <div ng-if="build.showAdminOptions == 1"
+         class="animate-show"
+         data-cy="build-admin-options-panel"
+         style="padding: 8px 0; display: flex; flex-direction: column; gap: 8px;">
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px;">
         <button class="btn btn-xs"
-                ng-class="build.done == 1 ? 'btn-default' : 'btn-info'"
-                ng-click="toggleDone(build)"
-                ng-disabled="build.doneLoading">
+                ng-class="(build.expected == 1 || build.expectedandmissing == 1) ? 'btn-warning' : 'btn-success'"
+                ng-click="toggleExpected(build, buildgroup.id)"
+                ng-disabled="build.expectedLoading"
+                data-cy="{{(build.expected == 1 || build.expectedandmissing == 1) ? 'mark-as-non-expected-btn' : 'mark-as-expected-btn'}}">
           <span class="glyphicon" ng-class="{
-            'glyphicon-ok-circle': !build.doneLoading && build.done != 1,
-            'glyphicon-ban-circle': !build.doneLoading && build.done == 1
+            'glyphicon-ok': !build.expectedLoading && (build.expected != 1 && build.expectedandmissing != 1),
+            'glyphicon-remove': !build.expectedLoading && (build.expected == 1 || build.expectedandmissing == 1)
           }"></span>
-          <span ng-if="!build.doneLoading && build.done != 1">Mark as Done</span>
-          <span ng-if="!build.doneLoading && build.done == 1">Mark as Not Done</span>
+          <span ng-if="!build.expectedLoading && (build.expected != 1 && build.expectedandmissing != 1)">Mark this build as expected</span>
+          <span ng-if="!build.expectedLoading && (build.expected == 1 || build.expectedandmissing == 1)">Mark this build as not expected</span>
+        </button>
+
+        <button class="btn btn-xs btn-danger" ng-click="showModal(build)">
+          <span class="glyphicon glyphicon-trash"></span> Remove This Build
+        </button>
+
+        <span ng-if="build.id && !build.expectedandmissing"
+              tooltip-popup-delay="1500"
+              tooltip-append-to-body="true"
+              uib-tooltip="Done builds will be overwritten if a new one is submitted with the same site, build name, and timestamp.">
+          <button class="btn btn-xs"
+                  ng-class="build.done == 1 ? 'btn-default' : 'btn-info'"
+                  ng-click="toggleDone(build)"
+                  ng-disabled="build.doneLoading">
+            <span class="glyphicon" ng-class="{
+              'glyphicon-ok-circle': !build.doneLoading && build.done != 1,
+              'glyphicon-ban-circle': !build.doneLoading && build.done == 1
+            }"></span>
+            <span ng-if="!build.doneLoading && build.done != 1">Mark as Done</span>
+            <span ng-if="!build.doneLoading && build.done == 1">Mark as Not Done</span>
+          </button>
+        </span>
+      </div>
+
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px;">
+        <select ng-model="build.moveTargetGroup"
+                style="padding: 2px 6px;"
+                data-cy="move-to-group-select">
+          <option ng-repeat="group in ::cdash.all_buildgroups"
+                  value="{{group.id}}">{{group.name}}</option>
+        </select>
+        <button class="btn btn-xs btn-primary"
+                ng-click="moveToGroup(build, build.moveTargetGroup)"
+                ng-disabled="!build.moveTargetGroup || build.moveTargetGroup == buildgroup.id"
+                data-cy="move-to-group-btn">
+          <span class="glyphicon glyphicon-arrow-right"></span> Move to group
         </button>
       </div>
     </div>
