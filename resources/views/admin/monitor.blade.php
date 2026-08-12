@@ -9,7 +9,7 @@
 
 @section('main_content')
     @if ($using_db_queue)
-        <monitor />
+        <monitor-page />
     @else
         <p>
             System Monitor only available when QUEUE_CONNECTION=database

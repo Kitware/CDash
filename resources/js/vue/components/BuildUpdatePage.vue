@@ -70,7 +70,7 @@ import { DateTime } from 'luxon';
 import CommitCard from './BuildUpdate/CommitCard.vue';
 
 export default {
-  name: 'BuildUpdate',
+  name: 'BuildUpdatePage',
   components: { CommitCard, LoadingIndicator, BuildSummaryCard, BuildSidebar },
 
   props: {

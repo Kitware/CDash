@@ -34,7 +34,7 @@ import BuildSidebar from './shared/BuildSidebar.vue';
 import DataTable from './shared/DataTable.vue';
 
 export default {
-  name: 'ViewDynamicAnalysis',
+  name: 'BuildDynamicAnalysisPage',
 
   components: {
     BuildSidebar,

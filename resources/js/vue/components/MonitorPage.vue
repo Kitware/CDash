@@ -39,7 +39,7 @@
 import ApiLoader from './shared/ApiLoader';
 import TimelinePlot from './shared/TimelinePlot';
 export default {
-  name: 'SubmissionProcessingMonitor',
+  name: 'MonitorPage',
 
   components: {
     TimelinePlot,
