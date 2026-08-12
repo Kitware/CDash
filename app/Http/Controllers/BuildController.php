@@ -83,7 +83,7 @@ final class BuildController extends AbstractBuildController
     {
         $this->setBuildById($build_id);
 
-        return $this->vue('build-configure', 'Configure', [
+        return $this->vue('build-configure-page', 'Configure', [
             'build-id' => $this->build->Id,
         ]);
     }
@@ -116,7 +116,7 @@ final class BuildController extends AbstractBuildController
                 break;
         }
 
-        return $this->vue('build-summary', 'Build Summary', [
+        return $this->vue('build-summary-page', 'Build Summary', [
             'project-id' => $this->project->Id,
             'build-id' => $this->build->Id,
             'previous-build-id' => $previous_buildid,

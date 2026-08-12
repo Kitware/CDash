@@ -75,7 +75,7 @@ import LoadingIndicator from './shared/LoadingIndicator.vue';
 import { DateTime } from 'luxon';
 
 export default {
-  name: 'ManageAuthTokens',
+  name: 'ManageAuthTokensPage',
   components: { LoadingIndicator, FontAwesomeIcon, DataTable },
 
   apollo: {

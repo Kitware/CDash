@@ -60,7 +60,7 @@ echarts.use([
 ]);
 
 export default {
-  name: 'SubProjectDependencies',
+  name: 'SubProjectDependenciesPage',
 
   components: {
     VChart,

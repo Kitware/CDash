@@ -311,7 +311,7 @@
 
 <script>
 import $ from 'jquery';
-import TestTrendChart from './TestTrendChart.vue';
+import TestTrendChart from './TestIdPage/TestTrendChart.vue';
 import CodeBox from './shared/CodeBox.vue';
 import BuildSummaryCard from './shared/BuildSummaryCard.vue';
 import LoadingIndicator from './shared/LoadingIndicator.vue';
@@ -336,7 +336,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 export default {
-  name: 'TestDetails',
+  name: 'TestIdPage',
 
   components: {
     BuildSidebar,

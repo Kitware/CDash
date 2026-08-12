@@ -457,7 +457,7 @@ import BuildTimeChart from './BuildSummaryPage/BuildTimeChart.vue';
 import { DateTime, Duration } from 'luxon';
 
 export default {
-  name: 'BuildSummary',
+  name: 'BuildSummaryPage',
   components: { BuildTimeChart, BuildSummaryCard, LoadingIndicator, BuildSidebar, FontAwesomeIcon },
 
   props: {

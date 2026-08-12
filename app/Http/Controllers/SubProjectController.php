@@ -111,7 +111,7 @@ final class SubProjectController extends AbstractProjectController
     {
         $this->setProjectByName($project);
 
-        return $this->vue('sub-project-dependencies', 'SubProject Dependencies', [
+        return $this->vue('sub-project-dependencies-page', 'SubProject Dependencies', [
             'project-name' => $this->project->Name,
             'date' => $request->string('date'),
         ]);

@@ -110,6 +110,10 @@ export default defineConfig([
       'vue/component-name-in-template-casing': ['error', 'PascalCase'],
       'vue/no-v-html': 'off',
       'vue/require-v-for-key': 'off',
+      'vue/match-component-file-name': ['error', {
+        extensions: ['vue'],
+        shouldMatchCase: true,
+      }],
       'vue/match-component-import-name': 'error',
       'vue/no-duplicate-class-names': 'error',
       'vue/no-empty-component-block': 'error',
