@@ -11896,6 +11896,18 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
+			rawMessage: 'Function get_dashboard_JSON() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
+			count: 1
+			path: app/cdash/include/common.php
+
+		-
+			rawMessage: 'Function get_dashboard_JSON() throws checked exception ValueError but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
+			count: 1
+			path: app/cdash/include/common.php
+
+		-
 			rawMessage: 'Function get_dates() has parameter $date with no type specified.'
 			identifier: missingType.parameter
 			count: 1
