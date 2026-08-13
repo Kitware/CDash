@@ -104,7 +104,7 @@ export default {
         query($buildId: ID!, $after: String) {
           build(id: $buildId) {
             id
-            notes(after: $after) {
+            notes(after: $after, first: 10) {
               edges {
                 node {
                   id
