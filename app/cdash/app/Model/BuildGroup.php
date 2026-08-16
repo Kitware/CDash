@@ -427,7 +427,7 @@ class BuildGroup
             ->where('buildgroup.projectid', '=', $build->ProjectId)
             ->where('build2grouprule.buildtype', '=', $build->Type)
             ->where('build2grouprule.siteid', '=', -1)
-            ->whereRaw("'{$build->Name}' LIKE build2grouprule.buildname")
+            ->whereRaw('? LIKE build2grouprule.buildname', [$build->Name])
             ->where('build2grouprule.starttime', '<', $build->StartTime)
             ->where(function ($query) use ($starttime): void {
                 $query->where('build2grouprule.endtime', '=', '1980-01-01 00:00:00')
