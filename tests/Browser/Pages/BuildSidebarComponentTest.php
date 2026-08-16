@@ -3,7 +3,6 @@
 namespace Tests\Browser\Pages;
 
 use App\Enums\BuildCommandType;
-use App\Enums\TargetType;
 use App\Models\Build;
 use App\Models\BuildUpdate;
 use App\Models\CoverageFile;
@@ -12,6 +11,7 @@ use App\Models\Note;
 use App\Models\Project;
 use App\Models\Site;
 use App\Models\SiteInformation;
+use App\Models\Target;
 use App\Models\UploadFile;
 use App\Models\User;
 use App\Services\SiteService;
@@ -393,10 +393,7 @@ class BuildSidebarComponentTest extends BrowserTestCase
         $this->browse(function (Browser $browser) use ($build): void {
             $this->assertDisabled($browser, "/builds/{$build->id}", '@sidebar-targets');
 
-            $build->targets()->create([
-                'name' => Str::uuid()->toString(),
-                'type' => TargetType::UNKNOWN,
-            ]);
+            Target::factory()->for($build)->create();
 
             $this->assertNotDisabled($browser, "/builds/{$build->id}", '@sidebar-targets', "/builds/{$build->id}/targets");
         });

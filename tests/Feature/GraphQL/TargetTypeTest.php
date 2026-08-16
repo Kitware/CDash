@@ -46,21 +46,18 @@ class TargetTypeTest extends TestCase
         ]);
 
         // Create one target of each type
-        $targets = [];
-        foreach (TargetType::cases() as $target_type) {
-            $targets[] = [
-                'name' => Str::uuid()->toString(),
-                'type' => $target_type,
-            ];
-        }
-        $build->targets()->createMany($targets);
+        $targets = Target::factory()
+            ->count(count(TargetType::cases()))
+            ->sequence(...array_map(fn (TargetType $type) => ['type' => $type], TargetType::cases()))
+            ->for($build)
+            ->create();
 
         $target_node_list = [];
         foreach ($targets as $target) {
             $target_node_list[] = [
                 'node' => [
-                    'name' => $target['name'],
-                    'type' => $target['type']->name,
+                    'name' => $target->name,
+                    'type' => $target->type->name,
                 ],
             ];
         }
@@ -99,16 +96,10 @@ class TargetTypeTest extends TestCase
             'uuid' => Str::uuid()->toString(),
         ]);
 
-        $build->targets()->createMany([
-            [
-                'name' => 'name1',
-                'type' => TargetType::UNKNOWN,
-            ],
-            [
-                'name' => 'name2',
-                'type' => TargetType::UNKNOWN,
-            ],
-        ]);
+        Target::factory()->count(2)->sequence(
+            ['name' => 'name1'],
+            ['name' => 'name2'],
+        )->for($build)->create();
 
         $this->graphQL('
             query build($id: ID) {
@@ -170,14 +161,11 @@ class TargetTypeTest extends TestCase
         ]);
 
         // Create one target of each type
-        $targets = [];
-        foreach (TargetType::cases() as $target_type) {
-            $targets[] = [
-                'name' => Str::uuid()->toString(),
-                'type' => $target_type,
-            ];
-        }
-        $build->targets()->createMany($targets);
+        Target::factory()
+            ->count(count(TargetType::cases()))
+            ->sequence(...array_map(fn (TargetType $type) => ['type' => $type], TargetType::cases()))
+            ->for($build)
+            ->create();
 
         $this->graphQL('
             query build($id: ID, $type: TargetType) {
@@ -226,9 +214,8 @@ class TargetTypeTest extends TestCase
         ]);
 
         /** @var Target $target */
-        $target = $build->targets()->create([
+        $target = Target::factory()->for($build)->create([
             'name' => 'name1',
-            'type' => TargetType::UNKNOWN,
         ]);
 
         /** @var BuildCommand $command */

@@ -52,8 +52,7 @@ class BuildTargetsPageTest extends BrowserTestCase
 
     private function addTarget(TargetType $type = TargetType::UNKNOWN): Target
     {
-        return $this->build->targets()->create([
-            'name' => Str::uuid()->toString(),
+        return Target::factory()->for($this->build)->create([
             'type' => $type,
         ]);
     }
@@ -125,10 +124,7 @@ class BuildTargetsPageTest extends BrowserTestCase
 
     public function testTargetTablePagination(): void
     {
-        $targets = collect();
-        for ($i = 0; $i < 120; $i++) {
-            $targets[] = $this->addTarget();
-        }
+        $targets = Target::factory()->count(120)->for($this->build)->create();
 
         $targets = $targets->sortByDesc('name');
 
