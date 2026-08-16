@@ -46,7 +46,6 @@ return [
     'login_field' => env('LOGIN_FIELD', 'Email'),
     'max_upload_quota' => env('MAX_UPLOAD_QUOTA', 10),
     'notify_pull_request' => env('NOTIFY_PULL_REQUEST', false),
-    'queue_timeout' => env('QUEUE_TIMEOUT', 2000),
     'retry_base' => env('QUEUE_RETRY_BASE', 5),
     'show_last_submission' => env('SHOW_LAST_SUBMISSION', true),
     'slow_page_time' => env('SLOW_PAGE_TIME', 10),
