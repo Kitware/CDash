@@ -10,6 +10,8 @@
       <BuildSummaryCard :build-id="buildId" />
 
       <LoadingIndicator :is-loading="loading">
+        <BuildTimelineCard :build-id="buildId" />
+
         <!-- Display link to create bug tracker issue if supported. -->
         <div v-if="cdash.newissueurl">
           <a
@@ -444,21 +446,20 @@
 
 <script>
 import {
-  faQuestionCircle,
   faLink,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import LoadingIndicator from './shared/LoadingIndicator.vue';
 import BuildSummaryCard from './shared/BuildSummaryCard.vue';
 import BuildSidebar from './shared/BuildSidebar.vue';
+import BuildTimelineCard from './BuildSummaryPage/BuildTimelineCard.vue';
 import gql from 'graphql-tag';
-import Utils from './shared/Utils';
 import BuildTimeChart from './BuildSummaryPage/BuildTimeChart.vue';
 import { DateTime, Duration } from 'luxon';
 
 export default {
   name: 'BuildSummaryPage',
-  components: { BuildTimeChart, BuildSummaryCard, LoadingIndicator, BuildSidebar, FontAwesomeIcon },
+  components: { BuildTimelineCard, BuildTimeChart, BuildSummaryCard, LoadingIndicator, BuildSidebar, FontAwesomeIcon },
 
   props: {
     projectId: {
@@ -486,10 +487,6 @@ export default {
       type: String,
       default: '',
     },
-    userId: {
-      type: Number,
-      default: 0,
-    },
   },
 
   data() {
@@ -509,6 +506,9 @@ export default {
             id
             name
             startTime
+            configureDuration
+            buildDuration
+            testDuration
             buildType
             configureErrorsCount
             configureWarningsCount
@@ -516,6 +516,7 @@ export default {
             buildWarningsCount
             failedTestsCount
             notRunTestsCount
+            passedTestsCount
             site {
               id
               name
@@ -617,12 +618,10 @@ export default {
         this.cdash.test = {
           nfailed: Math.max(0, build.failedTestsCount),
           nnotrun: Math.max(0, build.notRunTestsCount),
+          npassed: Math.max(0, build.passedTestsCount),
         };
 
         this.cdash.projectname_encoded = encodeURIComponent(build.project.name);
-        this.cdash.user = {
-          id: this.userId,
-        };
       },
       error(error) {
         this.errored = true;
@@ -674,13 +673,8 @@ export default {
   computed: {
     FA() {
       return {
-        faQuestionCircle,
         faLink,
       };
-    },
-
-    Utils() {
-      return Utils;
     },
 
     isParentBuild() {
