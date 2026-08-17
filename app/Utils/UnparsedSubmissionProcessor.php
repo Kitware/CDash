@@ -112,39 +112,28 @@ class UnparsedSubmissionProcessor
     /** Parse build metadata from POST request. */
     public function parseBuildMetadata(): void
     {
-        // We require POST to contain the following values.
-        $vars = ['project', 'build', 'stamp', 'site', 'starttime', 'endtime', 'datafilesmd5'];
-        foreach ($vars as $var) {
-            if (empty($_POST[$var])) {
-                abort(Response::HTTP_BAD_REQUEST, 'Variable \'' . $var . '\' not set but required.');
-            }
-        }
-
-        $this->projectname = htmlspecialchars($_POST['project']);
-        $this->buildname = htmlspecialchars($_POST['build']);
-        $this->buildstamp = htmlspecialchars($_POST['stamp']);
-        $this->sitename = htmlspecialchars($_POST['site']);
-        $this->starttime = htmlspecialchars($_POST['starttime']);
-        $this->endtime = htmlspecialchars($_POST['endtime']);
-        $this->generator = '';
-        if (isset($_POST['generator'])) {
-            $this->generator = htmlspecialchars($_POST['generator']);
-        }
-
-        $this->subprojectname = '';
-        if (isset($_POST['subproject'])) {
-            $this->subprojectname = htmlspecialchars($_POST['subproject']);
-        }
-
-        $validator = Validator::make([
-            'name' => $this->projectname,
-        ], [
-            'name' => new ProjectNameRule(),
+        $validator = Validator::make(request()->post(), [
+            'project' => ['required', new ProjectNameRule()],
+            'build' => 'required',
+            'stamp' => 'required',
+            'site' => 'required',
+            'starttime' => 'required',
+            'endtime' => 'required',
+            'datafilesmd5' => 'required',
         ]);
 
         if ($validator->fails()) {
             abort(Response::HTTP_BAD_REQUEST, $validator->errors()->first());
         }
+
+        $this->projectname = request()->post('project');
+        $this->buildname = request()->post('build');
+        $this->buildstamp = request()->post('stamp');
+        $this->sitename = request()->post('site');
+        $this->starttime = request()->post('starttime');
+        $this->endtime = request()->post('endtime');
+        $this->generator = request()->post('generator', '');
+        $this->subprojectname = request()->post('subproject', '');
 
         $this->getAuthTokenHash();
     }
@@ -362,18 +351,21 @@ class UnparsedSubmissionProcessor
 
     public function parseDataFileParameters(): void
     {
-        // We expect GET to contain the following values:
-        $vars = ['buildid', 'type', 'md5', 'filename'];
-        foreach ($vars as $var) {
-            if (empty($_GET[$var])) {
-                abort(Response::HTTP_BAD_REQUEST, "Variable '$var' not set but required.");
-            }
+        $validator = Validator::make(request()->query(), [
+            'buildid' => 'required',
+            'type' => 'required',
+            'md5' => 'required',
+            'filename' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            abort(Response::HTTP_BAD_REQUEST, $validator->errors()->first());
         }
 
-        $this->buildid = $_GET['buildid'];
-        $this->type = htmlspecialchars($_GET['type']);
-        $this->md5 = htmlspecialchars($_GET['md5']);
-        $this->backupfilename = htmlspecialchars($_GET['filename']);
+        $this->buildid = request()->query('buildid');
+        $this->type = request()->query('type');
+        $this->md5 = request()->query('md5');
+        $this->backupfilename = request()->query('filename');
 
         $this->getAuthTokenHash();
     }
