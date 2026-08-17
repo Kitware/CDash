@@ -34,9 +34,9 @@ final class SubmissionController extends AbstractProjectController
     {
         // If we have a POST or PUT we defer to the unparsed submission processor.
         try {
-            if (isset($_POST['project'])) {
+            if (request()->isMethod('POST') && request()->has('project')) {
                 return (new UnparsedSubmissionProcessor())->postSubmit();
-            } elseif (isset($_GET['buildid'])) {
+            } elseif (request()->isMethod('PUT') && request()->has('buildid')) {
                 return (new UnparsedSubmissionProcessor())->putSubmitFile();
             }
         } catch (Exception $e) {
@@ -99,8 +99,7 @@ final class SubmissionController extends AbstractProjectController
             $this->failProcessing(null, Response::HTTP_BAD_REQUEST, "Invalid project name: $projectname");
         }
 
-        $expected_md5 = isset($_GET['MD5']) ? htmlspecialchars($_GET['MD5']) : '';
-
+        $expected_md5 = request()->query('MD5', '');
         if ($expected_md5 !== '' && !preg_match('/^[a-f0-9]{32}$/i', $expected_md5)) {
             Log::info("Rejected submission with invalid hash '$expected_md5' for project $projectname");
             $this->failProcessing(null, Response::HTTP_BAD_REQUEST, "Provided md5 hash '{$expected_md5}' is improperly formatted.");
@@ -199,19 +198,21 @@ final class SubmissionController extends AbstractProjectController
 
         // Check if CTest provided us enough info to assign a buildid.
         $buildid = null;
-        if (isset($_GET['build']) && isset($_GET['site']) && isset($_GET['stamp'])) {
+        if (request()->has('build') && request()->has('site') && request()->has('stamp')) {
             $build = new Build();
-            $build->Name = pdo_real_escape_string($_GET['build']);
+            $build->Name = pdo_real_escape_string(request()->query('build'));
             $build->ProjectId = $this->project->Id;
-            $build->SetStamp(pdo_real_escape_string($_GET['stamp']));
+            $build->SetStamp(pdo_real_escape_string(request()->query('stamp')));
             $build->StartTime = gmdate(FMT_DATETIME);
             $build->SubmitTime = $build->StartTime;
 
-            if (isset($_GET['subproject'])) {
-                $build->SetSubProject(pdo_real_escape_string($_GET['subproject']));
+            if (request()->has('subproject')) {
+                $build->SetSubProject(pdo_real_escape_string(request()->query('subproject')));
             }
 
-            $build->SiteId = Site::firstOrCreate(['name' => $_GET['site']], ['name' => $_GET['site']])->id;
+            $build->SiteId = Site::firstOrCreate([
+                'name' => request()->query('site'),
+            ])->id;
 
             if ($build->AddBuild()) {
                 // Insert row to keep track of how many submissions are waiting to be
