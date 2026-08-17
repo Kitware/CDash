@@ -4792,12 +4792,6 @@ parameters:
 			path: app/Jobs/ProcessSubmission.php
 
 		-
-			rawMessage: 'Method App\Jobs\ProcessSubmission::__construct() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
-			identifier: missingType.checkedException
-			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
 			rawMessage: 'Method App\Jobs\ProcessSubmission::check_email_update_errors() return type has no value type specified in iterable type array.'
 			identifier: missingType.iterableValue
 			count: 1
@@ -4932,12 +4926,6 @@ parameters:
 		-
 			rawMessage: Property App\Jobs\ProcessSubmission::$projectid has no type specified.
 			identifier: missingType.property
-			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
-			rawMessage: 'Property App\Jobs\ProcessSubmission::$timeout (int) does not accept bool|int|string.'
-			identifier: assign.propertyType
 			count: 1
 			path: app/Jobs/ProcessSubmission.php
 

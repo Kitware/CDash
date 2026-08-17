@@ -46,10 +46,7 @@ class ProcessSubmission implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
-    public int $timeout;
-
     public $filename;
-    public string $localFilename = '';
     public $projectid;
     public $buildid;
     public $expected_md5;
@@ -61,8 +58,6 @@ class ProcessSubmission implements ShouldQueue
      */
     public function __construct($filename, $projectid, $buildid, $expected_md5)
     {
-        $this->timeout = config('cdash.queue_timeout');
-
         $context = [];
         if (isset($projectid)) {
             $context['projectid'] = $projectid;
