@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\GraphQL;
 
-use App\Enums\TargetType;
 use App\Models\Label;
 use App\Models\Project;
+use App\Models\Target;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
 use Tests\TestCase;
@@ -142,10 +142,7 @@ class LabelTypeTest extends TestCase
             'uuid' => Str::uuid()->toString(),
         ]);
 
-        $target = $build->targets()->create([
-            'name' => Str::uuid()->toString(),
-            'type' => TargetType::UNKNOWN,
-        ]);
+        $target = Target::factory()->for($build)->create();
 
         $this->labels['label1'] = $target->labels()->save(Label::factory()->make());
 

@@ -2,10 +2,10 @@
 
 namespace Tests\Feature\GraphQL;
 
-use App\Enums\TargetType;
 use App\Models\Build;
 use App\Models\Project;
 use App\Models\Site;
+use App\Models\Target;
 use App\Models\Test;
 use App\Models\TestOutput;
 use App\Models\User;
@@ -982,22 +982,22 @@ class FilterTest extends TestCase
     {
         $build1uuid = Str::uuid()->toString();
         $target1name = Str::uuid()->toString();
-        $this->projects['public1']->builds()->create([
+        $build1 = $this->projects['public1']->builds()->create([
             'name' => 'build1',
             'uuid' => $build1uuid,
-        ])->targets()->create([
+        ]);
+        Target::factory()->for($build1)->create([
             'name' => $target1name,
-            'type' => TargetType::UNKNOWN,
         ]);
 
         $build2uuid = Str::uuid()->toString();
         $target2name = Str::uuid()->toString();
-        $this->projects['public2']->builds()->create([
+        $build2 = $this->projects['public2']->builds()->create([
             'name' => 'build1',
             'uuid' => $build2uuid,
-        ])->targets()->create([
+        ]);
+        Target::factory()->for($build2)->create([
             'name' => $target2name,
-            'type' => TargetType::UNKNOWN,
         ]);
 
         $this->actingAs($this->users['admin'])->graphQL('

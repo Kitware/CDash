@@ -3,6 +3,7 @@
 namespace Tests\Feature\GraphQL;
 
 use App\Enums\BuildCommandType;
+use App\Enums\TargetType;
 use App\Models\Build;
 use App\Models\BuildCommand;
 use App\Models\CoverageFile;
@@ -319,9 +320,8 @@ class BuildTypeTest extends TestCase
         ]);
 
         /** @var Target $target */
-        $target = $build->targets()->create([
-            'name' => Str::uuid()->toString(),
-            'type' => 'EXECUTABLE',
+        $target = Target::factory()->for($build)->create([
+            'type' => TargetType::EXECUTABLE,
         ]);
 
         $this->graphQL('
