@@ -258,6 +258,8 @@ add_feature_test_in_transaction(/Feature/Jobs/PruneAuthTokensTest)
 
 add_feature_test_in_transaction(/Feature/UserCommand)
 
+add_feature_test_in_transaction(/Feature/EmailTestCommandTest)
+
 add_feature_test_in_transaction(/Feature/Jobs/NotifyExpiringAuthTokensTest)
 
 add_feature_test_in_transaction(/Feature/Jobs/PruneUploadsTest)
