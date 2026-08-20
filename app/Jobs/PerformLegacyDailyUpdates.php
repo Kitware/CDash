@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Enums\ProjectRole;
 use App\Models\Project;
 use CDash\Database;
 use CDash\Model\BuildGroup;
@@ -154,10 +155,10 @@ class PerformLegacyDailyUpdates implements ShouldQueue
                           u.id=user2project.userid
                           AND user2project.projectid=?
                           AND (
-                              user2project.role=2
+                              user2project.role=?
                               OR user2project.emailmissingsites=1
                           )
-                  ', [$projectid]);
+                  ', [$projectid, ProjectRole::ADMINISTRATOR->value]);
 
             foreach ($emails as $emails_array) {
                 $recipients[] = $emails_array['email'];
