@@ -97,22 +97,5 @@ export default {
       currentSection: 'general',
     };
   },
-
-  mounted() {
-    this.navigateToHashSection();
-  },
-
-  methods: {
-    navigateToHashSection() {
-      if (window.location.hash !== '#Testing') {
-        return;
-      }
-
-      this.currentSection = 'general';
-      this.$nextTick(() => {
-        document.getElementById('Testing')?.scrollIntoView();
-      });
-    },
-  },
 };
 </script>

@@ -1,8 +1,5 @@
 <template>
-  <section
-    :id="sectionId"
-    class="tw-container tw-mx-auto"
-  >
+  <section class="tw-container tw-mx-auto">
     <h4 class="tw-text-xl tw-font-semibold tw-border-b tw-pb-2 tw-mb-2">
       {{ title }}
     </h4>
@@ -20,12 +17,6 @@ export default {
     title: {
       type: String,
       required: true,
-    },
-
-    sectionId: {
-      type: String,
-      required: false,
-      default: null,
     },
   },
 };
