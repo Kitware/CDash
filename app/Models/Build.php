@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Utils\TestDisplay;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -403,16 +402,10 @@ class Build extends Model
     }
 
     /**
-     * The number of not-run tests whose details are not "Disabled".
+     * The number of not-run tests which were not explicitly disabled.
      */
     public function notRunTestsWarningCount(): int
     {
-        return $this->tests()
-            ->where('status', Test::NOTRUN)
-            ->where(static function (Builder $query): void {
-                $query->whereNull('details')
-                    ->orWhere('details', '!=', TestDisplay::DISABLED_DETAILS);
-            })
-            ->count();
+        return $this->tests()->notRunWarning()->count();
     }
 }
