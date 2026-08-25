@@ -31,20 +31,3 @@ export function testStatusToColorClass(status, details = '') {
       return '';
   }
 }
-
-/**
- * @param {string} status
- * @param {string} details
- */
-export function testStatusToTextColorClass(status, details = '') {
-  switch (testStatusToColorClass(status, details)) {
-    case 'normal':
-      return 'normal-text';
-    case 'warning':
-      return 'warning-text';
-    case 'error':
-      return 'error-text';
-    default:
-      return '';
-  }
-}
