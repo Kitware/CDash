@@ -33,6 +33,7 @@ use Illuminate\Support\Str;
  * @property int $buildwarnings
  * @property int $buildduration
  * @property int $testnotrun
+ * @property int $testnotrunwarning
  * @property int $testfailed
  * @property int $testpassed
  * @property int $testtimestatusfailed
@@ -84,6 +85,7 @@ class Build extends Model
         'buildwarnings',
         'buildduration',
         'testnotrun',
+        'testnotrunwarning',
         'testfailed',
         'testpassed',
         'testtimestatusfailed',
@@ -118,6 +120,7 @@ class Build extends Model
         'buildwarnings' => 'integer',
         'buildduration' => 'integer',
         'testnotrun' => 'integer',
+        'testnotrunwarning' => 'integer',
         'testfailed' => 'integer',
         'testpassed' => 'integer',
         'testduration' => 'integer',
@@ -399,13 +402,5 @@ class Build extends Model
         }
 
         return ($loctested / $total_lines) * 100;
-    }
-
-    /**
-     * The number of not-run tests which were not explicitly disabled.
-     */
-    public function notRunTestsWarningCount(): int
-    {
-        return $this->tests()->notRunWarning()->count();
     }
 }
