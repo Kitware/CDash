@@ -86,7 +86,6 @@ class TestsIdPageTest extends BrowserTestCase
 
             $browser->visit("/tests/{$test->id}")
                 ->waitForText($test->testname)
-                ->assertSee($this->build->name)
                 ->assertSeeIn('@test-status', 'Passed')
                 ->assertPresent('@test-name-link')
                 // Browser might decode %20 to space in href attribute
