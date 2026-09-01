@@ -35,7 +35,7 @@
     "autoprefixer": "^10.5.4",
     "axios": "^1.19",
     "bootstrap": "^4.6.2",
-    "core-js": "^3.49.0",
+    "core-js": "^3.50.0",
     "d3": "^3.5.17",
     "daisyui": "^4.12.23",
     "echarts": "^6.1.0",
