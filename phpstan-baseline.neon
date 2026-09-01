@@ -7848,7 +7848,7 @@ parameters:
 		-
 			rawMessage: 'Only numeric types are allowed in -, int|false given on the right side.'
 			identifier: minus.rightNonNumeric
-			count: 3
+			count: 4
 			path: app/cdash/app/Model/Build.php
 
 		-
