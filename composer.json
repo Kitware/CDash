@@ -34,7 +34,7 @@
     "league/flysystem-aws-s3-v3": "^3.29",
     "mll-lab/laravel-graphiql": "4.1.0",
     "nuwave/lighthouse": "6.69.2",
-    "pear/archive_tar": "1.6.0",
+    "pear/archive_tar": "1.6.1",
     "php-di/php-di": "7.1.1",
     "scaler-tech/laravel-saml2": "2.7.2",
     "sebastian/diff": "7.0.0",
