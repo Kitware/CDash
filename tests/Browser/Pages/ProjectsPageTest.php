@@ -58,10 +58,9 @@ class ProjectsPageTest extends BrowserTestCase
         parent::tearDown();
     }
 
-    public function testCreateProjectButtonOnlyVisibleToAdminsByDefault(): void
+    public function testCreateProjectButtonVisibleToAdmins(): void
     {
         $this->users['admin'] = User::factory()->adminUser()->create();
-        $this->users['normal'] = User::factory()->create();
 
         $this->browse(function (Browser $browser): void {
             $browser->loginAs($this->users['admin'])
@@ -69,14 +68,29 @@ class ProjectsPageTest extends BrowserTestCase
                 ->whenAvailable('@projects-page', function (Browser $browser): void {
                     $browser->assertVisible('@create-project-button');
                 });
+        });
+    }
+
+    public function testCreateProjectButtonNotVisibleToRegularUsers(): void
+    {
+        $this->users['normal'] = User::factory()->create();
+
+        $this->browse(function (Browser $browser): void {
             $browser->loginAs($this->users['normal'])
                 ->visit('/projects')
                 ->whenAvailable('@projects-page', function (Browser $browser): void {
                     $browser->assertMissing('@create-project-button');
                 });
+        });
+    }
 
-            $browser
-                ->visit('/projects')
+    public function testCreateProjectButtonNotVisibleWhenSignedOut(): void
+    {
+        // Avoid redirecting to login page due to no projects
+        $this->projects['project1'] = $this->makePublicProject();
+
+        $this->browse(function (Browser $browser): void {
+            $browser->visit('/projects')
                 ->whenAvailable('@projects-page', function (Browser $browser): void {
                     $browser->assertMissing('@create-project-button');
                 });
