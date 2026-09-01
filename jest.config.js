@@ -1,13 +1,12 @@
 module.exports = {
   verbose: true,
-  moduleFileExtensions: ['js', 'vue'],
+  moduleFileExtensions: ['js'],
   testEnvironment: 'jsdom',
   testEnvironmentOptions: {
     customExportConditions: ['node', 'node-addons'],
   },
   transform: {
     '^.+\\.js$': 'babel-jest',
-    '^.+\\.vue$': '@vue/vue3-jest',
   },
   transformIgnorePatterns: [
     '/node_modules/(?!echarts|zrender|jquery)/',
