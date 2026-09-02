@@ -86,7 +86,7 @@ class UnparsedSubmissionProcessor
         // Thus function will throw an exception if invalid data provided
         $this->parseBuildMetadata();
 
-        if ($this->checkDatabaseConnection() && !app()->isDownForMaintenance()) {
+        if (SystemUtils::isDatabaseOnline()) {
             return $this->initializeBuild();
         }
 
@@ -213,7 +213,7 @@ class UnparsedSubmissionProcessor
         $this->parseDataFileParameters();
         $ext = pathinfo($this->backupfilename, PATHINFO_EXTENSION);
 
-        $db_up = $this->checkDatabaseConnection() && !app()->isDownForMaintenance();
+        $db_up = SystemUtils::isDatabaseOnline();
         if ($db_up) {
             if (!is_numeric($this->buildid) || $this->buildid < 1) {
                 abort(Response::HTTP_NOT_FOUND, 'Build not found');
@@ -368,17 +368,6 @@ class UnparsedSubmissionProcessor
         $this->backupfilename = request()->query('filename');
 
         $this->getAuthTokenHash();
-    }
-
-    /** Check if CDash's database is down. */
-    private function checkDatabaseConnection(): bool
-    {
-        try {
-            DB::connection()->getPdo();
-            return true;
-        } catch (Exception) {
-            return false;
-        }
     }
 
     /** Write build metadata to disk in JSON format. */
