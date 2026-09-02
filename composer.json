@@ -54,7 +54,7 @@
     "phpstan/phpstan": "2.2.6",
     "phpstan/phpstan-deprecation-rules": "2.0.5",
     "phpstan/phpstan-mockery": "2.0.0",
-    "phpstan/phpstan-phpunit": "2.0.16",
+    "phpstan/phpstan-phpunit": "2.0.18",
     "phpstan/phpstan-strict-rules": "2.0.12",
     "phpunit/phpunit": "12.5.22"
   },
