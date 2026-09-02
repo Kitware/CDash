@@ -1,31 +1,32 @@
 <template>
   <LoadingIndicator :is-loading="!build">
-    <div
-      class="tw-border-base-300 tw-bg-base-200 tw-border tw-rounded-md tw-p-4"
-      data-test="build-summary-card"
-    >
-      <div class="tw-text-lg tw-font-medium tw-truncate tw-text-nowrap">
-        <a
-          :href="`${$baseURL}/builds/${build.id}`"
-          class="tw-link tw-link-hover"
-        >{{ build.name }}</a>
-        <div class="tw-badge tw-badge-outline tw-ml-2 tw-text-neutral-500">
-          {{ build.buildType }}
+    <div class="tw-border-base-300 tw-bg-base-200 tw-border tw-rounded-lg tw-p-4">
+      <div class="tw-flex tw-flex-row tw-justify-between tw-items-start">
+        <div class="tw-text-lg tw-font-medium tw-truncate tw-text-nowrap">
+          <a
+            :href="`${$baseURL}/builds/${build.id}`"
+            class="tw-link tw-link-hover"
+          >{{ build.name }}</a>
+          <div class="tw-badge tw-badge-outline tw-ml-2 tw-text-neutral-500">
+            {{ build.buildType }}
+          </div>
+        </div>
+        <div class="tw-text-small tw-font-medium tw-text-neutral-500 tw-space-x-1 tw-shrink-0">
+          <span :title="fullHumanReadableDateTimeString(build.startTime)">{{ humanReadableBuildStartTime }}</span>
+          <span v-if="humanReadableTotalDuration">({{ humanReadableTotalDuration }})</span>
         </div>
       </div>
-      <div
-        class="tw-text-small tw-font-medium tw-text-neutral-500 tw-flex tw-flex-row tw-gap-2 tw-flex-wrap sm:tw-flex-nowrap tw-text-nowrap"
-      >
+      <div class="tw-text-small tw-font-medium tw-text-neutral-500 tw-flex tw-flex-row tw-gap-4 tw-flex-wrap tw-text-nowrap tw-mt-1">
         <a
           :href="`${$baseURL}/sites/${build.site.id}`"
-          class="tw-truncate tw-link tw-link-hover"
+          class="tw-truncate tw-min-w-0 tw-link-hover"
         >
           <FontAwesomeIcon :icon="FA.faComputer" /> {{ build.site.name }}
         </a>
-        &bull;
+
         <span
           v-if="build.operatingSystemName"
-          class="tw-truncate"
+          class="tw-truncate tw-min-w-0"
         >
           <FontAwesomeIcon
             v-if="build.operatingSystemName === 'Windows'"
@@ -41,26 +42,40 @@
             :icon="FA.faApple"
           />
           {{ build.operatingSystemName }} {{ build.operatingSystemRelease }}
-          <span
-            v-if="build.operatingSystemPlatform"
-            class="tw-badge tw-badge-outline tw-text-xs tw-truncate"
-          >
-            {{ build.operatingSystemPlatform }}
+        </span>
+
+        <span
+          v-if="build.operatingSystemPlatform"
+          class="tw-truncate tw-min-w-0"
+        >
+          <FontAwesomeIcon
+            :icon="FA.faMicrochip"
+          />
+          {{ build.operatingSystemPlatform }}
+        </span>
+
+        <span
+          v-if="build.updateStep?.revision"
+          class="tw-truncate tw-min-w-0"
+        >
+          <FontAwesomeIcon
+            :icon="FA.faCodeCommit"
+          />
+          <span class="tw-font-mono">
+            {{ build.updateStep?.revision }}
           </span>
         </span>
-        &bull;
-        <span class="tw-truncate">
-          {{ build.generator }}
-        </span>
-        <template v-if="build.compilerName">
-          &bull;
-          <span class="tw-truncate">
-            {{ build.compilerName }} {{ build.compilerVersion }}
-          </span>
-        </template>
-        <span class="tw-flex-grow tw-text-right tw-space-x-1">
-          <span :title="fullHumanReadableDateTimeString(build.startTime)">{{ humanReadableBuildStartTime }}</span>
-          <span v-if="humanReadableTotalDuration">({{ humanReadableTotalDuration }})</span>
+      </div>
+      <div
+        v-if="build.labels && build.labels.edges.length > 0"
+        class="tw-mt-2 tw-flex tw-flex-row tw-flex-wrap tw-gap-2"
+      >
+        <span
+          v-for="label in build.labels.edges"
+          :key="label.node.id"
+          class="tw-badge tw-badge-outline tw-text-xs tw-text-neutral-500"
+        >
+          {{ label.node.text }}
         </span>
       </div>
     </div>
@@ -72,7 +87,11 @@ import gql from 'graphql-tag';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import LoadingIndicator from './LoadingIndicator.vue';
 import { DateTime, Interval } from 'luxon';
-import { faComputer } from '@fortawesome/free-solid-svg-icons';
+import {
+  faComputer,
+  faMicrochip,
+  faCodeCommit,
+} from '@fortawesome/free-solid-svg-icons';
 import {
   faWindows,
   faLinux,
@@ -101,15 +120,25 @@ export default {
             startTime
             endTime
             buildType
-            generator
             operatingSystemName
             operatingSystemPlatform
             operatingSystemRelease
-            compilerName
-            compilerVersion
             site {
               id
               name
+            }
+            updateStep {
+              id
+              revision
+            }
+            # We assume that projects won't have more than 100 labels.  Displaying more would be a challenge...
+            labels(first: 100) {
+              edges {
+                node {
+                  id
+                  text
+                }
+              }
             }
           }
         }
@@ -130,6 +159,8 @@ export default {
         faWindows,
         faLinux,
         faApple,
+        faMicrochip,
+        faCodeCommit,
       };
     },
 
