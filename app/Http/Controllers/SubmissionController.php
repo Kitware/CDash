@@ -10,6 +10,7 @@ use App\Models\Site;
 use App\Rules\ProjectNameRule;
 use App\Utils\AuthTokenUtil;
 use App\Utils\SubmissionUtils;
+use App\Utils\SystemUtils;
 use App\Utils\UnparsedSubmissionProcessor;
 use CDash\Model\Build;
 use CDash\Model\Project;
@@ -129,12 +130,7 @@ final class SubmissionController extends AbstractProjectController
         }
 
         // Check if we can connect to the database before proceeding any further.
-        try {
-            DB::connection()->getPdo();
-            if (app()->isDownForMaintenance()) {
-                throw new Exception();
-            }
-        } catch (Exception) {
+        if (!SystemUtils::isDatabaseOnline()) {
             // Write a marker file so we know to process these files when the DB comes back up.
             if (!Storage::exists('DB_WAS_DOWN')) {
                 Storage::put('DB_WAS_DOWN', '');
