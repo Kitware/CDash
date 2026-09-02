@@ -73,6 +73,7 @@ class BuildTypeTest extends TestCase
             'buildwarnings' => 4,
             'buildduration' => 20,
             'testnotrun' => 5,
+            'testnotrunwarning' => 9,
             'testfailed' => 6,
             'testpassed' => 7,
             'testtimestatusfailed' => 8,
@@ -107,6 +108,7 @@ class BuildTypeTest extends TestCase
                                 buildWarningsCount
                                 buildDuration
                                 notRunTestsCount
+                                notRunTestsWarningCount
                                 failedTestsCount
                                 passedTestsCount
                                 timeStatusFailedTestsCount
@@ -147,6 +149,7 @@ class BuildTypeTest extends TestCase
                                     'buildWarningsCount' => 4,
                                     'buildDuration' => 20,
                                     'notRunTestsCount' => 5,
+                                    'notRunTestsWarningCount' => 9,
                                     'failedTestsCount' => 6,
                                     'passedTestsCount' => 7,
                                     'timeStatusFailedTestsCount' => 8,
@@ -647,35 +650,6 @@ class BuildTypeTest extends TestCase
             'data' => [
                 'build' => [
                     'percentCoverageForPath' => $expected_percent,
-                ],
-            ],
-        ]);
-    }
-
-    public function testNotRunTestsWarningCount(): void
-    {
-        /** @var Build $build */
-        $build = $this->project->builds()->create([
-            'name' => 'build-with-disabled-tests',
-            'uuid' => Str::uuid()->toString(),
-            'testnotrun' => 2,
-            'testnotrunwarning' => 1,
-        ]);
-
-        $this->graphQL('
-            query build($id: ID!) {
-                build(id: $id) {
-                    notRunTestsCount
-                    notRunTestsWarningCount
-                }
-            }
-        ', [
-            'id' => $build->id,
-        ])->assertExactJson([
-            'data' => [
-                'build' => [
-                    'notRunTestsCount' => 2,
-                    'notRunTestsWarningCount' => 1,
                 ],
             ],
         ]);

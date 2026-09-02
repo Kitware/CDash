@@ -54,7 +54,7 @@
           :class="(row[column.name]?.classes ?? []).concat(column.expand ? [] : ['shrink'])"
           class="table-cell"
           data-cy="data-table-cell"
-          :data-test="testId + '-cell'"
+          :data-test="row[column.name]?.testId ?? (testId + '-cell')"
         >
           <!--
             Display a custom template for each table cell, or a default template
@@ -162,6 +162,7 @@ export default {
      *       text: String
      *       href: String
      *       classes: ?[String]  # A optional list of classes to be applied to the <td> element
+     *       testId: ?String     # Optional data-test attribute for the <td> element
      *   }
      *
      * Custom metadata objects can be used to provide props to custom templates passed via slots.

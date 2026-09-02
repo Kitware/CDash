@@ -813,9 +813,10 @@ class Build
         // Disabled tests aren't worth warning about, so they are tallied separately from
         // the other not-run tests.  The tests for this build have all been recorded by
         // now, so they can be counted directly.
-        $numberTestsNotRunWarning = Test::where('buildid', (int) $this->Id)
+        $numberTestsNotRunWarning = EloquentBuild::find((int) $this->Id)
+            ?->tests()
             ->notRunWarning()
-            ->count();
+            ->count() ?? 0;
 
         // If this is a subproject build, we also have to update its parents test numbers.
         $newFailed = $numberTestsFailed - $this->GetNumberOfFailedTests();

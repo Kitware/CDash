@@ -327,6 +327,7 @@ export default {
             text: this.humanReadableTestStatus(edge.node.status),
             href: `${this.$baseURL}/tests/${edge.node.id}`,
             classes: [testStatusToColorClass(edge.node.status, edge.node.details)],
+            testId: `test-status-${edge.node.id}`,
           },
           subProject: edge.subProject ?? '',
           timeStatus: {

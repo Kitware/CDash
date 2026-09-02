@@ -549,19 +549,11 @@ class BuildTestsPageTest extends BrowserTestCase
 
         $this->browse(function (Browser $browser) use ($disabled_not_run_test, $warning_not_run_test, $build): void {
             $browser->visit("/builds/{$build->id}/tests")
-                ->waitFor('@tests-table')
-                ->waitForText($disabled_not_run_test->testname)
+                ->waitFor("@test-status-{$disabled_not_run_test->id}")
+                ->waitFor("@test-status-{$warning_not_run_test->id}")
+                ->assertAttributeContains("@test-status-{$disabled_not_run_test->id}", 'class', 'normal')
+                ->assertAttributeContains("@test-status-{$warning_not_run_test->id}", 'class', 'warning')
             ;
-
-            self::assertTrue($browser->script(
-                'return document.querySelector(\'a[href*="/tests/' . $disabled_not_run_test->id . '"]\')'
-                . '?.closest("tr")?.querySelector("td.normal") !== null',
-            )[0]);
-
-            self::assertTrue($browser->script(
-                'return document.querySelector(\'a[href*="/tests/' . $warning_not_run_test->id . '"]\')'
-                . '?.closest("tr")?.querySelector("td.warning") !== null',
-            )[0]);
         });
     }
 }
