@@ -15310,12 +15310,6 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			rawMessage: 'Path in require() __DIR__ . ''/../bootstrap/app.php'' is not a file or it does not exist.'
-			identifier: require.fileNotFound
-			count: 2
-			path: app/cdash/tests/kwtest/kw_web_tester.php
-
-		-
 			rawMessage: 'Path in require_once() "tests/kwtest/simpletest/web_tester.php" is not a file or it does not exist.'
 			identifier: requireOnce.fileNotFound
 			count: 1
@@ -15616,7 +15610,7 @@ parameters:
 			path: app/cdash/tests/test_aggregatecoverage.php
 
 		-
-			rawMessage: 'Only booleans are allowed in an if condition, int|true given.'
+			rawMessage: 'Only booleans are allowed in an if condition, int<0, 1>|true given.'
 			identifier: if.condNotBoolean
 			count: 1
 			path: app/cdash/tests/test_aggregatecoverage.php
@@ -17269,7 +17263,7 @@ parameters:
 			path: app/cdash/tests/test_crosssubprojectcoverage.php
 
 		-
-			rawMessage: 'Only booleans are allowed in an if condition, int given.'
+			rawMessage: 'Only booleans are allowed in an if condition, int<0, 1> given.'
 			identifier: if.condNotBoolean
 			count: 1
 			path: app/cdash/tests/test_crosssubprojectcoverage.php
@@ -19291,7 +19285,7 @@ parameters:
 			path: app/cdash/tests/test_multicoverage.php
 
 		-
-			rawMessage: 'Only booleans are allowed in an if condition, int given.'
+			rawMessage: 'Only booleans are allowed in an if condition, int<0, 1> given.'
 			identifier: if.condNotBoolean
 			count: 2
 			path: app/cdash/tests/test_multicoverage.php
