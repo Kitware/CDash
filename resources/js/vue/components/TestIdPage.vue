@@ -334,6 +334,7 @@ import {
   faChartLine,
   faLink,
 } from '@fortawesome/free-solid-svg-icons';
+import { isAcceptableNotRun } from './shared/TestDisplay';
 
 export default {
   name: 'TestIdPage',
@@ -517,6 +518,14 @@ export default {
     },
 
     testStatusPillClass() {
+      if (!this.test) {
+        return 'tw-bg-neutral tw-text-neutral-content';
+      }
+
+      if (this.test.status === 'NOT_RUN' && isAcceptableNotRun(this.test.details)) {
+        return 'tw-bg-success tw-text-success-content';
+      }
+
       switch (this.test.status) {
         case 'PASSED':
           return 'tw-bg-success tw-text-success-content';

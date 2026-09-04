@@ -773,7 +773,7 @@ class Build
     /** Helper function for test number accessors. */
     private function GetNumberOfTestsByField(string $field): int
     {
-        if (!in_array($field, ['testpassed', 'testfailed', 'testnotrun'], true)) {
+        if (!in_array($field, ['testpassed', 'testfailed', 'testnotrun', 'testnotrunwarning'], true)) {
             throw new InvalidArgumentException('Invalid field specified.');
         }
 
@@ -799,20 +799,36 @@ class Build
         return $this->GetNumberOfTestsByField('testnotrun');
     }
 
+    /** Get number of not run tests which were not explicitly disabled */
+    public function GetNumberOfNotRunWarningTests(): int|false
+    {
+        return $this->GetNumberOfTestsByField('testnotrunwarning');
+    }
+
     /** Update the test numbers */
     public function UpdateTestNumbers(int $numberTestsPassed, int $numberTestsFailed, int $numberTestsNotRun): void
     {
         $this->TestFailedCount = $numberTestsFailed;
 
+        // Disabled tests aren't worth warning about, so they are tallied separately from
+        // the other not-run tests.  The tests for this build have all been recorded by
+        // now, so they can be counted directly.
+        $numberTestsNotRunWarning = EloquentBuild::find((int) $this->Id)
+            ?->tests()
+            ->notRunWarning()
+            ->count() ?? 0;
+
         // If this is a subproject build, we also have to update its parents test numbers.
         $newFailed = $numberTestsFailed - $this->GetNumberOfFailedTests();
         $newNotRun = $numberTestsNotRun - $this->GetNumberOfNotRunTests();
         $newPassed = $numberTestsPassed - $this->GetNumberOfPassedTests();
+        $newNotRunWarning = $numberTestsNotRunWarning - $this->GetNumberOfNotRunWarningTests();
         $this->SetParentId($this->LookupParentBuildId());
-        $this->UpdateParentTestNumbers($newFailed, $newNotRun, $newPassed);
+        $this->UpdateParentTestNumbers($newFailed, $newNotRun, $newPassed, $newNotRunWarning);
 
         EloquentBuild::whereKey($this->Id)->update([
             'testnotrun' => $numberTestsNotRun,
+            'testnotrunwarning' => $numberTestsNotRunWarning,
             'testfailed' => $numberTestsFailed,
             'testpassed' => $numberTestsPassed,
         ]);
@@ -1612,22 +1628,24 @@ class Build
     }
 
     /** Update the testing numbers for our parent build. */
-    private function UpdateParentTestNumbers(int $newFailed, int $newNotRun, int $newPassed): void
+    private function UpdateParentTestNumbers(int $newFailed, int $newNotRun, int $newPassed, int $newNotRunWarning): void
     {
         if ($this->ParentId < 1) {
             return;
         }
 
-        DB::transaction(function () use ($newFailed, $newNotRun, $newPassed): void {
+        DB::transaction(function () use ($newFailed, $newNotRun, $newPassed, $newNotRunWarning): void {
             $parent = EloquentBuild::findOrFail($this->ParentId);
 
             // Don't let the -1 default value screw up our math.
             $parent_testfailed = self::ConvertMissingToZero($parent->testfailed);
             $parent_testnotrun = self::ConvertMissingToZero($parent->testnotrun);
+            $parent_testnotrunwarning = self::ConvertMissingToZero($parent->testnotrunwarning);
             $parent_testpassed = self::ConvertMissingToZero($parent->testpassed);
 
             $parent->update([
                 'testnotrun' => $newNotRun + $parent_testnotrun,
+                'testnotrunwarning' => $newNotRunWarning + $parent_testnotrunwarning,
                 'testfailed' => $newFailed + $parent_testfailed,
                 'testpassed' => $newPassed + $parent_testpassed,
             ]);

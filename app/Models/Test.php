@@ -32,6 +32,8 @@ use Illuminate\Support\Facades\Config;
  * @property ?Carbon $starttime
  * @property TestTimeStatusCategory $timestatuscategory
  *
+ * @method static Builder<Test> notRunWarning()
+ *
  * @mixin Builder<Test>
  */
 class Test extends Model
@@ -83,6 +85,22 @@ class Test extends Model
         'timestatuscategory' => TestTimeStatusCategory::class,
         'starttime' => 'datetime',
     ];
+
+    /**
+     * Tests which did not run for a reason other than being explicitly disabled.
+     *
+     * CTest reports a completion status of "Disabled" for tests marked DISABLED.
+     *
+     * @param Builder<self> $query
+     */
+    public function scopeNotRunWarning(Builder $query): void
+    {
+        $query->where('status', self::NOTRUN)
+            ->where(static function (Builder $query): void {
+                $query->whereNull('details')
+                    ->orWhere('details', '!=', self::DISABLED);
+            });
+    }
 
     /**
      * @return BelongsTo<Build, $this>

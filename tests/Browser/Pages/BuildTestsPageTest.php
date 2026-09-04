@@ -521,4 +521,39 @@ class BuildTestsPageTest extends BrowserTestCase
             ;
         });
     }
+
+    public function testNotRunWithDisabledDetailsShownInGreen(): void
+    {
+        /** @var Build $build */
+        $build = $this->project->builds()->create([
+            'siteid' => $this->site->id,
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        /** @var Test $disabled_not_run_test */
+        $disabled_not_run_test = $build->tests()->create([
+            'testname' => Str::uuid()->toString(),
+            'status' => 'notrun',
+            'details' => 'Disabled',
+            'outputid' => $this->testOutput->id,
+        ]);
+
+        /** @var Test $warning_not_run_test */
+        $warning_not_run_test = $build->tests()->create([
+            'testname' => Str::uuid()->toString(),
+            'status' => 'notrun',
+            'details' => 'Unable to find executable',
+            'outputid' => $this->testOutput->id,
+        ]);
+
+        $this->browse(function (Browser $browser) use ($disabled_not_run_test, $warning_not_run_test, $build): void {
+            $browser->visit("/builds/{$build->id}/tests")
+                ->waitFor("@test-status-{$disabled_not_run_test->id}")
+                ->waitFor("@test-status-{$warning_not_run_test->id}")
+                ->assertAttributeContains("@test-status-{$disabled_not_run_test->id}", 'class', 'normal')
+                ->assertAttributeContains("@test-status-{$warning_not_run_test->id}", 'class', 'warning')
+            ;
+        });
+    }
 }
