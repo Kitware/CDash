@@ -109,7 +109,7 @@ class SubmissionUtils
     /** Add a new build */
     public static function add_build(Build $build)
     {
-        if (!is_numeric($build->ProjectId) || !is_numeric($build->SiteId)) {
+        if (!is_numeric($build->ProjectId) || (!is_numeric($build->SiteId) && $build->SiteId !== null)) {
             return;
         }
 

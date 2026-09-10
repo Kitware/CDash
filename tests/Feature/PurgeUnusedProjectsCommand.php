@@ -29,7 +29,6 @@ class PurgeUnusedProjectsCommand extends TestCase
         $build = new Build();
         $build->Name = 'test';
         $build->ProjectId = $this->project1->id;
-        $build->SiteId = 1;
         $build->SetStamp('20090223-0115-Experimental');
         $build->StartTime = '2009-02-23 01:15:00';
         $build->EndTime = '2009-02-23 01:15:00';

@@ -14,7 +14,7 @@ use Illuminate\Support\Str;
 
 /**
  * @property int $id
- * @property int $siteid
+ * @property ?int $siteid
  * @property int $projectid
  * @property int $parentid
  * @property int $subprojectid

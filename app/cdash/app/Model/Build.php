@@ -47,7 +47,7 @@ class Build
     public const STANDALONE_BUILD = 0;
 
     public $Id;
-    public $SiteId = 0;
+    public $SiteId;
     public $ProjectId = 0;
     private int $ParentId = 0;
     private string $Uuid = '';
