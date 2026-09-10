@@ -4,6 +4,7 @@ namespace Tests\Browser\Pages;
 
 use App\Models\Build;
 use App\Models\BuildConfigure;
+use App\Models\BuildGroup;
 use App\Models\Configure;
 use App\Models\Project;
 use App\Models\Site;
@@ -35,13 +36,8 @@ class BuildConfigurePageTest extends BrowserTestCase
 
         $this->project = $this->makePublicProject();
 
-        $buildgroup1 = $this->project->buildgroups()->create([
-            'description' => Str::uuid()->toString(),
-        ]);
-
-        $buildgroup2 = $this->project->buildgroups()->create([
-            'description' => Str::uuid()->toString(),
-        ]);
+        $buildgroup1 = BuildGroup::factory()->for($this->project)->create();
+        $buildgroup2 = BuildGroup::factory()->for($this->project)->create();
 
         $this->subproject1 = SubProject::create([
             'name' => Str::uuid()->toString(),
