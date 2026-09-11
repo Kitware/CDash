@@ -55,7 +55,7 @@ class BuildModelTestCase extends KWWebTestCase
         }
 
         $this->parentBuilds = [];
-        $parentBuilds = pdo_query("SELECT * FROM build WHERE name = 'buildmodel-test-parent-build' AND parentid = -1 ORDER BY id");
+        $parentBuilds = pdo_query("SELECT * FROM build WHERE name = 'buildmodel-test-parent-build' AND parentid IS NULL ORDER BY id");
         while ($build = pdo_fetch_array($parentBuilds)) {
             $this->parentBuilds[] = $build;
         }

@@ -425,7 +425,7 @@ final class BuildController extends AbstractBuildController
                     'SELECT starttime FROM build
                 WHERE siteid = :siteid AND type = :type AND name = :name AND
                       projectid = :projectid AND starttime <= :starttime AND
-                      parentid < 1 AND builderrors < 1
+                      parentid IS NULL AND builderrors < 1
                 ORDER BY starttime DESC LIMIT 1');
                 pdo_execute($no_errors_stmt, $query_params);
                 $last_good_submit = $no_errors_stmt->fetchColumn();
@@ -452,7 +452,7 @@ final class BuildController extends AbstractBuildController
                     'SELECT starttime FROM build
                 WHERE siteid = :siteid AND type = :type AND
                         name = :name AND projectid = :projectid AND
-                        starttime <= :starttime AND parentid < 1 AND
+                        starttime <= :starttime AND parentid IS NULL AND
                         testfailed < 1
                 ORDER BY starttime DESC LIMIT 1');
                 pdo_execute($no_fails_stmt, $query_params);

@@ -122,7 +122,7 @@ class TestOverview extends ResultsApi
                 JOIN build2test b2t ON (b2t.buildid=b.id)
                 $group_join
                 $sp_join
-                WHERE b.projectid = :projectid AND b.parentid != -1 AND $group_clause
+                WHERE b.projectid = :projectid AND $group_clause
                 AND b.starttime < :end AND b.starttime >= :begin
                 $filter_sql");
         $stmt->bindParam(':projectid', $this->project->Id);

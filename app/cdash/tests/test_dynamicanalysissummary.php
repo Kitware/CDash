@@ -110,7 +110,7 @@ class DynamicAnalysisSummaryTestCase extends KWWebTestCase
         $this->ParentId = 0;
         foreach ($result as $row) {
             $numdefects = (int) $row->numdefects;
-            if ((int) $row->parentid === -1) {
+            if ($row->parentid === null) {
                 // Parent case.
                 $this->ParentId = $row->id;
                 if ($numdefects !== 3) {

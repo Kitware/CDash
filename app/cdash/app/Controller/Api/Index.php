@@ -143,7 +143,7 @@ class Index extends ResultsApi
             $query_params[] = (int) $this->parentId;
         } elseif (!is_numeric($this->subProjectId)) {
             // Only show builds that are not children.
-            $sql .= ' AND (b.parentid = -1 OR b.parentid = 0) ';
+            $sql .= ' AND b.parentid IS NULL ';
         }
 
         // If the filter data doesn't have a date clause, use this as a default

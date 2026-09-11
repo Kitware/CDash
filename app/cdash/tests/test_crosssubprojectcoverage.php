@@ -203,7 +203,7 @@ class CoverageAcrossSubProjectsTestCase extends KWWebTestCase
         $row = DB::select(
             "SELECT id FROM build
                 WHERE name = 'Aggregate Coverage' AND
-                parentid=-1 AND
+                parentid IS NULL AND
                 projectid=
                 (SELECT id FROM project WHERE name='CrossSubProjectExample')")[0];
         $parentid = $row->id;

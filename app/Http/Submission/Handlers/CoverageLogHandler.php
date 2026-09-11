@@ -124,15 +124,16 @@ class CoverageLogHandler extends AbstractXmlHandler
                     $subproject = SubProject::GetSubProjectFromPath(
                         $coverageFile->FullPath, (int) $this->GetProject()->Id);
                     if (null !== $subproject) {
+                        $parentid = $this->Build->GetParentId() ?? (int) $this->Build->Id;
                         $subprojectBuild = Build::GetSubProjectBuild(
-                            $this->Build->GetParentId(), $subproject->GetId());
+                            $parentid, $subproject->GetId());
                         if (null === $subprojectBuild) {
                             // This SubProject build doesn't exist yet, add it here.
                             $subprojectBuild = new Build();
                             $subprojectBuild->ProjectId = $this->GetProject()->Id;
                             $subprojectBuild->Name = $this->Build->Name;
                             $subprojectBuild->SiteId = $this->Build->SiteId;
-                            $subprojectBuild->SetParentId($this->Build->GetParentId());
+                            $subprojectBuild->SetParentId($parentid);
                             $subprojectBuild->SetStamp($this->Build->GetStamp());
                             $subprojectBuild->SetSubProject($subproject->GetName());
                             $subprojectBuild->StartTime = $this->Build->StartTime;

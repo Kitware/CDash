@@ -111,7 +111,7 @@ class Timeline extends Index
         $stmt = $this->db->prepare('
                 SELECT b.id, b.starttime, b.testfailed, b.testnotrun, b.testpassed
                 FROM build b
-                WHERE b.projectid = :projectid AND b.parentid IN (0, -1)
+                WHERE b.projectid = :projectid AND b.parentid IS NULL
                 ORDER BY starttime');
         if (!pdo_execute($stmt, [':projectid' => $this->project->Id])) {
             abort(500, 'Failed to load results');
@@ -163,7 +163,7 @@ class Timeline extends Index
                     JOIN build2group b2g ON b2g.buildid = b.id
                     JOIN buildgroup bg ON bg.id = b2g.groupid
                     LEFT JOIN buildupdate bu ON bu.id = b.updateid
-                    WHERE b.projectid = :projectid AND b.parentid IN (0, -1) AND
+                    WHERE b.projectid = :projectid AND b.parentid IS NULL AND
                     bg.name = :buildgroupname
                     ORDER BY starttime');
             $query_params = [
