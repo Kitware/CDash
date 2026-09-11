@@ -246,7 +246,7 @@ class CoverageSummary
         $build_row = DB::table('build')->where('id', $this->BuildId)->first();
         if ($build_row) {
             $parentid = $build_row->parentid;
-            if ($parentid > 0) {
+            if ($parentid !== null) {
                 DB::transaction(function () use ($parentid, $delta_tested, $delta_untested): void {
                     $parent_summary = DB::table('coveragesummary')
                         ->where('buildid', $parentid)

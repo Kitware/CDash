@@ -308,7 +308,7 @@ class Project
                 AND build2group.groupid = buildgroup.id
                 AND buildgroup.includesubprojectotal = 1
                 AND build.buildwarnings > 0
-                AND build.parentid IN (-1, 0)
+                AND build.parentid IS NULL
         ', [(int) $this->Id, $startUTCdate, $endUTCdate])[0]->c;
     }
 
@@ -330,7 +330,7 @@ class Project
                 AND build2group.groupid = buildgroup.id
                 AND buildgroup.includesubprojectotal = 1
                 AND build.builderrors > 0
-                AND build.parentid IN (-1, 0)
+                AND build.parentid IS NULL
         ', [(int) $this->Id, $startUTCdate, $endUTCdate])[0]->c;
     }
 
@@ -353,7 +353,7 @@ class Project
                 AND bg.includesubprojectotal=1
                 AND b.builderrors=0
                 AND b.buildwarnings=0
-                AND b.parentid IN (-1, 0)
+                AND b.parentid IS NULL
         ', [(int) $this->Id, $startUTCdate, $endUTCdate])[0]->c;
     }
 
@@ -375,7 +375,7 @@ class Project
                 AND b.starttime <= ?
                 AND b.configurewarnings > 0
                 AND bg.includesubprojectotal = 1
-                AND b.parentid IN (-1, 0)
+                AND b.parentid IS NULL
         ', [(int) $this->Id, $startUTCdate, $endUTCdate])[0]->c;
     }
 
@@ -397,7 +397,7 @@ class Project
                 AND b.starttime <= ?
                 AND b.configureerrors > 0
                 AND bg.includesubprojectotal = 1
-                AND b.parentid IN (-1, 0)
+                AND b.parentid IS NULL
         ', [(int) $this->Id, $startUTCdate, $endUTCdate])[0]->c;
     }
 
@@ -420,7 +420,7 @@ class Project
                 AND b.configureerrors = 0
                 AND b.configurewarnings = 0
                 AND bg.includesubprojectotal = 1
-                AND b.parentid IN (-1, 0)
+                AND b.parentid IS NULL
         ', [(int) $this->Id, $startUTCdate, $endUTCdate])[0]->c;
     }
 
@@ -442,7 +442,7 @@ class Project
                 AND buildgroup.includesubprojectotal = 1
                 AND build.starttime > ?
                 AND build.starttime <= ?
-                AND build.parentid IN (-1, 0)
+                AND build.parentid IS NULL
         ', [(int) $this->Id, $startUTCdate, $endUTCdate])[0]->s;
     }
 
@@ -464,7 +464,7 @@ class Project
                 AND buildgroup.includesubprojectotal = 1
                 AND build.starttime > ?
                 AND build.starttime <= ?
-                AND build.parentid IN (-1, 0)
+                AND build.parentid IS NULL
         ', [(int) $this->Id, $startUTCdate, $endUTCdate])[0]->s;
     }
 
@@ -486,7 +486,7 @@ class Project
                 AND buildgroup.includesubprojectotal = 1
                 AND build.starttime > ?
                 AND build.starttime <= ?
-                AND build.parentid IN (-1, 0)
+                AND build.parentid IS NULL
         ', [(int) $this->Id, $startUTCdate, $endUTCdate])[0]->s;
     }
 

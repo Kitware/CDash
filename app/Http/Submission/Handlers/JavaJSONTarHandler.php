@@ -112,6 +112,7 @@ class JavaJSONTarHandler extends AbstractSubmissionHandler
             $packageName = $row['package'];
             $subprojectName = $row['subproject'];
 
+            $parentid = $this->Build->GetParentId() ?? (int) $this->Build->Id;
             // get the buildid that corresponds to this subproject.
             $buildid_result = DB::select('
                                   SELECT b.id AS buildid
@@ -120,7 +121,7 @@ class JavaJSONTarHandler extends AbstractSubmissionHandler
                                   WHERE
                                       sp.name = ?
                                       AND b.parentid=?
-                     ', [$subprojectName, $this->Build->GetParentId()])[0] ?? [];
+                     ', [$subprojectName, $parentid])[0] ?? [];
 
             // If we found a different buildid, create a new CoverageSummary.
             if ($buildid_result !== [] && (int) $buildid_result->buildid !== (int) $this->Build->Id) {

@@ -235,7 +235,7 @@ final class ProjectOverviewController extends AbstractProjectController
                             WHERE
                                 b.projectid = ?
                                 AND b.starttime BETWEEN ? AND ?
-                                AND b.parentid IN (-1, 0)
+                                AND b.parentid IS NULL
                         ', [$this->project->Id, $start_date, $end_date]);
 
         // If we have multiple coverage builds in a single day we will also

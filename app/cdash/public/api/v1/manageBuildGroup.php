@@ -100,7 +100,7 @@ $stmt = $db->prepare(
     JOIN site s ON (b.siteid=s.id)
     WHERE projectid=:projectid AND
     starttime BETWEEN :start AND :end AND
-    parentid IN (-1, 0)');
+    parentid IS NULL');
 $stmt->bindParam(':projectid', $projectid);
 $stmt->bindParam(':start', $beginUTCTime);
 $stmt->bindParam(':end', $currentUTCTime);

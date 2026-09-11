@@ -39,7 +39,7 @@ class ExpectedAndMissingTestCase extends KWWebTestCase
         // Find the id of an old build.
         $query = 'SELECT id FROM build WHERE name = :buildname';
         if ($projectname === 'Trilinos') {
-            $query .= ' AND parentid = -1';
+            $query .= ' AND parentid IS NULL';
         }
         $stmt = $this->PDO->prepare($query);
         $this->PDO->execute($stmt, [':buildname' => $buildname]);

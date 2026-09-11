@@ -44,7 +44,7 @@ class MisassignedConfigureTestCase extends KWWebTestCase
         $parent_builds = DB::select('
             SELECT id FROM build
             WHERE projectid = :projectid
-            AND parentid = -1', ['projectid' => $this->project->Id]);
+            AND parentid IS NULL', ['projectid' => $this->project->Id]);
         $this->assertTrue(1 === count($parent_builds));
         $parentid = $parent_builds[0]->id;
 
