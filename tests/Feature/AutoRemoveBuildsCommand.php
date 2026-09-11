@@ -45,7 +45,6 @@ class AutoRemoveBuildsCommand extends TestCase
         $build = new Build();
         $build->Name = 'remove me';
         $build->ProjectId = $this->project->id;
-        $build->SiteId = 1;
         $build->SetStamp('20090223-0115-Experimental');
         $build->StartTime = '2009-02-23 01:15:00';
         $build->Endime = '2009-02-23 01:15:00';
@@ -60,7 +59,6 @@ class AutoRemoveBuildsCommand extends TestCase
         $build = new Build();
         $build->Name = 'remove me later';
         $build->ProjectId = $this->project->id;
-        $build->SiteId = 1;
         $build->SetStamp($buildstamp);
         $build->StartTime = $db_datetime_str;
         $build->Endime = $db_datetime_str;
