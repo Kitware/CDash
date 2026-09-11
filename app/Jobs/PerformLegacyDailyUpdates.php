@@ -81,7 +81,7 @@ class PerformLegacyDailyUpdates implements ShouldQueue
                                AND bg.starttime<?
                                AND (
                                    bg.endtime>?
-                                   OR bg.endtime='1980-01-01 00:00:00'
+                                   OR bg.endtime IS NULL
                                )
                                AND site.id=t1.siteid
                        ", [
@@ -203,10 +203,10 @@ class PerformLegacyDailyUpdates implements ShouldQueue
         BuildGroupRule::DeleteExpiredRulesForProject($project->Id, $cutoff_date);
 
         $stmt = $db->prepare(
-            "SELECT id FROM buildgroup
+            'SELECT id FROM buildgroup
         WHERE projectid = :projectid AND
-              endtime != '1980-01-01 00:00:00' AND
-              endtime < :endtime");
+              endtime IS NOT NULL AND
+              endtime < :endtime');
         $query_params = [
             ':projectid' => $project->Id,
             ':endtime' => $cutoff_date,

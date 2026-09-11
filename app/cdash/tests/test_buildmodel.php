@@ -10,6 +10,7 @@ use App\Models\Project;
 use App\Utils\DatabaseCleanupUtils;
 use CDash\Model\Build;
 use CDash\Model\BuildError;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -38,6 +39,7 @@ class BuildModelTestCase extends KWWebTestCase
         DB::table('buildgroup')->insertOrIgnore([
             'id' => 0,
             'projectid' => $project->id,
+            'starttime' => Carbon::now(),
             'description' => 'MultipleSubprojectsEmailTest-' . Str::uuid()->toString(),
         ]);
 
