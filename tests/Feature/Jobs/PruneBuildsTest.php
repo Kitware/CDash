@@ -3,6 +3,7 @@
 namespace Tests\Feature\Jobs;
 
 use App\Jobs\PruneBuilds;
+use App\Models\BuildGroup;
 use App\Models\Project;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Carbon;
@@ -98,8 +99,7 @@ class PruneBuildsTest extends TestCase
             'starttime' => Carbon::now()->subDays(3),
         ]);
 
-        $buildgroup = $this->project->buildgroups()->create([
-            'description' => Str::uuid()->toString(),
+        $buildgroup = BuildGroup::factory()->for($this->project)->create([
             'autoremovetimeframe' => 4,
         ]);
         $buildgroup->builds()->attach($build_to_delete);
