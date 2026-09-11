@@ -17,11 +17,13 @@
 
 namespace CDash\Model;
 
+use App\Enums\BuildGroupType;
 use App\Models\BuildGroup as EloquentBuildGroup;
 use CDash\Database;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use InvalidArgumentException;
 
 class BuildGroup
 {
@@ -42,7 +44,7 @@ class BuildGroup
             'endtime' => Carbon::create(1980),
             'description' => '',
             'summaryemail' => 0,
-            'type' => 'Daily',
+            'type' => BuildGroupType::DAILY,
             'includesubprojectotal' => 1,
             'emailcommitters' => 0,
         ]);
@@ -233,12 +235,20 @@ class BuildGroup
             Log::error('BuildGroup GetType(): Id not set');
             return false;
         }
-        return $this->eloquent_model->type;
+        return $this->eloquent_model->type->value;
     }
 
-    public function SetType(string $type): void
+    public function SetType(string|BuildGroupType $type): void
     {
-        $this->eloquent_model->type = $type;
+        if ($type instanceof BuildGroupType) {
+            $this->eloquent_model->type = $type;
+        } else {
+            $this->eloquent_model->type = match ($type) {
+                'Daily' => BuildGroupType::DAILY,
+                'Latest' => BuildGroupType::LATEST,
+                default => throw new InvalidArgumentException("Invalid build group type: $type"),
+            };
+        }
     }
 
     /**

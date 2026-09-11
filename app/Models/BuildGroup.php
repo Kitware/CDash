@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\BuildGroupType;
 use Database\Factories\BuildGroupFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -22,7 +23,7 @@ use Illuminate\Support\Carbon;
  * @property int $summaryemail
  * @property int $includesubprojectotal // Should this be a boolean?
  * @property int $emailcommitters // Should this be a boolean?
- * @property string $type
+ * @property BuildGroupType $type
  *
  * @mixin Builder<BuildGroup>
  */
@@ -57,6 +58,7 @@ class BuildGroup extends Model
         'summaryemail' => 'integer',
         'includesubprojectotal' => 'integer',
         'emailcommitters' => 'integer',
+        'type' => BuildGroupType::class,
     ];
 
     /**
