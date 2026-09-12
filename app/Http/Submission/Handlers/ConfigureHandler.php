@@ -17,6 +17,7 @@ namespace App\Http\Submission\Handlers;
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use App\Models\Label;
 use App\Models\Site;
 use App\Models\SiteInformation;
 use App\Services\SiteService;
@@ -30,7 +31,6 @@ use CDash\Messaging\Topic\TopicCollection;
 use CDash\Model\Build;
 use CDash\Model\BuildConfigure;
 use CDash\Model\BuildGroup;
-use CDash\Model\Label;
 use CDash\Model\Project;
 use CDash\Model\Subscriber;
 
@@ -289,7 +289,7 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
             $this->SubProjects[$this->SubProjectName][] = $data;
             $build = $this->Builds[$this->SubProjectName];
             $label = $this->getModelFactory()->create(Label::class);
-            $label->Text = $data;
+            $label->text = $data;
             $build->AddLabel($label);
         } elseif ($parent === 'LABELS' && $element === 'LABEL') {
             // First, check if this label belongs to a SubProject
@@ -301,7 +301,7 @@ class ConfigureHandler extends AbstractXmlHandler implements ActionableBuildInte
                 }
             }
             if (empty($subproject_name)) {
-                $this->Label->Text = $data;
+                $this->Label->text = $data;
             }
         }
     }

@@ -17,6 +17,7 @@
 
 namespace App\Utils;
 
+use App\Models\Label;
 use App\Models\Test;
 use App\Models\TestImage;
 use App\Models\TestMeasurement;
@@ -178,9 +179,11 @@ class TestCreator
             $build->AddTest($buildtest);
 
             foreach ($this->labels as $label) {
-                $label->Test = $buildtest;
-                $label->Insert();
-                $buildtest->addLabel($label);
+                if ($label->text !== null && $label->text !== '') {
+                    $eloquent_label = Label::firstOrCreate(['text' => $label->text]);
+                    $buildtest->labels()->syncWithoutDetaching([$eloquent_label->id]);
+                    $buildtest->addLabel($eloquent_label);
+                }
             }
 
             // test2image

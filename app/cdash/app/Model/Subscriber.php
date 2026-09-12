@@ -111,7 +111,9 @@ class Subscriber
     public function setLabels(array $labels): static
     {
         foreach ($labels as $label) {
-            $this->LabelCollection->put($label->Text, $label);
+            if ($label->text !== null) {
+                $this->LabelCollection->put($label->text, $label);
+            }
         }
         return $this;
     }

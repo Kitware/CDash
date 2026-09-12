@@ -17,6 +17,7 @@ namespace App\Http\Submission\Handlers;
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use App\Models\Label;
 use App\Models\Site;
 use App\Models\SiteInformation;
 use App\Services\SiteService;
@@ -24,7 +25,6 @@ use App\Utils\SubmissionUtils;
 use CDash\Model\Coverage;
 use CDash\Model\CoverageFile;
 use CDash\Model\CoverageSummary;
-use CDash\Model\Label;
 use CDash\Model\Project;
 
 class CoverageJUnitHandler extends AbstractXmlHandler
@@ -181,7 +181,7 @@ class CoverageJUnitHandler extends AbstractXmlHandler
     {
         $element = $this->getElement();
         if ($element === 'LABEL') {
-            $this->Label->Text = $data;
+            $this->Label->text = $data;
         }
     }
 }

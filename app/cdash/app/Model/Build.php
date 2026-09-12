@@ -20,6 +20,7 @@ namespace CDash\Model;
 use App\Models\BasicBuildAlert;
 use App\Models\Build as EloquentBuild;
 use App\Models\BuildUpdateFile;
+use App\Models\Label;
 use App\Models\Site;
 use App\Models\Test;
 use App\Utils\DatabaseCleanupUtils;
@@ -137,8 +138,9 @@ class Build
 
     public function AddLabel($label): void
     {
-        $label->BuildId = $this->Id;
-        $this->LabelCollection->put($label->Text, $label);
+        if ($label->text !== null) {
+            $this->LabelCollection->put($label->text, $label);
+        }
     }
 
     public function SetStamp(string $stamp): void
@@ -183,7 +185,7 @@ class Build
         }
 
         $label = new Label();
-        $label->Text = $subproject;
+        $label->text = $subproject;
         $this->AddLabel($label);
 
         // Add this subproject as a label on the parent build.
@@ -210,9 +212,7 @@ class Build
         $subProject->Save();
 
         // Insert the label too.
-        $Label = new Label();
-        $Label->Text = $subProject->GetName();
-        $Label->Insert();
+        Label::firstOrCreate(['text' => $subProject->GetName()]);
 
         Log::debug('New subproject detected: ' . $subproject, [
             'projectid' => $this->ProjectId,
@@ -671,9 +671,16 @@ class Build
             return true;
         }
 
+        $eloquent_build = EloquentBuild::find($this->Id);
+        if ($eloquent_build === null) {
+            return false;
+        }
+
         foreach ($this->LabelCollection as $label) {
-            $label->BuildId = $this->Id;
-            $label->Insert();
+            if ($label->text !== null && $label->text !== '') {
+                $eloquent_label = Label::firstOrCreate(['text' => $label->text]);
+                $eloquent_build->labels()->syncWithoutDetaching([$eloquent_label->id]);
+            }
         }
         return true;
     }
@@ -1466,7 +1473,7 @@ class Build
 
         // Give the parent a label for this build's subproject.
         $label = new Label();
-        $label->Text = $this->SubProjectName;
+        $label->text = $this->SubProjectName;
         $parent = new self();
         $parent->Id = $this->ParentId;
         $parent->AddLabel($label);

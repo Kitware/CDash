@@ -15,13 +15,13 @@
  * =========================================================================
  */
 
+use App\Models\Label;
 use App\Models\Test;
 use CDash\Messaging\Notification\NotifyOn;
 use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
 use CDash\Messaging\Topic\TestFailureTopic;
 use CDash\Messaging\Topic\Topic;
 use CDash\Model\Build;
-use CDash\Model\Label;
 use CDash\Model\Subscriber;
 use CDash\Test\BuildDiffForTesting;
 use CDash\Test\CDashTestCase;
@@ -181,7 +181,7 @@ class TestFailureTopicTest extends CDashTestCase
 
         // Create a test that has a label we're searching for but has passed, does not get added
         $labelForOne = new Label();
-        $labelForOne->Text = 'One';
+        $labelForOne->text = 'One';
         $buildTestOne = new Test();
         $buildTestOne->status = Test::PASSED;
         $buildTestOne->addLabel($labelForOne);
@@ -189,7 +189,7 @@ class TestFailureTopicTest extends CDashTestCase
 
         // Create a test that has failed but does not have a label we're searching for
         $labelForTwo = new Label();
-        $labelForTwo->Text = 'Two';
+        $labelForTwo->text = 'Two';
         $buildTestTwo = new Test();
         $buildTestTwo->status = Test::FAILED;
         $buildTestTwo->addLabel($labelForTwo);
@@ -197,7 +197,7 @@ class TestFailureTopicTest extends CDashTestCase
 
         // Create a test that has failed and has a label that we're searching for
         $labelForThree = new Label();
-        $labelForThree->Text = 'Three';
+        $labelForThree->text = 'Three';
         $buildTestThree = new Test();
         $buildTestThree->status = Test::FAILED;
         $buildTestThree->addLabel($labelForThree);
@@ -209,17 +209,17 @@ class TestFailureTopicTest extends CDashTestCase
             ->AddTest($buildTestThree);
 
         $lbl1 = new Label();
-        $lbl1->Text = 'One';
+        $lbl1->text = 'One';
         $lbl2 = new Label();
-        $lbl2->Text = 'Nope';
+        $lbl2->text = 'Nope';
         $lbl3 = new Label();
-        $lbl3->Text = 'Three';
+        $lbl3->text = 'Three';
 
         $lblCollection = collect();
         $lblCollection
-            ->put($lbl1->Text, $lbl1)
-            ->put($lbl2->Text, $lbl2)
-            ->put($lbl3->Text, $lbl3);
+            ->put($lbl1->text, $lbl1)
+            ->put($lbl2->text, $lbl2)
+            ->put($lbl3->text, $lbl3);
 
         $sut->setTopicDataWithLabels($build, $lblCollection);
 
@@ -234,7 +234,7 @@ class TestFailureTopicTest extends CDashTestCase
 
         // Create a test that has a label we're searching for but has passed, does not get added
         $labelForOne = new Label();
-        $labelForOne->Text = 'One';
+        $labelForOne->text = 'One';
         $buildTestOne = new Test();
         $buildTestOne->status = Test::PASSED;
         $buildTestOne->addLabel($labelForOne);
@@ -242,7 +242,7 @@ class TestFailureTopicTest extends CDashTestCase
 
         // Create a test that has failed but does not have a label we're searching for
         $labelForTwo = new Label();
-        $labelForTwo->Text = 'Two';
+        $labelForTwo->text = 'Two';
         $buildTestTwo = new Test();
         $buildTestTwo->status = Test::FAILED;
         $buildTestTwo->addLabel($labelForTwo);
@@ -250,7 +250,7 @@ class TestFailureTopicTest extends CDashTestCase
 
         // Create a test that is not run and has a label that we're searching for
         $labelForThree = new Label();
-        $labelForThree->Text = 'Three';
+        $labelForThree->text = 'Three';
         $buildTestThree = new Test();
         $buildTestThree->status = Test::NOTRUN;
         $buildTestThree->addLabel($labelForThree);

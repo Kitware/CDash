@@ -17,13 +17,13 @@ namespace App\Http\Submission\Handlers;
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use App\Models\Label;
 use App\Utils\SubmissionUtils;
 use CDash\Model\Build;
 use CDash\Model\Coverage;
 use CDash\Model\CoverageFile;
 use CDash\Model\CoverageFileLog;
 use CDash\Model\CoverageSummary;
-use CDash\Model\Label;
 use CDash\Model\SubProject;
 use League\Flysystem\UnableToReadFile;
 use RecursiveDirectoryIterator;
@@ -380,7 +380,7 @@ class GcovTarHandler extends AbstractSubmissionHandler
         if (array_key_exists($path, $this->Labels)) {
             foreach ($this->Labels[$path] as $labelText) {
                 $label = new Label();
-                $label->Text = $labelText;
+                $label->text = $labelText;
                 $coverage->AddLabel($label);
             }
         }
@@ -482,7 +482,7 @@ class GcovTarHandler extends AbstractSubmissionHandler
         if (array_key_exists($path, $this->Labels)) {
             foreach ($this->Labels[$path] as $labelText) {
                 $label = new Label();
-                $label->Text = $labelText;
+                $label->text = $labelText;
                 $coverage->AddLabel($label);
             }
         }

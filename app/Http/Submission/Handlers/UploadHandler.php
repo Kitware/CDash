@@ -17,12 +17,12 @@ namespace App\Http\Submission\Handlers;
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use App\Models\Label;
 use App\Models\Site;
 use App\Models\SiteInformation;
 use App\Models\UploadFile;
 use App\Services\SiteService;
 use App\Utils\SubmissionUtils;
-use CDash\Model\Label;
 use CDash\Model\Project;
 use Illuminate\Http\File;
 use Illuminate\Support\Carbon;
@@ -276,7 +276,7 @@ class UploadHandler extends AbstractXmlHandler
         } elseif ($parent === 'UPLOAD' && $element === 'TIME') {
             $this->Timestamp = (int) $data;
         } elseif ($element === 'LABEL') {
-            $this->Label->Text = $data;
+            $this->Label->text = $data;
         }
     }
 

@@ -117,9 +117,9 @@ class BuildFailure
 
         // Insert the labels
         foreach ($this->Labels as $label) {
-            if ($label->Text !== null && $label->Text !== '') {
-                $label = Label::firstOrCreate(['text' => $label->Text]);
-                $failure->labels()->syncWithoutDetaching([$label->id]);
+            if ($label->text !== null && $label->text !== '') {
+                $eloquent_label = Label::firstOrCreate(['text' => $label->text]);
+                $failure->labels()->syncWithoutDetaching([$eloquent_label->id]);
             }
         }
         return true;

@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Enums\TestTimeStatusCategory;
 use Carbon\Carbon;
-use CDash\Model\Label;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
@@ -109,11 +108,11 @@ class Test extends Model
     }
 
     /**
-     * @return BelongsToMany<\App\Models\Label, $this>
+     * @return BelongsToMany<Label, $this>
      */
     public function labels(): BelongsToMany
     {
-        return $this->belongsToMany(\App\Models\Label::class, 'label2test', 'testid', 'labelid');
+        return $this->belongsToMany(Label::class, 'label2test', 'testid', 'labelid');
     }
 
     /**
@@ -172,7 +171,7 @@ class Test extends Model
         if (null === $this->labels) {
             $this->labels = collect();
         }
-        $this->labels->put($label->Text, $label);
+        $this->labels->put($label->text, $label);
     }
 
     /**
@@ -185,9 +184,7 @@ class Test extends Model
         if (null === $this->labels) {
             $this->labels = collect();
             foreach ($this->labels()->get() as $eloquent_label) {
-                $label = new Label();
-                $label->Id = $eloquent_label->id;
-                $this->labels->put($eloquent_label->text, $label);
+                $this->labels->put($eloquent_label->text, $eloquent_label);
             }
         }
         return $this->labels;

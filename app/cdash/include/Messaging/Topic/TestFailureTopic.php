@@ -17,10 +17,10 @@
 
 namespace CDash\Messaging\Topic;
 
+use App\Models\Label;
 use App\Models\Test;
 use CDash\Messaging\Notification\NotifyOn;
 use CDash\Model\Build;
-use CDash\Model\Label;
 use CDash\Model\Subscriber;
 use Illuminate\Support\Collection;
 
@@ -140,7 +140,7 @@ class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
             if ($this->itemHasTopicSubject($build, $buildtest)) {
                 $testLabels = $buildtest->getLabels();
                 foreach ($labels as $label) {
-                    if ($testLabels->has($label->Text)) {
+                    if ($testLabels->has($label->text)) {
                         $collection->put($test_name, $buildtest);
                     }
                 }
@@ -157,7 +157,9 @@ class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
             if ($this->itemHasTopicSubject($build, $buildtest)) {
                 /** @var Label $label */
                 foreach ($buildtest->getLabels() as $label) {
-                    $collection->put($label->Text, $label);
+                    if ($label->text !== null) {
+                        $collection->put($label->text, $label);
+                    }
                 }
             }
         }

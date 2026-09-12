@@ -2,6 +2,7 @@
 
 namespace CDash\Messaging\Topic;
 
+use App\Models\Label;
 use CDash\Model\Build;
 
 class LabeledTopic extends Topic
@@ -24,8 +25,9 @@ class LabeledTopic extends Topic
         if ($this->decoratedSubscribes) {
             $subscriberLabels = $this->subscriber->getLabels();
             $topicLabels = $this->topic->getLabelsFromBuild($build);
+            /** @var Label $subscriberLabel */
             foreach ($subscriberLabels as $subscriberLabel) {
-                if ($topicLabels->has($subscriberLabel->Text)) {
+                if ($topicLabels->has($subscriberLabel->text)) {
                     $subscribe = true;
                     break;
                 }

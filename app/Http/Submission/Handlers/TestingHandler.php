@@ -2,6 +2,7 @@
 
 namespace App\Http\Submission\Handlers;
 
+use App\Models\Label;
 use App\Models\Site;
 use App\Models\SiteInformation;
 use App\Models\TestMeasurement;
@@ -20,7 +21,6 @@ use CDash\Messaging\Topic\TopicCollection;
 use CDash\Model\Build;
 use CDash\Model\BuildGroup;
 use CDash\Model\Image;
-use CDash\Model\Label;
 use CDash\Model\Project;
 use CDash\Model\Subscriber;
 use CDash\Submission\CommitAuthorHandlerInterface;
@@ -307,7 +307,7 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
                     break;
                 }
             }
-            $this->Label->Text = $data;
+            $this->Label->text = $data;
             $this->Labels[] = $this->Label;
         }
     }

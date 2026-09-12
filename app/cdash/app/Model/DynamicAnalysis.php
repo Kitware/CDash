@@ -41,7 +41,7 @@ class DynamicAnalysis
     /** @var array<DynamicAnalysisDefect> */
     private array $Defects = [];
     public int $BuildId = -1;
-    /** @var array<\CDash\Model\Label> */
+    /** @var array<Label> */
     public array $Labels = [];
     public string $LogCompression = '';
     public string $LogEncoding = '';
@@ -57,7 +57,7 @@ class DynamicAnalysis
         return $this->Defects;
     }
 
-    public function AddLabel(\CDash\Model\Label $label): void
+    public function AddLabel(Label $label): void
     {
         $this->Labels[] = $label;
     }
@@ -72,9 +72,9 @@ class DynamicAnalysis
         if ($this->Id) {
             $dynamicAnalysis = EloquentDynamicAnalysis::findOrFail((int) $this->Id);
             foreach ($this->Labels as $label) {
-                if ($label->Text !== null && $label->Text !== '') {
+                if ($label->text !== null && $label->text !== '') {
                     $dynamicAnalysis->labels()->attach(
-                        Label::firstOrCreate(['text' => $label->Text])->id
+                        Label::firstOrCreate(['text' => $label->text])->id
                     );
                 }
             }

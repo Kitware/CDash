@@ -16,6 +16,7 @@
  */
 
 use App\Http\Submission\Handlers\ActionableBuildInterface;
+use App\Models\Label;
 use CDash\Collection\SubscriberCollection;
 use CDash\Database;
 use CDash\Messaging\Notification\Email\EmailBuilder;
@@ -24,7 +25,6 @@ use CDash\Messaging\Notification\NotificationDirector;
 use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
 use CDash\Messaging\Subscription\SubscriptionCollection;
 use CDash\Messaging\Subscription\UserSubscriptionBuilder;
-use CDash\Model\Label;
 use CDash\Model\Subscriber;
 use CDash\Test\CDashUseCaseTestCase;
 use CDash\Test\UseCase\UseCase;
@@ -150,7 +150,7 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
             if (isset($entry[2])) {
                 $labels = array_map(function ($text) {
                     $label = new Label();
-                    $label->Text = $text;
+                    $label->text = $text;
                     return $label;
                 }, $entry[2]);
             }

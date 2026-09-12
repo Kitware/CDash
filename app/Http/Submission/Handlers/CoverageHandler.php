@@ -17,6 +17,7 @@ namespace App\Http\Submission\Handlers;
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use App\Models\Label;
 use App\Models\Site;
 use App\Models\SiteInformation;
 use App\Services\ProjectService;
@@ -26,7 +27,6 @@ use CDash\Model\Build;
 use CDash\Model\Coverage;
 use CDash\Model\CoverageFile;
 use CDash\Model\CoverageSummary;
-use CDash\Model\Label;
 use CDash\Model\Project;
 use CDash\Model\SubProject;
 
@@ -226,7 +226,7 @@ class CoverageHandler extends AbstractXmlHandler
                     break;
             }
         } elseif ($element === 'LABEL') {
-            $this->Label->Text = $data;
+            $this->Label->text = $data;
         }
     }
 }

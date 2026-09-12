@@ -18,6 +18,7 @@ namespace App\Http\Submission\Handlers;
 =========================================================================*/
 
 use App\Models\DynamicAnalysisDefect;
+use App\Models\Label;
 use App\Models\Site;
 use App\Models\SiteInformation;
 use App\Services\SiteService;
@@ -32,7 +33,6 @@ use CDash\Model\Build;
 use CDash\Model\BuildGroup;
 use CDash\Model\DynamicAnalysis;
 use CDash\Model\DynamicAnalysisSummary;
-use CDash\Model\Label;
 use CDash\Model\Project;
 use CDash\Model\Subscriber;
 
@@ -256,7 +256,7 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
                 }
             }
             if (empty($this->TestSubProjectName)) {
-                $this->Label->Text = $data;
+                $this->Label->text = $data;
             }
         }
     }

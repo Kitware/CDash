@@ -191,8 +191,8 @@ class CoverageSummary
                 }
 
                 foreach ($coverage->Labels ?? [] as $label) {
-                    if ($label->Text !== null && $label->Text !== '') {
-                        $eloquent_coverage->labels()->syncWithoutDetaching(Label::firstOrCreate(['text' => $label->Text]));
+                    if ($label->text !== null && $label->text !== '') {
+                        $eloquent_coverage->labels()->syncWithoutDetaching([Label::firstOrCreate(['text' => $label->text])->id]);
                     }
                 }
             }
