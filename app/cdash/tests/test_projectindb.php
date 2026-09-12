@@ -39,15 +39,15 @@ class ProjectInDbTestCase extends KWWebTestCase
         $result = $this->db->query($query);
         $expected = ['0' => ['name' => 'Nightly',
             'starttime' => '1980-01-01 00:00:00',
-            'endtime' => '1980-01-01 00:00:00',
+            'endtime' => null,
             'description' => 'Nightly builds'],
             '1' => ['name' => 'Experimental',
                 'starttime' => '1980-01-01 00:00:00',
-                'endtime' => '1980-01-01 00:00:00',
+                'endtime' => null,
                 'description' => 'Experimental builds'],
             '2' => ['name' => 'Continuous',
                 'starttime' => '1980-01-01 00:00:00',
-                'endtime' => '1980-01-01 00:00:00',
+                'endtime' => null,
                 'description' => 'Continuous builds']];
         $this->assertEqual($result, $expected);
     }

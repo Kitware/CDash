@@ -41,7 +41,7 @@ class BuildGroup
             'projectid' => 0,
             'name' => '',
             'starttime' => Carbon::create(1980),
-            'endtime' => Carbon::create(1980),
+            'endtime' => null,
             'description' => '',
             'summaryemail' => 0,
             'type' => BuildGroupType::DAILY,
@@ -345,7 +345,7 @@ class BuildGroup
             $this->eloquent_model->positions()->create([
                 'position' => $position,
                 'starttime' => $this->eloquent_model->starttime,
-                'endtime' => $this->eloquent_model->endtime,
+                'endtime' => Carbon::create(1980),
             ]);
         }
         return true;
@@ -473,14 +473,14 @@ class BuildGroup
     {
         $buildgroups = [];
 
-        $stmt = DB::select("
+        $stmt = DB::select('
             SELECT bg.id, bg.name, bgp.position
             FROM buildgroup AS bg
             LEFT JOIN buildgroupposition AS bgp ON (bgp.buildgroupid = bg.id)
             WHERE bg.projectid = ? AND
                   bg.starttime < ? AND
-                  (bg.endtime > ? OR bg.endtime='1980-01-01 00:00:00')
-        ", [$projectid, $begin, $begin]);
+                  (bg.endtime > ? OR bg.endtime IS NULL)
+        ', [$projectid, $begin, $begin]);
 
         foreach ($stmt as $row) {
             $buildgroup = new self();

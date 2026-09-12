@@ -59,7 +59,7 @@ class ProjectService extends AbstractService
     {
         $common_defaults = [
             'starttime' => Carbon::create(1980),
-            'endtime' => Carbon::create(1980),
+            'endtime' => null,
             'type' => 'Daily',
             'includesubprojectotal' => 1,
             'emailcommitters' => 0,
@@ -121,7 +121,7 @@ class ProjectService extends AbstractService
     {
         $eloquent_buildgroups = Project::findOrFail($projectid)
             ->buildgroups()
-            ->where('endtime', Carbon::create(1980))
+            ->whereNull('endtime')
             ->get();
 
         $buildgroups = [];

@@ -194,7 +194,7 @@ class Index extends ResultsApi
                     LEFT JOIN buildgroupposition AS gp ON (gp.buildgroupid = bg.id)
                     WHERE
                         bg.projectid = ?
-                        AND bg.endtime = ?
+                        AND bg.endtime IS NULL
                         AND bg.type != 'Daily'
                         AND b2gr.starttime < ?
                         AND (
@@ -203,7 +203,6 @@ class Index extends ResultsApi
                         )
                 ", [
             (int) $this->project->Id,
-            self::BEGIN_EPOCH,
             $this->endDate,
             self::BEGIN_EPOCH,
             $this->endDate,

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\BuildGroupType;
 use Database\Factories\BuildGroupFactory;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -17,7 +18,7 @@ use Illuminate\Support\Carbon;
  * @property string $name
  * @property int $projectid
  * @property Carbon $starttime
- * @property Carbon $endtime
+ * @property ?Carbon $endtime
  * @property int $autoremovetimeframe
  * @property ?string $description
  * @property int $summaryemail
@@ -94,5 +95,14 @@ class BuildGroup extends Model
     public function rules(): HasMany
     {
         return $this->hasMany(BuildGroupRule::class, 'groupid');
+    }
+
+    /**
+     * @param Builder<$this> $query
+     */
+    #[Scope]
+    protected function active(Builder $query): void
+    {
+        $query->whereNull('endtime');
     }
 }

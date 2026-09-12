@@ -41,5 +41,13 @@ class ProjectServiceTest extends TestCase
             ['Nightly', 'Continuous', 'Experimental'],
             $project->buildgroups()->pluck('name')->toArray(),
         );
+
+        foreach ($project->buildgroups as $buildgroup) {
+            self::assertNotNull($buildgroup->starttime);
+            self::assertNull($buildgroup->endtime);
+        }
+
+        $active_groups = ProjectService::getBuildGroups($project->id);
+        self::assertCount(3, $active_groups);
     }
 }

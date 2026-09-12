@@ -22,7 +22,7 @@ class BuildGroupFactory extends Factory
         return [
             'name' => Str::uuid()->toString(),
             'starttime' => Carbon::create(1980),
-            'endtime' => Carbon::create(1980),
+            'endtime' => null,
             'autoremovetimeframe' => 0,
             'description' => Str::uuid()->toString(),
             'summaryemail' => 0,
