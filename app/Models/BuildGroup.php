@@ -22,8 +22,8 @@ use Illuminate\Support\Carbon;
  * @property int $autoremovetimeframe
  * @property ?string $description
  * @property int $summaryemail
- * @property int $includesubprojectotal // Should this be a boolean?
- * @property int $emailcommitters // Should this be a boolean?
+ * @property bool $includesubprojectotal
+ * @property bool $emailcommitters
  * @property BuildGroupType $type
  *
  * @mixin Builder<BuildGroup>
@@ -57,8 +57,8 @@ class BuildGroup extends Model
         'endtime' => 'datetime',
         'autoremovetimeframe' => 'integer',
         'summaryemail' => 'integer',
-        'includesubprojectotal' => 'integer',
-        'emailcommitters' => 'integer',
+        'includesubprojectotal' => 'boolean',
+        'emailcommitters' => 'boolean',
         'type' => BuildGroupType::class,
     ];
 

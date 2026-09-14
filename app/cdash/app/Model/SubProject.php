@@ -303,7 +303,7 @@ class SubProject
                            subprojectid=?
                            AND build2group.buildid=build.id
                            AND build2group.groupid=buildgroup.id
-                           AND buildgroup.includesubprojectotal=1
+                           AND buildgroup.includesubprojectotal=true
                        ORDER BY build.starttime DESC
                        LIMIT 1
                    ', [$this->Id]);
@@ -358,7 +358,7 @@ class SubProject
                 b.projectid = ? AND
                 b.starttime > ? AND
                 b.starttime <= ? AND
-                bg.includesubprojectotal = 1";
+                bg.includesubprojectotal = true";
         $params = array_merge($params, [(int) $this->ProjectId, $startUTCdate, $endUTCdate]);
         if ($allSubProjects) {
             $query .= ' GROUP BY subprojectid';
