@@ -17,8 +17,10 @@
 
 namespace CDash\Model;
 
+use App\Models\Build as EloquentBuild;
 use App\Models\BuildConfigure as EloquentBuildConfigure;
 use App\Models\Configure as EloquentConfigure;
+use App\Models\Label;
 use CDash\Database;
 use Exception;
 use Illuminate\Support\Collection;
@@ -53,8 +55,9 @@ class BuildConfigure
 
     public function AddLabel($label): void
     {
-        $label->BuildId = $this->BuildId;
-        $this->LabelCollection->put($label->Text, $label);
+        if ($label->text !== null) {
+            $this->LabelCollection->put($label->text, $label);
+        }
     }
 
     /** Check if the configure exists */
@@ -164,9 +167,16 @@ class BuildConfigure
                 return;
             }
 
+            $eloquent_build = EloquentBuild::find($this->BuildId);
+            if ($eloquent_build === null) {
+                return;
+            }
+
             foreach ($this->LabelCollection as $label) {
-                $label->BuildId = $this->BuildId;
-                $label->Insert();
+                if ($label->text !== null && $label->text !== '') {
+                    $eloquent_label = Label::firstOrCreate(['text' => $label->text]);
+                    $eloquent_build->labels()->syncWithoutDetaching([$eloquent_label->id]);
+                }
             }
         } else {
             Log::error('No BuildConfigure::BuildId - cannot call $label->Insert...', [

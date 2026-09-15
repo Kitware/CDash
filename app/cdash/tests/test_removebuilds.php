@@ -8,6 +8,7 @@ require_once __DIR__ . '/cdash_test_case.php';
 
 use App\Models\BuildUpdateFile;
 use App\Models\DynamicAnalysisDefect;
+use App\Models\Label;
 use App\Models\TestMeasurement;
 use App\Models\UploadFile;
 use App\Utils\DatabaseCleanupUtils;
@@ -26,7 +27,6 @@ use CDash\Model\CoverageSummary;
 use CDash\Model\DynamicAnalysis;
 use CDash\Model\DynamicAnalysisSummary;
 use CDash\Model\Image;
-use CDash\Model\Label;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 
@@ -47,7 +47,7 @@ class RemoveBuildsTestCase extends KWWebTestCase
 
         // Label
         $label = new Label();
-        $label->Text = 'remove me';
+        $label->text = 'remove me';
 
         // Build
         $build = new Build();

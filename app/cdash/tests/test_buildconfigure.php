@@ -6,11 +6,11 @@
 //
 require_once __DIR__ . '/cdash_test_case.php';
 
+use App\Models\Label;
 use App\Utils\DatabaseCleanupUtils;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildConfigure;
-use CDash\Model\Label;
 
 class BuildConfigureTestCase extends KWWebTestCase
 {

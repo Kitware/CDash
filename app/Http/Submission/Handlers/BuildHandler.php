@@ -23,7 +23,7 @@ use App\Models\Build as EloquentBuild;
 use App\Models\BuildCommand;
 use App\Models\BuildCommandOutput;
 use App\Models\BuildMeasurement;
-use App\Models\Label as EloquentLabel;
+use App\Models\Label;
 use App\Models\Site;
 use App\Models\SiteInformation;
 use App\Models\Target;
@@ -40,7 +40,6 @@ use CDash\Model\Build;
 use CDash\Model\BuildError;
 use CDash\Model\BuildFailure;
 use CDash\Model\BuildGroup;
-use CDash\Model\Label;
 use CDash\Model\Project;
 use CDash\Model\Subscriber;
 use CDash\Submission\CommitAuthorHandlerInterface;
@@ -78,7 +77,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
      * don't exist until parsing is complete.
      *
      * @var array<string,array{
-     *     labels: array<EloquentLabel>,
+     *     labels: array<Label>,
      *     target: Target
      * }>
      */
@@ -463,14 +462,14 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
                 if (isset($this->Error->Labels)) {
                     $hasLabel = false;
                     foreach ($this->Labels as $lbl) {
-                        if ($lbl->Text === $this->SubProjectName) {
+                        if ($lbl->text === $this->SubProjectName) {
                             $hasLabel = true;
                             break;
                         }
                     }
                     if (!$hasLabel) {
                         $label = $factory->create(Label::class);
-                        $label->Text = $this->SubProjectName;
+                        $label->text = $this->SubProjectName;
                         if (!$this->Error instanceof BuildFailure) {
                             throw new RuntimeException('Field "Error" is not instance of BuildFailure.');
                         }
@@ -645,7 +644,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
                 throw new Exception('Target data not initialized properly.');
             }
 
-            $this->Targets[$this->MostRecentCommand['targetname']]['labels'][] = EloquentLabel::firstOrCreate([
+            $this->Targets[$this->MostRecentCommand['targetname']]['labels'][] = Label::firstOrCreate([
                 'text' => $data,
             ]);
         } elseif ($this->getParent() === 'LABELS' && $element === 'LABEL') {
@@ -657,7 +656,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
                 }
             }
             if (empty($this->ErrorSubProjectName)) {
-                $this->Label->Text = $data;
+                $this->Label->text = $data;
             }
         } elseif (
             $this->currentPathMatches('site.build.commands.*.namedmeasurement.value')

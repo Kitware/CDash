@@ -15,13 +15,13 @@
  * =========================================================================
  */
 
+use App\Models\Label;
 use CDash\Collection\ConfigureCollection;
 use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
 use CDash\Messaging\Topic\ConfigureTopic;
 use CDash\Messaging\Topic\Topic;
 use CDash\Model\Build;
 use CDash\Model\BuildConfigure;
-use CDash\Model\Label;
 use CDash\Model\Subscriber;
 use CDash\Test\CDashTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -151,8 +151,8 @@ class ConfigureTopicTest extends CDashTestCase
         $lbl1 = new Label();
         $lbl2 = new Label();
 
-        $lbl1->Text = 'one';
-        $lbl2->Text = 'two';
+        $lbl1->text = 'one';
+        $lbl2->text = 'two';
 
         $build->AddLabel($lbl2);
         $configure->AddLabel($lbl1);

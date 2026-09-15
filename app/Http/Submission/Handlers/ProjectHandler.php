@@ -17,8 +17,8 @@ namespace App\Http\Submission\Handlers;
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use App\Models\Label;
 use App\Services\ProjectService;
-use CDash\Model\Label;
 use CDash\Model\Project;
 use CDash\Model\SubProject;
 use Illuminate\Support\Facades\DB;
@@ -167,9 +167,7 @@ class ProjectHandler extends AbstractXmlHandler
             $this->SubProjectPosition++;
 
             // Insert the label.
-            $Label = new Label();
-            $Label->Text = $this->SubProject->GetName();
-            $Label->Insert();
+            Label::firstOrCreate(['text' => $this->SubProject->GetName()]);
 
             $this->SubProjects[$this->SubProject->GetId()] = $this->SubProject;
 
