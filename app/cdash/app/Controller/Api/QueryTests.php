@@ -19,6 +19,7 @@ namespace CDash\Controller\Api;
 
 use App\Models\PinnedTestMeasurement;
 use App\Models\Project as EloquentProject;
+use App\Models\Test;
 use App\Models\TestMeasurement;
 use CDash\Database;
 use CDash\Model\Build;
@@ -423,7 +424,7 @@ class QueryTests extends ResultsApi
 
                 case 'notrun':
                     $test['status'] = 'Not Run';
-                    $test['statusclass'] = 'warning';
+                    $test['statusclass'] = $row->details === Test::DISABLED ? 'normal' : 'warning';
                     break;
             }
 

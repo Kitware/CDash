@@ -201,6 +201,7 @@ export default {
             buildWarningsCount
             failedTestsCount
             notRunTestsCount
+            notRunTestsWarningCount
             passedTestsCount
           }
         }
@@ -278,7 +279,7 @@ export default {
       if (this.build.failedTestsCount > 0) {
         return 'error';
       }
-      if (this.build.notRunTestsCount > 0) {
+      if (this.build.notRunTestsWarningCount > 0) {
         return 'warning';
       }
       return 'success';

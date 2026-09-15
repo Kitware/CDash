@@ -115,6 +115,36 @@ class TestXMLTest extends TestCase
     }
 
     /**
+     * Disabled tests are recorded as not run, but they are not worth warning about.
+     */
+    public function testNotRunWarningCount(): void
+    {
+        $this->submitFiles($this->project->name, [
+            base_path(
+                'tests/Feature/Submission/Test/data/disabled_and_not_run.xml'
+            ),
+        ]);
+
+        $this->graphQL('
+            query build($id: ID) {
+              build(id: $id) {
+                notRunTestsCount
+                notRunTestsWarningCount
+              }
+            }
+        ', [
+            'id' => $this->project->builds()->firstOrFail()->id,
+        ])->assertExactJson([
+            'data' => [
+                'build' => [
+                    'notRunTestsCount' => 2,
+                    'notRunTestsWarningCount' => 1,
+                ],
+            ],
+        ]);
+    }
+
+    /**
      * Test parsing a valid Test.xml file that contains the StartTestTime
      * attribute for each Test entry in the test output.
      */
