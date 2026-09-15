@@ -24,7 +24,7 @@
     "ext-xml": "*",
     "ext-xsl": "*",
     "ext-zlib": "*",
-    "directorytree/ldaprecord-laravel": "3.4.3",
+    "directorytree/ldaprecord-laravel": "4.0.5",
     "guzzlehttp/guzzle": "7.15.2",
     "knplabs/github-api": "3.16.1",
     "laravel/framework": "12.61.1",
