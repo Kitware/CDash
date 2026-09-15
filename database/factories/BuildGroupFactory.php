@@ -26,8 +26,8 @@ class BuildGroupFactory extends Factory
             'autoremovetimeframe' => 0,
             'description' => Str::uuid()->toString(),
             'summaryemail' => 0,
-            'includesubprojectotal' => 1,
-            'emailcommitters' => 0,
+            'includesubprojectotal' => true,
+            'emailcommitters' => false,
             'type' => 'Daily',
         ];
     }

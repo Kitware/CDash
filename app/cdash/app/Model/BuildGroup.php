@@ -45,8 +45,8 @@ class BuildGroup
             'description' => '',
             'summaryemail' => 0,
             'type' => BuildGroupType::DAILY,
-            'includesubprojectotal' => 1,
-            'emailcommitters' => 0,
+            'includesubprojectotal' => true,
+            'emailcommitters' => false,
         ]);
     }
 
@@ -189,7 +189,7 @@ class BuildGroup
     }
 
     /** Get/Set whether or not this group should include subproject total. */
-    public function GetIncludeSubProjectTotal(): int|false
+    public function GetIncludeSubProjectTotal(): bool
     {
         if (!isset($this->eloquent_model->id)) {
             Log::error('BuildGroup GetIncludeSubProjectTotal(): Id not set');
@@ -200,7 +200,7 @@ class BuildGroup
 
     public function SetIncludeSubProjectTotal(int $b): void
     {
-        $this->eloquent_model->includesubprojectotal = $b > 0 ? 1 : 0;
+        $this->eloquent_model->includesubprojectotal = (bool) $b;
     }
 
     /**
@@ -210,11 +210,11 @@ class BuildGroup
      */
     public function isNotifyingCommitters(): bool
     {
-        return (bool) $this->GetEmailCommitters();
+        return $this->GetEmailCommitters();
     }
 
     /** Get/Set whether or not committers should be emailed for this group. */
-    public function GetEmailCommitters(): int|false
+    public function GetEmailCommitters(): bool
     {
         if (!isset($this->eloquent_model->id)) {
             Log::error('BuildGroup GetEmailCommitters(): Id not set');
@@ -225,7 +225,7 @@ class BuildGroup
 
     public function SetEmailCommitters($b): void
     {
-        $this->eloquent_model->emailcommitters = $b ? 1 : 0;
+        $this->eloquent_model->emailcommitters = (bool) $b;
     }
 
     /** Get/Set the type */
