@@ -143,7 +143,7 @@ class Index extends ResultsApi
             $query_params[] = (int) $this->parentId;
         } elseif (!is_numeric($this->subProjectId)) {
             // Only show builds that are not children.
-            $sql .= ' AND (b.parentid = -1 OR b.parentid = 0) ';
+            $sql .= ' AND b.parentid IS NULL ';
         }
 
         // If the filter data doesn't have a date clause, use this as a default
@@ -194,7 +194,7 @@ class Index extends ResultsApi
                     LEFT JOIN buildgroupposition AS gp ON (gp.buildgroupid = bg.id)
                     WHERE
                         bg.projectid = ?
-                        AND bg.endtime = ?
+                        AND bg.endtime IS NULL
                         AND bg.type != 'Daily'
                         AND b2gr.starttime < ?
                         AND (
@@ -203,7 +203,6 @@ class Index extends ResultsApi
                         )
                 ", [
             (int) $this->project->Id,
-            self::BEGIN_EPOCH,
             $this->endDate,
             self::BEGIN_EPOCH,
             $this->endDate,

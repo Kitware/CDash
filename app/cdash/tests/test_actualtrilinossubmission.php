@@ -69,7 +69,7 @@ class ActualTrilinosSubmissionTestCase extends TrilinosSubmissionTestCase
         $query = $this->db->query(
             "SELECT id FROM build
             WHERE name = 'Windows_NT-MSVC10-SERIAL_DEBUG_DEV'
-            AND parentid = -1");
+            AND parentid IS NULL");
 
         if (!isset($query[0])) {
             $this->fail("Unable to find build, 'Windows_NT-MSVC10-SERIAL_DEBUG_DEV'");

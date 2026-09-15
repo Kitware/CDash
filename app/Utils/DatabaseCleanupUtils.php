@@ -47,7 +47,7 @@ class DatabaseCleanupUtils
                           SELECT build.id AS id
                           FROM build, build2group
                           WHERE
-                              build.parentid IN (0, -1)
+                              build.parentid IS NULL
                               AND build.starttime < ?
                               AND build2group.buildid = build.id
                               AND build2group.groupid = ?
@@ -87,7 +87,7 @@ class DatabaseCleanupUtils
 
         Log::info('about to query for builds to remove');
 
-        $buildids = Build::whereIn('parentid', [0, -1])
+        $buildids = Build::whereNull('parentid')
             ->where('starttime', '<', $startdate)
             ->where('projectid', '=', $projectid)
             ->orderBy('starttime')

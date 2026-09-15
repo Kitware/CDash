@@ -123,7 +123,7 @@ class IssueCreationTestCase extends KWWebTestCase
         $query =
             "SELECT b.id FROM build b
             JOIN project p on p.id = b.projectid
-            WHERE p.name = 'CDash' AND b.parentid != -1";
+            WHERE p.name = 'CDash' AND b.parentid IS NOT NULL";
         $buildid2 = $this->PDO->query($query)->fetch()['id'];
         $build = new Build();
         $build->Id = $buildid2;

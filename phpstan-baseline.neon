@@ -22951,6 +22951,15 @@ parameters:
 			path: tests/Feature/RouteAccessTest.php
 
 		-
+			rawMessage: '''
+				Call to deprecated method getBuildGroups() of class App\Services\ProjectService:
+				12/06/2025  Use Eloquent relationships for all new code
+			'''
+			identifier: staticMethod.deprecated
+			count: 1
+			path: tests/Feature/Services/ProjectServiceTest.php
+
+		-
 			rawMessage: Cannot access property $admin on App\Models\User|null.
 			identifier: property.nonObject
 			count: 1

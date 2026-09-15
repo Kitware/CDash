@@ -102,7 +102,7 @@ class GcovTarHandler extends AbstractSubmissionHandler
         if ($this->Build->Type === 'Nightly') {
             $aggregateBuild = get_aggregate_build($this->Build);
             $aggregateParentId = $aggregateBuild->GetParentId();
-            if ($aggregateParentId > 0) {
+            if ($aggregateParentId !== null) {
                 $this->AggregateBuildId = $aggregateParentId;
                 $aggregateParent = new Build();
                 $aggregateParent->Id = $aggregateParentId;
@@ -204,14 +204,15 @@ class GcovTarHandler extends AbstractSubmissionHandler
             $subprojectid = $subproject->GetId();
 
             // Find the sibling build that performed this SubProject.
-            $siblingBuild = Build::GetSubProjectBuild($this->Build->GetParentId(), $subprojectid);
+            $parentid = $this->Build->GetParentId() ?? (int) $this->Build->Id;
+            $siblingBuild = Build::GetSubProjectBuild($parentid, $subprojectid);
             if (null === $siblingBuild) {
                 // Build doesn't exist yet, add it here.
                 $siblingBuild = new Build();
                 $siblingBuild->Name = $this->Build->Name;
                 $siblingBuild->ProjectId = $this->GetProject()->Id;
                 $siblingBuild->SiteId = $this->Build->SiteId;
-                $siblingBuild->SetParentId($this->Build->GetParentId());
+                $siblingBuild->SetParentId($parentid);
                 $siblingBuild->SetStamp($this->Build->GetStamp());
                 $siblingBuild->SetSubProject($subproject->GetName());
                 $siblingBuild->StartTime = $this->Build->StartTime;

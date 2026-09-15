@@ -141,7 +141,7 @@ class ManageMeasurementsTestCase extends KWWebTestCase
             return false;
         }
         $stmt = $this->PDO->query(
-            "SELECT id FROM build WHERE name = 'subprojects_measurements_example' AND parentid = -1");
+            "SELECT id FROM build WHERE name = 'subprojects_measurements_example' AND parentid IS NULL");
         $this->SubProjectBuildId = $stmt->fetchColumn();
         if (!$this->SubProjectBuildId > 0) {
             $this->fail("Expected positive integer for build ID, found $this->BuildId");

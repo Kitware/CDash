@@ -16,7 +16,7 @@ use Illuminate\Support\Str;
  * @property int $id
  * @property ?int $siteid
  * @property int $projectid
- * @property int $parentid
+ * @property ?int $parentid
  * @property int $subprojectid
  * @property string $stamp
  * @property string $name
@@ -172,10 +172,7 @@ class Build extends Model
     public function scopeOnlyParents(Builder $query, bool $onlyParents = true): void
     {
         if ($onlyParents) {
-            $query->where(function (Builder $q): void {
-                $q->where('parentid', 0)
-                    ->orWhere('parentid', -1);
-            });
+            $query->whereNull('parentid');
         }
     }
 

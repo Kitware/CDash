@@ -761,7 +761,7 @@ function get_aggregate_build(Build $build): Build
                WHERE
                    name='Aggregate Coverage'
                    AND siteid = ?
-                   AND parentid < '1'
+                   AND parentid IS NULL
                    AND projectid = ?
                    AND starttime < ?
                    AND starttime >= ?

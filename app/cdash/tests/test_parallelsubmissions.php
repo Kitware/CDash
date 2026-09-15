@@ -42,7 +42,7 @@ class ParallelSubmissionsTestCase extends TrilinosSubmissionTestCase
 
         // Delete the existing Trilinos build if it exists.
         $trilinos_build_row = DB::table('build')
-            ->where('parentid', '=', '-1')
+            ->whereNull('parentid')
             ->where('projectid', '=', $project->Id)
             ->where('name', '=', 'Windows_NT-MSVC10-SERIAL_DEBUG_DEV')
             ->whereBetween('starttime', ['2011-07-22 00:00:00', '2011-07-22 23:59:59'])

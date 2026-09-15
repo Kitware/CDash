@@ -44,7 +44,7 @@ class SubProjectOrderTestCase extends KWWebTestCase
         $db = Database::getInstance();
         $stmt = $db->prepare(
             'SELECT id FROM build
-            WHERE projectid = :projectid AND parentid = -1');
+            WHERE projectid = :projectid AND parentid IS NULL');
         $db->execute($stmt, [':projectid' => $this->project->Id]);
         $parent_buildid = $stmt->fetchColumn();
 

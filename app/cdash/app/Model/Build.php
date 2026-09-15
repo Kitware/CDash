@@ -44,13 +44,13 @@ class Build
     public const TYPE_WARN = EloquentBuild::TYPE_WARN;
     public const STATUS_NEW = 1;
 
-    public const PARENT_BUILD = -1;
-    public const STANDALONE_BUILD = 0;
+    public const PARENT_BUILD = null;
+    public const STANDALONE_BUILD = null;
 
     public $Id;
     public $SiteId;
     public $ProjectId = 0;
-    private int $ParentId = 0;
+    private ?int $ParentId = null;
     private string $Uuid = '';
     private string $Stamp = '';
     public string $Name = '';
@@ -127,7 +127,10 @@ class Build
 
     public function IsParentBuild(): bool
     {
-        return $this->ParentId === -1;
+        if ($this->ParentId !== null || !$this->Id) {
+            return false;
+        }
+        return EloquentBuild::where('parentid', $this->Id)->exists();
     }
 
     public function AddError($error): void
@@ -190,7 +193,7 @@ class Build
 
         // Add this subproject as a label on the parent build.
         $this->SetParentId($this->LookupParentBuildId());
-        if ($this->ParentId > 0) {
+        if ($this->ParentId !== null) {
             $parent = new self();
             $parent->Id = $this->ParentId;
             $parent->AddLabel($label);
@@ -267,7 +270,7 @@ class Build
         // If this is a child build, add this exec time
         // to the parent's value.
         $this->SetParentId($this->LookupParentBuildId());
-        if ($this->ParentId > 0) {
+        if ($this->ParentId !== null) {
             $parent = new self();
             $parent->Id = $this->ParentId;
             $parent->UpdateBuildTestTime($total_proc_time);
@@ -448,7 +451,7 @@ class Build
             $stmt = $this->PDO->prepare(
                 "SELECT id FROM build
                 $related_build_criteria
-                AND build.parentid = " . self::PARENT_BUILD . "
+                AND build.parentid IS NULL
                 AND build.id != :parentid
                 $which_build_criteria
                 LIMIT 1");
@@ -481,9 +484,9 @@ class Build
                 'AND subprojectid = :subprojectid';
             $values_to_bind['subprojectid'] = $this->SubProjectId;
         }
-        if ($this->ParentId === self::PARENT_BUILD || $this->ParentId === self::STANDALONE_BUILD) {
+        if ($this->ParentId === null) {
             // Only search for other parents.
-            $parent_criteria = 'AND build.parentid IN (' . self::PARENT_BUILD . ', ' . self::STANDALONE_BUILD . ')';
+            $parent_criteria = 'AND build.parentid IS NULL';
         }
 
         $stmt = $this->PDO->prepare("
@@ -645,7 +648,7 @@ class Build
         if ((int) $this->SubProjectId !== 0) {
             $query = $query->where('subprojectid', $this->SubProjectId);
         } else {
-            $query = $query->whereIn('parentid', [0, -1]);
+            $query = $query->whereNull('parentid');
         }
 
         $id = $query->first()->id ?? 0;
@@ -727,7 +730,7 @@ class Build
                 $this->UpdateBuild($this->Id, $nbuilderrors, $nbuildwarnings);
 
                 // Does the parent still need to be created?
-                if ($this->SubProjectName && $this->ParentId < 1) {
+                if ($this->SubProjectName && ($this->ParentId === null || $this->ParentId < 1)) {
                     if (!$this->CreateParentBuild(
                         $nbuilderrors, $nbuildwarnings)) {
                         // Someone else created the parent after we called
@@ -1411,19 +1414,27 @@ class Build
     /** Lookup this build's parentid, returning 0 if none is found. */
     public function LookupParentBuildId(): int
     {
+        if ($this->ParentId !== null && $this->ParentId > 0) {
+            return $this->ParentId;
+        }
+
         if (!$this->SiteId || $this->Name === '' || $this->Stamp === '' || !$this->ProjectId) {
             return 0;
         }
 
-        $builds = EloquentBuild::where([
-            'parentid' => -1,
-            'projectid' => $this->ProjectId,
-            'siteid' => $this->SiteId,
-            'name' => $this->Name,
-            'stamp' => $this->Stamp,
-        ]);
+        $query = EloquentBuild::whereNull('parentid')
+            ->where([
+                'projectid' => $this->ProjectId,
+                'siteid' => $this->SiteId,
+                'name' => $this->Name,
+                'stamp' => $this->Stamp,
+            ]);
 
-        return $builds->first()->id ?? 0;
+        if ($this->Id) {
+            $query = $query->where('id', '!=', $this->Id);
+        }
+
+        return $query->first()->id ?? 0;
     }
 
     /** Create a new build as a parent of $this and sets $this->ParentId.
@@ -1441,19 +1452,25 @@ class Build
         // Check if there's an existing build that should be the parent.
         // This would be a standalone build with no subproject that matches
         // our name, site, stamp, and projectid.
-        $existing_build = EloquentBuild::firstWhere([
-            'parentid' => self::STANDALONE_BUILD,
-            'name' => $this->Name,
-            'siteid' => $this->SiteId,
-            'stamp' => $this->Stamp,
-            'projectid' => $this->ProjectId,
-        ]);
+        $existing_build = EloquentBuild::whereNull('parentid')
+            ->where([
+                'name' => $this->Name,
+                'siteid' => $this->SiteId,
+                'stamp' => $this->Stamp,
+                'projectid' => $this->ProjectId,
+            ]);
+
+        if ($this->Id) {
+            $existing_build = $existing_build->where('id', '!=', $this->Id);
+        }
+
+        $existing_build = $existing_build->first();
 
         if ($existing_build !== null) {
             // Use the previously existing parent if one exists.
             $this->SetParentId($existing_build->id);
 
-            // Mark it as a parent (parentid of -1).
+            // Mark it as a parent (parentid of null).
             $existing_build->parentid = self::PARENT_BUILD;
             $existing_build->save();
         } else {
@@ -1484,13 +1501,15 @@ class Build
         // This happens when Update.xml is parsed first, because it doesn't
         // contain info about what subproject it came from.
         // TODO: maybe we don't need this any more?
-        return EloquentBuild::where([
-            'parentid' => self::STANDALONE_BUILD,
-            'siteid' => $this->SiteId,
-            'name' => $this->Name,
-            'stamp' => $this->Stamp,
-            'projectid' => $this->ProjectId,
-        ])->update(['parentid' => $this->ParentId]) > 0;
+        return EloquentBuild::whereNull('parentid')
+            ->where([
+                'siteid' => $this->SiteId,
+                'name' => $this->Name,
+                'stamp' => $this->Stamp,
+                'projectid' => $this->ProjectId,
+            ])
+            ->where('id', '!=', $this->ParentId)
+            ->update(['parentid' => $this->ParentId]) > 0;
     }
 
     /**
@@ -1547,7 +1566,7 @@ class Build
                 $fields_to_update['endtime'] = $this->EndTime;
             }
 
-            if ($build->parentid !== -1) {
+            if ($build->parentid !== null) {
                 // If this is not a parent build, check if its command has changed.
                 if ($this->Command !== '' && $this->Command !== $build->command) {
                     if (!empty($build->command)) {
@@ -1603,7 +1622,7 @@ class Build
             }
 
             // Also update the parent if necessary.
-            if ($build->parentid > 0) {
+            if ($build->parentid !== null) {
                 if ($buildid === $build->parentid) {
                     // Avoid infinite recursion.
                     // This should never happen, but we might as well be careful.
@@ -1621,7 +1640,7 @@ class Build
     /** Update the testing numbers for our parent build. */
     private function UpdateParentTestNumbers(int $newFailed, int $newNotRun, int $newPassed): void
     {
-        if ($this->ParentId < 1) {
+        if ($this->ParentId === null || $this->ParentId < 1) {
             return;
         }
 
@@ -1704,7 +1723,7 @@ class Build
     public function UpdateParentConfigureNumbers(int $newWarnings, int $newErrors): void
     {
         $this->SetParentId($this->LookupParentBuildId());
-        if ($this->ParentId < 1) {
+        if ($this->ParentId === null || $this->ParentId < 1) {
             return;
         }
 
@@ -1734,7 +1753,7 @@ class Build
     {
         // Figure out if we should notify this build or its parent.
         $idToNotify = $this->Id;
-        if ($this->ParentId > 0) {
+        if ($this->ParentId !== null && $this->ParentId > 0) {
             $idToNotify = $this->ParentId;
         }
 
@@ -1778,7 +1797,7 @@ class Build
 
             // If this is a child build, add this duration to the parent's sum.
             $this->SetParentId($this->LookupParentBuildId());
-            if ($this->ParentId > 0) {
+            if ($this->ParentId !== null && $this->ParentId > 0) {
                 // Update duration of specified step for this build.
                 EloquentBuild::whereKey($this->ParentId)
                     ->increment("{$field}duration", $duration);
@@ -1860,14 +1879,18 @@ class Build
     }
 
     /** Get/set the parentid for this build. */
-    public function GetParentId(): int
+    public function GetParentId(): ?int
     {
         return $this->ParentId;
     }
 
     public function SetParentId($parentid): void
     {
-        if ($parentid > 0 && (int) $parentid === (int) $this->Id) {
+        if ($parentid === '' || $parentid === null || (is_numeric($parentid) && (int) $parentid <= 0)) {
+            $this->ParentId = null;
+            return;
+        }
+        if ($this->Id && (int) $parentid === (int) $this->Id) {
             Log::error("Attempt to mark build $this->Id as its own parent", [
                 'function' => 'Build::SetParentId',
                 'projectid' => $this->ProjectId,
@@ -1968,8 +1991,12 @@ class Build
     /**
      * Return a SubProject build for a particular parent if it exists.
      */
-    public static function GetSubProjectBuild(int $parentid, int $subprojectid): ?self
+    public static function GetSubProjectBuild(?int $parentid, int $subprojectid): ?self
     {
+        if ($parentid === null || $parentid <= 0) {
+            return null;
+        }
+
         $eloquent_model = EloquentBuild::where([
             'parentid' => $parentid,
             'subprojectid' => $subprojectid,
@@ -2058,7 +2085,7 @@ class Build
         $justCreatedParent = false;
         if ($this->SubProjectName) {
             $this->SetParentId($this->LookupParentBuildId());
-            if ($this->ParentId === 0) {
+            if ($this->ParentId === null || $this->ParentId === 0) {
                 // Parent build doesn't exist yet, create it here.
                 $justCreatedParent = $this->CreateParentBuild($nbuilderrors, $nbuildwarnings);
             }
@@ -2119,10 +2146,10 @@ class Build
             return false;
         }
 
-        if ($this->ParentId > 0 && !$justCreatedParent) {
+        if ($this->ParentId !== null && $this->ParentId > 0 && !$justCreatedParent) {
             // Update parent's tally of total build errors & warnings.
             $this->UpdateBuild($this->ParentId, $nbuilderrors, $nbuildwarnings);
-        } elseif ($this->ParentId > 0) {
+        } elseif ($this->ParentId !== null && $this->ParentId > 0) {
             // If we just created a child build, associate it with
             // the parent's updates (if any).
             BuildUpdate::AssignUpdateToChild((int) $this->Id, (int) $this->ParentId);
@@ -2148,7 +2175,7 @@ class Build
         ]);
 
         // Associate the parent with this build's group if necessary.
-        if ($this->ParentId > 0) {
+        if ($this->ParentId !== null && $this->ParentId > 0) {
             $existing_parent_groupid_row = DB::table('build2group')->where('buildid', $this->ParentId)->first();
             if (!$existing_parent_groupid_row) {
                 DB::table('build2group')->insertOrIgnore([

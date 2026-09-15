@@ -16,6 +16,7 @@
  */
 
 use App\Http\Submission\Handlers\ActionableBuildInterface;
+use App\Models\BuildGroup;
 use App\Models\Label;
 use CDash\Collection\SubscriberCollection;
 use CDash\Database;
@@ -28,6 +29,7 @@ use CDash\Messaging\Subscription\UserSubscriptionBuilder;
 use CDash\Model\Subscriber;
 use CDash\Test\CDashUseCaseTestCase;
 use CDash\Test\UseCase\UseCase;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
@@ -125,9 +127,10 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
             }
 
             // Do the same for build groups
-            DB::table('buildgroup')->insertOrIgnore([
+            BuildGroup::insertOrIgnore([
                 'id' => 0,
                 'projectid' => self::$projectid,
+                'starttime' => Carbon::now(),
                 'description' => 'MultipleSubprojectsEmailTest-' . Str::uuid()->toString(),
             ]);
         }
