@@ -7,8 +7,8 @@ return new class extends Migration {
     public function up(): void
     {
         // Disable triggers temporarily
-        DB::statement('ALTER TABLE build2test DISABLE TRIGGER ALL');
-        DB::statement('ALTER TABLE testoutput DISABLE TRIGGER ALL');
+        DB::statement('ALTER TABLE build2test DISABLE TRIGGER USER');
+        DB::statement('ALTER TABLE testoutput DISABLE TRIGGER USER');
 
         // Dynamically find and drop all indexes on testoutput EXCEPT the primary key
         DB::statement("
@@ -52,8 +52,8 @@ return new class extends Migration {
         DB::statement('CREATE INDEX ON testoutput USING hash (output)');
 
         // Re-enable triggers
-        DB::statement('ALTER TABLE build2test ENABLE TRIGGER ALL');
-        DB::statement('ALTER TABLE testoutput ENABLE TRIGGER ALL');
+        DB::statement('ALTER TABLE build2test ENABLE TRIGGER USER');
+        DB::statement('ALTER TABLE testoutput ENABLE TRIGGER USER');
     }
 
     public function down(): void
