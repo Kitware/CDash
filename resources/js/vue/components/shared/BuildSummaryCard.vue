@@ -29,17 +29,8 @@
           class="tw-truncate tw-min-w-0"
         >
           <FontAwesomeIcon
-            v-if="build.operatingSystemName === 'Windows'"
-            :icon="FA.faWindows"
-          />
-          <!-- TODO: Add more specific Linux types. May require CTest work. -->
-          <FontAwesomeIcon
-            v-else-if="build.operatingSystemName === 'Linux'"
-            :icon="FA.faLinux"
-          />
-          <FontAwesomeIcon
-            v-else-if="build.operatingSystemName === 'Darwin' || build.operatingSystemName === 'OSX'"
-            :icon="FA.faApple"
+            v-if="iconFromOperatingSystemName(build.operatingSystemName)"
+            :icon="iconFromOperatingSystemName(build.operatingSystemName)"
           />
           {{ build.operatingSystemName }} {{ build.operatingSystemRelease }}
         </span>
@@ -181,9 +172,24 @@ export default {
   },
 
   methods: {
-
     fullHumanReadableDateTimeString(timestamp) {
       return DateTime.fromISO(timestamp).toLocaleString(DateTime.DATETIME_FULL_WITH_SECONDS);
+    },
+
+    iconFromOperatingSystemName(operatingSystemName) {
+      switch (operatingSystemName) {
+        case 'Windows':
+          return this.FA.faWindows;
+        // TODO: Add more specific Linux types. May require CTest work.
+        case 'Linux':
+          return this.FA.faLinux;
+        case 'Darwin':
+        case 'OSX':
+        case 'macOS':
+          return this.FA.faApple;
+        default:
+          return undefined;
+      }
     },
   },
 };
