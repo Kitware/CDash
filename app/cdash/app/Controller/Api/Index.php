@@ -17,6 +17,7 @@
 
 namespace CDash\Controller\Api;
 
+use App\Models\Test;
 use App\Utils\TestingDay;
 use CDash\Database;
 use CDash\Model\BuildGroup;
@@ -344,6 +345,7 @@ class Index extends ResultsApi
                 b.buildwarnings AS countbuildwarnings,
                 b.buildduration,
                 b.testnotrun AS counttestsnotrun,
+                b.testnotrunwarning AS counttestsnotrunwarning,
                 b.testfailed AS counttestsfailed,
                 b.testpassed AS counttestspassed,
                 b.testtimestatusfailed AS countteststimestatusfailed,
@@ -655,6 +657,7 @@ class Index extends ResultsApi
         $selected_build_warnings = 0;
         $selected_build_duration = 0;
         $selected_tests_not_run = 0;
+        $selected_tests_not_run_warning = 0;
         $selected_tests_failed = 0;
         $selected_tests_passed = 0;
         $selected_proc_time = 0;
@@ -684,6 +687,7 @@ class Index extends ResultsApi
                                           b.starttime,
                                           b.endtime,
                                           testnotrun,
+                                          testnotrunwarning,
                                           testfailed,
                                           testpassed,
                                           testduration,
@@ -704,6 +708,7 @@ class Index extends ResultsApi
                     $selected_build_warnings += max(0, $select_array->buildwarnings);
                     $selected_build_duration += max(0, $select_array->buildduration);
                     $selected_tests_not_run += max(0, $select_array->testnotrun);
+                    $selected_tests_not_run_warning += max(0, $select_array->testnotrunwarning);
                     $selected_tests_failed += max(0, $select_array->testfailed);
                     $selected_tests_passed += max(0, $select_array->testpassed);
                     $selected_proc_time += max(0, $select_array->testtime);
@@ -1012,6 +1017,7 @@ class Index extends ResultsApi
             $test_response = [];
 
             $nnotrun = $build_array['counttestsnotrun'];
+            $nnotrunwarning = $build_array['counttestsnotrunwarning'];
             $nfail = $build_array['counttestsfailed'];
             $npass = $build_array['counttestspassed'];
             $proc_time = $build_array['testtime'];
@@ -1021,11 +1027,13 @@ class Index extends ResultsApi
             if (!$this->childView) {
                 if ($this->includeSubProjects) {
                     $nnotrun = $selected_tests_not_run;
+                    $nnotrunwarning = $selected_tests_not_run_warning;
                     $nfail = $selected_tests_failed;
                     $npass = $selected_tests_passed;
                     $proc_time = $selected_proc_time;
                 } else {
                     $nnotrun -= $selected_tests_not_run;
+                    $nnotrunwarning -= $selected_tests_not_run_warning;
                     $nfail -= $selected_tests_failed;
                     $npass -= $selected_tests_passed;
                     $proc_time -= $selected_proc_time;
@@ -1054,7 +1062,8 @@ class Index extends ResultsApi
                 $labels_result = DB::select("
                                      SELECT
                                          b2t.status,
-                                         b2t.newstatus
+                                         b2t.newstatus,
+                                         b2t.details
                                      FROM build2test AS b2t
                                      INNER JOIN label2test AS l2t ON l2t.testid = b2t.id
                                      WHERE
@@ -1064,6 +1073,7 @@ class Index extends ResultsApi
                                  ", array_merge([$buildid], $this->labelIds));
 
                 $nnotrun = 0;
+                $nnotrunwarning = 0;
                 $nfail = 0;
                 $npass = 0;
                 $test_response['nfaildiffp'] = 0;
@@ -1088,6 +1098,9 @@ class Index extends ResultsApi
                             break;
                         case 'notrun':
                             $nnotrun++;
+                            if ($label_row->details !== Test::DISABLED) {
+                                $nnotrunwarning++;
+                            }
                             if ((int) $label_row->newstatus === 1) {
                                 $test_response['nnotrundiffp']++;
                             }
@@ -1097,6 +1110,7 @@ class Index extends ResultsApi
             }
 
             $test_response['notrun'] = $nnotrun;
+            $test_response['notrunwarning'] = max(0, $nnotrunwarning);
             $test_response['fail'] = $nfail;
             $test_response['pass'] = $npass;
 

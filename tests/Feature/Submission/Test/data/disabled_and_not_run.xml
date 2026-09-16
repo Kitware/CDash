@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="dummy_test_name"
+  BuildStamp="dummy_stamp"
+  Name="dummy_name"
+	>
+	<Testing>
+		<StartDateTime>Feb 13 13:03 EST</StartDateTime>
+		<StartTestTime>1771005834</StartTestTime>
+		<TestList>
+			<Test>./disabled</Test>
+			<Test>./missing</Test>
+		</TestList>
+		<Test Status="notrun">
+			<Name>disabled</Name>
+			<Path>.</Path>
+			<FullName>./disabled</FullName>
+			<FullCommandLine></FullCommandLine>
+			<Results>
+				<NamedMeasurement type="text/string" name="Completion Status">
+					<Value>Disabled</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="text/string" name="Command Line">
+					<Value></Value>
+				</NamedMeasurement>
+				<Measurement>
+					<Value></Value>
+				</Measurement>
+			</Results>
+		</Test>
+		<Test Status="notrun">
+			<Name>missing</Name>
+			<Path>.</Path>
+			<FullName>./missing</FullName>
+			<FullCommandLine></FullCommandLine>
+			<Results>
+				<NamedMeasurement type="text/string" name="Completion Status">
+					<Value>Unable to find executable</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="text/string" name="Command Line">
+					<Value></Value>
+				</NamedMeasurement>
+				<Measurement>
+					<Value></Value>
+				</Measurement>
+			</Results>
+		</Test>
+		<EndDateTime>Feb 13 13:03 EST</EndDateTime>
+		<EndTestTime>1771005835</EndTestTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Testing>
+</Site>
