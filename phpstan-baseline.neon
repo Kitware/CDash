@@ -15966,11 +15966,6 @@ parameters:
 			count: 1
 			path: app/cdash/tests/test_bazeljson.php
 
-		-
-			rawMessage: Cannot access property $output on App\Models\TestOutput|null.
-			identifier: property.nonObject
-			count: 6
-			path: app/cdash/tests/test_bazeljson.php
 
 		-
 			rawMessage: 'Loose comparison via "!=" between int<0, max>|false and false is not allowed.'
@@ -20169,11 +20164,6 @@ parameters:
 			count: 3
 			path: app/cdash/tests/test_outputcolor.php
 
-		-
-			rawMessage: Cannot access property $output on App\Models\TestOutput|null.
-			identifier: property.nonObject
-			count: 1
-			path: app/cdash/tests/test_outputcolor.php
 
 		-
 			rawMessage: 'Method OutputColorTestCase::getIdForTest() has no return type specified.'
@@ -21702,11 +21692,6 @@ parameters:
 			count: 2
 			path: app/cdash/tests/test_truncateoutput.php
 
-		-
-			rawMessage: Cannot access property $output on App\Models\TestOutput|null.
-			identifier: property.nonObject
-			count: 1
-			path: app/cdash/tests/test_truncateoutput.php
 
 		-
 			rawMessage: Property TruncateOutputTestCase::$BuildId has no type specified.

@@ -21,7 +21,6 @@ use App\Models\Label;
 use App\Models\Test;
 use App\Models\TestImage;
 use App\Models\TestMeasurement;
-use App\Models\TestOutput;
 use Carbon\Carbon;
 use CDash\Model\Build;
 use CDash\Model\Image;
@@ -140,23 +139,19 @@ class TestCreator
         }
 
         DB::transaction(function () use ($build): void {
-            $outputid = TestOutput::select('id')->firstOrCreate([
-                'path' => $this->testPath,
-                'command' => $this->testCommand,
-                'output' => $this->testOutput,
-            ])->id;
-
             // Note: the newstatus column is currently handled in
             // ctestparserutils::compute_test_difference. This gets updated when we call
             // Build::ComputeTestTiming.
             $buildtest = Test::create([
                 'buildid' => $build->Id,
-                'outputid' => $outputid,
                 'status' => $this->testStatus,
                 'details' => $this->testDetails,
                 'time' => "$this->buildTestTime",
                 'testname' => $this->testName,
                 'starttime' => $this->testStartTime,
+                'path' => $this->testPath,
+                'command' => $this->testCommand,
+                'output' => $this->testOutput,
             ]);
 
             if ($this->measurements->isNotEmpty()) {

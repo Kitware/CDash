@@ -966,11 +966,11 @@ type Test {
 
   details: String! @filterable
 
-  path: String @with(relation: "testOutput")
+  path: String
 
-  command: String @with(relation: "testOutput")
+  command: String
 
-  output: String @with(relation: "testOutput")
+  output: String
 
   build: Build! @belongsTo
 

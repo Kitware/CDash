@@ -9,7 +9,6 @@ use App\Models\Project;
 use App\Models\Site;
 use App\Models\SiteInformation;
 use App\Models\Test;
-use App\Models\TestOutput;
 use App\Services\SiteService;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
@@ -57,14 +56,10 @@ class TestsIdPageTest extends BrowserTestCase
      */
     private function createTest(array $attributes = []): Test
     {
-        $output = TestOutput::create([
+        $attributes = array_merge([
             'path' => (string) Str::uuid(),
             'command' => (string) Str::uuid(),
             'output' => '',
-        ]);
-
-        $attributes = array_merge([
-            'outputid' => $output->id,
             'timemean' => 0,
             'timestd' => 0,
         ], $attributes);
@@ -416,18 +411,16 @@ class TestsIdPageTest extends BrowserTestCase
         });
 
         // Add output
-        $testOutput = TestOutput::create([
-            'path' => (string) Str::uuid(),
-            'command' => (string) Str::uuid(),
-            'output' => (string) Str::uuid(),
-        ]);
-        $test->outputid = $testOutput->id;
+        $outputText = (string) Str::uuid();
+        $test->path = (string) Str::uuid();
+        $test->command = (string) Str::uuid();
+        $test->output = $outputText;
         $test->save();
 
-        $this->browse(function (Browser $browser) use ($test, $testOutput): void {
+        $this->browse(function (Browser $browser) use ($test, $outputText): void {
             $browser->visit("/tests/{$test->id}")
-                ->waitForText($testOutput->output)
-                ->assertSee($testOutput->output)
+                ->waitForText($outputText)
+                ->assertSee($outputText)
                 ->assertMissing('@no-output-message');
         });
     }

@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Enums\TestTimeStatusCategory;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -19,7 +18,6 @@ use Illuminate\Support\Facades\Config;
  *
  * @property int $id
  * @property int $buildid
- * @property int $outputid
  * @property string $status 'failed' | 'passed' | 'notrun'  TODO: Turn this into a proper enum.
  * @property float $time
  * @property float $timemean
@@ -30,6 +28,9 @@ use Illuminate\Support\Facades\Config;
  * @property string $testname
  * @property ?Carbon $starttime
  * @property TestTimeStatusCategory $timestatuscategory
+ * @property string $path
+ * @property string $command
+ * @property string $output
  *
  * @mixin Builder<Test>
  */
@@ -37,7 +38,7 @@ class Test extends Model
 {
     public $timestamps = false;
 
-    protected $table = 'build2test';
+    protected $table = 'tests';
 
     /**
      * @deprecated 08/24/2024  This member variable is deprecated.  Use the labels() Eloquent relationship instead.
@@ -58,7 +59,6 @@ class Test extends Model
 
     protected $fillable = [
         'buildid',
-        'outputid',
         'status',
         'time',
         'timemean',
@@ -68,12 +68,14 @@ class Test extends Model
         'details',
         'testname',
         'starttime',
+        'path',
+        'command',
+        'output',
     ];
 
     protected $casts = [
         'id' => 'integer',
         'buildid' => 'integer',
-        'outputid' => 'integer',
         'time' => 'float',
         'timemean' => 'float',
         'timestd' => 'float',
@@ -89,14 +91,6 @@ class Test extends Model
     public function build(): BelongsTo
     {
         return $this->belongsTo('App\Models\Build', 'buildid');
-    }
-
-    /**
-     * @return BelongsTo<TestOutput, $this>
-     */
-    public function testOutput(): BelongsTo
-    {
-        return $this->belongsTo('App\Models\TestOutput', 'outputid');
     }
 
     /**
@@ -129,36 +123,6 @@ class Test extends Model
     public function testImages(): HasMany
     {
         return $this->hasMany(TestImage::class, 'testid');
-    }
-
-    /**
-     * @return Attribute<?string,null>
-     */
-    protected function path(): Attribute
-    {
-        return Attribute::make(
-            get: fn (mixed $value, array $attributes): ?string => $this->testOutput->path ?? null,
-        );
-    }
-
-    /**
-     * @return Attribute<?string,null>
-     */
-    protected function command(): Attribute
-    {
-        return Attribute::make(
-            get: fn (mixed $value, array $attributes): ?string => $this->testOutput->command ?? null,
-        );
-    }
-
-    /**
-     * @return Attribute<?string,null>
-     */
-    protected function output(): Attribute
-    {
-        return Attribute::make(
-            get: fn (mixed $value, array $attributes): ?string => $this->testOutput->output ?? null,
-        );
     }
 
     /**

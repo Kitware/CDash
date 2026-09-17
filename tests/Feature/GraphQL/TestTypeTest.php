@@ -5,7 +5,6 @@ namespace Tests\Feature\GraphQL;
 use App\Models\Label;
 use App\Models\Project;
 use App\Models\Test;
-use App\Models\TestOutput;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -20,7 +19,6 @@ class TestTypeTest extends TestCase
     use DatabaseTransactions;
 
     private Project $project;
-    private TestOutput $test_output;
 
     /**
      * @throws RandomException
@@ -30,21 +28,12 @@ class TestTypeTest extends TestCase
         parent::setUp();
 
         $this->project = $this->makePublicProject();
-
-        // A common test output to share among all of our tests
-        $this->test_output = TestOutput::create([
-            'path' => 'a',
-            'command' => 'b',
-            'output' => 'c',
-        ]);
     }
 
     protected function tearDown(): void
     {
         // Deleting the project will delete all corresponding builds and tests
         $this->project->delete();
-
-        $this->test_output->delete();
 
         parent::tearDown();
     }
@@ -64,7 +53,9 @@ class TestTypeTest extends TestCase
             'time' => 1.2,
             'timemean' => 3.4,
             'timestd' => 5.6,
-            'outputid' => $this->test_output->id,
+            'path' => 'a',
+            'command' => 'b',
+            'output' => 'c',
             'starttime' => '2026-02-13T18:03:54+00:00',
         ]);
 
@@ -143,7 +134,6 @@ class TestTypeTest extends TestCase
         $build->tests()->create([
             'testname' => 'test1',
             'status' => 'passed',
-            'outputid' => $this->test_output->id,
         ]);
 
         $this->graphQL('
@@ -206,7 +196,6 @@ class TestTypeTest extends TestCase
         ])->tests()->create([
             'testname' => 'test1',
             'status' => $db_value,
-            'outputid' => $this->test_output->id,
         ]);
 
         $this->graphQL('
@@ -280,7 +269,6 @@ class TestTypeTest extends TestCase
             'testname' => 'test1',
             'status' => 'passed',
             'timestatus' => $timestatus_db_value,
-            'outputid' => $this->test_output->id,
         ]);
 
         $this->graphQL('
@@ -341,7 +329,6 @@ class TestTypeTest extends TestCase
 
         $label = $build->tests()->create([
             'testname' => Str::uuid()->toString(),
-            'outputid' => $this->test_output->id,
             'status' => 'passed',
         ])->labels()->save(Label::factory()->make());
 
@@ -403,7 +390,6 @@ class TestTypeTest extends TestCase
 
         $test = $build->tests()->create([
             'testname' => Str::uuid()->toString(),
-            'outputid' => $this->test_output->id,
             'status' => 'passed',
         ]);
 
