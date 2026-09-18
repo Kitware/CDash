@@ -47,7 +47,7 @@ class TruncateOutputTestCase extends KWWebTestCase
                   build2test.testname = 'curl'");
         $buildtestid = $buildtests[0]->id;
 
-        $testOutput = Test::findOrFail((int) $buildtestid)->testOutput->output;
+        $testOutput = Test::findOrFail((int) $buildtestid)->output;
         $expected = 'The rest of the test output was removed since it exceeds the threshold';
         $this->assertTrue(str_contains($testOutput, $expected));
 

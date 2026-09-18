@@ -8,7 +8,6 @@ use App\Models\Site;
 use App\Models\SiteInformation;
 use App\Models\SubProject;
 use App\Models\Test;
-use App\Models\TestOutput;
 use App\Services\SiteService;
 use Illuminate\Support\Str;
 use Laravel\Dusk\Browser;
@@ -21,8 +20,6 @@ class BuildTestsPageTest extends BrowserTestCase
 
     private Project $project;
 
-    private TestOutput $testOutput;
-
     private Site $site;
 
     public function setUp(): void
@@ -31,12 +28,6 @@ class BuildTestsPageTest extends BrowserTestCase
 
         $this->project = $this->makePublicProject();
 
-        $this->testOutput = TestOutput::create([
-            'path' => 'a',
-            'command' => 'b',
-            'output' => 'c',
-        ]);
-
         $this->site = Site::factory()->create();
         SiteService::updateSiteInfoIfChanged($this->site, new SiteInformation([]));
     }
@@ -44,7 +35,6 @@ class BuildTestsPageTest extends BrowserTestCase
     public function tearDown(): void
     {
         $this->project->delete();
-        $this->testOutput->delete();
         $this->site->delete();
 
         parent::tearDown();
@@ -92,7 +82,6 @@ class BuildTestsPageTest extends BrowserTestCase
         $parent_build_test = $parent_build->tests()->create([
             'testname' => Str::uuid()->toString(),
             'status' => 'failed',
-            'outputid' => $this->testOutput->id,
         ]);
 
         /** @var Test $child_build_1_test */
@@ -105,7 +94,6 @@ class BuildTestsPageTest extends BrowserTestCase
         ])->tests()->create([
             'testname' => Str::uuid()->toString(),
             'status' => 'failed',
-            'outputid' => $this->testOutput->id,
         ]);
 
         /** @var Test $child_build_2_test */
@@ -118,7 +106,6 @@ class BuildTestsPageTest extends BrowserTestCase
         ])->tests()->create([
             'testname' => Str::uuid()->toString(),
             'status' => 'passed',
-            'outputid' => $this->testOutput->id,
         ]);
 
         $this->browse(function (Browser $browser) use ($parent_build_test, $child_build_2_test, $child_build_1_test, $parent_build): void {
@@ -165,7 +152,6 @@ class BuildTestsPageTest extends BrowserTestCase
         $test = $build->tests()->create([
             'testname' => Str::uuid()->toString(),
             'status' => 'failed',
-            'outputid' => $this->testOutput->id,
         ]);
 
         $this->browse(function (Browser $browser) use ($test, $build): void {
@@ -202,7 +188,6 @@ class BuildTestsPageTest extends BrowserTestCase
         ])->tests()->create([
             'testname' => Str::uuid()->toString(),
             'status' => 'failed',
-            'outputid' => $this->testOutput->id,
         ]);
 
         $this->browse(function (Browser $browser) use ($child_build_test, $parent_build): void {
@@ -232,7 +217,6 @@ class BuildTestsPageTest extends BrowserTestCase
             'testname' => Str::uuid()->toString(),
             'status' => 'passed',
             'timestatus' => 5,
-            'outputid' => $this->testOutput->id,
         ]);
 
         // Check that the time status column is hidden when not configured to show it
@@ -285,7 +269,6 @@ class BuildTestsPageTest extends BrowserTestCase
         $test = $build->tests()->create([
             'testname' => Str::uuid()->toString(),
             'status' => 'failed',
-            'outputid' => $this->testOutput->id,
         ]);
 
         $this->browse(function (Browser $browser) use ($test, $build): void {
@@ -319,7 +302,6 @@ class BuildTestsPageTest extends BrowserTestCase
         $test = $build->tests()->create([
             'testname' => Str::uuid()->toString(),
             'status' => 'failed',
-            'outputid' => $this->testOutput->id,
         ]);
 
         $measurement1 = $test->testMeasurements()->create([
@@ -399,28 +381,24 @@ class BuildTestsPageTest extends BrowserTestCase
         $previous_test_failed = $previous_build->tests()->create([
             'testname' => 'failed-before',
             'status' => 'failed',
-            'outputid' => $this->testOutput->id,
         ]);
 
         /** @var Test $previous_test_passed */
         $previous_test_passed = $previous_build->tests()->create([
             'testname' => 'passed-before',
             'status' => 'passed',
-            'outputid' => $this->testOutput->id,
         ]);
 
         /** @var Test $previous_test_to_be_fixed */
         $previous_test_to_be_fixed = $previous_build->tests()->create([
             'testname' => 'fixed-test',
             'status' => 'failed',
-            'outputid' => $this->testOutput->id,
         ]);
 
         /** @var Test $previous_test_stayed_passed */
         $previous_test_stayed_passed = $previous_build->tests()->create([
             'testname' => 'stayed-passed',
             'status' => 'passed',
-            'outputid' => $this->testOutput->id,
         ]);
 
         /** @var Build $current_build */
@@ -436,35 +414,30 @@ class BuildTestsPageTest extends BrowserTestCase
         $current_test_failed_again = $current_build->tests()->create([
             'testname' => 'failed-before',
             'status' => 'failed',
-            'outputid' => $this->testOutput->id,
         ]);
 
         /** @var Test $current_test_newly_failed */
         $current_test_newly_failed = $current_build->tests()->create([
             'testname' => 'passed-before',
             'status' => 'failed',
-            'outputid' => $this->testOutput->id,
         ]);
 
         /** @var Test $current_test_entirely_new_failed */
         $current_test_entirely_new_failed = $current_build->tests()->create([
             'testname' => 'new-failed',
             'status' => 'failed',
-            'outputid' => $this->testOutput->id,
         ]);
 
         /** @var Test $current_test_fixed */
         $current_test_fixed = $current_build->tests()->create([
             'testname' => 'fixed-test',
             'status' => 'passed',
-            'outputid' => $this->testOutput->id,
         ]);
 
         /** @var Test $current_test_stayed_passed */
         $current_test_stayed_passed = $current_build->tests()->create([
             'testname' => 'stayed-passed',
             'status' => 'passed',
-            'outputid' => $this->testOutput->id,
         ]);
 
         $this->browse(function (Browser $browser) use ($current_build, $current_test_failed_again, $current_test_newly_failed, $current_test_entirely_new_failed, $current_test_fixed, $current_test_stayed_passed): void {
@@ -494,7 +467,6 @@ class BuildTestsPageTest extends BrowserTestCase
         $previous_test_failed = $previous_build->tests()->create([
             'testname' => 'failed-before',
             'status' => 'failed',
-            'outputid' => $this->testOutput->id,
         ]);
 
         /** @var Build $current_build */
@@ -510,7 +482,6 @@ class BuildTestsPageTest extends BrowserTestCase
         $current_test_failed_again = $current_build->tests()->create([
             'testname' => 'failed-before',
             'status' => 'failed',
-            'outputid' => $this->testOutput->id,
         ]);
 
         $this->browse(function (Browser $browser) use ($current_build): void {

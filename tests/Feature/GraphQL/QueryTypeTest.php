@@ -9,7 +9,6 @@ use App\Models\BuildCommand;
 use App\Models\DynamicAnalysis;
 use App\Models\Project;
 use App\Models\Test;
-use App\Models\TestOutput;
 use App\Models\User;
 use Exception;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -393,12 +392,6 @@ class QueryTypeTest extends TestCase
         $user = User::factory()->create();
         $this->users[] = $user;
 
-        $testOutput = TestOutput::create([
-            'path' => Str::uuid()->toString(),
-            'command' => Str::uuid()->toString(),
-            'output' => Str::uuid()->toString(),
-        ]);
-
         $project1 = $this->makePrivateProject();
         $project1->users()
             ->attach($user->id, [
@@ -411,7 +404,6 @@ class QueryTypeTest extends TestCase
         ])->tests()->create([
             'testname' => Str::uuid()->toString(),
             'status' => 'failed',
-            'outputid' => $testOutput->id,
         ]);
 
         $project2 = $this->makePrivateProject();
@@ -422,7 +414,6 @@ class QueryTypeTest extends TestCase
         ])->tests()->create([
             'testname' => Str::uuid()->toString(),
             'status' => 'failed',
-            'outputid' => $testOutput->id,
         ]);
 
         $this->actingAs($user)->graphQL('

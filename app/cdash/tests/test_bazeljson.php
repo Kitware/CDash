@@ -62,7 +62,7 @@ class BazelJSONTestCase extends KWWebTestCase
         $buildtestid = $test_stmt->fetchColumn();
 
         // Verify that only output for the specified test is displayed
-        $output = Test::findOrFail((int) $buildtestid)->testOutput->output;
+        $output = Test::findOrFail((int) $buildtestid)->output;
 
         $not_expected = 'Executed 2 out of 2 tests';
         if (str_contains($output, $not_expected)) {
@@ -235,7 +235,7 @@ class BazelJSONTestCase extends KWWebTestCase
         $buildtestid = $test_stmt->fetchColumn();
 
         // Verify that all of the build output is displayed.
-        $output = Test::findOrFail((int) $buildtestid)->testOutput->output;
+        $output = Test::findOrFail((int) $buildtestid)->output;
 
         $expected = 'FAIL: testDrakeFindResourceOrThrowInInstall (__main__.TestCommonInstall)';
         if (!str_contains($output, $expected)) {
@@ -288,7 +288,7 @@ class BazelJSONTestCase extends KWWebTestCase
         $buildtestid = $test_stmt->fetchColumn();
 
         // Verify that the 'TIMEOUT' message is displayed
-        $output = Test::findOrFail((int) $buildtestid)->testOutput->output;
+        $output = Test::findOrFail((int) $buildtestid)->output;
 
         $expected = 'TIMEOUT';
         if (!str_contains($output, $expected)) {
@@ -511,7 +511,7 @@ class BazelJSONTestCase extends KWWebTestCase
         $buildtestid = $test_stmt->fetchColumn();
 
         // Verify that the expected output is displayed
-        $output = Test::findOrFail((int) $buildtestid)->testOutput->output;
+        $output = Test::findOrFail((int) $buildtestid)->output;
 
         $expected = '//automotive/maliput/multilane:multilane_builder_test';
         if (!str_contains($output, $expected)) {
@@ -540,7 +540,7 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Verify that the expected output is displayed
         $test = Test::findOrFail((int) $buildtestid);
-        $output = $test->testOutput->output;
+        $output = $test->output;
 
         $expected = 'automotive/maliput/multilane:multilane_lanes_test';
         if (!str_contains($output, $expected)) {
@@ -600,7 +600,7 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Verify that the expected output is displayed
         $test = Test::findOrFail((int) $buildtestid);
-        $output = $test->testOutput->output;
+        $output = $test->output;
 
         $expected = 'Note: This is test shard 8 of 10.';
         if (!str_contains($output, $expected)) {

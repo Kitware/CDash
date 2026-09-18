@@ -7,7 +7,6 @@ use App\Models\Project;
 use App\Models\Site;
 use App\Models\Target;
 use App\Models\Test;
-use App\Models\TestOutput;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\DB;
@@ -36,8 +35,6 @@ class FilterTest extends TestCase
      */
     private array $sites = [];
 
-    private TestOutput $testOutput;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -56,12 +53,6 @@ class FilterTest extends TestCase
             'normal' => User::factory()->create(),
             'admin' => User::factory()->adminUser()->create(),
         ];
-
-        $this->testOutput = TestOutput::create([
-            'path' => 'a',
-            'command' => 'b',
-            'output' => 'c',
-        ]);
     }
 
     protected function tearDown(): void
@@ -80,8 +71,6 @@ class FilterTest extends TestCase
             $site->delete();
         }
         $this->sites = [];
-
-        $this->testOutput->delete();
 
         parent::tearDown();
     }
@@ -1092,7 +1081,6 @@ class FilterTest extends TestCase
         $test = $build->tests()->create([
             'testname' => Str::uuid()->toString(),
             'status' => 'passed',
-            'outputid' => $this->testOutput->id,
         ]);
 
         $measurement1 = $test->testMeasurements()->create([

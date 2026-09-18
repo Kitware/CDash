@@ -47,7 +47,7 @@ class OutputColorTestCase extends KWWebTestCase
 
         // Get test output.
         $buildtestid = $this->getIdForTest('colortest_long');
-        $output = Test::findOrFail((int) $buildtestid)->testOutput->output;
+        $output = Test::findOrFail((int) $buildtestid)->output;
 
         // Check for expected escape sequences.
         if (!str_contains($output, "\x1B[32m")) {

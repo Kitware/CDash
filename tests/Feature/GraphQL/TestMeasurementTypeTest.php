@@ -3,7 +3,6 @@
 namespace Tests\Feature\GraphQL;
 
 use App\Models\Project;
-use App\Models\TestOutput;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
 use Random\RandomException;
@@ -17,7 +16,6 @@ class TestMeasurementTypeTest extends TestCase
     use DatabaseTransactions;
 
     private Project $project;
-    private TestOutput $test_output;
 
     /**
      * @throws RandomException
@@ -27,21 +25,12 @@ class TestMeasurementTypeTest extends TestCase
         parent::setUp();
 
         $this->project = $this->makePublicProject();
-
-        // A common test output to share among all of our tests
-        $this->test_output = TestOutput::create([
-            'path' => 'a',
-            'command' => 'b',
-            'output' => 'c',
-        ]);
     }
 
     protected function tearDown(): void
     {
         // Deleting the project will delete all corresponding builds and tests
         $this->project->delete();
-
-        $this->test_output->delete();
 
         parent::tearDown();
     }
@@ -57,7 +46,6 @@ class TestMeasurementTypeTest extends TestCase
         ])->tests()->create([
             'testname' => 'test1',
             'status' => 'failed',
-            'outputid' => $this->test_output->id,
         ])->testMeasurements()->createMany([
             [
                 'name' => 'measurement 1',

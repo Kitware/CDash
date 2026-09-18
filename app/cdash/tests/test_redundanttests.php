@@ -66,7 +66,7 @@ class RedundantTestsTestCase extends KWWebTestCase
         $test1found = false;
         $test2found = false;
         foreach ($results as $row) {
-            $output = Test::findOrFail((int) $row->id)->testOutput?->output;
+            $output = Test::findOrFail((int) $row->id)->output;
             if ($output === "this is a test\n") {
                 $test1found = true;
             }

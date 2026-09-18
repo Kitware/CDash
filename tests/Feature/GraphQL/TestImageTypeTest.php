@@ -4,7 +4,6 @@ namespace Tests\Feature\GraphQL;
 
 use App\Models\Image;
 use App\Models\Project;
-use App\Models\TestOutput;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
 use Random\RandomException;
@@ -19,7 +18,6 @@ class TestImageTypeTest extends TestCase
 
     private Project $project;
     private Image $image;
-    private TestOutput $testOutput;
 
     /**
      * @throws RandomException
@@ -35,12 +33,6 @@ class TestImageTypeTest extends TestCase
             'extension' => '.png',
             'checksum' => '123',
         ]);
-
-        $this->testOutput = TestOutput::create([
-            'path' => Str::uuid()->toString(),
-            'command' => Str::uuid()->toString(),
-            'output' => Str::uuid()->toString(),
-        ]);
     }
 
     /**
@@ -54,7 +46,6 @@ class TestImageTypeTest extends TestCase
         ])->tests()->create([
             'testname' => Str::uuid()->toString(),
             'status' => 'failed',
-            'outputid' => $this->testOutput->id,
         ]);
 
         $testImageNoImage = $test->testImages()->create([

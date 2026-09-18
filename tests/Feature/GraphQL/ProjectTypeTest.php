@@ -4,7 +4,6 @@ namespace Tests\Feature\GraphQL;
 
 use App\Enums\ProjectRole;
 use App\Models\Project;
-use App\Models\TestOutput;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
@@ -1272,12 +1271,6 @@ class ProjectTypeTest extends TestCase
 
     public function testTestsRelationship(): void
     {
-        $output = TestOutput::create([
-            'path' => 'a',
-            'command' => 'b',
-            'output' => 'c',
-        ]);
-
         // First build with two tests.
         $this->projects['public1']->builds()->create([
             'name' => 'build1',
@@ -1286,12 +1279,10 @@ class ProjectTypeTest extends TestCase
             [
                 'testname' => 'test1',
                 'status' => 'passed',
-                'outputid' => $output->id,
             ],
             [
                 'testname' => 'test2',
                 'status' => 'failed',
-                'outputid' => $output->id,
             ],
         ]);
 
@@ -1302,7 +1293,6 @@ class ProjectTypeTest extends TestCase
         ])->tests()->create([
             'testname' => 'test3',
             'status' => 'notrun',
-            'outputid' => $output->id,
         ]);
 
         // A test belonging to a different project should not be returned.
@@ -1312,7 +1302,6 @@ class ProjectTypeTest extends TestCase
         ])->tests()->create([
             'testname' => 'test4',
             'status' => 'passed',
-            'outputid' => $output->id,
         ]);
 
         $this->graphQL('
@@ -1358,8 +1347,6 @@ class ProjectTypeTest extends TestCase
                 ],
             ],
         ]);
-
-        $output->delete();
     }
 
     /**
@@ -1398,12 +1385,6 @@ class ProjectTypeTest extends TestCase
      */
     public function testTestsRelationshipWithFilters(): void
     {
-        $output = TestOutput::create([
-            'path' => 'a',
-            'command' => 'b',
-            'output' => 'c',
-        ]);
-
         $this->projects['public1']->builds()->create([
             'name' => 'build1',
             'uuid' => Str::uuid(),
@@ -1411,12 +1392,10 @@ class ProjectTypeTest extends TestCase
             [
                 'testname' => 'passing_test',
                 'status' => 'passed',
-                'outputid' => $output->id,
             ],
             [
                 'testname' => 'failing_test',
                 'status' => 'failed',
-                'outputid' => $output->id,
             ],
         ]);
 
@@ -1451,7 +1430,5 @@ class ProjectTypeTest extends TestCase
                 ],
             ],
         ]);
-
-        $output->delete();
     }
 }
