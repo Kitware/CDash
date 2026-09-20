@@ -64,6 +64,16 @@ export default {
       type: Function,
       required: true,
     },
+    large: {
+      type: Boolean,
+      required: false,
+      default: true,
+    },
+    progressive: {
+      type: Number,
+      required: false,
+      default: 400,
+    },
   },
 
   // eslint-disable-next-line vue/require-emit-validator
@@ -117,8 +127,8 @@ export default {
           type: 'custom',
           coordinateSystem: 'cartesian2d',
           data: this.data,
-          large: true,
-          progressive: 400,
+          large: this.large,
+          progressive: this.progressive,
           renderItem: this.renderItem,
           encode: {
             x: [1, 2],

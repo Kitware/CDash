@@ -452,6 +452,56 @@ class BuildTestsPageTest extends BrowserTestCase
         });
     }
 
+    public function testHidesTestTimelineWhenNoStartTimesPresent(): void
+    {
+        /** @var Build $build */
+        $build = $this->project->builds()->create([
+            'siteid' => $this->site->id,
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        /** @var Test $test */
+        $test = $build->tests()->create([
+            'testname' => Str::uuid()->toString(),
+            'status' => 'passed',
+        ]);
+
+        $this->browse(function (Browser $browser) use ($test, $build): void {
+            $browser->visit("/builds/{$build->id}/tests")
+                ->waitFor('@tests-table')
+                ->assertSeeIn('@tests-table', $test->testname)
+                ->assertMissing('@test-timeline')
+            ;
+        });
+    }
+
+    public function testShowsTestTimelineWhenStartTimesPresent(): void
+    {
+        /** @var Build $build */
+        $build = $this->project->builds()->create([
+            'siteid' => $this->site->id,
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        $build->tests()->create([
+            'testname' => Str::uuid()->toString(),
+            'status' => 'passed',
+            'time' => '1.5',
+            'starttime' => '2025-01-01 11:22:33',
+        ]);
+
+        $this->browse(function (Browser $browser) use ($build): void {
+            $browser->visit("/builds/{$build->id}/tests")
+                ->waitFor('@test-timeline')
+                ->assertSeeIn('@test-timeline', 'Test Execution Timeline')
+                ->click('@test-timeline')
+                ->assertSeeIn('@test-timeline', 'Passed')
+            ;
+        });
+    }
+
     public function testOnlyDeltaNoResults(): void
     {
         /** @var Build $previous_build */

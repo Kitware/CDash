@@ -6,6 +6,23 @@
     <div class="tw-flex tw-flex-col tw-w-full tw-gap-4">
       <BuildSummaryCard :build-id="buildId" />
 
+      <details
+        v-if="hasTestStartTimes"
+        class="tw-collapse tw-collapse-plus tw-w-full tw-bg-base-100 tw-rounded-lg tw-border tw-border-gray-200"
+        data-test="test-timeline"
+      >
+        <summary class="tw-collapse-title tw-text-xl tw-font-bold">
+          <FontAwesomeIcon
+            :icon="FA.faChartGantt"
+            class="tw-mr-1"
+          />
+          Test Execution Timeline
+        </summary>
+        <div class="tw-collapse-content">
+          <TestFlameChart :tests="testTimelineData" />
+        </div>
+      </details>
+
       <FilterBuilder
         filter-type="BuildTestsFiltersMultiFilterInput"
         primary-record-name="tests"
@@ -72,7 +89,10 @@ import FilterBuilder from './shared/FilterBuilder.vue';
 import LoadingIndicator from './shared/LoadingIndicator.vue';
 import BuildSummaryCard from './shared/BuildSummaryCard.vue';
 import BuildSidebar from './shared/BuildSidebar.vue';
-import { DateTime } from 'luxon';
+import TestFlameChart from './shared/TestFlameChart.vue';
+import { DateTime, Duration } from 'luxon';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { faChartGantt } from '@fortawesome/free-solid-svg-icons';
 
 const TEST_QUERY = gql`
   query(
@@ -90,6 +110,7 @@ const TEST_QUERY = gql`
             status
             details
             runningTime
+            startTime
             timeStatusCategory
             testMeasurements(filters: $measurementFilters) {
               id
@@ -111,6 +132,7 @@ const TEST_QUERY = gql`
                   status
                   details
                   runningTime
+                  startTime
                   timeStatusCategory
                   testMeasurements(filters: $measurementFilters) {
                     id
@@ -131,6 +153,22 @@ const TEST_QUERY = gql`
   }
 `;
 
+function mapTestsQueryResult(data) {
+  let tests = data.build.tests.edges.map((test) => ({
+    ...test,
+    subProject: '',
+  }));
+  data.build.children.edges.forEach((child) => {
+    tests = tests.concat(
+      child.node.tests.edges.map((test) => ({
+        ...test,
+        subProject: child.node.subProject.name,
+      })),
+    );
+  });
+  return tests;
+}
+
 export default {
   name: 'BuildTestsPage',
 
@@ -138,8 +176,10 @@ export default {
     BuildSummaryCard,
     LoadingIndicator,
     FilterBuilder,
+    TestFlameChart,
     DataTable,
     BuildSidebar,
+    FontAwesomeIcon,
   },
 
   props: {
@@ -190,21 +230,7 @@ export default {
   apollo: {
     tests: {
       query: TEST_QUERY,
-      update: (data) => {
-        let tests = data.build.tests.edges.map((test) => ({
-          ...test,
-          subProject: '',
-        }));
-        data.build.children.edges.forEach((child) => {
-          tests = tests.concat(
-            child.node.tests.edges.map((test) => ({
-              ...test,
-              subProject: child.node.subProject.name,
-            })),
-          );
-        });
-        return tests;
-      },
+      update: mapTestsQueryResult,
       variables() {
         return {
           buildid: this.buildId,
@@ -220,23 +246,28 @@ export default {
       },
     },
 
+    // Keep filtered-out tests on the timeline, grayed out rather than hidden.
+    allTests: {
+      query: TEST_QUERY,
+      update: mapTestsQueryResult,
+      variables() {
+        return {
+          buildid: this.buildId,
+          filters: {},
+          measurementFilters: {
+            any: this.pinnedMeasurements.map((name) => ({
+              eq: {
+                name: name,
+              },
+            })),
+          },
+        };
+      },
+    },
+
     previousTests: {
       query: TEST_QUERY,
-      update: (data) => {
-        let tests = data.build.tests.edges.map((test) => ({
-          ...test,
-          subProject: '',
-        }));
-        data.build.children.edges.forEach((child) => {
-          tests = tests.concat(
-            child.node.tests.edges.map((test) => ({
-              ...test,
-              subProject: child.node.subProject.name,
-            })),
-          );
-        });
-        return tests;
-      },
+      update: mapTestsQueryResult,
       variables() {
         return {
           buildid: this.previousBuildId,
@@ -263,6 +294,12 @@ export default {
   },
 
   computed: {
+    FA() {
+      return {
+        faChartGantt,
+      };
+    },
+
     filteredTests() {
       if (!this.onlyDelta) {
         return this.tests;
@@ -290,6 +327,34 @@ export default {
 
     hasSubProjects() {
       return this.filteredTests?.some((element) => element.subProject) ?? false;
+    },
+
+    visibleTestIds() {
+      return new Set((this.filteredTests ?? []).map((test) => test.node.id));
+    },
+
+    executedTests() {
+      return (this.allTests ?? []).filter((test) => test.node.status !== 'NOT_RUN');
+    },
+
+    hasTestStartTimes() {
+      return this.executedTests.some((test) => test.node.startTime);
+    },
+
+    testTimelineData() {
+      if (!this.hasTestStartTimes) {
+        return [];
+      }
+
+      return this.executedTests.filter((test) => test.node.startTime).map((test) => ({
+        id: test.node.id,
+        name: test.node.name,
+        startTime: DateTime.fromISO(test.node.startTime),
+        duration: Duration.fromObject({ seconds: test.node.runningTime }),
+        status: test.node.status,
+        subProject: test.subProject,
+        disabled: !this.visibleTestIds.has(test.node.id),
+      }));
     },
 
     pinnedMeasurementColumns() {

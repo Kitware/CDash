@@ -962,7 +962,7 @@ type Test {
   "The standard deviation of recent running times for this test"
   stdDevRunningTime: Float! @rename(attribute: "timestd") @filterable
 
-  startTime: DateTimeTz @rename(attribute: "starttime") @filterable
+  startTime: DateTimeUtc @rename(attribute: "starttime") @filterable
 
   details: String! @filterable
 
