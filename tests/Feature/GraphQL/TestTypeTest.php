@@ -56,7 +56,7 @@ class TestTypeTest extends TestCase
             'path' => 'a',
             'command' => 'b',
             'output' => 'c',
-            'starttime' => '2026-02-13T18:03:54+00:00',
+            'starttime' => '2026-02-13T18:03:54.000000Z',
         ]);
 
         $this->graphQL('
@@ -107,7 +107,7 @@ class TestTypeTest extends TestCase
                                                     'runningTime' => 1.2,
                                                     'meanRunningTime' => 3.4,
                                                     'stdDevRunningTime' => 5.6,
-                                                    'startTime' => '2026-02-13T18:03:54+00:00',
+                                                    'startTime' => '2026-02-13T18:03:54.000000Z',
                                                     'path' => 'a',
                                                     'command' => 'b',
                                                     'output' => 'c',

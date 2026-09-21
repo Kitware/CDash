@@ -71,7 +71,7 @@ const apolloClient = new ApolloClient({
       },
       Build: {
         fields: {
-          tests: relayStylePagination(),
+          tests: relayStylePagination(['filters']),
           labels: relayStylePagination(),
           files: relayStylePagination(),
           urls: relayStylePagination(),
