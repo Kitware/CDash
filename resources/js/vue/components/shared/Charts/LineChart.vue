@@ -76,7 +76,7 @@ export default {
       };
 
       if (hasData) {
-        const overallStartTime = Math.min(...this.data.map((p) => p.x.toMillis()));
+        const overallStartTime = this.data.reduce((min, p) => Math.min(min, p.x.toMillis()), Infinity);
 
         const chartData = this.data.map((point) => [point.x.toMillis() - overallStartTime, point.y]);
 
@@ -84,6 +84,8 @@ export default {
           ...baseOption,
           xAxis: {
             ...baseOption.xAxis,
+            min: 0,
+            max: 'dataMax',
             axisLabel: {
               formatter: (value) => {
                 return Utils.formatDuration(value);

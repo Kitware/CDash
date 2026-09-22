@@ -108,8 +108,8 @@ export default {
         };
       });
 
-      const overallStartTime = Math.min(...rawCommandData.map((cmd) => cmd.startTime));
-      const overallEndTime = Math.max(...rawCommandData.map((cmd) => cmd.endTime));
+      const overallStartTime = rawCommandData.reduce((start, cmd) => Math.min(start, cmd.startTime), Infinity);
+      const overallEndTime = rawCommandData.reduce((end, cmd) => Math.max(end, cmd.endTime), -Infinity);
 
       const trackEndTimes = [];
       const processedData = [];

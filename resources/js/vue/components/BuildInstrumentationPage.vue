@@ -261,16 +261,37 @@ export default {
       const memoryData = [];
       this.allCommands.forEach((edge) => {
         const command = edge.node;
-        if (command.measurements.edges && command.measurements.edges.length > 0) {
-          const memoryMeasurement = command.measurements.edges.find(
-            (m) => m.node.name === 'BeforeHostMemoryUsed' || m.node.name === 'AfterHostMemoryUsed',
-          );
+        if (command.measurements?.edges && command.measurements.edges.length > 0 && command.startTime) {
+          const startTime = DateTime.fromISO(command.startTime);
+          if (!startTime.isValid) {
+            return;
+          }
 
-          if (memoryMeasurement) {
-            memoryData.push({
-              x: DateTime.fromISO(command.startTime),
-              y: parseFloat(memoryMeasurement.node.value) / (1024 * 1024), // Convert KB to GB
-            });
+          const beforeMeasurement = command.measurements.edges.find(
+            (m) => m.node.name === 'BeforeHostMemoryUsed',
+          );
+          if (beforeMeasurement && beforeMeasurement.node.value !== null) {
+            const value = parseFloat(beforeMeasurement.node.value);
+            if (!Number.isNaN(value)) {
+              memoryData.push({
+                x: startTime,
+                y: value / (1024 * 1024), // Convert KB to GB
+              });
+            }
+          }
+
+          const afterMeasurement = command.measurements.edges.find(
+            (m) => m.node.name === 'AfterHostMemoryUsed',
+          );
+          if (afterMeasurement && afterMeasurement.node.value !== null) {
+            const value = parseFloat(afterMeasurement.node.value);
+            if (!Number.isNaN(value)) {
+              const endTime = command.duration ? startTime.plus({ milliseconds: command.duration }) : startTime;
+              memoryData.push({
+                x: endTime,
+                y: value / (1024 * 1024), // Convert KB to GB
+              });
+            }
           }
         }
       });
