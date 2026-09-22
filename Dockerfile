@@ -34,7 +34,6 @@ RUN apt-get update && \
         libfreetype6-dev \
         libjpeg62-turbo-dev \
         libldap2-dev \
-        libmcrypt-dev \
         libpng-dev \
         libpq-dev \
         libxslt-dev \
