@@ -71,6 +71,7 @@ import BuildSummaryCard from './shared/BuildSummaryCard.vue';
 import DataTable from './shared/DataTable.vue';
 import LoadingIndicator from './shared/LoadingIndicator.vue';
 import BuildSidebar from './shared/BuildSidebar.vue';
+import Utils from './shared/Utils';
 import gql from 'graphql-tag';
 
 export default {
@@ -191,7 +192,7 @@ export default {
           },
           size: {
             value: edge.node.size,
-            text: this.humanReadableFileSize(edge.node.size),
+            text: Utils.formatBytes(edge.node.size),
           },
           hash: {
             value: edge.node.sha1sum,
@@ -199,22 +200,6 @@ export default {
           },
         };
       });
-    },
-  },
-
-  methods: {
-    humanReadableFileSize(bytes) {
-      if (bytes < 1024) {
-        return `${bytes} bytes`;
-      } else if (bytes < 1024 * 1024) {
-        return `${(bytes / 1024).toFixed(2)} KiB`;
-      } else if (bytes < 1024 * 1024 * 1024) {
-        return `${(bytes / (1024 * 1024)).toFixed(2)} MiB`;
-      } else if (bytes < 1024 * 1024 * 1024 * 1024) {
-        return `${(bytes / (1024 * 1024 * 1024)).toFixed(2)} GiB`;
-      } else {
-        return `${(bytes / (1024 * 1024 * 1024 * 1024)).toFixed(2)} TiB`;
-      }
     },
   },
 };

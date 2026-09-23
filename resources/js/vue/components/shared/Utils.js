@@ -25,4 +25,28 @@ export default {
       return startTime.toRelative();
     }
   },
+
+  /** Formats a byte count to the largest useful binary unit (Bytes/KiB/MiB/GiB/TiB). */
+  formatBytes(bytes) {
+    if (bytes < 1024) {
+      return `${bytes} Bytes`;
+    } else if (bytes < 1024 ** 2) {
+      return `${(bytes / 1024).toFixed(2)} KiB`;
+    } else if (bytes < 1024 ** 3) {
+      return `${(bytes / (1024 ** 2)).toFixed(2)} MiB`;
+    } else if (bytes < 1024 ** 4) {
+      return `${(bytes / (1024 ** 3)).toFixed(2)} GiB`;
+    }
+    return `${(bytes / (1024 ** 4)).toFixed(2)} TiB`;
+  },
+
+  /** Formats a value already in KiB to the largest useful binary unit. */
+  formatBytesFromKib(kib) {
+    return this.formatBytes(kib * 1024);
+  },
+
+  /** Formats a value already in MiB to the largest useful binary unit. */
+  formatBytesFromMib(mib) {
+    return this.formatBytes(mib * (1024 ** 2));
+  },
 };
