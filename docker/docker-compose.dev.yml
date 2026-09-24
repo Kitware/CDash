@@ -44,7 +44,7 @@ services:
       - 7900:7900
     environment:
       # Allows developers to view running jobs via browser-based VNC at localhost:7900
-      VNC_NO_PASSWORD: true
+      VNC_NO_PASSWORD: "true"
       # Selenium takes a long time to detect idle+clean up, so allow a large number of sessions to exist at once if needed.
-      SE_NODE_OVERRIDE_MAX_SESSIONS: true
-      SE_NODE_MAX_SESSIONS: 500
+      SE_NODE_OVERRIDE_MAX_SESSIONS: "true"
+      SE_NODE_MAX_SESSIONS: "500"
