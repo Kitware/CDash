@@ -31,7 +31,7 @@
     {{-- Framework-specific details --}}
     @if(isset($angular) && $angular === true)
         <link rel="stylesheet" type="text/css" href="{{ asset(mix('assets/css/legacy.css')) }}"/>
-        <link rel="stylesheet" type="text/css" href="{{ asset(mix(get_css_file())) }} }}"/>
+        <link rel="stylesheet" type="text/css" href="{{ asset(mix(get_css_file())) }}"/>
         <script src="{{ asset(mix('assets/js/legacy.js')) }}"></script>
     @elseif(isset($vue) && $vue === true)
         <link rel="stylesheet" type="text/css" href="{{ asset(mix(get_css_file())) }}"/>
