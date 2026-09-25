@@ -7,3 +7,4 @@ function(add_jest_test TestName)
 endfunction()
 
 add_jest_test(repository-integrations)
+add_jest_test(utils)

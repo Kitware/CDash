@@ -191,23 +191,12 @@ export default {
       if (!inputInBytes) {
         return '';
       }
-
-      if (inputInBytes < 1024) {
-        return `${inputInBytes} Bytes`;
-      } else if (inputInBytes < 1024 ** 2) {
-        return `${(inputInBytes / 1024).toFixed(2)} KiB`;
-      } else if (inputInBytes < 1024 ** 3) {
-        return `${(inputInBytes / (1024 ** 2)).toFixed(2)} MiB`;
-      } else if (inputInBytes < 1024 ** 4) {
-        return `${(inputInBytes / (1024 ** 3)).toFixed(2)} GiB`;
-      } else {
-        return `${(inputInBytes / (1024 ** 4)).toFixed(2)} TiB`;
-      }
+      return Utils.formatBytes(inputInBytes);
     },
 
     addUnitsToSpecialMeasurements(measurementName, measurementValue) {
       if (['BeforeHostMemoryUsed', 'AfterHostMemoryUsed'].includes(measurementName)) {
-        return this.humanReadableMemory(measurementValue);
+        return Utils.formatBytesFromKib(measurementValue);
       }
 
       return measurementValue;

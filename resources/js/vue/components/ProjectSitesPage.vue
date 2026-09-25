@@ -43,6 +43,7 @@
 import DataTable from './shared/DataTable.vue';
 import gql from 'graphql-tag';
 import LoadingIndicator from './shared/LoadingIndicator.vue';
+import Utils from './shared/Utils';
 
 export default {
   name: 'ProjectSitesPage',
@@ -156,14 +157,7 @@ export default {
       if (!inputInMiB) {
         return '';
       }
-
-      if (inputInMiB < 1024) {
-        return `${inputInMiB} MiB`;
-      } else if (inputInMiB < 1024 * 1024) {
-        return `${(inputInMiB / 1024).toFixed(2)} GiB`;
-      } else {
-        return `${(inputInMiB / (1024 * 1024)).toFixed(2)} TiB`;
-      }
+      return Utils.formatBytesFromMib(inputInMiB);
     },
   },
 };
