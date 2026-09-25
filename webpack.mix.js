@@ -1,4 +1,5 @@
 const mix = require('laravel-mix');
+const path = require('path');
 mix.disableNotifications();
 mix.options({
   clearConsole: false,
@@ -10,17 +11,8 @@ mix.sourceMaps(true, 'source-map');
 // Hash the built files to create a version identifier.  Use the mix() helper in PHP to automatically append the identifier to a path.
 mix.version();
 
-// Write out version file for angular.js
-const fs = require('fs');
-const dir = 'public/assets/js/angular';
-if (!fs.existsSync(dir)) {
-  fs.mkdirSync(dir, { recursive: true });
-}
-fs.writeFileSync(`${dir}/version.js`, `export const VERSION = '${new Date().getTime().toString()}';`);
-
 // Copy angularjs files to build directory.
 mix.copy('resources/js/angular/views/*.html', 'public/assets/js/angular/views/');
-mix.copy('resources/js/angular/views/partials/*.html', 'public/assets/js/angular/views/partials/');
 
 // Copy CSS files
 mix.css('resources/css/cdash.css', 'public/assets/css/cdash.css');
@@ -33,9 +25,22 @@ mix.sass('resources/sass/app.scss', 'public/assets/css/app.css');
 mix.js('resources/js/vue/app.js', 'public/assets/js').vue();
 mix.js('resources/js/angular/legacy.js', 'public/assets/js/legacy.js');
 
+const partialsDir = path.resolve(__dirname, 'resources/js/angular/views/partials');
+
 mix.webpackConfig({
   stats: {
     children: true,
+  },
+  module: {
+    rules: [
+      {
+        // Import AngularJS partial templates as raw strings, so their content
+        // is inlined into legacy.js and covered by its own content hash.
+        test: /\.html$/,
+        include: partialsDir,
+        type: 'asset/source',
+      },
+    ],
   },
   output: {
     chunkFilename: 'assets/js/[contenthash].js',
@@ -43,4 +48,18 @@ mix.webpackConfig({
   optimization: {
     runtimeChunk: false,
   },
+});
+
+// Mix registers its own project-wide rule sending every *.html file through
+// html-loader (for Vue's <template src> imports). Webpack runs a module through
+// every rule that matches it, so without this exclusion our partials would be
+// wrapped by html-loader *and* by the asset/source rule above, leaving AngularJS
+// with html-loader's generated JS source text instead of the template's HTML.
+mix.override((webpackConfig) => {
+  for (const rule of webpackConfig.module.rules) {
+    const usesHtmlLoader = Array.isArray(rule.use) && rule.use.some((u) => String(u.loader || u).includes('html-loader'));
+    if (usesHtmlLoader) {
+      rule.exclude = partialsDir;
+    }
+  }
 });

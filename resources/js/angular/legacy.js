@@ -23,8 +23,16 @@ const CDash = angular.module('CDash', [
   'ui.bootstrap',
 ]);
 
-import { VERSION } from '../../../public/assets/js/angular/version.js';
-CDash.constant('VERSION', VERSION);
+// filterdataTemplate.html and subProjectTable.html are only ever reached via
+// ng-include in server-rendered view HTML (not through Angular DI), so their
+// content is pre-loaded into $templateCache under the same path ng-include
+// requests, instead of being fetched over HTTP.
+import filterdataTemplateHtml from './views/partials/filterdataTemplate.html';
+import subProjectTableHtml from './views/partials/subProjectTable.html';
+CDash.run(["$templateCache", function ($templateCache) {
+  $templateCache.put('assets/js/angular/views/partials/filterdataTemplate.html', filterdataTemplateHtml);
+  $templateCache.put('assets/js/angular/views/partials/subProjectTable.html', subProjectTableHtml);
+}]);
 
 import { ManageSubProjectController, filter_subproject_groups } from "./controllers/manageSubProject";
 CDash.controller('ManageSubProjectController', ["$scope", "$http", "apiLoader", ManageSubProjectController]);
@@ -86,16 +94,16 @@ import { renderTimer } from './services/renderTimer.js';
 CDash.factory('renderTimer', ["$timeout", renderTimer]);
 
 import { build } from './directives/build.js';
-CDash.directive('build', ["VERSION", build]);
+CDash.directive('build', build);
 
 import { timeline } from './directives/timeline.js';
-CDash.directive('timeline', ["VERSION", timeline]);
+CDash.directive('timeline', timeline);
 
 import { daterange } from './directives/daterange.js';
-CDash.directive('daterange', ["VERSION", daterange]);
+CDash.directive('daterange', daterange);
 
 import { buildgroup } from './directives/buildgroup.js';
-CDash.directive('buildgroup', ["VERSION", buildgroup]);
+CDash.directive('buildgroup', buildgroup);
 
 import { autocomplete } from './directives/autocomplete.js';
 CDash.directive('autoComplete', ["$parse", autocomplete]);
