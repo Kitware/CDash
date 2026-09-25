@@ -16,7 +16,7 @@ ARG BASE_IMAGE
 ARG DEVELOPMENT_BUILD
 
 RUN apt-get update && \
-    apt-get install -y \
+    apt-get install -y --no-install-recommends \
         ca-certificates \
         curl \
         gnupg \
@@ -27,7 +27,7 @@ RUN apt-get update && \
     echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_24.x nodistro main" \
          | tee /etc/apt/sources.list.d/nodesource.list && \
     apt-get update && \
-    apt-get install -y \
+    apt-get install -y --no-install-recommends \
         apt-utils \
         git \
         libbz2-dev \
@@ -43,6 +43,7 @@ RUN apt-get update && \
         vim \
         zip \
         && \
+    rm -rf /var/lib/apt/lists/* && \
     docker-php-ext-configure pgsql --with-pgsql=/usr/local/pgsql && \
     docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ && \
     docker-php-ext-install -j$(nproc) \
@@ -63,13 +64,13 @@ RUN apt-get update && \
 
 RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then \
     apt-get update && \
-    apt-get install -y \
+    apt-get install -y --no-install-recommends \
         cmake \
         rsync \
         libzip-dev `# needed for Laravel Dusk/Selenium` \
         && \
     `# Cypress dependencies` \
-    apt-get install -y \
+    apt-get install -y --no-install-recommends \
         libgtk2.0-0 \
         libgtk-3-0 \
         libgbm-dev \
@@ -81,6 +82,7 @@ RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then \
         xauth \
         xvfb \
         && \
+    rm -rf /var/lib/apt/lists/* && \
     mkdir /tmp/.X11-unix && \
     chmod 1777 /tmp/.X11-unix && \
     chown root /tmp/.X11-unix/ && \
@@ -163,7 +165,8 @@ RUN dnf install -y \
       git \
       vim \
       unzip \
-      zip
+      zip && \
+    dnf clean all
 
 RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then \
       dnf install -y \
@@ -173,7 +176,8 @@ RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then \
           --noplugins \
           --setopt=install_weak_deps=0 \
           rsync \
-          cmake; \
+          cmake && \
+      dnf clean all; \
     fi
 
 # certs, timezone, accounts
@@ -258,6 +262,7 @@ RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then \
 # Install dependencies, including dev dependencies if this is a development build
 RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then \
         composer install --no-interaction --no-progress --prefer-dist \
+        && composer clear-cache \
         && npm install; \
     else \
         composer install \
@@ -266,6 +271,7 @@ RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then \
             --prefer-dist  \
             --no-dev \
             --optimize-autoloader && \
+        composer clear-cache && \
         npm install --omit=dev; \
     fi
 
