@@ -127,6 +127,7 @@
         </details>
         <details
           v-if="allMeasurements.length > 0"
+          open
           class="tw-collapse tw-collapse-plus tw-join-item tw-border tw-border-base-300"
           data-test="measurements-collapse"
         >

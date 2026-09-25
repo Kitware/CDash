@@ -187,7 +187,6 @@ class TestsIdPageTest extends BrowserTestCase
         $this->browse(function (Browser $browser) use ($test, $otherMeasurement): void {
             $browser->visit("/tests/{$test->id}")
                 ->waitFor('@measurements-collapse')
-                ->click('@measurements-collapse')
                 ->waitForText($otherMeasurement->value)
                 ->assertSee($otherMeasurement->name)
                 ->within('@measurements-collapse', function (Browser $browser): void {
@@ -264,7 +263,6 @@ class TestsIdPageTest extends BrowserTestCase
         $this->browse(function (Browser $browser) use ($test, $measurement, $type): void {
             $browser->visit("/tests/{$test->id}")
                 ->waitFor('@measurements-collapse')
-                ->click('@measurements-collapse')
                 ->waitForText($measurement->name);
 
             $browser->assertSee($measurement->name);
