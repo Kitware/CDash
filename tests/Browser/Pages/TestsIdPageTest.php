@@ -3,11 +3,13 @@
 namespace Tests\Browser\Pages;
 
 use App\Models\Build;
+use App\Models\BuildGroup;
 use App\Models\Image;
 use App\Models\Label;
 use App\Models\Project;
 use App\Models\Site;
 use App\Models\SiteInformation;
+use App\Models\SubProject;
 use App\Models\Test;
 use App\Services\SiteService;
 use Illuminate\Support\Carbon;
@@ -54,7 +56,7 @@ class TestsIdPageTest extends BrowserTestCase
     /**
      * @param array<string, mixed> $attributes
      */
-    private function createTest(array $attributes = []): Test
+    private function createTest(array $attributes = [], ?Build $build = null): Test
     {
         $attributes = array_merge([
             'path' => (string) Str::uuid(),
@@ -64,7 +66,7 @@ class TestsIdPageTest extends BrowserTestCase
             'timestd' => 0,
         ], $attributes);
 
-        return $this->build->tests()->create($attributes);
+        return ($build ?? $this->build)->tests()->create($attributes);
     }
 
     public function testPassingTest(): void
@@ -300,8 +302,7 @@ class TestsIdPageTest extends BrowserTestCase
         $previousTest = $this->createTest([
             'testname' => $test->testname,
             'status' => 'passed',
-            'buildid' => $previousBuild->id,
-        ]);
+        ], $previousBuild);
         $previousTest->time = 5.0;
         $previousTest->save();
 
@@ -317,10 +318,59 @@ class TestsIdPageTest extends BrowserTestCase
                 ->waitFor('@trend-collapse')
                 ->click('@trend-collapse')
                 ->waitFor('@measurement-switcher')
+                ->waitFor('@trend-chart')
+                ->assertAttribute('@trend-chart', 'data-test-point-count', '2')
                 ->assertSelected('@measurement-switcher', 'time')
                 ->select('@measurement-switcher', $measurement->name)
                 ->waitFor("[data-test-selected-measurement=\"{$measurement->name}\"]")
                 ->assertSelected('@measurement-switcher', $measurement->name);
+        });
+    }
+
+    /**
+     * For projects with subprojects, tests belong to child builds rather than the parent build.
+     */
+    public function testTrendChartShowsDataForSubprojectBuilds(): void
+    {
+        $subproject = SubProject::create([
+            'name' => Str::uuid()->toString(),
+            'projectid' => $this->project->id,
+            'groupid' => BuildGroup::factory()->for($this->project)->create()->id,
+        ]);
+
+        $testName = Str::uuid()->toString();
+        $tests = [];
+        foreach ([20, 10] as $minutesAgo) {
+            $startTime = Carbon::now()->subMinutes($minutesAgo);
+            $parentBuild = $this->project->builds()->create([
+                'siteid' => $this->site->id,
+                'name' => $this->build->name,
+                'type' => $this->build->type,
+                'uuid' => Str::uuid()->toString(),
+                'starttime' => $startTime,
+            ]);
+            $childBuild = $this->project->builds()->create([
+                'siteid' => $this->site->id,
+                'name' => $this->build->name,
+                'type' => $this->build->type,
+                'uuid' => Str::uuid()->toString(),
+                'starttime' => $startTime,
+                'parentid' => $parentBuild->id,
+                'subprojectid' => $subproject->id,
+            ]);
+            $tests[] = $this->createTest([
+                'testname' => $testName,
+                'status' => 'passed',
+                'time' => 5.0,
+            ], $childBuild);
+        }
+
+        $this->browse(function (Browser $browser) use ($tests): void {
+            $browser->visit("/tests/{$tests[1]->id}")
+                ->waitFor('@trend-collapse')
+                ->click('@trend-collapse')
+                ->waitFor('@trend-chart')
+                ->assertAttribute('@trend-chart', 'data-test-point-count', '2');
         });
     }
 

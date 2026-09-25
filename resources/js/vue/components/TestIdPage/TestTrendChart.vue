@@ -46,6 +46,7 @@
       autoresize
       data-test="trend-chart"
       :data-test-selected-measurement="selectedMeasurement"
+      :data-test-point-count="chartData.length"
       @click="handleChartClick"
     >
       <template #tooltip="tooltipParams">
@@ -158,15 +159,20 @@ export default {
         ) {
           project(id: $projectId) {
             id
-            builds(filters: {
-              all: [
-                { eq: { name: $buildName } },
-                { eq: { buildType: $buildType } },
-                { has: { site: { eq: { id: $siteId } } } },
-                { has: { tests: { eq: { name: $testName } } } },
-                { le: { startTime: $buildStartTime } }
-              ]
-            }, first: 100) {
+            builds(
+              first: 100,
+              orderBy: [{ column: START_TIME, order: DESC }],
+              onlyParents: false,
+              filters: {
+                all: [
+                  { eq: { name: $buildName } },
+                  { eq: { buildType: $buildType } },
+                  { has: { site: { eq: { id: $siteId } } } },
+                  { has: { tests: { eq: { name: $testName } } } },
+                  { le: { startTime: $buildStartTime } }
+                ]
+              }
+            ) {
               edges {
                 node {
                   id
