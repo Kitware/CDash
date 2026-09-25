@@ -1,5 +1,7 @@
-export function build(VERSION) {
+import buildTemplate from '../views/partials/build.html';
+
+export function build() {
   return {
-    templateUrl: 'assets/js/angular/views/partials/build.html?id=' + VERSION,
+    template: buildTemplate,
   }
 }

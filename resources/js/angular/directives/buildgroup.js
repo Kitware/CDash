@@ -1,5 +1,7 @@
-export function buildgroup(VERSION) {
+import buildgroupTemplate from '../views/partials/buildgroup.html';
+
+export function buildgroup() {
   return {
-    templateUrl: 'assets/js/angular/views/partials/buildgroup.html?id=' + VERSION,
+    template: buildgroupTemplate,
   }
 }

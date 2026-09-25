@@ -1,7 +1,9 @@
-export function daterange(VERSION) {
+import daterangeTemplate from '../views/partials/daterange.html';
+
+export function daterange() {
   return {
     restrict: 'A',
-    templateUrl: 'assets/js/angular/views/partials/daterange.html?id=' + VERSION,
+    template: daterangeTemplate,
     link: function (scope, element, attrs, ngModelCtrl) {
       var format = "yy-mm-dd",
 

@@ -48,7 +48,7 @@
         </div>
 
         <!-- Filters -->
-        <ng-include src="'assets/js/angular/views/partials/filterdataTemplate.html?id=' + VERSION"></ng-include>
+        <ng-include src="'assets/js/angular/views/partials/filterdataTemplate.html'"></ng-include>
       </div> <!-- End index-top -->
 
       <!-- Timeline chart -->
@@ -151,7 +151,7 @@
       </div>
 
       <!-- Display subproject dependencies -->
-      <ng-include ng-if="::cdash.subproject.dependencies.length > 0" ng-init="cdash.tableName = 'SubProject Dependencies'; cdash.subprojects = cdash.subproject.dependencies" src="'assets/js/angular/views/partials/subProjectTable.html?id=' + VERSION"></ng-include>
+      <ng-include ng-if="::cdash.subproject.dependencies.length > 0" ng-init="cdash.tableName = 'SubProject Dependencies'; cdash.subprojects = cdash.subproject.dependencies" src="'assets/js/angular/views/partials/subProjectTable.html'"></ng-include>
 
       <!-- BuildGroups -->
       <div ng-repeat="buildgroup in cdash.buildgroups | orderBy:'position'| limitTo:buildgroup_limit" class="buildgroup"

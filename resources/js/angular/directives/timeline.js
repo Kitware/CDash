@@ -1,5 +1,6 @@
 import d3 from 'd3';
 import nv from 'nvd3';
+import timelineTemplate from '../views/partials/timeline.html';
 
 var timelineController =
   function TimelineChartController($http, $scope) {
@@ -261,10 +262,10 @@ var timelineController =
 };
 timelineController.$inject = ["$http", "$scope"];
 
-export function timeline(VERSION) {
+export function timeline() {
   return {
     restrict: 'A',
-    templateUrl: 'assets/js/angular/views/partials/timeline.html?id=' + VERSION,
+    template: timelineTemplate,
     controller: timelineController
   };
 }

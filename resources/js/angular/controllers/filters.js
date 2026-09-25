@@ -1,3 +1,5 @@
+import filterRowTemplate from '../views/partials/filterRow.html';
+import filterButtonsTemplate from '../views/partials/filterButtons.html';
 
 export function FiltersController($scope, $rootScope, $http, $timeout) {
 
@@ -454,14 +456,14 @@ export function FiltersController($scope, $rootScope, $http, $timeout) {
   });
 }
 
-export const filterRow = ["VERSION", function (VERSION) {
+export const filterRow = function () {
   return {
-    templateUrl: 'assets/js/angular/views/partials/filterRow.html?id=' + VERSION,
+    template: filterRowTemplate,
   };
-}];
+};
 
-export const filterButtons = ["VERSION", function (VERSION) {
+export const filterButtons = function () {
   return {
-    templateUrl: 'assets/js/angular/views/partials/filterButtons.html?id=' + VERSION,
+    template: filterButtonsTemplate,
   };
-}];
+};
