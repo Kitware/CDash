@@ -69,7 +69,6 @@
     "expect": "^30.4.1",
     "globals": "^17.7.0",
     "jest": "^30.4.2",
-    "jest-environment-jsdom": "^30.4.1",
     "postcss": "^8.5.26"
   }
 }
