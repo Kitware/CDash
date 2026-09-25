@@ -1,10 +1,7 @@
 module.exports = {
   verbose: true,
   moduleFileExtensions: ['js'],
-  testEnvironment: 'jsdom',
-  testEnvironmentOptions: {
-    customExportConditions: ['node', 'node-addons'],
-  },
+  testEnvironment: 'node',
   transform: {
     '^.+\\.js$': 'babel-jest',
   },
