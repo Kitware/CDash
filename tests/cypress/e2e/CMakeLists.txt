@@ -45,22 +45,22 @@ set_tests_properties(cypress/e2e/daterange PROPERTIES DEPENDS projectwebpage)
 
 # These tests don't have all of the dependencies worked out
 add_cypress_e2e_test(manage-overview)
-set_tests_properties(cypress/e2e/manage-overview PROPERTIES DEPENDS simple2_async)
+set_tests_properties(cypress/e2e/manage-overview PROPERTIES DEPENDS deferredsubmissions)
 
 add_cypress_e2e_test(manage-build-group)
-set_tests_properties(cypress/e2e/manage-build-group PROPERTIES DEPENDS simple2_async)
+set_tests_properties(cypress/e2e/manage-build-group PROPERTIES DEPENDS deferredsubmissions)
 
 add_cypress_e2e_test(manage-sub-project)
-set_tests_properties(cypress/e2e/manage-sub-project PROPERTIES DEPENDS simple2_async)
+set_tests_properties(cypress/e2e/manage-sub-project PROPERTIES DEPENDS deferredsubmissions)
 
 add_cypress_e2e_test(sort-index)
-set_tests_properties(cypress/e2e/sort-index PROPERTIES DEPENDS simple2_async)
+set_tests_properties(cypress/e2e/sort-index PROPERTIES DEPENDS deferredsubmissions)
 
 add_cypress_e2e_test(expected-build)
-set_tests_properties(cypress/e2e/expected-build PROPERTIES DEPENDS simple2_async)
+set_tests_properties(cypress/e2e/expected-build PROPERTIES DEPENDS deferredsubmissions)
 
 add_cypress_e2e_test(remove-build)
-set_tests_properties(cypress/e2e/remove-build PROPERTIES DEPENDS simple2_async)
+set_tests_properties(cypress/e2e/remove-build PROPERTIES DEPENDS deferredsubmissions)
 
 add_cypress_e2e_test(done-build)
-set_tests_properties(cypress/e2e/done-build PROPERTIES DEPENDS simple2_async)
+set_tests_properties(cypress/e2e/done-build PROPERTIES DEPENDS deferredsubmissions)

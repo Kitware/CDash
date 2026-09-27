@@ -10,30 +10,30 @@ describe('query tests', () => {
   }
 
   it('filters correctly by build name', () => {
-    filter_test('buildname', '63', 'simple', 3);
+    filter_test('buildname', '63', 'simple', 1);
   });
 
 
   it('filters correctly by build time', () => {
-    filter_test('buildstarttime', '83', 'yesterday', 4);
+    filter_test('buildstarttime', '83', 'yesterday', 2);
   });
 
   it('filters correctly by details', () => {
-    filter_test('details', '61', 'Completed', 4);
+    filter_test('details', '61', 'Completed', 2);
   });
 
   it('filters correctly by group', () => {
-    filter_test('groupname', '61', 'Experimental', 4);
+    filter_test('groupname', '61', 'Experimental', 2);
     filter_test('groupname', '62', 'Experimental', 0);
   });
 
   it('filters correctly by site', () => {
-    filter_test('site', '61', 'CDashTestingSite', 4);
+    filter_test('site', '61', 'CDashTestingSite', 2);
   });
 
   it('filters correctly by time', () => {
     // count all tests that took 0s to run
-    filter_test('time', '41', '0', 4);
+    filter_test('time', '41', '0', 2);
 
     // make sure all filtered tests actually have 'Time' equal to zero
     cy.get('#queryTestsTable').find('tbody').find('tr').each((row) => {
