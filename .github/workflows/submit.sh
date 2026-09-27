@@ -2,22 +2,16 @@
 
 ctest_driver="/cdash/.github/workflows/ctest_driver_script.cmake"
 
-database="$1"
-
-if [ "$database" != "mysql" ] && [ "$database" != "postgres" ]; then
-  echo "Database type required: mysql or postgres"
-  exit 1;
-fi
-
-submit_type="$2"
+submit_type="$1"
 submit_type="${submit_type:-Experimental}"
 
 site="${SITENAME:-$(hostname)}"
 
 storage_type="${STORAGE_TYPE:-local}"
 
+postgres_version="${POSTGRES_VERSION:-18}"
+
 echo "site=$site"
-echo "database=$database"
 echo "ctest_driver=$ctest_driver"
 echo "submit_type=$submit_type"
 
@@ -41,7 +35,7 @@ docker exec cdash-website-1 bash -c "\
     -j 3 \
     --schedule-random \
     -DSITENAME=\"${site}\" \
-    -DDATABASE=\"${database}\" \
+    -DPOSTGRES_VERSION=\"${postgres_version}\" \
     -DSTORAGE_TYPE=\"${storage_type}\" \
     -DSUBMIT_TYPE=\"${submit_type}\" \
     -S \"${ctest_driver}\" \
