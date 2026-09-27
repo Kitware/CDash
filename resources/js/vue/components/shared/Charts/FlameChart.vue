@@ -16,6 +16,7 @@ import {
   GridComponent,
   TooltipComponent,
   DataZoomComponent,
+  VisualMapContinuousComponent,
 } from 'echarts/components';
 import VChart from 'vue-echarts';
 import Utils from '../Utils';
@@ -26,6 +27,7 @@ use([
   GridComponent,
   TooltipComponent,
   DataZoomComponent,
+  VisualMapContinuousComponent,
 ]);
 
 export default {
@@ -74,6 +76,12 @@ export default {
       required: false,
       default: 400,
     },
+    /** An echarts `visualMap` config (continuous), used to color items by a data dimension. */
+    visualMap: {
+      type: Object,
+      required: false,
+      default: null,
+    },
   },
 
   // eslint-disable-next-line vue/require-emit-validator
@@ -82,6 +90,8 @@ export default {
   computed: {
     chartOptions() {
       return {
+        // An array lets vue-echarts remove the visual map without resetting the zoom.
+        visualMap: this.visualMap ? [this.visualMap] : [],
         tooltip: {
           confine: true,
           trigger: 'item',
