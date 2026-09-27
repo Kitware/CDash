@@ -3,6 +3,7 @@
 namespace Tests\Feature\Submission\Tests;
 
 use App\Models\Project;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
 use Tests\Traits\CreatesSubmissions;
@@ -11,6 +12,7 @@ class CoverageLogXMLTest extends TestCase
 {
     use CreatesProjects;
     use CreatesSubmissions;
+    use DatabaseTransactions;
 
     private Project $project;
 
@@ -34,14 +36,12 @@ class CoverageLogXMLTest extends TestCase
      */
     public function testBranchCoverage(): void
     {
-        $this->submitFiles($this->project->name, [
-            base_path(
-                'tests/Feature/Submission/CoverageLog/data/with_branchCoverage.xml'
-            ),
-            base_path(
-                'tests/Feature/Submission/CoverageLog/data/with_LogBranchCoverage.xml'
-            ),
-        ]);
+        $this->makeSubmission($this->project->name, base_path(
+            'tests/Feature/Submission/CoverageLog/data/with_branchCoverage.xml'
+        ));
+        $this->makeSubmission($this->project->name, base_path(
+            'tests/Feature/Submission/CoverageLog/data/with_LogBranchCoverage.xml'
+        ));
 
         $this->graphQL('
             query build($id: ID) {

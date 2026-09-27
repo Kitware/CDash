@@ -3,6 +3,7 @@
 namespace Feature\Submission\Test;
 
 use App\Models\Project;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
 use Tests\Traits\CreatesSubmissions;
@@ -11,6 +12,7 @@ class TestXMLTest extends TestCase
 {
     use CreatesProjects;
     use CreatesSubmissions;
+    use DatabaseTransactions;
 
     private Project $project;
 
@@ -34,11 +36,9 @@ class TestXMLTest extends TestCase
      */
     public function testAngleBracketsInName(): void
     {
-        $this->submitFiles($this->project->name, [
-            base_path(
-                'tests/Feature/Submission/Test/data/angle_brackets_in_test_name.xml'
-            ),
-        ]);
+        $this->makeSubmission($this->project->name, base_path(
+            'tests/Feature/Submission/Test/data/angle_brackets_in_test_name.xml'
+        ));
 
         $this->graphQL('
             query build($id: ID) {
@@ -77,11 +77,9 @@ class TestXMLTest extends TestCase
      */
     public function testNonUTF8Output(): void
     {
-        $this->submitFiles($this->project->name, [
-            base_path(
-                'tests/Feature/Submission/Test/data/non_utf8_output.xml'
-            ),
-        ]);
+        $this->makeSubmission($this->project->name, base_path(
+            'tests/Feature/Submission/Test/data/non_utf8_output.xml'
+        ));
 
         $this->graphQL('
             query build($id: ID) {
@@ -120,11 +118,9 @@ class TestXMLTest extends TestCase
      */
     public function testStartTestTime(): void
     {
-        $this->submitFiles($this->project->name, [
-            base_path(
-                'tests/Feature/Submission/Test/data/with_starttesttime.xml'
-            ),
-        ]);
+        $this->makeSubmission($this->project->name, base_path(
+            'tests/Feature/Submission/Test/data/with_starttesttime.xml'
+        ));
 
         $this->graphQL('
             query build($id: ID) {
