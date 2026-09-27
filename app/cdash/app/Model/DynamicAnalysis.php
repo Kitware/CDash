@@ -22,7 +22,6 @@ use App\Models\DynamicAnalysis as EloquentDynamicAnalysis;
 use App\Models\DynamicAnalysisDefect;
 use App\Models\Label;
 use CDash\Database;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class DynamicAnalysis
@@ -182,61 +181,6 @@ class DynamicAnalysis
         $this->Log = $model->log;
 
         return true;
-    }
-
-    /** Encapsulate common bits of functions below. */
-    private function GetRelatedId($build, $order, $time_clause = null): int
-    {
-        $params = [
-            'siteid' => $build->SiteId,
-            'buildtype' => $build->Type,
-            'buildname' => $build->Name,
-            'projectid' => $build->ProjectId,
-            'filename' => $this->Name,
-        ];
-
-        if ($time_clause !== null) {
-            $params['starttime'] = $build->StartTime;
-        }
-
-        $query = DB::select("
-            SELECT dynamicanalysis.id
-            FROM dynamicanalysis
-            JOIN build ON (dynamicanalysis.buildid = build.id)
-            WHERE build.siteid = :siteid AND
-                build.type = :buildtype AND
-                build.name = :buildname AND
-                build.projectid = :projectid AND
-                $time_clause
-                dynamicanalysis.name = :filename
-            ORDER BY build.starttime $order
-            LIMIT 1
-        ", $params);
-
-        if ($query === []) {
-            return 0;
-        }
-        return (int) $query[0]->id;
-    }
-
-    /** Get the previous id for this DA */
-    public function GetPreviousId($build): int
-    {
-        $time_clause = 'build.starttime < :starttime AND';
-        return $this->GetRelatedId($build, 'DESC', $time_clause);
-    }
-
-    /** Get the next id for this DA */
-    public function GetNextId($build): int
-    {
-        $time_clause = 'build.starttime > :starttime AND';
-        return $this->GetRelatedId($build, 'ASC', $time_clause);
-    }
-
-    /** Get the most recent id for this DA */
-    public function GetLastId($build): int
-    {
-        return $this->GetRelatedId($build, 'DESC');
     }
 
     /** Returns a self referencing URI for the current DynamicAnalysis. */
