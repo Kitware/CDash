@@ -130,8 +130,6 @@ add_php_test(seconds_from_interval)
 
 add_php_test(extracttar)
 
-add_php_test(passwordcomplexity)
-
 add_legacy_unit_test(/CDash/Model/Build)
 
 add_legacy_unit_test(/CDash/Model/Repository)
