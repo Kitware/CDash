@@ -570,11 +570,8 @@ set_tests_properties(testoverview PROPERTIES DEPENDS querytests)
 add_php_test(viewdynamicanalysis)
 set_tests_properties(viewdynamicanalysis PROPERTIES DEPENDS testoverview)
 
-add_php_test(viewdynamicanalysisfile)
-set_tests_properties(viewdynamicanalysisfile PROPERTIES DEPENDS viewdynamicanalysis)
-
 add_php_test(buildmodel)
-set_tests_properties(buildmodel PROPERTIES DEPENDS viewdynamicanalysisfile)
+set_tests_properties(buildmodel PROPERTIES DEPENDS viewdynamicanalysis)
 
 add_php_test(projectxmlsequence)
 set_tests_properties(projectxmlsequence PROPERTIES DEPENDS buildmodel)
