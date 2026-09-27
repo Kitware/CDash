@@ -75,6 +75,11 @@ class ProjectPolicy
         return false;
     }
 
+    public function delete(User $user, Project $project): bool
+    {
+        return $this->update($user, $project);
+    }
+
     public function changeUserRole(User $currentUser, Project $project, User $userToChange): bool
     {
         // Users cannot change their own role.

@@ -454,7 +454,86 @@
           </div>
         </div>
       </FormSection>
+
+      <div class="tw-container tw-mx-auto tw-mt-6 tw-rounded-lg tw-border-2 tw-border-error tw-p-4">
+        <h4 class="tw-mb-2 tw-text-xl tw-font-semibold tw-text-error">
+          Danger Zone
+        </h4>
+        <div class="tw-flex tw-flex-row tw-items-center tw-justify-between tw-gap-4">
+          <div>
+            <div class="tw-font-bold">
+              Delete Project
+            </div>
+            <div class="tw-text-xs tw-text-neutral-500">
+              Permanently delete this project, including all of its builds, tests, and other
+              associated data. This action cannot be undone.
+            </div>
+          </div>
+          <button
+            class="tw-btn tw-btn-outline tw-btn-error tw-shrink-0"
+            data-test="delete-project-button"
+            onclick="delete_project_modal.showModal()"
+          >
+            Delete Project
+          </button>
+        </div>
+      </div>
     </TabContent>
+
+    <dialog
+      id="delete_project_modal"
+      data-test="delete-project-modal"
+      class="tw-modal"
+    >
+      <div class="tw-modal-box tw-flex tw-flex-col tw-gap-4 tw-w-full">
+        <h3 class="tw-text-lg tw-font-bold">
+          Confirm
+        </h3>
+        <p>
+          Are you sure you want to delete <strong>{{ form.name }}</strong>? This will
+          permanently delete the project and all of its builds, tests, and other associated
+          data. This action cannot be undone.
+        </p>
+        <div
+          v-if="deleteProjectFailed"
+          class="tw-text-error"
+          data-test="delete-project-error-message"
+        >
+          <FontAwesomeIcon :icon="FA.faCircleXmark" />
+          {{ deleteProjectError || 'Failed to delete project.' }}
+        </div>
+        <form
+          method="dialog"
+          class="tw-flex tw-flex-row tw-w-full tw-gap-2"
+        >
+          <button
+            class="tw-btn tw-ml-auto"
+            data-test="delete-project-modal-cancel-button"
+          >
+            Cancel
+          </button>
+          <button
+            class="tw-btn tw-btn-error"
+            type="button"
+            data-test="delete-project-modal-button"
+            :disabled="deleteProjectLoading"
+            @click="deleteProject"
+          >
+            <span
+              v-if="deleteProjectLoading"
+              class="tw-loading tw-loading-spinner"
+            />
+            Delete
+          </button>
+        </form>
+      </div>
+      <form
+        method="dialog"
+        class="tw-modal-backdrop"
+      >
+        <button>Cancel</button>
+      </form>
+    </dialog>
   </LoadingIndicator>
 </template>
 
@@ -509,6 +588,9 @@ export default {
       updateProjectLoading: false,
       projectSaved: false,
       projectUpdateFailed: false,
+      deleteProjectLoading: false,
+      deleteProjectFailed: false,
+      deleteProjectError: null,
       form: {
         name: '',
         description: '',
@@ -669,6 +751,38 @@ export default {
       }
 
       this.updateProjectLoading = false;
+    },
+
+    async deleteProject() {
+      this.deleteProjectLoading = true;
+      this.deleteProjectFailed = false;
+      this.deleteProjectError = null;
+
+      try {
+        await this.$apollo.mutate({
+          mutation: gql`
+            mutation deleteProject($input: DeleteProjectInput!) {
+              deleteProject(input: $input) {
+                message
+              }
+            }
+          `,
+          variables: {
+            input: {
+              projectId: this.projectId,
+            },
+          },
+        });
+        window.location.href = '/projects';
+      } catch (error) {
+        this.deleteProjectFailed = true;
+        this.deleteProjectLoading = false;
+        if (error.graphQLErrors && error.graphQLErrors.length > 0) {
+          this.deleteProjectError = error.graphQLErrors[0].message;
+        } else {
+          this.deleteProjectError = error.message;
+        }
+      }
     },
   },
 };

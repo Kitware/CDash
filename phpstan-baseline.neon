@@ -337,6 +337,12 @@ parameters:
 			path: app/GraphQL/Mutations/DeletePinnedTestMeasurement.php
 
 		-
+			rawMessage: 'Parameter #2 $args (array{projectId: int}) of method App\GraphQL\Mutations\DeleteProject::__invoke() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::__invoke()'
+			identifier: method.childParameterType
+			count: 1
+			path: app/GraphQL/Mutations/DeleteProject.php
+
+		-
 			rawMessage: 'Parameter #2 $args (array{repositoryId: int}) of method App\GraphQL\Mutations\DeleteRepository::__invoke() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::__invoke()'
 			identifier: method.childParameterType
 			count: 1
