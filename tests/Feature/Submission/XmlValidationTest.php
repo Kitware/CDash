@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Submission;
 
 use App\Enums\SubmissionValidationType;
 use App\Models\Project;
@@ -9,7 +9,7 @@ use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
 use Tests\Traits\CreatesSubmissions;
 
-class SubmissionValidation extends TestCase
+class XmlValidationTest extends TestCase
 {
     use CreatesProjects;
     use CreatesSubmissions;
