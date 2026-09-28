@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\AuthTokenScope;
 use App\Models\AuthToken;
 use App\Utils\AuthTokenUtil;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -24,7 +25,7 @@ class AuthTokenFactory extends Factory
             'created' => Carbon::now(),
             'expires' => Carbon::now()->addYear(),
             'description' => Str::uuid()->toString(),
-            'scope' => AuthToken::SCOPE_FULL_ACCESS,
+            'scope' => AuthTokenScope::FULL_ACCESS,
             'hash' => AuthTokenUtil::hashToken(Str::uuid()->toString()),
         ];
     }

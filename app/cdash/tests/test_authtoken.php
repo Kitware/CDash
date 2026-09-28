@@ -2,6 +2,7 @@
 
 require_once __DIR__ . '/cdash_test_case.php';
 
+use App\Enums\AuthTokenScope;
 use App\Enums\ProjectRole;
 use App\Models\AuthToken;
 use App\Models\Project as EloquentProject;
@@ -68,7 +69,7 @@ class AuthTokenTestCase extends KWWebTestCase
     public function testGenerateToken(): void
     {
         $userid = User::where('email', 'user1@kw')->firstOrFail()->id;
-        $response = AuthTokenUtil::generateToken($userid, -1, AuthToken::SCOPE_FULL_ACCESS, 'mytoken');
+        $response = AuthTokenUtil::generateToken($userid, -1, AuthTokenScope::FULL_ACCESS, 'mytoken');
 
         $this->Token = $response['raw_token'];
     }
@@ -225,7 +226,7 @@ class AuthTokenTestCase extends KWWebTestCase
     public function testRemoveExpiredToken(): void
     {
         // Put an expired token in the database.
-        $result = AuthTokenUtil::generateToken(1, -1, AuthToken::SCOPE_FULL_ACCESS, 'Test Token 1');
+        $result = AuthTokenUtil::generateToken(1, -1, AuthTokenScope::FULL_ACCESS, 'Test Token 1');
         $token = $result['raw_token'];
         $authtoken = $result['token'];
         $authtoken['expires'] = gmdate(FMT_DATETIME, 1);

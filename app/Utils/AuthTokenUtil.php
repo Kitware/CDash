@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils;
 
+use App\Enums\AuthTokenScope;
 use App\Models\AuthToken;
 use App\Models\User;
 use CDash\Model\Project;
@@ -15,7 +16,6 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
-use RuntimeException;
 
 class AuthTokenUtil
 {
@@ -31,7 +31,7 @@ class AuthTokenUtil
     public static function generateToken(
         int $user_id,
         int $project_id,
-        string $scope,
+        AuthTokenScope $scope,
         string $description,
         ?Carbon $expiration = null,
     ): array {
@@ -66,22 +66,18 @@ class AuthTokenUtil
 
         $params['description'] = $description;
 
-        if (!self::validScope($scope)) {
-            Log::error("Invalid token scope {$scope}");
-            throw new InvalidArgumentException("Invalid token scope {$scope}");
-        }
-        if ($scope === AuthToken::SCOPE_FULL_ACCESS && Config::get('cdash.allow_full_access_tokens') !== true) {
+        if ($scope === AuthTokenScope::FULL_ACCESS && Config::get('cdash.allow_full_access_tokens') !== true) {
             Log::error('Full-access tokens are prohibited by config');
             throw new InvalidArgumentException('Full-access tokens are prohibited by config');
         }
-        if ($scope === AuthToken::SCOPE_SUBMIT_ONLY && $project_id < 0
+        if ($scope === AuthTokenScope::SUBMIT_ONLY && $project_id < 0
                 && Config::get('cdash.allow_submit_only_tokens') !== true) {
             Log::error('Only project-specific submit-only tokens allowed by config');
             throw new InvalidArgumentException('Only project-specific submit-only tokens allowed by config');
         }
         $params['scope'] = $scope;
 
-        $params['projectid'] = $scope === AuthToken::SCOPE_SUBMIT_ONLY && $project_id > -1 ? $project_id : null;
+        $params['projectid'] = $scope === AuthTokenScope::SUBMIT_ONLY && $project_id > -1 ? $project_id : null;
 
         $project = new Project();
         $project->Id = $project_id;
@@ -128,8 +124,8 @@ class AuthTokenUtil
             return false;
         }
 
-        switch ($auth_token['scope']) {
-            case AuthToken::SCOPE_SUBMIT_ONLY:
+        switch ($auth_token->scope) {
+            case AuthTokenScope::SUBMIT_ONLY:
                 // If a token is submit-only and is project-specific, make sure it matches the right project
                 if ($auth_token['projectid'] !== null && $project_id !== $auth_token['projectid']) {
                     Log::error('Invalid Project');
@@ -141,16 +137,12 @@ class AuthTokenUtil
                     return false;
                 }
                 break;
-            case AuthToken::SCOPE_FULL_ACCESS:
+            case AuthTokenScope::FULL_ACCESS:
                 if (Config::get('cdash.allow_full_access_tokens') !== true) {
                     Log::error('Full-access token used when disallowed by config');
                     return false;
                 }
                 break;
-            default:
-                // In theory, this case should never be possible
-                Log::error("Invalid scope listed for auth token with hash {$token_hash}");
-                throw new RuntimeException("Invalid scope listed for auth token with hash {$token_hash}");
         }
 
         return true;
@@ -171,8 +163,8 @@ class AuthTokenUtil
         /** @var User $user */
         $user = Auth::user();
 
-        switch ($auth_token['scope']) {
-            case AuthToken::SCOPE_SUBMIT_ONLY:
+        switch ($auth_token->scope) {
+            case AuthTokenScope::SUBMIT_ONLY:
                 if ($auth_token['projectid'] !== null) {
                     // Project-scoped submit-only tokens can be deleted by:
                     // 1. The user who created them
@@ -193,7 +185,7 @@ class AuthTokenUtil
                 // Submit-only tokens with access to all projects have the same deletion requirements
                 // as full-access tokens (thus we continue into the next case without breaking).
                 // no break
-            case AuthToken::SCOPE_FULL_ACCESS:
+            case AuthTokenScope::FULL_ACCESS:
                 // Full-access tokens can be deleted by:
                 // 1. The user who created them
                 // 2. A system administrator
@@ -201,10 +193,6 @@ class AuthTokenUtil
                     return false;
                 }
                 break;
-            default:
-                // In theory, this case should never be possible
-                Log::error("Invalid scope listed for auth token with hash {$token_hash}");
-                throw new RuntimeException("Invalid scope listed for auth token with hash {$token_hash}");
         }
         return $auth_token->delete() > 0;
     }
@@ -230,11 +218,6 @@ class AuthTokenUtil
         return false;
     }
 
-    public static function validScope(string $scope): bool
-    {
-        return $scope === AuthToken::SCOPE_FULL_ACCESS || $scope === AuthToken::SCOPE_SUBMIT_ONLY;
-    }
-
     /**
      * Checks for the presence of a bearer token and returns the user ID associated with
      * that token if applicable.  Returns null if no bearer token or invalid bearer token observed.
@@ -249,7 +232,7 @@ class AuthTokenUtil
         $auth_token = AuthToken::firstWhere('hash', $token_hash);
         if ($auth_token === null
             || self::isTokenExpired($auth_token)
-            || $auth_token['scope'] !== AuthToken::SCOPE_FULL_ACCESS
+            || $auth_token->scope !== AuthTokenScope::FULL_ACCESS
         ) {
             return null;
         }

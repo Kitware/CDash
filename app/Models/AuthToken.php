@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\AuthTokenScope;
 use Database\Factories\AuthTokenFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -19,7 +20,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon $expires
  * @property string $description
  * @property int $projectid
- * @property string $scope
+ * @property AuthTokenScope $scope
  *
  * @method static Builder<AuthToken> expired()
  *
@@ -29,9 +30,6 @@ class AuthToken extends Model
 {
     /** @use HasFactory<AuthTokenFactory> */
     use HasFactory;
-
-    public const SCOPE_FULL_ACCESS = 'full_access';
-    public const SCOPE_SUBMIT_ONLY = 'submit_only';
 
     // Eloquent requires this since we use a non-default creation date column
     // and have no updated timestamp column at all.
@@ -56,6 +54,7 @@ class AuthToken extends Model
         'created' => 'datetime',
         'expires' => 'datetime',
         'projectid' => 'integer',
+        'scope' => AuthTokenScope::class,
     ];
 
     /**

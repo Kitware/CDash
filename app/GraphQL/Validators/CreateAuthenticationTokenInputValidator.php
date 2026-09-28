@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Validators;
 
+use App\Enums\AuthTokenScope;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Validation\Rule;
@@ -14,10 +15,12 @@ final class CreateAuthenticationTokenInputValidator extends Validator
         $allowFullAccessTokens = Config::get('cdash.allow_full_access_tokens') === true;
         $allowSubmitOnlyTokens = Config::get('cdash.allow_submit_only_tokens') === true;
 
-        $validScopes = ['submit_only'];
+        $validScopes = [AuthTokenScope::SUBMIT_ONLY];
         if ($allowFullAccessTokens) {
-            $validScopes[] = 'full_access';
+            $validScopes[] = AuthTokenScope::FULL_ACCESS;
         }
+
+        $isSubmitOnly = $this->arg('scope') === AuthTokenScope::SUBMIT_ONLY;
 
         $durationConfig = (int) Config::get('cdash.token_duration');
         $maximumExpiration = $durationConfig === 0 ? Carbon::now()->endOfMillennium() : Carbon::now()->addSeconds($durationConfig);
@@ -25,12 +28,12 @@ final class CreateAuthenticationTokenInputValidator extends Validator
         return [
             'scope' => [
                 'required',
-                Rule::in($validScopes),
+                Rule::enum(AuthTokenScope::class)->only($validScopes),
             ],
             'projectId' => [
-                'prohibited_unless:scope,submit_only',
+                Rule::prohibitedIf(!$isSubmitOnly),
                 Rule::requiredIf(!$allowFullAccessTokens && !$allowSubmitOnlyTokens),
-                Rule::requiredIf(!$allowSubmitOnlyTokens && $this->arg('scope') === 'submit_only'),
+                Rule::requiredIf(!$allowSubmitOnlyTokens && $isSubmitOnly),
             ],
             'expiration' => [
                 'required',

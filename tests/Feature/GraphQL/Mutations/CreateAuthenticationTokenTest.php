@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\GraphQL\Mutations;
 
+use App\Enums\AuthTokenScope;
 use App\Enums\ProjectRole;
 use App\Models\AuthToken;
 use App\Models\Project;
@@ -119,7 +120,7 @@ class CreateAuthenticationTokenTest extends TestCase
             self::assertDatabaseHas(AuthToken::class, [
                 'projectid' => $project->id,
                 'userid' => $user?->id,
-                'scope' => 'submit_only',
+                'scope' => AuthTokenScope::SUBMIT_ONLY,
             ]);
         } else {
             $response->assertGraphQLErrorMessage('This action is unauthorized.');
@@ -133,19 +134,19 @@ class CreateAuthenticationTokenTest extends TestCase
     public static function fullAccessAndGlobalSubmitOnlyTokenCreationPermissionsCases(): array
     {
         return [
-            [null, 'full_access', false],
-            [null, 'submit_only', false],
-            ['normal', 'full_access', true],
-            ['normal', 'submit_only', true],
-            ['admin', 'full_access', true],
-            ['admin', 'submit_only', true],
+            [null, AuthTokenScope::FULL_ACCESS, false],
+            [null, AuthTokenScope::SUBMIT_ONLY, false],
+            ['normal', AuthTokenScope::FULL_ACCESS, true],
+            ['normal', AuthTokenScope::SUBMIT_ONLY, true],
+            ['admin', AuthTokenScope::FULL_ACCESS, true],
+            ['admin', AuthTokenScope::SUBMIT_ONLY, true],
         ];
     }
 
     #[DataProvider('fullAccessAndGlobalSubmitOnlyTokenCreationPermissionsCases')]
     public function testFullAccessAndGlobalSubmitOnlyTokenCreationPermissions(
         ?string $user,
-        string $scope,
+        AuthTokenScope $scope,
         bool $canCreateAuthToken,
     ): void {
         if ($user === 'normal') {
@@ -169,7 +170,7 @@ class CreateAuthenticationTokenTest extends TestCase
             }
         ', [
             'input' => [
-                'scope' => Str::upper($scope),
+                'scope' => $scope->name,
                 'expiration' => Carbon::now()->addDay()->toIso8601String(),
             ],
         ]);
@@ -203,14 +204,14 @@ class CreateAuthenticationTokenTest extends TestCase
     public static function disableFullAccessAndGlobalSubmitOnlyTokensCases(): array
     {
         return [
-            ['cdash.allow_full_access_tokens', true, 'full_access', true, null],
-            ['cdash.allow_full_access_tokens', false, 'full_access', false, 'input.scope'],
-            ['cdash.allow_full_access_tokens', true, 'submit_only', true, null],
-            ['cdash.allow_full_access_tokens', false, 'submit_only', true, null],
-            ['cdash.allow_submit_only_tokens', true, 'full_access', true, null],
-            ['cdash.allow_submit_only_tokens', false, 'full_access', true, null],
-            ['cdash.allow_submit_only_tokens', true, 'submit_only', true, null],
-            ['cdash.allow_submit_only_tokens', false, 'submit_only', false, 'input.projectId'],
+            ['cdash.allow_full_access_tokens', true, AuthTokenScope::FULL_ACCESS, true, null],
+            ['cdash.allow_full_access_tokens', false, AuthTokenScope::FULL_ACCESS, false, 'input.scope'],
+            ['cdash.allow_full_access_tokens', true, AuthTokenScope::SUBMIT_ONLY, true, null],
+            ['cdash.allow_full_access_tokens', false, AuthTokenScope::SUBMIT_ONLY, true, null],
+            ['cdash.allow_submit_only_tokens', true, AuthTokenScope::FULL_ACCESS, true, null],
+            ['cdash.allow_submit_only_tokens', false, AuthTokenScope::FULL_ACCESS, true, null],
+            ['cdash.allow_submit_only_tokens', true, AuthTokenScope::SUBMIT_ONLY, true, null],
+            ['cdash.allow_submit_only_tokens', false, AuthTokenScope::SUBMIT_ONLY, false, 'input.projectId'],
         ];
     }
 
@@ -218,7 +219,7 @@ class CreateAuthenticationTokenTest extends TestCase
     public function testDisableFullAccessAndGlobalSubmitOnlyTokens(
         string $configKey,
         bool $configValue,
-        string $scope,
+        AuthTokenScope $scope,
         bool $canCreateAuthToken,
         ?string $validationErrorKey,
     ): void {
@@ -241,7 +242,7 @@ class CreateAuthenticationTokenTest extends TestCase
             }
         ', [
             'input' => [
-                'scope' => Str::upper($scope),
+                'scope' => $scope->name,
                 'expiration' => Carbon::now()->addDay()->toIso8601String(),
             ],
         ]);
@@ -303,7 +304,7 @@ class CreateAuthenticationTokenTest extends TestCase
         self::assertDatabaseHas(AuthToken::class, [
             'projectid' => $project->id,
             'userid' => $user->id,
-            'scope' => 'submit_only',
+            'scope' => AuthTokenScope::SUBMIT_ONLY,
         ]);
     }
 
@@ -374,7 +375,7 @@ class CreateAuthenticationTokenTest extends TestCase
         ]);
         self::assertDatabaseHas(AuthToken::class, [
             'userid' => $user->id,
-            'scope' => 'full_access',
+            'scope' => AuthTokenScope::FULL_ACCESS,
             'description' => $description,
         ]);
     }

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Jobs;
 
+use App\Enums\AuthTokenScope;
 use App\Jobs\PruneAuthTokens;
 use App\Mail\AuthTokenExpired;
 use App\Models\AuthToken;
@@ -40,7 +41,7 @@ class PruneAuthTokensTest extends TestCase
         AuthToken::create([
             'hash' => $hash,
             'expires' => Carbon::now()->subMinute(),
-            'scope' => 'test',
+            'scope' => AuthTokenScope::FULL_ACCESS,
             'userid' => $this->user->id,
         ]);
 
@@ -60,7 +61,7 @@ class PruneAuthTokensTest extends TestCase
         AuthToken::create([
             'hash' => $hash,
             'expires' => Carbon::now()->addMinute(),
-            'scope' => 'test',
+            'scope' => AuthTokenScope::FULL_ACCESS,
             'userid' => $this->user->id,
         ]);
 
