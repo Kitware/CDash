@@ -224,8 +224,10 @@ RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then \
         echo "alias cdash_install='bash /cdash/install.sh'" >> /etc/bash.bashrc; \
     fi
 
-# Disable git repo ownership check system wide
-RUN git config --system --add safe.directory '*'
+# Disable git repo ownership check system wide.  Run from outside /cdash so this
+# doesn't depend on the repository at the build context being resolvable (e.g. a
+# git worktree whose gitdir points outside the build context).
+RUN cd / && git config --system --add safe.directory '*'
 
 ###############################################################################
 # Intermediate images to switch the user back to the default non-root user
