@@ -3,46 +3,44 @@
 namespace Tests\Traits;
 
 use Exception;
-use Illuminate\Http\Client\Pool;
-use Illuminate\Http\Client\Response;
-use Illuminate\Support\Facades\Http;
 
 trait CreatesSubmissions
 {
     /**
-     * Submit files to a given project.  Requests are batched for better performance.
+     * Submit a file to a given project using an in-process test request, so that the
+     * submission runs within the calling test's database transaction.
      *
-     * @param array<string> $files_to_submit
-     * @param int<1,max> $batch_size
+     * @return int|null the build id included in the submission response, or null if the
+     *                  response didn't include one
      */
-    private function submitFiles(string $project_name, array $files_to_submit, int $batch_size = 20, ?string $auth_token = null): void
+    private function makeSubmission(string $project_name, string $file_to_submit, int $expected_status = 200, ?string $auth_token = null): ?int
     {
-        $num_failed_submissions = 0;
-        foreach (array_chunk($files_to_submit, $batch_size) as $filenames_chunk) {
-            $responses = Http::pool(function (Pool $pool) use ($project_name, $filenames_chunk, $auth_token): void {
-                foreach ($filenames_chunk as $fixture) {
-                    $file_contents = file_get_contents($fixture);
-                    if ($file_contents === false) {
-                        throw new Exception('Unable to open submission file.');
-                    }
-                    $command = $pool->as($fixture)->withBody($file_contents);
-                    if ($auth_token !== null) {
-                        $command = $command->withToken($auth_token);
-                    }
-                    $command->get(url('/submit.php'), [
-                        'project' => $project_name,
-                    ]);
-                }
-            });
+        $server = $auth_token === null
+            ? []
+            : $this->transformHeadersToServerVars(['Authorization' => "Bearer $auth_token"]);
 
-            foreach ($responses as $file => $response) {
-                if (!($response instanceof Response) || !$response->ok()) {
-                    $num_failed_submissions++;
-                }
-            }
+        $file_contents = file_get_contents($file_to_submit);
+        if ($file_contents === false) {
+            throw new Exception('Unable to open submission file.');
         }
-        if ($num_failed_submissions > 0) {
-            throw new Exception("$num_failed_submissions submissions failed!");
+
+        $response = $this->call('GET', '/submit.php', ['project' => $project_name], [], [], $server, $file_contents);
+        $response->assertStatus($expected_status);
+
+        $content = $response->getContent();
+        if ($content === false) {
+            return null;
         }
+
+        $previous_libxml_setting = libxml_use_internal_errors(true);
+        $xml = simplexml_load_string($content);
+        libxml_clear_errors();
+        libxml_use_internal_errors($previous_libxml_setting);
+
+        if ($xml === false || !isset($xml->buildId)) {
+            return null;
+        }
+
+        return (int) $xml->buildId;
     }
 }

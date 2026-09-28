@@ -4,6 +4,7 @@ namespace Feature\Submission\Build;
 
 use App\Models\Project;
 use Exception;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
 use Tests\Traits\CreatesSubmissions;
@@ -12,6 +13,7 @@ class BuildXMLTest extends TestCase
 {
     use CreatesProjects;
     use CreatesSubmissions;
+    use DatabaseTransactions;
 
     private Project $project;
 
@@ -35,11 +37,9 @@ class BuildXMLTest extends TestCase
      */
     public function testBuildDirectoriesHandling(): void
     {
-        $this->submitFiles($this->project->name, [
-            base_path(
-                'tests/Feature/Submission/Build/data/with_build_source_binary_directories.xml'
-            ),
-        ]);
+        $this->makeSubmission($this->project->name, base_path(
+            'tests/Feature/Submission/Build/data/with_build_source_binary_directories.xml'
+        ));
 
         $this->graphQL('
             query build($id: ID) {
@@ -65,9 +65,7 @@ class BuildXMLTest extends TestCase
      */
     public function testValidSubmissionWithInstrumentation(): void
     {
-        $this->submitFiles($this->project->name, [
-            base_path('tests/Feature/Submission/Build/data/with_instrumentation_data.xml'),
-        ]);
+        $this->makeSubmission($this->project->name, base_path('tests/Feature/Submission/Build/data/with_instrumentation_data.xml'));
 
         $expected_result_json = file_get_contents(base_path('tests/Feature/Submission/Build/data/instrumentation-result.json'));
         if ($expected_result_json === false) {

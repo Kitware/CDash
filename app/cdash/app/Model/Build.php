@@ -221,7 +221,9 @@ class Build
             'projectid' => $this->ProjectId,
             'buildid' => $this->Id,
         ]);
-        return true;
+
+        $this->SubProjectId = $subProject->GetId();
+        return $this->SubProjectId;
     }
 
     /** Return the subproject name */

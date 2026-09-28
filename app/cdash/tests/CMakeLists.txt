@@ -326,6 +326,14 @@ add_feature_test_in_transaction(/Feature/Services/SiteServiceTest)
 
 add_feature_test_in_transaction(/Feature/AutoRemoveBuildsCommand)
 
+add_feature_test_in_transaction(/Feature/SubmissionValidation)
+
+add_feature_test_in_transaction(/Feature/Submission/Test/TestXMLTest)
+
+add_feature_test_in_transaction(/Feature/Submission/Build/BuildXMLTest)
+
+add_feature_test_in_transaction(/Feature/Submission/CoverageLog/CoverageLogXMLTest)
+
 ###################################################################################################
 # Tests from this point to the next cdash_install() are expected to be completely independent.
 # Tests may wipe the database, provided that they use RUN_SERIAL. All tests in this section should
@@ -349,20 +357,9 @@ set_tests_properties(/CDash/Messaging/Topic/UpdateErrorTopic PROPERTIES DEPENDS 
 add_legacy_unit_test(/CDash/Service/RepositoryService)
 set_tests_properties(/CDash/Service/RepositoryService PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
-# Set this to RUN_SERIAL as we are changing the config and don't want to clobber other tests.
-# Only requires exclusive .env access.
-add_feature_test(/Feature/SubmissionValidation)
-set_property(TEST /Feature/SubmissionValidation APPEND PROPERTY RUN_SERIAL TRUE)
-
 # Technically this test doesn't have to run serially.  It just needs to have exclusive access to the .env
 add_feature_test(/Feature/LdapIntegration)
 set_property(TEST /Feature/LdapIntegration APPEND PROPERTY RUN_SERIAL TRUE)
-
-add_feature_test(/Feature/Submission/Test/TestXMLTest)
-
-add_feature_test(/Feature/Submission/Build/BuildXMLTest)
-
-add_feature_test(/Feature/Submission/CoverageLog/CoverageLogXMLTest)
 
 add_browser_test(/Browser/Pages/SitesIdPageTest)
 

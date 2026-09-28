@@ -5,14 +5,15 @@ namespace Database\Seeders;
 use App\Models\User;
 use Exception;
 use Illuminate\Database\Seeder;
+use Illuminate\Http\Client\Pool;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Http;
 use Tests\Traits\CreatesProjects;
-use Tests\Traits\CreatesSubmissions;
 
 class DatabaseSeeder extends Seeder
 {
     use CreatesProjects;
-    use CreatesSubmissions;
 
     /**
      * The main database seeder method.
@@ -68,5 +69,38 @@ class DatabaseSeeder extends Seeder
         $this->submitFiles($project->name, [
             base_path('tests/Feature/Submission/Build/data/with_instrumentation_data.xml'),
         ], 1);
+    }
+
+    /**
+     * Submit files to a given project.  Requests are batched for better performance.
+     *
+     * @param array<string> $files_to_submit
+     * @param int<1,max> $batch_size
+     */
+    private function submitFiles(string $project_name, array $files_to_submit, int $batch_size = 20): void
+    {
+        $num_failed_submissions = 0;
+        foreach (array_chunk($files_to_submit, $batch_size) as $filenames_chunk) {
+            $responses = Http::pool(function (Pool $pool) use ($project_name, $filenames_chunk): void {
+                foreach ($filenames_chunk as $fixture) {
+                    $file_contents = file_get_contents($fixture);
+                    if ($file_contents === false) {
+                        throw new Exception('Unable to open submission file.');
+                    }
+                    $pool->as($fixture)->withBody($file_contents)->get(url('/submit.php'), [
+                        'project' => $project_name,
+                    ]);
+                }
+            });
+
+            foreach ($responses as $file => $response) {
+                if (!($response instanceof Response) || !$response->ok()) {
+                    $num_failed_submissions++;
+                }
+            }
+        }
+        if ($num_failed_submissions > 0) {
+            throw new Exception("$num_failed_submissions submissions failed!");
+        }
     }
 }
