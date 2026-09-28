@@ -20208,36 +20208,6 @@ parameters:
 			path: app/cdash/tests/test_parallelsubmissions.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" between mixed and mixed is not allowed.'
-			identifier: notEqual.notAllowed
-			count: 1
-			path: app/cdash/tests/test_passwordcomplexity.php
-
-		-
-			rawMessage: 'Method PasswordComplexityTestCase::complexityTest() has parameter $count with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/test_passwordcomplexity.php
-
-		-
-			rawMessage: 'Method PasswordComplexityTestCase::complexityTest() has parameter $expected with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/test_passwordcomplexity.php
-
-		-
-			rawMessage: 'Method PasswordComplexityTestCase::complexityTest() has parameter $password with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/test_passwordcomplexity.php
-
-		-
-			rawMessage: Property PasswordComplexityTestCase::$validator has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/test_passwordcomplexity.php
-
-		-
 			rawMessage: '''
 				Call to deprecated function pdo_execute():
 				v2.5.0 01/22/2018
