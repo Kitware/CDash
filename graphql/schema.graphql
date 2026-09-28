@@ -93,6 +93,9 @@ type Mutation {
 
   updateProject(input: UpdateProjectInput! @spread): UpdateProjectMutationPayload! @field(resolver: "UpdateProject")
 
+  "Permanently delete a project and all of its associated data."
+  deleteProject(input: DeleteProjectInput! @spread): DeleteProjectMutationPayload! @field(resolver: "DeleteProject")
+
   "Subscribe the current user to the specified site."
   claimSite(input: ClaimSiteInput! @spread): ClaimSiteMutationPayload! @field(resolver: "ClaimSite")
 
@@ -1183,6 +1186,17 @@ type UpdateProjectMutationPayload implements MutationPayloadInterface {
   message: String
 
   project: Project
+}
+
+
+input DeleteProjectInput {
+  projectId: ID!
+}
+
+
+type DeleteProjectMutationPayload implements MutationPayloadInterface {
+  "Optional error message."
+  message: String
 }
 
 

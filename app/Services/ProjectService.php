@@ -32,6 +32,12 @@ class ProjectService extends AbstractService
         return $project;
     }
 
+    public static function delete(Project $project): void
+    {
+        remove_project_builds($project->id);
+        $project->delete();
+    }
+
     /**
      * TODO: Rewrite this to use a dedicated project logo workflow instead of sharing the image table.
      *
