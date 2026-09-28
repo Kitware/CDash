@@ -81,14 +81,3 @@ set_tests_properties(nobackup PROPERTIES DEPENDS timeline)
 
 add_php_test(deferredsubmissions)
 set_tests_properties(deferredsubmissions PROPERTIES DEPENDS nobackup)
-
-# This is no longer relevant and should eventually be removed
-if(COVERAGE_COMMAND)
-  add_coverage_test(simple_async InsightExample simple simple.php enable_async)
-else()
-  add_ctest_test(simple_async InsightExample simple simple.php enable_async)
-endif()
-set_tests_properties(simple_async PROPERTIES DEPENDS deferredsubmissions)
-
-add_ctest_test(simple2_async InsightExample simple2 simple2.php enable_async)
-set_tests_properties(simple2_async PROPERTIES DEPENDS simple_async)

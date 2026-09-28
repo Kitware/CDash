@@ -3,8 +3,8 @@ describe('remove_build', () => {
     cy.login();
     cy.visit('index.php?project=InsightExample');
 
-    // locate the folder icon for the build 'CDash-CTest-simple_async'
-    cy.get('tbody').contains('tr', 'CDash-CTest-simple_async').find('td').eq(1).as('build_td');
+    // locate the folder icon for the build 'CDash-CTest-simple2'
+    cy.get('tbody').contains('tr', 'CDash-CTest-simple2').find('td').eq(1).as('build_td');
     cy.get('@build_td').find('span[name="adminoptions"]').click();
 
     // find the 'Remove This Build' button and click it
@@ -16,6 +16,6 @@ describe('remove_build', () => {
     // refresh the page to make sure this build is gone now
     cy.reload();
 
-    cy.get('tbody').contains('tr', 'CDash-CTest-simple_async').should('not.exist');
+    cy.get('tbody').contains('tr', 'CDash-CTest-simple2').should('not.exist');
   });
 });
