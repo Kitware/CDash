@@ -115,6 +115,7 @@ const TEST_QUERY = gql`
             testMeasurements(filters: $measurementFilters) {
               id
               name
+              type
               value
             }
           }
@@ -137,6 +138,7 @@ const TEST_QUERY = gql`
                   testMeasurements(filters: $measurementFilters) {
                     id
                     name
+                    type
                     value
                   }
                 }
@@ -235,13 +237,7 @@ export default {
         return {
           buildid: this.buildId,
           filters: this.initialFilters,
-          measurementFilters: {
-            any: this.pinnedMeasurements.map((name) => ({
-              eq: {
-                name: name,
-              },
-            })),
-          },
+          measurementFilters: this.measurementFilters,
         };
       },
     },
@@ -254,13 +250,7 @@ export default {
         return {
           buildid: this.buildId,
           filters: {},
-          measurementFilters: {
-            any: this.pinnedMeasurements.map((name) => ({
-              eq: {
-                name: name,
-              },
-            })),
-          },
+          measurementFilters: this.measurementFilters,
         };
       },
     },
@@ -272,13 +262,7 @@ export default {
         return {
           buildid: this.previousBuildId,
           filters: this.initialFilters,
-          measurementFilters: {
-            any: this.pinnedMeasurements.map((name) => ({
-              eq: {
-                name: name,
-              },
-            })),
-          },
+          measurementFilters: this.measurementFilters,
         };
       },
       skip() {
@@ -297,6 +281,18 @@ export default {
     FA() {
       return {
         faChartGantt,
+      };
+    },
+
+    // Fetch the pinned measurement columns and numeric measurements used by the
+    // test execution timeline and its tooltips. Unpinned text and file measurements
+    // aren't displayed on this page.
+    measurementFilters() {
+      return {
+        any: [
+          ...this.pinnedMeasurements.map((name) => ({ eq: { name: name } })),
+          { contains: { type: 'numeric/' } },
+        ],
       };
     },
 
@@ -346,15 +342,24 @@ export default {
         return [];
       }
 
-      return this.executedTests.filter((test) => test.node.startTime).map((test) => ({
-        id: test.node.id,
-        name: test.node.name,
-        startTime: DateTime.fromISO(test.node.startTime),
-        duration: Duration.fromObject({ seconds: test.node.runningTime }),
-        status: test.node.status,
-        subProject: test.subProject,
-        disabled: !this.visibleTestIds.has(test.node.id),
-      }));
+      return this.executedTests.filter((test) => test.node.startTime).map((test) => {
+        const numericMeasurements = test.node.testMeasurements
+          .filter((measurement) => measurement.type.startsWith('numeric'))
+          .map((measurement) => ({ name: measurement.name, value: parseFloat(measurement.value) }));
+        const maxRssMeasurement = numericMeasurements.find((measurement) => measurement.name === 'MaxRSS');
+
+        return {
+          id: test.node.id,
+          name: test.node.name,
+          startTime: DateTime.fromISO(test.node.startTime),
+          duration: Duration.fromObject({ seconds: test.node.runningTime }),
+          status: test.node.status,
+          subProject: test.subProject,
+          disabled: !this.visibleTestIds.has(test.node.id),
+          maxRss: maxRssMeasurement ? maxRssMeasurement.value : null,
+          numericMeasurements,
+        };
+      });
     },
 
     pinnedMeasurementColumns() {

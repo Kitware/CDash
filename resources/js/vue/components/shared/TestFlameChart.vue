@@ -1,8 +1,26 @@
 <template>
   <div>
     <div
+      v-if="hasMaxRssData"
+      class="tw-flex tw-justify-end tw-px-2.5 tw-pt-2.5"
+    >
+      <select
+        v-model="colorMode"
+        class="tw-select tw-select-bordered tw-select-sm"
+        data-test="test-flame-chart-color-mode"
+      >
+        <option value="status">
+          Passing/Failing
+        </option>
+        <option value="maxRss">
+          MaxRSS
+        </option>
+      </select>
+    </div>
+    <div
+      v-if="colorMode === 'status'"
       id="test-legend-container"
-      class="tw-flex tw-flex-wrap tw-justify-center tw-gap-x-5 tw-gap-y-2.5 tw-p-2.5 tw-text-xs"
+      class="tw-flex tw-flex-wrap tw-justify-center tw-items-center tw-gap-x-5 tw-gap-y-2.5 tw-p-2.5 tw-text-xs"
     >
       <div
         v-for="(colorClass, status) in colorClasses"
@@ -27,6 +45,7 @@
       :render-item="renderItem"
       :large="false"
       :progressive="0"
+      :visual-map="maxRssVisualMap"
       @click="onCellClick"
     />
   </div>
@@ -56,6 +75,14 @@ function resolveTailwindColor(colorClass) {
   return `rgb(${r}, ${g}, ${b})`;
 }
 
+// Known numeric CTest/instrumentation measurements and their base unit, keyed by
+// measurement name. Values are scaled to the largest useful unit for display.
+// Measurements not listed here (e.g. Processors, a CPU load average, or a
+// project-defined custom measurement) are shown as a plain number.
+const KIB_MEMORY_MEASUREMENTS = new Set(['MaxRSS', 'AfterHostMemoryUsed', 'BeforeHostMemoryUsed']);
+const MICROSECOND_TIME_MEASUREMENTS = new Set(['UserTime', 'SystemTime']);
+const SECOND_TIME_MEASUREMENTS = new Set(['Execution Time']);
+
 export default {
   name: 'TestFlameChart',
 
@@ -73,6 +100,7 @@ export default {
 
   data() {
     return {
+      colorMode: 'status',
       colorClasses: {
         Passed: 'tw-bg-success',
         Failed: 'tw-bg-error',
@@ -81,6 +109,8 @@ export default {
       testBarHeight: 15,
       testBarSpacing: 5,
       minimumBarWidth: 2,
+      // Bars with no MaxRSS measurement, shown only in MaxRSS color mode.
+      noDataColor: '#e1e0d9',
     };
   },
 
@@ -141,6 +171,8 @@ export default {
             test.name,
             test.subProject,
             test.id,
+            Number.isFinite(test.maxRss) ? test.maxRss : null,
+            test.numericMeasurements ?? [],
           ],
         };
         processedData.push(processedTest);
@@ -157,6 +189,48 @@ export default {
     totalChartHeight() {
       const numtracks = this.processedChartData.tracks.length;
       return ((this.testBarHeight + this.testBarSpacing) * numtracks) + 60;
+    },
+
+    hasMaxRssData() {
+      return (this.tests ?? []).some((test) => Number.isFinite(test.maxRss));
+    },
+
+    maxRssRange() {
+      let min = Infinity;
+      let max = -Infinity;
+      for (const test of this.tests ?? []) {
+        if (Number.isFinite(test.maxRss)) {
+          min = Math.min(min, test.maxRss);
+          max = Math.max(max, test.maxRss);
+        }
+      }
+      return min === Infinity ? { min: 0, max: 0 } : { min, max };
+    },
+
+    // Let ECharts use its theme's default gradient by leaving inRange unset.
+    // Dimension 10 is the MaxRSS value in each item's `value` array.
+    // Read via `api.visual('color')` in renderItem.
+    maxRssVisualMap() {
+      if (this.colorMode !== 'maxRss' || !this.hasMaxRssData) {
+        return null;
+      }
+      const { min, max } = this.maxRssRange;
+      return {
+        show: false,
+        type: 'continuous',
+        seriesIndex: 0,
+        dimension: 10,
+        min,
+        max: max > min ? max : min + 1,
+      };
+    },
+  },
+
+  watch: {
+    hasMaxRssData(hasData) {
+      if (!hasData) {
+        this.colorMode = 'status';
+      }
     },
   },
 
@@ -183,6 +257,32 @@ export default {
       }
     },
 
+    formatMeasurementValue(value) {
+      if (!Number.isFinite(value)) {
+        return String(value);
+      }
+      return Number.isInteger(value) ? value.toLocaleString() : value.toFixed(2);
+    },
+
+    // Dispatches each measurement to the formatter for its base unit, scaling to
+    // the largest useful unit. Measurements with no known unit are shown as a
+    // plain number.
+    formatMeasurement(name, value) {
+      if (!Number.isFinite(value)) {
+        return String(value);
+      }
+      if (KIB_MEMORY_MEASUREMENTS.has(name)) {
+        return Utils.formatBytesFromKib(value);
+      }
+      if (MICROSECOND_TIME_MEASUREMENTS.has(name)) {
+        return Utils.formatDuration(value / 1000);
+      }
+      if (SECOND_TIME_MEASUREMENTS.has(name)) {
+        return Utils.formatDuration(value * 1000);
+      }
+      return this.formatMeasurementValue(value);
+    },
+
     getTooltipElement(params) {
       if (!params.data.value || !Array.isArray(params.data.value)) {
         return '';
@@ -192,6 +292,7 @@ export default {
       const status = this.humanReadableTestStatus(data[5]);
       const name = data[7];
       const subProject = data[8];
+      const numericMeasurements = data[11] ?? [];
 
       const container = document.createElement('div');
 
@@ -217,6 +318,9 @@ export default {
       appendLine('SubProject', subProject);
       appendLine('Status', status);
       appendLine('Duration', duration);
+      numericMeasurements.forEach((measurement) => {
+        appendLine(measurement.name, this.formatMeasurement(measurement.name, measurement.value));
+      });
 
       return container;
     },
@@ -241,11 +345,15 @@ export default {
       const height = this.testBarHeight;
       const status = this.humanReadableTestStatus(api.value(5));
       const isDisabled = api.value(6);
+      const maxRss = api.value(10);
 
-      const style = {
-        fill: this.resolvedColors[status],
-        opacity: 0.85,
-      };
+      let style;
+      if (this.colorMode === 'maxRss') {
+        const hasMaxRss = Number.isFinite(maxRss);
+        style = { fill: hasMaxRss ? api.visual('color') : this.noDataColor, opacity: 0.9 };
+      } else {
+        style = { fill: this.resolvedColors[status], opacity: 0.85 };
+      }
 
       if (isDisabled) {
         Object.assign(style, {
