@@ -43,9 +43,9 @@ final class SubmissionController extends AbstractProjectController
         } catch (Exception $e) {
             $http_code = $e instanceof HttpException ? $e->getStatusCode() : 500;
 
-            return self::displayXMLReturnStatus([
-                'status' => 'ERROR',
-                'message' => $e->getMessage(),
+            return response()->json([
+                'status' => 1,
+                'description' => $e->getMessage(),
             ], $http_code);
         }
 
@@ -54,9 +54,9 @@ final class SubmissionController extends AbstractProjectController
         } catch (Exception $e) {
             $http_code = $e instanceof HttpException ? $e->getStatusCode() : 500;
 
-            return response()->json([
-                'status' => 1,
-                'description' => $e->getMessage(),
+            return self::displayXMLReturnStatus([
+                'status' => 'ERROR',
+                'message' => $e->getMessage(),
             ], $http_code);
         }
     }

@@ -172,7 +172,7 @@ class AuthTokenTestCase extends KWWebTestCase
         $response = curl_exec($ch);
         curl_close($ch);
         $response_array = json_decode($response, true);
-        if (!is_array($response_array)) {
+        if (!is_array($response_array) || $response_array['status'] !== 0) {
             return false;
         }
         $this->PostBuildId = $response_array['buildid'];
