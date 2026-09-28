@@ -419,6 +419,8 @@ add_browser_test(/Browser/Pages/BuildNotesPageTest)
 
 add_browser_test(/Browser/Pages/BuildTargetsPageTest)
 
+add_browser_test(/Browser/Pages/BuildInstrumentationPageTest)
+
 add_browser_test(/Browser/Pages/BuildTestsPageTest)
 
 add_browser_test(/Browser/Pages/BuildConfigurePageTest)

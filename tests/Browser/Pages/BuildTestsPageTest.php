@@ -498,6 +498,42 @@ class BuildTestsPageTest extends BrowserTestCase
                 ->assertSeeIn('@test-timeline', 'Test Execution Timeline')
                 ->click('@test-timeline')
                 ->assertSeeIn('@test-timeline', 'Passed')
+                ->assertMissing('@flame-chart-color-mode')
+            ;
+        });
+    }
+
+    public function testTestTimelineHeatmapColorModeShownWithMaxRss(): void
+    {
+        /** @var Build $build */
+        $build = $this->project->builds()->create([
+            'siteid' => $this->site->id,
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        /** @var Test $test */
+        $test = $build->tests()->create([
+            'testname' => Str::uuid()->toString(),
+            'status' => 'passed',
+            'time' => '1.5',
+            'starttime' => '2025-01-01 11:22:33',
+        ]);
+
+        $test->testMeasurements()->create([
+            'name' => 'MaxRSS',
+            'type' => 'numeric/integer',
+            'value' => '14576',
+        ]);
+
+        $this->browse(function (Browser $browser) use ($build): void {
+            $browser->visit("/builds/{$build->id}/tests")
+                ->waitFor('@test-timeline')
+                ->click('@test-timeline')
+                ->waitFor('@flame-chart-color-mode')
+                ->assertSeeIn('@flame-chart-legend', 'Passed')
+                ->select('@flame-chart-color-mode', 'heatmap')
+                ->waitUntilMissing('@flame-chart-legend')
             ;
         });
     }

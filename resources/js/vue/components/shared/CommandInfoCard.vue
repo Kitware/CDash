@@ -86,7 +86,7 @@
             <td class="tw-font-bold tw-w-px">
               {{ measurement.name }}
             </td>
-            <td>{{ addUnitsToSpecialMeasurements(measurement.name, measurement.value) }}</td>
+            <td>{{ formatMeasurement(measurement) }}</td>
           </tr>
         </tbody>
       </table>
@@ -151,6 +151,7 @@ export default {
                 node {
                   id
                   name
+                  type
                   value
                 }
               }
@@ -194,12 +195,10 @@ export default {
       return Utils.formatBytes(inputInBytes);
     },
 
-    addUnitsToSpecialMeasurements(measurementName, measurementValue) {
-      if (['BeforeHostMemoryUsed', 'AfterHostMemoryUsed'].includes(measurementName)) {
-        return Utils.formatBytesFromKib(measurementValue);
-      }
-
-      return measurementValue;
+    /** Formats numeric measurements with units, and shows any other measurement's value as-is. */
+    formatMeasurement(measurement) {
+      const [numericMeasurement] = Utils.numericMeasurements([measurement]);
+      return numericMeasurement ? Utils.formatMeasurement(numericMeasurement.name, numericMeasurement.value) : measurement.value;
     },
   },
 };

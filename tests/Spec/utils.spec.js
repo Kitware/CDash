@@ -135,4 +135,60 @@ describe('Utils', () => {
       expect(Utils.formatBytesFromMib(1024 ** 2)).toBe('1.00 TiB');
     });
   });
+
+  describe('numericMeasurements', () => {
+    it('parses measurements with a numeric type', () => {
+      expect(Utils.numericMeasurements([
+        { name: 'MaxRSS', type: 'numeric/integer', value: '78144' },
+        { name: 'AfterCPULoadAverage', type: 'numeric/double', value: '7.3916015625' },
+      ])).toEqual([
+        { name: 'MaxRSS', value: 78144 },
+        { name: 'AfterCPULoadAverage', value: 7.3916015625 },
+      ]);
+    });
+
+    it('skips measurements without a numeric type, even if their value looks numeric', () => {
+      expect(Utils.numericMeasurements([
+        { name: 'Version', type: 'text/string', value: '1.2.3' },
+        { name: 'Log', type: 'text/preformatted', value: '42' },
+        { name: 'output.txt', type: 'file', value: '' },
+        { name: 'MaxRSS', type: 'numeric/integer', value: '100' },
+      ])).toEqual([{ name: 'MaxRSS', value: 100 }]);
+    });
+
+    it('skips numeric measurements whose value is not a finite number', () => {
+      expect(Utils.numericMeasurements([
+        { name: 'Empty', type: 'numeric/double', value: '' },
+        { name: 'Word', type: 'numeric/double', value: 'abc' },
+        { name: 'Infinite', type: 'numeric/double', value: 'Infinity' },
+      ])).toEqual([]);
+    });
+  });
+
+  describe('formatMeasurement', () => {
+    it('formats KiB memory measurements', () => {
+      expect(Utils.formatMeasurement('MaxRSS', 1024)).toBe('1.00 MiB');
+      expect(Utils.formatMeasurement('BeforeHostMemoryUsed', 1024 ** 2)).toBe('1.00 GiB');
+      expect(Utils.formatMeasurement('AfterHostMemoryUsed', 1)).toBe('1.00 KiB');
+    });
+
+    it('formats microsecond CPU time measurements', () => {
+      expect(Utils.formatMeasurement('UserTime', 1500000)).toBe('1.50s');
+      expect(Utils.formatMeasurement('SystemTime', 500000)).toBe('500ms');
+    });
+
+    it('formats second time measurements', () => {
+      expect(Utils.formatMeasurement('Execution Time', 2.5)).toBe('2.50s');
+    });
+
+    it('formats unknown measurements as plain numbers', () => {
+      expect(Utils.formatMeasurement('Processors', 4)).toBe('4');
+      expect(Utils.formatMeasurement('AfterCPULoadAverage', 7.3916015625)).toBe('7.39');
+    });
+
+    it('returns non-finite values as strings', () => {
+      expect(Utils.formatMeasurement('MaxRSS', NaN)).toBe('NaN');
+      expect(Utils.formatMeasurement('MaxRSS', null)).toBe('null');
+    });
+  });
 });
