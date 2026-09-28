@@ -53,12 +53,14 @@ class SitesIdPageTest extends BrowserTestCase
     public function testMostRecentSiteDetails(): void
     {
         $this->sites['site1'] = Site::factory()->create();
-        $this->sites['site1']->information()->createMany([
+        $this->sites['site1']->information()->forceCreateMany([
             [
+                'timestamp' => Carbon::now()->subMinute(),
                 'totalphysicalmemory' => 5678,
                 'numberphysicalcpus' => 2,
             ],
             [
+                'timestamp' => Carbon::now(),
                 'totalphysicalmemory' => 8765,
                 'numberphysicalcpus' => 4,
             ],
@@ -293,7 +295,9 @@ class SitesIdPageTest extends BrowserTestCase
     public function testEditSiteDescription(): void
     {
         $this->sites['site1'] = Site::factory()->create();
-        $this->sites['site1']->information()->create();
+        $this->sites['site1']->information()->forceCreate([
+            'timestamp' => Carbon::now()->subMinute(),
+        ]);
         $this->users['user'] = User::factory()->create();
 
         $this->browse(function (Browser $browser): void {
@@ -349,8 +353,15 @@ class SitesIdPageTest extends BrowserTestCase
                 ->assertMissing('@save-description-button')
                 ->assertVisible('@edit-description-button')
                 ->waitForTextIn('@site-description', $description1)
-                ->waitForTextIn('[data-test="site-history-item"]:nth-child(1)', $description1)
-                ->click('@edit-description-button')
+                ->waitForTextIn('[data-test="site-history-item"]:nth-child(1)', $description1);
+
+            // Site information timestamps have a precision of one second, so move the first edit back in time
+            // to guarantee that the next edit is strictly newer.
+            $this->sites['site1']->mostRecentInformation?->forceFill([
+                'timestamp' => Carbon::now()->subSeconds(30),
+            ])->save();
+
+            $browser->click('@edit-description-button')
                 ->assertValue('@edit-description-textarea', $description1)
                 ->clear('@edit-description-textarea')
                 ->type('@edit-description-textarea', $description2)

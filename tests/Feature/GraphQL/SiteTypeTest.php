@@ -679,10 +679,20 @@ class SiteTypeTest extends TestCase
             'name' => 'site1',
         ]);
 
-        // We want to be explicit about creating these in order, so we can't use createMany
-        $this->sites['site1']->information()->create(['description' => 'site 1 information 1']);
-        $this->sites['site1']->information()->create(['description' => 'site 1 information 2']);
-        $this->sites['site1']->information()->create(['description' => 'site 1 information 3']);
+        $this->sites['site1']->information()->forceCreateMany([
+            [
+                'description' => 'site 1 information 1',
+                'timestamp' => Carbon::now()->subMinutes(2),
+            ],
+            [
+                'description' => 'site 1 information 2',
+                'timestamp' => Carbon::now()->subMinute(),
+            ],
+            [
+                'description' => 'site 1 information 3',
+                'timestamp' => Carbon::now(),
+            ],
+        ]);
 
         $this->projects['public1']->builds()->create([
             'name' => 'build1',
