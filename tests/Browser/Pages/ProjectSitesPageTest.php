@@ -4,6 +4,7 @@ namespace Tests\Browser\Pages;
 
 use App\Models\Project;
 use App\Models\Site;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Laravel\Dusk\Browser;
 use Tests\BrowserTestCase;
@@ -44,12 +45,14 @@ class ProjectSitesPageTest extends BrowserTestCase
         $this->projects[] = $project;
         $site = Site::factory()->create();
         $this->sites[] = $site;
-        $site->information()->createMany([
+        $site->information()->forceCreateMany([
             [
+                'timestamp' => Carbon::now()->subMinute(),
                 'totalphysicalmemory' => 5678,
                 'numberphysicalcpus' => 2,
             ],
             [
+                'timestamp' => Carbon::now(),
                 'totalphysicalmemory' => 8765,
                 'numberphysicalcpus' => 4,
             ],

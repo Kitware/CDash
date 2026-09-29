@@ -126,6 +126,8 @@ add_legacy_unit_test(/CDash/ServiceContainer)
 
 add_unit_test(/Unit/Console/Command/ValidateXmlCommandTest)
 
+add_unit_test(/Unit/GraphQL/SchemaValidationTest)
+
 add_php_test(seconds_from_interval)
 
 add_php_test(extracttar)
