@@ -1578,12 +1578,3 @@ type AuthToken {
 
   user: User
 }
-
-
-enum AuthTokenScope {
-  "Provides full API access."
-  FULL_ACCESS @enum(value: "full_access")
-
-  "Only valid for authenticated submissions.  If associated with a project, only valid for that project."
-  SUBMIT_ONLY @enum(value: "submit_only")
-}

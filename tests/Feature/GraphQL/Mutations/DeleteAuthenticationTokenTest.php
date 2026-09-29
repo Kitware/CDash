@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\GraphQL\Mutations;
 
+use App\Enums\AuthTokenScope;
 use App\Enums\ProjectRole;
 use App\Models\AuthToken;
 use App\Models\User;
@@ -147,7 +148,7 @@ class DeleteAuthenticationTokenTest extends TestCase
         $project = $this->makePublicProject();
         /** @var AuthToken $authToken */
         $authToken = $user->authenticationTokens()->save(AuthToken::factory()->make([
-            'scope' => 'submit_only',
+            'scope' => AuthTokenScope::SUBMIT_ONLY,
             'projectid' => $project->id,
         ]));
 
@@ -183,7 +184,7 @@ class DeleteAuthenticationTokenTest extends TestCase
         $project = $this->makePublicProject();
         /** @var AuthToken $authToken */
         $authToken = $user->authenticationTokens()->save(AuthToken::factory()->make([
-            'scope' => 'submit_only',
+            'scope' => AuthTokenScope::SUBMIT_ONLY,
             'projectid' => $project->id,
         ]));
 

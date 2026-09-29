@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Enums\AuthTokenScope;
 use App\Enums\BuildCommandType;
 use App\Enums\GlobalRole;
 use App\Enums\ProjectRole;
@@ -20,5 +21,6 @@ final class GraphQLServiceProvider extends ServiceProvider
         $typeRegistry->register(new PhpEnumType(TargetType::class));
         $typeRegistry->register(new PhpEnumType(BuildCommandType::class));
         $typeRegistry->register(new PhpEnumType(TestTimeStatusCategory::class));
+        $typeRegistry->register(new PhpEnumType(AuthTokenScope::class));
     }
 }

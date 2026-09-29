@@ -271,7 +271,7 @@ parameters:
 			path: app/GraphQL/Mutations/CreateAuthenticationToken.php
 
 		-
-			rawMessage: 'Parameter #2 $args (array{projectId: int|null, scope: string, description: string|null, expiration: Illuminate\Support\Carbon}) of method App\GraphQL\Mutations\CreateAuthenticationToken::__invoke() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::__invoke()'
+			rawMessage: 'Parameter #2 $args (array{projectId: int|null, scope: App\Enums\AuthTokenScope, description: string|null, expiration: Illuminate\Support\Carbon}) of method App\GraphQL\Mutations\CreateAuthenticationToken::__invoke() should be contravariant with parameter $args (array<string, mixed>) of method App\GraphQL\Mutations\AbstractMutation::__invoke()'
 			identifier: method.childParameterType
 			count: 1
 			path: app/GraphQL/Mutations/CreateAuthenticationToken.php

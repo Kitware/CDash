@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Jobs;
 
+use App\Enums\AuthTokenScope;
 use App\Jobs\NotifyExpiringAuthTokens;
 use App\Mail\AuthTokenExpiring;
 use App\Models\User;
@@ -38,7 +39,7 @@ class NotifyExpiringAuthTokensTest extends TestCase
         $this->user->authenticationTokens()->create([
             'hash' => Str::uuid()->toString(),
             'expires' => Carbon::now()->addDays(8),
-            'scope' => 'test',
+            'scope' => AuthTokenScope::FULL_ACCESS,
         ]);
 
         NotifyExpiringAuthTokens::dispatch();
@@ -52,7 +53,7 @@ class NotifyExpiringAuthTokensTest extends TestCase
         $this->user->authenticationTokens()->create([
             'hash' => Str::uuid()->toString(),
             'expires' => Carbon::now()->addDays(6),
-            'scope' => 'test',
+            'scope' => AuthTokenScope::FULL_ACCESS,
         ]);
 
         NotifyExpiringAuthTokens::dispatch();
@@ -67,7 +68,7 @@ class NotifyExpiringAuthTokensTest extends TestCase
         $this->user->authenticationTokens()->create([
             'hash' => Str::uuid()->toString(),
             'expires' => Carbon::now()->addHour(),
-            'scope' => 'test',
+            'scope' => AuthTokenScope::FULL_ACCESS,
         ]);
 
         NotifyExpiringAuthTokens::dispatch();

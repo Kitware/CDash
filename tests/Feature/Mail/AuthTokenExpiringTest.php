@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Mail;
 
+use App\Enums\AuthTokenScope;
 use App\Mail\AuthTokenExpiring;
 use App\Models\AuthToken;
 use App\Models\User;
@@ -38,7 +39,7 @@ class AuthTokenExpiringTest extends TestCase
         $authtoken = $this->user->authenticationTokens()->create([
             'hash' => Str::uuid()->toString(),
             'expires' => Carbon::create(2025, 3, 14),
-            'scope' => 'test',
+            'scope' => AuthTokenScope::FULL_ACCESS,
         ]);
 
         $mailable = new AuthTokenExpiring($authtoken);
@@ -54,7 +55,7 @@ class AuthTokenExpiringTest extends TestCase
         $authtoken = $this->user->authenticationTokens()->create([
             'hash' => Str::uuid()->toString(),
             'expires' => Carbon::now(),
-            'scope' => 'test',
+            'scope' => AuthTokenScope::FULL_ACCESS,
         ]);
 
         $mailable = new AuthTokenExpiring($authtoken);
@@ -70,7 +71,7 @@ class AuthTokenExpiringTest extends TestCase
         $authtoken = $this->user->authenticationTokens()->create([
             'hash' => Str::uuid()->toString(),
             'expires' => Carbon::now(),
-            'scope' => 'test',
+            'scope' => AuthTokenScope::FULL_ACCESS,
         ]);
 
         $mailable = new AuthTokenExpiring($authtoken);
@@ -86,7 +87,7 @@ class AuthTokenExpiringTest extends TestCase
         $authtoken = $this->user->authenticationTokens()->create([
             'hash' => Str::uuid()->toString(),
             'expires' => Carbon::now(),
-            'scope' => 'test',
+            'scope' => AuthTokenScope::FULL_ACCESS,
             'description' => Str::uuid()->toString(),
         ]);
 

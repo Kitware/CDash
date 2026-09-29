@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\GraphQL\Mutations;
 
+use App\Enums\AuthTokenScope;
 use App\Models\AuthToken;
 use App\Models\Project;
 use App\Utils\AuthTokenUtil;
@@ -20,7 +21,7 @@ final class CreateAuthenticationToken extends AbstractMutation
     /**
      * @param array{
      *     projectId: ?int,
-     *     scope: string,
+     *     scope: AuthTokenScope,
      *     description: ?string,
      *     expiration: Carbon,
      * } $args
@@ -48,7 +49,7 @@ final class CreateAuthenticationToken extends AbstractMutation
             $args['expiration'],
         );
 
-        $logMessage = "User {$user->id} created authentication token with scope {$this->token->scope}";
+        $logMessage = "User {$user->id} created authentication token with scope {$this->token->scope->value}";
         if ($this->token->projectid > 0) {
             $logMessage .= " for project {$this->token->projectid}";
         }

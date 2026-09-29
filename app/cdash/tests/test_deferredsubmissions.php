@@ -7,7 +7,7 @@
 require_once __DIR__ . '/cdash_test_case.php';
 require_once 'tests/test_branchcoverage.php';
 
-use App\Models\AuthToken;
+use App\Enums\AuthTokenScope;
 use App\Models\User;
 use App\Utils\AuthTokenUtil;
 use App\Utils\DatabaseCleanupUtils;
@@ -121,12 +121,10 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
     }
 
     /**
-     * When creating a submit-only, project-specific token (`$scope = AuthToken::SCOPE_SUBMIT_ONLY`),
+     * When creating a submit-only, project-specific token (`$scope = AuthTokenScope::SUBMIT_ONLY`),
      * the project will always be `$this->project`
-     *
-     * @param string $scope a string value matching one of the constants defined in AuthToken.php
      */
-    private function getToken(string $scope): void
+    private function getToken(AuthTokenScope $scope): void
     {
         if ($this->token !== '') {
             return;
@@ -145,7 +143,7 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         $this->project->Save();
 
         // Get bearer token.
-        $this->getToken(AuthToken::SCOPE_FULL_ACCESS);
+        $this->getToken(AuthTokenScope::FULL_ACCESS);
 
         // Start from a clean slate.
         $this->prepareForNormalSubmission();
@@ -296,7 +294,7 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         $this->project->Save();
 
         // Get bearer token.
-        $this->getToken(AuthToken::SCOPE_FULL_ACCESS);
+        $this->getToken(AuthTokenScope::FULL_ACCESS);
 
         // Delete existing results (if any).
         $this->clearPriorBranchCoverageResults();
@@ -349,7 +347,7 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         $this->project->Save();
 
         // Get bearer token.
-        $this->getToken(AuthToken::SCOPE_FULL_ACCESS);
+        $this->getToken(AuthTokenScope::FULL_ACCESS);
 
         // Delete existing results (if any).
         $this->clearPriorBranchCoverageResults();
@@ -392,7 +390,7 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         $this->project->Save();
 
         // Get bearer token.
-        $this->getToken(AuthToken::SCOPE_FULL_ACCESS);
+        $this->getToken(AuthTokenScope::FULL_ACCESS);
 
         // Delete existing results (if any).
         $this->clearPriorBranchCoverageResults();
@@ -435,7 +433,7 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         $this->project->Save();
 
         // Get bearer token.
-        $this->getToken(AuthToken::SCOPE_SUBMIT_ONLY);
+        $this->getToken(AuthTokenScope::SUBMIT_ONLY);
 
         // Delete existing results (if any).
         $this->clearPriorBranchCoverageResults();
@@ -501,7 +499,7 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         $project2->Fill();
 
         // Get bearer token.
-        $this->getToken(AuthToken::SCOPE_SUBMIT_ONLY);
+        $this->getToken(AuthTokenScope::SUBMIT_ONLY);
 
         // Delete existing results (if any).
         $this->clearPriorBranchCoverageResults();
