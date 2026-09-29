@@ -8953,42 +8953,6 @@ parameters:
 			path: app/cdash/app/Model/DynamicAnalysis.php
 
 		-
-			rawMessage: 'Method CDash\Model\DynamicAnalysis::GetLastId() has parameter $build with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Model/DynamicAnalysis.php
-
-		-
-			rawMessage: 'Method CDash\Model\DynamicAnalysis::GetNextId() has parameter $build with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Model/DynamicAnalysis.php
-
-		-
-			rawMessage: 'Method CDash\Model\DynamicAnalysis::GetPreviousId() has parameter $build with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Model/DynamicAnalysis.php
-
-		-
-			rawMessage: 'Method CDash\Model\DynamicAnalysis::GetRelatedId() has parameter $build with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Model/DynamicAnalysis.php
-
-		-
-			rawMessage: 'Method CDash\Model\DynamicAnalysis::GetRelatedId() has parameter $order with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Model/DynamicAnalysis.php
-
-		-
-			rawMessage: 'Method CDash\Model\DynamicAnalysis::GetRelatedId() has parameter $time_clause with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/app/Model/DynamicAnalysis.php
-
-		-
 			rawMessage: 'Method CDash\Model\DynamicAnalysis::Insert() has no return type specified.'
 			identifier: missingType.return
 			count: 1
@@ -21896,63 +21860,6 @@ parameters:
 			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/test_viewdynamicanalysis.php
-
-		-
-			rawMessage: '''
-				Call to deprecated function pdo_execute():
-				v2.5.0 01/22/2018
-			'''
-			identifier: function.deprecated
-			count: 2
-			path: app/cdash/tests/test_viewdynamicanalysisfile.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method getPdo() of class CDash\Database:
-				04/22/2023  Use Laravel query builder or Eloquent instead
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/test_viewdynamicanalysisfile.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method submission() of class KWWebTestCase:
-				12/09/2024  Use \Test\Traits\CreatesSubmissions instead
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/test_viewdynamicanalysisfile.php
-
-		-
-			rawMessage: Cannot access offset 'buildid' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_viewdynamicanalysisfile.php
-
-		-
-			rawMessage: Cannot access offset 'id' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/cdash/tests/test_viewdynamicanalysisfile.php
-
-		-
-			rawMessage: 'Cannot call method fetch() on PDOStatement|false.'
-			identifier: method.nonObject
-			count: 3
-			path: app/cdash/tests/test_viewdynamicanalysisfile.php
-
-		-
-			rawMessage: 'Parameter #1 $buildid of static method App\Utils\DatabaseCleanupUtils::removeBuild() expects array<int>|int, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/tests/test_viewdynamicanalysisfile.php
-
-		-
-			rawMessage: 'Parameter #1 $stmt of function pdo_execute expects PDOStatement, (PDOStatement|false) given.'
-			identifier: argument.type
-			count: 2
-			path: app/cdash/tests/test_viewdynamicanalysisfile.php
 
 		-
 			rawMessage: 'Argument of an invalid type mixed supplied for foreach, only iterables are supported.'
