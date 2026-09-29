@@ -40,7 +40,7 @@ if(COVERAGE_COMMAND)
 else()
   add_ctest_test(simple InsightExample simple simple.php)
 endif()
-set_tests_properties(simple PROPERTIES DEPENDS misassignedconfigure)
+set_tests_properties(simple PROPERTIES DEPENDS /Feature/SubProjectDependencies)
 
 add_ctest_test(simple2 InsightExample simple2 simple2.php)
 set_tests_properties(simple2 PROPERTIES DEPENDS simple)

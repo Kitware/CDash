@@ -334,6 +334,8 @@ add_feature_test_in_transaction(/Feature/Submission/Build/BuildXMLTest)
 
 add_feature_test_in_transaction(/Feature/Submission/CoverageLog/CoverageLogXMLTest)
 
+add_feature_test_in_transaction(/Feature/Submission/Configure/ConfigureXMLTest)
+
 ###################################################################################################
 # Tests from this point to the next cdash_install() are expected to be completely independent.
 # Tests may wipe the database, provided that they use RUN_SERIAL. All tests in this section should
@@ -460,9 +462,6 @@ set_tests_properties(dynamicanalysislogs PROPERTIES DEPENDS /CDash/XmlHandler/Up
 add_php_test(dynamicanalysisdefectlongtype)
 set_tests_properties(dynamicanalysisdefectlongtype PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
-add_php_test(configureappend)
-set_tests_properties(configureappend PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
-
 add_php_test(buildproperties)
 set_tests_properties(buildproperties PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
@@ -505,7 +504,6 @@ set_property(TEST install_2 APPEND PROPERTY DEPENDS
   subprojectorder
   dynamicanalysislogs
   dynamicanalysisdefectlongtype
-  configureappend
   buildproperties
   issuecreation
   junithandler
@@ -724,11 +722,8 @@ set_tests_properties(testimages PROPERTIES DEPENDS commitauthornotification)
 add_php_test(namedmeasurements)
 set_tests_properties(namedmeasurements PROPERTIES DEPENDS testimages)
 
-add_php_test(longbuildname)
-set_tests_properties(longbuildname PROPERTIES DEPENDS namedmeasurements)
-
 add_php_test(multiplelabelsfortests)
-set_tests_properties(multiplelabelsfortests PROPERTIES DEPENDS longbuildname)
+set_tests_properties(multiplelabelsfortests PROPERTIES DEPENDS namedmeasurements)
 
 add_php_test(starttimefromnotes)
 set_tests_properties(starttimefromnotes PROPERTIES DEPENDS multiplelabelsfortests)
@@ -750,9 +745,6 @@ set_tests_properties(notesparsererrormessages PROPERTIES DEPENDS redundanttests)
 
 add_laravel_test(/Feature/SubProjectDependencies)
 set_tests_properties(/Feature/SubProjectDependencies PROPERTIES DEPENDS notesparsererrormessages)
-
-add_php_test(misassignedconfigure)
-set_tests_properties(misassignedconfigure PROPERTIES DEPENDS /Feature/SubProjectDependencies)
 
 # These tests should go last so the removal of builds doesn't clobber other tests
 # TODO: Some of these dependencies may not be necessary.
