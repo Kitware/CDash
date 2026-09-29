@@ -336,6 +336,8 @@ add_feature_test_in_transaction(/Feature/Submission/Build/BuildXMLTest)
 
 add_feature_test_in_transaction(/Feature/Submission/CoverageLog/CoverageLogXMLTest)
 
+add_feature_test_in_transaction(/Feature/Submission/Coverage/JavaJSONTarTest)
+
 add_feature_test_in_transaction(/Feature/Submission/Configure/ConfigureXMLTest)
 
 ###################################################################################################
@@ -585,11 +587,8 @@ set_tests_properties(unparsedsubmissionshonorbuildid PROPERTIES DEPENDS actualbr
 add_php_test(multicoverage)
 set_tests_properties(multicoverage PROPERTIES DEPENDS unparsedsubmissionshonorbuildid)
 
-add_php_test(javajsoncoverage)
-set_tests_properties(javajsoncoverage PROPERTIES DEPENDS multicoverage)
-
 add_php_test(jscovercoverage)
-set_tests_properties(jscovercoverage PROPERTIES DEPENDS javajsoncoverage)
+set_tests_properties(jscovercoverage PROPERTIES DEPENDS multicoverage)
 
 add_php_test(opencovercoverage)
 set_tests_properties(opencovercoverage PROPERTIES DEPENDS jscovercoverage)
