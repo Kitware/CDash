@@ -26,14 +26,15 @@ use PDOStatement;
 
 class Database extends Singleton
 {
-    private ?PDO $pdo = null;
-
     public function __construct()
     {
     }
 
     /**
-     * Get the underlying PDO object or false if it cannot be created.
+     * Get the PDO object for the current default Laravel database connection.
+     *
+     * This is intentionally not cached, since the underlying connection may be replaced
+     * (e.g., after a reconnect, or between tests which each run in their own transaction).
      *
      * @return PDO
      *
@@ -41,12 +42,7 @@ class Database extends Singleton
      */
     public function getPdo()
     {
-        if ($this->pdo === null) {
-            $pdo = DB::connection()->getPdo();
-            $this->pdo = $pdo;
-        }
-
-        return $this->pdo;
+        return DB::connection()->getPdo();
     }
 
     /**
@@ -68,11 +64,7 @@ class Database extends Singleton
      */
     public function prepare(string $sql, array $options = []): PDOStatement|false
     {
-        if ($this->pdo === null) {
-            $this->getPdo();
-        }
-
-        return $this->pdo->prepare($sql, $options);
+        return $this->getPdo()->prepare($sql, $options);
     }
 
     /**

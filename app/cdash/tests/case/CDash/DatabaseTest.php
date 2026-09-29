@@ -3,6 +3,7 @@
 use CDash\Database;
 use CDash\Singleton;
 use CDash\Test\CDashTestCase;
+use Illuminate\Support\Facades\DB;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class DatabaseTest extends CDashTestCase
@@ -52,6 +53,17 @@ class DatabaseTest extends CDashTestCase
         $db = Database::getInstance();
         $pdo = $db->getPdo();
         $this->assertInstanceOf('PDO', $pdo);
+    }
+
+    public function testGetPdoUsesCurrentConnection(): void
+    {
+        $db = Database::getInstance();
+        $original_pdo = $db->getPdo();
+
+        DB::reconnect();
+
+        $this->assertNotSame($original_pdo, DB::connection()->getPdo());
+        $this->assertSame(DB::connection()->getPdo(), $db->getPdo());
     }
 
     public function testExecute(): void
