@@ -90,6 +90,7 @@ import LoadingIndicator from './shared/LoadingIndicator.vue';
 import BuildSummaryCard from './shared/BuildSummaryCard.vue';
 import BuildSidebar from './shared/BuildSidebar.vue';
 import TestFlameChart from './shared/TestFlameChart.vue';
+import Utils from './shared/Utils';
 import { DateTime, Duration } from 'luxon';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faChartGantt } from '@fortawesome/free-solid-svg-icons';
@@ -342,24 +343,16 @@ export default {
         return [];
       }
 
-      return this.executedTests.filter((test) => test.node.startTime).map((test) => {
-        const numericMeasurements = test.node.testMeasurements
-          .filter((measurement) => measurement.type.startsWith('numeric'))
-          .map((measurement) => ({ name: measurement.name, value: parseFloat(measurement.value) }));
-        const maxRssMeasurement = numericMeasurements.find((measurement) => measurement.name === 'MaxRSS');
-
-        return {
-          id: test.node.id,
-          name: test.node.name,
-          startTime: DateTime.fromISO(test.node.startTime),
-          duration: Duration.fromObject({ seconds: test.node.runningTime }),
-          status: test.node.status,
-          subProject: test.subProject,
-          disabled: !this.visibleTestIds.has(test.node.id),
-          maxRss: maxRssMeasurement ? maxRssMeasurement.value : null,
-          numericMeasurements,
-        };
-      });
+      return this.executedTests.filter((test) => test.node.startTime).map((test) => ({
+        id: test.node.id,
+        name: test.node.name,
+        startTime: DateTime.fromISO(test.node.startTime),
+        duration: Duration.fromObject({ seconds: test.node.runningTime }),
+        status: test.node.status,
+        subProject: test.subProject,
+        disabled: !this.visibleTestIds.has(test.node.id),
+        measurements: Utils.numericMeasurements(test.node.testMeasurements),
+      }));
     },
 
     pinnedMeasurementColumns() {

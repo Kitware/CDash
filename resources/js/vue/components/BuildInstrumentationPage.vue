@@ -49,6 +49,7 @@ import FilterBuilder from './shared/FilterBuilder.vue';
 import CommandFlameChart from './shared/CommandFlameChart.vue';
 import { DateTime, Duration } from 'luxon';
 import LineChart from './shared/Charts/LineChart.vue';
+import Utils from './shared/Utils';
 
 export default {
   name: 'BuildInstrumentationPage',
@@ -104,6 +105,7 @@ export default {
                     edges {
                       node {
                         name
+                        type
                         value
                       }
                     }
@@ -133,6 +135,7 @@ export default {
                           edges {
                             node {
                               name
+                              type
                               value
                             }
                           }
@@ -249,6 +252,7 @@ export default {
           language: edge.node.language,
           config: edge.node.config,
           disabled: !this.visibleCommandIds.has(edge.node.id),
+          measurements: Utils.numericMeasurements(edge.node.measurements.edges.map(({ node }) => node)),
         };
       });
     },

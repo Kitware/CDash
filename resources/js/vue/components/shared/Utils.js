@@ -49,4 +49,43 @@ export default {
   formatBytesFromMib(mib) {
     return this.formatBytes(mib * (1024 ** 2));
   },
+
+  /**
+   * Returns the numeric measurements (those with a numeric/* type) from a list of GraphQL test or
+   * build command measurements, as { name, value } objects with a number value.  Numeric measurements
+   * whose value can't be parsed as a finite number are skipped.
+   */
+  numericMeasurements(measurements) {
+    return measurements
+      .filter((measurement) => measurement.type.startsWith('numeric'))
+      .map((measurement) => ({ name: measurement.name, value: parseFloat(measurement.value) }))
+      .filter((measurement) => Number.isFinite(measurement.value));
+  },
+
+  /**
+   * Formats a numeric test or build command measurement in its base unit, scaled to
+   * the largest useful unit. Measurements with no known unit are shown as a plain number.
+   */
+  formatMeasurement(name, value) {
+    // Known numeric CTest/instrumentation measurements and their base unit, keyed by
+    // measurement name. Measurements not listed here (e.g. Processors, a CPU load
+    // average, or a project-defined custom measurement) are shown as a plain number.
+    const KIB_MEMORY_MEASUREMENTS = new Set(['MaxRSS', 'AfterHostMemoryUsed', 'BeforeHostMemoryUsed']);
+    const MICROSECOND_TIME_MEASUREMENTS = new Set(['UserTime', 'SystemTime']);
+    const SECOND_TIME_MEASUREMENTS = new Set(['Execution Time']);
+
+    if (!Number.isFinite(value)) {
+      return String(value);
+    }
+    if (KIB_MEMORY_MEASUREMENTS.has(name)) {
+      return this.formatBytesFromKib(value);
+    }
+    if (MICROSECOND_TIME_MEASUREMENTS.has(name)) {
+      return this.formatDuration(value / 1000);
+    }
+    if (SECOND_TIME_MEASUREMENTS.has(name)) {
+      return this.formatDuration(value * 1000);
+    }
+    return Number.isInteger(value) ? value.toLocaleString() : value.toFixed(2);
+  },
 };
