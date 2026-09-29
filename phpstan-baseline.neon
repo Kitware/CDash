@@ -16754,15 +16754,6 @@ parameters:
 
 		-
 			rawMessage: '''
-				Call to deprecated method submission() of class KWWebTestCase:
-				12/09/2024  Use \Test\Traits\CreatesSubmissions instead
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/test_configureappend.php
-
-		-
-			rawMessage: '''
 				Call to deprecated method execute() of class CDash\Database:
 				04/22/2023  Use Laravel query builder or Eloquent instead
 			'''
@@ -18754,21 +18745,6 @@ parameters:
 			'''
 			identifier: method.deprecated
 			count: 1
-			path: app/cdash/tests/test_longbuildname.php
-
-		-
-			rawMessage: Cannot access property $log on App\Models\Configure|null.
-			identifier: property.nonObject
-			count: 1
-			path: app/cdash/tests/test_longbuildname.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method submission() of class KWWebTestCase:
-				12/09/2024  Use \Test\Traits\CreatesSubmissions instead
-			'''
-			identifier: method.deprecated
-			count: 1
 			path: app/cdash/tests/test_lotsofsubprojects.php
 
 		-
@@ -19022,21 +18998,6 @@ parameters:
 			identifier: missingType.property
 			count: 1
 			path: app/cdash/tests/test_managemeasurements.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method submission() of class KWWebTestCase:
-				12/09/2024  Use \Test\Traits\CreatesSubmissions instead
-			'''
-			identifier: method.deprecated
-			count: 2
-			path: app/cdash/tests/test_misassignedconfigure.php
-
-		-
-			rawMessage: Class MisassignedConfigureTestCase has an uninitialized property $project. Give it default value or assign it in the constructor.
-			identifier: property.uninitialized
-			count: 1
-			path: app/cdash/tests/test_misassignedconfigure.php
 
 		-
 			rawMessage: Binary operation "." between 'POST returned ' and mixed results in an error.
