@@ -1,5 +1,10 @@
 set(CTEST_SITE "${SITENAME}")
 
+# Pull request number, which CDash uses to link the build back to GitHub.
+if (CHANGE_ID)
+  set(CTEST_CHANGE_ID "${CHANGE_ID}")
+endif()
+
 cmake_host_system_information(RESULT DISTRIB_ID QUERY DISTRIB_ID)
 cmake_host_system_information(RESULT DISTRIB_VERSION_ID QUERY DISTRIB_VERSION_ID)
 set(CTEST_BUILD_NAME "${DISTRIB_ID}-${DISTRIB_VERSION_ID}-postgres-${POSTGRES_VERSION}-${STORAGE_TYPE}")
