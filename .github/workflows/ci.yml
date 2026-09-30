@@ -15,16 +15,23 @@ jobs:
       SITENAME: GitHub Actions
       BASE_IMAGE: ${{matrix.base-image}}
       STORAGE_TYPE: ${{matrix.storage}}
+      POSTGRES_VERSION: ${{matrix.postgres-version}}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        database: ['postgres']
         base-image: ['debian', 'ubi']
         storage: ['local', 'minio']
+        postgres-version: ['18']
         exclude:
           - storage: minio
             base-image: ubi
+        include:
+          # Also test against the minimum supported postgres version, on a single
+          # configuration (local storage, debian) to avoid matrix blowup.
+          - base-image: debian
+            storage: local
+            postgres-version: '14'
     steps:
       - uses: actions/checkout@v7
       - uses: docker/setup-buildx-action@v4
@@ -37,7 +44,7 @@ jobs:
           docker compose \
               -f docker/docker-compose.yml \
               -f docker/docker-compose.dev.yml \
-              -f "docker/docker-compose.${{matrix.database}}.yml" ${extra_args} \
+              -f docker/docker-compose.postgres.yml ${extra_args} \
               --env-file .env.dev up -d \
               --build \
               --wait
@@ -56,7 +63,7 @@ jobs:
             BUILD_GROUP="Experimental";
           fi
           echo "Submitting to build group: ${BUILD_GROUP}"
-          bash .github/workflows/submit.sh ${{matrix.database}} "${BUILD_GROUP}"
+          bash .github/workflows/submit.sh "${BUILD_GROUP}"
 
   build-images:
     runs-on: ${{matrix.architecture}}
