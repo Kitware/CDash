@@ -2,33 +2,32 @@
 
 declare(strict_types=1);
 
-namespace App\Utils;
+namespace App\Services;
 
 use App\Enums\AuthTokenScope;
 use App\Models\AuthToken;
+use App\Models\Project;
 use App\Models\User;
-use CDash\Model\Project;
-use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 
-class AuthTokenUtil
+class AuthTokenService extends AbstractService
 {
     /**
      * Contract: we assume that $user_id has already been validated and blindly create a token
      * for the user specified.  It is the responsibility of anyone who uses this function to
-     * ensure that the $user_id has been properly authenticated.
+     * ensure that the $user_id has been properly authenticated, and that the user is authorized
+     * to create a token for the specified project.
      *
      * @return array{raw_token: string, token: AuthToken}
      *
      * @throws InvalidArgumentException
      */
-    public static function generateToken(
+    public static function generate(
         int $user_id,
         int $project_id,
         AuthTokenScope $scope,
@@ -78,13 +77,9 @@ class AuthTokenUtil
         $params['scope'] = $scope;
 
         $params['projectid'] = $scope === AuthTokenScope::SUBMIT_ONLY && $project_id > -1 ? $project_id : null;
-
-        $project = new Project();
-        $project->Id = $project_id;
-        $project->Fill();
-        if ($project_id >= 0 && !Gate::allows('view-project', $project)) {
-            Log::error('Permissions error');
-            throw new InvalidArgumentException('Permissions error');
+        if ($params['projectid'] !== null && !Project::whereKey($params['projectid'])->exists()) {
+            Log::error('Invalid project');
+            throw new InvalidArgumentException('Invalid project');
         }
 
         $auth_token = AuthToken::create($params);
@@ -98,7 +93,7 @@ class AuthTokenUtil
      * Accepts a hashed token and a project, and decides whether the token is valid for the
      * specified project and associated user.
      */
-    public static function checkToken(string $token_hash, int $project_id): bool
+    public static function check(string $token_hash, int $project_id): bool
     {
         $auth_token = AuthToken::firstWhere('hash', $token_hash);
         if ($auth_token === null) {
@@ -112,13 +107,13 @@ class AuthTokenUtil
             return false;
         }
 
-        // Check for token expiration, deleting the token if expired
-        if (self::isTokenExpired($auth_token)) {
+        // Expired tokens are deleted by the PruneAuthTokens job, not here.
+        if ($auth_token->expires->isPast()) {
             Log::error('Invalid Token');
             return false;
         }
 
-        $project = \App\Models\Project::find($project_id);
+        $project = Project::find($project_id);
         if ($project === null || Gate::forUser($user)->denies('view', $project)) {
             Log::error('Invalid Project');
             return false;
@@ -148,103 +143,12 @@ class AuthTokenUtil
         return true;
     }
 
-    /**
-     * Accepts the hash of a token and the user we expect it be associated with (ID obtained for
-     * the current user via the Auth class).  The function returns a boolean indicating whether
-     * The token was successfully deleted.
-     */
-    public static function deleteToken(string $token_hash, int $expected_user_id): bool
-    {
-        $auth_token = AuthToken::firstWhere('hash', $token_hash);
-        if ($auth_token === null) {
-            throw new AuthenticationException('This action is unauthorized.');
-        }
-
-        /** @var User $user */
-        $user = Auth::user();
-
-        switch ($auth_token->scope) {
-            case AuthTokenScope::SUBMIT_ONLY:
-                if ($auth_token['projectid'] !== null) {
-                    // Project-scoped submit-only tokens can be deleted by:
-                    // 1. The user who created them
-                    // 2. A project administrator
-                    // 3. A system administrator
-
-                    $project = \App\Models\Project::findOrFail((int) $auth_token['projectid']);
-
-                    if (
-                        $expected_user_id !== $auth_token['userid']
-                        && $project->administrators()->find($user->id) === null
-                        && !$user->admin
-                    ) {
-                        return false;
-                    }
-                    break;
-                }
-                // Submit-only tokens with access to all projects have the same deletion requirements
-                // as full-access tokens (thus we continue into the next case without breaking).
-                // no break
-            case AuthTokenScope::FULL_ACCESS:
-                // Full-access tokens can be deleted by:
-                // 1. The user who created them
-                // 2. A system administrator
-                if ($expected_user_id !== $auth_token['userid'] && !$user->admin) {
-                    return false;
-                }
-                break;
-        }
-        return $auth_token->delete() > 0;
-    }
-
-    public static function hashToken(?string $unhashed_token): string
+    public static function hash(?string $unhashed_token): string
     {
         if ($unhashed_token === null || $unhashed_token === '') {
             return '';
         }
 
         return hash('sha512', $unhashed_token);
-    }
-
-    /**
-     * Check if the specified AuthToken is expired and delete it if so
-     */
-    public static function isTokenExpired(AuthToken $auth_token): bool
-    {
-        if ($auth_token['expires'] < Carbon::now()) {
-            $auth_token->delete();
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Checks for the presence of a bearer token and returns the user ID associated with
-     * that token if applicable.  Returns null if no bearer token or invalid bearer token observed.
-     */
-    public static function getUserIdFromRequest(): ?int
-    {
-        $token_hash = self::hashToken(self::getBearerToken());
-        if ($token_hash === '') {
-            return null;
-        }
-
-        $auth_token = AuthToken::firstWhere('hash', $token_hash);
-        if ($auth_token === null
-            || self::isTokenExpired($auth_token)
-            || $auth_token->scope !== AuthTokenScope::FULL_ACCESS
-        ) {
-            return null;
-        }
-
-        return $auth_token['userid'];
-    }
-
-    /**
-     * Get access token from header.
-     */
-    public static function getBearerToken(): ?string
-    {
-        return request()->bearerToken();
     }
 }

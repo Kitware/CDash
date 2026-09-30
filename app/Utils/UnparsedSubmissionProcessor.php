@@ -22,6 +22,7 @@ use App\Models\BuildFile;
 use App\Models\PendingSubmissions;
 use App\Models\Site;
 use App\Rules\ProjectNameRule;
+use App\Services\AuthTokenService;
 use CDash\Model\Build;
 use CDash\Model\Project;
 use Exception;
@@ -152,7 +153,7 @@ class UnparsedSubmissionProcessor
         $projectid = $project_row->id;
 
         // Check if this submission requires a valid authentication token.
-        if (($this->token || $project_row->authenticatesubmissions) && !AuthTokenUtil::checkToken($this->token, $projectid)) {
+        if (($this->token || $project_row->authenticatesubmissions) && !AuthTokenService::check($this->token, $projectid)) {
             abort(Response::HTTP_FORBIDDEN, 'Forbidden');
         }
 
@@ -322,9 +323,9 @@ class UnparsedSubmissionProcessor
 
         // Check if this submission requires a valid authentication token.
         if ($this->project->AuthenticateSubmissions) {
-            $token = AuthTokenUtil::getBearerToken();
-            $authtoken_hash = AuthTokenUtil::hashToken($token);
-            if (!AuthTokenUtil::checkToken($authtoken_hash, $this->project->Id)) {
+            $token = request()->bearerToken();
+            $authtoken_hash = AuthTokenService::hash($token);
+            if (!AuthTokenService::check($authtoken_hash, $this->project->Id)) {
                 Storage::delete($this->inboxdatafilename);
                 abort(Response::HTTP_FORBIDDEN, 'Forbidden');
             }
@@ -460,9 +461,9 @@ class UnparsedSubmissionProcessor
         if ($this->token) {
             return;
         }
-        $token = AuthTokenUtil::getBearerToken();
+        $token = request()->bearerToken();
         if ($token) {
-            $this->token = AuthTokenUtil::hashToken($token);
+            $this->token = AuthTokenService::hash($token);
         } else {
             $this->token = '';
         }

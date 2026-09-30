@@ -8,7 +8,7 @@ use App\Jobs\ProcessSubmission;
 use App\Models\PendingSubmissions;
 use App\Models\Site;
 use App\Rules\ProjectNameRule;
-use App\Utils\AuthTokenUtil;
+use App\Services\AuthTokenService;
 use App\Utils\SubmissionUtils;
 use App\Utils\SystemUtils;
 use App\Utils\UnparsedSubmissionProcessor;
@@ -107,8 +107,8 @@ final class SubmissionController extends AbstractProjectController
         }
 
         // Get auth token (if any).
-        $authtoken = AuthTokenUtil::getBearerToken();
-        $authtoken_hash = $authtoken === null || $authtoken === '' ? '' : AuthTokenUtil::hashToken($authtoken);
+        $authtoken = request()->bearerToken();
+        $authtoken_hash = $authtoken === null || $authtoken === '' ? '' : AuthTokenService::hash($authtoken);
 
         // Check that the md5sum of the file matches what we were told to expect.
         $fp = request()->getContent(true);
@@ -151,7 +151,7 @@ final class SubmissionController extends AbstractProjectController
         }
 
         // Check for valid authentication token if this project requires one.
-        if ($this->project->AuthenticateSubmissions && !AuthTokenUtil::checkToken($authtoken_hash, $this->project->Id)) {
+        if ($this->project->AuthenticateSubmissions && !AuthTokenService::check($authtoken_hash, $this->project->Id)) {
             Storage::delete("inbox/{$filename}");
             Log::info('Rejected submission with invalid authentication token');
             $this->failProcessing(null, Response::HTTP_FORBIDDEN, 'Invalid Token');

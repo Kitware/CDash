@@ -7,7 +7,7 @@ use App\Enums\ProjectRole;
 use App\Models\AuthToken;
 use App\Models\Project as EloquentProject;
 use App\Models\User;
-use App\Utils\AuthTokenUtil;
+use App\Services\AuthTokenService;
 use CDash\Model\Project;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
@@ -69,7 +69,7 @@ class AuthTokenTestCase extends KWWebTestCase
     public function testGenerateToken(): void
     {
         $userid = User::where('email', 'user1@kw')->firstOrFail()->id;
-        $response = AuthTokenUtil::generateToken($userid, -1, AuthTokenScope::FULL_ACCESS, 'mytoken');
+        $response = AuthTokenService::generate($userid, -1, AuthTokenScope::FULL_ACCESS, 'mytoken');
 
         $this->Token = $response['raw_token'];
     }
@@ -223,25 +223,25 @@ class AuthTokenTestCase extends KWWebTestCase
         }
     }
 
-    public function testRemoveExpiredToken(): void
+    public function testExpiredTokenIsRejected(): void
     {
         // Put an expired token in the database.
-        $result = AuthTokenUtil::generateToken(1, -1, AuthTokenScope::FULL_ACCESS, 'Test Token 1');
+        $result = AuthTokenService::generate(1, -1, AuthTokenScope::FULL_ACCESS, 'Test Token 1');
         $token = $result['raw_token'];
         $authtoken = $result['token'];
         $authtoken['expires'] = gmdate(FMT_DATETIME, 1);
         $authtoken->save();
 
         // Try to submit using this token.
-        // This will cause it to be revoked since it has already expired.
         $headers = ["Authorization: Bearer {$token}"];
         if ($this->normalSubmit($headers)) {
             $this->fail('Normal submit succeeded with an expired token');
         }
 
-        // Make sure this token does not exist anymore.
-        if (AuthToken::firstWhere('hash', $authtoken['hash'])) {
-            $this->fail('Expired token still exists after submission');
+        // Expired tokens are deleted by the PruneAuthTokens job, not when they are used.
+        if (AuthToken::firstWhere('hash', $authtoken['hash']) === null) {
+            $this->fail('Expired token was deleted when it was used');
         }
+        $authtoken->delete();
     }
 }

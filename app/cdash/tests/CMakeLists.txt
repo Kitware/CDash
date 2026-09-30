@@ -322,9 +322,13 @@ add_feature_test_in_transaction(/Feature/Jobs/PruneEmailsTest)
 
 add_feature_test_in_transaction(/Feature/Jobs/ComputeCoverageDifferenceTest)
 
+add_feature_test_in_transaction(/Feature/Services/AuthTokenServiceTest)
+
 add_feature_test_in_transaction(/Feature/Services/ProjectServiceTest)
 
 add_feature_test_in_transaction(/Feature/Services/SiteServiceTest)
+
+add_feature_test_in_transaction(/Feature/Middleware/AuthenticateTokenTest)
 
 add_feature_test_in_transaction(/Feature/AutoRemoveBuildsCommand)
 

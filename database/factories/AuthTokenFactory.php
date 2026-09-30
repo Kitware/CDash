@@ -4,7 +4,7 @@ namespace Database\Factories;
 
 use App\Enums\AuthTokenScope;
 use App\Models\AuthToken;
-use App\Utils\AuthTokenUtil;
+use App\Services\AuthTokenService;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
@@ -26,7 +26,7 @@ class AuthTokenFactory extends Factory
             'expires' => Carbon::now()->addYear(),
             'description' => Str::uuid()->toString(),
             'scope' => AuthTokenScope::FULL_ACCESS,
-            'hash' => AuthTokenUtil::hashToken(Str::uuid()->toString()),
+            'hash' => AuthTokenService::hash(Str::uuid()->toString()),
         ];
     }
 }
