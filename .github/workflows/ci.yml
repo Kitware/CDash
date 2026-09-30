@@ -50,6 +50,9 @@ jobs:
               --wait
 
       - name: Run Tests
+        env:
+          # Lets CDash link the build back to the pull request.  Empty for non-PR events.
+          CHANGE_ID: ${{github.event.pull_request.number}}
         run: |
           if [ "${{github.event_name}}" == "pull_request" ]; then
             BUILD_GROUP="Pull Requests";

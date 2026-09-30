@@ -11,9 +11,12 @@ storage_type="${STORAGE_TYPE:-local}"
 
 postgres_version="${POSTGRES_VERSION:-18}"
 
+change_id="${CHANGE_ID:-}"
+
 echo "site=$site"
 echo "ctest_driver=$ctest_driver"
 echo "submit_type=$submit_type"
+echo "change_id=$change_id"
 
 # Wait a couple seconds for the migrations to start running
 sleep 2
@@ -38,5 +41,6 @@ docker exec cdash-website-1 bash -c "\
     -DPOSTGRES_VERSION=\"${postgres_version}\" \
     -DSTORAGE_TYPE=\"${storage_type}\" \
     -DSUBMIT_TYPE=\"${submit_type}\" \
+    -DCHANGE_ID=\"${change_id}\" \
     -S \"${ctest_driver}\" \
 "
