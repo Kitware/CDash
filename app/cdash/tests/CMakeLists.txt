@@ -340,6 +340,8 @@ add_feature_test_in_transaction(/Feature/Submission/Coverage/JavaJSONTarTest)
 
 add_feature_test_in_transaction(/Feature/Submission/Configure/ConfigureXMLTest)
 
+add_feature_test_in_transaction(/Feature/Submission/Bazel/BazelJSONTest)
+
 ###################################################################################################
 # Tests from this point to the next cdash_install() are expected to be completely independent.
 # Tests may wipe the database, provided that they use RUN_SERIAL. All tests in this section should
@@ -689,11 +691,8 @@ set_tests_properties(outputcolor PROPERTIES DEPENDS coveragedirectories)
 add_php_test(timestatus)
 set_tests_properties(timestatus PROPERTIES DEPENDS outputcolor)
 
-add_php_test(bazeljson)
-set_tests_properties(bazeljson PROPERTIES DEPENDS timestatus)
-
 add_php_test(buildrelationship)
-set_tests_properties(buildrelationship PROPERTIES DEPENDS bazeljson)
+set_tests_properties(buildrelationship PROPERTIES DEPENDS timestatus)
 
 add_php_test(submission_assign_buildid)
 set_tests_properties(submission_assign_buildid PROPERTIES DEPENDS buildrelationship)
