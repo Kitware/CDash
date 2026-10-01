@@ -346,6 +346,8 @@ add_feature_test_in_transaction(/Feature/Submission/Configure/ConfigureXMLTest)
 
 add_feature_test_in_transaction(/Feature/Submission/Bazel/BazelJSONTest)
 
+add_feature_test_in_transaction(/Feature/Submission/DynamicAnalysis/DynamicAnalysisXMLTest)
+
 ###################################################################################################
 # Tests from this point to the next cdash_install() are expected to be completely independent.
 # Tests may wipe the database, provided that they use RUN_SERIAL. All tests in this section should
@@ -468,12 +470,6 @@ set_tests_properties(attachedfiles PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHa
 add_php_test(subprojectorder)
 set_tests_properties(subprojectorder PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
-add_php_test(dynamicanalysislogs)
-set_tests_properties(dynamicanalysislogs PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
-
-add_php_test(dynamicanalysisdefectlongtype)
-set_tests_properties(dynamicanalysisdefectlongtype PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
-
 add_php_test(buildproperties)
 set_tests_properties(buildproperties PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
@@ -514,8 +510,6 @@ set_property(TEST install_2 APPEND PROPERTY DEPENDS
   numericupdate
   attachedfiles
   subprojectorder
-  dynamicanalysislogs
-  dynamicanalysisdefectlongtype
   buildproperties
   issuecreation
   junithandler
@@ -572,11 +566,8 @@ set_tests_properties(querytests PROPERTIES DEPENDS projectindb)
 add_php_test(testoverview)
 set_tests_properties(testoverview PROPERTIES DEPENDS querytests)
 
-add_php_test(viewdynamicanalysis)
-set_tests_properties(viewdynamicanalysis PROPERTIES DEPENDS testoverview)
-
 add_php_test(buildmodel)
-set_tests_properties(buildmodel PROPERTIES DEPENDS viewdynamicanalysis)
+set_tests_properties(buildmodel PROPERTIES DEPENDS testoverview)
 
 add_php_test(projectxmlsequence)
 set_tests_properties(projectxmlsequence PROPERTIES DEPENDS buildmodel)
@@ -638,11 +629,8 @@ set_tests_properties(aggregatesubprojectcoverage PROPERTIES DEPENDS crosssubproj
 add_php_test(filtertestlabels)
 set_tests_properties(filtertestlabels PROPERTIES DEPENDS aggregatesubprojectcoverage)
 
-add_php_test(dynamicanalysissummary)
-set_tests_properties(dynamicanalysissummary PROPERTIES DEPENDS filtertestlabels)
-
 add_php_test(viewsubprojects)
-set_tests_properties(viewsubprojects PROPERTIES DEPENDS dynamicanalysissummary)
+set_tests_properties(viewsubprojects PROPERTIES DEPENDS filtertestlabels)
 
 add_php_test(truncateoutput)
 set_tests_properties(truncateoutput PROPERTIES DEPENDS viewsubprojects)
