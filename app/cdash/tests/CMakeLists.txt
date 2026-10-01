@@ -48,6 +48,15 @@ function(add_laravel_test TestName)
     ${TestName} PROPERTIES
     ATTACHED_FILES_ON_FAIL "${CDash_SOURCE_DIR}/storage/logs/cdash.log"
   )
+
+  # Storage::fake() empties and reuses the same directory for a given disk in every test process,
+  # unless Laravel's parallel testing token is set, in which case it appends "_test_<token>" to the
+  # directory.  Give each test its own token so that tests running in parallel never share (or
+  # clear) each other's fake disks.  Don't set LARAVEL_PARALLEL_TESTING as well: that would also
+  # make Laravel switch each test to its own database, cache prefix, and compiled views directory.
+  string(REGEX REPLACE "^/" "" test_token "${TestName}")
+  string(MAKE_C_IDENTIFIER "${test_token}" test_token)
+  set_property(TEST ${TestName} APPEND PROPERTY ENVIRONMENT "TEST_TOKEN=${test_token}")
 endfunction()
 
 # Tests with no dependencies whatsoever
@@ -70,10 +79,10 @@ endfunction()
 function(add_feature_test_in_transaction TestName)
   add_laravel_test(${TestName})
   set_property(TEST ${TestName} APPEND PROPERTY DEPENDS install_clean_database)
+  set_property(TEST ${TestName} APPEND PROPERTY ENVIRONMENT "DB_DATABASE=testing_clean")
   set_tests_properties(
     ${TestName} PROPERTIES
     ATTACHED_FILES_ON_FAIL "${CDash_SOURCE_DIR}/storage/logs/cdash.log"
-    ENVIRONMENT "DB_DATABASE=testing_clean"
   )
 endfunction()
 
