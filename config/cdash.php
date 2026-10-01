@@ -34,7 +34,6 @@ return [
     'autoremove_builds' => env('AUTOREMOVE_BUILDS', true),
     'backup_timeframe' => env('BACKUP_TIMEFRAME', 48),
     'builds_per_project' => env('BUILDS_PER_PROJECT', 0),
-    'coverage_dir' => env('CDASH_COVERAGE_DIR', '/cdash/_build/xdebugCoverage'),
     'default_project' => env('DEFAULT_PROJECT', null),
     'delete_old_subprojects' => env('DELETE_OLD_SUBPROJECTS', true),
     'github_always_pass' => env('GITHUB_ALWAYS_PASS', false),

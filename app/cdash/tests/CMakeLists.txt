@@ -3,7 +3,7 @@ cdash_install(install_1 "")
 cdash_install(install_2 "")
 cdash_install(install_clean_database testing_clean)
 
-# function to add a new PHP based coverage test to CDash
+# function to add a new PHP based test to CDash
 function(add_php_test TestName)
   add_test(
     NAME ${TestName}
@@ -22,7 +22,6 @@ function(add_legacy_unit_test TestName)
     NAME ${TestName}
     COMMAND
       ${PHP_EXE}
-      ${phpunit_extra_arg}
       ${PHPUNIT}
       -c ${CDash_SOURCE_DIR}/phpunit.xml
       --bootstrap ${testing_dir}/bootstrap.php
@@ -39,7 +38,6 @@ function(add_laravel_test TestName)
     NAME ${TestName}
     COMMAND
       ${PHP_EXE}
-      ${phpunit_extra_arg}
       ${PHPUNIT}
       -c ${CDash_SOURCE_DIR}/phpunit.xml
       ${laravel_testing_dir}/${TestName}.php
@@ -100,12 +98,6 @@ function(add_browser_test TestName)
   set_property(TEST ${TestName} APPEND PROPERTY FIXTURES_REQUIRED APP_URL_WEBSITE)
   set_property(TEST ${TestName} APPEND PROPERTY PROCESSORS 2)
 endfunction()
-
-# phpunit tests
-set(phpunit_extra_arg "")
-if (CDASH_CONFIGURE_HTACCESS_FILE)
-    set(phpunit_extra_arg "-d auto_prepend_file=${CMAKE_BINARY_DIR}/prepend_coverage.php")
-endif()
 
 ###################################################################################################
 # Tests from this point to the next cdash_install() are expected to not need database or other
