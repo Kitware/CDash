@@ -341,6 +341,8 @@ add_feature_test_in_transaction(/Feature/Submission/XmlValidationTest)
 
 add_feature_test_in_transaction(/Feature/Submission/Test/TestXMLTest)
 
+add_feature_test_in_transaction(/Feature/Submission/Test/JUnitXMLTest)
+
 add_feature_test_in_transaction(/Feature/Submission/Build/BuildXMLTest)
 
 add_feature_test_in_transaction(/Feature/Submission/CoverageLog/CoverageLogXMLTest)
@@ -489,9 +491,6 @@ set_tests_properties(buildproperties PROPERTIES DEPENDS /CDash/XmlHandler/Update
 add_php_test(issuecreation)
 set_tests_properties(issuecreation PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
-add_php_test(junithandler)
-set_tests_properties(junithandler PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
-
 add_php_test(configurewarnings)
 set_tests_properties(configurewarnings PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
@@ -527,7 +526,6 @@ set_property(TEST install_2 APPEND PROPERTY DEPENDS
   dynamicanalysisdefectlongtype
   buildproperties
   issuecreation
-  junithandler
   configurewarnings
   lotsofsubprojects
 )
