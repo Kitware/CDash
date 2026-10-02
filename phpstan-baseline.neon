@@ -5065,6 +5065,24 @@ parameters:
 			path: app/Rules/ProjectVisibilityRule.php
 
 		-
+			rawMessage: Implicit array creation is not allowed - variable $params does not exist.
+			identifier: variable.implicitArray
+			count: 1
+			path: app/Services/AuthTokenService.php
+
+		-
+			rawMessage: 'Parameter #2 $timestamp of function gmdate expects int|null, float|int given.'
+			identifier: argument.type
+			count: 1
+			path: app/Services/AuthTokenService.php
+
+		-
+			rawMessage: 'Part $duration (mixed) of encapsed string cannot be cast to string.'
+			identifier: encapsedStringPart.nonString
+			count: 1
+			path: app/Services/AuthTokenService.php
+
+		-
 			rawMessage: Binary operation "." between mixed and 'UTC' results in an error.
 			identifier: binaryOp.invalid
 			count: 1
@@ -5087,42 +5105,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: app/Services/ProjectService.php
-
-		-
-			rawMessage: Cannot cast mixed to int.
-			identifier: cast.int
-			count: 1
-			path: app/Utils/AuthTokenUtil.php
-
-		-
-			rawMessage: Implicit array creation is not allowed - variable $params does not exist.
-			identifier: variable.implicitArray
-			count: 1
-			path: app/Utils/AuthTokenUtil.php
-
-		-
-			rawMessage: 'Method App\Utils\AuthTokenUtil::deleteToken() throws checked exception Illuminate\Auth\AuthenticationException but it''s missing from the PHPDoc @throws tag.'
-			identifier: missingType.checkedException
-			count: 1
-			path: app/Utils/AuthTokenUtil.php
-
-		-
-			rawMessage: 'Method App\Utils\AuthTokenUtil::getUserIdFromRequest() should return int|null but returns mixed.'
-			identifier: return.type
-			count: 1
-			path: app/Utils/AuthTokenUtil.php
-
-		-
-			rawMessage: 'Parameter #2 $timestamp of function gmdate expects int|null, float|int given.'
-			identifier: argument.type
-			count: 1
-			path: app/Utils/AuthTokenUtil.php
-
-		-
-			rawMessage: 'Part $duration (mixed) of encapsed string cannot be cast to string.'
-			identifier: encapsedStringPart.nonString
-			count: 1
-			path: app/Utils/AuthTokenUtil.php
 
 		-
 			rawMessage: 'Parameter #1 $buildid of static method App\Utils\DatabaseCleanupUtils::removeBuild() expects array<int>|int, array<mixed> given.'
@@ -15828,12 +15810,6 @@ parameters:
 		-
 			rawMessage: 'Only booleans are allowed in a ternary operator condition, Psr\Http\Message\ResponseInterface given.'
 			identifier: ternary.condNotBoolean
-			count: 1
-			path: app/cdash/tests/test_authtoken.php
-
-		-
-			rawMessage: 'Only booleans are allowed in an if condition, App\Models\AuthToken|null given.'
-			identifier: if.condNotBoolean
 			count: 1
 			path: app/cdash/tests/test_authtoken.php
 

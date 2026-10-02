@@ -9,7 +9,7 @@ require_once 'tests/test_branchcoverage.php';
 
 use App\Enums\AuthTokenScope;
 use App\Models\User;
-use App\Utils\AuthTokenUtil;
+use App\Services\AuthTokenService;
 use App\Utils\DatabaseCleanupUtils;
 use CDash\Model\Project;
 use Illuminate\Support\Facades\DB;
@@ -131,7 +131,7 @@ class DeferredSubmissionsTestCase extends BranchCoverageTestCase
         }
 
         $userid = User::where('email', 'user1@kw')->firstOrFail()->id;
-        $response = AuthTokenUtil::generateToken($userid, $this->project->Id, $scope, 'mytoken');
+        $response = AuthTokenService::generate($userid, $this->project->Id, $scope, 'mytoken');
         $this->token = $response['raw_token'];
     }
 

@@ -7,7 +7,7 @@ namespace App\GraphQL\Mutations;
 use App\Enums\AuthTokenScope;
 use App\Models\AuthToken;
 use App\Models\Project;
-use App\Utils\AuthTokenUtil;
+use App\Services\AuthTokenService;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Gate;
@@ -41,7 +41,7 @@ final class CreateAuthenticationToken extends AbstractMutation
         [
             'token' => $this->token,
             'raw_token' => $this->rawToken,
-        ] = AuthTokenUtil::generateToken(
+        ] = AuthTokenService::generate(
             $user->id,
             (int) ($args['projectId'] ?? -1),
             $args['scope'],
