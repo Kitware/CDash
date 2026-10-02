@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ff22a40f59875e90908715839de0e78c",
+    "content-hash": "6e0c7568dabacf7efd4816e66ceeea2a",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -3162,16 +3162,16 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "3.14.1",
+            "version": "3.14.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/CarbonPHP/carbon.git",
-                "reference": "34e9109535165bf1d7ff17a610492372ae73a896"
+                "reference": "94cfc34887f07ab5c0efa07914c8f527544e3224"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CarbonPHP/carbon/zipball/34e9109535165bf1d7ff17a610492372ae73a896",
-                "reference": "34e9109535165bf1d7ff17a610492372ae73a896",
+                "url": "https://api.github.com/repos/CarbonPHP/carbon/zipball/94cfc34887f07ab5c0efa07914c8f527544e3224",
+                "reference": "94cfc34887f07ab5c0efa07914c8f527544e3224",
                 "shasum": ""
             },
             "require": {
@@ -3191,7 +3191,7 @@
                 "doctrine/orm": "^2.15.2 || ^3.0",
                 "friendsofphp/php-cs-fixer": "^v3.87.1",
                 "kylekatarnls/multi-tester": "^2.5.3",
-                "phpmd/phpmd": "^2.15.0",
+                "phpmd/phpmd": "^3.0@dev",
                 "phpstan/extension-installer": "^1.4.3",
                 "phpstan/phpstan": "^2.1.22",
                 "phpunit/phpunit": "^10.5.53",
@@ -3263,7 +3263,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-09-27T12:07:26+00:00"
+            "time": "2026-10-02T07:26:52+00:00"
         },
         {
             "name": "nette/schema",
@@ -3512,16 +3512,16 @@
         },
         {
             "name": "nuwave/lighthouse",
-            "version": "v6.69.2",
+            "version": "v6.70.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nuwave/lighthouse.git",
-                "reference": "43e036e1123e92ab1d060df2627f1eb1ffe186c9"
+                "reference": "d4d0c8eeebbf0eb92f8a776e6556159a48f0a7e9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nuwave/lighthouse/zipball/43e036e1123e92ab1d060df2627f1eb1ffe186c9",
-                "reference": "43e036e1123e92ab1d060df2627f1eb1ffe186c9",
+                "url": "https://api.github.com/repos/nuwave/lighthouse/zipball/d4d0c8eeebbf0eb92f8a776e6556159a48f0a7e9",
+                "reference": "d4d0c8eeebbf0eb92f8a776e6556159a48f0a7e9",
                 "shasum": ""
             },
             "require": {
@@ -3639,7 +3639,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2026-07-29T12:57:29+00:00"
+            "time": "2026-09-02T12:48:27+00:00"
         },
         {
             "name": "onelogin/php-saml",
