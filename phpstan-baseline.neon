@@ -17272,81 +17272,6 @@ parameters:
 			path: app/cdash/tests/test_donehandler.php
 
 		-
-			rawMessage: '''
-				Call to deprecated method submission() of class KWWebTestCase:
-				12/09/2024  Use \Test\Traits\CreatesSubmissions instead
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/test_dynamicanalysisdefectlongtype.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method submission() of class KWWebTestCase:
-				12/09/2024  Use \Test\Traits\CreatesSubmissions instead
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/test_dynamicanalysislogs.php
-
-		-
-			rawMessage: 'Call to deprecated method pass() of class SimpleTestCase.'
-			identifier: method.deprecated
-			count: 3
-			path: app/cdash/tests/test_dynamicanalysissummary.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method submission() of class KWWebTestCase:
-				12/09/2024  Use \Test\Traits\CreatesSubmissions instead
-			'''
-			identifier: method.deprecated
-			count: 2
-			path: app/cdash/tests/test_dynamicanalysissummary.php
-
-		-
-			rawMessage: 'Loose comparison via "!=" between mixed and int is not allowed.'
-			identifier: notEqual.notAllowed
-			count: 1
-			path: app/cdash/tests/test_dynamicanalysissummary.php
-
-		-
-			rawMessage: 'Method DynamicAnalysisSummaryTestCase::testDynamicAnalysisSummary() has no return type specified.'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_dynamicanalysissummary.php
-
-		-
-			rawMessage: 'Method DynamicAnalysisSummaryTestCase::testSubProjectDynamicAnalysisSummary() has no return type specified.'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_dynamicanalysissummary.php
-
-		-
-			rawMessage: Property DynamicAnalysisSummaryTestCase::$ChildIds has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/test_dynamicanalysissummary.php
-
-		-
-			rawMessage: Property DynamicAnalysisSummaryTestCase::$DataDir has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/test_dynamicanalysissummary.php
-
-		-
-			rawMessage: Property DynamicAnalysisSummaryTestCase::$ParentId has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/test_dynamicanalysissummary.php
-
-		-
-			rawMessage: Property DynamicAnalysisSummaryTestCase::$StandaloneBuildId has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/test_dynamicanalysissummary.php
-
-		-
 			rawMessage: 'Call to deprecated method pass() of class SimpleTestCase.'
 			identifier: method.deprecated
 			count: 5
@@ -21419,18 +21344,6 @@ parameters:
 			identifier: missingType.property
 			count: 1
 			path: app/cdash/tests/test_uploadfile.php
-
-		-
-			rawMessage: 'Call to deprecated method pass() of class SimpleTestCase.'
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/test_viewdynamicanalysis.php
-
-		-
-			rawMessage: 'Method ViewDynamicAnalysisTestCase::testViewDynamicAnalysis() has no return type specified.'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_viewdynamicanalysis.php
 
 		-
 			rawMessage: 'Argument of an invalid type mixed supplied for foreach, only iterables are supported.'
