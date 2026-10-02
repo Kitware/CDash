@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="regular_submission"
+	BuildStamp="20240501-0100-Nightly"
+	Name="submission.site"
+	Generator="ctest-3.30.0"
+	>
+	<Configure>
+		<StartDateTime>May 01 01:00 UTC</StartDateTime>
+		<StartConfigureTime>1714525200</StartConfigureTime>
+		<ConfigureCommand>"/usr/bin/cmake" "-GNinja" "-S/tmp/src" "-B/tmp/build"</ConfigureCommand>
+		<Log>-- Configuring done
+-- Generating done
+-- Build files have been written to: /tmp/build
+</Log>
+		<ConfigureStatus>0</ConfigureStatus>
+		<EndDateTime>May 01 01:00 UTC</EndDateTime>
+		<EndConfigureTime>1714525210</EndConfigureTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Configure>
+</Site>
