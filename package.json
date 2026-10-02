@@ -52,7 +52,7 @@
     "sass-loader": "^17.0.1",
     "tailwindcss": "^3.4.17",
     "vue": "^3.5.43",
-    "vue-echarts": "^8.1.0",
+    "vue-echarts": "^8.3.0",
     "vue-loader": "^17.4.2",
     "vuedraggable": "^4.1.0",
     "webpack": "^5.105.4"
