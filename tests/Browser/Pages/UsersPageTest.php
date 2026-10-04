@@ -226,6 +226,7 @@ class UsersPageTest extends BrowserTestCase
                 ->assertValue('@role-select-' . $this->users['normal']->id, 'USER')
                 ->assertMissing('@role-text-' . $this->users['normal']->id)
                 ->select('@role-select-' . $this->users['normal']->id, 'ADMINISTRATOR')
+                ->waitUsing(null, 100, fn (): bool => $this->users['normal']->refresh()->admin)
                 ->refresh()
                 ->waitFor('@role-select-' . $this->users['normal']->id)
                 ->assertValue('@role-select-' . $this->users['normal']->id, 'ADMINISTRATOR')
@@ -270,7 +271,8 @@ class UsersPageTest extends BrowserTestCase
             $browser->loginAs($this->users['admin1'])
                 ->visit('/users')
                 ->whenAvailable('@users-table', function (Browser $browser): void {
-                    $browser->assertVisible('@remove-user-button-' . $this->users['admin2']->id);
+                    $browser->waitFor('@remove-user-button-' . $this->users['admin2']->id)
+                        ->assertVisible('@remove-user-button-' . $this->users['admin2']->id);
                 });
         });
     }
