@@ -502,13 +502,17 @@ class BuildBuildPageTest extends BrowserTestCase
         $buildError2 = $child_build_2->buildErrors()->save(BuildError::factory()->make());
 
         $this->browse(function (Browser $browser) use ($buildError1, $buildError2, $parent_build): void {
+            // The build summary card and build info box load separately and push the subprojects down when they
+            // render, so wait for them before clicking to avoid clicking where the subproject used to be.
             $browser->visit("/builds/{$parent_build->id}/build")
                 ->waitForText($this->subproject1->name)
                 ->waitForText($this->subproject2->name)
+                ->waitForText($parent_build->name)
+                ->waitFor('@build-info')
                 ->assertDontSee($buildError1->stdoutput)
                 ->assertDontSee($buildError2->stdoutput)
                 ->click('@collapse-' . $this->subproject1->id . ' summary')
-                ->assertSee($buildError1->stdoutput)
+                ->waitForText($buildError1->stdoutput)
                 ->assertDontSee($buildError2->stdoutput)
             ;
         });
@@ -799,10 +803,14 @@ class BuildBuildPageTest extends BrowserTestCase
             $buildError2,
             $buildError3,
             $buildError4,
+            $buildName,
             $current_parent_build,
         ): void {
+            // Wait for the build summary card and build info box before clicking, as in testShowsListOfSubProjects().
             $browser->visit("/builds/{$current_parent_build->id}/build")
                 ->waitForText($this->subproject1->name)
+                ->waitForText($buildName)
+                ->waitFor('@build-info')
                 ->click('@collapse-' . $this->subproject1->id . ' summary')
                 ->with('@collapse-' . $this->subproject1->id, function (Browser $browser) use (
                     $buildError1,
@@ -835,6 +843,8 @@ class BuildBuildPageTest extends BrowserTestCase
 
             $browser->visit("/builds/{$current_parent_build->id}/build?onlydeltap")
                 ->waitForText($this->subproject1->name)
+                ->waitForText($buildName)
+                ->waitFor('@build-info')
                 ->click('@collapse-' . $this->subproject1->id . ' summary')
                 ->with('@collapse-' . $this->subproject1->id, function (Browser $browser) use (
                     $buildError1,
@@ -867,6 +877,8 @@ class BuildBuildPageTest extends BrowserTestCase
 
             $browser->visit("/builds/{$current_parent_build->id}/build?onlydeltan")
                 ->waitForText($this->subproject1->name)
+                ->waitForText($buildName)
+                ->waitFor('@build-info')
                 ->click('@collapse-' . $this->subproject1->id . ' summary')
                 ->with('@collapse-' . $this->subproject1->id, function (Browser $browser) use (
                     $buildError1,
