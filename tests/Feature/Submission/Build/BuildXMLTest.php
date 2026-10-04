@@ -61,6 +61,59 @@ class BuildXMLTest extends TestCase
     }
 
     /**
+     * Test parsing a valid Build.xml file that contains terminal color escape
+     * sequences in the context of a build error.  CTest replaces the escape
+     * character with a [NON-XML-CHAR-0x1B] placeholder, which is stored as-is
+     * and decoded by the frontend.
+     */
+    public function testColorOutput(): void
+    {
+        $this->makeSubmission($this->project->name, base_path(
+            'tests/Feature/Submission/Build/data/color_output.xml'
+        ));
+
+        $this->graphQL('
+            query build($id: ID) {
+              build(id: $id) {
+                buildErrors(filters: {
+                  eq: {
+                    logLine: 5
+                  }
+                }) {
+                  edges {
+                    node {
+                      stdOutput
+                      stdError
+                    }
+                  }
+                }
+              }
+            }
+        ', [
+            'id' => $this->project->builds()->firstOrFail()->id,
+        ])->assertExactJson([
+            'data' => [
+                'build' => [
+                    'buildErrors' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'stdOutput' => "Scanning dependencies of target colortest\n"
+                                        . "[NON-XML-CHAR-0x1B][32mHello world!\n"
+                                        . "[NON-XML-CHAR-0x1B][91mVisit our website: <a href=\"https://www.kitware.com/\">Kitware</a>\n"
+                                        . "[NON-XML-CHAR-0x1B][0mGood bye!\n"
+                                        . "CMakeFiles/colortest.dir/build.make:57: recipe for target 'CMakeFiles/colortest' failed\n",
+                                    'stdError' => "CMakeFiles/colortest.dir/build.make:57: recipe for target 'CMakeFiles/colortest' failed",
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+    }
+
+    /**
      * A basic submission which tests all of the core parts of the instrumentation functionality
      */
     public function testValidSubmissionWithInstrumentation(): void
