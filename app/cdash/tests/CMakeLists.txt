@@ -333,6 +333,8 @@ add_feature_test_in_transaction(/Feature/Middleware/AuthenticateTokenTest)
 
 add_feature_test_in_transaction(/Feature/AutoRemoveBuildsCommand)
 
+add_feature_test_in_transaction(/Feature/Submission/XmlSubmissionTest)
+
 add_feature_test_in_transaction(/Feature/Submission/XmlValidationTest)
 
 add_feature_test_in_transaction(/Feature/Submission/Test/TestXMLTest)
