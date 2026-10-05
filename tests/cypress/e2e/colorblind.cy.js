@@ -1,6 +1,6 @@
 describe('colorblind', () => {
   it('toggles between the two color modes', () => {
-    cy.visit('index.php?project=InsightExample');
+    cy.visit('index.php?project=InsightExample&date=2009-02-23');
 
     // classic colors by default
     cy.get('[data-cy="settings-dropdown"]').click();

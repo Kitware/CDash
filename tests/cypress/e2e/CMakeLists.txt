@@ -63,13 +63,13 @@ add_cypress_e2e_test(filter-labels)
 set_tests_properties(cypress/e2e/filter-labels PROPERTIES DEPENDS actualtrilinossubmission)
 
 add_cypress_e2e_test(colorblind)
-set_tests_properties(cypress/e2e/colorblind PROPERTIES DEPENDS projectwebpage)
+set_tests_properties(cypress/e2e/colorblind PROPERTIES DEPENDS testgraphpermissions)
 
 add_cypress_e2e_test(calendar)
-set_tests_properties(cypress/e2e/calendar PROPERTIES DEPENDS projectwebpage)
+set_tests_properties(cypress/e2e/calendar PROPERTIES DEPENDS testgraphpermissions)
 
 add_cypress_e2e_test(daterange)
-set_tests_properties(cypress/e2e/daterange PROPERTIES DEPENDS projectwebpage)
+set_tests_properties(cypress/e2e/daterange PROPERTIES DEPENDS testgraphpermissions)
 
 # These tests don't have all of the dependencies worked out
 add_cypress_e2e_test(manage-overview)
