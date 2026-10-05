@@ -70,16 +70,26 @@ class PutDynamicBuildsTestCase extends KWWebTestCase
         ];
         $this->verifyListGetsCreated($client, $starttime_stmt, $build_rules);
 
-        // Make sure bar and baz got soft-deleted.
+        // Make sure bar and baz got soft-deleted, and that foo is still a single active rule.
+        $endtime_stmt = $this->PDO->prepare('
+            SELECT endtime FROM build2grouprule
+            WHERE buildname     = :buildname AND
+                  parentgroupid = :parentgroupid AND
+                  siteid        = 0');
         foreach (['bar', 'baz'] as $match) {
             $query_params = [
                 ':buildname' => $match,
                 ':parentgroupid' => $this->ParentGroupId,
             ];
-            $this->PDO->execute($starttime_stmt, $query_params);
-            $endtime = $starttime_stmt->fetchColumn();
-            $this->assertTrue(strtotime($endtime) > strtotime('-1 week'));
+            $this->PDO->execute($endtime_stmt, $query_params);
+            $endtime = $endtime_stmt->fetchColumn();
+            $this->assertTrue($endtime !== null && strtotime($endtime) > strtotime('-1 week'));
         }
+        $this->PDO->execute($endtime_stmt, [
+            ':buildname' => 'foo',
+            ':parentgroupid' => $this->ParentGroupId,
+        ]);
+        $this->assertEqual($endtime_stmt->fetchAll(PDO::FETCH_COLUMN), [null]);
 
         // Verify that we can associate a dynamic build group with a rule that
         // hasn't submitted any builds to this project yet.

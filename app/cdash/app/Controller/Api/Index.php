@@ -198,13 +198,12 @@ class Index extends ResultsApi
                         AND bg.type != 'Daily'
                         AND b2gr.starttime < ?
                         AND (
-                            b2gr.endtime = ?
+                            b2gr.endtime IS NULL
                             OR b2gr.endtime > ?
                         )
                 ", [
             (int) $this->project->Id,
             $this->endDate,
-            self::BEGIN_EPOCH,
             $this->endDate,
         ]);
 
@@ -1289,7 +1288,7 @@ class Index extends ResultsApi
                                     AND g.starttime<?
                                     AND (
                                         g.endtime>?
-                                        OR g.endtime='1980-01-01 00:00:00'
+                                        OR g.endtime IS NULL
                                     )
                             ", array_merge($all_groupids, [$currentUTCTime, $currentUTCTime]));
 
