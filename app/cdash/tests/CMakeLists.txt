@@ -680,11 +680,8 @@ set_tests_properties(managemeasurements PROPERTIES DEPENDS limitedbuilds)
 add_php_test(coveragedirectories)
 set_tests_properties(coveragedirectories PROPERTIES DEPENDS managemeasurements)
 
-add_php_test(outputcolor)
-set_tests_properties(outputcolor PROPERTIES DEPENDS coveragedirectories)
-
 add_php_test(timestatus)
-set_tests_properties(timestatus PROPERTIES DEPENDS outputcolor)
+set_tests_properties(timestatus PROPERTIES DEPENDS coveragedirectories)
 
 add_php_test(buildrelationship)
 set_tests_properties(buildrelationship PROPERTIES DEPENDS timestatus)

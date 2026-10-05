@@ -154,4 +154,118 @@ class TestXMLTest extends TestCase
             ],
         ]);
     }
+
+    /**
+     * Test parsing a valid Test.xml file that contains terminal color escape
+     * sequences in the test output.  CTest replaces the escape character with
+     * a [NON-XML-CHAR-0x1B] placeholder in plain text output, which is stored
+     * as-is and decoded by the frontend.  Compressed output is not escaped by
+     * CTest, so it contains the actual escape characters once decompressed.
+     */
+    public function testColorOutput(): void
+    {
+        $this->makeSubmission($this->project->name, base_path(
+            'tests/Feature/Submission/Test/data/color_output.xml'
+        ));
+
+        $this->graphQL('
+            query build($id: ID) {
+              build(id: $id) {
+                tests {
+                  edges {
+                    node {
+                      name
+                      output
+                    }
+                  }
+                }
+              }
+            }
+        ', [
+            'id' => $this->project->builds()->firstOrFail()->id,
+        ])->assertExactJson([
+            'data' => [
+                'build' => [
+                    'tests' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'name' => 'colortest_short',
+                                    'output' => "\n"
+                                        . "not bold [NON-XML-CHAR-0x1B][1mbold[NON-XML-CHAR-0x1B][0m not bold\n"
+                                        . "[NON-XML-CHAR-0x1B][32mHello world!\n"
+                                        . "[NON-XML-CHAR-0x1B][31mThis is a test\n",
+                                ],
+                            ],
+                            [
+                                'node' => [
+                                    'name' => 'colortest_long',
+                                    'output' => "\x1B[32mHello world!\n"
+                                        . "\x1B[91m<script type=\"text/javascript\">console.log(\"MALICIOUS JAVASCRIPT!!!\");</script>\n"
+                                        . "\x1B[0mGood bye world!\n",
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+    }
+
+    /**
+     * Test parsing a valid Test.xml file that contains terminal color escape
+     * sequences in a preformatted test measurement.
+     */
+    public function testColorOutputInPreformattedMeasurement(): void
+    {
+        $this->makeSubmission($this->project->name, base_path(
+            'tests/Feature/Submission/Test/data/color_output_preformatted_measurement.xml'
+        ));
+
+        $this->graphQL('
+            query build($id: ID) {
+              build(id: $id) {
+                tests {
+                  edges {
+                    node {
+                      name
+                      testMeasurements(filters: {
+                        eq: {
+                          type: "text/preformatted"
+                        }
+                      }) {
+                        name
+                        value
+                      }
+                    }
+                  }
+                }
+              }
+            }
+        ', [
+            'id' => $this->project->builds()->firstOrFail()->id,
+        ])->assertExactJson([
+            'data' => [
+                'build' => [
+                    'tests' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'name' => 'preformatted_color',
+                                    'testMeasurements' => [
+                                        [
+                                            'name' => 'Color Output',
+                                            'value' => "not bold[NON-XML-CHAR-0x1B][1m bold[NON-XML-CHAR-0x1B][0;0m not bold\n"
+                                                . "[NON-XML-CHAR-0x1B][32mHello world![NON-XML-CHAR-0x1B][0m\n"
+                                                . '[NON-XML-CHAR-0x1B][31mThis is test output[NON-XML-CHAR-0x1B][0m',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+    }
 }
