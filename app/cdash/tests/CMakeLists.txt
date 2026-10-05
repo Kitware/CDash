@@ -614,11 +614,8 @@ set_tests_properties(testhistory PROPERTIES DEPENDS subprojectnextprevious)
 add_php_test(expectedandmissing)
 set_tests_properties(expectedandmissing PROPERTIES DEPENDS testhistory)
 
-add_php_test(externallinksfromtests)
-set_tests_properties(externallinksfromtests PROPERTIES DEPENDS expectedandmissing)
-
 add_php_test(timesummary)
-set_tests_properties(timesummary PROPERTIES DEPENDS externallinksfromtests)
+set_tests_properties(timesummary PROPERTIES DEPENDS expectedandmissing)
 
 add_php_test(buildgetdate)
 set_tests_properties(buildgetdate PROPERTIES DEPENDS timesummary)
@@ -707,17 +704,8 @@ set_tests_properties(putdynamicbuilds PROPERTIES DEPENDS indexnextprevious)
 add_php_test(commitauthornotification)
 set_tests_properties(commitauthornotification PROPERTIES DEPENDS putdynamicbuilds)
 
-add_php_test(testimages)
-set_tests_properties(testimages PROPERTIES DEPENDS commitauthornotification)
-
-add_php_test(namedmeasurements)
-set_tests_properties(namedmeasurements PROPERTIES DEPENDS testimages)
-
-add_php_test(multiplelabelsfortests)
-set_tests_properties(multiplelabelsfortests PROPERTIES DEPENDS namedmeasurements)
-
 add_php_test(starttimefromnotes)
-set_tests_properties(starttimefromnotes PROPERTIES DEPENDS multiplelabelsfortests)
+set_tests_properties(starttimefromnotes PROPERTIES DEPENDS commitauthornotification)
 
 add_php_test(starttimefromupload)
 set_tests_properties(starttimefromupload PROPERTIES DEPENDS starttimefromnotes)
@@ -728,11 +716,8 @@ set_tests_properties(querytestsfilterlabels PROPERTIES DEPENDS starttimefromuplo
 add_php_test(querytestsrevisionfilter)
 set_tests_properties(querytestsrevisionfilter PROPERTIES DEPENDS querytestsfilterlabels)
 
-add_php_test(redundanttests)
-set_tests_properties(redundanttests PROPERTIES DEPENDS querytestsrevisionfilter)
-
 add_php_test(notesparsererrormessages)
-set_tests_properties(notesparsererrormessages PROPERTIES DEPENDS redundanttests)
+set_tests_properties(notesparsererrormessages PROPERTIES DEPENDS querytestsrevisionfilter)
 
 add_laravel_test(/Feature/SubProjectDependencies)
 set_tests_properties(/Feature/SubProjectDependencies PROPERTIES DEPENDS notesparsererrormessages)

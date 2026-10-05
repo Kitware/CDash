@@ -17710,27 +17710,6 @@ parameters:
 			path: app/cdash/tests/test_expiredbuildrules.php
 
 		-
-			rawMessage: 'Call to deprecated method pass() of class SimpleTestCase.'
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/test_externallinksfromtests.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method submission() of class KWWebTestCase:
-				12/09/2024  Use \Test\Traits\CreatesSubmissions instead
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/test_externallinksfromtests.php
-
-		-
-			rawMessage: 'Method ExternalLinksFromTestsTestCase::testExternalLinksFromTests() has no return type specified.'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_externallinksfromtests.php
-
-		-
 			rawMessage: 'Argument of an invalid type mixed supplied for foreach, only iterables are supported.'
 			identifier: foreach.nonIterable
 			count: 1
@@ -18724,21 +18703,6 @@ parameters:
 			path: app/cdash/tests/test_multicoverage.php
 
 		-
-			rawMessage: '''
-				Call to deprecated method submission() of class KWWebTestCase:
-				12/09/2024  Use \Test\Traits\CreatesSubmissions instead
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/test_multiplelabelsfortests.php
-
-		-
-			rawMessage: 'Cannot call method labels() on App\Models\Test|null.'
-			identifier: method.nonObject
-			count: 1
-			path: app/cdash/tests/test_multiplelabelsfortests.php
-
-		-
 			rawMessage: 'Argument of an invalid type mixed supplied for foreach, only iterables are supported.'
 			identifier: foreach.nonIterable
 			count: 3
@@ -19393,15 +19357,6 @@ parameters:
 			path: app/cdash/tests/test_multiplesubprojects.php
 
 		-
-			rawMessage: '''
-				Call to deprecated method submission() of class KWWebTestCase:
-				12/09/2024  Use \Test\Traits\CreatesSubmissions instead
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/test_namedmeasurements.php
-
-		-
 			rawMessage: Access to an undefined property NoBackupTestCase::$Original.
 			identifier: property.notFound
 			count: 2
@@ -19949,15 +19904,6 @@ parameters:
 			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/test_recoverpassword.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method submission() of class KWWebTestCase:
-				12/09/2024  Use \Test\Traits\CreatesSubmissions instead
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/test_redundanttests.php
 
 		-
 			rawMessage: 'Parameter #1 $string of function base64_encode expects string, string|false given.'
@@ -20663,27 +20609,6 @@ parameters:
 			identifier: missingType.property
 			count: 1
 			path: app/cdash/tests/test_testhistory.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method submission() of class KWWebTestCase:
-				12/09/2024  Use \Test\Traits\CreatesSubmissions instead
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/test_testimages.php
-
-		-
-			rawMessage: 'Loose comparison via "!=" between int|null and int|null is not allowed.'
-			identifier: notEqual.notAllowed
-			count: 1
-			path: app/cdash/tests/test_testimages.php
-
-		-
-			rawMessage: 'Loose comparison via "!=" between mixed and mixed is not allowed.'
-			identifier: notEqual.notAllowed
-			count: 1
-			path: app/cdash/tests/test_testimages.php
 
 		-
 			rawMessage: '''
