@@ -14,8 +14,36 @@ function(add_cypress_e2e_test TestName)
     RESOURCE_LOCK "cypress" # Cypress can only run one at a time due to xvfb issues
     PROCESSORS 2
     ATTACHED_FILES_ON_FAIL "${CDash_SOURCE_DIR}/storage/logs/cdash.log"
+    FIXTURES_REQUIRED cypress_setup
   )
 endfunction()
+
+add_test(
+  NAME cypress_setup_admin
+  COMMAND ${PHP_EXE} ${CDash_SOURCE_DIR}/artisan user:save
+    --email=admin@example.com
+    --firstname=admin
+    --lastname=admin
+    --password=12345
+    --institution=testing
+    --admin=1
+)
+
+add_test(
+  NAME cypress_setup_user
+  COMMAND ${PHP_EXE} ${CDash_SOURCE_DIR}/artisan user:save
+    --email=user@example.com
+    --firstname=user
+    --lastname=user
+    --password=12345
+    --institution=testing
+)
+
+set_tests_properties(cypress_setup_admin cypress_setup_user PROPERTIES
+  DEPENDS install_2
+  DISABLED "$<STREQUAL:${CDASH_IMAGE},ubi>"
+  FIXTURES_SETUP cypress_setup
+)
 
 # These tests have the correct dependencies set up
 add_cypress_e2e_test(query-tests)
