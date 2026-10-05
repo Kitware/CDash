@@ -1,0 +1,264 @@
+==529== Memcheck, a memory error detector
+==529== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==529== Using Valgrind-3.13.0 and LibVEX; rerun with -h for copyright info
+==529== Command: /projects/tmp_for_cdash/leak_lots_bin/main
+==529== Parent PID: 455
+==529== 
+==529== 
+==529== HEAP SUMMARY:
+==529==     in use at exit: 3,600 bytes in 60 blocks
+==529==   total heap usage: 64 allocs, 4 frees, 81,034 bytes allocated
+==529== 
+<b>MLK</b> ==529== 40 bytes in 1 blocks are definitely lost in loss record 1 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x1097F5: main (main.cc:41)
+==529== 
+<b>MLK</b> ==529== 40 bytes in 1 blocks are definitely lost in loss record 2 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x10981B: main (main.cc:42)
+==529== 
+<b>MLK</b> ==529== 40 bytes in 1 blocks are definitely lost in loss record 3 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x109841: main (main.cc:43)
+==529== 
+<b>MLK</b> ==529== 40 bytes in 1 blocks are definitely lost in loss record 4 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x109867: main (main.cc:44)
+==529== 
+<b>MLK</b> ==529== 40 bytes in 1 blocks are definitely lost in loss record 5 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x10988D: main (main.cc:45)
+==529== 
+<b>MLK</b> ==529== 40 bytes in 1 blocks are definitely lost in loss record 6 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x1098B3: main (main.cc:46)
+==529== 
+<b>MLK</b> ==529== 40 bytes in 1 blocks are definitely lost in loss record 7 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x1098D9: main (main.cc:47)
+==529== 
+<b>MLK</b> ==529== 40 bytes in 1 blocks are definitely lost in loss record 8 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x1098FF: main (main.cc:48)
+==529== 
+<b>MLK</b> ==529== 40 bytes in 1 blocks are definitely lost in loss record 9 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x109925: main (main.cc:49)
+==529== 
+<b>MLK</b> ==529== 40 bytes in 1 blocks are definitely lost in loss record 10 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x10994B: main (main.cc:50)
+==529== 
+<b>MLK</b> ==529== 40 bytes in 1 blocks are definitely lost in loss record 11 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x109971: main (main.cc:51)
+==529== 
+<b>MLK</b> ==529== 40 bytes in 1 blocks are definitely lost in loss record 12 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x109997: main (main.cc:52)
+==529== 
+<b>MLK</b> ==529== 40 bytes in 1 blocks are definitely lost in loss record 13 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x1099BD: main (main.cc:53)
+==529== 
+<b>MLK</b> ==529== 40 bytes in 1 blocks are definitely lost in loss record 14 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x1099E3: main (main.cc:54)
+==529== 
+<b>MLK</b> ==529== 40 bytes in 1 blocks are definitely lost in loss record 15 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x109A09: main (main.cc:55)
+==529== 
+<b>MLK</b> ==529== 40 bytes in 1 blocks are definitely lost in loss record 16 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x109A2C: main (main.cc:56)
+==529== 
+<b>MLK</b> ==529== 40 bytes in 1 blocks are definitely lost in loss record 17 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x109A4F: main (main.cc:57)
+==529== 
+<b>MLK</b> ==529== 40 bytes in 1 blocks are definitely lost in loss record 18 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x109A72: main (main.cc:58)
+==529== 
+<b>MLK</b> ==529== 40 bytes in 1 blocks are definitely lost in loss record 19 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x109A95: main (main.cc:59)
+==529== 
+<b>MLK</b> ==529== 40 bytes in 1 blocks are definitely lost in loss record 20 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x109AB8: main (main.cc:60)
+==529== 
+<b>MLK</b> ==529== 40 bytes in 1 blocks are definitely lost in loss record 21 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x109ADB: main (main.cc:61)
+==529== 
+<b>MLK</b> ==529== 40 bytes in 1 blocks are definitely lost in loss record 22 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x109AFE: main (main.cc:62)
+==529== 
+<b>MLK</b> ==529== 40 bytes in 1 blocks are definitely lost in loss record 23 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x109B21: main (main.cc:63)
+==529== 
+<b>MLK</b> ==529== 40 bytes in 1 blocks are definitely lost in loss record 24 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x109B44: main (main.cc:64)
+==529== 
+<b>MLK</b> ==529== 40 bytes in 1 blocks are definitely lost in loss record 25 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x109B67: main (main.cc:65)
+==529== 
+<b>MLK</b> ==529== 40 bytes in 1 blocks are definitely lost in loss record 26 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x109B8A: main (main.cc:66)
+==529== 
+<b>MLK</b> ==529== 40 bytes in 1 blocks are definitely lost in loss record 27 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x109BAD: main (main.cc:67)
+==529== 
+<b>MLK</b> ==529== 40 bytes in 1 blocks are definitely lost in loss record 28 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x109BD0: main (main.cc:68)
+==529== 
+<b>MLK</b> ==529== 40 bytes in 1 blocks are definitely lost in loss record 29 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x109BF3: main (main.cc:69)
+==529== 
+<b>MLK</b> ==529== 40 bytes in 1 blocks are definitely lost in loss record 30 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x109C16: main (main.cc:70)
+==529== 
+<b>MLK</b> ==529== 80 bytes in 1 blocks are definitely lost in loss record 31 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x109335: main (main.cc:9)
+==529== 
+<b>MLK</b> ==529== 80 bytes in 1 blocks are definitely lost in loss record 32 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x10935B: main (main.cc:10)
+==529== 
+<b>MLK</b> ==529== 80 bytes in 1 blocks are definitely lost in loss record 33 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x109381: main (main.cc:11)
+==529== 
+<b>MLK</b> ==529== 80 bytes in 1 blocks are definitely lost in loss record 34 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x1093A7: main (main.cc:12)
+==529== 
+<b>MLK</b> ==529== 80 bytes in 1 blocks are definitely lost in loss record 35 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x1093CD: main (main.cc:13)
+==529== 
+<b>MLK</b> ==529== 80 bytes in 1 blocks are definitely lost in loss record 36 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x1093F3: main (main.cc:14)
+==529== 
+<b>MLK</b> ==529== 80 bytes in 1 blocks are definitely lost in loss record 37 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x109419: main (main.cc:15)
+==529== 
+<b>MLK</b> ==529== 80 bytes in 1 blocks are definitely lost in loss record 38 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x10943F: main (main.cc:16)
+==529== 
+<b>MLK</b> ==529== 80 bytes in 1 blocks are definitely lost in loss record 39 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x109465: main (main.cc:17)
+==529== 
+<b>MLK</b> ==529== 80 bytes in 1 blocks are definitely lost in loss record 40 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x10948B: main (main.cc:18)
+==529== 
+<b>MLK</b> ==529== 80 bytes in 1 blocks are definitely lost in loss record 41 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x1094B1: main (main.cc:19)
+==529== 
+<b>MLK</b> ==529== 80 bytes in 1 blocks are definitely lost in loss record 42 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x1094D7: main (main.cc:20)
+==529== 
+<b>MLK</b> ==529== 80 bytes in 1 blocks are definitely lost in loss record 43 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x1094FD: main (main.cc:21)
+==529== 
+<b>MLK</b> ==529== 80 bytes in 1 blocks are definitely lost in loss record 44 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x109523: main (main.cc:22)
+==529== 
+<b>MLK</b> ==529== 80 bytes in 1 blocks are definitely lost in loss record 45 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x109549: main (main.cc:23)
+==529== 
+<b>MLK</b> ==529== 80 bytes in 1 blocks are definitely lost in loss record 46 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x10956F: main (main.cc:24)
+==529== 
+<b>MLK</b> ==529== 80 bytes in 1 blocks are definitely lost in loss record 47 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x109595: main (main.cc:25)
+==529== 
+<b>MLK</b> ==529== 80 bytes in 1 blocks are definitely lost in loss record 48 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x1095BB: main (main.cc:26)
+==529== 
+<b>MLK</b> ==529== 80 bytes in 1 blocks are definitely lost in loss record 49 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x1095E1: main (main.cc:27)
+==529== 
+<b>MLK</b> ==529== 80 bytes in 1 blocks are definitely lost in loss record 50 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x109607: main (main.cc:28)
+==529== 
+<b>MLK</b> ==529== 80 bytes in 1 blocks are definitely lost in loss record 51 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x10962D: main (main.cc:29)
+==529== 
+<b>MLK</b> ==529== 80 bytes in 1 blocks are definitely lost in loss record 52 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x109653: main (main.cc:30)
+==529== 
+<b>MLK</b> ==529== 80 bytes in 1 blocks are definitely lost in loss record 53 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x109679: main (main.cc:31)
+==529== 
+<b>MLK</b> ==529== 80 bytes in 1 blocks are definitely lost in loss record 54 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x10969F: main (main.cc:32)
+==529== 
+<b>MLK</b> ==529== 80 bytes in 1 blocks are definitely lost in loss record 55 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x1096C5: main (main.cc:33)
+==529== 
+<b>MLK</b> ==529== 80 bytes in 1 blocks are definitely lost in loss record 56 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x1096EB: main (main.cc:34)
+==529== 
+<b>MLK</b> ==529== 80 bytes in 1 blocks are definitely lost in loss record 57 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x109711: main (main.cc:35)
+==529== 
+<b>MLK</b> ==529== 80 bytes in 1 blocks are definitely lost in loss record 58 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x109737: main (main.cc:36)
+==529== 
+<b>MLK</b> ==529== 80 bytes in 1 blocks are definitely lost in loss record 59 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x10975D: main (main.cc:37)
+==529== 
+<b>MLK</b> ==529== 80 bytes in 1 blocks are definitely lost in loss record 60 of 60
+==529==    at 0x4C3089F: operator new[](unsigned long) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==529==    by 0x109783: main (main.cc:38)
+==529== 
+==529== LEAK SUMMARY:
+==529==    definitely lost: 3,600 bytes in 60 blocks
+==529==    indirectly lost: 0 bytes in 0 blocks
+==529==      possibly lost: 0 bytes in 0 blocks
+==529==    still reachable: 0 bytes in 0 blocks
+==529==         suppressed: 0 bytes in 0 blocks
+==529== 
+==529== For counts of detected and suppressed errors, rerun with: -v
+==529== ERROR SUMMARY: 60 errors from 60 contexts (suppressed: 0 from 0)
+Hello world
+30 double array[10]
+30 int array[10]
+Goodbye world
