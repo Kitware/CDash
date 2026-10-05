@@ -70,7 +70,7 @@ class PerformLegacyDailyUpdates implements ShouldQueue
                                    AND g.starttime<?
                                    AND (
                                        g.endtime>?
-                                       OR g.endtime='1980-01-01 00:00:00'
+                                       OR g.endtime IS NULL
                                    )
                            ) as t1,
                            buildgroup as bg,

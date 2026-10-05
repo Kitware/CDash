@@ -323,6 +323,10 @@ add_feature_test_in_transaction(/Feature/Jobs/PruneEmailsTest)
 
 add_feature_test_in_transaction(/Feature/Jobs/ComputeCoverageDifferenceTest)
 
+add_feature_test_in_transaction(/Feature/Jobs/PerformLegacyDailyUpdatesTest)
+
+add_feature_test_in_transaction(/Feature/BuildGroupRuleTest)
+
 add_feature_test_in_transaction(/Feature/Services/AuthTokenServiceTest)
 
 add_feature_test_in_transaction(/Feature/Services/ProjectServiceTest)

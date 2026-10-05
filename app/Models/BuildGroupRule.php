@@ -16,7 +16,7 @@ use Illuminate\Support\Carbon;
  * @property int $siteid
  * @property int $expected // bool?
  * @property Carbon $starttime
- * @property Carbon $endtime
+ * @property ?Carbon $endtime
  *
  * @mixin Builder<BuildGroupRule>
  */
@@ -53,6 +53,6 @@ class BuildGroupRule extends Model
     #[Scope]
     protected function active(Builder $query): void
     {
-        $query->where('endtime', '1980-01-01 00:00:00');
+        $query->whereNull('endtime');
     }
 }

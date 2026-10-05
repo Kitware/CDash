@@ -27,7 +27,7 @@ class BuildGroupRule
 {
     public $BuildName = '';
     public $BuildType = '';
-    public $EndTime = '1980-01-01 00:00:00';
+    public $EndTime;
     public $Expected = 0;
     public $GroupId = 0;
     public $ParentGroupId = 0;
@@ -105,8 +105,7 @@ class BuildGroupRule
             'buildtype' => (string) $this->BuildType,
             'buildname' => $this->BuildName,
             'siteid' => $this->SiteId,
-            'endtime' => '1980-01-01 00:00:00',
-        ])->update([
+        ])->whereNull('endtime')->update([
             'expected' => $this->Expected,
         ]);
 
@@ -115,14 +114,13 @@ class BuildGroupRule
 
     public function GetExpected(): int
     {
-        return EloquentBuildGroupRule::firstWhere([
+        return EloquentBuildGroupRule::where([
             'groupid' => $this->GroupId,
             // Are we missing parentgroupid?
             'buildtype' => (string) $this->BuildType,
             'buildname' => $this->BuildName,
             'siteid' => $this->SiteId,
-            'endtime' => '1980-01-01 00:00:00',
-        ])->expected ?? 0;
+        ])->whereNull('endtime')->first()->expected ?? 0;
     }
 
     /** Delete a rule */
@@ -144,8 +142,7 @@ class BuildGroupRule
             'buildtype' => (string) $this->BuildType,
             'buildname' => $this->BuildName,
             'siteid' => $this->SiteId,
-            'endtime' => '1980-01-01 00:00:00',
-        ])->update([
+        ])->whereNull('endtime')->update([
             'endtime' => Carbon::now(),
         ]);
     }
@@ -176,8 +173,7 @@ class BuildGroupRule
                 'buildtype' => $this->BuildType,
                 'buildname' => $this->BuildName,
                 'siteid' => $this->SiteId,
-                'endtime' => '1980-01-01 00:00:00',
-            ])->update([
+            ])->whereNull('endtime')->update([
                 'endtime' => $now,
             ]);
     }
@@ -190,8 +186,7 @@ class BuildGroupRule
             'buildtype' => $this->BuildType,
             'buildname' => $this->BuildName,
             'siteid' => $this->SiteId,
-            'endtime' => '1980-01-01 00:00:00',
-        ])->update([
+        ])->whereNull('endtime')->update([
             'groupid' => $newgroupid,
         ]);
 
@@ -221,7 +216,6 @@ class BuildGroupRule
             ->pluck('id')
             ->toArray();
         EloquentBuildGroupRule::whereIn('groupid', $groupids)
-            ->where('endtime', '!=', '1980-01-01 00:00:00')
             ->where('endtime', '<', $cutoff_date)
             ->delete();
     }

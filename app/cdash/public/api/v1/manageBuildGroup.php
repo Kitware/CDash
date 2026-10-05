@@ -224,7 +224,7 @@ $wildcards = $db->executePrepared("
                      AND b2gr.groupid = bg.id
                      AND bg.type = 'Daily'
                      AND bg.projectid=?
-                     AND b2gr.endtime = '1980-01-01 00:00:00'
+                     AND b2gr.endtime IS NULL
              ", [intval($projectid)]);
 
 $wildcards_response = [];

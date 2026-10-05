@@ -233,7 +233,6 @@ function rest_post($pdo, $projectid)
             $buildgrouprule->GroupId = $groupid;
             $buildgrouprule->Expected = $expected;
             $buildgrouprule->StartTime = $now;
-            $buildgrouprule->EndTime = '1980-01-01 00:00:00';
             if (!$buildgrouprule->Save()) {
                 abort(500, 'Error saving rule');
             }

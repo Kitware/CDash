@@ -103,7 +103,7 @@ class ExpectedAndMissingTestCase extends KWWebTestCase
         if ($endtime === false) {
             $this->fail('No endtime found when expected');
         }
-        if ($endtime === '1980-01-01 00:00:00') {
+        if ($endtime === null) {
             $this->fail('API failed to soft delete');
         }
         if (strlen($endtime) < 3) {
