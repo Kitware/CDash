@@ -23,6 +23,7 @@ use CDash\Model\BuildGroup;
 use CDash\Model\Project;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use JsonException;
 
 class Index extends ResultsApi
 {
@@ -45,7 +46,7 @@ class Index extends ResultsApi
     public bool $childView;
     public bool $shareLabelFilters;
     public array $siteResponse;
-    public string $subProjectTestFilters;
+    public string $subProjectChildFilters;
     public string $updateType;
 
     /**
@@ -104,7 +105,7 @@ class Index extends ResultsApi
         $this->excludedSubProjects = [];
         $this->numSelectedSubProjects = 0;
         $this->selectedSubProjects = [];
-        $this->subProjectTestFilters = '';
+        $this->subProjectChildFilters = '';
 
         $this->labelIds = [];
         $this->parentId = false;
@@ -1389,8 +1390,12 @@ class Index extends ResultsApi
         return $response;
     }
 
-    // Check if we should be excluding some SubProjects from our
-    // build results.
+    /**
+     * Check if we should be excluding some SubProjects from our
+     * build results.
+     *
+     * @throws JsonException
+     */
     public function checkForSubProjectFilters(): void
     {
         $filter_on_labels = false;
@@ -1423,33 +1428,14 @@ class Index extends ResultsApi
             $this->excludeSubProjects = true;
         }
 
-        if (!$this->childView) {
-            // Determine subproject filters to pass to viewTest.php.
-            $subproject_test_filters = [];
-            $selected_subprojects = [];
-            $compare = '';
-            if ($this->includeSubProjects) {
-                $selected_subprojects = $this->includedSubProjects;
-                $compare = '61'; // string is equal
-                $combine = 'or';
-            } elseif ($this->excludeSubProjects) {
-                $selected_subprojects = $this->excludedSubProjects;
-                $compare = '62'; // string is not equal
-                $combine = 'and';
+        if (!$this->childView && $this->numSelectedSubProjects > 0) {
+            // Determine child build filters to pass to the build tests page.
+            [$combine, $operator] = $this->includeSubProjects ? ['any', 'eq'] : ['all', 'ne'];
+            $child_filters = [];
+            foreach ($this->selectedSubProjects as $subproject) {
+                $child_filters[] = ['has' => ['subProject' => [$operator => ['name' => $subproject]]]];
             }
-            if (count($selected_subprojects) > 0) {
-                foreach ($selected_subprojects as $i => $subproject) {
-                    $idx = $i + 1;
-                    $subproject_test_filters[] = "field{$idx}=subproject";
-                    $subproject_test_filters[] = "compare{$idx}=$compare";
-                    $subproject_test_filters[] = "value{$idx}=$subproject";
-                }
-                $this->subProjectTestFilters = '&';
-                $this->subProjectTestFilters .= implode('&', $subproject_test_filters);
-                $this->subProjectTestFilters .= "&filtercount={$this->numSelectedSubProjects}";
-                $this->subProjectTestFilters .= "&filtercombine=$combine";
-                $this->subProjectTestFilters .= '&showfilters=1';
-            }
+            $this->subProjectChildFilters = urlencode(json_encode([$combine => $child_filters], JSON_THROW_ON_ERROR));
         }
     }
 

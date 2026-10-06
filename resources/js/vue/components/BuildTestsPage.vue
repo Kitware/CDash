@@ -30,6 +30,19 @@
         :execute-query-link="executeQueryLink"
         @change-filters="filters => changedFilters = filters"
       />
+      <div
+        v-if="hasChildFilters"
+        class="tw-self-center"
+        data-test="subproject-filter-notice"
+      >
+        {{ isSubProjectInclude ? 'Showing only tests for SubProjects:' : 'Hiding tests for SubProjects:' }}
+        <b>{{ filteredSubProjectNames.join(', ') }}</b>
+        (<a
+          class="tw-link tw-link-hover tw-link-info"
+          :href="showAllSubProjectsLink"
+          data-test="show-all-subprojects-link"
+        >show all</a>)
+      </div>
       <LoadingIndicator :is-loading="!tests || (onlyDelta && !previousTests && previousBuildId !== null)">
         <div
           v-if="onlyDelta && tests && filteredTests.length === 0"
@@ -99,11 +112,13 @@ const TEST_QUERY = gql`
   query(
     $buildid: ID,
     $filters: BuildTestsFiltersMultiFilterInput,
+    $childFilters: BuildChildrenFiltersMultiFilterInput,
+    $skipParentTests: Boolean = false,
     $measurementFilters: TestTestMeasurementsFiltersMultiFilterInput,
   ) {
     build(id: $buildid) {
       id
-      tests(filters: $filters, first: 1000000) {
+      tests(filters: $filters, first: 1000000) @skip(if: $skipParentTests) {
         edges {
           node {
             id
@@ -122,7 +137,7 @@ const TEST_QUERY = gql`
           }
         }
       }
-      children(first: 100000) {
+      children(filters: $childFilters, first: 100000) {
         edges {
           node {
             id
@@ -157,7 +172,7 @@ const TEST_QUERY = gql`
 `;
 
 function mapTestsQueryResult(data) {
-  let tests = data.build.tests.edges.map((test) => ({
+  let tests = (data.build.tests?.edges ?? []).map((test) => ({
     ...test,
     subProject: '',
   }));
@@ -211,6 +226,13 @@ export default {
       required: true,
     },
 
+    /** Filters applied to the child builds, used to restrict results to a set of SubProjects. */
+    initialChildFilters: {
+      type: Object,
+      required: false,
+      default: () => ({ all: [] }),
+    },
+
     /** A list of measurements to display, ordered by position. */
     pinnedMeasurements: {
       type: Array,
@@ -238,6 +260,8 @@ export default {
         return {
           buildid: this.buildId,
           filters: this.initialFilters,
+          childFilters: this.initialChildFilters,
+          skipParentTests: this.skipParentTests,
           measurementFilters: this.measurementFilters,
         };
       },
@@ -251,6 +275,8 @@ export default {
         return {
           buildid: this.buildId,
           filters: {},
+          childFilters: this.initialChildFilters,
+          skipParentTests: this.skipParentTests,
           measurementFilters: this.measurementFilters,
         };
       },
@@ -263,6 +289,8 @@ export default {
         return {
           buildid: this.previousBuildId,
           filters: this.initialFilters,
+          childFilters: this.initialChildFilters,
+          skipParentTests: this.skipParentTests,
           measurementFilters: this.measurementFilters,
         };
       },
@@ -362,7 +390,39 @@ export default {
       }));
     },
 
+    hasChildFilters() {
+      return (this.initialChildFilters.any ?? this.initialChildFilters.all ?? []).length > 0;
+    },
+
+    // Include filters are combined with "any", exclude filters with "all".
+    isSubProjectInclude() {
+      return (this.initialChildFilters.any ?? []).length > 0;
+    },
+
+    // Tests attached directly to the parent build don't belong to any SubProject,
+    // so they can never match an include filter.
+    skipParentTests() {
+      return this.isSubProjectInclude;
+    },
+
+    filteredSubProjectNames() {
+      return (this.initialChildFilters.any ?? this.initialChildFilters.all ?? [])
+        .map((filter) => {
+          const subProjectFilter = filter.has?.subProject;
+          return subProjectFilter?.eq?.name ?? subProjectFilter?.ne?.name;
+        })
+        .filter((name) => name !== undefined);
+    },
+
     executeQueryLink() {
+      let link = this.showAllSubProjectsLink;
+      if (this.hasChildFilters) {
+        link += `&childFilters=${encodeURIComponent(JSON.stringify(this.initialChildFilters))}`;
+      }
+      return link;
+    },
+
+    showAllSubProjectsLink() {
       let link = `${window.location.origin}${window.location.pathname}?filters=${encodeURIComponent(JSON.stringify(this.changedFilters))}`;
       if (this.onlyDelta) {
         link += '&onlydelta';
