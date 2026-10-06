@@ -268,4 +268,461 @@ class TestXMLTest extends TestCase
             ],
         ]);
     }
+
+    public function testExternalLink(): void
+    {
+        $this->makeSubmission($this->project->name, base_path(
+            'tests/Feature/Submission/Test/data/external_link.xml'
+        ));
+
+        $this->graphQL('
+            query build($id: ID) {
+              build(id: $id) {
+                tests {
+                  edges {
+                    node {
+                      name
+                      testMeasurements(filters: {
+                        eq: {
+                          type: "text/link"
+                        }
+                      }) {
+                        name
+                        value
+                      }
+                    }
+                  }
+                }
+              }
+            }
+        ', [
+            'id' => $this->project->builds()->firstOrFail()->id,
+        ])->assertExactJson([
+            'data' => [
+                'build' => [
+                    'tests' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'name' => 'foo',
+                                    'testMeasurements' => [
+                                        [
+                                            'name' => 'Interesting website',
+                                            'value' => 'http://www.google.com',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+    }
+
+    public function testNamedMeasurements(): void
+    {
+        $this->makeSubmission($this->project->name, base_path(
+            'tests/Feature/Submission/Test/data/named_measurements_1.xml'
+        ));
+        $this->makeSubmission($this->project->name, base_path(
+            'tests/Feature/Submission/Test/data/named_measurements_2.xml'
+        ));
+
+        $this->graphQL('
+            query project($id: ID) {
+              project(id: $id) {
+                first: builds(filters: {
+                  eq: {
+                    stamp: "20210204-1412-Experimental"
+                  }
+                }) {
+                  edges {
+                    node {
+                      tests {
+                        edges {
+                          node {
+                            name
+                            testMeasurements(filters: {
+                              eq: {
+                                name: "archive directory"
+                              }
+                            }) {
+                              type
+                              value
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+                second: builds(filters: {
+                  eq: {
+                    stamp: "20210204-1413-Experimental"
+                  }
+                }) {
+                  edges {
+                    node {
+                      tests {
+                        edges {
+                          node {
+                            name
+                            testMeasurements(filters: {
+                              eq: {
+                                name: "archive directory"
+                              }
+                            }) {
+                              type
+                              value
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+        ', [
+            'id' => $this->project->id,
+        ])->assertExactJson([
+            'data' => [
+                'project' => [
+                    'first' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'tests' => [
+                                        'edges' => [
+                                            [
+                                                'node' => [
+                                                    'name' => 'measurements',
+                                                    'testMeasurements' => [
+                                                        [
+                                                            'type' => 'text/link',
+                                                            'value' => 'https://example.com/link1.txt',
+                                                        ],
+                                                    ],
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                    'second' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'tests' => [
+                                        'edges' => [
+                                            [
+                                                'node' => [
+                                                    'name' => 'measurements',
+                                                    'testMeasurements' => [
+                                                        [
+                                                            'type' => 'text/link',
+                                                            'value' => 'https://example.com/link2.txt',
+                                                        ],
+                                                    ],
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+    }
+
+    public function testRedundantTests(): void
+    {
+        $this->makeSubmission($this->project->name, base_path(
+            'tests/Feature/Submission/Test/data/redundant_tests.xml'
+        ));
+
+        $this->graphQL('
+            query build($id: ID) {
+              build(id: $id) {
+                passed: tests(filters: {
+                  eq: {
+                    status: PASSED
+                  }
+                }) {
+                  edges {
+                    node {
+                      name
+                      output
+                    }
+                  }
+                }
+                failed: tests(filters: {
+                  eq: {
+                    status: FAILED
+                  }
+                }) {
+                  edges {
+                    node {
+                      name
+                      output
+                    }
+                  }
+                }
+              }
+            }
+        ', [
+            'id' => $this->project->builds()->firstOrFail()->id,
+        ])->assertExactJson([
+            'data' => [
+                'build' => [
+                    'passed' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'name' => 'test1',
+                                    'output' => "this is a test\n",
+                                ],
+                            ],
+                        ],
+                    ],
+                    'failed' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'name' => 'test1',
+                                    'output' => "this is the same test but with different output\n",
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+    }
+
+    public function testMultipleLabels(): void
+    {
+        $this->makeSubmission($this->project->name, base_path(
+            'tests/Feature/Submission/Test/data/multiple_labels.xml'
+        ));
+
+        $this->graphQL('
+            query build($id: ID) {
+              build(id: $id) {
+                tests {
+                  edges {
+                    node {
+                      name
+                      label1: labels(filters: {
+                        eq: {
+                          text: "label1"
+                        }
+                      }) {
+                        edges {
+                          node {
+                            text
+                          }
+                        }
+                      }
+                      label2: labels(filters: {
+                        eq: {
+                          text: "label2"
+                        }
+                      }) {
+                        edges {
+                          node {
+                            text
+                          }
+                        }
+                      }
+                      label3: labels(filters: {
+                        eq: {
+                          text: "label3"
+                        }
+                      }) {
+                        edges {
+                          node {
+                            text
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+        ', [
+            'id' => $this->project->builds()->firstOrFail()->id,
+        ])->assertExactJson([
+            'data' => [
+                'build' => [
+                    'tests' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'name' => 'multi_labels',
+                                    'label1' => [
+                                        'edges' => [
+                                            [
+                                                'node' => [
+                                                    'text' => 'label1',
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                    'label2' => [
+                                        'edges' => [
+                                            [
+                                                'node' => [
+                                                    'text' => 'label2',
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                    'label3' => [
+                                        'edges' => [
+                                            [
+                                                'node' => [
+                                                    'text' => 'label3',
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+    }
+
+    public function testImages(): void
+    {
+        $this->makeSubmission($this->project->name, base_path(
+            'tests/Feature/Submission/Test/data/image_1.xml'
+        ));
+        $this->makeSubmission($this->project->name, base_path(
+            'tests/Feature/Submission/Test/data/image_2.xml'
+        ));
+
+        $this->graphQL('
+            query project($id: ID) {
+              project(id: $id) {
+                first: builds(filters: {
+                  eq: {
+                    stamp: "20200702-1728-Experimental"
+                  }
+                }) {
+                  edges {
+                    node {
+                      tests {
+                        edges {
+                          node {
+                            name
+                            testImages {
+                              edges {
+                                node {
+                                  role
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+                second: builds(filters: {
+                  eq: {
+                    stamp: "20200702-1729-Experimental"
+                  }
+                }) {
+                  edges {
+                    node {
+                      tests {
+                        edges {
+                          node {
+                            name
+                            testImages {
+                              edges {
+                                node {
+                                  role
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+        ', [
+            'id' => $this->project->id,
+        ])->assertExactJson([
+            'data' => [
+                'project' => [
+                    'first' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'tests' => [
+                                        'edges' => [
+                                            [
+                                                'node' => [
+                                                    'name' => 'image',
+                                                    'testImages' => [
+                                                        'edges' => [
+                                                            [
+                                                                'node' => [
+                                                                    'role' => 'TestImage',
+                                                                ],
+                                                            ],
+                                                        ],
+                                                    ],
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                    'second' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'tests' => [
+                                        'edges' => [
+                                            [
+                                                'node' => [
+                                                    'name' => 'image',
+                                                    'testImages' => [
+                                                        'edges' => [
+                                                            [
+                                                                'node' => [
+                                                                    'role' => 'TestImage',
+                                                                ],
+                                                            ],
+                                                        ],
+                                                    ],
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+    }
 }
