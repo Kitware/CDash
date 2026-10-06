@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Enums\UnparsedSubmissionType;
 use App\Exceptions\BadSubmissionException;
 use App\Http\Submission\Handlers\AbstractSubmissionHandler;
 use App\Http\Submission\Handlers\ActionableBuildInterface;
@@ -297,23 +298,15 @@ class ProcessSubmission implements ShouldQueue
         // Save a backup file for this submission.
 
         // Include the handler file for this type of submission.
-        $valid_types = [
-            'BazelJSON',
-            'BuildPropertiesJSON',
-            'GcovTar',
-            'JavaJSONTar',
-            'JSCoverTar',
-            'OpenCoverTar',
-            'SubProjectDirectories',
-        ];
-        if (!in_array($buildfile->type, $valid_types, true)) {
+        $type = UnparsedSubmissionType::tryFrom($buildfile->type);
+        if ($type === null) {
             Log::error("No handler include file for {$buildfile->type}");
             $buildfile->delete();
             return false;
         }
 
         // Instantiate the handler.
-        $className = 'App\\Http\\Submission\\Handlers\\' . $buildfile->type . 'Handler';
+        $className = 'App\\Http\\Submission\\Handlers\\' . $type->value . 'Handler';
         if (!class_exists($className)) {
             Log::error("No handler class for {$buildfile->type}");
             $buildfile->delete();

@@ -17,6 +17,7 @@
 
 namespace App\Utils;
 
+use App\Enums\UnparsedSubmissionType;
 use App\Jobs\ProcessSubmission;
 use App\Models\BuildFile;
 use App\Models\PendingSubmissions;
@@ -33,6 +34,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -118,8 +120,8 @@ class UnparsedSubmissionProcessor
             'build' => 'required',
             'stamp' => 'required',
             'site' => 'required',
-            'starttime' => 'required',
-            'endtime' => 'required',
+            'starttime' => 'required|integer',
+            'endtime' => 'required|integer',
             'datafilesmd5' => 'required',
         ]);
 
@@ -216,9 +218,11 @@ class UnparsedSubmissionProcessor
 
         $db_up = SystemUtils::isDatabaseOnline();
         if ($db_up) {
-            if (!is_numeric($this->buildid) || $this->buildid < 1) {
+            $buildid = filter_var($this->buildid, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+            if ($buildid === false) {
                 abort(Response::HTTP_NOT_FOUND, 'Build not found');
             }
+            $this->buildid = $buildid;
             // Get the relevant build and project.
             $this->build = new Build();
             $this->build->Id = $this->buildid;
@@ -352,10 +356,12 @@ class UnparsedSubmissionProcessor
 
     public function parseDataFileParameters(): void
     {
+        // The build id is validated later: it is a UUID instead of an integer if the build metadata
+        // was submitted while the database was unavailable.
         $validator = Validator::make(request()->query(), [
             'buildid' => 'required',
-            'type' => 'required',
-            'md5' => 'required',
+            'type' => ['required', Rule::enum(UnparsedSubmissionType::class)],
+            'md5' => ['required', 'regex:/^[a-f0-9]{32}$/i'],
             'filename' => 'required',
         ]);
 
