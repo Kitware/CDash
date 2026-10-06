@@ -236,7 +236,7 @@ $response['filterdata'] = $controller->getFilterData();
 $response['filterurl'] = get_filterurl();
 
 $controller->checkForSubProjectFilters();
-$response['testfilters'] = $controller->subProjectTestFilters;
+$response['childfilters'] = $controller->subProjectChildFilters;
 
 $build_data = $controller->getDailyBuilds();
 $build_data = array_merge($build_data, $controller->getDynamicBuilds());

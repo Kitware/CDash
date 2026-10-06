@@ -162,6 +162,7 @@ final class BuildController extends AbstractBuildController
             'project-name' => $eloquent_project->name,
             'build-time' => Carbon::parse($this->build->StartTime)->toIso8601String(),
             'initial-filters' => $filters,
+            'initial-child-filters' => json_decode($request->string('childFilters')->toString()) ?? ['all' => []],
             'pinned-measurements' => $eloquent_project->pinnedTestMeasurements()->orderBy('position')->pluck('name')->toArray(),
         ];
 

@@ -139,6 +139,105 @@ class BuildTestsPageTest extends BrowserTestCase
         });
     }
 
+    public function testFiltersBySubProject(): void
+    {
+        /** @var SubProject $subproject1 */
+        $subproject1 = $this->project->subprojects()->create([
+            'groupid' => -1,
+            'name' => Str::uuid()->toString(),
+        ]);
+
+        /** @var SubProject $subproject2 */
+        $subproject2 = $this->project->subprojects()->create([
+            'groupid' => -1,
+            'name' => Str::uuid()->toString(),
+        ]);
+
+        /** @var Build $parent_build */
+        $parent_build = $this->project->builds()->create([
+            'siteid' => $this->site->id,
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        /** @var Test $parent_build_test */
+        $parent_build_test = $parent_build->tests()->create([
+            'testname' => Str::uuid()->toString(),
+            'status' => 'failed',
+        ]);
+
+        /** @var Test $child_build_1_test */
+        $child_build_1_test = $parent_build->children()->create([
+            'projectid' => $this->project->id,
+            'siteid' => $this->site->id,
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+            'subprojectid' => $subproject1->id,
+        ])->tests()->create([
+            'testname' => Str::uuid()->toString(),
+            'status' => 'failed',
+        ]);
+
+        /** @var Test $child_build_2_test */
+        $child_build_2_test = $parent_build->children()->create([
+            'projectid' => $this->project->id,
+            'siteid' => $this->site->id,
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+            'subprojectid' => $subproject2->id,
+        ])->tests()->create([
+            'testname' => Str::uuid()->toString(),
+            'status' => 'failed',
+        ]);
+
+        // {"any":[{"has":{"subProject":{"eq":{"name":"<subproject1>"}}}}]}
+        $include_filters = "%7B%22any%22%3A%5B%7B%22has%22%3A%7B%22subProject%22%3A%7B%22eq%22%3A%7B%22name%22%3A%22{$subproject1->name}%22%7D%7D%7D%7D%5D%7D";
+        // {"all":[{"has":{"subProject":{"ne":{"name":"<subproject1>"}}}}]}
+        $exclude_filters = "%7B%22all%22%3A%5B%7B%22has%22%3A%7B%22subProject%22%3A%7B%22ne%22%3A%7B%22name%22%3A%22{$subproject1->name}%22%7D%7D%7D%7D%5D%7D";
+
+        $this->browse(function (Browser $browser) use ($parent_build, $parent_build_test, $child_build_1_test, $child_build_2_test, $subproject1, $include_filters, $exclude_filters): void {
+            $browser->visit("/builds/{$parent_build->id}/tests")
+                ->waitFor('@tests-table')
+                ->assertMissing('@subproject-filter-notice')
+                ->assertSeeIn('@tests-table', $parent_build_test->testname)
+                ->assertSeeIn('@tests-table', $child_build_1_test->testname)
+                ->assertSeeIn('@tests-table', $child_build_2_test->testname)
+            ;
+
+            $browser->visit("/builds/{$parent_build->id}/tests?childFilters={$include_filters}")
+                ->waitFor('@tests-table')
+                ->assertSeeIn('@subproject-filter-notice', 'Showing only tests for SubProjects:')
+                ->assertSeeIn('@subproject-filter-notice', $subproject1->name)
+                ->assertDontSeeIn('@tests-table', $parent_build_test->testname)
+                ->assertSeeIn('@tests-table', $child_build_1_test->testname)
+                ->assertDontSeeIn('@tests-table', $child_build_2_test->testname)
+            ;
+
+            // Test filters and SubProject filters are combined.
+            $browser->visit("/builds/{$parent_build->id}/tests?filters=%7B%22all%22%3A%5B%7B%22eq%22%3A%7B%22status%22%3A%22FAILED%22%7D%7D%5D%7D&childFilters={$include_filters}")
+                ->waitFor('@tests-table')
+                ->assertSeeIn('@tests-table', $child_build_1_test->testname)
+                ->assertDontSeeIn('@tests-table', $child_build_2_test->testname)
+            ;
+
+            $browser->visit("/builds/{$parent_build->id}/tests?childFilters={$exclude_filters}")
+                ->waitFor('@tests-table')
+                ->assertSeeIn('@subproject-filter-notice', 'Hiding tests for SubProjects:')
+                ->assertSeeIn('@tests-table', $parent_build_test->testname)
+                ->assertDontSeeIn('@tests-table', $child_build_1_test->testname)
+                ->assertSeeIn('@tests-table', $child_build_2_test->testname)
+            ;
+
+            $browser->click('@show-all-subprojects-link')
+                ->waitFor('@tests-table')
+                ->assertMissing('@subproject-filter-notice')
+                ->assertSeeIn('@tests-table', $parent_build_test->testname)
+                ->assertSeeIn('@tests-table', $child_build_1_test->testname)
+                ->assertSeeIn('@tests-table', $child_build_2_test->testname)
+            ;
+        });
+    }
+
     public function testHidesSubProjectColumnWhenNoChildBuilds(): void
     {
         /** @var Build $build */

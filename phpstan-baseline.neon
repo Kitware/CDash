@@ -6355,12 +6355,6 @@ parameters:
 			path: app/cdash/app/Controller/Api/Index.php
 
 		-
-			rawMessage: 'Binary operation "+" between (int|string) and 1 results in an error.'
-			identifier: binaryOp.invalid
-			count: 1
-			path: app/cdash/app/Controller/Api/Index.php
-
-		-
 			rawMessage: 'Binary operation ".=" between array<string>|string and string results in an error.'
 			identifier: assignOp.invalid
 			count: 1
@@ -6498,12 +6492,6 @@ parameters:
 		-
 			rawMessage: 'Method CDash\Controller\Api\Index::recordGenerationTime() has parameter $response with no value type specified in iterable type array.'
 			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/app/Controller/Api/Index.php
-
-		-
-			rawMessage: 'Only numeric types are allowed in +, (int|string) given on the left side.'
-			identifier: plus.leftNonNumeric
 			count: 1
 			path: app/cdash/app/Controller/Api/Index.php
 
@@ -6660,12 +6648,6 @@ parameters:
 		-
 			rawMessage: Property CDash\Controller\Api\Index::$subProjectPositions type has no value type specified in iterable type array.
 			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/app/Controller/Api/Index.php
-
-		-
-			rawMessage: Variable $combine might not be defined.
-			identifier: variable.undefined
 			count: 1
 			path: app/cdash/app/Controller/Api/Index.php
 

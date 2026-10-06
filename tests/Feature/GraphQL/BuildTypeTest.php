@@ -9,6 +9,7 @@ use App\Models\BuildCommand;
 use App\Models\CoverageFile;
 use App\Models\Label;
 use App\Models\Project;
+use App\Models\SubProject;
 use App\Models\Target;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Carbon;
@@ -565,6 +566,97 @@ class BuildTypeTest extends TestCase
                                     'id' => (string) $child2->id,
                                 ],
                             ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+    }
+
+    public function testChildBuildRelationshipFilterChildrenBySubProject(): void
+    {
+        /** @var Build $build */
+        $build = $this->project->builds()->create([
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        /** @var SubProject $subproject1 */
+        $subproject1 = $this->project->subprojects()->create([
+            'groupid' => -1,
+            'name' => Str::uuid()->toString(),
+        ]);
+
+        /** @var SubProject $subproject2 */
+        $subproject2 = $this->project->subprojects()->create([
+            'groupid' => -1,
+            'name' => Str::uuid()->toString(),
+        ]);
+
+        /** @var Build $child1 */
+        $child1 = $this->project->builds()->create([
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+            'parentid' => $build->id,
+            'subprojectid' => $subproject1->id,
+        ]);
+
+        /** @var Build $child2 */
+        $child2 = $this->project->builds()->create([
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+            'parentid' => $build->id,
+            'subprojectid' => $subproject2->id,
+        ]);
+
+        $query = '
+            query build($id: ID, $filters: BuildChildrenFiltersMultiFilterInput) {
+                build(id: $id) {
+                    children(filters: $filters) {
+                        edges {
+                            node {
+                                id
+                            }
+                        }
+                    }
+                }
+            }
+        ';
+
+        // Include
+        $this->graphQL($query, [
+            'id' => $build->id,
+            'filters' => [
+                'any' => [
+                    ['has' => ['subProject' => ['eq' => ['name' => $subproject1->name]]]],
+                ],
+            ],
+        ])->assertExactJson([
+            'data' => [
+                'build' => [
+                    'children' => [
+                        'edges' => [
+                            ['node' => ['id' => (string) $child1->id]],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+
+        // Exclude
+        $this->graphQL($query, [
+            'id' => $build->id,
+            'filters' => [
+                'all' => [
+                    ['has' => ['subProject' => ['ne' => ['name' => $subproject1->name]]]],
+                ],
+            ],
+        ])->assertExactJson([
+            'data' => [
+                'build' => [
+                    'children' => [
+                        'edges' => [
+                            ['node' => ['id' => (string) $child2->id]],
                         ],
                     ],
                 ],
