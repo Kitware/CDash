@@ -45,7 +45,7 @@ class Index extends ResultsApi
     public bool $childView;
     public bool $shareLabelFilters;
     public array $siteResponse;
-    public string $subProjectTestFilters;
+    public string $subProjectTestsQuery;
     public string $updateType;
 
     /**
@@ -104,7 +104,7 @@ class Index extends ResultsApi
         $this->excludedSubProjects = [];
         $this->numSelectedSubProjects = 0;
         $this->selectedSubProjects = [];
-        $this->subProjectTestFilters = '';
+        $this->subProjectTestsQuery = '';
 
         $this->labelIds = [];
         $this->parentId = false;
@@ -1423,32 +1423,11 @@ class Index extends ResultsApi
             $this->excludeSubProjects = true;
         }
 
-        if (!$this->childView) {
-            // Determine subproject filters to pass to viewTest.php.
-            $subproject_test_filters = [];
-            $selected_subprojects = [];
-            $compare = '';
-            if ($this->includeSubProjects) {
-                $selected_subprojects = $this->includedSubProjects;
-                $compare = '61'; // string is equal
-                $combine = 'or';
-            } elseif ($this->excludeSubProjects) {
-                $selected_subprojects = $this->excludedSubProjects;
-                $compare = '62'; // string is not equal
-                $combine = 'and';
-            }
-            if (count($selected_subprojects) > 0) {
-                foreach ($selected_subprojects as $i => $subproject) {
-                    $idx = $i + 1;
-                    $subproject_test_filters[] = "field{$idx}=subproject";
-                    $subproject_test_filters[] = "compare{$idx}=$compare";
-                    $subproject_test_filters[] = "value{$idx}=$subproject";
-                }
-                $this->subProjectTestFilters = '&';
-                $this->subProjectTestFilters .= implode('&', $subproject_test_filters);
-                $this->subProjectTestFilters .= "&filtercount={$this->numSelectedSubProjects}";
-                $this->subProjectTestFilters .= "&filtercombine=$combine";
-                $this->subProjectTestFilters .= '&showfilters=1';
+        if (!$this->childView && $this->numSelectedSubProjects > 0) {
+            // Determine the SubProject query parameters to pass to the build tests page.
+            $param = $this->includeSubProjects ? 'subprojects[]' : 'excludeSubprojects[]';
+            foreach ($this->selectedSubProjects as $subproject) {
+                $this->subProjectTestsQuery .= "&{$param}=" . rawurlencode($subproject);
             }
         }
     }
