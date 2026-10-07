@@ -21766,30 +21766,6 @@ parameters:
 			path: tests/Feature/GlobalInvitationAcceptanceTest.php
 
 		-
-			rawMessage: '''
-				Call to deprecated method coverageResults() of class App\Models\Build:
-				07/27/2025 Use this relation only to edit the underlying coverage table.  Use coverage() instead.
-			'''
-			identifier: method.deprecated
-			count: 2
-			path: tests/Feature/GraphQL/BuildTypeTest.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method coverageResults() of class App\Models\Build:
-				07/27/2025 Use this relation only to edit the underlying coverage table.  Use coverage() instead.
-			'''
-			identifier: method.deprecated
-			count: 5
-			path: tests/Feature/GraphQL/CoverageTypeTest.php
-
-		-
-			rawMessage: 'Method Tests\Feature\GraphQL\GlobalInvitationTypeTest::createInvitation() throws checked exception OverflowException but it''s missing from the PHPDoc @throws tag.'
-			identifier: missingType.checkedException
-			count: 1
-			path: tests/Feature/GraphQL/GlobalInvitationTypeTest.php
-
-		-
 			rawMessage: 'Method Tests\Feature\GraphQL\Mutations\CreateGlobalInvitationTest::testAdminCreatesInvitationCorrectly() throws checked exception OverflowException but it''s missing from the PHPDoc @throws tag.'
 			identifier: missingType.checkedException
 			count: 1
@@ -21928,70 +21904,94 @@ parameters:
 			path: tests/Feature/GraphQL/Mutations/UpdateProjectTest.php
 
 		-
-			rawMessage: 'Method Tests\Feature\GraphQL\ProjectInvitationTypeTest::testAdminCanViewInvitations() throws checked exception OverflowException but it''s missing from the PHPDoc @throws tag.'
-			identifier: missingType.checkedException
-			count: 1
-			path: tests/Feature/GraphQL/ProjectInvitationTypeTest.php
+			rawMessage: '''
+				Call to deprecated method coverageResults() of class App\Models\Build:
+				07/27/2025 Use this relation only to edit the underlying coverage table.  Use coverage() instead.
+			'''
+			identifier: method.deprecated
+			count: 2
+			path: tests/Feature/GraphQL/Queries/BuildTypeTest.php
 
 		-
-			rawMessage: 'Method Tests\Feature\GraphQL\ProjectInvitationTypeTest::testAnonymousUserCannotViewInvitations() throws checked exception OverflowException but it''s missing from the PHPDoc @throws tag.'
-			identifier: missingType.checkedException
-			count: 1
-			path: tests/Feature/GraphQL/ProjectInvitationTypeTest.php
+			rawMessage: '''
+				Call to deprecated method coverageResults() of class App\Models\Build:
+				07/27/2025 Use this relation only to edit the underlying coverage table.  Use coverage() instead.
+			'''
+			identifier: method.deprecated
+			count: 5
+			path: tests/Feature/GraphQL/Queries/CoverageTypeTest.php
 
 		-
-			rawMessage: 'Method Tests\Feature\GraphQL\ProjectInvitationTypeTest::testNormalUserCannotViewInvitations() throws checked exception OverflowException but it''s missing from the PHPDoc @throws tag.'
+			rawMessage: 'Method Tests\Feature\GraphQL\Queries\GlobalInvitationTypeTest::createInvitation() throws checked exception OverflowException but it''s missing from the PHPDoc @throws tag.'
 			identifier: missingType.checkedException
 			count: 1
-			path: tests/Feature/GraphQL/ProjectInvitationTypeTest.php
+			path: tests/Feature/GraphQL/Queries/GlobalInvitationTypeTest.php
+
+		-
+			rawMessage: 'Method Tests\Feature\GraphQL\Queries\ProjectInvitationTypeTest::testAdminCanViewInvitations() throws checked exception OverflowException but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
+			count: 1
+			path: tests/Feature/GraphQL/Queries/ProjectInvitationTypeTest.php
+
+		-
+			rawMessage: 'Method Tests\Feature\GraphQL\Queries\ProjectInvitationTypeTest::testAnonymousUserCannotViewInvitations() throws checked exception OverflowException but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
+			count: 1
+			path: tests/Feature/GraphQL/Queries/ProjectInvitationTypeTest.php
+
+		-
+			rawMessage: 'Method Tests\Feature\GraphQL\Queries\ProjectInvitationTypeTest::testNormalUserCannotViewInvitations() throws checked exception OverflowException but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
+			count: 1
+			path: tests/Feature/GraphQL/Queries/ProjectInvitationTypeTest.php
 
 		-
 			rawMessage: Cannot access offset 'edges' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 3
-			path: tests/Feature/GraphQL/SiteTypeTest.php
+			path: tests/Feature/GraphQL/Queries/SiteTypeTest.php
 
 		-
 			rawMessage: Cannot access offset 'information' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: tests/Feature/GraphQL/SiteTypeTest.php
+			path: tests/Feature/GraphQL/Queries/SiteTypeTest.php
 
 		-
 			rawMessage: Cannot access offset 'node' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 3
-			path: tests/Feature/GraphQL/SiteTypeTest.php
+			path: tests/Feature/GraphQL/Queries/SiteTypeTest.php
 
 		-
 			rawMessage: Cannot access offset 'projects' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: tests/Feature/GraphQL/SiteTypeTest.php
+			path: tests/Feature/GraphQL/Queries/SiteTypeTest.php
 
 		-
 			rawMessage: Cannot access offset 'sites' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: tests/Feature/GraphQL/SiteTypeTest.php
+			path: tests/Feature/GraphQL/Queries/SiteTypeTest.php
 
 		-
 			rawMessage: Cannot access offset 'timestamp' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: tests/Feature/GraphQL/SiteTypeTest.php
+			path: tests/Feature/GraphQL/Queries/SiteTypeTest.php
 
 		-
 			rawMessage: Cannot access offset 0 on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 3
-			path: tests/Feature/GraphQL/SiteTypeTest.php
+			path: tests/Feature/GraphQL/Queries/SiteTypeTest.php
 
 		-
 			rawMessage: 'Parameter #1 $time of static method Carbon\Carbon::parse() expects Carbon\Month|Carbon\WeekDay|DateTimeInterface|float|int|string|null, mixed given.'
 			identifier: argument.type
 			count: 1
-			path: tests/Feature/GraphQL/SiteTypeTest.php
+			path: tests/Feature/GraphQL/Queries/SiteTypeTest.php
 
 		-
 			rawMessage: '''

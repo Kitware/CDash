@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\GraphQL;
+namespace Tests\Feature\GraphQL\Queries;
 
 use App\Models\Image;
 use App\Models\Project;
