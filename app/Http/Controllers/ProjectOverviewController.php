@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\BuildGroupType;
 use App\Services\ProjectService;
 use App\Utils\PageTimer;
 use Illuminate\Http\JsonResponse;
@@ -835,7 +836,8 @@ final class ProjectOverviewController extends AbstractProjectController
         $response['buildcolumns'] = $build_response;
         $response['staticrows'] = $static_response;
 
-        // Get the buildgroups that aren't part of the overview yet.
+        // Get the buildgroups that aren't part of the overview yet.  The overview only shows builds
+        // assigned to a group via build2group, so dynamic groups would always be empty.
         $buildgroup_rows = DB::select('
                                SELECT
                                    bg.id,
@@ -844,8 +846,9 @@ final class ProjectOverviewController extends AbstractProjectController
                                LEFT JOIN overview_components AS oc ON (bg.id = oc.buildgroupid)
                                WHERE
                                    bg.projectid=?
+                                   AND bg.type=?
                                    AND oc.buildgroupid IS NULL
-                           ', [(int) $this->project->Id]);
+                           ', [(int) $this->project->Id, BuildGroupType::DAILY->value]);
 
         $availablegroups_response = [];
         foreach ($buildgroup_rows as $buildgroup_row) {
