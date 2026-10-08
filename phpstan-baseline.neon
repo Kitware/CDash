@@ -738,7 +738,7 @@ parameters:
 		-
 			rawMessage: 'Parameter #1 $string of function htmlspecialchars expects string, mixed given.'
 			identifier: argument.type
-			count: 3
+			count: 2
 			path: app/Http/Controllers/ExpectedBuildController.php
 
 		-

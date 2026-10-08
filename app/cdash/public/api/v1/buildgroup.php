@@ -17,6 +17,8 @@
 
 namespace CDash\Api\v1\BuildGroup;
 
+use App\Enums\BuildGroupType;
+use App\Models\BuildGroup as EloquentBuildGroup;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildGroup;
@@ -197,9 +199,13 @@ function rest_post($pdo, $projectid)
     if (isset($_POST['builds'])) {
         // Move builds to a new group.
         $group = $_POST['group'];
-        if ($group['id'] < 1) {
+        $groupid = $group['id'];
+        if ($groupid < 1) {
             $error_msg = 'Please select a group for these builds';
             abort(400, $error_msg);
+        }
+        if (EloquentBuildGroup::whereKey($groupid)->firstOrFail()->type !== BuildGroupType::DAILY) {
+            abort(400, 'Builds cannot be assigned to dynamic build groups.');
         }
 
         $builds = $_POST['builds'];
@@ -210,8 +216,6 @@ function rest_post($pdo, $projectid)
         }
 
         foreach ($builds as $buildinfo) {
-            $groupid = $group['id'];
-
             $Build = new Build();
             $Build->Id = (int) $buildinfo['id'];
             $Build->FillFromId($Build->Id);
@@ -246,6 +250,9 @@ function rest_post($pdo, $projectid)
         if ($groupid < 1) {
             $error_msg = 'Please select a BuildGroup to define.';
             abort(400, $error_msg);
+        }
+        if (EloquentBuildGroup::whereKey($groupid)->firstOrFail()->type !== BuildGroupType::DAILY) {
+            abort(400, 'Builds cannot be assigned to dynamic build groups.');
         }
 
         $nameMatch = convert_wildcards($_POST['nameMatch']);

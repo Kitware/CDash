@@ -182,7 +182,10 @@
          data-cy="build-admin-options-panel"
          style="padding: 8px 0; display: flex; flex-direction: column; gap: 8px;">
       <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px;">
+        <!-- Expected builds belong to daily groups.  Expected-and-missing rows in dynamic groups
+             can only come from old data, so they can still be cleared. -->
         <button class="btn btn-xs"
+                ng-if="buildgroup.type != 'Latest' || build.expectedandmissing == 1"
                 ng-class="(build.expected == 1 || build.expectedandmissing == 1) ? 'btn-warning' : 'btn-success'"
                 ng-click="toggleExpected(build, buildgroup.id)"
                 ng-disabled="build.expectedLoading"
