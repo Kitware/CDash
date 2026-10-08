@@ -12439,48 +12439,6 @@ parameters:
 			path: app/cdash/include/filterdataFunctions.php
 
 		-
-			rawMessage: Cannot access offset 'head_sha' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/public/api/v1/GitHub/webhook.php
-
-		-
-			rawMessage: Cannot access offset 'name' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/public/api/v1/GitHub/webhook.php
-
-		-
-			rawMessage: 'Function handle_error() has no return type specified.'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/public/api/v1/GitHub/webhook.php
-
-		-
-			rawMessage: 'Function handle_error() has parameter $msg with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/public/api/v1/GitHub/webhook.php
-
-		-
-			rawMessage: 'Parameter #2 $data of function hash_hmac expects string, string|false given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/public/api/v1/GitHub/webhook.php
-
-		-
-			rawMessage: 'Parameter #2 $string of function explode expects string, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/public/api/v1/GitHub/webhook.php
-
-		-
-			rawMessage: 'Parameter #3 $key of function hash_hmac expects string, bool|string given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/public/api/v1/GitHub/webhook.php
-
-		-
 			rawMessage: 'Argument of an invalid type mixed supplied for foreach, only iterables are supported.'
 			identifier: foreach.nonIterable
 			count: 3
