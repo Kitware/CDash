@@ -11,9 +11,6 @@ mix.sourceMaps(true, 'source-map');
 // Hash the built files to create a version identifier.  Use the mix() helper in PHP to automatically append the identifier to a path.
 mix.version();
 
-// Copy angularjs files to build directory.
-mix.copy('resources/js/angular/views/*.html', 'public/assets/js/angular/views/');
-
 // Copy CSS files
 mix.css('resources/css/cdash.css', 'public/assets/css/cdash.css');
 mix.css('resources/css/colorblind.css', 'public/assets/css/colorblind.css');
