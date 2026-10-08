@@ -189,7 +189,7 @@ add_feature_test_in_transaction(/Feature/GitHubWebhook)
 
 add_feature_test_in_transaction(/Feature/GlobalBannerTest)
 
-add_feature_test_in_transaction(/Feature/GraphQL/BuildTypeTest)
+add_feature_test_in_transaction(/Feature/GraphQL/Queries/BuildTypeTest)
 
 add_feature_test_in_transaction(/Feature/ProjectInvitationAcceptanceTest)
 
@@ -197,53 +197,53 @@ add_feature_test_in_transaction(/Feature/UpdateProjectLogoTest)
 
 add_feature_test_in_transaction(/Feature/GraphQL/FilterTest)
 
-add_feature_test_in_transaction(/Feature/GraphQL/QueryTypeTest)
+add_feature_test_in_transaction(/Feature/GraphQL/Queries/QueryTypeTest)
 
-add_feature_test_in_transaction(/Feature/GraphQL/UserTypeTest)
+add_feature_test_in_transaction(/Feature/GraphQL/Queries/UserTypeTest)
 
-add_feature_test_in_transaction(/Feature/GraphQL/ProjectTypeTest)
+add_feature_test_in_transaction(/Feature/GraphQL/Queries/ProjectTypeTest)
 
-add_feature_test_in_transaction(/Feature/GraphQL/SiteTypeTest)
+add_feature_test_in_transaction(/Feature/GraphQL/Queries/SiteTypeTest)
 
-add_feature_test_in_transaction(/Feature/GraphQL/ConfigureTypeTest)
+add_feature_test_in_transaction(/Feature/GraphQL/Queries/ConfigureTypeTest)
 
-add_feature_test_in_transaction(/Feature/GraphQL/TestTypeTest)
+add_feature_test_in_transaction(/Feature/GraphQL/Queries/TestTypeTest)
 
-add_feature_test_in_transaction(/Feature/GraphQL/TestImageTypeTest)
+add_feature_test_in_transaction(/Feature/GraphQL/Queries/TestImageTypeTest)
 
-add_feature_test_in_transaction(/Feature/GraphQL/TestMeasurementTypeTest)
+add_feature_test_in_transaction(/Feature/GraphQL/Queries/TestMeasurementTypeTest)
 
-add_feature_test_in_transaction(/Feature/GraphQL/NoteTypeTest)
+add_feature_test_in_transaction(/Feature/GraphQL/Queries/NoteTypeTest)
 
-add_feature_test_in_transaction(/Feature/GraphQL/CoverageTypeTest)
+add_feature_test_in_transaction(/Feature/GraphQL/Queries/CoverageTypeTest)
 
-add_feature_test_in_transaction(/Feature/GraphQL/DynamicAnalysisTypeTest)
+add_feature_test_in_transaction(/Feature/GraphQL/Queries/DynamicAnalysisTypeTest)
 
-add_feature_test_in_transaction(/Feature/GraphQL/DynamicAnalysisDefectTypeTest)
+add_feature_test_in_transaction(/Feature/GraphQL/Queries/DynamicAnalysisDefectTypeTest)
 
-add_feature_test_in_transaction(/Feature/GraphQL/ProjectInvitationTypeTest)
+add_feature_test_in_transaction(/Feature/GraphQL/Queries/ProjectInvitationTypeTest)
 
-add_feature_test_in_transaction(/Feature/GraphQL/LabelTypeTest)
+add_feature_test_in_transaction(/Feature/GraphQL/Queries/LabelTypeTest)
 
-add_feature_test_in_transaction(/Feature/GraphQL/TargetTypeTest)
+add_feature_test_in_transaction(/Feature/GraphQL/Queries/TargetTypeTest)
 
-add_feature_test_in_transaction(/Feature/GraphQL/BuildCommandTypeTest)
+add_feature_test_in_transaction(/Feature/GraphQL/Queries/BuildCommandTypeTest)
 
-add_feature_test_in_transaction(/Feature/GraphQL/BuildCommandOutputTypeTest)
+add_feature_test_in_transaction(/Feature/GraphQL/Queries/BuildCommandOutputTypeTest)
 
-add_feature_test_in_transaction(/Feature/GraphQL/UpdateTypeTest)
+add_feature_test_in_transaction(/Feature/GraphQL/Queries/UpdateTypeTest)
 
-add_feature_test_in_transaction(/Feature/GraphQL/UpdateFileTypeTest)
+add_feature_test_in_transaction(/Feature/GraphQL/Queries/UpdateFileTypeTest)
 
-add_feature_test_in_transaction(/Feature/GraphQL/PinnedTestMeasurementTypeTest)
+add_feature_test_in_transaction(/Feature/GraphQL/Queries/PinnedTestMeasurementTypeTest)
 
-add_feature_test_in_transaction(/Feature/GraphQL/BuildErrorTypeTest)
+add_feature_test_in_transaction(/Feature/GraphQL/Queries/BuildErrorTypeTest)
 
-add_feature_test_in_transaction(/Feature/GraphQL/CommentTypeTest)
+add_feature_test_in_transaction(/Feature/GraphQL/Queries/CommentTypeTest)
 
-add_feature_test_in_transaction(/Feature/GraphQL/RepositoryTypeTest)
+add_feature_test_in_transaction(/Feature/GraphQL/Queries/RepositoryTypeTest)
 
-add_feature_test_in_transaction(/Feature/GraphQL/CoverageDiffTypeTest)
+add_feature_test_in_transaction(/Feature/GraphQL/Queries/CoverageDiffTypeTest)
 
 add_feature_test_in_transaction(/Feature/RouteAccessTest)
 
@@ -307,7 +307,7 @@ add_feature_test_in_transaction(/Feature/GraphQL/Mutations/DeleteAuthenticationT
 
 add_feature_test_in_transaction(/Feature/GlobalInvitationAcceptanceTest)
 
-add_feature_test_in_transaction(/Feature/GraphQL/GlobalInvitationTypeTest)
+add_feature_test_in_transaction(/Feature/GraphQL/Queries/GlobalInvitationTypeTest)
 
 add_feature_test_in_transaction(/Feature/GraphQL/Mutations/RemoveUserTest)
 
