@@ -21,8 +21,11 @@ use App\Http\Submission\Handlers\UploadHandler;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildUpdate;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use League\Flysystem\UnableToWriteFile;
 
 class SubmissionUtils
 {
@@ -329,6 +332,50 @@ class SubmissionUtils
         hash_update_stream($hashContext, $filehandle);
         rewind($filehandle);
         return hash_final($hashContext);
+    }
+
+    /** Check whether a string is a properly formatted md5 hash */
+    public static function isValidMD5(string $md5): bool
+    {
+        return preg_match('/^[a-f0-9]{32}\z/i', $md5) === 1;
+    }
+
+    /** Check whether the md5 of an open file handle matches the expected hash, ignoring case */
+    public static function isFileMD5Correct(mixed $filehandle, string $expected_md5): bool
+    {
+        return strcasecmp(self::hashFileHandle($filehandle, 'md5'), $expected_md5) === 0;
+    }
+
+    /**
+     * Save a submission file to the inbox directory
+     *
+     * @param resource|string $contents
+     */
+    public static function storeInInbox(string $filename, mixed $contents): bool
+    {
+        try {
+            return Storage::put("inbox/{$filename}", $contents);
+        } catch (UnableToWriteFile $e) {
+            report($e);
+            return false;
+        }
+    }
+
+    /** Record that the inbox holds submissions received while the database was unavailable */
+    public static function markDeferredSubmissions(): void
+    {
+        if (!Storage::exists('DB_WAS_DOWN')) {
+            Storage::put('DB_WAS_DOWN', '');
+        }
+    }
+
+    /** Queue any submissions received while the database was unavailable */
+    public static function queueDeferredSubmissions(): void
+    {
+        if (Storage::exists('DB_WAS_DOWN')) {
+            Storage::delete('DB_WAS_DOWN');
+            Artisan::call('submission:queue');
+        }
     }
 
     /** Generate the inbox filename for a CTest XML submission */

@@ -3,6 +3,10 @@
 namespace Tests\Unit\Utils;
 
 use App\Utils\SubmissionUtils;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Exceptions;
+use Illuminate\Support\Facades\Storage;
+use League\Flysystem\UnableToWriteFile;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
@@ -92,5 +96,132 @@ class SubmissionUtilsTest extends TestCase
     public function testParseFilenameRejectsMalformedFilename(string $filename): void
     {
         $this->assertNull(SubmissionUtils::parseFilename($filename));
+    }
+
+    /**
+     * @return array<string,array{string}>
+     */
+    public static function wellFormedMd5s(): array
+    {
+        return [
+            'lowercase' => [self::MD5],
+            'uppercase' => [strtoupper(self::MD5)],
+        ];
+    }
+
+    #[DataProvider('wellFormedMd5s')]
+    public function testIsValidMD5AcceptsWellFormedHash(string $md5): void
+    {
+        $this->assertTrue(SubmissionUtils::isValidMD5($md5));
+    }
+
+    /**
+     * @return array<string,array{string}>
+     */
+    public static function malformedMd5s(): array
+    {
+        return [
+            'empty' => [''],
+            'too short' => [substr(self::MD5, 1)],
+            'too long' => [self::MD5 . 'f'],
+            'not hexadecimal' => ['z' . substr(self::MD5, 1)],
+            'path' => ['../' . substr(self::MD5, 3)],
+            'trailing newline' => [self::MD5 . "\n"],
+        ];
+    }
+
+    #[DataProvider('malformedMd5s')]
+    public function testIsValidMD5RejectsMalformedHash(string $md5): void
+    {
+        $this->assertFalse(SubmissionUtils::isValidMD5($md5));
+    }
+
+    public function testIsFileMD5CorrectAcceptsMatchingHash(): void
+    {
+        $stream = $this->makeStream('contents');
+
+        $this->assertTrue(SubmissionUtils::isFileMD5Correct($stream, md5('contents')));
+        $this->assertSame('contents', stream_get_contents($stream));
+    }
+
+    public function testIsFileMD5CorrectAcceptsUppercaseMatchingHash(): void
+    {
+        $stream = $this->makeStream('contents');
+
+        $this->assertTrue(SubmissionUtils::isFileMD5Correct($stream, strtoupper(md5('contents'))));
+    }
+
+    public function testIsFileMD5CorrectRejectsMismatchedHash(): void
+    {
+        $stream = $this->makeStream('contents');
+
+        $this->assertFalse(SubmissionUtils::isFileMD5Correct($stream, self::MD5));
+    }
+
+    public function testStoreInInbox(): void
+    {
+        Storage::fake();
+
+        $this->assertTrue(SubmissionUtils::storeInInbox('file.xml', $this->makeStream('contents')));
+
+        $this->assertSame(['inbox/file.xml'], Storage::allFiles());
+        $this->assertSame('contents', Storage::get('inbox/file.xml'));
+    }
+
+    public function testStoreInInboxReturnsFalseWhenWriteFails(): void
+    {
+        Exceptions::fake();
+        Storage::shouldReceive('put')
+            ->once()
+            ->with('inbox/file.xml', 'contents')
+            ->andThrow(UnableToWriteFile::atLocation('inbox/file.xml'));
+
+        $this->assertFalse(SubmissionUtils::storeInInbox('file.xml', 'contents'));
+
+        Exceptions::assertReported(UnableToWriteFile::class);
+    }
+
+    public function testMarkDeferredSubmissions(): void
+    {
+        Storage::fake();
+
+        SubmissionUtils::markDeferredSubmissions();
+
+        $this->assertSame(['DB_WAS_DOWN'], Storage::allFiles());
+    }
+
+    public function testQueueDeferredSubmissions(): void
+    {
+        Storage::fake();
+        Storage::put('DB_WAS_DOWN', '');
+        $artisan = Artisan::spy();
+
+        SubmissionUtils::queueDeferredSubmissions();
+
+        $this->assertSame([], Storage::allFiles());
+        $artisan->shouldHaveReceived('call')->once()->with('submission:queue');
+    }
+
+    public function testQueueDeferredSubmissionsDoesNothingWithoutMarker(): void
+    {
+        Storage::fake();
+        $artisan = Artisan::spy();
+
+        SubmissionUtils::queueDeferredSubmissions();
+
+        $this->assertSame([], Storage::allFiles());
+        $artisan->shouldNotHaveReceived('call');
+    }
+
+    /**
+     * @return resource
+     */
+    private function makeStream(string $contents)
+    {
+        $stream = fopen('php://memory', 'r+');
+        $this->assertIsResource($stream);
+        fwrite($stream, $contents);
+        rewind($stream);
+        return $stream;
     }
 }

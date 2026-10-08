@@ -564,6 +564,38 @@ class UnparsedSubmissionTest extends TestCase
             && $job->expected_md5 === $md5);
     }
 
+    public function testAcceptsDataFileWithUppercaseMd5(): void
+    {
+        $buildid = $this->createBuild();
+        $md5 = strtoupper(md5(self::FILE_CONTENTS));
+
+        $response = $this->putDataFile([
+            ...$this->dataFileParameters($buildid),
+            'md5' => $md5,
+        ]);
+
+        $response->assertOk();
+        $response->assertExactJson(['status' => 0]);
+        $filename = "{$this->project->name}_-__-_BazelJSON_-_{$buildid}_-_{$md5}_-_.json";
+        $this->assertSame(["inbox/$filename"], Storage::allFiles());
+        $this->assertSame(self::FILE_CONTENTS, Storage::get("inbox/$filename"));
+        $this->assertDatabaseHas('buildfile', [
+            'buildid' => $buildid,
+            'type' => 'BazelJSON',
+            'md5' => $md5,
+            'filename' => 'bazel.json',
+        ]);
+        $this->assertDatabaseHas('pending_submissions', [
+            'buildid' => $buildid,
+            'numfiles' => 1,
+        ]);
+        Queue::assertCount(1);
+        Queue::assertPushed(ProcessSubmission::class, fn (ProcessSubmission $job) => $job->filename === $filename
+            && $job->projectid === $this->project->id
+            && $job->buildid === $buildid
+            && $job->expected_md5 === $md5);
+    }
+
     public function testRejectsDataFileWithoutTokenWhenProjectRequiresAuthentication(): void
     {
         $this->requireAuthenticatedSubmissions();
