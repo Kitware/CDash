@@ -73,42 +73,6 @@ parameters:
 			path: app/Console/Commands/CheckKey.php
 
 		-
-			rawMessage: 'Method App\Console\Commands\QueueSubmissions::queueFile() has parameter $inboxFile with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Console/Commands/QueueSubmissions.php
-
-		-
-			rawMessage: 'Parameter #1 $haystack of function strpos expects string, (array<string>|string) given.'
-			identifier: argument.type
-			count: 2
-			path: app/Console/Commands/QueueSubmissions.php
-
-		-
-			rawMessage: 'Parameter #1 $haystack of function strrpos expects string, (array<string>|string) given.'
-			identifier: argument.type
-			count: 2
-			path: app/Console/Commands/QueueSubmissions.php
-
-		-
-			rawMessage: 'Parameter #1 $string of function strlen expects string, (array<string>|string) given.'
-			identifier: argument.type
-			count: 1
-			path: app/Console/Commands/QueueSubmissions.php
-
-		-
-			rawMessage: 'Parameter #1 $string of function substr expects string, (array<string>|string) given.'
-			identifier: argument.type
-			count: 3
-			path: app/Console/Commands/QueueSubmissions.php
-
-		-
-			rawMessage: 'Part $filename (array<string>|string) of encapsed string cannot be cast to string.'
-			identifier: encapsedStringPart.nonString
-			count: 11
-			path: app/Console/Commands/QueueSubmissions.php
-
-		-
 			rawMessage: 'Only booleans are allowed in a negated boolean, App\Models\User|null given.'
 			identifier: booleanNot.exprNotBoolean
 			count: 1
@@ -1459,6 +1423,12 @@ parameters:
 			path: app/Http/Controllers/SubmissionController.php
 
 		-
+			rawMessage: 'Parameter #3 $md5 of static method App\Utils\SubmissionUtils::xmlFilename() expects string, (array|string) given.'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/SubmissionController.php
+
+		-
 			rawMessage: 'Part $expected_md5 (array|non-empty-string) of encapsed string cannot be cast to string.'
 			identifier: encapsedStringPart.nonString
 			count: 2
@@ -1467,7 +1437,7 @@ parameters:
 		-
 			rawMessage: 'Part $expected_md5 (array|string) of encapsed string cannot be cast to string.'
 			identifier: encapsedStringPart.nonString
-			count: 3
+			count: 2
 			path: app/Http/Controllers/SubmissionController.php
 
 		-

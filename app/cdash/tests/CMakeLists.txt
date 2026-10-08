@@ -120,6 +120,8 @@ add_unit_test(/Unit/Validators/PasswordTest)
 
 add_unit_test(/Unit/Middleware/InternalTest)
 
+add_unit_test(/Unit/Utils/SubmissionUtilsTest)
+
 # TODO: Is this test useful now?
 add_legacy_unit_test(/PHPUnitTest)
 
@@ -340,6 +342,8 @@ add_feature_test_in_transaction(/Feature/Services/SiteServiceTest)
 add_feature_test_in_transaction(/Feature/Middleware/AuthenticateTokenTest)
 
 add_feature_test_in_transaction(/Feature/AutoRemoveBuildsCommand)
+
+add_feature_test_in_transaction(/Feature/Console/QueueSubmissionsCommandTest)
 
 add_feature_test_in_transaction(/Feature/Submission/XmlSubmissionTest)
 
