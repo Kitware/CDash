@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Console;
 
 use App\Models\Project;
 use CDash\Database;
@@ -11,7 +11,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
 
-class AutoRemoveBuildsCommand extends TestCase
+class AutoRemoveBuildsCommandTest extends TestCase
 {
     use CreatesProjects;
     use DatabaseTransactions;

@@ -127,8 +127,6 @@ add_legacy_unit_test(/PHPUnitTest)
 
 add_legacy_unit_test(/CDash/ServiceContainer)
 
-add_unit_test(/Unit/Console/Command/ValidateXmlCommandTest)
-
 add_unit_test(/Unit/GraphQL/SchemaValidationTest)
 
 add_php_test(seconds_from_interval)
@@ -253,15 +251,17 @@ add_feature_test_in_transaction(/Feature/Monitor)
 
 add_feature_test_in_transaction(/Feature/PasswordRotation)
 
-add_feature_test_in_transaction(/Feature/PurgeUnusedProjectsCommand)
+add_feature_test_in_transaction(/Feature/Console/PurgeUnusedProjectsCommandTest)
 
 add_feature_test_in_transaction(/Feature/Jobs/PruneJobsTest)
 
 add_feature_test_in_transaction(/Feature/Jobs/PruneAuthTokensTest)
 
-add_feature_test_in_transaction(/Feature/UserCommand)
+add_feature_test_in_transaction(/Feature/Console/SaveUserCommandTest)
 
-add_feature_test_in_transaction(/Feature/EmailTestCommandTest)
+add_feature_test_in_transaction(/Feature/Console/RemoveUserCommandTest)
+
+add_feature_test_in_transaction(/Feature/Console/EmailTestCommandTest)
 
 add_feature_test_in_transaction(/Feature/Jobs/NotifyExpiringAuthTokensTest)
 
@@ -341,9 +341,13 @@ add_feature_test_in_transaction(/Feature/Services/SiteServiceTest)
 
 add_feature_test_in_transaction(/Feature/Middleware/AuthenticateTokenTest)
 
-add_feature_test_in_transaction(/Feature/AutoRemoveBuildsCommand)
+add_feature_test_in_transaction(/Feature/Console/AutoRemoveBuildsCommandTest)
 
 add_feature_test_in_transaction(/Feature/Console/QueueSubmissionsCommandTest)
+
+add_feature_test_in_transaction(/Feature/Console/DeleteProjectCommandTest)
+
+add_feature_test_in_transaction(/Feature/Console/ValidateXmlCommandTest)
 
 add_feature_test_in_transaction(/Feature/Submission/XmlSubmissionTest)
 
