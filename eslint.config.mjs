@@ -2,7 +2,6 @@ import js from '@eslint/js';
 import globals from 'globals';
 import pluginVue from 'eslint-plugin-vue';
 import pluginCypress from 'eslint-plugin-cypress';
-import pluginJest from 'eslint-plugin-jest';
 import stylistic from '@stylistic/eslint-plugin';
 import { defineConfig, globalIgnores } from 'eslint/config';
 
@@ -155,22 +154,9 @@ export default defineConfig([
     ...pluginCypress.configs.recommended,
   },
   {
-    files: ['**/*.spec.js'],
-    plugins: {
-      jest: pluginJest,
-    },
-    languageOptions: {
-      globals: {
-        ...globals.node,
-        ...pluginJest.environments.globals.globals,
-      },
-    },
-  },
-  {
     files: [
       '**/postcss.config.js',
       '**/babel.config.js',
-      '**/jest.config.js',
     ],
     languageOptions: {
       globals: {
