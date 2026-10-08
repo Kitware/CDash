@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Jobs\ProcessSubmission;
 use App\Services\AuthTokenService;
+use App\Utils\SubmissionUtils;
 use CDash\Model\Project;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
@@ -42,7 +43,7 @@ class QueueSubmissions extends Command
         // Queue the "build metadata" JSON files first, so they have a chance
         // to get parsed before the subsequent payload files.
         foreach (Storage::files('inbox') as $inboxFile) {
-            if (!str_contains($inboxFile, '_-_build-metadata_-_') || !str_contains($inboxFile, '.json')) {
+            if (!SubmissionUtils::isBuildMetadataFilename($inboxFile)) {
                 continue;
             }
             $this->queueFile($inboxFile);
@@ -50,62 +51,37 @@ class QueueSubmissions extends Command
 
         // Iterate over our inbox files again, queueing them for parsing.
         foreach (Storage::files('inbox') as $inboxFile) {
-            if (str_contains($inboxFile, '_-_build-metadata_-_') && str_contains($inboxFile, '.json')) {
+            if (SubmissionUtils::isBuildMetadataFilename($inboxFile)) {
                 continue;
             }
             $this->queueFile($inboxFile);
         }
     }
 
-    private function queueFile($inboxFile): void
+    private function queueFile(string $inboxFile): void
     {
         $filename = str_replace('inbox/', '', $inboxFile);
-        $pos = strpos($filename, '_-_');
-        if ($pos === false) {
+        $parsed = SubmissionUtils::parseFilename($filename);
+        if ($parsed === null) {
             Storage::move("inbox/{$filename}", "failed/{$filename}");
-            echo "Could not extract projectname from $filename\n";
+            echo "Could not parse $filename\n";
             return;
         }
 
-        $projectname = substr($filename, 0, $pos);
         $project = new Project();
-        $project->FindByName($projectname);
+        $project->FindByName($parsed['projectname']);
         if (!$project->Id) {
             Storage::move("inbox/{$filename}", "failed/{$filename}");
-            echo "Could not find project $projectname\n";
+            echo "Could not find project {$parsed['projectname']}\n";
             return;
         }
 
-        if ($project->AuthenticateSubmissions) {
-            // Get authtoken hash from filename.
-            $begin = $pos + 3;
-            $end = strpos($filename, '_-_', $begin);
-            if ($end === false) {
-                Storage::move("inbox/{$filename}", "failed/{$filename}");
-                echo "Could not extract authtoken from $filename\n";
-                return;
-            }
-            $len = $end - $begin;
-            if (!AuthTokenService::check(substr($filename, $begin, $len), $project->Id)) {
-                Storage::move("inbox/{$filename}", "failed/{$filename}");
-                echo "Invalid authentication token for $filename\n";
-                return;
-            }
+        if ($project->AuthenticateSubmissions && !AuthTokenService::check($parsed['token_hash'], $project->Id)) {
+            Storage::move("inbox/{$filename}", "failed/{$filename}");
+            echo "Invalid authentication token for $filename\n";
+            return;
         }
 
-        // Get md5 from filename (if any).
-        $md5 = '';
-        $last_underscore_pos = strrpos($filename, '_-_');
-        if ($last_underscore_pos !== false) {
-            $offset = $last_underscore_pos - strlen($filename) - 3;
-            $next_to_last_underscore_pos = strrpos($filename, '_-_', $offset);
-            if ($next_to_last_underscore_pos !== false) {
-                $next_to_last_underscore_pos += 3;
-                $len = $last_underscore_pos - $next_to_last_underscore_pos;
-                $md5 = substr($filename, $next_to_last_underscore_pos, $len);
-            }
-        }
-
-        ProcessSubmission::dispatch($filename, $project->Id, null, $md5);
+        ProcessSubmission::dispatch($filename, $project->Id, null, $parsed['md5']);
     }
 }

@@ -245,37 +245,26 @@ class UnparsedSubmissionProcessor
             }
             $this->projectname = $this->project->Name;
 
-            $this->inboxdatafilename = "inbox/{$this->projectname}_-_{$this->token}_-_{$this->type}_-_{$this->buildid}_-_{$this->md5}_-_.$ext";
+            $this->inboxdatafilename = 'inbox/' . SubmissionUtils::dataFilename($this->projectname, $this->token, $this->type, $this->buildid, $this->md5, $ext);
         } else {
             // Get project name from build metadata file on disk.
             $projectname = null;
             foreach (Storage::files('inbox') as $inboxFile) {
                 $filename = str_replace('inbox/', '', $inboxFile);
-                $pos = strpos($filename, "_-_build-metadata_-_{$this->buildid}");
-                if ($pos === false) {
+                $parsed = SubmissionUtils::parseFilename($filename);
+                if ($parsed === null || $filename !== SubmissionUtils::buildMetadataFilename($parsed['projectname'], $parsed['token_hash'], $this->buildid)) {
                     continue;
                 }
-                $pos = strpos($filename, '_-_');
-                if ($pos === false) {
-                    Log::info("Could not extract projectname from $filename for {$this->buildid}");
-                    continue;
-                }
-                $projectname = substr($filename, 0, $pos);
+                $projectname = $parsed['projectname'];
                 break;
             }
 
-            $validator = Validator::make([
-                'name' => $projectname,
-            ], [
-                'name' => new ProjectNameRule(),
-            ]);
-
-            if (null === $projectname || $validator->fails()) {
+            if ($projectname === null) {
                 Log::info("Could not find build metadata file for {$this->buildid}");
                 abort(Response::HTTP_NOT_FOUND, 'Build not found');
             }
             $this->projectname = $projectname;
-            $this->inboxdatafilename = "inbox/{$this->projectname}_-_{$this->token}_-_{$this->type}_-_{$this->buildid}_-_{$this->md5}_-_.$ext";
+            $this->inboxdatafilename = 'inbox/' . SubmissionUtils::dataFilename($this->projectname, $this->token, $this->type, $this->buildid, $this->md5, $ext);
             $this->serializeDataFileParameters();
 
             if (!Storage::exists('DB_WAS_DOWN')) {
@@ -397,15 +386,14 @@ class UnparsedSubmissionProcessor
             abort(500);
         }
 
-        $build_metadata_filename = "{$this->projectname}_-_{$this->token}_-_build-metadata_-_{$uuid}_-__-_.json";
-        $inbox_build_metadata_filename = "inbox/{$build_metadata_filename}";
+        $inbox_build_metadata_filename = 'inbox/' . SubmissionUtils::buildMetadataFilename($this->projectname, $this->token, $uuid);
         Storage::put($inbox_build_metadata_filename, $build_metadata);
     }
 
     /** Append data file parameters to the build metadata JSON file. */
     private function serializeDataFileParameters(): void
     {
-        $inbox_filename = "inbox/{$this->projectname}_-_{$this->token}_-_build-metadata_-_{$this->buildid}_-__-_.json";
+        $inbox_filename = 'inbox/' . SubmissionUtils::buildMetadataFilename($this->projectname, $this->token, $this->buildid);
         if (!Storage::exists($inbox_filename)) {
             Log::warning("Could not find build metadata file {$inbox_filename}");
             abort(Response::HTTP_INTERNAL_SERVER_ERROR, 'Could not find build metadata file');

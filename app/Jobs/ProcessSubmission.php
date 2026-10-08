@@ -177,7 +177,7 @@ class ProcessSubmission implements ShouldQueue
         }
 
         // Special handling for "build metadata" files created while the DB was down.
-        if (str_contains($filename, '_-_build-metadata_-_') && str_contains($filename, '.json')) {
+        if (SubmissionUtils::isBuildMetadataFilename($this->filename)) {
             $handler = new UnparsedSubmissionProcessor();
             $handler->backupFileName = $this->filename;
             $handler->deserializeBuildMetadata($filehandle);

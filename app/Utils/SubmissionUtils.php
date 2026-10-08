@@ -22,6 +22,7 @@ use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildUpdate;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class SubmissionUtils
 {
@@ -328,5 +329,51 @@ class SubmissionUtils
         hash_update_stream($hashContext, $filehandle);
         rewind($filehandle);
         return hash_final($hashContext);
+    }
+
+    /** Generate the inbox filename for a CTest XML submission */
+    public static function xmlFilename(string $projectname, string $token_hash, string $md5): string
+    {
+        return "{$projectname}_-_{$token_hash}_-_" . Str::uuid()->toString() . "_-_{$md5}.xml";
+    }
+
+    /** Generate the inbox filename for an unparsed submission data file */
+    public static function dataFilename(string $projectname, string $token_hash, string $type, int|string $buildid, string $md5, string $extension): string
+    {
+        return "{$projectname}_-_{$token_hash}_-_{$type}_-_{$buildid}_-_{$md5}_-_.{$extension}";
+    }
+
+    /** Generate the inbox filename for unparsed submission build metadata received while the database was down */
+    public static function buildMetadataFilename(string $projectname, string $token_hash, string $uuid): string
+    {
+        return "{$projectname}_-_{$token_hash}_-_build-metadata_-_{$uuid}_-__-_.json";
+    }
+
+    public static function isBuildMetadataFilename(string $filename): bool
+    {
+        return (explode('_-_', $filename)[2] ?? null) === 'build-metadata';
+    }
+
+    /**
+     * Extract the fields shared by all inbox filename formats
+     *
+     * @return array{projectname: string, token_hash: string, md5: string}|null
+     */
+    public static function parseFilename(string $filename): ?array
+    {
+        $parts = explode('_-_', $filename);
+        if (count($parts) === 4) {
+            $md5 = Str::beforeLast($parts[3], '.');
+        } elseif (count($parts) >= 6) {
+            $md5 = $parts[4];
+        } else {
+            return null;
+        }
+
+        return [
+            'projectname' => $parts[0],
+            'token_hash' => $parts[1],
+            'md5' => $md5,
+        ];
     }
 }

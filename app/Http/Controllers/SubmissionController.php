@@ -22,7 +22,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
 use League\Flysystem\UnableToMoveFile;
 use League\Flysystem\UnableToReadFile;
 use League\Flysystem\UnableToWriteFile;
@@ -121,7 +120,7 @@ final class SubmissionController extends AbstractProjectController
         }
 
         // Save the incoming file in the inbox directory.
-        $filename = "{$projectname}_-_{$authtoken_hash}_-_" . Str::uuid()->toString() . "_-_{$expected_md5}.xml";
+        $filename = SubmissionUtils::xmlFilename((string) $projectname, $authtoken_hash, $expected_md5);
         try {
             Storage::put("inbox/{$filename}", $fp);
         } catch (UnableToWriteFile $e) {
