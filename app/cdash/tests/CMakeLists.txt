@@ -327,6 +327,10 @@ add_feature_test_in_transaction(/Feature/Jobs/PerformLegacyDailyUpdatesTest)
 
 add_feature_test_in_transaction(/Feature/BuildGroupRuleTest)
 
+add_feature_test_in_transaction(/Feature/ManageOverviewTest)
+
+add_feature_test_in_transaction(/Feature/TestOverviewTest)
+
 add_feature_test_in_transaction(/Feature/Services/AuthTokenServiceTest)
 
 add_feature_test_in_transaction(/Feature/Services/ProjectServiceTest)

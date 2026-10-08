@@ -17,6 +17,7 @@
 
 namespace CDash\Controller\Api;
 
+use App\Enums\BuildGroupType;
 use App\Services\ProjectService;
 use CDash\Database;
 use CDash\Model\BuildGroup;
@@ -93,6 +94,11 @@ class TestOverview extends ResultsApi
         $groups_response[] = $default_group;
 
         foreach ($buildgroups as $buildgroup) {
+            // Tests are found via build2group, so dynamic groups would never have any.
+            if ($buildgroup->GetType() !== BuildGroupType::DAILY->value) {
+                continue;
+            }
+
             $group_response = [];
             $group_response['id'] = $buildgroup->GetId();
             $group_response['name'] = $buildgroup->GetName();
