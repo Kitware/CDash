@@ -40,7 +40,7 @@ abstract class AbstractController extends BaseController
         $controller_name = Str::studly($file) . 'Controller';
 
         return $this->view('cdash', $title)
-            ->with('xsl_content', file_get_contents(base_path("public/assets/js/angular/views/$view.html")))
+            ->with('xsl_content', file_get_contents(resource_path("js/angular/views/$view.html")))
             ->with('xsl', true)
             ->with('angular', true)
             ->with('angular_controller', $controller_name);
