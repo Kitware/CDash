@@ -51,6 +51,8 @@ Route::match(['get', 'post', 'delete'], '/v1/expectedbuild.php', ExpectedBuildCo
 Route::middleware(['auth'])->group(function (): void {
     Route::get('/v1/manageSubProject.php', 'SubProjectController@apiManageSubProject');
 
+    Route::match(['get', 'post', 'put', 'delete'], '/v1/subproject.php', 'SubProjectController@apiSubProject');
+
     Route::match(['get', 'post'], '/v1/manageOverview.php', 'ProjectOverviewController@apiManageOverview');
 
     Route::middleware(['admin'])->group(function (): void {
