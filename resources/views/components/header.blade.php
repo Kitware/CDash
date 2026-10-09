@@ -210,7 +210,7 @@ $showHeaderNav = isset($build);
                             @endif
                             @if($userInProject)
                                 <li>
-                                    <a href="{{ url('/subscribeProject.php') }}?projectid={{ $project->Id }}">
+                                    <a href="{{ url("/projects/{$project->Id}/notifications") }}">
                                         Notifications
                                     </a>
                                 </li>

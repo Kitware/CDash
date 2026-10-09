@@ -27,6 +27,7 @@ const app = createApp({
     ProjectSitesPage: defineAsyncComponent(() => import('./components/ProjectSitesPage.vue')),
     SitesIdPage: defineAsyncComponent(() => import('./components/SitesIdPage.vue')),
     ProjectMembersPage: defineAsyncComponent(() => import('./components/ProjectMembersPage.vue')),
+    ProjectNotificationsPage: defineAsyncComponent(() => import('./components/ProjectNotificationsPage.vue')),
     UsersPage: defineAsyncComponent(() => import('./components/UsersPage.vue')),
     BuildFilesPage: defineAsyncComponent(() => import('./components/BuildFilesPage.vue')),
     BuildTargetsPage: defineAsyncComponent(() => import('./components/BuildTargetsPage.vue')),

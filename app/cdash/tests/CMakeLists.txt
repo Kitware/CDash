@@ -197,6 +197,8 @@ add_feature_test_in_transaction(/Feature/ProjectInvitationAcceptanceTest)
 
 add_feature_test_in_transaction(/Feature/UpdateProjectLogoTest)
 
+add_feature_test_in_transaction(/Feature/ProjectNotificationsTest)
+
 add_feature_test_in_transaction(/Feature/GraphQL/FilterTest)
 
 add_feature_test_in_transaction(/Feature/GraphQL/Queries/QueryTypeTest)
@@ -403,6 +405,8 @@ add_browser_test(/Browser/Pages/SitesIdPageTest)
 add_browser_test(/Browser/Pages/ProjectSitesPageTest)
 
 add_browser_test(/Browser/Pages/ProjectMembersPageTest)
+
+add_browser_test(/Browser/Pages/ProjectNotificationsPageTest)
 
 add_browser_test(/Browser/Pages/ProjectBuildsPageTest)
 
