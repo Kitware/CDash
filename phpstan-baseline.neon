@@ -1405,42 +1405,6 @@ parameters:
 			path: app/Http/Controllers/SubmissionController.php
 
 		-
-			rawMessage: 'Only booleans are allowed in a negated boolean, int|false given.'
-			identifier: booleanNot.exprNotBoolean
-			count: 1
-			path: app/Http/Controllers/SubmissionController.php
-
-		-
-			rawMessage: 'Parameter #1 $string of function strlen expects string, (array|string) given.'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/SubmissionController.php
-
-		-
-			rawMessage: 'Parameter #2 $subject of function preg_match expects string, (array|string) given.'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/SubmissionController.php
-
-		-
-			rawMessage: 'Parameter #3 $md5 of static method App\Utils\SubmissionUtils::xmlFilename() expects string, (array|string) given.'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/SubmissionController.php
-
-		-
-			rawMessage: 'Part $expected_md5 (array|non-empty-string) of encapsed string cannot be cast to string.'
-			identifier: encapsedStringPart.nonString
-			count: 2
-			path: app/Http/Controllers/SubmissionController.php
-
-		-
-			rawMessage: 'Part $expected_md5 (array|string) of encapsed string cannot be cast to string.'
-			identifier: encapsedStringPart.nonString
-			count: 2
-			path: app/Http/Controllers/SubmissionController.php
-
-		-
 			rawMessage: '''
 				Call to deprecated method executePrepared() of class CDash\Database:
 				04/22/2023  Use Laravel query builder or Eloquent instead
@@ -6031,12 +5995,6 @@ parameters:
 			path: app/Utils/UnparsedSubmissionProcessor.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" between string and mixed is not allowed.'
-			identifier: notEqual.notAllowed
-			count: 1
-			path: app/Utils/UnparsedSubmissionProcessor.php
-
-		-
 			rawMessage: 'Method App\Utils\UnparsedSubmissionProcessor::deserializeBuildMetadata() has parameter $fp with no type specified.'
 			identifier: missingType.parameter
 			count: 1
@@ -6051,18 +6009,6 @@ parameters:
 		-
 			rawMessage: 'Only booleans are allowed in a negated boolean, mixed given.'
 			identifier: booleanNot.exprNotBoolean
-			count: 1
-			path: app/Utils/UnparsedSubmissionProcessor.php
-
-		-
-			rawMessage: 'Only booleans are allowed in a negated boolean, stdClass|null given.'
-			identifier: booleanNot.exprNotBoolean
-			count: 1
-			path: app/Utils/UnparsedSubmissionProcessor.php
-
-		-
-			rawMessage: 'Only booleans are allowed in an if condition, string|null given.'
-			identifier: if.condNotBoolean
 			count: 1
 			path: app/Utils/UnparsedSubmissionProcessor.php
 
