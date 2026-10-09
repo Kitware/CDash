@@ -179,37 +179,37 @@ export default {
             passedTestsCount
             notRunTestsCount
             failedTestsCount
-            coverage {
+            coverage(first: 0) {
               pageInfo {
                 total
               }
             }
-            dynamicAnalyses {
+            dynamicAnalyses(first: 0) {
               pageInfo {
                 total
               }
             }
-            files {
+            files(first: 0) {
               pageInfo {
                 total
               }
             }
-            urls {
+            urls(first: 0) {
               pageInfo {
                 total
               }
             }
-            notes {
+            notes(first: 0) {
               pageInfo {
                 total
               }
             }
-            commands {
+            commands(first: 0) {
               pageInfo {
                 total
               }
             }
-            targets {
+            targets(first: 0) {
               pageInfo {
                 total
               }
