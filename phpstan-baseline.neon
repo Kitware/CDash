@@ -21472,10 +21472,19 @@ parameters:
 			path: tests/BrowserTestCase.php
 
 		-
+			rawMessage: '''
+				Call to deprecated method forceRootUrl() of class Illuminate\Routing\UrlGenerator:
+				Use useOrigin
+			'''
+			identifier: staticMethod.deprecated
+			count: 4
+			path: tests/Feature/CDashTest.php
+
+		-
 			rawMessage: Access to an undefined property CDash\Model\Build::$Endime.
 			identifier: property.notFound
 			count: 2
-			path: tests/Feature/AutoRemoveBuildsCommand.php
+			path: tests/Feature/Console/AutoRemoveBuildsCommandTest.php
 
 		-
 			rawMessage: '''
@@ -21484,7 +21493,7 @@ parameters:
 			'''
 			identifier: method.deprecated
 			count: 3
-			path: tests/Feature/AutoRemoveBuildsCommand.php
+			path: tests/Feature/Console/AutoRemoveBuildsCommandTest.php
 
 		-
 			rawMessage: '''
@@ -21493,28 +21502,25 @@ parameters:
 			'''
 			identifier: method.deprecated
 			count: 1
-			path: tests/Feature/AutoRemoveBuildsCommand.php
+			path: tests/Feature/Console/AutoRemoveBuildsCommandTest.php
 
 		-
 			rawMessage: 'Cannot call method fetchColumn() on PDOStatement|false.'
 			identifier: method.nonObject
 			count: 3
-			path: tests/Feature/AutoRemoveBuildsCommand.php
+			path: tests/Feature/Console/AutoRemoveBuildsCommandTest.php
 
 		-
 			rawMessage: 'Parameter #1 $stmt of method CDash\Database::execute() expects PDOStatement, PDOStatement|false given.'
 			identifier: argument.type
 			count: 3
-			path: tests/Feature/AutoRemoveBuildsCommand.php
+			path: tests/Feature/Console/AutoRemoveBuildsCommandTest.php
 
 		-
-			rawMessage: '''
-				Call to deprecated method forceRootUrl() of class Illuminate\Routing\UrlGenerator:
-				Use useOrigin
-			'''
-			identifier: staticMethod.deprecated
-			count: 4
-			path: tests/Feature/CDashTest.php
+			rawMessage: 'You should use assertSame() instead of assertEquals(), because both values are scalars of the same type'
+			identifier: phpunit.assertEquals
+			count: 2
+			path: tests/Feature/Console/ValidateXmlCommandTest.php
 
 		-
 			rawMessage: 'Method Tests\Feature\GlobalInvitationAcceptanceTest::createInvitation() throws checked exception OverflowException but it''s missing from the PHPDoc @throws tag.'
@@ -21910,18 +21916,6 @@ parameters:
 			path: tests/Feature/ProjectPermissions.php
 
 		-
-			rawMessage: Class Tests\Feature\PurgeUnusedProjectsCommand has an uninitialized property $project1. Give it default value or assign it in the constructor.
-			identifier: property.uninitialized
-			count: 1
-			path: tests/Feature/PurgeUnusedProjectsCommand.php
-
-		-
-			rawMessage: Class Tests\Feature\PurgeUnusedProjectsCommand has an uninitialized property $project2. Give it default value or assign it in the constructor.
-			identifier: property.uninitialized
-			count: 1
-			path: tests/Feature/PurgeUnusedProjectsCommand.php
-
-		-
 			rawMessage: '''
 				Call to deprecated method forceRootUrl() of class Illuminate\Routing\UrlGenerator:
 				Use useOrigin
@@ -21938,36 +21932,6 @@ parameters:
 			identifier: staticMethod.deprecated
 			count: 1
 			path: tests/Feature/Services/ProjectServiceTest.php
-
-		-
-			rawMessage: Cannot access property $admin on App\Models\User|null.
-			identifier: property.nonObject
-			count: 1
-			path: tests/Feature/UserCommand.php
-
-		-
-			rawMessage: Cannot access property $institution on App\Models\User|null.
-			identifier: property.nonObject
-			count: 1
-			path: tests/Feature/UserCommand.php
-
-		-
-			rawMessage: Property Tests\Feature\UserCommand::$user has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: tests/Feature/UserCommand.php
-
-		-
-			rawMessage: 'You should use assertSame() instead of assertEquals(), because both values are scalars of the same type'
-			identifier: phpunit.assertEquals
-			count: 5
-			path: tests/Feature/UserCommand.php
-
-		-
-			rawMessage: 'You should use assertSame() instead of assertEquals(), because both values are scalars of the same type'
-			identifier: phpunit.assertEquals
-			count: 2
-			path: tests/Unit/Console/Command/ValidateXmlCommandTest.php
 
 		-
 			rawMessage: 'Parameter #1 $objectOrClass of class ReflectionClass constructor expects class-string<T of object>|T of object, array<string>|string given.'
