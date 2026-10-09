@@ -23,8 +23,6 @@ use CDash\Collection\SubscriberCollection;
 use CDash\Database;
 use CDash\Messaging\Notification\NotifyOn;
 use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
-use CDash\Messaging\Preferences\NotificationPreferences;
-use CDash\ServiceContainer;
 use DateInterval;
 use DateTime;
 use DateTimeZone;
@@ -554,8 +552,7 @@ class Project
      */
     protected function GetProjectSubscribers(): SubscriberCollection
     {
-        $service = ServiceContainer::getInstance()->getContainer();
-        $collection = $service->make(SubscriberCollection::class);
+        $collection = new SubscriberCollection();
         // TODO: works, but maybe find a better query
         $sql = '
             SELECT
@@ -572,11 +569,7 @@ class Project
         $user->execute();
 
         foreach ($user->fetchAll(PDO::FETCH_OBJ) as $row) {
-            /** @var NotificationPreferences $preferences */
-            $preferences = $service->make(
-                BitmaskNotificationPreferences::class,
-                ['mask' => $row->emailcategory]
-            );
+            $preferences = new BitmaskNotificationPreferences($row->emailcategory);
             $preferences->setPreferencesFromEmailTypeProperty($row->emailtype);
             if ($preferences->get(NotifyOn::NEVER)) {
                 continue;
@@ -585,8 +578,7 @@ class Project
             $preferences->set(NotifyOn::SITE_MISSING, $row->emailmissingsites);
             $preferences->set(NotifyOn::REDUNDANT, $this->EmailRedundantFailures);
 
-            /** @var Subscriber $subscriber */
-            $subscriber = $service->make(Subscriber::class, ['preferences' => $preferences]);
+            $subscriber = new Subscriber($preferences);
             $subscriber
                 ->setAddress($row->email)
                 ->setUserId($row->userid);

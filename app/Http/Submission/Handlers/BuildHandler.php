@@ -123,7 +123,6 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
     public function startElement($parser, $name, $attributes): void
     {
         parent::startElement($parser, $name, $attributes);
-        $factory = $this->getModelFactory();
 
         if ($this->currentPathMatches('site')) {
             $site_name = !empty($attributes['NAME']) ? $attributes['NAME'] : '(empty)';
@@ -182,7 +181,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
                 $this->SubProjects[$this->SubProjectName] = [];
             }
             if (!array_key_exists($this->SubProjectName, $this->Builds)) {
-                $build = $factory->create(Build::class);
+                $build = app(Build::class);
                 if (!empty($this->PullRequest)) {
                     $build->SetPullRequest($this->PullRequest);
                 }
@@ -201,7 +200,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
         } elseif ($name === 'BUILD') {
             if (empty($this->Builds)) {
                 // No subprojects
-                $build = $factory->create(Build::class);
+                $build = app(Build::class);
                 if (!empty($this->PullRequest)) {
                     $build->SetPullRequest($this->PullRequest);
                 }
@@ -218,15 +217,15 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
                 $this->Builds[''] = $build;
             }
         } elseif ($name === 'WARNING') {
-            $this->Error = $factory->create(BuildError::class);
+            $this->Error = app(BuildError::class);
             $this->Error->Type = 1;
             $this->ErrorSubProjectName = '';
         } elseif ($name === 'ERROR') {
-            $this->Error = $factory->create(BuildError::class);
+            $this->Error = app(BuildError::class);
             $this->Error->Type = 0;
             $this->ErrorSubProjectName = '';
         } elseif ($name === 'FAILURE') {
-            $this->Error = $factory->create(BuildFailure::class);
+            $this->Error = app(BuildFailure::class);
             $this->Error->Type = 0;
             if ($attributes['TYPE'] === 'Error') {
                 $this->Error->Type = 0;
@@ -235,7 +234,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
             }
             $this->ErrorSubProjectName = '';
         } elseif ($name === 'LABEL' && !$this->currentPathMatches('site.build.commands.*.labels.label')) {
-            $this->Label = $factory->create(Label::class);
+            $this->Label = app(Label::class);
         } elseif ($this->currentPathMatches('site.build.targets.target')) {
             if (array_key_exists($attributes['NAME'], $this->Targets)) {
                 // In theory, this case should never happen...
@@ -324,8 +323,6 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
 
     public function endElement($parser, $name): void
     {
-        $factory = $this->getModelFactory();
-
         if ($name === 'BUILD') {
             $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
             $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp);
@@ -468,7 +465,7 @@ class BuildHandler extends AbstractXmlHandler implements ActionableBuildInterfac
                         }
                     }
                     if (!$hasLabel) {
-                        $label = $factory->create(Label::class);
+                        $label = app(Label::class);
                         $label->text = $this->SubProjectName;
                         if (!$this->Error instanceof BuildFailure) {
                             throw new RuntimeException('Field "Error" is not instance of BuildFailure.');

@@ -125,8 +125,6 @@ add_unit_test(/Unit/Utils/SubmissionUtilsTest)
 # TODO: Is this test useful now?
 add_legacy_unit_test(/PHPUnitTest)
 
-add_legacy_unit_test(/CDash/ServiceContainer)
-
 add_unit_test(/Unit/Console/Command/ValidateXmlCommandTest)
 
 add_unit_test(/Unit/GraphQL/SchemaValidationTest)
