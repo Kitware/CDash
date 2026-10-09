@@ -17,7 +17,6 @@ namespace CDash\Test;
 
 use CDash\Database;
 use CDash\Model\Build;
-use CDash\ServiceContainer;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
@@ -28,12 +27,6 @@ class CDashTestCase extends TestCase
 
     /** @var Database */
     private $originalDatabase;
-
-    public static function tearDownAfterClass(): void
-    {
-        ServiceContainer::setInstance(ServiceContainer::class, null);
-        parent::tearDownAfterClass();
-    }
 
     public function tearDown(): void
     {

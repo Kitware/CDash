@@ -8,7 +8,6 @@ use App\Models\Configure;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\Project;
-use CDash\ServiceContainer;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Support\Uri;
@@ -33,66 +32,6 @@ class RepositoryUtils
             return is_string($host) && str_contains($url, $host);
         }
         return false;
-    }
-
-    /** Return the GitHub diff URL */
-    public static function get_github_diff_url($projecturl, $directory, $file, $revision)
-    {
-        if (empty($directory) && empty($file) && empty($revision)) {
-            return;
-        }
-
-        // set a reasonable default revision if none was specified
-        if (empty($revision)) {
-            $revision = 'master';
-        }
-
-        $directory = trim($directory, '/');
-
-        $diff_url = "$projecturl/blob/$revision/";
-        $diff_url .= "$directory/$file";
-        return make_cdash_url($diff_url);
-    }
-
-    /** Return the GitLab diff URL */
-    public static function get_gitlab_diff_url($projecturl, $directory, $file, $revision): string
-    {
-        // Since GitLab supports arbitrarily nested groups, there is a `/-/`
-        // component to start per-project resources.
-        if ($revision !== '') {
-            $diff_url = $projecturl . '/-/commit/' . $revision;
-        } elseif ($file !== '') {
-            $diff_url = $projecturl . '/-/blob/master/';
-            if ($directory !== '') {
-                $diff_url .= $directory . '/';
-            }
-            $diff_url .= $file;
-        } else {
-            return '';
-        }
-        return make_cdash_url($diff_url);
-    }
-
-    /** Get the diff url based on the type of viewer */
-    public static function get_diff_url($projectid, $projecturl, $directory, $file, $revision = '')
-    {
-        if (!is_numeric($projectid)) {
-            return;
-        }
-
-        $service = ServiceContainer::getInstance();
-        $project = $service->get(Project::class);
-        $project->Id = $projectid;
-        $project->Fill();
-
-        $cvsviewertype = strtolower($project->CvsViewerType ?? '');
-        $difffunction = 'get_' . $cvsviewertype . '_diff_url';
-
-        if (method_exists(self::class, $difffunction)) {
-            return self::$difffunction($projecturl, $directory, $file, $revision);
-        }
-        // default is github
-        return self::get_github_diff_url($projecturl, $directory, $file, $revision);
     }
 
     /** Return the GitHub revision URL */
