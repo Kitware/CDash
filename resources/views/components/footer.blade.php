@@ -4,7 +4,7 @@
 <div id="footer" class="ng-scope">
     <div>
         <a href="https://www.kitware.com">
-            <img src="{{ asset('img/kitware_logo_footer.svg') }}" alt="logo" height="30" style="height: 30px;">
+            <img src="{{ asset('img/kitware_logo_footer.svg?rev=2023-05-31') }}" alt="logo" height="30" style="height: 30px;">
         </a>
     </div>
     <div class="footer-element" style="text-align: right;">

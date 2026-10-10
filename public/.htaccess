@@ -9,6 +9,9 @@
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
+    # Static files in these directories are versioned or never change...
+    RewriteRule ^(assets|fonts|images|img)/ - [E=CDASH_IMMUTABLE:1]
+
     # Redirect Trailing Slashes If Not A Folder...
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_URI} (.+)/$
@@ -21,8 +24,9 @@
 </IfModule>
 
 <IfModule mod_headers.c>
-    <FilesMatch "\.(css|js|svg|gif|png)$">
-        Header set Cache-Control "max-age=31536000"
+    <FilesMatch "\.(css|js|svg|gif|png|woff2?|ttf|eot)$">
+        Header set Cache-Control "max-age=31536000, immutable" env=CDASH_IMMUTABLE
+        Header set Cache-Control "no-cache" env=!CDASH_IMMUTABLE
     </FilesMatch>
 
     Header set Content-Security-Policy "default-src 'self' 'unsafe-inline' 'unsafe-eval'; font-src 'self' data:; img-src 'self' data:"
