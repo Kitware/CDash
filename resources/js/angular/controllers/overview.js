@@ -1,8 +1,5 @@
-import d3 from 'd3';
-import nv from 'nvd3';
-
 function makeLineChart(elementName, inputData, project, anchor, sort) {
-  jQuery(function(){
+  import('../charts/jqplot.js').then(function() {
 
     // setup the chart
     var chart = $.jqplot (elementName, [inputData], {
@@ -57,7 +54,7 @@ function makeBulletChart(chartName, elementName, min, avg, max, current,
                          previous, chartHeight) {
   // note that chartHeight is just for the chart itself (not the labels)
   var chart;
-  nv.addGraph(function() {
+  import('../charts/nvd3.js').then(({ d3, nv }) => nv.addGraph(function() {
     chart = nv.models.bulletChart()
       .options({
         margin: {top: 33, right: 10, bottom: 5, left: 5},
@@ -82,7 +79,7 @@ function makeBulletChart(chartName, elementName, min, avg, max, current,
       .datum(chartData)
       .call(chart);
     return chart;
-  });
+  }));
 }
 
 export function linechart() {
