@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\BuildGroupType;
 use App\Models\Build as EloquentBuild;
 use App\Models\BuildGroup;
 use App\Models\Project;
@@ -484,6 +485,11 @@ final class BuildController extends AbstractBuildController
 
         // Should we change whether or not this build is expected?
         if (request()->has('expected') && request()->has('groupid')) {
+            // The rule would also route future submissions of this build into the group.
+            if (BuildGroup::findOrFail(request()->integer('groupid'))->type !== BuildGroupType::DAILY) {
+                abort(400, 'Builds cannot be assigned to dynamic build groups.');
+            }
+
             $buildgrouprule->Expected = request()->input('expected');
             $buildgrouprule->GroupId = request()->input('groupid');
             $buildgrouprule->SetExpected();
@@ -496,8 +502,12 @@ final class BuildController extends AbstractBuildController
 
             $eloquent_build = EloquentBuild::findOrFail((int) $this->build->Id);
 
-            if (BuildGroup::findOrFail((int) $newgroupid)->project()->isNot($eloquent_build->project)) {
+            $newgroup = BuildGroup::findOrFail((int) $newgroupid);
+            if ($newgroup->project()->isNot($eloquent_build->project)) {
                 abort(403, 'Requested build group is not associated with this project.');
+            }
+            if ($newgroup->type !== BuildGroupType::DAILY) {
+                abort(400, 'Builds cannot be assigned to dynamic build groups.');
             }
 
             // Remove the build from its previous group.

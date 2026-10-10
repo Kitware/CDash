@@ -75,13 +75,13 @@ class BuildGroupRuleTest extends TestCase
         return [];
     }
 
-    private function getGroupIdForNewBuild(string $name, string $starttime): int
+    private function getGroupIdForNewBuild(string $name, string $starttime, string $type = 'Nightly'): int
     {
         $build = new LegacyBuild();
         $build->ProjectId = $this->project->id;
         $build->SiteId = $this->site->id;
         $build->Name = $name;
-        $build->Type = 'Nightly';
+        $build->Type = $type;
         $build->StartTime = $starttime;
         return (new LegacyBuildGroup())->GetGroupIdFromRule($build);
     }
@@ -141,6 +141,27 @@ class BuildGroupRuleTest extends TestCase
         self::assertSame($this->continuous->id, $this->getGroupIdForNewBuild('gcc-active-debug', '2025-01-15 12:00:00'));
         self::assertSame($this->continuous->id, $this->getGroupIdForNewBuild('gcc-ended-debug', '2025-01-05 12:00:00'));
         self::assertSame($this->nightly->id, $this->getGroupIdForNewBuild('gcc-ended-debug', '2025-01-15 12:00:00'));
+    }
+
+    public function testRulesOnDynamicGroupsDoNotAssignNewBuilds(): void
+    {
+        $latest = BuildGroup::factory()->for($this->project)->create(['type' => BuildGroupType::LATEST]);
+        $this->createRule($latest, ['buildname' => 'explicit']);
+        $this->createRule($latest, ['buildname' => '%wildcard%', 'siteid' => -1]);
+
+        self::assertSame($this->nightly->id, $this->getGroupIdForNewBuild('explicit', '2025-01-15 12:00:00'));
+        self::assertSame($this->nightly->id, $this->getGroupIdForNewBuild('gcc-wildcard-debug', '2025-01-15 12:00:00'));
+    }
+
+    public function testDynamicGroupNamedAfterBuildTypeIsNotTheDefault(): void
+    {
+        BuildGroup::factory()->for($this->project)->create([
+            'name' => 'Custom',
+            'type' => BuildGroupType::LATEST,
+        ]);
+        $experimental = $this->project->buildgroups()->where('name', 'Experimental')->firstOrFail();
+
+        self::assertSame($experimental->id, $this->getGroupIdForNewBuild('custom', '2025-01-15 12:00:00', 'Custom'));
     }
 
     public function testChangingGroupMovesOnlyTheActiveRule(): void

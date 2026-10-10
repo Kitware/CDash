@@ -371,11 +371,13 @@ class BuildGroup
             /** @var ?EloquentBuildGroup $newGroup */
             $newGroup = $this->eloquent_model->project?->buildgroups()->where([
                 'name' => $oldbuild->type,
+                'type' => BuildGroupType::DAILY,
             ])->first();
 
             if ($newGroup === null) {
                 $newGroup = $this->eloquent_model->project?->buildgroups()->where([
                     'name' => 'Experimental',
+                    'type' => BuildGroupType::DAILY,
                 ])->first();
             }
 
@@ -410,6 +412,10 @@ class BuildGroup
         return true;
     }
 
+    /**
+     * Builds are only ever assigned to daily groups.  Dynamic groups compute their builds from
+     * their own rules at display time.
+     */
     public function GetGroupIdFromRule(Build $build): int
     {
         $starttime = $build->StartTime;
@@ -419,6 +425,7 @@ class BuildGroup
         $rule_row = DB::table('build2grouprule')
             ->join('buildgroup', 'buildgroup.id', '=', 'build2grouprule.groupid')
             ->where('buildgroup.projectid', '=', $build->ProjectId)
+            ->where('buildgroup.type', '=', BuildGroupType::DAILY)
             ->where('build2grouprule.buildtype', '=', $build->Type)
             ->where('build2grouprule.siteid', '=', $build->SiteId)
             ->where('build2grouprule.buildname', '=', $build->Name)
@@ -435,6 +442,7 @@ class BuildGroup
         $name_rule_row = DB::table('build2grouprule')
             ->join('buildgroup', 'buildgroup.id', '=', 'build2grouprule.groupid')
             ->where('buildgroup.projectid', '=', $build->ProjectId)
+            ->where('buildgroup.type', '=', BuildGroupType::DAILY)
             ->where('build2grouprule.buildtype', '=', $build->Type)
             ->where('build2grouprule.siteid', '=', -1)
             ->whereRaw('? LIKE build2grouprule.buildname', [$build->Name])
@@ -454,6 +462,7 @@ class BuildGroup
         $default_model = EloquentBuildGroup::where([
             'name' => $build->Type,
             'projectid' => $build->ProjectId,
+            'type' => BuildGroupType::DAILY,
         ])->first();
         if ($default_model !== null) {
             return $default_model->id;
@@ -462,6 +471,7 @@ class BuildGroup
         return EloquentBuildGroup::where([
             'name' => 'Experimental',
             'projectid' => (int) $build->ProjectId,
+            'type' => BuildGroupType::DAILY,
         ])->first()->id ?? 0;
     }
 
