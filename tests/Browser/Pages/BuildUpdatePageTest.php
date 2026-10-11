@@ -98,7 +98,7 @@ class BuildUpdatePageTest extends BrowserTestCase
     {
         $this->browse(function (Browser $browser): void {
             $revisionUrl = 'https://example.com/org/repo/commit/' . $this->update->revision;
-            $revisionCompareUrl = 'https://example.com/org/repo/compare/' . $this->update->revision . '...' . $this->update->priorrevision;
+            $revisionCompareUrl = 'https://example.com/org/repo/compare/' . $this->update->priorrevision . '...' . $this->update->revision;
             $priorRevisionUrl = 'https://example.com/org/repo/commit/' . $this->update->priorrevision;
 
             $browser->visit("/builds/{$this->build->id}/update")

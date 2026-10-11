@@ -160,7 +160,7 @@ export default {
 
     revisionUrl() {
       if (this.update.priorRevision) {
-        return this.repository?.getComparisonUrl(this.update.revision, this.update.priorRevision) ?? '';
+        return this.repository?.getComparisonUrl(this.update.priorRevision, this.update.revision) ?? '';
       } else {
         return this.repository?.getCommitUrl(this.update.revision) ?? '';
       }
