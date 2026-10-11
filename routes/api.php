@@ -41,6 +41,8 @@ Route::get('/v1/is_build_expected.php', 'BuildController@apiBuildExpected');
 
 Route::get('/v1/buildUpdateGraph.php', 'BuildController@apiBuildUpdateGraph');
 
+Route::get('/v1/manageBuildGroup.php', 'BuildController@apiManageBuildGroup');
+
 Route::get('/v1/overview.php', 'ProjectOverviewController@apiOverview');
 
 Route::get('/v1/timeline.php', TimelineController::class);

@@ -565,12 +565,54 @@ parameters:
 			path: app/Http/Controllers/Auth/RegisterController.php
 
 		-
+			rawMessage: 'Argument of an invalid type array|false supplied for foreach, only iterables are supported.'
+			identifier: foreach.nonIterable
+			count: 3
+			path: app/Http/Controllers/BuildController.php
+
+		-
 			rawMessage: '''
 				Call to deprecated function pdo_execute():
 				v2.5.0 01/22/2018
 			'''
 			identifier: function.deprecated
 			count: 4
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method execute() of class CDash\Database:
+				04/22/2023  Use Laravel query builder or Eloquent instead
+			'''
+			identifier: method.deprecated
+			count: 1
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method executePrepared() of class CDash\Database:
+				04/22/2023  Use Laravel query builder or Eloquent instead
+			'''
+			identifier: method.deprecated
+			count: 2
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method executePreparedSingleRow() of class CDash\Database:
+				04/22/2023  Use Laravel query builder or Eloquent instead
+			'''
+			identifier: method.deprecated
+			count: 1
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method getBuildGroups() of class App\Services\ProjectService:
+				12/06/2025  Use Eloquent relationships for all new code
+			'''
+			identifier: staticMethod.deprecated
+			count: 1
 			path: app/Http/Controllers/BuildController.php
 
 		-
@@ -583,6 +625,45 @@ parameters:
 			path: app/Http/Controllers/BuildController.php
 
 		-
+			rawMessage: '''
+				Call to deprecated method prepare() of class CDash\Database:
+				04/22/2023  Use Laravel query builder or Eloquent instead
+			'''
+			identifier: method.deprecated
+			count: 1
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			rawMessage: Cannot access offset 'id' on array|false|null.
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			rawMessage: Cannot access offset 'name' on mixed.
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			rawMessage: Cannot access offset 'siteid' on mixed.
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			rawMessage: 'Cannot call method bindParam() on PDOStatement|false.'
+			identifier: method.nonObject
+			count: 3
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			rawMessage: 'Cannot call method fetch() on PDOStatement|false.'
+			identifier: method.nonObject
+			count: 1
+			path: app/Http/Controllers/BuildController.php
+
+		-
 			rawMessage: 'Cannot call method fetchColumn() on PDOStatement|false.'
 			identifier: method.nonObject
 			count: 4
@@ -591,7 +672,49 @@ parameters:
 		-
 			rawMessage: Cannot cast mixed to int.
 			identifier: cast.int
-			count: 6
+			count: 7
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			rawMessage: 'Construct empty() is not allowed. Use more strict comparison.'
+			identifier: empty.notAllowed
+			count: 4
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			rawMessage: Foreach overwrites $buildgroup with its value variable.
+			identifier: foreach.valueOverwrite
+			count: 1
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between int and mixed is not allowed.'
+			identifier: equal.notAllowed
+			count: 1
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between mixed and int is not allowed.'
+			identifier: equal.notAllowed
+			count: 1
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between mixed and int|null is not allowed.'
+			identifier: equal.notAllowed
+			count: 1
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between mixed and mixed is not allowed.'
+			identifier: equal.notAllowed
+			count: 1
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			rawMessage: 'Only booleans are allowed in a while condition, mixed given.'
+			identifier: while.condNotBoolean
+			count: 1
 			path: app/Http/Controllers/BuildController.php
 
 		-
@@ -649,9 +772,21 @@ parameters:
 			path: app/Http/Controllers/BuildController.php
 
 		-
+			rawMessage: 'Parameter #1 $stmt of method CDash\Database::execute() expects PDOStatement, PDOStatement|false given.'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/BuildController.php
+
+		-
 			rawMessage: 'Parameter #2 $timestamp of function date expects int|null, int|false given.'
 			identifier: argument.type
 			count: 2
+			path: app/Http/Controllers/BuildController.php
+
+		-
+			rawMessage: 'Variable $project in empty() is never defined.'
+			identifier: empty.variable
+			count: 1
 			path: app/Http/Controllers/BuildController.php
 
 		-
@@ -12731,141 +12866,6 @@ parameters:
 			identifier: encapsedStringPart.nonString
 			count: 1
 			path: app/cdash/public/api/v1/index.php
-
-		-
-			rawMessage: 'Argument of an invalid type array|false supplied for foreach, only iterables are supported.'
-			identifier: foreach.nonIterable
-			count: 3
-			path: app/cdash/public/api/v1/manageBuildGroup.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method execute() of class CDash\Database:
-				04/22/2023  Use Laravel query builder or Eloquent instead
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/public/api/v1/manageBuildGroup.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method executePrepared() of class CDash\Database:
-				04/22/2023  Use Laravel query builder or Eloquent instead
-			'''
-			identifier: method.deprecated
-			count: 2
-			path: app/cdash/public/api/v1/manageBuildGroup.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method executePreparedSingleRow() of class CDash\Database:
-				04/22/2023  Use Laravel query builder or Eloquent instead
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/public/api/v1/manageBuildGroup.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method getBuildGroups() of class App\Services\ProjectService:
-				12/06/2025  Use Eloquent relationships for all new code
-			'''
-			identifier: staticMethod.deprecated
-			count: 1
-			path: app/cdash/public/api/v1/manageBuildGroup.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method prepare() of class CDash\Database:
-				04/22/2023  Use Laravel query builder or Eloquent instead
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/public/api/v1/manageBuildGroup.php
-
-		-
-			rawMessage: Cannot access offset 'id' on array|false|null.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/public/api/v1/manageBuildGroup.php
-
-		-
-			rawMessage: Cannot access offset 'name' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/public/api/v1/manageBuildGroup.php
-
-		-
-			rawMessage: Cannot access offset 'siteid' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/public/api/v1/manageBuildGroup.php
-
-		-
-			rawMessage: 'Cannot call method bindParam() on PDOStatement|false.'
-			identifier: method.nonObject
-			count: 3
-			path: app/cdash/public/api/v1/manageBuildGroup.php
-
-		-
-			rawMessage: 'Cannot call method fetch() on PDOStatement|false.'
-			identifier: method.nonObject
-			count: 1
-			path: app/cdash/public/api/v1/manageBuildGroup.php
-
-		-
-			rawMessage: 'Construct empty() is not allowed. Use more strict comparison.'
-			identifier: empty.notAllowed
-			count: 4
-			path: app/cdash/public/api/v1/manageBuildGroup.php
-
-		-
-			rawMessage: Foreach overwrites $buildgroup with its value variable.
-			identifier: foreach.valueOverwrite
-			count: 1
-			path: app/cdash/public/api/v1/manageBuildGroup.php
-
-		-
-			rawMessage: 'Loose comparison via "==" between int and mixed is not allowed.'
-			identifier: equal.notAllowed
-			count: 1
-			path: app/cdash/public/api/v1/manageBuildGroup.php
-
-		-
-			rawMessage: 'Loose comparison via "==" between mixed and int is not allowed.'
-			identifier: equal.notAllowed
-			count: 1
-			path: app/cdash/public/api/v1/manageBuildGroup.php
-
-		-
-			rawMessage: 'Loose comparison via "==" between mixed and int|null is not allowed.'
-			identifier: equal.notAllowed
-			count: 1
-			path: app/cdash/public/api/v1/manageBuildGroup.php
-
-		-
-			rawMessage: 'Loose comparison via "==" between mixed and mixed is not allowed.'
-			identifier: equal.notAllowed
-			count: 1
-			path: app/cdash/public/api/v1/manageBuildGroup.php
-
-		-
-			rawMessage: 'Only booleans are allowed in a while condition, mixed given.'
-			identifier: while.condNotBoolean
-			count: 1
-			path: app/cdash/public/api/v1/manageBuildGroup.php
-
-		-
-			rawMessage: 'Parameter #1 $stmt of method CDash\Database::execute() expects PDOStatement, PDOStatement|false given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/public/api/v1/manageBuildGroup.php
-
-		-
-			rawMessage: 'Parameter #1 $value of function intval expects array|bool|float|GMP|int|resource|SimpleXMLElement|string|null, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/public/api/v1/manageBuildGroup.php
 
 		-
 			rawMessage: 'Call to an undefined method CDash\Test\UseCase\UseCase::setBuildCommand().'
