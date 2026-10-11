@@ -363,7 +363,7 @@ export default {
       this.coverage?.filter((edge) => {
         return edge.node.filePath.startsWith(this.currentPrefix) || edge.node.filePath.startsWith(`./${this.currentPrefix}`);
       }).forEach((edge) => {
-        const pathWithoutPrefix = edge.node.filePath.replace(/^.\//, '').slice(this.currentPrefix.length);
+        const pathWithoutPrefix = edge.node.filePath.replace(/^\.\//, '').slice(this.currentPrefix.length);
         const pathComponents = pathWithoutPrefix.split('/');
         const cleanedPath = pathComponents[0];
         const isDirectory = pathComponents.length > 1;
