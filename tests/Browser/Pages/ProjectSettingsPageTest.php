@@ -204,6 +204,33 @@ class ProjectSettingsPageTest extends BrowserTestCase
         self::assertEquals($modelValue, $this->project->refresh()->getAttribute($modelAttribute));
     }
 
+    public function testShowsSavedGeneralTabValuesAfterSwitchingTabs(): void
+    {
+        $newName = Str::uuid()->toString();
+
+        $this->browse(function (Browser $browser) use ($newName): void {
+            $browser->loginAs($this->admin)
+                ->visit("/projects/{$this->project->id}/settings")
+                ->whenAvailable('@general-tab', function (Browser $browser) use ($newName): void {
+                    $browser->clear('@name-input')
+                        ->type('@name-input', $newName)
+                        ->click('@save-button')
+                        ->waitFor('@success-message');
+                });
+
+            $browser->script('window.scrollTo(0, 0);');
+
+            $browser->click('@integrations-tab-link')
+                ->waitFor('@integrations-tab')
+                ->click('@general-tab-link')
+                ->whenAvailable('@general-tab', function (Browser $browser) use ($newName): void {
+                    $browser->assertValue('@name-input', $newName);
+                });
+        });
+
+        self::assertSame($newName, $this->project->refresh()->name);
+    }
+
     public function testDisablesTestTimingFieldsWhenTestTimingDisabled(): void
     {
         $this->project->showtesttime = false;

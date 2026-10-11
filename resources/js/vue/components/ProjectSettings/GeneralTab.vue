@@ -731,6 +731,7 @@ export default {
             },
           },
         });
+        await this.$apollo.queries.project.refetch();
         this.projectSaved = true;
       } catch (error) {
         this.projectUpdateFailed = true;
