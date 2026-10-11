@@ -1546,7 +1546,7 @@ type Comment {
   "Creation timestamp."
   timestamp: DateTimeTz!
 
-  user: User!
+  user: User! @hasOne
 }
 
 
@@ -1574,7 +1574,7 @@ type AuthToken {
 
   scope: AuthTokenScope!
 
-  project: Project
+  project: Project @belongsTo
 
-  user: User
+  user: User @belongsTo
 }

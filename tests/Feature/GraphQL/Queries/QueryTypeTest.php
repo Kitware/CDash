@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\GraphQL\Queries;
 
+use App\Enums\AuthTokenScope;
 use App\Enums\BuildCommandType;
 use App\Enums\ProjectRole;
 use App\Models\AuthToken;
@@ -385,6 +386,73 @@ class QueryTypeTest extends TestCase
         } else {
             $response->assertGraphQLErrorMessage('This action is unauthorized.');
         }
+    }
+
+    public function testAuthenticationTokensProjectAndUserRelationships(): void
+    {
+        $admin = User::factory()->adminUser()->create();
+        $this->users[] = $admin;
+
+        $owner1 = User::factory()->create();
+        $this->users[] = $owner1;
+        $owner2 = User::factory()->create();
+        $this->users[] = $owner2;
+
+        $project = $this->makePrivateProject();
+        $this->projects[] = $project;
+
+        /** @var AuthToken $projectToken */
+        $projectToken = $owner1->authenticationTokens()->save(AuthToken::factory()->make([
+            'projectid' => $project->id,
+            'scope' => AuthTokenScope::SUBMIT_ONLY,
+        ]));
+        /** @var AuthToken $globalToken */
+        $globalToken = $owner2->authenticationTokens()->save(AuthToken::factory()->make());
+
+        $this->actingAs($admin)->graphQL('
+            query {
+                authenticationTokens {
+                    edges {
+                        node {
+                            id
+                            project {
+                                id
+                            }
+                            user {
+                                id
+                            }
+                        }
+                    }
+                }
+            }
+        ')->assertExactJson([
+            'data' => [
+                'authenticationTokens' => [
+                    'edges' => [
+                        [
+                            'node' => [
+                                'id' => (string) $projectToken->id,
+                                'project' => [
+                                    'id' => (string) $project->id,
+                                ],
+                                'user' => [
+                                    'id' => (string) $owner1->id,
+                                ],
+                            ],
+                        ],
+                        [
+                            'node' => [
+                                'id' => (string) $globalToken->id,
+                                'project' => null,
+                                'user' => [
+                                    'id' => (string) $owner2->id,
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
     }
 
     public function testTestFieldRestrictsAccessByProject(): void
