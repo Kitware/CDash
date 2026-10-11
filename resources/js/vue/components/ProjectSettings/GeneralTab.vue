@@ -712,8 +712,9 @@ export default {
       this.fatalError = null;
 
       try {
-        const cleanForm = { ...this.form };
-        delete cleanForm.__typename;
+        const changedFields = Object.fromEntries(
+          Object.entries(this.form).filter(([key, value]) => value !== this.project[key]),
+        );
         await this.$apollo.mutate({
           mutation: gql`
             mutation updateProject($input: UpdateProjectInput!) {
@@ -727,7 +728,7 @@ export default {
           variables: {
             input: {
               id: this.projectId,
-              ...cleanForm,
+              ...changedFields,
             },
           },
         });
