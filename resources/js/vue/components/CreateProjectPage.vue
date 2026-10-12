@@ -113,6 +113,13 @@
             </div>
           </label>
         </div>
+        <span
+          v-if="validationErrors.visibility"
+          class="tw-label tw-text-error"
+          data-test="project-visibility-validation-errors"
+        >
+          {{ validationErrors.visibility[0] }}
+        </span>
       </div>
       <div class="tw-form-control tw-w-full">
         <span class="tw-label tw-label-text tw-font-bold">
@@ -124,11 +131,19 @@
             type="checkbox"
             class="tw-checkbox"
             data-test="project-authenticated-submissions-input"
+            :disabled="authenticatedSubmissionsRequired"
           >
           <span class="tw-label-text">
             Require submissions to provide a valid authentication token.
           </span>
         </label>
+        <span
+          v-if="validationErrors.authenticateSubmissions"
+          class="tw-label tw-text-error"
+          data-test="project-authenticated-submissions-validation-errors"
+        >
+          {{ validationErrors.authenticateSubmissions[0] }}
+        </span>
       </div>
       <div class="tw-flex tw-justify-start tw-mt-4">
         <button
@@ -153,6 +168,8 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import gql from 'graphql-tag';
 
+const DISPLAYED_VALIDATION_FIELDS = ['name', 'description', 'visibility', 'authenticateSubmissions'];
+
 export default {
   name: 'CreateProjectPage',
   components: { FontAwesomeIcon },
@@ -162,6 +179,11 @@ export default {
       type: String,
       required: true,
     },
+
+    authenticatedSubmissionsRequired: {
+      type: Boolean,
+      required: true,
+    },
   },
 
   data() {
@@ -169,7 +191,7 @@ export default {
       name: '',
       description: '',
       visibility: 'PRIVATE',
-      requireAuthenticatedSubmissions: false,
+      requireAuthenticatedSubmissions: this.authenticatedSubmissionsRequired,
       validationErrors: {},
       fatalError: null,
     };
@@ -223,6 +245,12 @@ export default {
                 acc[key.replace('input.', '')] = e.extensions.validation[key];
                 return acc;
               }, {});
+              const undisplayedErrors = Object.entries(this.validationErrors)
+                .filter(([key]) => !DISPLAYED_VALIDATION_FIELDS.includes(key))
+                .flatMap(([, messages]) => messages);
+              if (undisplayedErrors.length > 0) {
+                this.fatalError = undisplayedErrors.join(' ');
+              }
             } else {
               this.fatalError = e.message;
             }
