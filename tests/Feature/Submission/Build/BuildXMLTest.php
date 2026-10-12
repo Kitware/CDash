@@ -5,6 +5,8 @@ namespace Feature\Submission\Build;
 use App\Models\Project;
 use Exception;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\Config;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
 use Tests\Traits\CreatesSubmissions;
@@ -111,6 +113,60 @@ class BuildXMLTest extends TestCase
                 ],
             ],
         ]);
+    }
+
+    /**
+     * @return array<string,array{string,array<string>}>
+     */
+    public static function truncatedOutputCases(): array
+    {
+        return [
+            'stdout' => ['truncate_stdout.xml', ['stdoutput']],
+            'stderr' => ['truncate_stderr.xml', ['stderror']],
+            'both' => ['truncate_both.xml', ['stdoutput', 'stderror']],
+        ];
+    }
+
+    /**
+     * Test that build error output which exceeds the large text limit is truncated
+     * in the middle, preserving the beginning and end of the output.
+     *
+     * @param array<string> $fields
+     */
+    #[DataProvider('truncatedOutputCases')]
+    public function testTruncatesLargeOutput(string $file, array $fields): void
+    {
+        Config::set('cdash.large_text_limit', 44);
+
+        $this->makeSubmission($this->project->name, base_path("tests/Feature/Submission/Build/data/$file"));
+
+        $build = $this->project->builds()->firstOrFail();
+        $this->assertSame(1, $build->buildErrors()->count());
+        $error = $build->buildErrors()->firstOrFail();
+        foreach ($fields as $field) {
+            $this->assertSame(
+                "The beginning survives\n...\nCDash truncated output because it exceeded 44 characters.\n...\nThis part is preserved\n",
+                $error->getAttribute($field),
+            );
+        }
+    }
+
+    /**
+     * Test that suppressed warnings are removed from build error output which exceeds
+     * the large text limit before resorting to truncation.
+     */
+    public function testRemovesSuppressedWarningsFromLargeOutput(): void
+    {
+        Config::set('cdash.large_text_limit', 44);
+
+        $this->makeSubmission($this->project->name, base_path('tests/Feature/Submission/Build/data/suppressed_warnings.xml'));
+
+        $build = $this->project->builds()->firstOrFail();
+        $this->assertSame(1, $build->buildErrors()->count());
+        $this->assertSame(
+            "[CTest: warning matched] This part survives\n",
+            $build->buildErrors()->firstOrFail()->stderror,
+        );
     }
 
     /**

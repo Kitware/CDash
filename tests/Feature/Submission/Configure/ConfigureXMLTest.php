@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Submission\Configure;
 
+use App\Models\Label;
 use App\Models\Project;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
@@ -230,5 +231,66 @@ class ConfigureXMLTest extends TestCase
                 ],
             ],
         ]);
+    }
+
+    /**
+     * Test submitting a Configure.xml file with build, site, and stamp parameters.  The
+     * response should include the id of the build, which should be populated with the
+     * information from the submitted file.
+     */
+    public function testAssignBuildIdFromParameters(): void
+    {
+        $begin_test_time = time();
+
+        $buildid = $this->makeSubmission($this->project->name, base_path(
+            'tests/Feature/Submission/Configure/data/assign_buildid.xml'
+        ), parameters: [
+            'build' => 'assign_buildid',
+            'site' => 'localhost',
+            'stamp' => '20180918-0100-Nightly',
+        ]);
+
+        $this->assertNotNull($buildid);
+        $build = $this->project->builds()->findOrFail($buildid);
+        $this->assertSame('assign_buildid', $build->name);
+        $this->assertGreaterThanOrEqual($begin_test_time, $build->submittime->getTimestamp());
+        $this->assertSame('2018-09-18 14:27:07', $build->starttime->toDateTimeString());
+        $this->assertSame('2018-09-18 14:27:08', $build->endtime->toDateTimeString());
+        $this->assertSame('ctest-3.13.0', $build->generator);
+        $this->assertSame('Linux', $build->osname);
+        $this->assertSame('x86_64', $build->osplatform);
+        $this->assertSame('4.4.0', $build->osrelease);
+        $this->assertSame('#166', $build->osversion);
+        $this->assertSame('gcc', $build->compilername);
+        $this->assertSame('5.5.0', $build->compilerversion);
+    }
+
+    /**
+     * Test parsing a Configure.xml file with a large number of subprojects.  A child build
+     * and a label should be created for each subproject.
+     */
+    public function testManySubProjects(): void
+    {
+        // Generate the submission file programmatically to avoid adding a large file to the repository.
+        $xml = file_get_contents(base_path('tests/Feature/Submission/Configure/data/many_subprojects_before.xml'));
+        foreach (range(1, 100) as $i) {
+            $xml .= "\t<Subproject name=\"ManySubProjects{$i}\">\n";
+            $xml .= "\t\t<Label>ManySubProjects{$i}</Label>\n";
+            $xml .= "\t</Subproject>\n";
+        }
+        $xml .= file_get_contents(base_path('tests/Feature/Submission/Configure/data/many_subprojects_after.xml'));
+
+        $file_to_submit = tempnam(sys_get_temp_dir(), 'many_subprojects');
+        $this->assertNotFalse($file_to_submit);
+        try {
+            file_put_contents($file_to_submit, $xml);
+            $this->makeSubmission($this->project->name, $file_to_submit);
+        } finally {
+            unlink($file_to_submit);
+        }
+
+        // 1 parent + 100 children
+        $this->assertSame(101, $this->project->builds()->count());
+        $this->assertSame(100, Label::where('text', 'LIKE', 'ManySubProjects%')->count());
     }
 }

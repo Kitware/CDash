@@ -10,10 +10,14 @@ trait CreatesSubmissions
      * Submit a file to a given project using an in-process test request, so that the
      * submission runs within the calling test's database transaction.
      *
+     * @param array<string,string> $parameters additional request parameters, e.g. build,
+     *                                         site, and stamp to assign the submission to a
+     *                                         specific build
+     *
      * @return int|null the build id included in the submission response, or null if the
      *                  response didn't include one
      */
-    private function makeSubmission(string $project_name, string $file_to_submit, int $expected_status = 200, ?string $auth_token = null): ?int
+    private function makeSubmission(string $project_name, string $file_to_submit, int $expected_status = 200, ?string $auth_token = null, array $parameters = []): ?int
     {
         $server = $auth_token === null
             ? []
@@ -24,7 +28,7 @@ trait CreatesSubmissions
             throw new Exception('Unable to open submission file.');
         }
 
-        $response = $this->call('GET', '/submit.php', ['project' => $project_name], [], [], $server, $file_contents);
+        $response = $this->call('GET', '/submit.php', ['project' => $project_name, ...$parameters], [], [], $server, $file_contents);
         $response->assertStatus($expected_status);
 
         $content = $response->getContent();

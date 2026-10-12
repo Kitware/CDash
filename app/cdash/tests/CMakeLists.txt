@@ -375,6 +375,14 @@ add_feature_test_in_transaction(/Feature/Submission/Bazel/BazelJSONTest)
 
 add_feature_test_in_transaction(/Feature/Submission/DynamicAnalysis/DynamicAnalysisXMLTest)
 
+add_feature_test_in_transaction(/Feature/Submission/Update/UpdateXMLTest)
+
+add_feature_test_in_transaction(/Feature/Submission/Notes/NotesXMLTest)
+
+add_feature_test_in_transaction(/Feature/Submission/Upload/UploadXMLTest)
+
+add_feature_test_in_transaction(/Feature/Submission/Done/DoneXMLTest)
+
 ###################################################################################################
 # Tests from this point to the next cdash_install() are expected to be completely independent.
 # Tests may wipe the database, provided that they use RUN_SERIAL. All tests in this section should
@@ -482,9 +490,6 @@ add_browser_test(/Browser/Pages/BuildUpdatePageTest)
 add_php_test(image)
 set_tests_properties(image PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
-add_php_test(changeid)
-set_tests_properties(changeid PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
-
 add_php_test(consistenttestingday)
 set_tests_properties(consistenttestingday PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
@@ -506,9 +511,6 @@ set_tests_properties(issuecreation PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHa
 add_php_test(configurewarnings)
 set_tests_properties(configurewarnings PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
-add_php_test(lotsofsubprojects)
-set_tests_properties(lotsofsubprojects PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
-
 ###################################################################################################
 
 set_property(TEST install_2 APPEND PROPERTY DEPENDS
@@ -529,7 +531,6 @@ set_property(TEST install_2 APPEND PROPERTY DEPENDS
   /CDash/Messaging/Topic/TestFailureTopic
   /CDash/Messaging/Topic/TopicDecorator
   image
-  changeid
   consistenttestingday
   numericupdate
   attachedfiles
@@ -537,7 +538,6 @@ set_property(TEST install_2 APPEND PROPERTY DEPENDS
   buildproperties
   issuecreation
   configurewarnings
-  lotsofsubprojects
 )
 
 
@@ -652,11 +652,8 @@ set_tests_properties(filtertestlabels PROPERTIES DEPENDS aggregatesubprojectcove
 add_php_test(viewsubprojects)
 set_tests_properties(viewsubprojects PROPERTIES DEPENDS filtertestlabels)
 
-add_php_test(truncateoutput)
-set_tests_properties(truncateoutput PROPERTIES DEPENDS viewsubprojects)
-
 add_php_test(uniquediffs)
-set_tests_properties(uniquediffs PROPERTIES DEPENDS truncateoutput)
+set_tests_properties(uniquediffs PROPERTIES DEPENDS viewsubprojects)
 
 add_php_test(imagecomparison)
 set_tests_properties(imagecomparison PROPERTIES DEPENDS uniquediffs)
@@ -697,14 +694,8 @@ set_tests_properties(timestatus PROPERTIES DEPENDS coveragedirectories)
 add_php_test(buildrelationship)
 set_tests_properties(buildrelationship PROPERTIES DEPENDS timestatus)
 
-add_php_test(submission_assign_buildid)
-set_tests_properties(submission_assign_buildid PROPERTIES DEPENDS buildrelationship)
-
-add_php_test(donehandler)
-set_tests_properties(donehandler PROPERTIES DEPENDS submission_assign_buildid)
-
 add_php_test(expiredbuildrules)
-set_tests_properties(expiredbuildrules PROPERTIES DEPENDS donehandler)
+set_tests_properties(expiredbuildrules PROPERTIES DEPENDS buildrelationship)
 
 add_php_test(filterblocks)
 set_tests_properties(filterblocks PROPERTIES DEPENDS expiredbuildrules)
@@ -718,23 +709,14 @@ set_tests_properties(putdynamicbuilds PROPERTIES DEPENDS indexnextprevious)
 add_php_test(commitauthornotification)
 set_tests_properties(commitauthornotification PROPERTIES DEPENDS putdynamicbuilds)
 
-add_php_test(starttimefromnotes)
-set_tests_properties(starttimefromnotes PROPERTIES DEPENDS commitauthornotification)
-
-add_php_test(starttimefromupload)
-set_tests_properties(starttimefromupload PROPERTIES DEPENDS starttimefromnotes)
-
 add_php_test(querytestsfilterlabels)
-set_tests_properties(querytestsfilterlabels PROPERTIES DEPENDS starttimefromupload)
+set_tests_properties(querytestsfilterlabels PROPERTIES DEPENDS commitauthornotification)
 
 add_php_test(querytestsrevisionfilter)
 set_tests_properties(querytestsrevisionfilter PROPERTIES DEPENDS querytestsfilterlabels)
 
-add_php_test(notesparsererrormessages)
-set_tests_properties(notesparsererrormessages PROPERTIES DEPENDS querytestsrevisionfilter)
-
 add_laravel_test(/Feature/SubProjectDependencies)
-set_tests_properties(/Feature/SubProjectDependencies PROPERTIES DEPENDS notesparsererrormessages)
+set_tests_properties(/Feature/SubProjectDependencies PROPERTIES DEPENDS querytestsrevisionfilter)
 
 # These tests should go last so the removal of builds doesn't clobber other tests
 # TODO: Some of these dependencies may not be necessary.

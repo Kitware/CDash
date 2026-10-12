@@ -16160,51 +16160,6 @@ parameters:
 
 		-
 			rawMessage: '''
-				Call to deprecated method execute() of class CDash\Database:
-				04/22/2023  Use Laravel query builder or Eloquent instead
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/test_changeid.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method prepare() of class CDash\Database:
-				04/22/2023  Use Laravel query builder or Eloquent instead
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/test_changeid.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method submission() of class KWWebTestCase:
-				12/09/2024  Use \Test\Traits\CreatesSubmissions instead
-			'''
-			identifier: method.deprecated
-			count: 3
-			path: app/cdash/tests/test_changeid.php
-
-		-
-			rawMessage: 'Cannot call method fetchAll() on PDOStatement|false.'
-			identifier: method.nonObject
-			count: 1
-			path: app/cdash/tests/test_changeid.php
-
-		-
-			rawMessage: 'Parameter #1 $stmt of method CDash\Database::execute() expects PDOStatement, PDOStatement|false given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/tests/test_changeid.php
-
-		-
-			rawMessage: Property ChangeIdTestCase::$ProjectId has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/test_changeid.php
-
-		-
-			rawMessage: '''
 				Call to deprecated method submission() of class KWWebTestCase:
 				12/09/2024  Use \Test\Traits\CreatesSubmissions instead
 			'''
@@ -16934,81 +16889,6 @@ parameters:
 			identifier: missingType.checkedException
 			count: 1
 			path: app/cdash/tests/test_displayimage.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method getPdo() of class CDash\Database:
-				04/22/2023  Use Laravel query builder or Eloquent instead
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/test_donehandler.php
-
-		-
-			rawMessage: Cannot access property $id on App\Models\Site|null.
-			identifier: property.nonObject
-			count: 1
-			path: app/cdash/tests/test_donehandler.php
-
-		-
-			rawMessage: Cannot access property $name on App\Models\Site|null.
-			identifier: property.nonObject
-			count: 2
-			path: app/cdash/tests/test_donehandler.php
-
-		-
-			rawMessage: 'Method DoneHandlerTestCase::performTest() has parameter $remote with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/test_donehandler.php
-
-		-
-			rawMessage: 'Parameter #1 $filename of function fopen expects string, (string|false) given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/tests/test_donehandler.php
-
-		-
-			rawMessage: 'Parameter #1 $filename of function unlink expects string, (string|false) given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/tests/test_donehandler.php
-
-		-
-			rawMessage: 'Parameter #1 $haystack of function str_contains expects string, string|null given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/tests/test_donehandler.php
-
-		-
-			rawMessage: 'Parameter #1 $stream of function fclose expects resource, resource|false given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/tests/test_donehandler.php
-
-		-
-			rawMessage: 'Parameter #1 $stream of function fwrite expects resource, resource|false given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/tests/test_donehandler.php
-
-		-
-			rawMessage: Property DoneHandlerTestCase::$ConfigFile has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/test_donehandler.php
-
-		-
-			rawMessage: Property DoneHandlerTestCase::$Original has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/test_donehandler.php
-
-		-
-			rawMessage: Property DoneHandlerTestCase::$PDO has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/test_donehandler.php
 
 		-
 			rawMessage: 'Call to deprecated method pass() of class SimpleTestCase.'
@@ -18071,27 +17951,6 @@ parameters:
 			identifier: missingType.property
 			count: 1
 			path: app/cdash/tests/test_limitedbuilds.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method submission() of class KWWebTestCase:
-				12/09/2024  Use \Test\Traits\CreatesSubmissions instead
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/test_lotsofsubprojects.php
-
-		-
-			rawMessage: 'Parameter #1 $stream of function fwrite expects resource, resource|false given.'
-			identifier: argument.type
-			count: 5
-			path: app/cdash/tests/test_lotsofsubprojects.php
-
-		-
-			rawMessage: 'Parameter #2 $data of function fwrite expects string, string|false given.'
-			identifier: argument.type
-			count: 2
-			path: app/cdash/tests/test_lotsofsubprojects.php
 
 		-
 			rawMessage: 'Argument of an invalid type mixed supplied for foreach, only iterables are supported.'
@@ -19242,15 +19101,6 @@ parameters:
 				12/09/2024  Use \Test\Traits\CreatesSubmissions instead
 			'''
 			identifier: method.deprecated
-			count: 3
-			path: app/cdash/tests/test_notesparsererrormessages.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method submission() of class KWWebTestCase:
-				12/09/2024  Use \Test\Traits\CreatesSubmissions instead
-			'''
-			identifier: method.deprecated
 			count: 1
 			path: app/cdash/tests/test_numericupdate.php
 
@@ -19868,24 +19718,6 @@ parameters:
 			identifier: booleanNot.exprNotBoolean
 			count: 3
 			path: app/cdash/tests/test_sequenceindependence.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method submission() of class KWWebTestCase:
-				12/09/2024  Use \Test\Traits\CreatesSubmissions instead
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/test_starttimefromnotes.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method submission() of class KWWebTestCase:
-				12/09/2024  Use \Test\Traits\CreatesSubmissions instead
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/test_starttimefromupload.php
 
 		-
 			rawMessage: '''
@@ -20741,45 +20573,6 @@ parameters:
 			identifier: variable.undefined
 			count: 4
 			path: app/cdash/tests/test_timesummary.php
-
-		-
-			rawMessage: Binary operation "." between non-falsy-string and mixed results in an error.
-			identifier: binaryOp.invalid
-			count: 1
-			path: app/cdash/tests/test_truncateoutput.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method submission() of class KWWebTestCase:
-				12/09/2024  Use \Test\Traits\CreatesSubmissions instead
-			'''
-			identifier: method.deprecated
-			count: 2
-			path: app/cdash/tests/test_truncateoutput.php
-
-		-
-			rawMessage: Property TruncateOutputTestCase::$BuildId has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/test_truncateoutput.php
-
-		-
-			rawMessage: Property TruncateOutputTestCase::$ConfigFile has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/test_truncateoutput.php
-
-		-
-			rawMessage: Property TruncateOutputTestCase::$Expected has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/test_truncateoutput.php
-
-		-
-			rawMessage: Property TruncateOutputTestCase::$Original has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/test_truncateoutput.php
 
 		-
 			rawMessage: '''
