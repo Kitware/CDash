@@ -1,16 +1,28 @@
 import { DateTime, Duration } from 'luxon';
 
 export default {
+  /**
+   * Formats a duration in milliseconds as ms, seconds, minutes and seconds, or hours and minutes.
+   * The value is rounded to the precision displayed before choosing a unit, so a value just under
+   * a unit boundary (e.g. 59999ms) is shown in the larger unit rather than as "60.00s".
+   */
   formatDuration(ms) {
-    if (ms < 1000) {
-      return `${ms}ms`;
+    if (!Number.isFinite(ms)) {
+      return '—';
     }
-    if (ms < 60000) {
-      return `${(ms / 1000).toFixed(2)}s`;
+    const milliseconds = Math.round(ms);
+    if (milliseconds < 1000) {
+      return `${milliseconds}ms`;
     }
-    const duration = Duration.fromMillis(ms);
-    // Use Luxon's toFormat which intelligently omits larger units if they are zero.
-    return duration.toFormat("m'm' ss's'");
+    const centiseconds = Math.round(ms / 10);
+    if (centiseconds < 6000) {
+      return `${(centiseconds / 100).toFixed(2)}s`;
+    }
+    const seconds = Math.round(ms / 1000);
+    if (seconds < 3600) {
+      return Duration.fromObject({ seconds }).toFormat("m'm' ss's'");
+    }
+    return Duration.fromObject({ minutes: Math.round(ms / 60000) }).toFormat("h'h' mm'm'");
   },
 
   /**
