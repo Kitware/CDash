@@ -332,6 +332,54 @@ class BuildTestsPageTest extends BrowserTestCase
         });
     }
 
+    public function testNumericMeasurementColumnSortsNumerically(): void
+    {
+        /** @var Build $build */
+        $build = $this->project->builds()->create([
+            'siteid' => $this->site->id,
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        $measurementName = Str::uuid()->toString();
+        foreach (['9.5', '2', '12', '100'] as $value) {
+            /** @var Test $test */
+            $test = $build->tests()->create([
+                'testname' => Str::uuid()->toString(),
+                'status' => 'passed',
+            ]);
+            $test->testMeasurements()->create([
+                'name' => $measurementName,
+                'type' => 'numeric/double',
+                'value' => $value,
+            ]);
+        }
+
+        $this->project->pinnedTestMeasurements()->create([
+            'name' => $measurementName,
+            'position' => 1,
+        ]);
+
+        $this->browse(function (Browser $browser) use ($build): void {
+            $browser->visit("/builds/{$build->id}/tests")
+                ->waitFor('@tests-table')
+                ->click('@tests-table th:nth-child(3)')
+            ;
+
+            $cells = collect($browser->elements('@tests-table-row td:nth-child(3)'))
+                ->map(fn ($cell) => $cell->getText())
+                ->all();
+            self::assertSame(['2', '9.5', '12', '100'], $cells);
+
+            $browser->click('@tests-table th:nth-child(3)');
+
+            $cells = collect($browser->elements('@tests-table-row td:nth-child(3)'))
+                ->map(fn ($cell) => $cell->getText())
+                ->all();
+            self::assertSame(['100', '12', '9.5', '2'], $cells);
+        });
+    }
+
     public function testMeasurementColumnOrder(): void
     {
         /** @var Build $build */
