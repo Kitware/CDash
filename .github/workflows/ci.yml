@@ -21,10 +21,10 @@ jobs:
       fail-fast: false
       matrix:
         base-image: ['debian', 'ubi']
-        storage: ['local', 'minio']
+        storage: ['local', 'seaweedfs']
         postgres-version: ['18']
         exclude:
-          - storage: minio
+          - storage: seaweedfs
             base-image: ubi
         include:
           # Also test against the minimum supported postgres version, on a single
@@ -38,8 +38,8 @@ jobs:
       - name: Build images
         shell: bash
         run: |
-          if [ "${{matrix.storage}}" == "minio" ]; then
-            extra_args="-f docker/docker-compose.minio.yml"
+          if [ "${{matrix.storage}}" == "seaweedfs" ]; then
+            extra_args="-f docker/docker-compose.seaweedfs.yml"
           fi
           docker compose \
               -f docker/docker-compose.yml \
