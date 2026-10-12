@@ -56,7 +56,7 @@ class Kernel extends HttpKernel
         'web' => [
             EncryptCookies::class,
             AddQueuedCookiesToResponse::class,
-            // \Illuminate\Session\Middleware\AuthenticateSession::class,
+            AuthenticateSession::class,
             ShareErrorsFromSession::class,
             VerifyCsrfToken::class,
             SubstituteBindings::class,
@@ -70,6 +70,7 @@ class Kernel extends HttpKernel
             // 'throttle:60,1',
             SubstituteBindings::class,
             AuthenticateToken::class,
+            AuthenticateSession::class,
         ],
         'saml' => [
             EncryptCookies::class,

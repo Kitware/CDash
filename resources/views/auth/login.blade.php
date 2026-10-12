@@ -9,6 +9,7 @@
 
     $login_field = config('cdash.login_field');
     $show_login_form = config('cdash.username_password_authentication_enabled');
+    $show_password_reset = !config('cdash.ldap_enabled');
     $title = 'Login';
 @endphp
 
@@ -32,6 +33,11 @@
                     <div class="tw-w-full tw-flex tw-flex-row tw-justify-center">
                         <img src="{{ asset('img/cdash_logo_full.svg?rev=2023-05-31') }}" height="60" alt="CDash logo" style="height: 60px;">
                     </div>
+                    @if (session('status'))
+                        <div role="alert" class="tw-alert tw-alert-success" data-test="status-message">
+                            {{ session('status') }}
+                        </div>
+                    @endif
                     <label class="tw-form-control tw-w-full">
                         <span class="tw-label tw-label-text">
                             {{ $login_field }}
@@ -48,9 +54,11 @@
                             <span class="tw-label-text">
                                 Password
                             </span>
-                            <a href="{{ url('recoverPassword.php') }}" class="tw-label-text-alt tw-link tw-link-hover">
-                                Forgot Password?
-                            </a>
+                            @if ($show_password_reset)
+                                <a href="{{ route('password.request') }}" class="tw-label-text-alt tw-link tw-link-hover">
+                                    Forgot Password?
+                                </a>
+                            @endif
                         </span>
                         <input type="password" name="password" class="tw-input tw-input-bordered tw-w-full" />
                         @if ($errors->has('password'))

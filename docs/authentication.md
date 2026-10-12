@@ -18,6 +18,17 @@ The following `.env` variables can be used to customize the email/password user 
 | USERNAME_PASSWORD_AUTHENTICATION_ENABLED | Whether or not email+password authentication is enabled | true |
 | USER_REGISTRATION_FORM_ENABLED | Whether or not new CDash users can register email+password accounts | true |
 
+### Password resets
+Users who forget their password can follow the "Forgot Password?" link on the login page to receive an email
+containing a password reset link, so CDash must be configured to send email.  Reset links expire after 60 minutes.
+New passwords must meet the password requirements described above.
+
+Changing a password, either by resetting it or from the profile page, logs the user out of all of their other sessions.
+After resetting their password, users must log in again with their new password.
+
+Password resets are disabled when `USERNAME_PASSWORD_AUTHENTICATION_ENABLED` is `false` or when LDAP authentication
+is enabled.
+
 ## Customizing the login page
 You can add your own custom content to the login page by writing a
 [Blade template file](https://laravel.com/docs/9.x/blade) named `login.blade.php` in `resources/views/local/`.
