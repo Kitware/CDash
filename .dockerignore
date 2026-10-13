@@ -34,3 +34,6 @@ bootstrap/cache/*
 
 # database/.gitignore
 database/*.sqlite
+
+# public/assets/.gitignore (webpack output, rebuilt by `npm run prod` in the image)
+public/assets/*
