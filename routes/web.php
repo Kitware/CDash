@@ -25,7 +25,6 @@ use App\Http\Controllers\ProjectMembersController;
 use App\Http\Controllers\ProjectSettingsController;
 use App\Http\Controllers\SiteController;
 use App\Http\Controllers\SubmissionController;
-use App\Http\Controllers\SubscribeProjectController;
 use App\Http\Controllers\UpdateProjectLogoController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ViewProjectsController;
@@ -311,9 +310,17 @@ Route::middleware(['auth'])->group(function (): void {
     Route::match(['get', 'post'], '/profile', 'UserController@edit');
     Route::permanentRedirect('/editUser.php', url('/profile'));
 
-    // TODO: (williamjallen) send the POST route to a different function
-    Route::get('/subscribeProject.php', SubscribeProjectController::class);
-    Route::post('/subscribeProject.php', SubscribeProjectController::class);
+    Route::get('/projects/{project_id}/notifications', 'ProjectNotificationsController@show')
+        ->whereNumber('project_id');
+    Route::post('/projects/{project_id}/notifications', 'ProjectNotificationsController@update')
+        ->whereNumber('project_id');
+    Route::get('/subscribeProject.php', function (Request $request) {
+        $projectid = $request->query('projectid');
+        if (!is_numeric($projectid)) {
+            abort(400, 'Not a valid projectid!');
+        }
+        return redirect("/projects/{$projectid}/notifications", 301);
+    });
 
     Route::get('/manageProjectRoles.php', function (Request $request) {
         if (!$request->has('projectid')) {
