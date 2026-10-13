@@ -22,7 +22,6 @@
     "ext-posix": "*",
     "ext-simplexml": "*",
     "ext-xml": "*",
-    "ext-xsl": "*",
     "ext-zlib": "*",
     "directorytree/ldaprecord-laravel": "3.4.3",
     "guzzlehttp/guzzle": "7.15.2",

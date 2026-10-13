@@ -120,97 +120,6 @@ function get_param($name, $required = true): string
     return pdo_real_escape_string($value);
 }
 
-function xslt_process(XSLTProcessor $xsltproc,
-    $xml_arg,
-    $xsl_arg,
-    $xslcontainer = null,
-    $args = null,
-    $params = null)
-{
-    // Start with preparing the arguments
-    $xml_arg = str_replace('arg:', '', $xml_arg);
-    $xsl_arg = str_replace('arg:', '', $xsl_arg);
-
-    // Create instances of the DomDocument class
-    $xml = new DOMDocument();
-    $xsl = new DOMDocument();
-
-    // Load the xml document and the xsl template
-    if (LIBXML_VERSION >= 20700) {
-        $xmlOptions = LIBXML_PARSEHUGE;
-    } else {
-        $xmlOptions = 0;
-    }
-
-    $xml->loadXML($args[$xml_arg], $xmlOptions);
-    $xsl->loadXML(file_get_contents($xsl_arg), $xmlOptions);
-
-    // Load the xsl template
-    $xsltproc->importStylesheet($xsl);
-
-    // Set parameters when defined
-    if ($params) {
-        foreach ($params as $param => $value) {
-            $xsltproc->setParameter('', $param, $value);
-        }
-    }
-
-    // Start the transformation
-    $processed = $xsltproc->transformToXml($xml);
-
-    // Put the result in a file when specified
-    if ($xslcontainer) {
-        return @file_put_contents($xslcontainer, $processed);
-    }
-
-    return $processed;
-}
-
-/**
- * Do the XSLT translation
- */
-function generate_XSLT($xml, string $pageName, bool $return_html = false): string
-{
-    $xh = new XSLTProcessor();
-
-    $arguments = [
-        '/_xml' => $xml,
-    ];
-
-    $xslpage = $pageName . '.xsl';
-
-    $html = xslt_process($xh, 'arg:/_xml', $xslpage, null, $arguments);
-
-    unset($xh);
-    if ($return_html) {
-        return $html;
-    }
-    echo $html;
-    return '';
-}
-
-/**
- * used to escape special XML characters
- */
-function XMLStrFormat(string $str): string
-{
-    if (mb_detect_encoding($str, 'UTF-8', true) === false) {
-        $str = mb_convert_encoding($str, 'UTF-8');
-    }
-    $str = str_replace('&', '&amp;', $str);
-    $str = str_replace('<', '&lt;', $str);
-    $str = str_replace('>', '&gt;', $str);
-    $str = str_replace("'", '&apos;', $str);
-    $str = str_replace('"', '&quot;', $str);
-    $str = str_replace("\r", '', $str);
-
-    // Remove UTF-8 characters that are not valid in an XML document.
-    // https://www.w3.org/TR/REC-xml/#charsets
-    $str = preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', '', $str);
-
-    return $str;
-}
-
 function time_difference($duration, bool $compact = false, string $suffix = '', bool $displayms = false): string
 {
     $duration = is_numeric($duration) ? $duration : 0;
@@ -363,21 +272,6 @@ function get_seconds_from_interval($input)
     ]);
 
     return null;
-}
-
-function xml_replace_callback($matches): string
-{
-    $decimal_value = hexdec(bin2hex($matches[0]));
-    return '&#' . $decimal_value . ';';
-}
-
-/**
- * Add an XML tag to a string
- */
-function add_XML_value(string $tag, $value): string
-{
-    $value = preg_replace_callback('/[\x1b]/', 'xml_replace_callback', $value);
-    return '<' . $tag . '>' . XMLStrFormat($value) . '</' . $tag . '>';
 }
 
 /**
@@ -535,11 +429,6 @@ function get_css_file(): string
         return $colorblind;
     }
     return $classic;
-}
-
-function begin_XML_for_XSLT(): string
-{
-    return '<?xml version="1.0" encoding="UTF-8"?><cdash>';
 }
 
 function begin_JSON_response(): array
@@ -853,36 +742,6 @@ function extract_tar(string $stored_filepath): string
         report($e);
     }
     throw new RuntimeException('Unable to determine valid extraction directory');
-}
-
-/**
- * Encode structures for safe HTML output
- */
-function deepEncodeHTMLEntities(&$structure): void
-{
-    $encode = fn ($string) => htmlspecialchars($string, ENT_QUOTES, 'UTF-8', false);
-
-    if (is_object($structure)) {
-        $properties = get_object_vars($structure);
-        foreach ($properties as $key => &$prop) {
-            if (is_object($prop) || is_array($prop)) {
-                deepEncodeHTMLEntities($prop);
-                $structure->{$key} = $prop;
-                continue;
-            }
-            $structure->{$key} = $encode($prop);
-        }
-    } elseif (is_array($structure)) {
-        foreach ($structure as $key => &$value) {
-            if (is_object($value) || is_array($value)) {
-                deepEncodeHTMLEntities($value);
-                continue;
-            }
-            $value = $encode($value);
-        }
-    } elseif (is_string($structure)) {
-        $structure = $encode($structure);
-    }
 }
 
 /**

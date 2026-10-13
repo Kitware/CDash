@@ -86,8 +86,8 @@
 
             @hasSection('main_content')
                 @yield('main_content')
-            @elseif(isset($xsl) && $xsl === true)
-                {!! $xsl_content !!}
+            @elseif(isset($angular) && $angular === true)
+                {!! $angular_content !!}
             @endif
         </div>
 

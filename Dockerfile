@@ -36,7 +36,6 @@ RUN apt-get update && \
         libldap2-dev \
         libpng-dev \
         libpq-dev \
-        libxslt-dev \
         libxss1 \
         nodejs \
         unzip \
@@ -52,7 +51,6 @@ RUN apt-get update && \
         gd \
         ldap \
         pdo_pgsql \
-        xsl \
         opcache \
         && \
     curl -fsSL https://composer.github.io/installer.sha384sum > checksum && \
