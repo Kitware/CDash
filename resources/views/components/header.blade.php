@@ -65,7 +65,7 @@ $showHeaderNav = isset($build);
                 @if(isset($project) && $logoid !== null)
                     <img id="projectlogo" height="50px" alt="" src="{{ url('/image/' . $logoid) }}" />
                 @else
-                    <img id="projectlogo" height="50px" alt="" src="{{ asset('img/cdash.svg') }}" />
+                    <img id="projectlogo" height="50px" alt="" src="{{ asset('img/cdash.svg?rev=2023-05-31') }}" />
                 @endif
             </a>
         </div>
