@@ -17,6 +17,7 @@ use CDash\Model\Build;
 use CDash\Model\BuildGroupRule;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -166,6 +167,8 @@ final class BuildController extends AbstractBuildController
             'project-name' => $eloquent_project->name,
             'build-time' => Carbon::parse($this->build->StartTime)->toIso8601String(),
             'initial-filters' => $filters,
+            'included-sub-projects' => self::queryStringList($request, 'subprojects'),
+            'excluded-sub-projects' => self::queryStringList($request, 'excludeSubprojects'),
             'pinned-measurements' => $eloquent_project->pinnedTestMeasurements()->orderBy('position')->pluck('name')->toArray(),
         ];
 
@@ -178,6 +181,16 @@ final class BuildController extends AbstractBuildController
         }
 
         return $this->vue('build-tests-page', 'Tests', $params);
+    }
+
+    /**
+     * Get a list of strings from a query parameter such as `?name[]=a&name[]=b`.
+     *
+     * @return list<string>
+     */
+    private static function queryStringList(Request $request, string $key): array
+    {
+        return array_values(array_filter(Arr::wrap($request->query($key)), 'is_string'));
     }
 
     public function coverage(int $build_id): View
