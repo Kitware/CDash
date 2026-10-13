@@ -21,7 +21,6 @@ use App\Models\Site;
 use App\Utils\Stack;
 use CDash\Model\Build;
 use CDash\Model\Project;
-use CDash\ServiceContainer;
 use DOMDocument;
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\UnableToReadFile;
@@ -37,8 +36,6 @@ abstract class AbstractXmlHandler extends AbstractSubmissionHandler
     protected Site $Site;
     protected string $SubProjectName = '';
 
-    private ServiceContainer $ModelFactory;
-
     protected static ?string $schema_file = null;
 
     public function __construct(Build|Project $init)
@@ -46,7 +43,6 @@ abstract class AbstractXmlHandler extends AbstractSubmissionHandler
         parent::__construct($init);
 
         $this->stack = new Stack();
-        $this->ModelFactory = ServiceContainer::getInstance();
     }
 
     /**
@@ -182,11 +178,6 @@ abstract class AbstractXmlHandler extends AbstractSubmissionHandler
     public function getSubProjectName()
     {
         return $this->Build->SubProjectName;
-    }
-
-    protected function getModelFactory(): ServiceContainer
-    {
-        return $this->ModelFactory;
     }
 
     public function GetSite(): Site

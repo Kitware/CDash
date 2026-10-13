@@ -66,7 +66,6 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
     public function startElement($parser, $name, $attributes): void
     {
         parent::startElement($parser, $name, $attributes);
-        $factory = $this->getModelFactory();
 
         if ($this->currentPathMatches('site')) {
             $site_name = !empty($attributes['NAME']) ? $attributes['NAME'] : '(empty)';
@@ -121,7 +120,7 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
         } elseif ($name === 'DYNAMICANALYSIS') {
             $this->Checker = $attributes['CHECKER'];
             if (empty($this->DynamicAnalysisSummaries)) {
-                $summary = $factory->create(DynamicAnalysisSummary::class);
+                $summary = app(DynamicAnalysisSummary::class);
                 $summary->Empty = true;
                 $summary->Checker = $this->Checker;
                 $this->DynamicAnalysisSummaries[$this->SubProjectName] = $summary;
@@ -131,7 +130,7 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
                 }
             }
         } elseif ($name === 'TEST' && isset($attributes['STATUS'])) {
-            $this->DynamicAnalysis = $factory->create(DynamicAnalysis::class);
+            $this->DynamicAnalysis = app(DynamicAnalysis::class);
             $this->DynamicAnalysis->Checker = $this->Checker;
             $this->DynamicAnalysis->Status = $attributes['STATUS'];
             $this->TestSubProjectName = '';
@@ -139,7 +138,7 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
             $this->DynamicAnalysisDefect = new DynamicAnalysisDefect();
             $this->DynamicAnalysisDefect->type = $attributes['TYPE'];
         } elseif ($name === 'LABEL') {
-            $this->Label = $factory->create(Label::class);
+            $this->Label = app(Label::class);
         } elseif ($name === 'LOG') {
             $this->DynamicAnalysis->LogCompression = $attributes['COMPRESSION'] ?? '';
             $this->DynamicAnalysis->LogEncoding = $attributes['ENCODING'] ?? '';
@@ -149,7 +148,6 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
     /** Function endElement */
     public function endElement($parser, $name): void
     {
-        $factory = $this->getModelFactory();
         if ($name === 'STARTTESTTIME' && $this->getParent() === 'DYNAMICANALYSIS') {
             if (empty($this->SubProjects)) {
                 // Not a SubProject build.
@@ -190,7 +188,7 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
                 // If everything is perfect CTest doesn't send any <test>
                 // But we still want a line showing the current dynamic analysis
                 if ($this->DynamicAnalysisSummaries[$subprojectName]->Empty) {
-                    $this->DynamicAnalysis = $factory->create(DynamicAnalysis::class);
+                    $this->DynamicAnalysis = app(DynamicAnalysis::class);
                     $this->DynamicAnalysis->BuildId = (int) $build->Id;
                     $this->DynamicAnalysis->Status = 'passed';
                     $this->DynamicAnalysis->Checker = $this->Checker;
@@ -278,8 +276,7 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
 
     private function createBuild($subprojectName): void
     {
-        $factory = $this->getModelFactory();
-        $build = $factory->create(Build::class);
+        $build = app(Build::class);
 
         $build->SiteId = $this->Site->id;
         $build->Name = $this->BuildName;
@@ -320,7 +317,7 @@ class DynamicAnalysisHandler extends AbstractXmlHandler implements ActionableBui
         $this->Builds[$subprojectName] = $build;
 
         // Initialize a dynamic analysis summary for this build.
-        $summary = $factory->create(DynamicAnalysisSummary::class);
+        $summary = app(DynamicAnalysisSummary::class);
         $summary->Empty = true;
         $summary->BuildId = (int) $build->Id;
         $summary->Checker = $this->Checker;

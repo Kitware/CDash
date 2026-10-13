@@ -69,7 +69,6 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
     public function startElement($parser, $name, $attributes): void
     {
         parent::startElement($parser, $name, $attributes);
-        $factory = $this->getModelFactory();
 
         if ($this->currentPathMatches('site')) {
             $site_name = !empty($attributes['NAME']) ? $attributes['NAME'] : '(empty)';
@@ -135,7 +134,7 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
             $this->TestSubProjectName = '';
             $this->Labels = [];
         } elseif ($name === 'NAMEDMEASUREMENT' && array_key_exists('TYPE', $attributes)) {
-            $this->TestMeasurement = $factory->create(TestMeasurement::class);
+            $this->TestMeasurement = app(TestMeasurement::class);
 
             if ($attributes['TYPE'] === 'file') {
                 $this->TestMeasurement->name = $attributes['FILENAME'];
@@ -148,15 +147,13 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
                 $this->TestCreator->alreadyCompressed = true;
             }
         } elseif ($name === 'LABEL' && $this->getParent() === 'LABELS') {
-            $this->Label = $factory->create(Label::class);
+            $this->Label = app(Label::class);
         }
     }
 
     /** End Element */
     public function endElement($parser, $name): void
     {
-        $factory = $this->getModelFactory();
-
         if ($name === 'TEST' && $this->getParent() === 'TESTING') {
             // By now, will either have one subproject for the entire file
             // Or a subproject specifically for this test
@@ -207,7 +204,7 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
 
                 // If it's an image we add it as an image
                 if (str_contains($this->TestMeasurement->type, 'image')) {
-                    $image = $factory->create(Image::class);
+                    $image = app(Image::class);
                     $image->Extension = $this->TestMeasurement->type;
                     $image->Data = $this->TestMeasurement->value;
                     $image->Name = $this->TestMeasurement->name;
@@ -246,7 +243,7 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
                     $duration = $this->EndTimeStamp - $this->StartTimeStamp;
                     $build->UpdateTestDuration($duration, !$all_at_once);
                     if ($all_at_once && !$parent_duration_set) {
-                        $parent_build = $factory->create(Build::class);
+                        $parent_build = app(Build::class);
                         $parent_build->Id = $build->GetParentId();
                         $parent_build->UpdateTestDuration($duration, false);
                         $parent_duration_set = true;
@@ -338,9 +335,8 @@ class TestingHandler extends AbstractXmlHandler implements ActionableBuildInterf
         if (!array_key_exists($this->SubProjectName, $this->NumberTestsPassed)) {
             $this->NumberTestsPassed[$this->SubProjectName] = 0;
         }
-        $factory = $this->getModelFactory();
         /** @var Build $build */
-        $build = $factory->create(Build::class);
+        $build = app(Build::class);
         $build->SetSite($this->Site);
 
         if (!empty($this->PullRequest)) {

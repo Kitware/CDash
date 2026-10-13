@@ -23,7 +23,6 @@ use CDash\Model\BuildGroup;
 use CDash\Model\BuildGroupRule;
 use App\Models\Site;
 use CDash\Model\Project;
-use CDash\ServiceContainer;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -45,8 +44,7 @@ function just_get_project_from_request(): Project
     }
     $projectname = $_REQUEST['project'];
     $projectid = get_project_id($projectname);
-    $service = ServiceContainer::getInstance();
-    $Project = $service->get(Project::class);
+    $Project = new Project();
     $Project->Id = $projectid;
     if (!$Project->Exists()) {
         abort(404, 'Project does not exist');

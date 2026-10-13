@@ -32,7 +32,6 @@ use App\Utils\TestingDay;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\Project;
-use CDash\ServiceContainer;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -386,8 +385,7 @@ function add_XML_value(string $tag, $value): string
  */
 function get_project_id($projectname): int
 {
-    $service = ServiceContainer::getInstance();
-    $project = $service->get(Project::class);
+    $project = new Project();
     $project->Name = $projectname;
     if ($project->GetIdByName()) {
         return (int) $project->Id;
@@ -566,10 +564,7 @@ function begin_JSON_response(): array
  */
 function get_dashboard_JSON($projectname, $date, &$response): void
 {
-    $service = ServiceContainer::getInstance();
-
-    /** @var Project $project */
-    $project = $service->create(Project::class);
+    $project = new Project();
     $project->FindByName($projectname);
 
     $project_array = [];

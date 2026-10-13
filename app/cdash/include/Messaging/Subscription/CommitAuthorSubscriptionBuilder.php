@@ -21,8 +21,6 @@ use App\Http\Submission\Handlers\ActionableBuildInterface;
 use CDash\Messaging\Notification\NotifyOn;
 use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
 use CDash\Model\Subscriber;
-use DI\DependencyException;
-use DI\NotFoundException;
 
 /**
  * Class CommitAuthorSubscriptionBuilder
@@ -48,10 +46,6 @@ class CommitAuthorSubscriptionBuilder implements SubscriptionBuilderInterface
         $this->submission = $submission;
     }
 
-    /**
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
     public function build(SubscriptionCollection $subscriptions): void
     {
         $group = $this->submission->GetBuildGroup();
