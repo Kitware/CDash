@@ -1,7 +1,7 @@
 <template>
   <BuildSidebar
     :build-id="buildId"
-    active-tab="commands"
+    active-tab="instrumentation"
   >
     <div class="tw-flex tw-flex-col tw-w-full tw-gap-4">
       <BuildSummaryCard :build-id="buildId" />
