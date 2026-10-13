@@ -20,6 +20,9 @@ final class ImageController extends AbstractController
 
         return response()->stream(function () use ($image): void {
             echo $image->Data;
-        }, 200, ['Content-type' => $image->Extension]);
+        }, 200, [
+            'Content-type' => $image->Extension,
+            'Cache-Control' => 'private, max-age=31536000, immutable',
+        ]);
     }
 }
