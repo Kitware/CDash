@@ -151,7 +151,7 @@ class UnparsedSubmissionProcessor
         $projectid = $eloquent_project->id;
 
         // Check if this submission requires a valid authentication token.
-        if (($this->token || $eloquent_project->authenticatesubmissions) && !AuthTokenService::check($this->token, $projectid)) {
+        if ($eloquent_project->authenticatesubmissions && !AuthTokenService::check($this->token, $projectid)) {
             abort(Response::HTTP_FORBIDDEN, 'Forbidden');
         }
 
@@ -305,13 +305,9 @@ class UnparsedSubmissionProcessor
         }
 
         // Check if this submission requires a valid authentication token.
-        if ($this->project->AuthenticateSubmissions) {
-            $token = request()->bearerToken();
-            $authtoken_hash = AuthTokenService::hash($token);
-            if (!AuthTokenService::check($authtoken_hash, $this->project->Id)) {
-                Storage::delete($this->inboxdatafilename);
-                abort(Response::HTTP_FORBIDDEN, 'Forbidden');
-            }
+        if ($this->project->AuthenticateSubmissions && !AuthTokenService::check($this->token, $this->project->Id)) {
+            Storage::delete($this->inboxdatafilename);
+            abort(Response::HTTP_FORBIDDEN, 'Forbidden');
         }
 
         // Check that the md5sum of the file matches what we were expecting.

@@ -348,22 +348,17 @@ class UnparsedSubmissionTest extends TestCase
         ]);
     }
 
-    /**
-     * Unlike XML submissions and data file uploads, build metadata is rejected whenever an invalid
-     * token is presented, even if the project doesn't require one.
-     */
-    public function testRejectsBuildMetadataWithUnknownTokenWhenProjectDoesNotRequireAuthentication(): void
+    public function testAcceptsBuildMetadataWithUnknownTokenWhenProjectDoesNotRequireAuthentication(): void
     {
         $response = $this->postBuildMetadata($this->buildMetadata(), Str::uuid()->toString());
 
-        $response->assertForbidden();
+        $response->assertOk();
+        $this->assertSame(1, $this->project->builds()->count());
         $response->assertExactJson([
-            'status' => 1,
-            'description' => 'Forbidden',
+            'status' => 0,
+            'buildid' => $this->project->builds()->firstOrFail()->id,
+            'datafilesmd5' => [0],
         ]);
-        $this->assertDatabaseMissing('build', ['projectid' => $this->project->id]);
-        Queue::assertNothingPushed();
-        $this->assertSame([], Storage::allFiles());
     }
 
     public function testRejectsDataFileWithEmptyBuildId(): void

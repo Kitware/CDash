@@ -4,6 +4,7 @@ namespace Tests\Feature\Console;
 
 use App\Jobs\ProcessSubmission;
 use App\Models\Project;
+use App\Services\AuthTokenService;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Artisan;
@@ -81,5 +82,20 @@ class QueueSubmissionsCommandTest extends TestCase
 
         Queue::assertNothingPushed();
         $this->assertSame(['failed/malformed.xml'], Storage::allFiles());
+    }
+
+    public function testQueuesFileWithUnknownTokenWhenProjectDoesNotRequireAuthentication(): void
+    {
+        $token_hash = AuthTokenService::hash(Str::uuid()->toString());
+        $filename = "{$this->project->name}_-_{$token_hash}_-_" . Str::uuid()->toString() . '_-_.xml';
+        Storage::put("inbox/$filename", '');
+
+        Artisan::call('submission:queue');
+
+        Queue::assertCount(1);
+        Queue::assertPushed(ProcessSubmission::class, fn (ProcessSubmission $job) => $job->filename === $filename
+            && $job->projectid === $this->project->id
+            && $job->buildid === null
+            && $job->expected_md5 === '');
     }
 }
