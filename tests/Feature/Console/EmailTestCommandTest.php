@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Console;
 
 use App\Mail\TestEmail;
 use Illuminate\Foundation\Testing\DatabaseTransactions;

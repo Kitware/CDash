@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Console\Command;
+namespace Tests\Feature\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;

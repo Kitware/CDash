@@ -21,14 +21,15 @@ use App\Enums\UnparsedSubmissionType;
 use App\Jobs\ProcessSubmission;
 use App\Models\BuildFile;
 use App\Models\PendingSubmissions;
+use App\Models\Project as EloquentProject;
 use App\Models\Site;
 use App\Rules\ProjectNameRule;
 use App\Services\AuthTokenService;
 use CDash\Model\Build;
 use CDash\Model\Project;
+use Closure;
 use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -98,10 +99,7 @@ class UnparsedSubmissionProcessor
         $uuid = Str::uuid()->toString();
         $this->serializeBuildMetadata($uuid);
 
-        // Write a marker file so we know to process these files when the DB comes back up.
-        if (!Storage::exists('DB_WAS_DOWN')) {
-            Storage::put('DB_WAS_DOWN', '');
-        }
+        SubmissionUtils::markDeferredSubmissions();
 
         // Respond with success even though the database is down so that CTest will
         // proceed to upload the data file.
@@ -145,17 +143,15 @@ class UnparsedSubmissionProcessor
     public function initializeBuild(): JsonResponse
     {
         // Retrieve this project from the database.
-        $project_row = DB::table('project')
-            ->where('name', $this->projectname)
-            ->first();
+        $eloquent_project = EloquentProject::firstWhere('name', $this->projectname);
 
-        if (!$project_row) {
+        if ($eloquent_project === null) {
             abort(Response::HTTP_NOT_FOUND, 'Project does not exist');
         }
-        $projectid = $project_row->id;
+        $projectid = $eloquent_project->id;
 
         // Check if this submission requires a valid authentication token.
-        if (($this->token || $project_row->authenticatesubmissions) && !AuthTokenService::check($this->token, $projectid)) {
+        if (($this->token || $eloquent_project->authenticatesubmissions) && !AuthTokenService::check($this->token, $projectid)) {
             abort(Response::HTTP_FORBIDDEN, 'Forbidden');
         }
 
@@ -168,7 +164,7 @@ class UnparsedSubmissionProcessor
         // Add the build.
         $this->build = new Build();
 
-        $this->build->ProjectId = get_project_id($this->projectname);
+        $this->build->ProjectId = $projectid;
         $this->build->StartTime = gmdate(FMT_DATETIME, $this->starttime);
         $this->build->EndTime = gmdate(FMT_DATETIME, $this->endtime);
         $this->build->SubmitTime = gmdate(FMT_DATETIME);
@@ -244,8 +240,6 @@ class UnparsedSubmissionProcessor
                 abort(Response::HTTP_BAD_REQUEST, $validator->errors()->first());
             }
             $this->projectname = $this->project->Name;
-
-            $this->inboxdatafilename = 'inbox/' . SubmissionUtils::dataFilename($this->projectname, $this->token, $this->type, $this->buildid, $this->md5, $ext);
         } else {
             // Get project name from build metadata file on disk.
             $projectname = null;
@@ -264,18 +258,19 @@ class UnparsedSubmissionProcessor
                 abort(Response::HTTP_NOT_FOUND, 'Build not found');
             }
             $this->projectname = $projectname;
-            $this->inboxdatafilename = 'inbox/' . SubmissionUtils::dataFilename($this->projectname, $this->token, $this->type, $this->buildid, $this->md5, $ext);
-            $this->serializeDataFileParameters();
+        }
 
-            if (!Storage::exists('DB_WAS_DOWN')) {
-                Storage::put('DB_WAS_DOWN', '');
-            }
+        $filename = SubmissionUtils::dataFilename($this->projectname, $this->token, $this->type, $this->buildid, $this->md5, $ext);
+        $this->inboxdatafilename = 'inbox/' . $filename;
+
+        if (!$db_up) {
+            $this->serializeDataFileParameters();
+            SubmissionUtils::markDeferredSubmissions();
         }
 
         // Write this file to the inbox directory.
-        $handle = request()->getContent(true);
-        if (!Storage::put($this->inboxdatafilename, $handle)) {
-            abort(Response::HTTP_INTERNAL_SERVER_ERROR, "Cannot open file ($this->inboxdatafilename)");
+        if (!SubmissionUtils::storeInInbox($filename, request()->getContent(true))) {
+            abort(Response::HTTP_INTERNAL_SERVER_ERROR, 'Failed to save submission file.');
         }
 
         if (!$db_up) {
@@ -287,14 +282,9 @@ class UnparsedSubmissionProcessor
         // THis function will throw an exception if invalid data provided
         $this->populateBuildFileRow();
 
-        $filename = str_replace('inbox/', '', $this->inboxdatafilename);
         ProcessSubmission::dispatch($filename, $this->project->Id, $this->build->Id, $this->md5);
 
-        // Check for marker file to see if we need to queue deferred submissions.
-        if (Storage::exists('DB_WAS_DOWN')) {
-            Storage::delete('DB_WAS_DOWN');
-            Artisan::call('submission:queue');
-        }
+        SubmissionUtils::queueDeferredSubmissions();
 
         return response()->json($response_array);
     }
@@ -325,8 +315,9 @@ class UnparsedSubmissionProcessor
         }
 
         // Check that the md5sum of the file matches what we were expecting.
-        $md5sum = SubmissionUtils::hashFileHandle(Storage::readStream($this->inboxdatafilename), 'md5');
-        if ($md5sum != $this->md5) {
+        $stream = Storage::readStream($this->inboxdatafilename);
+        if (!SubmissionUtils::isFileMD5Correct($stream, $this->md5)) {
+            $md5sum = SubmissionUtils::hashFileHandle($stream, 'md5');
             Storage::delete($this->inboxdatafilename);
             $buildfile->delete();
             abort(Response::HTTP_BAD_REQUEST, "md5 mismatch. expected: {$this->md5}, received: $md5sum");
@@ -350,7 +341,11 @@ class UnparsedSubmissionProcessor
         $validator = Validator::make(request()->query(), [
             'buildid' => 'required',
             'type' => ['required', Rule::enum(UnparsedSubmissionType::class)],
-            'md5' => ['required', 'regex:/^[a-f0-9]{32}$/i'],
+            'md5' => ['required', function (string $attribute, mixed $value, Closure $fail): void {
+                if (!is_string($value) || !SubmissionUtils::isValidMD5($value)) {
+                    $fail('The :attribute format is invalid.');
+                }
+            }],
             'filename' => 'required',
         ]);
 
@@ -455,11 +450,6 @@ class UnparsedSubmissionProcessor
         if ($this->token) {
             return;
         }
-        $token = request()->bearerToken();
-        if ($token) {
-            $this->token = AuthTokenService::hash($token);
-        } else {
-            $this->token = '';
-        }
+        $this->token = AuthTokenService::hash(request()->bearerToken());
     }
 }

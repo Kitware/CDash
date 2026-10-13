@@ -17,14 +17,12 @@ use CDash\Model\Project;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use League\Flysystem\UnableToMoveFile;
 use League\Flysystem\UnableToReadFile;
-use League\Flysystem\UnableToWriteFile;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -73,6 +71,7 @@ final class SubmissionController extends AbstractProjectController
     }
 
     /**
+     * @throws BadRequestException
      * @throws BadSubmissionException
      */
     private function submitProcess(): Response
@@ -83,7 +82,7 @@ final class SubmissionController extends AbstractProjectController
         $responseMessage = '';
         $projectname = request()->string('project', '');
 
-        if (strlen($projectname) === 0) {
+        if (!request()->filled('project')) {
             Log::info('Rejected submission with no project name');
             $this->failProcessing(null, Response::HTTP_BAD_REQUEST, 'No project name provided.');
         }
@@ -99,41 +98,32 @@ final class SubmissionController extends AbstractProjectController
             $this->failProcessing(null, Response::HTTP_BAD_REQUEST, "Invalid project name: $projectname");
         }
 
-        $expected_md5 = request()->query('MD5', '');
-        if ($expected_md5 !== '' && !preg_match('/^[a-f0-9]{32}$/i', $expected_md5)) {
+        $expected_md5 = request()->query->getString('MD5');
+        if (request()->filled('MD5') && !SubmissionUtils::isValidMD5($expected_md5)) {
             Log::info("Rejected submission with invalid hash '$expected_md5' for project $projectname");
             $this->failProcessing(null, Response::HTTP_BAD_REQUEST, "Provided md5 hash '{$expected_md5}' is improperly formatted.");
         }
 
         // Get auth token (if any).
-        $authtoken = request()->bearerToken();
-        $authtoken_hash = $authtoken === null || $authtoken === '' ? '' : AuthTokenService::hash($authtoken);
+        $authtoken_hash = AuthTokenService::hash(request()->bearerToken());
 
         // Check that the md5sum of the file matches what we were told to expect.
         $fp = request()->getContent(true);
-        if (strlen($expected_md5) > 0) {
+        if (request()->filled('MD5') && !SubmissionUtils::isFileMD5Correct($fp, $expected_md5)) {
             $md5sum = SubmissionUtils::hashFileHandle($fp, 'md5');
-            if ($md5sum !== $expected_md5) {
-                Log::info("Rejected submission because hash '$md5sum' does not match the expected hash '$expected_md5' for project $projectname");
-                $this->failProcessing(null, Response::HTTP_BAD_REQUEST, "md5 mismatch. expected: {$expected_md5}, received: {$md5sum}");
-            }
+            Log::info("Rejected submission because hash '$md5sum' does not match the expected hash '$expected_md5' for project $projectname");
+            $this->failProcessing(null, Response::HTTP_BAD_REQUEST, "md5 mismatch. expected: {$expected_md5}, received: {$md5sum}");
         }
 
         // Save the incoming file in the inbox directory.
         $filename = SubmissionUtils::xmlFilename((string) $projectname, $authtoken_hash, $expected_md5);
-        try {
-            Storage::put("inbox/{$filename}", $fp);
-        } catch (UnableToWriteFile $e) {
-            report($e);
+        if (!SubmissionUtils::storeInInbox($filename, $fp)) {
             $this->failProcessing($filename, Response::HTTP_INTERNAL_SERVER_ERROR, 'Failed to save submission file.');
         }
 
         // Check if we can connect to the database before proceeding any further.
         if (!SystemUtils::isDatabaseOnline()) {
-            // Write a marker file so we know to process these files when the DB comes back up.
-            if (!Storage::exists('DB_WAS_DOWN')) {
-                Storage::put('DB_WAS_DOWN', '');
-            }
+            SubmissionUtils::markDeferredSubmissions();
             $statusarray['status'] = 'OK';
             $statusarray['message'] = 'Database is unavailable.';
             return self::displayXMLReturnStatus($statusarray);
@@ -193,7 +183,7 @@ final class SubmissionController extends AbstractProjectController
 
         // Check if CTest provided us enough info to assign a buildid.
         $buildid = null;
-        if (request()->has('build') && request()->has('site') && request()->has('stamp')) {
+        if (request()->filled('build') && request()->filled('site') && request()->filled('stamp')) {
             $build = new Build();
             $build->Name = pdo_real_escape_string(request()->query('build'));
             $build->ProjectId = $this->project->Id;
@@ -201,7 +191,7 @@ final class SubmissionController extends AbstractProjectController
             $build->StartTime = gmdate(FMT_DATETIME);
             $build->SubmitTime = $build->StartTime;
 
-            if (request()->has('subproject')) {
+            if (request()->filled('subproject')) {
                 $build->SetSubProject(pdo_real_escape_string(request()->query('subproject')));
             }
 
@@ -229,11 +219,7 @@ final class SubmissionController extends AbstractProjectController
         fclose($fp);
         unset($fp);
 
-        // Check for marker file to see if we need to queue deferred submissions.
-        if (Storage::exists('DB_WAS_DOWN')) {
-            Storage::delete('DB_WAS_DOWN');
-            Artisan::call('submission:queue');
-        }
+        SubmissionUtils::queueDeferredSubmissions();
 
         $statusarray['message'] = '';
         if ($responseMessage !== '') {

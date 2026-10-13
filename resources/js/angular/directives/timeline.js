@@ -1,9 +1,7 @@
-import d3 from 'd3';
-import nv from 'nvd3';
 import timelineTemplate from '../views/partials/timeline.html';
 
 var timelineController =
-  function TimelineChartController($http, $scope) {
+  function TimelineChartController($http, $q, $scope) {
     $scope.loading = true;
 
     var query_parameters = {
@@ -21,22 +19,26 @@ var timelineController =
       $scope.buildgroup = $scope.$parent.cdash.buildgroup;
       query_parameters.buildgroup = $scope.buildgroup;
     }
-    $http({
-      url: 'api/v1/timeline.php',
-      method: 'GET',
-      params: query_parameters
-    }).then(function success(s) {
+    // Fetch the charting libraries alongside the data they will display.
+    $q.all([
+      $http({
+        url: 'api/v1/timeline.php',
+        method: 'GET',
+        params: query_parameters
+      }),
+      import('../charts/nvd3.js')
+    ]).then(function success([s, charts]) {
       $scope.timeline = s.data;
       $scope.error = false;
-      $scope.finishSetup();
+      $scope.finishSetup(charts);
     }, function error(e) {
-      $scope.error = e.data;
+      $scope.error = e.data || e.message;
     }).finally(function() {
       $scope.loading = false;
     });
 
 
-    $scope.finishSetup = function() {
+    $scope.finishSetup = function({ d3, nv }) {
       if ($scope.timeline === undefined || $scope.timeline.length === 0) {
         return;
       }
@@ -260,7 +262,7 @@ var timelineController =
       window.location = uri;
     };
 };
-timelineController.$inject = ["$http", "$scope"];
+timelineController.$inject = ["$http", "$q", "$scope"];
 
 export function timeline() {
   return {

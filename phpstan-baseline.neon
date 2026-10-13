@@ -1405,42 +1405,6 @@ parameters:
 			path: app/Http/Controllers/SubmissionController.php
 
 		-
-			rawMessage: 'Only booleans are allowed in a negated boolean, int|false given.'
-			identifier: booleanNot.exprNotBoolean
-			count: 1
-			path: app/Http/Controllers/SubmissionController.php
-
-		-
-			rawMessage: 'Parameter #1 $string of function strlen expects string, (array|string) given.'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/SubmissionController.php
-
-		-
-			rawMessage: 'Parameter #2 $subject of function preg_match expects string, (array|string) given.'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/SubmissionController.php
-
-		-
-			rawMessage: 'Parameter #3 $md5 of static method App\Utils\SubmissionUtils::xmlFilename() expects string, (array|string) given.'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/SubmissionController.php
-
-		-
-			rawMessage: 'Part $expected_md5 (array|non-empty-string) of encapsed string cannot be cast to string.'
-			identifier: encapsedStringPart.nonString
-			count: 2
-			path: app/Http/Controllers/SubmissionController.php
-
-		-
-			rawMessage: 'Part $expected_md5 (array|string) of encapsed string cannot be cast to string.'
-			identifier: encapsedStringPart.nonString
-			count: 2
-			path: app/Http/Controllers/SubmissionController.php
-
-		-
 			rawMessage: '''
 				Call to deprecated method executePrepared() of class CDash\Database:
 				04/22/2023  Use Laravel query builder or Eloquent instead
@@ -5941,12 +5905,6 @@ parameters:
 			path: app/Utils/UnparsedSubmissionProcessor.php
 
 		-
-			rawMessage: 'Loose comparison via "!=" between string and mixed is not allowed.'
-			identifier: notEqual.notAllowed
-			count: 1
-			path: app/Utils/UnparsedSubmissionProcessor.php
-
-		-
 			rawMessage: 'Method App\Utils\UnparsedSubmissionProcessor::deserializeBuildMetadata() has parameter $fp with no type specified.'
 			identifier: missingType.parameter
 			count: 1
@@ -5961,18 +5919,6 @@ parameters:
 		-
 			rawMessage: 'Only booleans are allowed in a negated boolean, mixed given.'
 			identifier: booleanNot.exprNotBoolean
-			count: 1
-			path: app/Utils/UnparsedSubmissionProcessor.php
-
-		-
-			rawMessage: 'Only booleans are allowed in a negated boolean, stdClass|null given.'
-			identifier: booleanNot.exprNotBoolean
-			count: 1
-			path: app/Utils/UnparsedSubmissionProcessor.php
-
-		-
-			rawMessage: 'Only booleans are allowed in an if condition, string|null given.'
-			identifier: if.condNotBoolean
 			count: 1
 			path: app/Utils/UnparsedSubmissionProcessor.php
 
@@ -12289,48 +12235,6 @@ parameters:
 			path: app/cdash/include/filterdataFunctions.php
 
 		-
-			rawMessage: Cannot access offset 'head_sha' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/public/api/v1/GitHub/webhook.php
-
-		-
-			rawMessage: Cannot access offset 'name' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/public/api/v1/GitHub/webhook.php
-
-		-
-			rawMessage: 'Function handle_error() has no return type specified.'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/public/api/v1/GitHub/webhook.php
-
-		-
-			rawMessage: 'Function handle_error() has parameter $msg with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/public/api/v1/GitHub/webhook.php
-
-		-
-			rawMessage: 'Parameter #2 $data of function hash_hmac expects string, string|false given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/public/api/v1/GitHub/webhook.php
-
-		-
-			rawMessage: 'Parameter #2 $string of function explode expects string, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/public/api/v1/GitHub/webhook.php
-
-		-
-			rawMessage: 'Parameter #3 $key of function hash_hmac expects string, bool|string given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/public/api/v1/GitHub/webhook.php
-
-		-
 			rawMessage: 'Argument of an invalid type mixed supplied for foreach, only iterables are supported.'
 			identifier: foreach.nonIterable
 			count: 3
@@ -12812,117 +12716,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: app/cdash/public/api/v1/manageBuildGroup.php
-
-		-
-			rawMessage: 'Argument of an invalid type mixed supplied for foreach, only iterables are supported.'
-			identifier: foreach.nonIterable
-			count: 1
-			path: app/cdash/public/api/v1/subproject.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method executePrepared() of class CDash\Database:
-				04/22/2023  Use Laravel query builder or Eloquent instead
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/public/api/v1/subproject.php
-
-		-
-			rawMessage: Cannot access offset 'id' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/public/api/v1/subproject.php
-
-		-
-			rawMessage: Cannot access offset 'position' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/public/api/v1/subproject.php
-
-		-
-			rawMessage: Cannot access offset 'projectid' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/public/api/v1/subproject.php
-
-		-
-			rawMessage: Cannot cast mixed to int.
-			identifier: cast.int
-			count: 4
-			path: app/cdash/public/api/v1/subproject.php
-
-		-
-			rawMessage: 'Function CDash\Api\v1\SubProject\echo_error() has no return type specified.'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/public/api/v1/subproject.php
-
-		-
-			rawMessage: 'Function CDash\Api\v1\SubProject\echo_error() has parameter $msg with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/public/api/v1/subproject.php
-
-		-
-			rawMessage: 'Function CDash\Api\v1\SubProject\echo_error() has parameter $status with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/public/api/v1/subproject.php
-
-		-
-			rawMessage: 'Function CDash\Api\v1\SubProject\get_subprojectid() has no return type specified.'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/public/api/v1/subproject.php
-
-		-
-			rawMessage: 'Function CDash\Api\v1\SubProject\rest_get() has parameter $projectid with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/public/api/v1/subproject.php
-
-		-
-			rawMessage: 'Function CDash\Api\v1\SubProject\rest_post() has parameter $projectid with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/public/api/v1/subproject.php
-
-		-
-			rawMessage: 'Function CDash\Api\v1\SubProject\rest_put() has parameter $projectid with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/public/api/v1/subproject.php
-
-		-
-			rawMessage: 'Parameter #1 $groupName of method CDash\Model\SubProject::SetGroup() expects string, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/public/api/v1/subproject.php
-
-		-
-			rawMessage: 'Parameter #1 $json of function json_decode expects string, string|false given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/public/api/v1/subproject.php
-
-		-
-			rawMessage: 'Parameter #1 $name of method CDash\Model\SubProjectGroup::SetName() expects string, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/public/api/v1/subproject.php
-
-		-
-			rawMessage: 'Parameter #1 $string of function htmlspecialchars expects string, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/public/api/v1/subproject.php
-
-		-
-			rawMessage: 'Parameter #1 $value of function intval expects array|bool|float|GMP|int|resource|SimpleXMLElement|string|null, mixed given.'
-			identifier: argument.type
-			count: 4
-			path: app/cdash/public/api/v1/subproject.php
 
 		-
 			rawMessage: 'Call to an undefined method CDash\Test\UseCase\UseCase::setBuildCommand().'
@@ -21463,10 +21256,19 @@ parameters:
 			path: tests/BrowserTestCase.php
 
 		-
+			rawMessage: '''
+				Call to deprecated method forceRootUrl() of class Illuminate\Routing\UrlGenerator:
+				Use useOrigin
+			'''
+			identifier: staticMethod.deprecated
+			count: 4
+			path: tests/Feature/CDashTest.php
+
+		-
 			rawMessage: Access to an undefined property CDash\Model\Build::$Endime.
 			identifier: property.notFound
 			count: 2
-			path: tests/Feature/AutoRemoveBuildsCommand.php
+			path: tests/Feature/Console/AutoRemoveBuildsCommandTest.php
 
 		-
 			rawMessage: '''
@@ -21475,7 +21277,7 @@ parameters:
 			'''
 			identifier: method.deprecated
 			count: 3
-			path: tests/Feature/AutoRemoveBuildsCommand.php
+			path: tests/Feature/Console/AutoRemoveBuildsCommandTest.php
 
 		-
 			rawMessage: '''
@@ -21484,28 +21286,25 @@ parameters:
 			'''
 			identifier: method.deprecated
 			count: 1
-			path: tests/Feature/AutoRemoveBuildsCommand.php
+			path: tests/Feature/Console/AutoRemoveBuildsCommandTest.php
 
 		-
 			rawMessage: 'Cannot call method fetchColumn() on PDOStatement|false.'
 			identifier: method.nonObject
 			count: 3
-			path: tests/Feature/AutoRemoveBuildsCommand.php
+			path: tests/Feature/Console/AutoRemoveBuildsCommandTest.php
 
 		-
 			rawMessage: 'Parameter #1 $stmt of method CDash\Database::execute() expects PDOStatement, PDOStatement|false given.'
 			identifier: argument.type
 			count: 3
-			path: tests/Feature/AutoRemoveBuildsCommand.php
+			path: tests/Feature/Console/AutoRemoveBuildsCommandTest.php
 
 		-
-			rawMessage: '''
-				Call to deprecated method forceRootUrl() of class Illuminate\Routing\UrlGenerator:
-				Use useOrigin
-			'''
-			identifier: staticMethod.deprecated
-			count: 4
-			path: tests/Feature/CDashTest.php
+			rawMessage: 'You should use assertSame() instead of assertEquals(), because both values are scalars of the same type'
+			identifier: phpunit.assertEquals
+			count: 2
+			path: tests/Feature/Console/ValidateXmlCommandTest.php
 
 		-
 			rawMessage: 'Method Tests\Feature\GlobalInvitationAcceptanceTest::createInvitation() throws checked exception OverflowException but it''s missing from the PHPDoc @throws tag.'
@@ -21901,18 +21700,6 @@ parameters:
 			path: tests/Feature/ProjectPermissions.php
 
 		-
-			rawMessage: Class Tests\Feature\PurgeUnusedProjectsCommand has an uninitialized property $project1. Give it default value or assign it in the constructor.
-			identifier: property.uninitialized
-			count: 1
-			path: tests/Feature/PurgeUnusedProjectsCommand.php
-
-		-
-			rawMessage: Class Tests\Feature\PurgeUnusedProjectsCommand has an uninitialized property $project2. Give it default value or assign it in the constructor.
-			identifier: property.uninitialized
-			count: 1
-			path: tests/Feature/PurgeUnusedProjectsCommand.php
-
-		-
 			rawMessage: '''
 				Call to deprecated method forceRootUrl() of class Illuminate\Routing\UrlGenerator:
 				Use useOrigin
@@ -21929,36 +21716,6 @@ parameters:
 			identifier: staticMethod.deprecated
 			count: 1
 			path: tests/Feature/Services/ProjectServiceTest.php
-
-		-
-			rawMessage: Cannot access property $admin on App\Models\User|null.
-			identifier: property.nonObject
-			count: 1
-			path: tests/Feature/UserCommand.php
-
-		-
-			rawMessage: Cannot access property $institution on App\Models\User|null.
-			identifier: property.nonObject
-			count: 1
-			path: tests/Feature/UserCommand.php
-
-		-
-			rawMessage: Property Tests\Feature\UserCommand::$user has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: tests/Feature/UserCommand.php
-
-		-
-			rawMessage: 'You should use assertSame() instead of assertEquals(), because both values are scalars of the same type'
-			identifier: phpunit.assertEquals
-			count: 5
-			path: tests/Feature/UserCommand.php
-
-		-
-			rawMessage: 'You should use assertSame() instead of assertEquals(), because both values are scalars of the same type'
-			identifier: phpunit.assertEquals
-			count: 2
-			path: tests/Unit/Console/Command/ValidateXmlCommandTest.php
 
 		-
 			rawMessage: 'Parameter #1 $objectOrClass of class ReflectionClass constructor expects class-string<T of object>|T of object, array<string>|string given.'

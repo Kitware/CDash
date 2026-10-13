@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SubProject as EloquentSubProject;
+use App\Models\SubProjectGroup as EloquentSubProjectGroup;
 use App\Models\User;
 use App\Services\ProjectService;
 use App\Utils\PageTimer;
+use CDash\Model\Project;
 use CDash\Model\SubProject;
+use CDash\Model\SubProjectGroup;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -105,6 +110,158 @@ final class SubProjectController extends AbstractProjectController
 
         $pageTimer->end($response);
         return response()->json(cast_data_for_JSON($response));
+    }
+
+    public function apiSubProject(Request $request): JsonResponse|Response
+    {
+        if (!$request->has('projectid')) {
+            abort(400, 'projectid not specified.');
+        }
+        $projectid = $request->integer('projectid');
+
+        // Make sure the user has access to this page.
+        $project = new Project();
+        $project->Id = $projectid;
+        if (!Gate::allows('edit-project', $project)) {
+            abort(403, "You don't have the permissions to access this page ($projectid)");
+        }
+
+        // Route based on what type of request this is.
+        return match ($request->method()) {
+            'DELETE' => self::apiSubProjectDelete($request),
+            'POST' => self::apiSubProjectPost($request, $projectid),
+            'PUT' => self::apiSubProjectPut($request, $projectid),
+            default => self::apiSubProjectGet($request, $projectid),
+        };
+    }
+
+    private static function apiSubProjectGet(Request $request, int $projectid): JsonResponse
+    {
+        $subprojectid = self::getSubProjectIdFromRequest($request);
+
+        $pageTimer = new PageTimer();
+        $response = begin_JSON_response();
+        $response['projectid'] = $projectid;
+        $response['subprojectid'] = $subprojectid;
+
+        $SubProject = new SubProject();
+        $SubProject->SetId($subprojectid);
+        $response['name'] = $SubProject->GetName();
+        $response['group'] = $SubProject->GetGroupId();
+
+        $subprojects = EloquentSubProject::where('projectid', $projectid)
+            ->where('endtime', '1980-01-01 00:00:00')
+            ->get(['id', 'name']);
+
+        $dependencies = $SubProject->GetDependencies();
+        $dependencies_response = [];
+        $available_dependencies_response = [];
+
+        foreach ($subprojects as $subproject) {
+            if ($subproject->id === $subprojectid) {
+                continue;
+            }
+            $subproject_response = [
+                'id' => $subproject->id,
+                'name' => $subproject->name,
+            ];
+            if (in_array($subproject->id, $dependencies, true)) {
+                $dependencies_response[] = $subproject_response;
+            } else {
+                $available_dependencies_response[] = $subproject_response;
+            }
+        }
+
+        $response['dependencies'] = $dependencies_response;
+        $response['available_dependencies'] = $available_dependencies_response;
+
+        $pageTimer->end($response);
+        return response()->json(cast_data_for_JSON($response));
+    }
+
+    private static function apiSubProjectDelete(Request $request): Response
+    {
+        if ($request->has('groupid')) {
+            // Delete subproject group.
+            $Group = new SubProjectGroup();
+            $Group->SetId($request->integer('groupid'));
+            $Group->Delete();
+        }
+
+        return response()->noContent();
+    }
+
+    private static function apiSubProjectPost(Request $request, int $projectid): JsonResponse|Response
+    {
+        $response = response()->noContent();
+
+        if ($request->has('newgroup')) {
+            // Create a new group
+            $Group = new SubProjectGroup();
+            $Group->SetProjectId($projectid);
+            $Group->SetName(htmlspecialchars($request->string('newgroup')->toString()));
+            if ($request->has('isdefault')) {
+                $Group->SetIsDefault($request->input('isdefault') === 'true' ? 1 : 0);
+            }
+            $Group->SetCoverageThreshold($request->integer('threshold'));
+            $Group->Save();
+
+            // Respond with a JSON representation of this new group
+            $response = response()->json(cast_data_for_JSON([
+                'id' => $Group->GetId(),
+                'name' => $Group->GetName(),
+                'is_default' => $Group->GetIsDefault(),
+                'coverage_threshold' => $Group->GetCoverageThreshold(),
+            ]));
+        }
+
+        if ($request->has('newLayout')) {
+            // Update the order of the SubProject groups.
+            foreach (array_keys((array) $request->input('newLayout')) as $index) {
+                // TODO: (williamjallen) refactor this to execute a constant number of queries
+                EloquentSubProjectGroup::findOrFail($request->integer("newLayout.{$index}.id"))
+                    ->update([
+                        'position' => $request->integer("newLayout.{$index}.position"),
+                    ]);
+            }
+        }
+
+        return $response;
+    }
+
+    private static function apiSubProjectPut(Request $request, int $projectid): Response
+    {
+        if ($request->has('threshold')) {
+            // Modify an existing subproject group.
+            $Group = new SubProjectGroup();
+            $Group->SetProjectId($projectid);
+            $Group->SetId($request->integer('groupid'));
+            $Group->SetName($request->string('name')->toString());
+            $Group->SetCoverageThreshold($request->integer('threshold'));
+            $Group->SetIsDefault($request->input('is_default') === 'true' ? 1 : 0);
+            $Group->Save();
+
+            return response()->noContent();
+        }
+
+        $SubProject = new SubProject();
+        $SubProject->SetId(self::getSubProjectIdFromRequest($request));
+
+        if ($request->has('groupname')) {
+            // Change which group a subproject belongs to.
+            $SubProject->SetGroup($request->string('groupname')->toString());
+            $SubProject->Save();
+        }
+
+        return response()->noContent();
+    }
+
+    private static function getSubProjectIdFromRequest(Request $request): int
+    {
+        if (!$request->has('subprojectid')) {
+            abort(400, 'subprojectid not specified.');
+        }
+        return $request->integer('subprojectid');
     }
 
     public function dependenciesGraph(Request $request, string $project): View
@@ -296,7 +453,7 @@ final class SubProjectController extends AbstractProjectController
         }
 
         $result = []; // array to store the all the result
-        /** @var \App\Models\SubProject $subproject */
+        /** @var EloquentSubProject $subproject */
         foreach ($subprojects as $subproject) {
             $subarray = [
                 'name' => $subproject->name,

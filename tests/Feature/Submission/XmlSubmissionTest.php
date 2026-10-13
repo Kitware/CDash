@@ -191,6 +191,29 @@ class XmlSubmissionTest extends TestCase
             && $job->expected_md5 === $md5);
     }
 
+    public function testAcceptsSubmissionWithUppercaseMd5(): void
+    {
+        $file_to_submit = base_path('tests/Feature/Submission/data/configure.xml');
+        $md5 = md5_file($file_to_submit);
+        $this->assertIsString($md5);
+        $md5 = strtoupper($md5);
+
+        $response = $this->submit($file_to_submit, [
+            'project' => $this->project->name,
+            'MD5' => $md5,
+        ]);
+
+        $response->assertOk();
+        $this->assertXmlResponse($response, '
+            <message></message>
+            <status>OK</status>
+        ');
+        Queue::assertCount(1);
+        Queue::assertPushed(ProcessSubmission::class, fn (ProcessSubmission $job) => $job->projectid === $this->project->id
+            && $job->buildid === null
+            && $job->expected_md5 === $md5);
+    }
+
     public function testAcceptsSubmissionWithBuildMetadata(): void
     {
         $response = $this->submit(base_path('tests/Feature/Submission/data/configure.xml'), [
@@ -231,6 +254,21 @@ class XmlSubmissionTest extends TestCase
             'without stamp' => [[
                 'build' => 'regular_submission',
                 'site' => 'submission.site',
+            ]],
+            'with blank build' => [[
+                'build' => '',
+                'site' => 'submission.site',
+                'stamp' => '20240501-0100-Nightly',
+            ]],
+            'with blank site' => [[
+                'build' => 'regular_submission',
+                'site' => '',
+                'stamp' => '20240501-0100-Nightly',
+            ]],
+            'with blank stamp' => [[
+                'build' => 'regular_submission',
+                'site' => 'submission.site',
+                'stamp' => '',
             ]],
         ];
     }

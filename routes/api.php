@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ExpectedBuildController;
 use App\Http\Controllers\FilterController;
+use App\Http\Controllers\GitHubWebhookController;
 use App\Http\Controllers\TimelineController;
 use Illuminate\Support\Facades\Route;
 
@@ -48,8 +49,12 @@ Route::get('/v1/testOverview.php', 'TestController@apiTestOverview');
 
 Route::match(['get', 'post', 'delete'], '/v1/expectedbuild.php', ExpectedBuildController::class);
 
+Route::post('/v1/GitHub/webhook.php', GitHubWebhookController::class);
+
 Route::middleware(['auth'])->group(function (): void {
     Route::get('/v1/manageSubProject.php', 'SubProjectController@apiManageSubProject');
+
+    Route::match(['get', 'post', 'put', 'delete'], '/v1/subproject.php', 'SubProjectController@apiSubProject');
 
     Route::match(['get', 'post'], '/v1/manageOverview.php', 'ProjectOverviewController@apiManageOverview');
 
