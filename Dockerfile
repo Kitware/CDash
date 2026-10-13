@@ -193,6 +193,11 @@ RUN echo "clear_env = no" >> /etc/php-fpm.d/www.conf
 # https://www.php.net/manual/en/install.fpm.configuration.php
 RUN echo "catch_workers_output = yes" >> /etc/php-fpm.d/www.conf
 
+# At startup, /usr/libexec/s2i/run regenerates /etc/php.d/10-opcache.ini from this
+# template, which lacks the zend_extension line, so OPcache would never be loaded.
+RUN grep -q '^zend_extension=opcache' /opt/app-root/etc/php.d/10-opcache.ini.template || \
+    sed -i '1i zend_extension=opcache' /opt/app-root/etc/php.d/10-opcache.ini.template
+
 USER 1001
 
 # Copy CDash (current folder) into /cdash
