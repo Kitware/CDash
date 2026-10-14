@@ -427,7 +427,7 @@
             <a
               class="tw-btn tw-btn-sm tw-btn-outline"
               data-test="build-history-link"
-              :href="$baseURL + '/index.php?project=' + cdash.projectname_encoded + '&filtercount=4&showfilters=1&filtercombine=and&field1=site&compare1=61&value1=' + cdash.build.sitename_encoded + '&field2=buildname&compare2=61&value2=' + cdash.build.name + '&field3=buildtype&compare3=61&value3=' + cdash.build.type + '&field4=buildstarttime&compare4=84&value4=' + cdash.build.starttime"
+              :href="$baseURL + '/index.php?project=' + cdash.projectname_encoded + '&filtercount=4&showfilters=1&filtercombine=and&field1=site&compare1=61&value1=' + cdash.build.sitename_encoded + '&field2=buildname&compare2=61&value2=' + cdash.build.name_encoded + '&field3=buildtype&compare3=61&value3=' + cdash.build.type_encoded + '&field4=buildstarttime&compare4=84&value4=' + cdash.build.starttime_encoded"
             >
               <FontAwesomeIcon :icon="FA.faLink" />
               Show History
@@ -604,9 +604,9 @@ export default {
           id: build.id,
           nerrors: Math.max(0, build.buildErrorsCount),
           nwarnings: Math.max(0, build.buildWarningsCount),
-          name: build.name,
-          type: build.buildType,
-          starttime: build.startTime,
+          name_encoded: encodeURIComponent(build.name),
+          type_encoded: encodeURIComponent(build.buildType),
+          starttime_encoded: encodeURIComponent(build.startTime),
           sitename_encoded: encodeURIComponent(build.site.name),
         };
 

@@ -58,7 +58,7 @@ class BuildSummaryPageTest extends BrowserTestCase
 
     public function testShowsHistoryLink(): void
     {
-        $buildName = 'TestBuild_' . Str::uuid()->toString();
+        $buildName = 'Linux-g++_' . Str::uuid()->toString();
         $buildType = 'Nightly';
         $startTime = '2024-03-15T08:30:00+00:00';
 
@@ -76,9 +76,9 @@ class BuildSummaryPageTest extends BrowserTestCase
                 ->waitForText('Show History')
                 ->assertAttributeContains('@build-history-link', 'href', 'project=' . urlencode($this->project->name))
                 ->assertAttributeContains('@build-history-link', 'href', 'value1=' . urlencode($this->site->name))
-                ->assertAttributeContains('@build-history-link', 'href', 'value2=' . $buildName)
-                ->assertAttributeContains('@build-history-link', 'href', 'value3=' . $buildType)
-                ->assertAttributeContains('@build-history-link', 'href', 'value4=' . $startTime)
+                ->assertAttributeContains('@build-history-link', 'href', 'value2=' . rawurlencode($buildName))
+                ->assertAttributeContains('@build-history-link', 'href', 'value3=' . rawurlencode($buildType))
+                ->assertAttributeContains('@build-history-link', 'href', 'value4=' . rawurlencode($startTime))
             ;
         });
     }
