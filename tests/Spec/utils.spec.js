@@ -13,18 +13,37 @@ describe('Utils', () => {
       expect(Utils.formatDuration(999)).toBe('999ms');
     });
 
+    it('rounds fractional milliseconds to the nearest millisecond', () => {
+      expect(Utils.formatDuration(0.4)).toBe('0ms');
+      expect(Utils.formatDuration(7.1000000000000005)).toBe('7ms');
+      expect(Utils.formatDuration(7.5)).toBe('8ms');
+      expect(Utils.formatDuration(570.0000000000001)).toBe('570ms');
+    });
+
     it('switches to seconds at exactly 1000ms', () => {
       expect(Utils.formatDuration(1000)).toBe('1.00s');
+    });
+
+    it('switches to seconds when rounding reaches 1000ms', () => {
+      expect(Utils.formatDuration(999.5)).toBe('1.00s');
     });
 
     it('formats a mid-range second value with two decimal places', () => {
       expect(Utils.formatDuration(1500)).toBe('1.50s');
     });
 
-    it('rounds up to 60.00s rather than switching format just under the minute threshold', () => {
-      // 59999ms / 1000 = 59.999, which toFixed(2) rounds to "60.00" while still
-      // taking the seconds-only branch (59999 < 60000).
-      expect(Utils.formatDuration(59999)).toBe('60.00s');
+    it('rounds seconds to the nearest hundredth', () => {
+      expect(Utils.formatDuration(1234)).toBe('1.23s');
+      expect(Utils.formatDuration(1236)).toBe('1.24s');
+    });
+
+    it('stays in seconds just under the minute threshold', () => {
+      expect(Utils.formatDuration(59994)).toBe('59.99s');
+    });
+
+    it('switches to minutes and seconds when rounding reaches a minute', () => {
+      expect(Utils.formatDuration(59995)).toBe('1m 00s');
+      expect(Utils.formatDuration(59999)).toBe('1m 00s');
     });
 
     it('switches to minutes and seconds at exactly 60000ms', () => {
@@ -37,9 +56,39 @@ describe('Utils', () => {
       expect(Utils.formatDuration(125000)).toBe('2m 05s');
     });
 
-    it('keeps accumulating minutes rather than rolling over into hours', () => {
-      expect(Utils.formatDuration(3600000)).toBe('60m 00s');
-      expect(Utils.formatDuration(3661000)).toBe('61m 01s');
+    it('rounds minute durations to the nearest second', () => {
+      expect(Utils.formatDuration(61499)).toBe('1m 01s');
+      expect(Utils.formatDuration(61500)).toBe('1m 02s');
+    });
+
+    it('stays in minutes and seconds just under the hour threshold', () => {
+      expect(Utils.formatDuration(3599499)).toBe('59m 59s');
+    });
+
+    it('switches to hours and minutes when rounding reaches an hour', () => {
+      expect(Utils.formatDuration(3599500)).toBe('1h 00m');
+    });
+
+    it('formats hour durations as hours and minutes, zero-padding minutes', () => {
+      expect(Utils.formatDuration(3600000)).toBe('1h 00m');
+      expect(Utils.formatDuration(3661000)).toBe('1h 01m');
+      expect(Utils.formatDuration(7202000)).toBe('2h 00m');
+    });
+
+    it('rounds hour durations to the nearest minute', () => {
+      expect(Utils.formatDuration(3629999)).toBe('1h 00m');
+      expect(Utils.formatDuration(3630000)).toBe('1h 01m');
+    });
+
+    it('keeps accumulating hours rather than rolling over into days', () => {
+      expect(Utils.formatDuration(172800000)).toBe('48h 00m');
+    });
+
+    it('formats missing or non-finite values as a dash', () => {
+      expect(Utils.formatDuration(null)).toBe('—');
+      expect(Utils.formatDuration(undefined)).toBe('—');
+      expect(Utils.formatDuration(NaN)).toBe('—');
+      expect(Utils.formatDuration(Infinity)).toBe('—');
     });
   });
 
@@ -176,10 +225,12 @@ describe('Utils', () => {
     it('formats microsecond CPU time measurements', () => {
       expect(Utils.formatMeasurement('UserTime', 1500000)).toBe('1.50s');
       expect(Utils.formatMeasurement('SystemTime', 500000)).toBe('500ms');
+      expect(Utils.formatMeasurement('SystemTime', 1234)).toBe('1ms');
     });
 
     it('formats second time measurements', () => {
       expect(Utils.formatMeasurement('Execution Time', 2.5)).toBe('2.50s');
+      expect(Utils.formatMeasurement('Execution Time', 0.0071)).toBe('7ms');
     });
 
     it('formats unknown measurements as plain numbers', () => {
