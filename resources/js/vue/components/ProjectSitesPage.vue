@@ -145,7 +145,7 @@ export default {
           }).join(', '),
           description: {
             value: edge.node.mostRecentInformation?.description,
-            text: edge.node.description,
+            text: edge.node.mostRecentInformation?.description,
           },
         };
       });

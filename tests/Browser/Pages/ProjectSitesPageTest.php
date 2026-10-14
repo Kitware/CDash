@@ -50,11 +50,13 @@ class ProjectSitesPageTest extends BrowserTestCase
                 'timestamp' => Carbon::now()->subMinute(),
                 'totalphysicalmemory' => 5678,
                 'numberphysicalcpus' => 2,
+                'description' => 'old site description',
             ],
             [
                 'timestamp' => Carbon::now(),
                 'totalphysicalmemory' => 8765,
                 'numberphysicalcpus' => 4,
+                'description' => 'new site description',
             ],
         ]);
         $project->builds()->create([
@@ -68,6 +70,8 @@ class ProjectSitesPageTest extends BrowserTestCase
                 ->whenAvailable('@all-sites-table > @data-table', function (Browser $browser): void {
                     self::assertEquals('4', $browser->elements('@data-table-cell')[1]->getText());
                     self::assertEquals('8.56 GiB', $browser->elements('@data-table-cell')[2]->getText());
+                    self::assertSame('new site description', $browser->elements('@data-table-cell')[4]->getText());
+                    $browser->assertDontSee('old site description');
                 });
         });
     }
