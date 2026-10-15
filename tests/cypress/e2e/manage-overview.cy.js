@@ -16,6 +16,7 @@ describe('manageOverview', () => {
     cy.get('#newBuildColumn').select('Experimental');
     cy.get('#addBuildColumn').click();
     cy.get('#saveLayout').click();
+    cy.get('#loading').should('have.attr', 'src', 'img/check.gif');
 
     // Navigate to the overview page.
     cy.contains('Go to overview').click();
