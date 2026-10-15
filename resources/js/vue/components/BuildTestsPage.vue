@@ -466,10 +466,19 @@ export default {
             text: 'History',
             href: `${this.$baseURL}/queryTests.php?project=${this.projectName}&date=${DateTime.fromISO(this.buildTime).toISODate()}&filtercount=1&showfilters=1&field1=testname&compare1=61&value1=${edge.node.name}`,
           },
-          ...this.pinnedMeasurements.reduce((acc, name) => ({
-            ...acc,
-            [name]: edge.node.testMeasurements.find((measurementEdge) => measurementEdge.name === name)?.value ?? '',
-          }), {}),
+          ...this.pinnedMeasurements.reduce((acc, name) => {
+            const measurement = edge.node.testMeasurements.find((measurementEdge) => measurementEdge.name === name);
+            const text = measurement?.value ?? '';
+            // Sort numeric measurements by their numeric value rather than as strings.
+            const numericValue = measurement?.type.startsWith('numeric') ? parseFloat(text) : NaN;
+            return {
+              ...acc,
+              [name]: {
+                value: Number.isFinite(numericValue) ? numericValue : text,
+                text: text,
+              },
+            };
+          }, {}),
         };
       });
     },
