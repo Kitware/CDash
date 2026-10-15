@@ -138,6 +138,33 @@ class BuildCoveragePageTest extends BrowserTestCase
         });
     }
 
+    /**
+     * Single-character top-level directories (e.g. R/) should be shown as directories,
+     * both with and without a leading "./".
+     */
+    public function testSingleCharacterDirectory(): void
+    {
+        $this->createCoverage(1, 1, 0, 0, 'R/foo.R');
+        $this->createCoverage(1, 1, 0, 0, './R/bar.R');
+
+        $this->browse(function (Browser $browser): void {
+            $browser->visit("/builds/{$this->build->id}/coverage")
+                ->waitFor('@coverage-directory-link')
+                ->assertSeeIn('@coverage-directory-link', 'R')
+                ->assertDontSeeIn('@coverage-table', 'foo.R')
+                ->assertDontSeeIn('@coverage-table', 'bar.R')
+                ->assertSeeIn('@coverage-table', '2 / 4')
+                ->assertMissing('@coverage-file-link')
+                ->click('@coverage-directory-link')
+                ->waitFor('@coverage-file-link')
+                ->assertSeeIn('@breadcrumbs', 'R')
+                ->assertSeeIn('@coverage-table', 'foo.R')
+                ->assertSeeIn('@coverage-table', 'bar.R')
+                ->assertMissing('@coverage-directory-link')
+            ;
+        });
+    }
+
     public function testBackButton(): void
     {
         $this->createCoverage(1, 1, 0, 0, 'foo/bar/baz.cpp');
