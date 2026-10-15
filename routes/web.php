@@ -56,8 +56,7 @@ Route::get('/auth/{service}/callback', 'OAuthController@callback');
 
 Route::get('/logout', 'Auth\LoginController@logout');
 
-Route::get('/recoverPassword.php', 'UserController@recoverPassword');
-Route::post('/recoverPassword.php', 'UserController@recoverPassword');
+Route::get('/recoverPassword.php', fn () => redirect('/password/reset', 301));
 
 Route::get('/login.php', fn () => redirect('/login', 301));
 

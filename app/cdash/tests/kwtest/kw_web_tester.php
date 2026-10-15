@@ -273,6 +273,10 @@ class KWWebTestCase extends WebTestCase
         Auth::shouldReceive('id')->andReturn($user->id);
         Auth::shouldReceive('guard')->andReturnSelf();
         Auth::shouldReceive('shouldUse')->andReturn('web');
+        // Used by the AuthenticateSession middleware.
+        Auth::shouldReceive('getDefaultDriver')->andReturn('web');
+        Auth::shouldReceive('viaRemember')->andReturn(false);
+        Auth::shouldReceive('hashPasswordForCookie')->andReturnArg(0);
     }
 
     public function logout(): void

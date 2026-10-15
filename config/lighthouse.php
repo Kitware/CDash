@@ -5,6 +5,7 @@ use GraphQL\Error\DebugFlag;
 use GraphQL\Validator\Rules\DisableIntrospection;
 use GraphQL\Validator\Rules\QueryComplexity;
 use GraphQL\Validator\Rules\QueryDepth;
+use Illuminate\Session\Middleware\AuthenticateSession;
 use Nuwave\Lighthouse\Execution\AuthenticationErrorHandler;
 use Nuwave\Lighthouse\Execution\AuthorizationErrorHandler;
 use Nuwave\Lighthouse\Execution\ReportingErrorHandler;
@@ -56,6 +57,9 @@ return [
 
             // Always set the `Accept: application/json` header.
             AcceptJson::class,
+
+            // Logs out sessions whose user has changed their password since logging in.
+            AuthenticateSession::class,
 
             // Logs in a user if they are authenticated. In contrast to Laravel's 'auth'
             // middleware, this delegates auth and permission checks to the field level.

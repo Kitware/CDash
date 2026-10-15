@@ -54,18 +54,8 @@ set_tests_properties(svnUpdates PROPERTIES DEPENDS sameImage)
 add_ctest_test(gitUpdates PublicDashboard simple simple.php)
 set_tests_properties(gitUpdates PROPERTIES DEPENDS svnUpdates)
 
-add_test(
-  NAME recoverpassword
-  COMMAND ${PHP_EXE} ${testing_dir}/singletest.php ${testing_dir}/test_recoverpassword.php
-)
-set_tests_properties(recoverpassword PROPERTIES
-  FAIL_REGULAR_EXPRESSION ".*Failures: [1-9]+.*;.*Exceptions: [1-9]+.*"
-  DEPENDS gitUpdates
-  ATTACHED_FILES_ON_FAIL "${CDash_SOURCE_DIR}/storage/logs/cdash.log"
-)
-
 add_php_test(submitsortingdata)
-set_tests_properties(submitsortingdata PROPERTIES DEPENDS recoverpassword)
+set_tests_properties(submitsortingdata PROPERTIES DEPENDS gitUpdates)
 
 add_php_test(indexfilters)
 set_tests_properties(indexfilters PROPERTIES DEPENDS submitsortingdata)
