@@ -16,7 +16,9 @@ final class MonitorController extends AbstractController
 {
     public function monitor(): View
     {
-        return $this->view('admin.monitor', 'Queue Status');
+        return $this->vue('monitor-page', 'Monitor Submission Processing', [
+            'using-database-queue' => config('queue.default') === 'database',
+        ], enableDaisyUI: false);
     }
 
     /**

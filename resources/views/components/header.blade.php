@@ -76,7 +76,17 @@ $showHeaderNav = isset($build);
             </span>
         </div>
 
-        <nav class="projectnav clearfix">
+        <nav
+            class="projectnav clearfix"
+            @if(isset($vue) && $vue === true && $showHeaderNav)
+                data-vue-component="header-nav"
+                data-vue-props="{{ json_encode([
+                    'previous-url' => $previousUrl,
+                    'latest-url' => $latestUrl,
+                    'next-url' => $nextUrl,
+                ], JSON_THROW_ON_ERROR) }}"
+            @endif
+        >
             @if(isset($angular) && $angular === true)
                 @verbatim
                     <ul ng-if="cdash.menu.previous || cdash.menu.current || cdash.menu.next" class="projectnav_controls clearfix">
@@ -98,18 +108,6 @@ $showHeaderNav = isset($build);
                         </li>
                     </ul>
                 @endverbatim
-            @elseif(isset($vue) && $vue === true && $showHeaderNav)
-                <header-nav
-                    @if($previousUrl)
-                        previous-url="{{ $previousUrl }}"
-                    @endif
-                    @if($latestUrl)
-                        latest-url="{{ $latestUrl }}"
-                    @endif
-                    @if($nextUrl)
-                        next-url="{{ $nextUrl }}"
-                    @endif
-                />
             @endif
         </nav>
 

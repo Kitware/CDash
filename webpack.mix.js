@@ -19,7 +19,7 @@ mix.css('resources/css/legacy.css', 'public/assets/css/legacy.css');
 mix.sass('resources/sass/app.scss', 'public/assets/css/app.css');
 
 // Boilerplate.
-mix.js('resources/js/vue/app.js', 'public/assets/js').vue();
+mix.js('resources/js/vue/app.js', 'public/assets/js').vue({ runtimeOnly: true });
 mix.js('resources/js/angular/legacy.js', 'public/assets/js/legacy.js');
 
 const partialsDir = path.resolve(__dirname, 'resources/js/angular/views/partials');

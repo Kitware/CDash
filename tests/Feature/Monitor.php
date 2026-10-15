@@ -52,15 +52,15 @@ class Monitor extends TestCase
         // By default, the monitor is not available.
 
         $response = $this->actingAs($this->admin_user)->get('/monitor');
-        $response->assertViewIs('admin.monitor');
-        $response->assertSee('only available when QUEUE_CONNECTION=database');
+        $response->assertViewIs('vue');
+        $response->assertViewHas('componentName', 'monitor-page');
+        $response->assertViewHas('props', ['using-database-queue' => false]);
 
         // Enable the relevant config setting to make the monitor available to admins.
         config(['queue.default' => 'database']);
 
         $response = $this->actingAs($this->admin_user)->get('/monitor');
-        $response->assertViewIs('admin.monitor');
-        $response->assertDontSee('only available when QUEUE_CONNECTION=database');
+        $response->assertViewHas('props', ['using-database-queue' => true]);
     }
 
     public function testMonitorAPI(): void
