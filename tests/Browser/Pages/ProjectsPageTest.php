@@ -299,6 +299,24 @@ class ProjectsPageTest extends BrowserTestCase
         });
     }
 
+    public function testProjectNameLinksToProjectHomePage(): void
+    {
+        $this->projects['project1'] = $this->makePublicProject();
+
+        $this->browse(function (Browser $browser): void {
+            $browser->visit('/projects')
+                ->whenAvailable('@projects-page', function (Browser $browser): void {
+                    $browser->click('@all-tab')
+                        ->waitFor('@projects-table')
+                    ;
+
+                    $href = $browser->attribute('@project-name', 'href');
+                    self::assertIsString($href);
+                    self::assertStringEndsWith("/projects/{$this->projects['project1']->id}", $href);
+                });
+        });
+    }
+
     public function testPaginationLoadsAllProjects(): void
     {
         $this->users['admin'] = User::factory()->adminUser()->create();

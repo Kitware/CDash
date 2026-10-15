@@ -78,7 +78,7 @@
                 <div class="tw-flex tw-flex-col tw-justify-center tw-h-full">
                   <a
                     class="tw-link tw-link-hover tw-font-bold"
-                    :href="$baseURL + '/index.php?project=' + project.name"
+                    :href="$baseURL + '/projects/' + project.id"
                     data-test="project-name"
                   >
                     {{ project.name }}

@@ -20,6 +20,7 @@ use App\Http\Controllers\GlobalInvitationController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ProjectHomeController;
 use App\Http\Controllers\ProjectInvitationController;
 use App\Http\Controllers\ProjectMembersController;
 use App\Http\Controllers\ProjectSettingsController;
@@ -192,6 +193,9 @@ Route::post('/projects/{project_id}/logo', UpdateProjectLogoController::class)
 
 Route::get('/projects/new', CreateProjectController::class);
 Route::permanentRedirect('/project/new', url('/projects/new'));
+
+Route::get('/projects/{project_id}', ProjectHomeController::class)
+    ->whereNumber('project_id');
 
 Route::get('/projects/{project_id}/settings', ProjectSettingsController::class)
     ->whereNumber('project_id');
