@@ -24,7 +24,6 @@ CDash needs the following PHP modules installed and enabled.
 - ldap
 - mbstring
 - pdo_pgsql
-- xsl
 - posix
 - simplexml
 - tokenizer
