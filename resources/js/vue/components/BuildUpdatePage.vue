@@ -6,48 +6,56 @@
     <section class="tw-flex tw-flex-col tw-w-full tw-gap-4">
       <BuildSummaryCard :build-id="buildId" />
 
-      <LoadingIndicator :is-loading="!update">
-        <div>
-          <div v-if="update.revision">
-            <b>Revision: </b>
-            <!-- eslint-disable-next-line vue/no-undef-components -->
-            <tt v-if="repository">
-              <a
-                class="tw-link tw-link-hover tw-link-info"
-                :href="revisionUrl"
-              >{{ update.revision }}</a>
-            </tt>
-            <!-- eslint-disable-next-line vue/no-undef-components -->
-            <tt v-else>
-              {{ update.revision }}
-            </tt>
-          </div>
-          <div v-if="update.priorRevision">
-            <b>Prior Revision: </b>
-            <!-- eslint-disable-next-line vue/no-undef-components -->
-            <tt v-if="repository">
-              <a
-                class="tw-link tw-link-hover tw-link-info"
-                :href="repository?.getCommitUrl(update.priorRevision) ?? ''"
-              >{{ update.priorRevision }}</a>
-            </tt>
-            <!-- eslint-disable-next-line vue/no-undef-components -->
-            <tt v-else>
-              {{ update.priorRevision }}
-            </tt>
-          </div>
+      <LoadingIndicator :is-loading="$apollo.queries.update.loading">
+        <div v-if="!update">
+          No update found for this build.
         </div>
+        <template v-else>
+          <div>
+            <div v-if="update.revision">
+              <b>Revision: </b>
+              <!-- eslint-disable-next-line vue/no-undef-components -->
+              <tt v-if="repository">
+                <a
+                  class="tw-link tw-link-hover tw-link-info"
+                  :href="revisionUrl"
+                >{{ update.revision }}</a>
+              </tt>
+              <!-- eslint-disable-next-line vue/no-undef-components -->
+              <tt v-else>
+                {{ update.revision }}
+              </tt>
+            </div>
+            <div v-if="update.priorRevision">
+              <b>Prior Revision: </b>
+              <!-- eslint-disable-next-line vue/no-undef-components -->
+              <tt v-if="repository">
+                <a
+                  class="tw-link tw-link-hover tw-link-info"
+                  :href="repository?.getCommitUrl(update.priorRevision) ?? ''"
+                >{{ update.priorRevision }}</a>
+              </tt>
+              <!-- eslint-disable-next-line vue/no-undef-components -->
+              <tt v-else>
+                {{ update.priorRevision }}
+              </tt>
+            </div>
+          </div>
 
-        <h3
-          v-if="update.status"
-          class="error"
-        >
-          {{ update.status }}
-        </h3>
+          <h3
+            v-if="update.status"
+            class="error"
+          >
+            {{ update.status }}
+          </h3>
+        </template>
       </LoadingIndicator>
 
-      <LoadingIndicator :is-loading="!updateFiles">
-        <div class="tw-flex tw-flex-col tw-gap-4">
+      <LoadingIndicator :is-loading="$apollo.queries.updateFiles.loading">
+        <div
+          class="tw-flex tw-flex-col tw-gap-4"
+          data-test="update-files"
+        >
           <CommitCard
             v-for="commitFiles in commits"
             :key="commitFiles[0].revision"

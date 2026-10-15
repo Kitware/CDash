@@ -66,6 +66,25 @@ class BuildUpdatePageTest extends BrowserTestCase
         });
     }
 
+    public function testShowsMessageWhenNoUpdate(): void
+    {
+        /** @var Build $build */
+        $build = $this->project->builds()->create([
+            'siteid' => $this->site->id,
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        $this->browse(function (Browser $browser) use ($build): void {
+            $browser->visit("/builds/{$build->id}/update")
+                ->waitForText('No update found for this build.')
+                ->assertSee('No update found for this build.')
+                ->waitFor('@update-files')
+                ->assertMissing('@commit-card')
+            ;
+        });
+    }
+
     public function testShowsRevision(): void
     {
         $this->browse(function (Browser $browser): void {
