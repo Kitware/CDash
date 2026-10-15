@@ -112,6 +112,10 @@ export default {
       update: (data) => {
         let configures = data.build.configure !== null ? [{ configure: data.build.configure }] : [];
         data.build.children.edges.forEach((child) => {
+          // Not every SubProject necessarily has a configure step.
+          if (child.node.configure === null) {
+            return;
+          }
           configures = configures.concat({
             ...child.node,
           });

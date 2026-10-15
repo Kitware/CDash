@@ -237,6 +237,143 @@ class BuildConfigurePageTest extends BrowserTestCase
         });
     }
 
+    public function testShowsSingleConfigureWhenSomeChildBuildsHaveNoConfigure(): void
+    {
+        /** @var Build $parent_build */
+        $parent_build = $this->project->builds()->create([
+            'siteid' => $this->site->id,
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        /** @var Build $child_build_1 */
+        $child_build_1 = $parent_build->children()->create([
+            'projectid' => $this->project->id,
+            'subprojectid' => $this->subproject1->id,
+            'siteid' => $this->site->id,
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        // This child has no configure.
+        $parent_build->children()->create([
+            'projectid' => $this->project->id,
+            'subprojectid' => $this->subproject2->id,
+            'siteid' => $this->site->id,
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        $configure = Configure::factory()->create();
+        $this->configures[] = $configure;
+
+        BuildConfigure::create([
+            'buildid' => $child_build_1->id,
+            'configureid' => $configure->id,
+        ]);
+
+        $this->browse(function (Browser $browser) use ($configure, $parent_build): void {
+            $browser->visit("/builds/{$parent_build->id}/configure")
+                ->waitForText('Configure Command')
+                ->assertSee($configure->command)
+                ->assertSee($configure->log)
+                ->assertDontSee($this->subproject1->name)
+                ->assertDontSee($this->subproject2->name)
+            ;
+        });
+    }
+
+    public function testShowsListOfConfiguresWhenSomeChildBuildsHaveNoConfigure(): void
+    {
+        $subproject3 = SubProject::create([
+            'name' => Str::uuid()->toString(),
+            'projectid' => $this->project->id,
+            'groupid' => BuildGroup::factory()->for($this->project)->create()->id,
+        ]);
+
+        /** @var Build $parent_build */
+        $parent_build = $this->project->builds()->create([
+            'siteid' => $this->site->id,
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        /** @var Build $child_build_1 */
+        $child_build_1 = $parent_build->children()->create([
+            'projectid' => $this->project->id,
+            'subprojectid' => $this->subproject1->id,
+            'siteid' => $this->site->id,
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        /** @var Build $child_build_2 */
+        $child_build_2 = $parent_build->children()->create([
+            'projectid' => $this->project->id,
+            'subprojectid' => $this->subproject2->id,
+            'siteid' => $this->site->id,
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        // This child has no configure.
+        $parent_build->children()->create([
+            'projectid' => $this->project->id,
+            'subprojectid' => $subproject3->id,
+            'siteid' => $this->site->id,
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        $configure1 = Configure::factory()->create();
+        $configure2 = Configure::factory()->create();
+        $this->configures[] = $configure1;
+        $this->configures[] = $configure2;
+
+        BuildConfigure::create([
+            'buildid' => $child_build_1->id,
+            'configureid' => $configure1->id,
+        ]);
+
+        BuildConfigure::create([
+            'buildid' => $child_build_2->id,
+            'configureid' => $configure2->id,
+        ]);
+
+        $this->browse(function (Browser $browser) use ($parent_build, $subproject3): void {
+            $browser->visit("/builds/{$parent_build->id}/configure")
+                ->waitForText($this->subproject1->name)
+                ->waitForText($this->subproject2->name)
+                ->assertDontSee($subproject3->name)
+            ;
+        });
+    }
+
+    public function testShowsMessageWhenNoChildBuildsHaveConfigure(): void
+    {
+        /** @var Build $parent_build */
+        $parent_build = $this->project->builds()->create([
+            'siteid' => $this->site->id,
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        $parent_build->children()->create([
+            'projectid' => $this->project->id,
+            'subprojectid' => $this->subproject1->id,
+            'siteid' => $this->site->id,
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        $this->browse(function (Browser $browser) use ($parent_build): void {
+            $browser->visit("/builds/{$parent_build->id}/configure")
+                ->waitForText('No configure found for this build.')
+                ->assertSee('No configure found for this build.')
+            ;
+        });
+    }
+
     public function testWarningsAndErrorsBySubproject(): void
     {
         /** @var Build $parent_build */
