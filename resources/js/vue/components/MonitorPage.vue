@@ -1,5 +1,8 @@
 <template>
-  <section v-if="errored">
+  <p v-if="!usingDatabaseQueue">
+    System Monitor only available when QUEUE_CONNECTION=database
+  </p>
+  <section v-else-if="errored">
     <p>{{ cdash.error }}</p>
   </section>
   <section v-else>
@@ -37,12 +40,19 @@
 
 <script>
 import ApiLoader from './shared/ApiLoader';
-import TimelinePlot from './shared/TimelinePlot';
+import TimelinePlot from './shared/TimelinePlot.vue';
 export default {
   name: 'MonitorPage',
 
   components: {
     TimelinePlot,
+  },
+
+  props: {
+    usingDatabaseQueue: {
+      type: Boolean,
+      required: true,
+    },
   },
 
   data() {
@@ -56,7 +66,9 @@ export default {
   },
 
   mounted() {
-    ApiLoader.loadPageData(this, '/api/monitor');
+    if (this.usingDatabaseQueue) {
+      ApiLoader.loadPageData(this, '/api/monitor');
+    }
   },
 
   methods: {

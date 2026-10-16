@@ -3,9 +3,8 @@
 ])
 
 @section('main_content')
-    <{{ $componentName }}
-    @foreach($props as $prop => $value)
-        :{{ $prop }}="@js($value)"
-    @endforeach
-    ></{{ $componentName }}>
+    <div
+        data-vue-component="{{ $componentName }}"
+        data-vue-props="{{ json_encode((object) $props, JSON_THROW_ON_ERROR) }}"
+    ></div>
 @endsection
