@@ -171,9 +171,9 @@ export default {
         { label: 'Repository', url: this.vcsUrl, icon: repositoryIcon, testId: 'repository-link' },
         { label: 'Website', url: this.homeUrl, icon: faGlobe, testId: 'website-link' },
         { label: 'Documentation', url: this.documentationUrl, icon: faBook, testId: 'documentation-link' },
-        { label: 'Bug tracker', url: this.bugTrackerUrl, icon: faBug, testId: 'bug-tracker-link' },
-        { label: 'Report an issue', url: this.bugTrackerNewIssueUrl, icon: faCirclePlus, testId: 'new-issue-link' },
-        { label: 'Test data', url: this.testDataUrl, icon: faDatabase, testId: 'test-data-link' },
+        { label: 'Issue Tracker', url: this.bugTrackerUrl, icon: faBug, testId: 'bug-tracker-link' },
+        { label: 'Report an Issue', url: this.bugTrackerNewIssueUrl, icon: faCirclePlus, testId: 'new-issue-link' },
+        { label: 'Test Data', url: this.testDataUrl, icon: faDatabase, testId: 'test-data-link' },
       ].filter((resource) => resource.url);
     },
   },

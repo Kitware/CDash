@@ -200,7 +200,7 @@ $showHeaderNav = isset($build);
                             @if(isset($project->BugTrackerUrl) && strlen($project->BugTrackerUrl) > 0)
                                 <li>
                                     <a href="{{ $project->BugTrackerUrl }}">
-                                        Bug Tracker
+                                        Issue Tracker
                                     </a>
                                 </li>
                             @endif

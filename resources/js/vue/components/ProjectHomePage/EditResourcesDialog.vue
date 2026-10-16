@@ -35,10 +35,10 @@
           />
           <SelectField
             v-model="form.vcsViewer"
-            class="sm:tw-w-36 tw-shrink-0"
-            label="Type"
+            class="sm:tw-w-40 tw-shrink-0"
+            label="Repository Type"
             :options="[
-              { text: 'Other', value: null },
+              { text: 'None', value: null },
               { text: 'GitHub', value: 'GITHUB' },
               { text: 'GitLab', value: 'GITLAB' },
             ]"
@@ -194,16 +194,16 @@ export default {
       return [
         { name: 'homeUrl', label: 'Website', testId: 'home-url-input' },
         { name: 'documentationUrl', label: 'Documentation', testId: 'documentation-url-input' },
-        { name: 'bugTrackerUrl', label: 'Bug tracker', testId: 'bug-tracker-url-input' },
+        { name: 'bugTrackerUrl', label: 'Issue Tracker', testId: 'bug-tracker-url-input' },
         {
           name: 'bugTrackerNewIssueUrl',
-          label: 'Report an issue',
+          label: 'Report an Issue',
           description: 'The page where users can file a new issue.',
           testId: 'bug-tracker-new-issue-url-input',
         },
         {
           name: 'testDataUrl',
-          label: 'Test data',
+          label: 'Test Data',
           description: 'Where the data used by the project\'s tests can be downloaded.',
           testId: 'test-data-url-input',
         },

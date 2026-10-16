@@ -131,7 +131,7 @@ class ProjectHomePageTest extends BrowserTestCase
                 });
 
             $resources = $browser->script("return [...document.querySelectorAll('[data-test=\"resources-section\"] a')].map(a => a.textContent.trim());")[0];
-            self::assertSame(['Repository', 'Website', 'Documentation', 'Bug tracker', 'Report an issue', 'Test data'], $resources);
+            self::assertSame(['Repository', 'Website', 'Documentation', 'Issue Tracker', 'Report an Issue', 'Test Data'], $resources);
         });
     }
 
