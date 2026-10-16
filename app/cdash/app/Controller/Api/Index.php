@@ -515,6 +515,7 @@ class Index extends ResultsApi
 
         $buildgroup_response['id'] = $buildgroup->GetId();
         $buildgroup_response['name'] = $groupname;
+        $buildgroup_response['type'] = $buildgroup->GetType();
         $buildgroup_response['linkname'] = urlencode($groupname);
         $buildgroup_response['position'] = $buildgroup->GetPosition();
 

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\BuildGroupType;
+use App\Models\BuildGroup as EloquentBuildGroup;
 use CDash\Model\BuildGroup;
 use CDash\Model\BuildGroupRule;
 use Illuminate\Http\JsonResponse;
@@ -103,7 +105,10 @@ final class ExpectedBuildController extends AbstractProjectController
             abort(400, 'newgroupid not specified.');
         }
 
-        $newgroupid = htmlspecialchars($request->input('newgroupid'));
+        $newgroupid = $request->integer('newgroupid');
+        if (EloquentBuildGroup::findOrFail($newgroupid)->type !== BuildGroupType::DAILY) {
+            abort(400, 'Builds cannot be assigned to dynamic build groups.');
+        }
 
         $rule = new BuildGroupRule();
         $rule->SiteId = $siteid;

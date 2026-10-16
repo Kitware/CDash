@@ -51,10 +51,11 @@
     </div>
     
     <div style="display: flex; align-items: center; gap: 8px;">
-      <button class="btn btn-sm btn-success" ng-click="bulkMarkAsExpected(buildgroup, 1)" data-cy="bulk-mark-expected-btn">
+      <!-- Expected builds belong to daily groups. -->
+      <button class="btn btn-sm btn-success" ng-if="buildgroup.type != 'Latest'" ng-click="bulkMarkAsExpected(buildgroup, 1)" data-cy="bulk-mark-expected-btn">
         <span class="glyphicon glyphicon-ok"></span> Mark as Expected
       </button>
-      <button class="btn btn-sm btn-warning" ng-click="bulkMarkAsExpected(buildgroup, 0)" data-cy="bulk-mark-not-expected-btn">
+      <button class="btn btn-sm btn-warning" ng-if="buildgroup.type != 'Latest'" ng-click="bulkMarkAsExpected(buildgroup, 0)" data-cy="bulk-mark-not-expected-btn">
         <span class="glyphicon glyphicon-remove"></span> Mark as Not Expected
       </button>
       <button class="btn btn-sm btn-danger" ng-click="bulkDeleteBuilds(buildgroup)" data-cy="bulk-delete-btn">

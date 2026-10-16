@@ -17,6 +17,7 @@
 
 namespace CDash\Api\v1\Index;
 
+use App\Enums\BuildGroupType;
 use App\Services\ProjectService;
 use CDash\Controller\Api\Index as IndexController;
 use CDash\Database;
@@ -516,8 +517,12 @@ for ($i = 0; $i < count($controller->buildgroupsResponse); $i++) {
 
 // Create a separate "all buildgroups" section of our response.
 // This is used to allow project admins to move builds between groups.
+// Builds can't be moved into dynamic groups, so only daily groups are listed.
 $response['all_buildgroups'] = [];
 foreach ($controller->buildgroupsResponse as $group) {
+    if ($group['type'] !== BuildGroupType::DAILY->value) {
+        continue;
+    }
     $response['all_buildgroups'][] = [
         'id' => $group['id'],
         'name' => $group['name'],
