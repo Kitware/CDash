@@ -109,6 +109,12 @@ parameters:
 			path: app/Exceptions/Handler.php
 
 		-
+			rawMessage: Foreach overwrites $directive with its value variable.
+			identifier: foreach.valueOverwrite
+			count: 1
+			path: app/GraphQL/Directives/FilterDirective.php
+
+		-
 			rawMessage: 'Generic type Illuminate\Database\Eloquent\Relations\Relation<Illuminate\Database\Eloquent\Model> in PHPDoc tag @param for parameter $builder does not specify all template types of class Illuminate\Database\Eloquent\Relations\Relation: TRelatedModel, TDeclaringModel, TResult'
 			identifier: generics.lessTypes
 			count: 1
@@ -1309,9 +1315,15 @@ parameters:
 			path: app/Http/Controllers/ProjectOverviewController.php
 
 		-
+			rawMessage: 'Offset ''loctested'' might not exist on array{loctested?: (array|float|int), locuntested?: (array|float|int), percent?: float}.'
+			identifier: offsetAccess.notFound
+			count: 3
+			path: app/Http/Controllers/ProjectOverviewController.php
+
+		-
 			rawMessage: 'Offset ''loctested'' might not exist on array{}|array{loctested: (array|float|int), locuntested?: (array|float|int)}.'
 			identifier: offsetAccess.notFound
-			count: 5
+			count: 2
 			path: app/Http/Controllers/ProjectOverviewController.php
 
 		-
@@ -1327,7 +1339,7 @@ parameters:
 			path: app/Http/Controllers/ProjectOverviewController.php
 
 		-
-			rawMessage: 'Offset ''locuntested'' might not exist on array{}|array{loctested: (array|float|int), locuntested?: (array|float|int)}.'
+			rawMessage: 'Offset ''locuntested'' might not exist on array{loctested?: (array|float|int), locuntested?: (array|float|int), percent?: float}.'
 			identifier: offsetAccess.notFound
 			count: 2
 			path: app/Http/Controllers/ProjectOverviewController.php
@@ -1834,12 +1846,6 @@ parameters:
 			path: app/Http/Submission/Handlers/AbstractXmlHandler.php
 
 		-
-			rawMessage: 'Method App\Http\Submission\Handlers\AbstractXmlHandler::startElement() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
-			identifier: missingType.checkedException
-			count: 1
-			path: app/Http/Submission/Handlers/AbstractXmlHandler.php
-
-		-
 			rawMessage: 'Method App\Http\Submission\Handlers\AbstractXmlHandler::text() has no return type specified.'
 			identifier: missingType.return
 			count: 1
@@ -1969,6 +1975,18 @@ parameters:
 			path: app/Http/Submission/Handlers/BazelJSONHandler.php
 
 		-
+			rawMessage: Foreach key variable $subproject_name is never read before being overwritten.
+			identifier: foreach.keyOverwritten
+			count: 1
+			path: app/Http/Submission/Handlers/BazelJSONHandler.php
+
+		-
+			rawMessage: Foreach key variable $subproject_name is never read.
+			identifier: foreach.unusedKey
+			count: 1
+			path: app/Http/Submission/Handlers/BazelJSONHandler.php
+
+		-
 			rawMessage: Foreach overwrites $line with its value variable.
 			identifier: foreach.valueOverwrite
 			count: 2
@@ -2071,6 +2089,12 @@ parameters:
 			path: app/Http/Submission/Handlers/BazelJSONHandler.php
 
 		-
+			rawMessage: 'Method App\Http\Submission\Handlers\BazelJSONHandler::RecordError() has an unused parameter $type.'
+			identifier: method.unusedParameter
+			count: 1
+			path: app/Http/Submission/Handlers/BazelJSONHandler.php
+
+		-
 			rawMessage: 'Method App\Http\Submission\Handlers\BazelJSONHandler::RecordError() has parameter $build_error with no type specified.'
 			identifier: missingType.parameter
 			count: 1
@@ -2089,7 +2113,7 @@ parameters:
 			path: app/Http/Submission/Handlers/BazelJSONHandler.php
 
 		-
-			rawMessage: 'Offset 1 might not exist on array{}|array{0: non-falsy-string, 1: string, 2: string, 3?: string}.'
+			rawMessage: 'Offset 1 might not exist on array{}|array{non-falsy-string, string, string}.'
 			identifier: offsetAccess.notFound
 			count: 1
 			path: app/Http/Submission/Handlers/BazelJSONHandler.php
@@ -2193,6 +2217,24 @@ parameters:
 		-
 			rawMessage: Property App\Http\Submission\Handlers\BazelJSONHandler::$TestsOutput type has no value type specified in iterable type array.
 			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Submission/Handlers/BazelJSONHandler.php
+
+		-
+			rawMessage: Value assigned to variable $build_error is never read before being overwritten.
+			identifier: assign.overwritten
+			count: 1
+			path: app/Http/Submission/Handlers/BazelJSONHandler.php
+
+		-
+			rawMessage: Value assigned to variable $build_error is never read.
+			identifier: assign.unused
+			count: 1
+			path: app/Http/Submission/Handlers/BazelJSONHandler.php
+
+		-
+			rawMessage: Value assigned to variable $subproject_name is never read before being overwritten.
+			identifier: assign.overwritten
 			count: 1
 			path: app/Http/Submission/Handlers/BazelJSONHandler.php
 
@@ -2323,12 +2365,6 @@ parameters:
 			path: app/Http/Submission/Handlers/BuildHandler.php
 
 		-
-			rawMessage: 'Method App\Http\Submission\Handlers\BuildHandler::startElement() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
-			identifier: missingType.checkedException
-			count: 17
-			path: app/Http/Submission/Handlers/BuildHandler.php
-
-		-
 			rawMessage: 'Method App\Http\Submission\Handlers\BuildHandler::text() has parameter $data with no type specified.'
 			identifier: missingType.parameter
 			count: 1
@@ -2338,12 +2374,6 @@ parameters:
 			rawMessage: 'Method App\Http\Submission\Handlers\BuildHandler::text() has parameter $parser with no type specified.'
 			identifier: missingType.parameter
 			count: 1
-			path: app/Http/Submission/Handlers/BuildHandler.php
-
-		-
-			rawMessage: 'Method App\Http\Submission\Handlers\BuildHandler::text() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
-			identifier: missingType.checkedException
-			count: 2
 			path: app/Http/Submission/Handlers/BuildHandler.php
 
 		-
@@ -2467,12 +2497,6 @@ parameters:
 			path: app/Http/Submission/Handlers/ConfigureHandler.php
 
 		-
-			rawMessage: 'Method App\Http\Submission\Handlers\ConfigureHandler::CreateBuild() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
-			identifier: missingType.checkedException
-			count: 6
-			path: app/Http/Submission/Handlers/ConfigureHandler.php
-
-		-
 			rawMessage: 'Method App\Http\Submission\Handlers\ConfigureHandler::endElement() has parameter $name with no type specified.'
 			identifier: missingType.parameter
 			count: 1
@@ -2506,12 +2530,6 @@ parameters:
 			rawMessage: 'Method App\Http\Submission\Handlers\ConfigureHandler::startElement() has parameter $parser with no type specified.'
 			identifier: missingType.parameter
 			count: 1
-			path: app/Http/Submission/Handlers/ConfigureHandler.php
-
-		-
-			rawMessage: 'Method App\Http\Submission\Handlers\ConfigureHandler::startElement() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
-			identifier: missingType.checkedException
-			count: 4
 			path: app/Http/Submission/Handlers/ConfigureHandler.php
 
 		-
@@ -2650,12 +2668,6 @@ parameters:
 			path: app/Http/Submission/Handlers/CoverageHandler.php
 
 		-
-			rawMessage: 'Method App\Http\Submission\Handlers\CoverageHandler::startElement() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
-			identifier: missingType.checkedException
-			count: 8
-			path: app/Http/Submission/Handlers/CoverageHandler.php
-
-		-
 			rawMessage: 'Method App\Http\Submission\Handlers\CoverageHandler::text() has parameter $data with no type specified.'
 			identifier: missingType.parameter
 			count: 1
@@ -2749,12 +2761,6 @@ parameters:
 			rawMessage: 'Method App\Http\Submission\Handlers\CoverageJUnitHandler::startElement() has parameter $parser with no type specified.'
 			identifier: missingType.parameter
 			count: 1
-			path: app/Http/Submission/Handlers/CoverageJUnitHandler.php
-
-		-
-			rawMessage: 'Method App\Http\Submission\Handlers\CoverageJUnitHandler::startElement() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
-			identifier: missingType.checkedException
-			count: 8
 			path: app/Http/Submission/Handlers/CoverageJUnitHandler.php
 
 		-
@@ -2854,12 +2860,6 @@ parameters:
 			rawMessage: 'Method App\Http\Submission\Handlers\CoverageLogHandler::startElement() has parameter $parser with no type specified.'
 			identifier: missingType.parameter
 			count: 1
-			path: app/Http/Submission/Handlers/CoverageLogHandler.php
-
-		-
-			rawMessage: 'Method App\Http\Submission\Handlers\CoverageLogHandler::startElement() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
-			identifier: missingType.checkedException
-			count: 2
 			path: app/Http/Submission/Handlers/CoverageLogHandler.php
 
 		-
@@ -3025,6 +3025,12 @@ parameters:
 			path: app/Http/Submission/Handlers/DynamicAnalysisHandler.php
 
 		-
+			rawMessage: Foreach key variable $subprojectName is never read.
+			identifier: foreach.unusedKey
+			count: 1
+			path: app/Http/Submission/Handlers/DynamicAnalysisHandler.php
+
+		-
 			rawMessage: 'Loose comparison via "==" between mixed and int is not allowed.'
 			identifier: equal.notAllowed
 			count: 1
@@ -3034,12 +3040,6 @@ parameters:
 			rawMessage: 'Method App\Http\Submission\Handlers\DynamicAnalysisHandler::createBuild() has parameter $subprojectName with no type specified.'
 			identifier: missingType.parameter
 			count: 1
-			path: app/Http/Submission/Handlers/DynamicAnalysisHandler.php
-
-		-
-			rawMessage: 'Method App\Http\Submission\Handlers\DynamicAnalysisHandler::createBuild() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
-			identifier: missingType.checkedException
-			count: 8
 			path: app/Http/Submission/Handlers/DynamicAnalysisHandler.php
 
 		-
@@ -3079,12 +3079,6 @@ parameters:
 			path: app/Http/Submission/Handlers/DynamicAnalysisHandler.php
 
 		-
-			rawMessage: 'Method App\Http\Submission\Handlers\DynamicAnalysisHandler::startElement() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
-			identifier: missingType.checkedException
-			count: 5
-			path: app/Http/Submission/Handlers/DynamicAnalysisHandler.php
-
-		-
 			rawMessage: 'Method App\Http\Submission\Handlers\DynamicAnalysisHandler::text() has parameter $data with no type specified.'
 			identifier: missingType.parameter
 			count: 1
@@ -3093,12 +3087,6 @@ parameters:
 		-
 			rawMessage: 'Method App\Http\Submission\Handlers\DynamicAnalysisHandler::text() has parameter $parser with no type specified.'
 			identifier: missingType.parameter
-			count: 1
-			path: app/Http/Submission/Handlers/DynamicAnalysisHandler.php
-
-		-
-			rawMessage: 'Method App\Http\Submission\Handlers\DynamicAnalysisHandler::text() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
-			identifier: missingType.checkedException
 			count: 1
 			path: app/Http/Submission/Handlers/DynamicAnalysisHandler.php
 
@@ -3175,9 +3163,9 @@ parameters:
 			path: app/Http/Submission/Handlers/GcovTarHandler.php
 
 		-
-			rawMessage: 'Method App\Http\Submission\Handlers\GcovTarHandler::Parse() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
-			identifier: missingType.checkedException
-			count: 2
+			rawMessage: Foreach key variable $buildid is never read.
+			identifier: foreach.unusedKey
+			count: 1
 			path: app/Http/Submission/Handlers/GcovTarHandler.php
 
 		-
@@ -3565,12 +3553,6 @@ parameters:
 			path: app/Http/Submission/Handlers/NoteHandler.php
 
 		-
-			rawMessage: 'Method App\Http\Submission\Handlers\NoteHandler::startElement() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
-			identifier: missingType.checkedException
-			count: 8
-			path: app/Http/Submission/Handlers/NoteHandler.php
-
-		-
 			rawMessage: 'Method App\Http\Submission\Handlers\NoteHandler::text() has parameter $data with no type specified.'
 			identifier: missingType.parameter
 			count: 1
@@ -3579,12 +3561,6 @@ parameters:
 		-
 			rawMessage: 'Method App\Http\Submission\Handlers\NoteHandler::text() has parameter $parser with no type specified.'
 			identifier: missingType.parameter
-			count: 1
-			path: app/Http/Submission/Handlers/NoteHandler.php
-
-		-
-			rawMessage: 'Method App\Http\Submission\Handlers\NoteHandler::text() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
-			identifier: missingType.checkedException
 			count: 1
 			path: app/Http/Submission/Handlers/NoteHandler.php
 
@@ -4108,12 +4084,6 @@ parameters:
 			path: app/Http/Submission/Handlers/TestingHandler.php
 
 		-
-			rawMessage: 'Method App\Http\Submission\Handlers\TestingHandler::createBuild() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
-			identifier: missingType.checkedException
-			count: 6
-			path: app/Http/Submission/Handlers/TestingHandler.php
-
-		-
 			rawMessage: 'Method App\Http\Submission\Handlers\TestingHandler::endElement() has parameter $name with no type specified.'
 			identifier: missingType.parameter
 			count: 1
@@ -4122,12 +4092,6 @@ parameters:
 		-
 			rawMessage: 'Method App\Http\Submission\Handlers\TestingHandler::endElement() has parameter $parser with no type specified.'
 			identifier: missingType.parameter
-			count: 1
-			path: app/Http/Submission/Handlers/TestingHandler.php
-
-		-
-			rawMessage: 'Method App\Http\Submission\Handlers\TestingHandler::endElement() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
-			identifier: missingType.checkedException
 			count: 1
 			path: app/Http/Submission/Handlers/TestingHandler.php
 
@@ -4153,12 +4117,6 @@ parameters:
 			rawMessage: 'Method App\Http\Submission\Handlers\TestingHandler::startElement() has parameter $parser with no type specified.'
 			identifier: missingType.parameter
 			count: 1
-			path: app/Http/Submission/Handlers/TestingHandler.php
-
-		-
-			rawMessage: 'Method App\Http\Submission\Handlers\TestingHandler::startElement() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
-			identifier: missingType.checkedException
-			count: 4
 			path: app/Http/Submission/Handlers/TestingHandler.php
 
 		-
@@ -4312,12 +4270,6 @@ parameters:
 			path: app/Http/Submission/Handlers/TestingJUnitHandler.php
 
 		-
-			rawMessage: 'Method App\Http\Submission\Handlers\TestingJUnitHandler::startElement() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
-			identifier: missingType.checkedException
-			count: 15
-			path: app/Http/Submission/Handlers/TestingJUnitHandler.php
-
-		-
 			rawMessage: 'Method App\Http\Submission\Handlers\TestingJUnitHandler::text() has parameter $data with no type specified.'
 			identifier: missingType.parameter
 			count: 1
@@ -4444,12 +4396,6 @@ parameters:
 			path: app/Http/Submission/Handlers/UpdateHandler.php
 
 		-
-			rawMessage: 'Method App\Http\Submission\Handlers\UpdateHandler::startElement() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
-			identifier: missingType.checkedException
-			count: 1
-			path: app/Http/Submission/Handlers/UpdateHandler.php
-
-		-
 			rawMessage: 'Method App\Http\Submission\Handlers\UpdateHandler::text() has parameter $data with no type specified.'
 			identifier: missingType.parameter
 			count: 1
@@ -4458,12 +4404,6 @@ parameters:
 		-
 			rawMessage: 'Method App\Http\Submission\Handlers\UpdateHandler::text() has parameter $parser with no type specified.'
 			identifier: missingType.parameter
-			count: 1
-			path: app/Http/Submission/Handlers/UpdateHandler.php
-
-		-
-			rawMessage: 'Method App\Http\Submission\Handlers\UpdateHandler::text() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
-			identifier: missingType.checkedException
 			count: 1
 			path: app/Http/Submission/Handlers/UpdateHandler.php
 
@@ -4531,12 +4471,6 @@ parameters:
 			rawMessage: 'Method App\Http\Submission\Handlers\UploadHandler::startElement() has parameter $parser with no type specified.'
 			identifier: missingType.parameter
 			count: 1
-			path: app/Http/Submission/Handlers/UploadHandler.php
-
-		-
-			rawMessage: 'Method App\Http\Submission\Handlers\UploadHandler::startElement() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
-			identifier: missingType.checkedException
-			count: 8
 			path: app/Http/Submission/Handlers/UploadHandler.php
 
 		-
@@ -4628,6 +4562,12 @@ parameters:
 			identifier: assign.propertyType
 			count: 1
 			path: app/Http/Submission/Handlers/UploadHandler.php
+
+		-
+			rawMessage: Variable $lineText is never read.
+			identifier: variable.unused
+			count: 1
+			path: app/Jobs/ComputeCoverageDifference.php
 
 		-
 			rawMessage: 'Argument of an invalid type array|false supplied for foreach, only iterables are supported.'
@@ -4725,6 +4665,18 @@ parameters:
 		-
 			rawMessage: 'Parameter #2 $timestamp of function gmdate expects int|null, (float|int) given.'
 			identifier: argument.type
+			count: 1
+			path: app/Jobs/PerformLegacyDailyUpdates.php
+
+		-
+			rawMessage: Variable $nextdate is never read.
+			identifier: variable.unused
+			count: 1
+			path: app/Jobs/PerformLegacyDailyUpdates.php
+
+		-
+			rawMessage: Variable $previousdate is never read.
+			identifier: variable.unused
 			count: 1
 			path: app/Jobs/PerformLegacyDailyUpdates.php
 
@@ -4945,6 +4897,12 @@ parameters:
 			path: app/Jobs/ProcessSubmission.php
 
 		-
+			rawMessage: Value assigned to variable $handler is never read.
+			identifier: assign.unused
+			count: 1
+			path: app/Jobs/ProcessSubmission.php
+
+		-
 			rawMessage: 'Parameter #1 $value of method Carbon\Carbon::subHours() expects float|int, bool|int|string given.'
 			identifier: argument.type
 			count: 1
@@ -5140,6 +5098,12 @@ parameters:
 			path: app/Services/ProjectService.php
 
 		-
+			rawMessage: Foreach overwrites $attribute with its value variable.
+			identifier: foreach.valueOverwrite
+			count: 1
+			path: app/Services/SiteService.php
+
+		-
 			rawMessage: 'Parameter #1 $buildid of static method App\Utils\DatabaseCleanupUtils::removeBuild() expects array<int>|int, array<mixed> given.'
 			identifier: argument.type
 			count: 1
@@ -5196,7 +5160,7 @@ parameters:
 		-
 			rawMessage: 'Argument of an invalid type array|false supplied for foreach, only iterables are supported.'
 			identifier: foreach.nonIterable
-			count: 1
+			count: 2
 			path: app/Utils/RepositoryUtils.php
 
 		-
@@ -5278,6 +5242,18 @@ parameters:
 			path: app/Utils/RepositoryUtils.php
 
 		-
+			rawMessage: Foreach overwrites $key with its key variable.
+			identifier: foreach.keyOverwrite
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			rawMessage: Foreach overwrites $value with its value variable.
+			identifier: foreach.valueOverwrite
+			count: 1
+			path: app/Utils/RepositoryUtils.php
+
+		-
 			rawMessage: 'Loose comparison via "==" between (float|int) and int is not allowed.'
 			identifier: equal.notAllowed
 			count: 1
@@ -5296,15 +5272,15 @@ parameters:
 			path: app/Utils/RepositoryUtils.php
 
 		-
-			rawMessage: 'Loose comparison via "==" between int<1, max> and int is not allowed.'
-			identifier: equal.notAllowed
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
 			rawMessage: 'Loose comparison via "==" between int|false and int is not allowed.'
 			identifier: equal.notAllowed
 			count: 2
+			path: app/Utils/RepositoryUtils.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between mixed and int is not allowed.'
+			identifier: equal.notAllowed
+			count: 1
 			path: app/Utils/RepositoryUtils.php
 
 		-
@@ -5604,7 +5580,7 @@ parameters:
 		-
 			rawMessage: 'Parameter #1 $value of function count expects array|Countable, array|false given.'
 			identifier: argument.type
-			count: 6
+			count: 7
 			path: app/Utils/RepositoryUtils.php
 
 		-
@@ -5757,6 +5733,12 @@ parameters:
 		-
 			rawMessage: 'Parameter #3 $length of function substr expects int|null, int<0, max>|false given.'
 			identifier: argument.type
+			count: 1
+			path: app/Utils/SubmissionUtils.php
+
+		-
+			rawMessage: Variable $pdo is never read.
+			identifier: variable.unused
 			count: 1
 			path: app/Utils/SubmissionUtils.php
 
@@ -6007,12 +5989,6 @@ parameters:
 			rawMessage: 'Method App\Utils\UnparsedSubmissionProcessor::deserializeBuildMetadata() has parameter $fp with no type specified.'
 			identifier: missingType.parameter
 			count: 1
-			path: app/Utils/UnparsedSubmissionProcessor.php
-
-		-
-			rawMessage: 'Method App\Utils\UnparsedSubmissionProcessor::initializeBuild() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
-			identifier: missingType.checkedException
-			count: 2
 			path: app/Utils/UnparsedSubmissionProcessor.php
 
 		-
@@ -6316,6 +6292,12 @@ parameters:
 			rawMessage: 'Construct empty() is not allowed. Use more strict comparison.'
 			identifier: empty.notAllowed
 			count: 18
+			path: app/cdash/app/Controller/Api/Index.php
+
+		-
+			rawMessage: Foreach overwrites $rule with its value variable.
+			identifier: foreach.valueOverwrite
+			count: 2
 			path: app/cdash/app/Controller/Api/Index.php
 
 		-
@@ -6697,6 +6679,12 @@ parameters:
 			path: app/cdash/app/Controller/Api/QueryTests.php
 
 		-
+			rawMessage: 'Method CDash\Controller\Api\QueryTests::checkForSpecialFilters() has an unused parameter $filterdata.'
+			identifier: method.unusedParameter
+			count: 1
+			path: app/cdash/app/Controller/Api/QueryTests.php
+
+		-
 			rawMessage: 'Method CDash\Controller\Api\QueryTests::checkForSpecialFilters() has parameter $filterdata with no type specified.'
 			identifier: missingType.parameter
 			count: 1
@@ -6841,12 +6829,6 @@ parameters:
 			path: app/cdash/app/Controller/Api/ResultsApi.php
 
 		-
-			rawMessage: 'Method CDash\Controller\Api\ResultsApi::validateDateString() throws checked exception ValueError but it''s missing from the PHPDoc @throws tag.'
-			identifier: missingType.checkedException
-			count: 1
-			path: app/cdash/app/Controller/Api/ResultsApi.php
-
-		-
 			rawMessage: 'Parameter #1 $array of function array_sum expects an array of values castable to number, array<string, int<0, max>|list<string>> given.'
 			identifier: argument.type
 			count: 1
@@ -6909,6 +6891,12 @@ parameters:
 		-
 			rawMessage: Property CDash\Controller\Api\ResultsApi::$previousDate has no type specified.
 			identifier: missingType.property
+			count: 1
+			path: app/cdash/app/Controller/Api/ResultsApi.php
+
+		-
+			rawMessage: Variable $unused is never read.
+			identifier: variable.unused
 			count: 1
 			path: app/cdash/app/Controller/Api/ResultsApi.php
 
@@ -7012,26 +7000,80 @@ parameters:
 			path: app/cdash/app/Controller/Api/TestOverview.php
 
 		-
+			rawMessage: 'Offset ''failed'' might not exist on array{failed?: int<0, max>, timeout?: int<0, max>, passed?: int<0, max>, name?: mixed, subproject?: mixed, time?: mixed}.'
+			identifier: offsetAccess.notFound
+			count: 3
+			path: app/cdash/app/Controller/Api/TestOverview.php
+
+		-
+			rawMessage: 'Offset ''failed'' might not exist on array{name?: mixed, subproject?: mixed, passed?: int<0, max>, failed?: int<0, max>, timeout?: int<0, max>, time?: mixed}.'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: app/cdash/app/Controller/Api/TestOverview.php
+
+		-
+			rawMessage: 'Offset ''passed'' might not exist on array{failed?: int<0, max>, timeout?: int<0, max>, passed?: int<0, max>, name?: mixed, subproject?: mixed, time?: mixed}.'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: app/cdash/app/Controller/Api/TestOverview.php
+
+		-
+			rawMessage: 'Offset ''passed'' might not exist on array{name?: mixed, subproject?: mixed, passed?: int<0, max>, failed?: int<0, max>, timeout?: int<0, max>, time?: mixed}.'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: app/cdash/app/Controller/Api/TestOverview.php
+
+		-
+			rawMessage: 'Offset ''subproject'' might not exist on array{failed?: int<0, max>, timeout?: int<0, max>, passed?: int<0, max>, name?: mixed, subproject?: mixed, time?: mixed}.'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: app/cdash/app/Controller/Api/TestOverview.php
+
+		-
+			rawMessage: 'Offset ''time'' might not exist on array{failed?: int<0, max>, timeout?: int<0, max>, passed?: int<0, max>, name?: mixed, subproject?: mixed, time?: mixed}.'
+			identifier: offsetAccess.notFound
+			count: 2
+			path: app/cdash/app/Controller/Api/TestOverview.php
+
+		-
+			rawMessage: 'Offset ''time'' might not exist on non-empty-array{name?: mixed, subproject?: mixed, passed?: int<0, max>, failed?: int<0, max>, timeout?: int<0, max>, time?: mixed}.'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: app/cdash/app/Controller/Api/TestOverview.php
+
+		-
+			rawMessage: 'Offset ''timeout'' might not exist on array{failed: 0, timeout?: int<0, max>, passed?: int<0, max>, name?: mixed, subproject?: mixed, time?: mixed}.'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: app/cdash/app/Controller/Api/TestOverview.php
+
+		-
+			rawMessage: 'Offset ''timeout'' might not exist on array{failed?: int<0, max>, timeout?: int<0, max>, passed?: int<0, max>, name?: mixed, subproject?: mixed, time?: mixed}.'
+			identifier: offsetAccess.notFound
+			count: 2
+			path: app/cdash/app/Controller/Api/TestOverview.php
+
+		-
+			rawMessage: 'Offset ''timeout'' might not exist on array{name?: mixed, subproject?: mixed, passed?: int<0, max>, failed?: int<0, max>, timeout?: int<0, max>, time?: mixed}.'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: app/cdash/app/Controller/Api/TestOverview.php
+
+		-
 			rawMessage: 'Only booleans are allowed in an if condition, int|string given.'
 			identifier: if.condNotBoolean
 			count: 1
 			path: app/cdash/app/Controller/Api/TestOverview.php
 
 		-
-			rawMessage: 'Only numeric types are allowed in +, (array|float|int) given on the left side.'
-			identifier: plus.leftNonNumeric
+			rawMessage: Short ternary operator is not allowed. Use null coalesce operator if applicable or consider using long ternary.
+			identifier: ternary.shortNotAllowed
 			count: 1
 			path: app/cdash/app/Controller/Api/TestOverview.php
 
 		-
-			rawMessage: 'Only numeric types are allowed in /, (array|float|int<min, -1>|int<1, max>) given on the right side.'
-			identifier: div.rightNonNumeric
-			count: 2
-			path: app/cdash/app/Controller/Api/TestOverview.php
-
-		-
-			rawMessage: Short ternary operator is not allowed. Use null coalesce operator if applicable or consider using long ternary.
-			identifier: ternary.shortNotAllowed
+			rawMessage: 'Value assigned to $tests_response[] is never read before being overwritten.'
+			identifier: assign.overwritten
 			count: 1
 			path: app/cdash/app/Controller/Api/TestOverview.php
 
@@ -7171,21 +7213,27 @@ parameters:
 			path: app/cdash/app/Controller/Api/Timeline.php
 
 		-
+			rawMessage: Variable $unused is never read.
+			identifier: variable.unused
+			count: 4
+			path: app/cdash/app/Controller/Api/Timeline.php
+
+		-
 			rawMessage: Comparison operation ">" between 0 and 0 is always false.
 			identifier: greater.alwaysFalse
 			count: 2
 			path: app/cdash/app/Lib/Repository/GitHub.php
 
 		-
-			rawMessage: If condition is always false.
-			identifier: if.alwaysFalse
-			count: 3
+			rawMessage: Foreach key variable $name is never read.
+			identifier: foreach.unusedKey
+			count: 1
 			path: app/cdash/app/Lib/Repository/GitHub.php
 
 		-
-			rawMessage: 'Method CDash\Lib\Repository\GitHub::__construct() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
-			identifier: missingType.checkedException
-			count: 2
+			rawMessage: If condition is always false.
+			identifier: if.alwaysFalse
+			count: 3
 			path: app/cdash/app/Lib/Repository/GitHub.php
 
 		-
@@ -7269,6 +7317,12 @@ parameters:
 		-
 			rawMessage: 'Strict comparison using === between 0 and 0 will always evaluate to true.'
 			identifier: identical.alwaysTrue
+			count: 1
+			path: app/cdash/app/Lib/Repository/GitHub.php
+
+		-
+			rawMessage: Variable $statuses is never read.
+			identifier: variable.unused
 			count: 1
 			path: app/cdash/app/Lib/Repository/GitHub.php
 
@@ -7405,12 +7459,6 @@ parameters:
 			path: app/cdash/app/Model/Build.php
 
 		-
-			rawMessage: 'Method CDash\Model\Build::AddBuild() throws checked exception Error but it''s missing from the PHPDoc @throws tag.'
-			identifier: missingType.checkedException
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
 			rawMessage: 'Method CDash\Model\Build::AddError() has parameter $error with no type specified.'
 			identifier: missingType.parameter
 			count: 1
@@ -7432,12 +7480,6 @@ parameters:
 			rawMessage: 'Method CDash\Model\Build::FillFromId() has parameter $buildid with no type specified.'
 			identifier: missingType.parameter
 			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			rawMessage: 'Method CDash\Model\Build::FillFromId() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
-			identifier: missingType.checkedException
-			count: 3
 			path: app/cdash/app/Model/Build.php
 
 		-
@@ -7527,12 +7569,6 @@ parameters:
 		-
 			rawMessage: 'Method CDash\Model\Build::GetFailures() return type has no value type specified in iterable type array.'
 			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/app/Model/Build.php
-
-		-
-			rawMessage: 'Method CDash\Model\Build::GetFailures() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
-			identifier: missingType.checkedException
 			count: 1
 			path: app/cdash/app/Model/Build.php
 
@@ -8569,6 +8605,18 @@ parameters:
 			path: app/cdash/app/Model/CoverageFileLog.php
 
 		-
+			rawMessage: Foreach key variable $line is never read before being overwritten.
+			identifier: foreach.keyOverwritten
+			count: 1
+			path: app/cdash/app/Model/CoverageFileLog.php
+
+		-
+			rawMessage: Foreach key variable $line is never read.
+			identifier: foreach.unusedKey
+			count: 1
+			path: app/cdash/app/Model/CoverageFileLog.php
+
+		-
 			rawMessage: 'Loose comparison via "!=" between string and string is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 1
@@ -8691,6 +8739,12 @@ parameters:
 		-
 			rawMessage: Property CDash\Model\CoverageFileLog::$PreviousAggregateParentId has no type specified.
 			identifier: missingType.property
+			count: 1
+			path: app/cdash/app/Model/CoverageFileLog.php
+
+		-
+			rawMessage: Value assigned to variable $value is never read before being overwritten.
+			identifier: assign.overwritten
 			count: 1
 			path: app/cdash/app/Model/CoverageFileLog.php
 
@@ -9169,6 +9223,12 @@ parameters:
 			path: app/cdash/app/Model/Project.php
 
 		-
+			rawMessage: Variable $unused is never read.
+			identifier: variable.unused
+			count: 1
+			path: app/cdash/app/Model/Project.php
+
+		-
 			rawMessage: 'Call to an undefined method CDash\Lib\Repository\RepositoryInterface::compareCommits().'
 			identifier: method.notFound
 			count: 1
@@ -9553,6 +9613,12 @@ parameters:
 			path: app/cdash/include/Collection/BuildEmailCollection.php
 
 		-
+			rawMessage: Foreach key variable $key is never read.
+			identifier: foreach.unusedKey
+			count: 1
+			path: app/cdash/include/Collection/BuildEmailCollection.php
+
+		-
 			rawMessage: 'Method CDash\Collection\BuildErrorCollection::add() has parameter $error with no type specified.'
 			identifier: missingType.parameter
 			count: 1
@@ -9645,6 +9711,12 @@ parameters:
 		-
 			rawMessage: 'Cannot call method getTopicTemplates() on mixed.'
 			identifier: method.nonObject
+			count: 1
+			path: app/cdash/include/Messaging/Notification/NotificationDirector.php
+
+		-
+			rawMessage: Foreach key variable $recipient is never read.
+			identifier: foreach.unusedKey
 			count: 1
 			path: app/cdash/include/Messaging/Notification/NotificationDirector.php
 
@@ -10213,6 +10285,12 @@ parameters:
 			path: app/cdash/include/Messaging/Topic/LabeledTopic.php
 
 		-
+			rawMessage: Foreach key variable $id is never read.
+			identifier: foreach.unusedKey
+			count: 1
+			path: app/cdash/include/Messaging/Topic/MissingTestTopic.php
+
+		-
 			rawMessage: 'Method CDash\Messaging\Topic\MissingTestTopic::getTopicCollection() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
 			identifier: missingType.generics
 			count: 1
@@ -10260,6 +10338,12 @@ parameters:
 		-
 			rawMessage: 'Cannot call method getLabels() on mixed.'
 			identifier: method.nonObject
+			count: 1
+			path: app/cdash/include/Messaging/Topic/TestFailureTopic.php
+
+		-
+			rawMessage: Foreach key variable $test_name is never read.
+			identifier: foreach.unusedKey
 			count: 1
 			path: app/cdash/include/Messaging/Topic/TestFailureTopic.php
 
@@ -10606,12 +10690,6 @@ parameters:
 			path: app/cdash/include/Test/CDashUseCaseTestCase.php
 
 		-
-			rawMessage: 'Method CDash\Test\CDashUseCaseTestCase::setUseCaseModelFactory() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
-			identifier: missingType.checkedException
-			count: 1
-			path: app/cdash/include/Test/CDashUseCaseTestCase.php
-
-		-
 			rawMessage: 'Cannot call method appendChild() on DOMElement|false.'
 			identifier: method.nonObject
 			count: 13
@@ -10626,7 +10704,7 @@ parameters:
 		-
 			rawMessage: 'Method CDash\Test\UseCase\BuildUseCase::build() throws checked exception DOMException but it''s missing from the PHPDoc @throws tag.'
 			identifier: missingType.checkedException
-			count: 6
+			count: 7
 			path: app/cdash/include/Test/UseCase/BuildUseCase.php
 
 		-
@@ -10692,7 +10770,7 @@ parameters:
 		-
 			rawMessage: 'Method CDash\Test\UseCase\BuildUseCase::createFailureElement() throws checked exception DOMException but it''s missing from the PHPDoc @throws tag.'
 			identifier: missingType.checkedException
-			count: 1
+			count: 2
 			path: app/cdash/include/Test/UseCase/BuildUseCase.php
 
 		-
@@ -10776,7 +10854,7 @@ parameters:
 		-
 			rawMessage: 'Method CDash\Test\UseCase\ConfigUseCase::build() throws checked exception DOMException but it''s missing from the PHPDoc @throws tag.'
 			identifier: missingType.checkedException
-			count: 9
+			count: 10
 			path: app/cdash/include/Test/UseCase/ConfigUseCase.php
 
 		-
@@ -10806,7 +10884,7 @@ parameters:
 		-
 			rawMessage: 'Method CDash\Test\UseCase\DynamicAnalysisUseCase::build() throws checked exception DOMException but it''s missing from the PHPDoc @throws tag.'
 			identifier: missingType.checkedException
-			count: 5
+			count: 6
 			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
 
 		-
@@ -10842,7 +10920,7 @@ parameters:
 		-
 			rawMessage: 'Method CDash\Test\UseCase\DynamicAnalysisUseCase::createResultsElement() throws checked exception DOMException but it''s missing from the PHPDoc @throws tag.'
 			identifier: missingType.checkedException
-			count: 2
+			count: 3
 			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
 
 		-
@@ -10860,7 +10938,7 @@ parameters:
 		-
 			rawMessage: 'Method CDash\Test\UseCase\DynamicAnalysisUseCase::createTestElement() throws checked exception DOMException but it''s missing from the PHPDoc @throws tag.'
 			identifier: missingType.checkedException
-			count: 3
+			count: 6
 			path: app/cdash/include/Test/UseCase/DynamicAnalysisUseCase.php
 
 		-
@@ -10962,7 +11040,7 @@ parameters:
 		-
 			rawMessage: 'Method CDash\Test\UseCase\TestUseCase::build() throws checked exception DOMException but it''s missing from the PHPDoc @throws tag.'
 			identifier: missingType.checkedException
-			count: 5
+			count: 6
 			path: app/cdash/include/Test/UseCase/TestUseCase.php
 
 		-
@@ -10974,7 +11052,7 @@ parameters:
 		-
 			rawMessage: 'Method CDash\Test\UseCase\TestUseCase::createResultsElement() throws checked exception DOMException but it''s missing from the PHPDoc @throws tag.'
 			identifier: missingType.checkedException
-			count: 11
+			count: 19
 			path: app/cdash/include/Test/UseCase/TestUseCase.php
 
 		-
@@ -11017,6 +11095,12 @@ parameters:
 			rawMessage: 'Method CDash\Test\UseCase\TestUseCase::createTestTimedout() has parameter $labels with no value type specified in iterable type array.'
 			identifier: missingType.iterableValue
 			count: 1
+			path: app/cdash/include/Test/UseCase/TestUseCase.php
+
+		-
+			rawMessage: 'Method CDash\Test\UseCase\TestUseCase::setTestStatus() throws checked exception DOMException but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
+			count: 3
 			path: app/cdash/include/Test/UseCase/TestUseCase.php
 
 		-
@@ -11064,7 +11148,7 @@ parameters:
 		-
 			rawMessage: 'Method CDash\Test\UseCase\UpdateUseCase::build() throws checked exception DOMException but it''s missing from the PHPDoc @throws tag.'
 			identifier: missingType.checkedException
-			count: 12
+			count: 15
 			path: app/cdash/include/Test/UseCase/UpdateUseCase.php
 
 		-
@@ -11280,7 +11364,7 @@ parameters:
 		-
 			rawMessage: 'Method CDash\Test\UseCase\UseCase::getSiteElement() throws checked exception DOMException but it''s missing from the PHPDoc @throws tag.'
 			identifier: missingType.checkedException
-			count: 1
+			count: 3
 			path: app/cdash/include/Test/UseCase/UseCase.php
 
 		-
@@ -11557,12 +11641,6 @@ parameters:
 			path: app/cdash/include/common.php
 
 		-
-			rawMessage: 'Function create_aggregate_build() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
-			identifier: missingType.checkedException
-			count: 2
-			path: app/cdash/include/common.php
-
-		-
 			rawMessage: 'Function get_dashboard_JSON() has parameter $date with no type specified.'
 			identifier: missingType.parameter
 			count: 1
@@ -11577,18 +11655,6 @@ parameters:
 		-
 			rawMessage: 'Function get_dashboard_JSON() has parameter $response with no type specified.'
 			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			rawMessage: 'Function get_dashboard_JSON() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
-			identifier: missingType.checkedException
-			count: 1
-			path: app/cdash/include/common.php
-
-		-
-			rawMessage: 'Function get_dashboard_JSON() throws checked exception ValueError but it''s missing from the PHPDoc @throws tag.'
-			identifier: missingType.checkedException
 			count: 1
 			path: app/cdash/include/common.php
 
@@ -12226,6 +12292,24 @@ parameters:
 			path: app/cdash/include/filterdataFunctions.php
 
 		-
+			rawMessage: Variable $sql_compare is assigned value '' but it already has that value.
+			identifier: assign.redundant
+			count: 1
+			path: app/cdash/include/filterdataFunctions.php
+
+		-
+			rawMessage: Variable $sql_field is assigned value '' but it already has that value.
+			identifier: assign.redundant
+			count: 2
+			path: app/cdash/include/filterdataFunctions.php
+
+		-
+			rawMessage: Variable $sql_value is assigned value '' but it already has that value.
+			identifier: assign.redundant
+			count: 1
+			path: app/cdash/include/filterdataFunctions.php
+
+		-
 			rawMessage: 'Argument of an invalid type mixed supplied for foreach, only iterables are supported.'
 			identifier: foreach.nonIterable
 			count: 3
@@ -12661,12 +12745,6 @@ parameters:
 			path: app/cdash/tests/case/CDash/Lib/Repository/GitHubTest.php
 
 		-
-			rawMessage: 'Method GitHubTest::setUp() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
-			identifier: missingType.checkedException
-			count: 1
-			path: app/cdash/tests/case/CDash/Lib/Repository/GitHubTest.php
-
-		-
 			rawMessage: 'Property GitHubTest::$baseUrl (string) does not accept bool|string.'
 			identifier: assign.propertyType
 			count: 1
@@ -12967,6 +13045,12 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
 
 		-
+			rawMessage: Value assigned to variable $subscriber is never read.
+			identifier: assign.unused
+			count: 1
+			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
+
+		-
 			rawMessage: 'You should use assertSame() instead of assertEquals(), because both values are scalars of the same type'
 			identifier: phpunit.assertEquals
 			count: 6
@@ -13194,6 +13278,12 @@ parameters:
 		-
 			rawMessage: Property TestFailureTopicTest::$fixed_keys has no type specified.
 			identifier: missingType.property
+			count: 1
+			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
+
+		-
+			rawMessage: Value assigned to variable $subscriber is never read.
+			identifier: assign.unused
 			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
 
@@ -13554,6 +13644,30 @@ parameters:
 		-
 			rawMessage: 'Call to an undefined method CDash\Test\UseCase\UseCase::setBuildName().'
 			identifier: method.notFound
+			count: 1
+			path: app/cdash/tests/case/CDash/UpdateUseCaseTest.php
+
+		-
+			rawMessage: Variable $m is never read.
+			identifier: variable.unused
+			count: 1
+			path: app/cdash/tests/case/CDash/UpdateUseCaseTest.php
+
+		-
+			rawMessage: Variable $time is never read.
+			identifier: variable.unused
+			count: 1
+			path: app/cdash/tests/case/CDash/UpdateUseCaseTest.php
+
+		-
+			rawMessage: Variable $tz is never read.
+			identifier: variable.unused
+			count: 1
+			path: app/cdash/tests/case/CDash/UpdateUseCaseTest.php
+
+		-
+			rawMessage: Variable $y is never read.
+			identifier: variable.unused
 			count: 1
 			path: app/cdash/tests/case/CDash/UpdateUseCaseTest.php
 
@@ -13950,6 +14064,12 @@ parameters:
 		-
 			rawMessage: Unreachable statement - code above always terminates.
 			identifier: deadCode.unreachable
+			count: 1
+			path: app/cdash/tests/kwtest/kw_test_manager.php
+
+		-
+			rawMessage: Value assigned to variable $dbcreated is never read.
+			identifier: assign.unused
 			count: 1
 			path: app/cdash/tests/kwtest/kw_test_manager.php
 
@@ -14653,6 +14773,12 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
+			rawMessage: Value assigned to variable $response is never read.
+			identifier: assign.unused
+			count: 1
+			path: app/cdash/tests/kwtest/kw_web_tester.php
+
+		-
 			rawMessage: Variable property access on CDash\Model\Project.
 			identifier: property.dynamicName
 			count: 2
@@ -15103,6 +15229,18 @@ parameters:
 			path: app/cdash/tests/test_attachedfiles.php
 
 		-
+			rawMessage: 'Method AttachedFilesTestCase::testAttachedFiles() throws checked exception PharException but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
+			count: 1
+			path: app/cdash/tests/test_attachedfiles.php
+
+		-
+			rawMessage: 'Method AttachedFilesTestCase::testAttachedFiles() throws checked exception UnexpectedValueException but it''s missing from the PHPDoc @throws tag.'
+			identifier: missingType.checkedException
+			count: 1
+			path: app/cdash/tests/test_attachedfiles.php
+
+		-
 			rawMessage: 'Parameter #1 $haystack of function str_contains expects string, string|false given.'
 			identifier: argument.type
 			count: 1
@@ -15423,6 +15561,12 @@ parameters:
 		-
 			rawMessage: Property BranchCoverageTestCase::$projectname has no type specified.
 			identifier: missingType.property
+			count: 1
+			path: app/cdash/tests/test_branchcoverage.php
+
+		-
+			rawMessage: Variable $fileid is never read.
+			identifier: variable.unused
 			count: 1
 			path: app/cdash/tests/test_branchcoverage.php
 
@@ -16093,6 +16237,12 @@ parameters:
 			path: app/cdash/tests/test_coveragedirectories.php
 
 		-
+			rawMessage: Variable $buildid is never read.
+			identifier: variable.unused
+			count: 1
+			path: app/cdash/tests/test_coveragedirectories.php
+
+		-
 			rawMessage: 'Argument of an invalid type mixed supplied for foreach, only iterables are supported.'
 			identifier: foreach.nonIterable
 			count: 1
@@ -16521,12 +16671,6 @@ parameters:
 		-
 			rawMessage: 'Method DisplayImageTestCase::testDisplayImage() has no return type specified.'
 			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_displayimage.php
-
-		-
-			rawMessage: 'Method DisplayImageTestCase::testDisplayImage() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
-			identifier: missingType.checkedException
 			count: 1
 			path: app/cdash/tests/test_displayimage.php
 
@@ -17479,12 +17623,6 @@ parameters:
 			path: app/cdash/tests/test_install.php
 
 		-
-			rawMessage: 'Method InstallTestCase::__construct() throws checked exception TypeError but it''s missing from the PHPDoc @throws tag.'
-			identifier: missingType.checkedException
-			count: 1
-			path: app/cdash/tests/test_install.php
-
-		-
 			rawMessage: 'Method InstallTestCase::testInstall() has no return type specified.'
 			identifier: missingType.return
 			count: 1
@@ -17521,6 +17659,12 @@ parameters:
 			'''
 			identifier: method.deprecated
 			count: 3
+			path: app/cdash/tests/test_issuecreation.php
+
+		-
+			rawMessage: Foreach key variable $name is never read.
+			identifier: foreach.unusedKey
+			count: 1
 			path: app/cdash/tests/test_issuecreation.php
 
 		-
@@ -18793,6 +18937,12 @@ parameters:
 			path: app/cdash/tests/test_numericupdate.php
 
 		-
+			rawMessage: Foreach value variable $i is never read.
+			identifier: foreach.unusedValue
+			count: 1
+			path: app/cdash/tests/test_parallelsubmissions.php
+
+		-
 			rawMessage: 'Only booleans are allowed in an if condition, stdClass|null given.'
 			identifier: if.condNotBoolean
 			count: 1
@@ -19840,6 +19990,12 @@ parameters:
 			path: app/cdash/tests/test_testhistory.php
 
 		-
+			rawMessage: Variable $groupid is never read.
+			identifier: variable.unused
+			count: 1
+			path: app/cdash/tests/test_testhistory.php
+
+		-
 			rawMessage: '''
 				Call to deprecated method getPdo() of class CDash\Database:
 				04/22/2023  Use Laravel query builder or Eloquent instead
@@ -20545,6 +20701,12 @@ parameters:
 			path: app/cdash/tests/trilinos_submission_test.php
 
 		-
+			rawMessage: Foreach overwrites $build with its value variable.
+			identifier: foreach.valueOverwrite
+			count: 1
+			path: app/cdash/tests/trilinos_submission_test.php
+
+		-
 			rawMessage: 'Loose comparison via "!=" between int<0, max> and int is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 1
@@ -20695,6 +20857,12 @@ parameters:
 			path: database/factories/UserFactory.php
 
 		-
+			rawMessage: Foreach key variable $file is never read.
+			identifier: foreach.unusedKey
+			count: 1
+			path: database/seeders/DatabaseSeeder.php
+
+		-
 			rawMessage: 'Method SocialiteProviders\PingIdentity\Provider::getAuthEndpoint() should return string but returns mixed.'
 			identifier: return.type
 			count: 1
@@ -20779,6 +20947,18 @@ parameters:
 			path: tests/Browser/Pages/BuildBuildPageTest.php
 
 		-
+			rawMessage: Variable $child_build_1 is never read.
+			identifier: variable.unused
+			count: 1
+			path: tests/Browser/Pages/BuildBuildPageTest.php
+
+		-
+			rawMessage: Variable $child_build_2 is never read.
+			identifier: variable.unused
+			count: 1
+			path: tests/Browser/Pages/BuildBuildPageTest.php
+
+		-
 			rawMessage: '''
 				Call to deprecated method coverageResults() of class App\Models\Build:
 				07/27/2025 Use this relation only to edit the underlying coverage table.  Use coverage() instead.
@@ -20795,6 +20975,36 @@ parameters:
 			identifier: method.deprecated
 			count: 1
 			path: tests/Browser/Pages/BuildSidebarComponentTest.php
+
+		-
+			rawMessage: Variable $current_test_failed_again is never read.
+			identifier: variable.unused
+			count: 1
+			path: tests/Browser/Pages/BuildTestsPageTest.php
+
+		-
+			rawMessage: Variable $previous_test_failed is never read.
+			identifier: variable.unused
+			count: 2
+			path: tests/Browser/Pages/BuildTestsPageTest.php
+
+		-
+			rawMessage: Variable $previous_test_passed is never read.
+			identifier: variable.unused
+			count: 1
+			path: tests/Browser/Pages/BuildTestsPageTest.php
+
+		-
+			rawMessage: Variable $previous_test_stayed_passed is never read.
+			identifier: variable.unused
+			count: 1
+			path: tests/Browser/Pages/BuildTestsPageTest.php
+
+		-
+			rawMessage: Variable $previous_test_to_be_fixed is never read.
+			identifier: variable.unused
+			count: 1
+			path: tests/Browser/Pages/BuildTestsPageTest.php
 
 		-
 			rawMessage: 'Method Tests\Browser\Pages\ProjectMembersPageTest::testFullInvitationWorkflow() throws checked exception OverflowException but it''s missing from the PHPDoc @throws tag.'
@@ -20944,6 +21154,12 @@ parameters:
 			path: tests/Feature/Console/AutoRemoveBuildsCommandTest.php
 
 		-
+			rawMessage: Variable $skipped is never read.
+			identifier: variable.unused
+			count: 1
+			path: tests/Feature/Console/ValidateXmlCommandTest.php
+
+		-
 			rawMessage: 'You should use assertSame() instead of assertEquals(), because both values are scalars of the same type'
 			identifier: phpunit.assertEquals
 			count: 2
@@ -20960,6 +21176,18 @@ parameters:
 			identifier: phpunit.assertEquals
 			count: 4
 			path: tests/Feature/GlobalInvitationAcceptanceTest.php
+
+		-
+			rawMessage: Variable $build2 is never read.
+			identifier: variable.unused
+			count: 1
+			path: tests/Feature/GraphQL/FilterTest.php
+
+		-
+			rawMessage: Variable $measurement2 is never read.
+			identifier: variable.unused
+			count: 1
+			path: tests/Feature/GraphQL/FilterTest.php
 
 		-
 			rawMessage: 'Method Tests\Feature\GraphQL\Mutations\CreateGlobalInvitationTest::testAdminCreatesInvitationCorrectly() throws checked exception OverflowException but it''s missing from the PHPDoc @throws tag.'
@@ -21094,6 +21322,12 @@ parameters:
 			path: tests/Feature/GraphQL/Mutations/RevokeProjectInvitationTest.php
 
 		-
+			rawMessage: Variable $measurement1 is never read.
+			identifier: variable.unused
+			count: 1
+			path: tests/Feature/GraphQL/Mutations/UpdatePinnedTestMeasurementOrderTest.php
+
+		-
 			rawMessage: 'Parameter #1 $user of method Illuminate\Foundation\Testing\TestCase::actingAs() expects Illuminate\Contracts\Auth\Authenticatable, App\Models\User|null given.'
 			identifier: argument.type
 			count: 2
@@ -21140,6 +21374,12 @@ parameters:
 			identifier: missingType.checkedException
 			count: 1
 			path: tests/Feature/GraphQL/Queries/ProjectInvitationTypeTest.php
+
+		-
+			rawMessage: Variable $user is assigned value null but it already has that value.
+			identifier: assign.redundant
+			count: 1
+			path: tests/Feature/GraphQL/Queries/QueryTypeTest.php
 
 		-
 			rawMessage: Cannot access offset 'edges' on mixed.
@@ -21190,6 +21430,12 @@ parameters:
 			path: tests/Feature/GraphQL/Queries/SiteTypeTest.php
 
 		-
+			rawMessage: Variable $user is assigned value null but it already has that value.
+			identifier: assign.redundant
+			count: 2
+			path: tests/Feature/GraphQL/Queries/UserTypeTest.php
+
+		-
 			rawMessage: '''
 				Call to deprecated method coverageResults() of class App\Models\Build:
 				07/27/2025 Use this relation only to edit the underlying coverage table.  Use coverage() instead.
@@ -21214,6 +21460,18 @@ parameters:
 			rawMessage: 'Cannot access property $pivot on (App\Models\User&object{pivot: Illuminate\Database\Eloquent\Relations\Pivot})|null.'
 			identifier: property.nonObject
 			count: 3
+			path: tests/Feature/LdapIntegration.php
+
+		-
+			rawMessage: Foreach key variable $key is never read before being overwritten.
+			identifier: foreach.keyOverwritten
+			count: 2
+			path: tests/Feature/LdapIntegration.php
+
+		-
+			rawMessage: Foreach key variable $key is never read.
+			identifier: foreach.unusedKey
+			count: 1
 			path: tests/Feature/LdapIntegration.php
 
 		-
@@ -21246,6 +21504,12 @@ parameters:
 		-
 			rawMessage: 'Parameter #1 $user of method Illuminate\Foundation\Testing\TestCase::assertAuthenticatedAs() expects Illuminate\Contracts\Auth\Authenticatable, App\Models\User|null given.'
 			identifier: argument.type
+			count: 2
+			path: tests/Feature/LoginAndRegistration.php
+
+		-
+			rawMessage: Variable $response is never read.
+			identifier: variable.unused
 			count: 2
 			path: tests/Feature/LoginAndRegistration.php
 
@@ -21339,6 +21603,12 @@ parameters:
 				Use useOrigin
 			'''
 			identifier: staticMethod.deprecated
+			count: 1
+			path: tests/Feature/ProjectPermissions.php
+
+		-
+			rawMessage: Variable $missing_project_response is never read.
+			identifier: variable.unused
 			count: 1
 			path: tests/Feature/ProjectPermissions.php
 
