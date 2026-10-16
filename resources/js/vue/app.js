@@ -19,6 +19,7 @@ const components = {
   'sub-project-dependencies-page': () => import('./components/SubProjectDependenciesPage.vue'),
   'build-tests-page': () => import('./components/BuildTestsPage.vue'),
   'project-sites-page': () => import('./components/ProjectSitesPage.vue'),
+  'project-home-page': () => import('./components/ProjectHomePage.vue'),
   'sites-id-page': () => import('./components/SitesIdPage.vue'),
   'project-members-page': () => import('./components/ProjectMembersPage.vue'),
   'project-notifications-page': () => import('./components/ProjectNotificationsPage.vue'),

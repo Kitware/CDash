@@ -420,6 +420,8 @@ add_browser_test(/Browser/Pages/SitesIdPageTest)
 
 add_browser_test(/Browser/Pages/ProjectSitesPageTest)
 
+add_browser_test(/Browser/Pages/ProjectHomePageTest)
+
 add_browser_test(/Browser/Pages/ProjectMembersPageTest)
 
 add_browser_test(/Browser/Pages/ProjectNotificationsPageTest)

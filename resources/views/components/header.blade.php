@@ -57,7 +57,7 @@ $showHeaderNav = isset($build);
         <div id="headerlogo">
             <a
                 @if(isset($project))
-                    href="{{ url('/index.php') }}?project={{ rawurlencode($project->Name) }}"
+                    href="{{ url("/projects/{$project->Id}") }}"
                 @else
                     href="{{ url('/')}}"
                 @endif
@@ -164,6 +164,11 @@ $showHeaderNav = isset($build);
                     <li>
                         <a href="#">Project</a>
                         <ul>
+                            <li>
+                                <a href="{{ url("/projects/{$project->Id}") }}">
+                                    Home
+                                </a>
+                            </li>
                             @can('edit-project', $project)
                                 <li>
                                     <a href="{{ url("/projects/{$project->Id}/settings") }}">
@@ -174,7 +179,7 @@ $showHeaderNav = isset($build);
                             @if(isset($project->HomeUrl) && strlen($project->HomeUrl) > 0)
                                 <li>
                                     <a href="{{ $project->HomeUrl }}">
-                                        Home
+                                        Website
                                     </a>
                                 </li>
                             @endif
@@ -195,7 +200,7 @@ $showHeaderNav = isset($build);
                             @if(isset($project->BugTrackerUrl) && strlen($project->BugTrackerUrl) > 0)
                                 <li>
                                     <a href="{{ $project->BugTrackerUrl }}">
-                                        Bug Tracker
+                                        Issue Tracker
                                     </a>
                                 </li>
                             @endif

@@ -185,7 +185,7 @@
         <InputField
           v-model="form.homeUrl"
           :validation-error="validationErrors?.homeUrl?.[0]"
-          label="Home URL"
+          label="Website"
           placeholder="https://example.com"
           test-id="home-url-input"
         />
@@ -193,7 +193,7 @@
         <InputField
           v-model="form.documentationUrl"
           :validation-error="validationErrors?.documentationUrl?.[0]"
-          label="Documentation URL"
+          label="Documentation"
           placeholder="https://example.com"
           test-id="documentation-url-input"
         />
@@ -201,7 +201,7 @@
         <InputField
           v-model="form.testDataUrl"
           :validation-error="validationErrors?.testDataUrl?.[0]"
-          label="Test Data URL"
+          label="Test Data"
           placeholder="https://example.com"
           test-id="test-data-url-input"
         />
@@ -231,7 +231,7 @@
           <InputField
             v-model="form.vcsUrl"
             :validation-error="validationErrors?.vcsUrl?.[0]"
-            label="Repository URL"
+            label="Repository"
             placeholder="https://example.com"
             test-id="vcs-url-input"
           />
@@ -274,7 +274,7 @@
           <InputField
             v-model="form.bugTrackerUrl"
             :validation-error="validationErrors?.bugTrackerUrl?.[0]"
-            label="Issue Tracker URL"
+            label="Issue Tracker"
             placeholder="https://example.com"
             test-id="bug-tracker-url-input"
           />
