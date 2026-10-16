@@ -1,6 +1,6 @@
 services:
   website:
-    image: kitware/cdash:testing
+    image: kitware/cdash:latest
     ports:
       - 8080:8080
     build:
