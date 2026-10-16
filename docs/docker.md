@@ -42,9 +42,9 @@ ctest -j3 --schedule-random --output-on-failure
 ## Configuration
 
 ### Why so many YAML files?
-You may have noticed that CDash's `docker compose` configuration is [split across multiple files](https://docs.docker.com/compose/extends/). The allows us to support various workflows (production vs. development, local vs MinIO storage) while minimizing code duplication.
+You may have noticed that CDash's `docker compose` configuration is [split across multiple files](https://docs.docker.com/compose/extends/). The allows us to support various workflows (production vs. development, local vs S3 storage) while minimizing code duplication.
 
-For example, to use MinIO instead of local storage, pass `-f docker/docker-compose.minio.yml` to the `docker compose` commands mentioned in this document.
+For example, to use S3 storage backed by [SeaweedFS](https://github.com/seaweedfs/seaweedfs) instead of local storage, pass `-f docker/docker-compose.seaweedfs.yml` to the `docker compose` commands mentioned in this document.
 
 ### Building from source
 If you would prefer to build your own Docker images for CDash, pass the `--build` option to your `docker compose up` command.

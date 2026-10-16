@@ -70,6 +70,9 @@ return [
             // See https://github.com/laravel/framework/discussions/49232
             // for more details.
             // 'stream_reads' => true,
+            // Skip the GetObjectAcl request Flysystem makes before every copy/move.
+            // Some S3-compatible servers (e.g. Garage) don't implement object ACLs.
+            'retain_visibility' => false,
             'throw' => true,
         ],
 
