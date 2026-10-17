@@ -6,6 +6,7 @@ use App\Database\Query\Grammars\PostgresGrammar;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
@@ -30,6 +31,12 @@ class AppServiceProvider extends ServiceProvider
         }
 
         Model::preventSilentlyDiscardingAttributes(!$this->app->isProduction());
+
+        // Queue workers process many jobs in a single process, so undo any timezone change made by a
+        // previous job (e.g., by CDash\Model\Project::SetNightlyTime()).
+        Queue::before(static function (): void {
+            date_default_timezone_set((string) config('app.timezone'));
+        });
     }
 
     /**

@@ -47,6 +47,8 @@ return [
             'prefix_indexes' => true,
             'search_path' => 'public',
             'sslmode' => 'prefer',
+            // CDash stores timestamps in UTC, regardless of the database server's timezone.
+            'timezone' => 'UTC',
         ],
     ],
 
