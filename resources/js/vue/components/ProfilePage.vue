@@ -245,7 +245,7 @@
                 class="tw-text-nowrap"
                 data-test="token-expires"
               >
-                {{ stringToDate(token.expires) }}
+                {{ formatExpiration(token.expires) }}
               </td>
               <td
                 class="tw-text-nowrap"
@@ -439,6 +439,14 @@ export default {
         return '';
       }
       return DateTime.fromISO(isoString).toISODate();
+    },
+
+    formatExpiration(isoString) {
+      // Tokens which never expire are stored with an expiration in the year 9999.
+      if (isoString && DateTime.fromISO(isoString, { zone: 'utc' }).year >= 9999) {
+        return 'Never';
+      }
+      return this.stringToDate(isoString);
     },
 
     formatScope(scope) {

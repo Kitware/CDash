@@ -124,7 +124,7 @@ export default {
             projectname: token.project?.name,
           },
           created: this.stringToDate(token.created),
-          expires: this.stringToDate(token.expires),
+          expires: this.formatExpiration(token.expires),
           actions: {
             token: token,
           },
@@ -161,6 +161,14 @@ export default {
         return '';
       }
       return DateTime.fromISO(isoString).toISODate();
+    },
+
+    formatExpiration(isoString) {
+      // Tokens which never expire are stored with an expiration in the year 9999.
+      if (isoString && DateTime.fromISO(isoString, { zone: 'utc' }).year >= 9999) {
+        return 'Never';
+      }
+      return this.stringToDate(isoString);
     },
   },
 };

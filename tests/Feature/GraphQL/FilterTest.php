@@ -1455,4 +1455,112 @@ class FilterTest extends TestCase
             ],
         ]);
     }
+
+    public function testDateTimeTzFilterConvertsOffsetToUtc(): void
+    {
+        $this->projects['public1']->builds()->create([
+            'name' => 'build1',
+            'uuid' => Str::uuid()->toString(),
+            'submittime' => '2026-10-17 12:00:00',
+        ]);
+
+        $this->projects['public1']->builds()->create([
+            'name' => 'build2',
+            'uuid' => Str::uuid()->toString(),
+            'submittime' => '2026-10-17 14:00:00',
+        ]);
+
+        // 09:30 EDT is 13:30 UTC, between the two submission times.
+        $this->actingAs($this->users['admin'])->graphQL('
+            query($projectId: ID!, $since: DateTimeTz!) {
+                project(id: $projectId) {
+                    builds(filters: {
+                        gt: {
+                            submissionTime: $since
+                        }
+                    }) {
+                        edges {
+                            node {
+                                name
+                            }
+                        }
+                    }
+                }
+            }
+        ', [
+            'projectId' => $this->projects['public1']->id,
+            'since' => '2026-10-17T09:30:00-04:00',
+        ])->assertExactJson([
+            'data' => [
+                'project' => [
+                    'builds' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'name' => 'build2',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+    }
+
+    public function testDateTimeUtcFilterConvertsOffsetToUtc(): void
+    {
+        /** @var Build $build */
+        $build = $this->projects['public1']->builds()->create([
+            'name' => 'build1',
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        $build->tests()->create([
+            'testname' => 'test1',
+            'status' => 'passed',
+            'starttime' => '2026-10-17 12:00:00',
+        ]);
+
+        $build->tests()->create([
+            'testname' => 'test2',
+            'status' => 'passed',
+            'starttime' => '2026-10-17 14:00:00',
+        ]);
+
+        // 09:30 EDT is 13:30 UTC, between the two start times.
+        $this->actingAs($this->users['admin'])->graphQL('
+            query($buildId: ID!, $since: DateTimeUtc!) {
+                build(id: $buildId) {
+                    tests(filters: {
+                        gt: {
+                            startTime: $since
+                        }
+                    }) {
+                        edges {
+                            node {
+                                name
+                            }
+                        }
+                    }
+                }
+            }
+        ', [
+            'buildId' => $build->id,
+            'since' => '2026-10-17T09:30:00.000000-04:00',
+        ])->assertExactJson([
+            'data' => [
+                'build' => [
+                    'tests' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'name' => 'test2',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+    }
 }
