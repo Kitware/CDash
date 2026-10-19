@@ -380,6 +380,11 @@ type Project {
     onlyParents: Boolean = true @scope
   ): Int! @count(relation: "builds")
 
+  "Daily build groups for this project."
+  buildGroups(
+    filters: _ @filter
+  ): [BuildGroup!]! @hasMany(relation: "buildgroups", type: CONNECTION, scopes: ["daily"]) @orderBy(column: "id")
+
   """
   The most recent build submitted to this server.  Note: this is determined by
   submission time, not build start time.
@@ -943,6 +948,31 @@ type Build {
   updateStep: Update @belongsTo
 
   comments: [Comment!]! @hasMany(type: CONNECTION) @orderBy(column: "timestamp", direction: DESC)
+}
+
+
+"Build group."
+type BuildGroup {
+  "Unique primary key."
+  id: ID! @filterable
+
+  "Name."
+  name: String! @filterable
+
+  "Description."
+  description: String
+
+  "Start time."
+  startTime: DateTimeTz! @rename(attribute: "starttime") @filterable
+
+  "End time."
+  endTime: DateTimeTz @rename(attribute: "endtime") @filterable
+
+  builds(
+    filters: _ @filter
+    "When true (default), only return parent builds. When false, return all builds including child builds."
+    onlyParents: Boolean = true @scope
+  ): [Build!]! @belongsToMany(type: CONNECTION)
 }
 
 

@@ -105,4 +105,13 @@ class BuildGroup extends Model
     {
         $query->whereNull('endtime');
     }
+
+    /**
+     * @param Builder<$this> $query
+     */
+    #[Scope]
+    protected function daily(Builder $query): void
+    {
+        $query->where('type', BuildGroupType::DAILY);
+    }
 }
