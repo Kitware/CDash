@@ -270,6 +270,9 @@ type Project {
   "Example: https://cmake.org/cmake/help/latest"
   documentationUrl: Url @rename(attribute: "documentationurl")
 
+  "Instructions for reporting security vulnerabilities. Example: https://github.com/Kitware/CDash/security/policy"
+  securityPolicyUrl: Url @rename(attribute: "securitypolicyurl")
+
   testDataUrl: Url @rename(attribute: "testingdataurl")
 
   "Visibility."
@@ -474,6 +477,8 @@ input UpdateProjectInput @validator {
   bugTrackerNewIssueUrl: Url @rename(attribute: "bugtrackernewissueurl")
 
   documentationUrl: Url @rename(attribute: "documentationurl")
+
+  securityPolicyUrl: Url @rename(attribute: "securitypolicyurl")
 
   testDataUrl: Url @rename(attribute: "testingdataurl")
 
