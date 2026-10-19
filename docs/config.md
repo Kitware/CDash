@@ -75,9 +75,9 @@ See the [Submissions guide](submissions.md) for more details.
 By default, CDash uses the local filesystem to store files it receives from CTest.
 If you're happy with this default, no additional configuration is necessary.
 
-CDash can be configured to use S3 instead, either hosted by AWS or a MinIO server.
+CDash can be configured to use S3 instead, either hosted by AWS or a self-hosted S3-compatible server such as [SeaweedFS](https://github.com/seaweedfs/seaweedfs).
 
-The following environment variables are common for both S3 implementations:
+The following environment variables are common for all S3 implementations:
 ```
 FILESYSTEM_DRIVER=s3
 AWS_ACCESS_KEY_ID=<access key id>
@@ -90,12 +90,12 @@ For AWS S3, you will also need to set:
 AWS_REGION=<region>
 ```
 
-For MinIO, you should set the following environment variables:
+For a self-hosted S3-compatible server, you should set the following environment variables:
 ```
-AWS_REGION=local
+AWS_REGION=<region expected by your server> (e.g. local)
 AWS_USE_PATH_STYLE_ENDPOINT=true
-AWS_ENDPOINT=<root Minio URL> (e.g. http://127.0.0.1:9001)
-AWS_URL=<bucket URL> (e.g. http://127.0.0.1:9001/cdash/)
+AWS_ENDPOINT=<root server URL> (e.g. http://127.0.0.1:8333)
+AWS_URL=<bucket URL> (e.g. http://127.0.0.1:8333/cdash/)
 ```
 
 ## Other settings

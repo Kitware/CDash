@@ -1,0 +1,31 @@
+services:
+  website:
+    environment:
+      FILESYSTEM_DRIVER: s3
+      AWS_BUCKET: cdash
+      AWS_REGION: local
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_USE_PATH_STYLE_ENDPOINT: true
+      AWS_URL: http://seaweedfs:8333/cdash/
+      AWS_ENDPOINT: http://seaweedfs:8333
+    depends_on:
+      seaweedfs:
+        condition: service_healthy
+  seaweedfs:
+    image: chrislusf/seaweedfs:4.48
+    command: mini -dir=/data -master.telemetry=false
+    ports:
+      - "8333:8333"
+    environment:
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      S3_BUCKET: cdash
+    volumes:
+      - seaweedfsdata:/data
+    healthcheck:
+      test: "wget -q -O /dev/null http://localhost:8333/healthz"
+      interval: 1s
+      retries: 120
+volumes:
+  seaweedfsdata:
