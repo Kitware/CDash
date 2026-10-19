@@ -5,7 +5,6 @@ namespace Tests\Feature\GraphQL\Mutations;
 use App\Models\PinnedTestMeasurement;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Support\Str;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
 
@@ -37,10 +36,7 @@ class DeletePinnedTestMeasurementTest extends TestCase
         $project = $this->makePublicProject();
 
         /** @var PinnedTestMeasurement $measurement */
-        $measurement = $project->pinnedTestMeasurements()->create([
-            'name' => Str::uuid()->toString(),
-            'position' => 1,
-        ]);
+        $measurement = PinnedTestMeasurement::factory()->for($project)->create();
 
         $this->graphQL('
             mutation deletePinnedTestMeasurement($input: DeletePinnedTestMeasurementInput!) {
@@ -63,10 +59,7 @@ class DeletePinnedTestMeasurementTest extends TestCase
         $user = User::factory()->create();
 
         /** @var PinnedTestMeasurement $measurement */
-        $measurement = $project->pinnedTestMeasurements()->create([
-            'name' => Str::uuid()->toString(),
-            'position' => 1,
-        ]);
+        $measurement = PinnedTestMeasurement::factory()->for($project)->create();
 
         $this->actingAs($user)->graphQL('
             mutation deletePinnedTestMeasurement($input: DeletePinnedTestMeasurementInput!) {
@@ -89,10 +82,7 @@ class DeletePinnedTestMeasurementTest extends TestCase
         $user = User::factory()->adminUser()->create();
 
         /** @var PinnedTestMeasurement $measurement */
-        $measurement = $project->pinnedTestMeasurements()->create([
-            'name' => Str::uuid()->toString(),
-            'position' => 1,
-        ]);
+        $measurement = PinnedTestMeasurement::factory()->for($project)->create();
 
         $this->actingAs($user)->graphQL('
             mutation deletePinnedTestMeasurement($input: DeletePinnedTestMeasurementInput!) {
