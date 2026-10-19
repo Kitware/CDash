@@ -80,6 +80,68 @@ class SiteServiceTest extends TestCase
         self::assertCount(1, $this->site->information()->get());
     }
 
+    public function testPreservesDescriptionWhenNoChange(): void
+    {
+        $this->site->information()->forceCreate([
+            'timestamp' => Carbon::now()->subMinute(),
+            'description' => 'abc',
+            'processorclockfrequency' => 1234,
+        ]);
+        $this->site->refresh();
+        self::assertCount(1, $this->site->information()->get());
+
+        $site_information = new SiteInformation([
+            'processorclockfrequency' => 1234,
+        ]);
+        SiteService::updateSiteInfoIfChanged($this->site, $site_information);
+
+        $this->site->refresh();
+        self::assertSame('abc', $this->site->mostRecentInformation?->description);
+        self::assertCount(1, $this->site->information()->get());
+    }
+
+    public function testPreservesDescriptionWhenChangedInformation(): void
+    {
+        $this->site->information()->forceCreate([
+            'timestamp' => Carbon::now()->subMinute(),
+            'description' => 'abc',
+            'processorclockfrequency' => 1234,
+        ]);
+        $this->site->refresh();
+        self::assertCount(1, $this->site->information()->get());
+
+        $site_information = new SiteInformation([
+            'processorclockfrequency' => 2345,
+        ]);
+        SiteService::updateSiteInfoIfChanged($this->site, $site_information);
+
+        $this->site->refresh();
+        self::assertSame(2345, $this->site->mostRecentInformation?->processorclockfrequency);
+        self::assertSame('abc', $this->site->mostRecentInformation->description);
+        self::assertCount(2, $this->site->information()->get());
+    }
+
+    public function testUpdatesWhenChangedDescription(): void
+    {
+        $this->site->information()->forceCreate([
+            'timestamp' => Carbon::now()->subMinute(),
+            'description' => 'abc',
+            'processorclockfrequency' => 1234,
+        ]);
+        $this->site->refresh();
+        self::assertCount(1, $this->site->information()->get());
+
+        $site_information = new SiteInformation([
+            'description' => 'def',
+            'processorclockfrequency' => 1234,
+        ]);
+        SiteService::updateSiteInfoIfChanged($this->site, $site_information);
+
+        $this->site->refresh();
+        self::assertSame('def', $this->site->mostRecentInformation?->description);
+        self::assertCount(2, $this->site->information()->get());
+    }
+
     public function testDoesNotSaveWhenAllNull(): void
     {
         $this->site->information()->create([

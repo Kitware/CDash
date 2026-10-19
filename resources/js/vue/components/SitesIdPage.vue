@@ -673,7 +673,7 @@ export default {
       this.editingDescription = false;
 
       this.$apollo.mutate({
-        mutation: gql`mutation ($siteid: ID!, $description: String!) {
+        mutation: gql`mutation ($siteid: ID!, $description: String) {
           updateSiteDescription(input: {
             siteId: $siteid
             description: $description

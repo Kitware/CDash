@@ -31,6 +31,11 @@ class SiteService extends AbstractService
             return;
         }
 
+        if ($newInformation->description === null) {
+            // CTest doesn't send a site description, so keep the one users set via the site page.
+            $newInformation->description = $site->mostRecentInformation?->description;
+        }
+
         foreach ($newInformation->getFillable() as $attribute) {
             if ($site->mostRecentInformation?->getAttribute($attribute) !== $newInformation->getAttribute($attribute)) {
                 // Something changed, so we can go ahead and save the new information.

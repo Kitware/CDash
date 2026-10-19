@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class UpdateSiteDescriptionTest extends TestCase
@@ -132,5 +133,61 @@ class UpdateSiteDescriptionTest extends TestCase
         $site_information = $this->site->information()->get();
         self::assertCount(2, $site_information);
         self::assertNotEquals($site_information[0]->timestamp ?? null, $site_information[1]->timestamp ?? null);
+    }
+
+    /**
+     * @return array<string, array{?string}>
+     */
+    public static function clearedDescriptions(): array
+    {
+        return [
+            'empty' => [''],
+            'whitespace' => ['   '],
+            'null' => [null],
+        ];
+    }
+
+    #[DataProvider('clearedDescriptions')]
+    public function testMutationClearsDescription(?string $description): void
+    {
+        $this->site->information()->forceCreate([
+            'timestamp' => Carbon::create(2020),
+            'description' => Str::uuid()->toString(),
+            'processorclockfrequency' => 1234,
+        ]);
+
+        $this->actingAs($this->user)->graphQL('
+            mutation ($siteid: ID!, $description: String) {
+                updateSiteDescription(input: {
+                    siteId: $siteid
+                    description: $description
+                }) {
+                    site {
+                        mostRecentInformation {
+                            description
+                            processorClockFrequency
+                        }
+                    }
+                    message
+                }
+            }
+        ', [
+            'siteid' => $this->site->id,
+            'description' => $description,
+        ])->assertExactJson([
+            'data' => [
+                'updateSiteDescription' => [
+                    'site' => [
+                        'mostRecentInformation' => [
+                            'description' => null,
+                            'processorClockFrequency' => 1234,
+                        ],
+                    ],
+                    'message' => null,
+                ],
+            ],
+        ]);
+
+        self::assertCount(2, $this->site->information()->get());
     }
 }
