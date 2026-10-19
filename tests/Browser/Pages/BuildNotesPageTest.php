@@ -8,6 +8,7 @@ use App\Models\Project;
 use App\Models\Site;
 use App\Models\SiteInformation;
 use App\Services\SiteService;
+use Facebook\WebDriver\Chrome\ChromeDevToolsDriver;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Laravel\Dusk\Browser;
@@ -72,6 +73,14 @@ class BuildNotesPageTest extends BrowserTestCase
         return $note;
     }
 
+    /**
+     * Pause the page's GraphQL requests until Fetch.disable is called.
+     */
+    private function holdGraphQLRequests(ChromeDevToolsDriver $devTools): void
+    {
+        $devTools->execute('Fetch.enable', ['patterns' => [['urlPattern' => '*/graphql']]]);
+    }
+
     public function testShowsBuildName(): void
     {
         $this->browse(function (Browser $browser): void {
@@ -88,6 +97,64 @@ class BuildNotesPageTest extends BrowserTestCase
             $browser->visit("/builds/{$this->build->id}/notes")
                 ->waitFor('@no-notes-message')
                 ->assertMissing('@notes-content')
+            ;
+        });
+    }
+
+    public function testShowsLoadingIndicatorWhileNotesLoad(): void
+    {
+        $this->browse(function (Browser $browser): void {
+            $devTools = new ChromeDevToolsDriver($browser->driver);
+            $this->holdGraphQLRequests($devTools);
+            try {
+                $browser->visit("/builds/{$this->build->id}/notes")
+                    ->waitFor('@notes-section img[alt="The page is loading."]')
+                    ->assertMissing('@no-notes-message')
+                ;
+            } finally {
+                $devTools->execute('Fetch.disable');
+            }
+
+            $browser->waitFor('@no-notes-message')
+                ->assertMissing('@notes-section img[alt="The page is loading."]')
+            ;
+        });
+    }
+
+    public function testShowsErrorIfNotesFailToLoad(): void
+    {
+        $this->browse(function (Browser $browser): void {
+            $devTools = new ChromeDevToolsDriver($browser->driver);
+            $devTools->execute('Network.enable');
+            $devTools->execute('Network.setBlockedURLs', ['urls' => ['*/graphql']]);
+            try {
+                $browser->visit("/builds/{$this->build->id}/notes")
+                    ->waitFor('@notes-error-message')
+                    ->assertMissing('@notes-section img[alt="The page is loading."]')
+                    ->assertMissing('@no-notes-message')
+                ;
+            } finally {
+                $devTools->execute('Network.setBlockedURLs', ['urls' => []]);
+            }
+        });
+    }
+
+    public function testShowsErrorIfBuildDeletedWhileLoading(): void
+    {
+        $this->browse(function (Browser $browser): void {
+            $devTools = new ChromeDevToolsDriver($browser->driver);
+            $this->holdGraphQLRequests($devTools);
+            try {
+                $browser->visit("/builds/{$this->build->id}/notes")
+                    ->waitFor('@notes-section img[alt="The page is loading."]')
+                ;
+                $this->build->delete();
+            } finally {
+                $devTools->execute('Fetch.disable');
+            }
+
+            $browser->waitFor('@notes-error-message')
+                ->assertMissing('@notes-section img[alt="The page is loading."]')
             ;
         });
     }
