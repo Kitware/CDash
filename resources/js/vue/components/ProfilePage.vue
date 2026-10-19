@@ -63,7 +63,10 @@
       </form>
     </FormSection>
 
-    <FormSection title="Change Password">
+    <FormSection
+      v-if="canChangePassword"
+      title="Change Password"
+    >
       <form
         id="password_form"
         method="post"
@@ -320,6 +323,10 @@ export default {
     message: {
       type: String,
       default: '',
+    },
+    canChangePassword: {
+      type: Boolean,
+      required: true,
     },
     maxTokenExpiration: {
       type: String,
