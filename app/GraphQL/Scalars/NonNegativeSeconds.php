@@ -7,6 +7,7 @@ namespace App\GraphQL\Scalars;
 use GraphQL\Error\Error;
 use GraphQL\Error\InvariantViolation;
 use GraphQL\Language\AST\FloatValueNode;
+use GraphQL\Language\AST\IntValueNode;
 use GraphQL\Language\AST\Node;
 use GraphQL\Language\AST\ValueNode;
 use GraphQL\Type\Definition\ScalarType;
@@ -58,8 +59,12 @@ final class NonNegativeSeconds extends ScalarType
      */
     public function parseLiteral(Node $valueNode, ?array $variables = null): float
     {
-        if (!$valueNode instanceof FloatValueNode) {
-            throw new Error("Query error: Can only parse Floats, got {$valueNode->kind}.", $valueNode);
+        if (!$valueNode instanceof FloatValueNode && !$valueNode instanceof IntValueNode) {
+            throw new Error("Query error: Can only parse Floats or Integers, got {$valueNode->kind}.", $valueNode);
+        }
+
+        if (!$this->validate($valueNode->value)) {
+            throw new Error("Could not parse {$valueNode->value} as non-negative seconds.", $valueNode);
         }
 
         return (float) $valueNode->value;

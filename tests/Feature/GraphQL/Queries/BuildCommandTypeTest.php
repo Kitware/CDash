@@ -250,4 +250,29 @@ class BuildCommandTypeTest extends TestCase
             ],
         ]);
     }
+
+    public function testCannotFilterByNegativeDuration(): void
+    {
+        /** @var Build $build */
+        $build = $this->project->builds()->create([
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        $this->graphQL('
+            query build($id: ID) {
+                build(id: $id) {
+                    commands(filters: { lt: { duration: -1 } }) {
+                        edges {
+                            node {
+                                duration
+                            }
+                        }
+                    }
+                }
+            }
+        ', [
+            'id' => $build->id,
+        ])->assertGraphQLErrorMessage('Could not parse -1 as non-negative integer milliseconds.');
+    }
 }

@@ -61,6 +61,10 @@ final class Url extends ScalarType
             throw new Error("Query error: Can only parse Strings, got {$valueNode->kind}.", $valueNode);
         }
 
+        if (!$this->validate($valueNode->value)) {
+            throw new Error("Could not parse {$valueNode->value} as URL.", $valueNode);
+        }
+
         return (string) $valueNode->value;
     }
 }
