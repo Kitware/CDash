@@ -68,4 +68,20 @@ class UserPolicy
     {
         return $currentUser->admin || $currentUser->id === $user->id;
     }
+
+    public function changePassword(?User $currentUser, User $user): bool
+    {
+        // Users can only change their own password.
+        if ($currentUser === null || $currentUser->id !== $user->id) {
+            return false;
+        }
+
+        // Passwords can't be changed when password login is disabled.
+        if (config('cdash.username_password_authentication_enabled') === false) {
+            return false;
+        }
+
+        // Passwords for users who log in with LDAP are managed by the LDAP server.
+        return !((bool) config('cdash.ldap_enabled') && $user->ldapguid !== null);
+    }
 }
