@@ -249,6 +249,8 @@ add_feature_test_in_transaction(/Feature/GraphQL/Queries/RepositoryTypeTest)
 
 add_feature_test_in_transaction(/Feature/GraphQL/Queries/CoverageDiffTypeTest)
 
+add_feature_test_in_transaction(/Feature/GraphQL/Queries/BuildGroupTypeTest)
+
 add_feature_test_in_transaction(/Feature/RouteAccessTest)
 
 add_feature_test_in_transaction(/Feature/Monitor)
