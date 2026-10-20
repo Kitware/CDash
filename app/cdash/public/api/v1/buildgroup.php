@@ -17,6 +17,9 @@
 
 namespace CDash\Api\v1\BuildGroup;
 
+use App\Enums\BuildGroupType;
+use App\Models\Build as EloquentBuild;
+use App\Models\BuildGroup as EloquentBuildGroup;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildGroup;
@@ -52,6 +55,20 @@ function just_get_project_from_request(): Project
     return $Project;
 }
 
+/**
+ * Get the requested build group, making sure it belongs to the project the user was authorized for.
+ * Callers must use the returned group's ID instead of the raw input, which the database may parse
+ * as a different ID.
+ */
+function get_project_buildgroup(int $projectid, mixed $groupid): EloquentBuildGroup
+{
+    $group = EloquentBuildGroup::findOrFail((int) $groupid);
+    if ($group->projectid !== $projectid) {
+        abort(403, 'Requested build group is not associated with this project.');
+    }
+    return $group;
+}
+
 // Require administrative access to view this page.
 init_api_request();
 
@@ -73,7 +90,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 switch ($method) {
     case 'DELETE':
-        rest_delete();
+        rest_delete($projectid);
         break;
     case 'POST':
         return rest_post($pdo, $projectid);
@@ -85,11 +102,11 @@ switch ($method) {
 }
 
 /** Handle DELETE requests */
-function rest_delete(): void
+function rest_delete(int $projectid): void
 {
     if (isset($_GET['buildgroupid'])) {
         // Delete the specified BuildGroup.
-        $buildgroupid = (int) $_GET['buildgroupid'];
+        $buildgroupid = get_project_buildgroup($projectid, $_GET['buildgroupid'])->id;
         $Group = new BuildGroup();
         $Group->SetId($buildgroupid);
         $Group->Delete();
@@ -104,7 +121,7 @@ function rest_delete(): void
         $buildgrouprule->BuildType = $wildcard['buildtype'];
         $buildgrouprule->BuildName =
             isset($wildcard['match']) ? convert_wildcards($wildcard['match']) : '';
-        $buildgrouprule->GroupId = $wildcard['buildgroupid'];
+        $buildgrouprule->GroupId = get_project_buildgroup($projectid, $wildcard['buildgroupid'])->id;
         $buildgrouprule->Delete(true);
     }
 
@@ -113,7 +130,7 @@ function rest_delete(): void
         $buildgrouprule = new BuildGroupRule();
 
         $dynamic = json_decode($_GET['dynamic'], true);
-        $buildgrouprule->GroupId = $dynamic['id'];
+        $buildgrouprule->GroupId = get_project_buildgroup($projectid, $dynamic['id'])->id;
 
         $rule = json_decode($_GET['rule'], true);
         $buildgrouprule->BuildName = $rule['match'] ?? '';
@@ -166,6 +183,16 @@ function rest_post($pdo, $projectid)
         // Update the order of the buildgroups for this project.
         $inputRows = $_POST['newLayout'];
         if (count($inputRows) > 0) {
+            // Construct query to insert the new layout.  This checks every group before the old
+            // layout is removed.
+            $params = [];
+            $query = 'INSERT INTO buildgroupposition (buildgroupid, position) VALUES ';
+            foreach ($inputRows as $inputRow) {
+                $query .= '(?, ?), ';
+                $params[] = get_project_buildgroup($projectid, $inputRow['id'])->id;
+                $params[] = $inputRow['position'];
+            }
+
             // Remove old build group layout for this project.
             $sql = "
                 DELETE FROM buildgroupposition WHERE buildgroupid IN
@@ -174,15 +201,6 @@ function rest_post($pdo, $projectid)
                 WHERE bg.projectid = ?)";
             $stmt = $pdo->prepare($sql);
             pdo_execute($stmt, [$projectid]);
-
-            // Construct query to insert the new layout.
-            $params = [];
-            $query = 'INSERT INTO buildgroupposition (buildgroupid, position) VALUES ';
-            foreach ($inputRows as $inputRow) {
-                $query .= '(?, ?), ';
-                $params[] = $inputRow['id'];
-                $params[] = $inputRow['position'];
-            }
 
             // Remove the trailing comma and space, then insert our new values.
             $query = rtrim($query, ', ');
@@ -199,8 +217,18 @@ function rest_post($pdo, $projectid)
             $error_msg = 'Please select a group for these builds';
             abort(400, $error_msg);
         }
+        $newgroup = get_project_buildgroup($projectid, $group['id']);
+        if ($newgroup->type !== BuildGroupType::DAILY) {
+            abort(400, 'Builds cannot be assigned to dynamic build groups.');
+        }
+        $groupid = $newgroup->id;
 
         $builds = $_POST['builds'];
+        // Check every build before any of them are moved.
+        $buildids = array_map(fn ($buildinfo) => (int) $buildinfo['id'], $builds);
+        if (EloquentBuild::whereIn('id', $buildids)->where('projectid', '!=', $projectid)->exists()) {
+            abort(403, 'Requested builds are not associated with this project.');
+        }
         if (array_key_exists('expected', $_POST)) {
             $expected = $_POST['expected'];
         } else {
@@ -208,8 +236,6 @@ function rest_post($pdo, $projectid)
         }
 
         foreach ($builds as $buildinfo) {
-            $groupid = $group['id'];
-
             $Build = new Build();
             $Build->Id = (int) $buildinfo['id'];
             $Build->FillFromId($Build->Id);
@@ -240,11 +266,15 @@ function rest_post($pdo, $projectid)
     if (isset($_POST['nameMatch'])) {
         // Define a BuildGroup by Build name.
         $group = $_POST['group'];
-        $groupid = $group['id'];
-        if ($groupid < 1) {
+        if ($group['id'] < 1) {
             $error_msg = 'Please select a BuildGroup to define.';
             abort(400, $error_msg);
         }
+        $rulegroup = get_project_buildgroup($projectid, $group['id']);
+        if ($rulegroup->type !== BuildGroupType::DAILY) {
+            abort(400, 'Builds cannot be assigned to dynamic build groups.');
+        }
+        $groupid = $rulegroup->id;
 
         $nameMatch = convert_wildcards($_POST['nameMatch']);
         $type = $_POST['type'];
@@ -262,7 +292,7 @@ function rest_post($pdo, $projectid)
 
     if (isset($_POST['dynamic']) && !empty($_POST['dynamic'])) {
         // Add a build row to a dynamic group
-        $groupid = $_POST['dynamic']['id'];
+        $groupid = get_project_buildgroup($projectid, $_POST['dynamic']['id'])->id;
 
         if (empty($_POST['buildgroup'])) {
             $parentgroupid = 0;
@@ -327,7 +357,7 @@ function rest_put($projectid): void
         }
 
         $BuildGroup = new BuildGroup();
-        $BuildGroup->SetId((int) $buildgroup['id']);
+        $BuildGroup->SetId(get_project_buildgroup($projectid, $buildgroup['id'])->id);
         $BuildGroup->SetName(pdo_real_escape_string($buildgroup['name']));
         $BuildGroup->SetDescription(
             pdo_real_escape_string($buildgroup['description']));
@@ -343,7 +373,7 @@ function rest_put($projectid): void
 
     if (isset($_REQUEST['dynamiclist']) && !empty($_REQUEST['dynamiclist'])) {
         // Update a list of dynamic builds.
-        $buildgroupid = (int) $_REQUEST['buildgroupid'];
+        $buildgroupid = get_project_buildgroup($projectid, $_REQUEST['buildgroupid'])->id;
         $build_group = new BuildGroup();
         $build_group->SetId($buildgroupid);
         $old_rules = $build_group->GetRules();
