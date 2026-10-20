@@ -723,24 +723,27 @@ final class BuildController extends AbstractBuildController
 
         // Should we change whether or not this build is expected?
         if (request()->has('expected') && request()->has('groupid')) {
+            $group = BuildGroup::findOrFail(request()->integer('groupid'));
+            if ($group->projectid !== (int) $this->project->Id) {
+                abort(403, 'Requested build group is not associated with this project.');
+            }
             // The rule would also route future submissions of this build into the group.
-            if (BuildGroup::findOrFail(request()->integer('groupid'))->type !== BuildGroupType::DAILY) {
+            if ($group->type !== BuildGroupType::DAILY) {
                 abort(400, 'Builds cannot be assigned to dynamic build groups.');
             }
 
             $buildgrouprule->Expected = request()->input('expected');
-            $buildgrouprule->GroupId = request()->input('groupid');
+            $buildgrouprule->GroupId = $group->id;
             $buildgrouprule->SetExpected();
         }
 
         // Should we move this build to a different group?
         if (request()->has('expected') && request()->has('newgroupid')) {
             $expected = request()->input('expected');
-            $newgroupid = request()->input('newgroupid');
 
             $eloquent_build = EloquentBuild::findOrFail((int) $this->build->Id);
 
-            $newgroup = BuildGroup::findOrFail((int) $newgroupid);
+            $newgroup = BuildGroup::findOrFail(request()->integer('newgroupid'));
             if ($newgroup->project()->isNot($eloquent_build->project)) {
                 abort(403, 'Requested build group is not associated with this project.');
             }
@@ -751,14 +754,14 @@ final class BuildController extends AbstractBuildController
             // Remove the build from its previous group.
             $eloquent_build->buildGroups()->detach();
             // Insert it into the new group.
-            $eloquent_build->buildGroups()->attach((int) $newgroupid);
+            $eloquent_build->buildGroups()->attach($newgroup->id);
 
             // Mark any previous buildgroup rule as finished as of this time.
             $now = gmdate(FMT_DATETIME);
             $buildgrouprule->SoftDeleteExpiredRules($now);
 
             // Create the rule for the newly assigned buildgroup.
-            $buildgrouprule->GroupId = $newgroupid;
+            $buildgrouprule->GroupId = $newgroup->id;
             $buildgrouprule->Expected = $expected;
             $buildgrouprule->StartTime = $now;
             $buildgrouprule->Save();

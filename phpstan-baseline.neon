@@ -678,7 +678,7 @@ parameters:
 		-
 			rawMessage: Cannot cast mixed to int.
 			identifier: cast.int
-			count: 7
+			count: 5
 			path: app/Http/Controllers/BuildController.php
 
 		-
@@ -12357,7 +12357,7 @@ parameters:
 		-
 			rawMessage: Cannot access offset 'id' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 8
+			count: 9
 			path: app/cdash/public/api/v1/buildgroup.php
 
 		-
@@ -12482,6 +12482,12 @@ parameters:
 
 		-
 			rawMessage: 'Parameter #2 $array of function array_key_exists expects array, mixed given.'
+			identifier: argument.type
+			count: 1
+			path: app/cdash/public/api/v1/buildgroup.php
+
+		-
+			rawMessage: 'Parameter #2 $array of function array_map expects array, mixed given.'
 			identifier: argument.type
 			count: 1
 			path: app/cdash/public/api/v1/buildgroup.php

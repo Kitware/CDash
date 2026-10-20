@@ -47,7 +47,7 @@ final class ExpectedBuildController extends AbstractProjectController
             case 'GET':
                 return self::rest_get($request, $siteid, $buildname, $buildtype, $this->project->Id);
             case 'POST':
-                self::rest_post($request, $siteid, $buildgroupid, $buildname, $buildtype);
+                self::rest_post($request, $siteid, $buildgroupid, $buildname, $buildtype, $this->project->Id);
                 break;
             default:
                 abort(500, 'Unhandled method: ' . $request->method());
@@ -99,14 +99,17 @@ final class ExpectedBuildController extends AbstractProjectController
         return response()->json(cast_data_for_JSON($response));
     }
 
-    private static function rest_post(Request $request, int $siteid, int $buildgroupid, string $buildname, string $buildtype): void
+    private static function rest_post(Request $request, int $siteid, int $buildgroupid, string $buildname, string $buildtype, int $projectid): void
     {
         if (!$request->has('newgroupid')) {
             abort(400, 'newgroupid not specified.');
         }
 
-        $newgroupid = $request->integer('newgroupid');
-        if (EloquentBuildGroup::findOrFail($newgroupid)->type !== BuildGroupType::DAILY) {
+        $newgroup = EloquentBuildGroup::findOrFail($request->integer('newgroupid'));
+        if ($newgroup->projectid !== $projectid) {
+            abort(403, 'Requested build group is not associated with this project.');
+        }
+        if ($newgroup->type !== BuildGroupType::DAILY) {
             abort(400, 'Builds cannot be assigned to dynamic build groups.');
         }
 
@@ -115,7 +118,7 @@ final class ExpectedBuildController extends AbstractProjectController
         $rule->GroupId = $buildgroupid;
         $rule->BuildName = $buildname;
         $rule->BuildType = $buildtype;
-        $rule->ChangeGroup($newgroupid);
+        $rule->ChangeGroup($newgroup->id);
     }
 
     private static function rest_delete(int $siteid, int $buildgroupid, string $buildname, string $buildtype): void
