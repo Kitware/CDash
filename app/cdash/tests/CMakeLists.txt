@@ -116,6 +116,8 @@ add_unit_test(/Unit/ControllerNameTest)
 
 add_unit_test(/Unit/FillableAttributesTest)
 
+add_unit_test(/Unit/TimezoneConfigTest)
+
 add_unit_test(/Unit/Validators/PasswordTest)
 
 add_unit_test(/Unit/Middleware/InternalTest)
@@ -435,6 +437,8 @@ add_browser_test(/Browser/Pages/ProjectBuildsPageTest)
 add_browser_test(/Browser/Pages/CreateProjectPageTest)
 
 add_browser_test(/Browser/Pages/ProfilePageTest)
+
+add_browser_test(/Browser/Pages/ManageAuthTokensPageTest)
 
 add_browser_test(/Browser/Pages/PasswordResetPageTest)
 

@@ -607,7 +607,7 @@ export default {
         testDataUrl: '',
         ldapFilter: '',
         coverageThreshold: 70,
-        nightlyTime: '00:00:00',
+        nightlyTime: '00:00:00 UTC',
         emailLowCoverage: false,
         emailTestTimingChanged: false,
         emailBrokenSubmissions: true,

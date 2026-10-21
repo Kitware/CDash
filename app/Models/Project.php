@@ -121,7 +121,7 @@ class Project extends Model
 
     protected $attributes = [
         'coveragethreshold' => 70,
-        'nightlytime' => '00:00:00',
+        'nightlytime' => '00:00:00 UTC',
         'emaillowcoverage' => false,
         'emailtesttimingchanged' => false,
         'emailbrokensubmission' => true,

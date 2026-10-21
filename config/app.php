@@ -94,13 +94,25 @@ return [
     | Application Timezone
     |--------------------------------------------------------------------------
     |
-    | Here you may specify the default timezone for your application, which
-    | will be used by the PHP date and date-time functions. We have gone
-    | ahead and set this to a sensible default for you out of the box.
+    | CDash stores timestamps in UTC, and Laravel interprets stored timestamps
+    | in the application timezone, so it must remain UTC.  APP_TIMEZONE only
+    | controls when scheduled tasks run.
     |
     */
 
-    'timezone' => env('APP_TIMEZONE', 'UTC'),
+    'timezone' => 'UTC',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Schedule Timezone
+    |--------------------------------------------------------------------------
+    |
+    | The timezone used to determine when scheduled tasks run, e.g., the hour
+    | at which daily tasks run.
+    |
+    */
+
+    'schedule_timezone' => env('APP_TIMEZONE', 'UTC'),
 
     /*
     |--------------------------------------------------------------------------
