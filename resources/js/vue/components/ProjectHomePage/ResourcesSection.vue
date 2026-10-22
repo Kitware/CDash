@@ -70,6 +70,7 @@
       :documentation-url="documentationUrl"
       :bug-tracker-url="bugTrackerUrl"
       :bug-tracker-new-issue-url="bugTrackerNewIssueUrl"
+      :security-policy-url="securityPolicyUrl"
       :test-data-url="testDataUrl"
     />
   </SidebarSection>
@@ -86,6 +87,7 @@ import {
   faGlobe,
   faPen,
   faPlus,
+  faShieldHalved,
 } from '@fortawesome/free-solid-svg-icons';
 import {
   faGithub,
@@ -145,6 +147,11 @@ export default {
       default: null,
     },
 
+    securityPolicyUrl: {
+      type: [String, null],
+      default: null,
+    },
+
     testDataUrl: {
       type: [String, null],
       default: null,
@@ -173,6 +180,7 @@ export default {
         { label: 'Documentation', url: this.documentationUrl, icon: faBook, testId: 'documentation-link' },
         { label: 'Issue Tracker', url: this.bugTrackerUrl, icon: faBug, testId: 'bug-tracker-link' },
         { label: 'Report an Issue', url: this.bugTrackerNewIssueUrl, icon: faCirclePlus, testId: 'new-issue-link' },
+        { label: 'Security Policy', url: this.securityPolicyUrl, icon: faShieldHalved, testId: 'security-policy-link' },
         { label: 'Test Data', url: this.testDataUrl, icon: faDatabase, testId: 'test-data-link' },
       ].filter((resource) => resource.url);
     },

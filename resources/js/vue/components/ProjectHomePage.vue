@@ -34,6 +34,7 @@
             :documentation-url="project.documentationUrl"
             :bug-tracker-url="project.bugTrackerUrl"
             :bug-tracker-new-issue-url="project.bugTrackerNewIssueUrl"
+            :security-policy-url="project.securityPolicyUrl"
             :test-data-url="project.testDataUrl"
           />
           <AdministratorsSection
@@ -105,6 +106,7 @@ export default {
             vcsViewer
             bugTrackerUrl
             bugTrackerNewIssueUrl
+            securityPolicyUrl
             testDataUrl
             buildsLastDay: buildCount(filters: {
               gt: {

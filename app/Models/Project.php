@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Auth;
  * @property ?string $bugtrackernewissueurl
  * @property ?string $bugtrackertype
  * @property ?string $documentationurl
+ * @property ?string $securitypolicyurl
  * @property int $imageid
  * @property int $public
  * @property int $coveragethreshold
@@ -70,6 +71,7 @@ class Project extends Model
         'bugtrackernewissueurl',
         'bugtrackertype',
         'documentationurl',
+        'securitypolicyurl',
         'imageid',
         'public',
         'coveragethreshold',
