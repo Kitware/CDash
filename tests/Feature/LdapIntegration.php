@@ -165,6 +165,11 @@ class LdapIntegration extends TestCase
             'password' => $user->getAttribute('userpassword')[0],
         ])->assertRedirect('/');
 
+        // LDAP users can't change their password from their profile page.
+        $this->get('/profile')
+            ->assertOk()
+            ->assertViewHas('props', fn (array $props): bool => $props['can-change-password'] === false);
+
         // Ensure the user was actually created in the database, and then clean it up
         \App\Models\User::where(['email' => $user->getAttribute('uid')[0]])->firstOrFail()->delete();
     }

@@ -24,7 +24,8 @@ class PasswordExpired
             $password_expired_path = '/profile';
             if (!Str::contains(url()->current(), $password_expired_path)) {
                 $password_lifetime = (int) config('cdash.password.expires');
-                if ($password_lifetime > 0 && $user->password_updated_at->addDays($password_lifetime) < Carbon::now()) {
+                // Don't send users to change a password they can't change.
+                if ($password_lifetime > 0 && $user->can('changePassword', $user) && $user->password_updated_at->addDays($password_lifetime) < Carbon::now()) {
                     return redirect("{$password_expired_path}?password_expired=1");
                 }
             }

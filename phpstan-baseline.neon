@@ -1594,12 +1594,6 @@ parameters:
 			path: app/Http/Controllers/UserController.php
 
 		-
-			rawMessage: 'Only booleans are allowed in an if condition, mixed given.'
-			identifier: if.condNotBoolean
-			count: 1
-			path: app/Http/Controllers/UserController.php
-
-		-
 			rawMessage: 'Parameter #1 $haystack of function str_contains expects string, mixed given.'
 			identifier: argument.type
 			count: 1
