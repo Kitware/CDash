@@ -59,6 +59,7 @@
           <FontAwesomeIcon :icon="FA.faBarsStaggered" /> Add Group
         </button>
         <button
+          v-if="primaryRecordName === ''"
           class="tw-btn tw-btn-xs"
           @click="$emit('delete')"
         >
