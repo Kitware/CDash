@@ -329,7 +329,7 @@ Route::middleware(['auth'])->group(function (): void {
         if (!$request->has('projectid')) {
             abort(404);
         }
-        $projectid = $request->integer('projectidid');
+        $projectid = $request->integer('projectid');
         return redirect("/projects/$projectid/members", 301);
     });
 
