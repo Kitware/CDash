@@ -66,9 +66,7 @@ export default {
 
   computed: {
     chartOption() {
-      const hasData = this.data && this.data.length > 0;
-
-      const baseOption = {
+      return {
         animation: false,
         tooltip: {
           trigger: 'axis',
@@ -92,60 +90,54 @@ export default {
             formatter: (value) => Utils.formatDuration(value),
           },
         },
-      };
-
-      if (hasData) {
-        return {
-          ...baseOption,
-          xAxis: {
-            type: 'category',
-            data: this.data.map((d) => d.buildId),
-            axisLabel: {
-              show: false,
-            },
+        // ECharts only builds the grid's axes when both an xAxis and a yAxis exist, so the xAxis
+        // must be present even when there's no data, or rendering the yAxis throws.
+        xAxis: {
+          type: 'category',
+          data: this.data.map((d) => d.buildId),
+          axisLabel: {
+            show: false,
           },
-          series: [
-            {
-              name: 'Configure',
-              type: 'bar',
-              stack: 'total',
-              data: this.data.map((d) => d.configureTime.toMillis()),
-              color: '#bce784',
-            },
-            {
-              name: 'Build',
-              type: 'bar',
-              stack: 'total',
-              data: this.data.map((d) => d.buildTime.toMillis()),
-              color: '#5dd39e',
-            },
-            {
-              name: 'Test',
-              type: 'bar',
-              stack: 'total',
-              data: this.data.map((d) => d.testTime.toMillis()),
-              color: '#348aa7',
-              markArea: {
-                silent: true,
-                data: this.data.reduce((acc, d, i) => {
-                  if (d.configureFailed || d.buildFailed || d.testFailed) {
-                    acc.push([
-                      { xAxis: i },
-                      { xAxis: i },
-                    ]);
-                  }
-                  return acc;
-                }, []),
-                itemStyle: {
-                  color: 'rgba(255, 100, 100, 0.18)',
-                },
+        },
+        series: [
+          {
+            name: 'Configure',
+            type: 'bar',
+            stack: 'total',
+            data: this.data.map((d) => d.configureTime.toMillis()),
+            color: '#bce784',
+          },
+          {
+            name: 'Build',
+            type: 'bar',
+            stack: 'total',
+            data: this.data.map((d) => d.buildTime.toMillis()),
+            color: '#5dd39e',
+          },
+          {
+            name: 'Test',
+            type: 'bar',
+            stack: 'total',
+            data: this.data.map((d) => d.testTime.toMillis()),
+            color: '#348aa7',
+            markArea: {
+              silent: true,
+              data: this.data.reduce((acc, d, i) => {
+                if (d.configureFailed || d.buildFailed || d.testFailed) {
+                  acc.push([
+                    { xAxis: i },
+                    { xAxis: i },
+                  ]);
+                }
+                return acc;
+              }, []),
+              itemStyle: {
+                color: 'rgba(255, 100, 100, 0.18)',
               },
             },
-          ],
-        };
-      }
-
-      return baseOption;
+          },
+        ],
+      };
     },
   },
 
