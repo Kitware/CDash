@@ -7,6 +7,7 @@ use App\Models\Project;
 use App\Models\Site;
 use App\Models\Target;
 use App\Models\Test;
+use App\Models\TestMeasurement;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\DB;
@@ -1083,17 +1084,9 @@ class FilterTest extends TestCase
             'status' => 'passed',
         ]);
 
-        $measurement1 = $test->testMeasurements()->create([
-            'name' => Str::uuid()->toString(),
-            'type' => 'text/string',
-            'value' => Str::uuid()->toString(),
-        ]);
+        $measurement1 = TestMeasurement::factory()->for($test)->create();
 
-        $measurement2 = $test->testMeasurements()->create([
-            'name' => Str::uuid()->toString(),
-            'type' => 'text/string',
-            'value' => Str::uuid()->toString(),
-        ]);
+        $measurement2 = TestMeasurement::factory()->for($test)->create();
 
         $this->actingAs($this->users['admin'])->graphQL('
             query($buildid: ID!, $measurementname: String!) {

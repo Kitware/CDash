@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\GraphQL\Mutations;
 
+use App\Models\PinnedTestMeasurement;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Support\Str;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
 
@@ -20,14 +20,8 @@ class UpdatePinnedTestMeasurementOrderTest extends TestCase
         $project2 = $this->makePublicProject();
         $user = User::factory()->adminUser()->create();
 
-        $measurement1 = $project1->pinnedTestMeasurements()->create([
-            'name' => Str::uuid()->toString(),
-            'position' => 1,
-        ]);
-        $measurement2 = $project2->pinnedTestMeasurements()->create([
-            'name' => Str::uuid()->toString(),
-            'position' => 1,
-        ]);
+        $measurement1 = PinnedTestMeasurement::factory()->for($project1)->create();
+        $measurement2 = PinnedTestMeasurement::factory()->for($project2)->create();
 
         $this->actingAs($user)->graphQL('
             mutation updatePinnedTestMeasurementOrder($input: UpdatePinnedTestMeasurementOrderInput!) {
@@ -54,12 +48,10 @@ class UpdatePinnedTestMeasurementOrderTest extends TestCase
         $project = $this->makePublicProject();
         $user = User::factory()->adminUser()->create();
 
-        $measurement1 = $project->pinnedTestMeasurements()->create([
-            'name' => Str::uuid()->toString(),
+        $measurement1 = PinnedTestMeasurement::factory()->for($project)->create([
             'position' => 1,
         ]);
-        $measurement2 = $project->pinnedTestMeasurements()->create([
-            'name' => Str::uuid()->toString(),
+        $measurement2 = PinnedTestMeasurement::factory()->for($project)->create([
             'position' => 2,
         ]);
 
@@ -114,8 +106,7 @@ class UpdatePinnedTestMeasurementOrderTest extends TestCase
     public function testFailsWhenAnonymousUser(): void
     {
         $project = $this->makePublicProject();
-        $measurement = $project->pinnedTestMeasurements()->create([
-            'name' => Str::uuid()->toString(),
+        $measurement = PinnedTestMeasurement::factory()->for($project)->create([
             'position' => 1,
         ]);
 
@@ -145,8 +136,7 @@ class UpdatePinnedTestMeasurementOrderTest extends TestCase
     {
         $project = $this->makePublicProject();
         $user = User::factory()->create();
-        $measurement = $project->pinnedTestMeasurements()->create([
-            'name' => Str::uuid()->toString(),
+        $measurement = PinnedTestMeasurement::factory()->for($project)->create([
             'position' => 1,
         ]);
 
@@ -177,8 +167,7 @@ class UpdatePinnedTestMeasurementOrderTest extends TestCase
         $project = $this->makePublicProject();
         $user = User::factory()->adminUser()->create();
 
-        $measurement = $project->pinnedTestMeasurements()->create([
-            'name' => Str::uuid()->toString(),
+        $measurement = PinnedTestMeasurement::factory()->for($project)->create([
             'position' => 1,
         ]);
 
@@ -209,11 +198,11 @@ class UpdatePinnedTestMeasurementOrderTest extends TestCase
         $project = $this->makePublicProject();
         $user = User::factory()->adminUser()->create();
 
-        $measurement1 = $project->pinnedTestMeasurements()->create([
+        $measurement1 = PinnedTestMeasurement::factory()->for($project)->create([
             'name' => 'Measurement 1',
             'position' => 1,
         ]);
-        $measurement2 = $project->pinnedTestMeasurements()->create([
+        $measurement2 = PinnedTestMeasurement::factory()->for($project)->create([
             'name' => 'Measurement 2',
             'position' => 2,
         ]);

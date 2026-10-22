@@ -4,7 +4,6 @@ namespace Tests\Feature\GraphQL\Queries;
 
 use App\Models\PinnedTestMeasurement;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Support\Str;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
 
@@ -21,20 +20,17 @@ class PinnedTestMeasurementTypeTest extends TestCase
         $project = $this->makePublicProject();
 
         /** @var PinnedTestMeasurement $measurement1 */
-        $measurement1 = $project->pinnedTestMeasurements()->create([
-            'name' => Str::uuid()->toString(),
+        $measurement1 = PinnedTestMeasurement::factory()->for($project)->create([
             'position' => 3,
         ]);
 
         /** @var PinnedTestMeasurement $measurement2 */
-        $measurement2 = $project->pinnedTestMeasurements()->create([
-            'name' => Str::uuid()->toString(),
+        $measurement2 = PinnedTestMeasurement::factory()->for($project)->create([
             'position' => 1,
         ]);
 
         /** @var PinnedTestMeasurement $measurement3 */
-        $measurement3 = $project->pinnedTestMeasurements()->create([
-            'name' => Str::uuid()->toString(),
+        $measurement3 = PinnedTestMeasurement::factory()->for($project)->create([
             'position' => 2,
         ]);
 

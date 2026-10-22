@@ -3,11 +3,13 @@
 namespace Tests\Browser\Pages;
 
 use App\Models\Build;
+use App\Models\PinnedTestMeasurement;
 use App\Models\Project;
 use App\Models\Site;
 use App\Models\SiteInformation;
 use App\Models\SubProject;
 use App\Models\Test;
+use App\Models\TestMeasurement;
 use App\Services\SiteService;
 use Illuminate\Support\Str;
 use Laravel\Dusk\Browser;
@@ -398,21 +400,12 @@ class BuildTestsPageTest extends BrowserTestCase
             'status' => 'failed',
         ]);
 
-        $measurement1 = $test->testMeasurements()->create([
-            'name' => Str::uuid()->toString(),
-            'type' => 'text/string',
-            'value' => Str::uuid()->toString(),
-        ]);
+        $measurement1 = TestMeasurement::factory()->for($test)->create();
 
-        $measurement2 = $test->testMeasurements()->create([
-            'name' => Str::uuid()->toString(),
-            'type' => 'text/string',
-            'value' => Str::uuid()->toString(),
-        ]);
+        $measurement2 = TestMeasurement::factory()->for($test)->create();
 
-        $this->project->pinnedTestMeasurements()->create([
+        PinnedTestMeasurement::factory()->for($this->project)->create([
             'name' => $measurement1->name,
-            'position' => 1,
         ]);
 
         $this->browse(function (Browser $browser) use ($build, $measurement1, $measurement2): void {
@@ -442,16 +435,15 @@ class BuildTestsPageTest extends BrowserTestCase
                 'testname' => Str::uuid()->toString(),
                 'status' => 'passed',
             ]);
-            $test->testMeasurements()->create([
+            TestMeasurement::factory()->for($test)->create([
                 'name' => $measurementName,
                 'type' => 'numeric/double',
                 'value' => $value,
             ]);
         }
 
-        $this->project->pinnedTestMeasurements()->create([
+        PinnedTestMeasurement::factory()->for($this->project)->create([
             'name' => $measurementName,
-            'position' => 1,
         ]);
 
         $this->browse(function (Browser $browser) use ($build): void {
@@ -483,18 +475,15 @@ class BuildTestsPageTest extends BrowserTestCase
             'uuid' => Str::uuid()->toString(),
         ]);
 
-        $measurement1 = $this->project->pinnedTestMeasurements()->create([
-            'name' => Str::uuid()->toString(),
+        $measurement1 = PinnedTestMeasurement::factory()->for($this->project)->create([
             'position' => 1,
         ]);
 
-        $measurement2 = $this->project->pinnedTestMeasurements()->create([
-            'name' => Str::uuid()->toString(),
+        $measurement2 = PinnedTestMeasurement::factory()->for($this->project)->create([
             'position' => 2,
         ]);
 
-        $measurement3 = $this->project->pinnedTestMeasurements()->create([
-            'name' => Str::uuid()->toString(),
+        $measurement3 = PinnedTestMeasurement::factory()->for($this->project)->create([
             'position' => 3,
         ]);
 
@@ -662,7 +651,7 @@ class BuildTestsPageTest extends BrowserTestCase
             'starttime' => '2025-01-01 11:22:33',
         ]);
 
-        $test->testMeasurements()->create([
+        TestMeasurement::factory()->for($test)->create([
             'name' => 'MaxRSS',
             'type' => 'numeric/integer',
             'value' => '14576',
