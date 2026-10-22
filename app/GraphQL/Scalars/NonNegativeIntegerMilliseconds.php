@@ -56,12 +56,16 @@ final class NonNegativeIntegerMilliseconds extends ScalarType
      *
      * @throws Error
      */
-    public function parseLiteral(Node $valueNode, ?array $variables = null): float
+    public function parseLiteral(Node $valueNode, ?array $variables = null): int
     {
         if (!$valueNode instanceof IntValueNode) {
             throw new Error("Query error: Can only parse Integers, got {$valueNode->kind}.", $valueNode);
         }
 
-        return (float) $valueNode->value;
+        if (!$this->validate($valueNode->value)) {
+            throw new Error("Could not parse {$valueNode->value} as non-negative integer milliseconds.", $valueNode);
+        }
+
+        return (int) $valueNode->value;
     }
 }

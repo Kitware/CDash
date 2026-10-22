@@ -451,4 +451,76 @@ class TestTypeTest extends TestCase
         $label1->delete();
         $label2->delete();
     }
+
+    public function testFilterByIntegerRunningTime(): void
+    {
+        $build = $this->project->builds()->create([
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+        ]);
+        $build->tests()->create([
+            'testname' => 'fast',
+            'status' => 'passed',
+            'time' => 1.5,
+        ]);
+        $build->tests()->create([
+            'testname' => 'slow',
+            'status' => 'passed',
+            'time' => 2.5,
+        ]);
+
+        $this->graphQL('
+            query build($id: ID) {
+                build(id: $id) {
+                    tests(filters: { lt: { runningTime: 2 } }) {
+                        edges {
+                            node {
+                                name
+                            }
+                        }
+                    }
+                }
+            }
+        ', [
+            'id' => $build->id,
+        ])->assertExactJson([
+            'data' => [
+                'build' => [
+                    'tests' => [
+                        'edges' => [
+                            [
+                                'node' => [
+                                    'name' => 'fast',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+    }
+
+    public function testCannotFilterByNegativeRunningTime(): void
+    {
+        $build = $this->project->builds()->create([
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        $this->graphQL('
+            query build($id: ID) {
+                build(id: $id) {
+                    tests(filters: { lt: { runningTime: -1.0 } }) {
+                        edges {
+                            node {
+                                name
+                            }
+                        }
+                    }
+                }
+            }
+        ', [
+            'id' => $build->id,
+        ])->assertGraphQLErrorMessage('Could not parse -1.0 as non-negative seconds.');
+    }
 }
