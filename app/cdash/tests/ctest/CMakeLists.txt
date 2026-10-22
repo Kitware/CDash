@@ -63,11 +63,8 @@ set_tests_properties(indexfilters PROPERTIES DEPENDS submitsortingdata)
 add_php_test(timeline)
 set_tests_properties(timeline PROPERTIES DEPENDS indexfilters)
 
-add_php_test(nobackup)
-set_tests_properties(nobackup PROPERTIES DEPENDS timeline)
-
 # TODO: (sbelsk) revisit why this test fails and add proper dependencies
 #add_php_test(parallelsubmissions)
 
 add_php_test(deferredsubmissions)
-set_tests_properties(deferredsubmissions PROPERTIES DEPENDS nobackup)
+set_tests_properties(deferredsubmissions PROPERTIES DEPENDS timeline)

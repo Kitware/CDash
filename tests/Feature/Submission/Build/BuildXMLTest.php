@@ -2,7 +2,9 @@
 
 namespace Feature\Submission\Build;
 
+use App\Models\BuildError;
 use App\Models\Project;
+use App\Utils\DatabaseCleanupUtils;
 use Exception;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Config;
@@ -385,5 +387,37 @@ class BuildXMLTest extends TestCase
         ', [
             'id' => $this->project->id,
         ])->assertExactJson($expected_result_json);
+    }
+
+    /**
+     * Test that identical build failures submitted for two builds are stored separately for each
+     * build, so that removing one build leaves the other build's failures intact.
+     */
+    public function testBuildFailuresRemovedWithBuild(): void
+    {
+        $this->makeSubmission($this->project->name, base_path(
+            'tests/Feature/Submission/Build/data/build_failures_1.xml'
+        ));
+        $this->makeSubmission($this->project->name, base_path(
+            'tests/Feature/Submission/Build/data/build_failures_2.xml'
+        ));
+
+        $this->assertSame(2, $this->project->builds()->count());
+        $first_build = $this->project->builds()->where('stamp', '20150813-1324-Experimental')->firstOrFail();
+        $second_build = $this->project->builds()->where('stamp', '20150813-1338-Experimental')->firstOrFail();
+        $this->assertSame(2, $first_build->buildErrors()->count());
+        $this->assertSame(2, $second_build->buildErrors()->count());
+
+        DatabaseCleanupUtils::removeBuild($first_build->id);
+
+        $this->assertSame(0, BuildError::where('buildid', $first_build->id)->count());
+        $this->assertEqualsCanonicalizing(
+            ['object file', 'executable'],
+            $second_build->buildErrors()->pluck('outputtype')->all(),
+        );
+
+        DatabaseCleanupUtils::removeBuild($second_build->id);
+
+        $this->assertSame(0, BuildError::where('buildid', $second_build->id)->count());
     }
 }
