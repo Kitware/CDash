@@ -8,13 +8,13 @@ use App\Models\BuildGroup;
 use App\Models\Project;
 use App\Models\SubProject;
 use App\Models\SubProjectGroup;
-use CDash\Model\Image;
 use Exception;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class ProjectService extends AbstractService
 {
@@ -36,10 +36,12 @@ class ProjectService extends AbstractService
     {
         remove_project_builds($project->id);
         $project->delete();
+        Storage::deleteDirectory("logos/{$project->id}");
     }
 
     /**
-     * TODO: Rewrite this to use a dedicated project logo workflow instead of sharing the image table.
+     * Logos are stored in logos/<project id>/<sha1 of contents>.<extension> on the default disk.
+     * Callers are responsible for validating that the file is an image.
      *
      * @throws FileNotFoundException
      */
@@ -50,14 +52,18 @@ class ProjectService extends AbstractService
             throw new Exception();
         }
 
-        $image = new Image();
-        $image->Data = $contents;
-        $image->Checksum = crc32($contents);
-        $image->Extension = $file->extension();
-        $image->Save(true);
+        $old_logo_path = $project->logo_path;
+        $logo_path = "logos/{$project->id}/" . sha1($contents) . '.' . $file->extension();
+        if (!Storage::put($logo_path, $contents)) {
+            throw new Exception("Unable to store logo for project {$project->id}.");
+        }
 
-        $project->imageid = (int) $image->Id;
+        $project->logo_path = $logo_path;
         $project->save();
+
+        if ($old_logo_path !== null && $old_logo_path !== $logo_path) {
+            Storage::delete($old_logo_path);
+        }
     }
 
     /** This method is meant to be temporary, eventually only being called in create() */

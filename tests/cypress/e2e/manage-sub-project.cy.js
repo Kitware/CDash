@@ -15,7 +15,7 @@ describe('manageSubProject', () => {
 
     // switch project from the drop down at the top of the page
     cy.get('select[name="projectSelection"]').select('TestHistory');
-    cy.url().should('contain', 'manageSubProject.php?projectid=13');
+    cy.url().should('contain', 'manageSubProject.php?projectid=12');
 
     // switch back to original project
     cy.get('select[name="projectSelection"]').select('Trilinos');

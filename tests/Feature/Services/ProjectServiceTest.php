@@ -8,7 +8,9 @@ use App\Models\Project;
 use App\Models\Site;
 use App\Models\UploadFile;
 use App\Services\ProjectService;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Tests\TestCase;
@@ -91,5 +93,26 @@ class ProjectServiceTest extends TestCase
         self::assertDatabaseMissing(Note::class, ['id' => $note->id]);
         self::assertDatabaseMissing(UploadFile::class, ['id' => $uploadFile->id]);
         Storage::assertMissing("upload/{$uploadFile->sha1sum}");
+    }
+
+    /**
+     * @throws FileNotFoundException
+     */
+    public function testDeleteRemovesLogo(): void
+    {
+        Storage::fake('local');
+
+        $project = ProjectService::create([
+            'name' => Str::uuid()->toString(),
+            'public' => Project::ACCESS_PUBLIC,
+        ]);
+        ProjectService::setLogo($project, UploadedFile::fake()->image('logo.png'));
+        $logo_path = (string) $project->logo_path;
+        Storage::assertExists($logo_path);
+
+        ProjectService::delete($project);
+
+        Storage::assertMissing($logo_path);
+        self::assertSame([], Storage::allFiles("logos/{$project->id}"));
     }
 }

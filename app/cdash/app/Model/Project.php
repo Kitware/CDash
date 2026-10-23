@@ -46,7 +46,6 @@ class Project
     public ?string $BugTrackerUrl = null;
     public ?string $BugTrackerNewIssueUrl = null;
     public ?string $BugTrackerType = null;
-    public ?int $ImageId = null;
     public $Public;
     public $CoverageThreshold;
     public ?string $TestingDataUrl = null;
@@ -132,7 +131,6 @@ class Project
             'testtimemaxstatus' => (int) $this->TestTimeMaxStatus,
             'emailmaxitems' => (int) $this->EmailMaxItems,
             'emailmaxchars' => (int) $this->EmailMaxChars,
-            'imageid' => $this->ImageId,
             'ldapfilter' => $this->LdapFilter,
             'banner' => $this->Banner,
         ]);
@@ -180,7 +178,6 @@ class Project
             $this->BugTrackerUrl = $project->bugtrackerurl;
             $this->BugTrackerNewIssueUrl = $project->bugtrackernewissueurl;
             $this->BugTrackerType = $project->bugtrackertype;
-            $this->ImageId = $project->imageid;
             $this->Public = $project->public;
             $this->CoverageThreshold = $project->coveragethreshold;
             $this->TestingDataUrl = $project->testingdataurl;

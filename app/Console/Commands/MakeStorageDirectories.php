@@ -30,6 +30,7 @@ class MakeStorageDirectories extends Command
             "{$storage_path}/app/failed",
             "{$storage_path}/app/inbox",
             "{$storage_path}/app/inprogress",
+            "{$storage_path}/app/logos",
             "{$storage_path}/app/parsed",
             "{$storage_path}/app/public",
             "{$storage_path}/app/tmp",

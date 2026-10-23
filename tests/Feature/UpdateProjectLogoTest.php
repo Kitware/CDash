@@ -16,6 +16,13 @@ class UpdateProjectLogoTest extends TestCase
 
     use DatabaseTransactions;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        Storage::fake();
+    }
+
     public function testCannotUploadToNonExistentProject(): void
     {
         $user = User::factory()->adminUser()->create();
@@ -75,7 +82,6 @@ class UpdateProjectLogoTest extends TestCase
 
     public function testCanUploadAsProjectAdmin(): void
     {
-        Storage::fake('public');
         $project = $this->makePublicProject();
         $user = User::factory()->create();
         $project->users()->attach($user, ['role' => ProjectRole::ADMINISTRATOR]);
@@ -85,7 +91,9 @@ class UpdateProjectLogoTest extends TestCase
         ]);
 
         $response->assertRedirect(url("/projects/{$project->id}/settings"));
-        self::assertNotNull($project->fresh()?->logoUrl);
+        $project->refresh();
+        self::assertNotNull($project->logoUrl);
+        Storage::assertExists((string) $project->logo_path);
     }
 
     public function testCanUploadAsGlobalAdmin(): void
@@ -98,7 +106,61 @@ class UpdateProjectLogoTest extends TestCase
         ]);
 
         $response->assertRedirect(url("/projects/{$project->id}/settings"));
-        self::assertNotNull($project->fresh()?->logoUrl);
+        $project->refresh();
+        self::assertNotNull($project->logoUrl);
+        Storage::assertExists((string) $project->logo_path);
+    }
+
+    public function testStoresLogoInProjectDirectory(): void
+    {
+        $project = $this->makePublicProject();
+        $user = User::factory()->adminUser()->create();
+        $logo = UploadedFile::fake()->image('logo.png');
+        $contents = (string) file_get_contents($logo->getPathname());
+
+        $this->actingAs($user)->postJson("/projects/{$project->id}/logo", [
+            'logo' => $logo,
+        ]);
+
+        $expected_path = "logos/{$project->id}/" . sha1($contents) . '.png';
+        self::assertSame($expected_path, $project->fresh()?->logo_path);
+        self::assertSame($contents, Storage::get($expected_path));
+    }
+
+    public function testReplacingLogoDeletesPreviousLogo(): void
+    {
+        $project = $this->makePublicProject();
+        $user = User::factory()->adminUser()->create();
+
+        $this->actingAs($user)->postJson("/projects/{$project->id}/logo", [
+            'logo' => UploadedFile::fake()->image('logo.png', 10, 10),
+        ]);
+        $old_path = (string) $project->fresh()?->logo_path;
+
+        $this->actingAs($user)->postJson("/projects/{$project->id}/logo", [
+            'logo' => UploadedFile::fake()->image('logo.jpg', 20, 20),
+        ]);
+        $new_path = (string) $project->fresh()?->logo_path;
+
+        self::assertNotSame($old_path, $new_path);
+        Storage::assertMissing($old_path);
+        Storage::assertExists($new_path);
+    }
+
+    public function testUploadingSameLogoTwiceKeepsLogo(): void
+    {
+        $project = $this->makePublicProject();
+        $user = User::factory()->adminUser()->create();
+        $logo = UploadedFile::fake()->image('logo.png');
+
+        $this->actingAs($user)->postJson("/projects/{$project->id}/logo", [
+            'logo' => $logo,
+        ]);
+        $this->actingAs($user)->postJson("/projects/{$project->id}/logo", [
+            'logo' => $logo,
+        ]);
+
+        Storage::assertExists((string) $project->fresh()?->logo_path);
     }
 
     public function testCannotUploadNonImage(): void

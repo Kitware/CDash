@@ -4,10 +4,6 @@ use Illuminate\Support\Str;
 use App\Services\ProjectService;
 use Illuminate\Support\Facades\Auth;
 
-if (isset($project)) {
-    $logoid = $project->ImageId;
-}
-
 $hideRegistration = config('cdash.user_registration_form_enabled') === false;
 
 $userInProject = false;
@@ -62,8 +58,8 @@ $showHeaderNav = isset($build);
                     href="{{ url('/')}}"
                 @endif
             >
-                @if(isset($project) && $logoid !== null)
-                    <img id="projectlogo" height="50px" alt="" src="{{ url('/image/' . $logoid) }}" />
+                @if(isset($project) && $eloquentProject->logoUrl !== null)
+                    <img id="projectlogo" height="50px" alt="" src="{{ $eloquentProject->logoUrl }}" />
                 @else
                     <img id="projectlogo" height="50px" alt="" src="{{ asset('img/cdash.svg?rev=2023-05-31') }}" />
                 @endif

@@ -9,7 +9,6 @@ use CDash\Model\Image;
 use CDash\Model\Project;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 
 class AuthServiceProvider extends ServiceProvider
@@ -58,16 +57,6 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('view-image', function (?User $user, Image $image) {
-            // Make sure the current user has access to at least one project with this image as the project icon
-            $projects_with_img = DB::select('SELECT id AS projectid FROM project WHERE imageid=?', [$image->Id]);
-            foreach ($projects_with_img as $project_row) {
-                $project = new Project();
-                $project->Id = $project_row->projectid;
-                if (Gate::allows('view-project', $project)) {
-                    return true;
-                }
-            }
-
             // Make sure the current user has access to a test result with this image
             foreach (\App\Models\Image::findOrFail((int) $image->Id)->tests as $test) {
                 $project = $test->build?->project;
