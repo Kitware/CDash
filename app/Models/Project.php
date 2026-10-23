@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Auth;
  * @property ?string $bugtrackernewissueurl
  * @property ?string $bugtrackertype
  * @property ?string $documentationurl
- * @property int $imageid
+ * @property ?string $logo_path Path to the project's logo on the default storage disk
  * @property int $public
  * @property int $coveragethreshold
  * @property ?string $testingdataurl
@@ -70,7 +70,6 @@ class Project extends Model
         'bugtrackernewissueurl',
         'bugtrackertype',
         'documentationurl',
-        'imageid',
         'public',
         'coveragethreshold',
         'testingdataurl',
@@ -99,7 +98,6 @@ class Project extends Model
 
     protected $casts = [
         'id' => 'integer',
-        'imageid' => 'integer',
         'public' => 'integer',
         'emaillowcoverage' => 'boolean',
         'emailtesttimingchanged' => 'boolean',
@@ -150,11 +148,14 @@ class Project extends Model
     {
         return Attribute::make(
             get: function (mixed $value, array $attributes): ?string {
-                if ((int) $attributes['imageid'] === 0) {
+                // Newly created projects don't have a logo_path attribute until they are refreshed.
+                $logo_path = $attributes['logo_path'] ?? null;
+                if (!is_string($logo_path)) {
                     return null;
                 }
 
-                return url('/image/' . $attributes['imageid']);
+                // The logo's filename is a hash of its contents, so the URL changes whenever the logo does.
+                return url("/projects/{$this->id}/logo?v=" . pathinfo($logo_path, PATHINFO_FILENAME));
             },
         );
     }

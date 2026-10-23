@@ -199,6 +199,10 @@ add_feature_test_in_transaction(/Feature/ProjectInvitationAcceptanceTest)
 
 add_feature_test_in_transaction(/Feature/UpdateProjectLogoTest)
 
+add_feature_test_in_transaction(/Feature/ProjectLogoTest)
+
+add_feature_test_in_transaction(/Feature/TestImageAccessTest)
+
 add_feature_test_in_transaction(/Feature/ProjectNotificationsTest)
 
 add_feature_test_in_transaction(/Feature/GraphQL/FilterTest)
@@ -597,11 +601,8 @@ set_tests_properties(buildgrouprule PROPERTIES DEPENDS buildconfigure)
 add_php_test(committerinfo)
 set_tests_properties(committerinfo PROPERTIES DEPENDS buildgrouprule)
 
-add_php_test(displayimage)
-set_tests_properties(displayimage PROPERTIES DEPENDS committerinfo)
-
 add_php_test(projectindb)
-set_tests_properties(projectindb PROPERTIES DEPENDS displayimage)
+set_tests_properties(projectindb PROPERTIES DEPENDS committerinfo)
 
 add_php_test(querytests)
 set_tests_properties(querytests PROPERTIES DEPENDS projectindb)
