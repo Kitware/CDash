@@ -4,7 +4,6 @@ import './jquery-init.js';
 import 'jquery-ui-dist/jquery-ui.js';
 import 'jquery.cookie/jquery.cookie.js';
 import './bootstrap.min.js';
-import './je_compare.js';
 import 'angular/angular.min.js';
 import 'angular-animate/angular-animate.min.js';
 import 'angular-ui-bootstrap/dist/ui-bootstrap.js';
