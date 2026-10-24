@@ -4,15 +4,10 @@ import './jquery-init.js';
 import 'jquery-ui-dist/jquery-ui.js';
 import 'jquery.cookie/jquery.cookie.js';
 import './bootstrap.min.js';
-import './je_compare.js';
 import 'angular/angular.min.js';
 import 'angular-animate/angular-animate.min.js';
-import 'angular-ui-bootstrap/dist/ui-bootstrap.js';
 import 'angular-ui-sortable/dist/sortable.js';
 import './ui-bootstrap-tpls-0.14.2.min.js';
-import './tabNavigation.js';
-import './jquery.tablesorter.js';
-import './jquery.metadata.js';
 
 const CDash = angular.module('CDash', [
   'ngAnimate',
@@ -35,9 +30,8 @@ import { ManageSubProjectController, filter_subproject_groups } from "./controll
 CDash.controller('ManageSubProjectController', ["$scope", "$http", "apiLoader", ManageSubProjectController]);
 CDash.filter('filter_subproject_groups', filter_subproject_groups);
 
-import { ManageBuildGroupController, filter_builds, filter_buildgroups } from "./controllers/manageBuildGroup";
+import { ManageBuildGroupController, filter_buildgroups } from "./controllers/manageBuildGroup";
 CDash.controller('ManageBuildGroupController', ["$scope", "$http", "apiLoader", "modalSvc", ManageBuildGroupController]);
-CDash.filter('filter_builds', filter_builds);
 CDash.filter('filter_buildgroups', filter_buildgroups);
 
 import { ViewSubProjectsController } from "./controllers/viewSubProjects";
@@ -101,12 +95,6 @@ CDash.directive('daterange', daterange);
 
 import { buildgroup } from './directives/buildgroup.js';
 CDash.directive('buildgroup', buildgroup);
-
-import { autocomplete } from './directives/autocomplete.js';
-CDash.directive('autoComplete', ["$parse", autocomplete]);
-
-import { onFinishRender } from './directives/onFinishRender.js';
-CDash.directive('onFinishRender', ["$timeout", onFinishRender]);
 
 import { convertToNumber } from './directives/convertToNumber.js';
 CDash.directive('convertToNumber', convertToNumber);

@@ -32,10 +32,6 @@ import gql from 'graphql-tag';
 import BuildSummaryCard from './shared/BuildSummaryCard.vue';
 import LoadingIndicator from './shared/LoadingIndicator.vue';
 import BuildSidebar from './shared/BuildSidebar.vue';
-import {
-  faCircleExclamation,
-  faTriangleExclamation,
-} from '@fortawesome/free-solid-svg-icons';
 import CodeBox from './shared/CodeBox.vue';
 
 export default {
@@ -80,13 +76,6 @@ export default {
   },
 
   computed: {
-    FA() {
-      return {
-        faCircleExclamation,
-        faTriangleExclamation,
-      };
-    },
-
     status() {
       switch (this.dynamicAnalysis.status) {
         case 'passed':
