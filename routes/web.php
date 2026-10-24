@@ -12,22 +12,33 @@
 */
 
 use App\Http\Controllers\AdministrationController;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\AuthTokenController;
+use App\Http\Controllers\BuildController;
 use App\Http\Controllers\CoverageFileController;
 use App\Http\Controllers\CreateProjectController;
 use App\Http\Controllers\CTestConfigurationController;
+use App\Http\Controllers\DynamicAnalysisController;
 use App\Http\Controllers\GlobalInvitationController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\IndexController;
+use App\Http\Controllers\MonitorController;
+use App\Http\Controllers\OAuthController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProjectHomeController;
 use App\Http\Controllers\ProjectInvitationController;
 use App\Http\Controllers\ProjectLogoController;
 use App\Http\Controllers\ProjectMembersController;
+use App\Http\Controllers\ProjectNotificationsController;
+use App\Http\Controllers\ProjectOverviewController;
 use App\Http\Controllers\ProjectSettingsController;
 use App\Http\Controllers\SiteController;
 use App\Http\Controllers\SubmissionController;
+use App\Http\Controllers\SubProjectController;
+use App\Http\Controllers\TestController;
+use App\Http\Controllers\TestDetailsController;
 use App\Http\Controllers\UpdateProjectLogoController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ViewProjectsController;
 use App\Models\DynamicAnalysis;
@@ -47,16 +58,16 @@ if (config('cdash.user_registration_form_enabled') === false) {
 }
 Auth::routes($routeList);
 
-Route::get('/oauth/{service}', 'OAuthController@socialite');
-Route::get('/oauth/callback/{service}', 'OAuthController@callback');
+Route::get('/oauth/{service}', [OAuthController::class, 'socialite']);
+Route::get('/oauth/callback/{service}', [OAuthController::class, 'callback']);
 
-Route::post('/saml2/login', 'Auth\LoginController@saml2Login');
+Route::post('/saml2/login', [LoginController::class, 'saml2Login']);
 
-Route::get('/auth/{service}/redirect', 'OAuthController@socialite');
+Route::get('/auth/{service}/redirect', [OAuthController::class, 'socialite']);
 
-Route::get('/auth/{service}/callback', 'OAuthController@callback');
+Route::get('/auth/{service}/callback', [OAuthController::class, 'callback']);
 
-Route::get('/logout', 'Auth\LoginController@logout');
+Route::get('/logout', [LoginController::class, 'logout']);
 
 Route::get('/recoverPassword.php', fn () => redirect('/password/reset', 301));
 
@@ -84,9 +95,9 @@ Route::get('/displayImage.php', function (Request $request) {
     return redirect("/image/{$imgid}", 301);
 });
 
-Route::get('/builds/{id}', 'BuildController@summary')
+Route::get('/builds/{id}', [BuildController::class, 'summary'])
     ->whereNumber('id');
-Route::get('/builds/{id}/comments', 'BuildController@comments')
+Route::get('/builds/{id}/comments', [BuildController::class, 'comments'])
     ->whereNumber('id');
 Route::permanentRedirect('/build/{id}', url('/builds/{id}'));
 Route::get('/buildSummary.php', function (Request $request) {
@@ -94,7 +105,7 @@ Route::get('/buildSummary.php', function (Request $request) {
     return redirect("/builds/{$buildid}", 301);
 });
 
-Route::get('/builds/{id}/configure', 'BuildController@configure')
+Route::get('/builds/{id}/configure', [BuildController::class, 'configure'])
     ->whereNumber('id');
 Route::permanentRedirect('/build/{id}/configure', url('/builds/{id}/configure'));
 Route::get('/viewConfigure.php', function (Request $request) {
@@ -102,14 +113,14 @@ Route::get('/viewConfigure.php', function (Request $request) {
     return redirect("/builds/{$buildid}/configure", 301);
 });
 
-Route::get('/builds/{build_id}/tests', 'BuildController@tests')
+Route::get('/builds/{build_id}/tests', [BuildController::class, 'tests'])
     ->whereNumber('build_id');
 Route::get('/viewTest.php', function (Request $request) {
     $buildid = $request->query('buildid');
     return redirect("/builds/{$buildid}/tests", 301);
 });
 
-Route::get('/builds/{id}/update', 'BuildController@update')
+Route::get('/builds/{id}/update', [BuildController::class, 'update'])
     ->whereNumber('id');
 Route::permanentRedirect('/build/{id}/update', url('/builds/{id}/update'));
 Route::get('/viewUpdate.php', function (Request $request) {
@@ -117,7 +128,7 @@ Route::get('/viewUpdate.php', function (Request $request) {
     return redirect("/builds/{$buildid}/update", 301);
 });
 
-Route::get('/builds/{id}/notes', 'BuildController@notes')
+Route::get('/builds/{id}/notes', [BuildController::class, 'notes'])
     ->whereNumber('id');
 Route::permanentRedirect('/build/{id}/notes', url('/builds/{id}/notes'));
 Route::get('/viewNotes.php', function (Request $request) {
@@ -125,7 +136,7 @@ Route::get('/viewNotes.php', function (Request $request) {
     return redirect("/builds/{$buildid}/notes", 301);
 });
 
-Route::get('/builds/{id}/dynamic_analysis', 'DynamicAnalysisController@viewDynamicAnalysis')
+Route::get('/builds/{id}/dynamic_analysis', [DynamicAnalysisController::class, 'viewDynamicAnalysis'])
     ->whereNumber('id');
 Route::permanentRedirect('/build/{id}/dynamic_analysis', url('/builds/{id}/dynamic_analysis'));
 Route::get('/viewDynamicAnalysis.php', function (Request $request) {
@@ -133,7 +144,7 @@ Route::get('/viewDynamicAnalysis.php', function (Request $request) {
     return redirect("/builds/{$buildid}/dynamic_analysis", 301);
 });
 
-Route::get('/builds/{build_id}/dynamic_analysis/{file_id}', 'DynamicAnalysisController@viewDynamicAnalysisFile')
+Route::get('/builds/{build_id}/dynamic_analysis/{file_id}', [DynamicAnalysisController::class, 'viewDynamicAnalysisFile'])
     ->whereNumber(['build_id', 'file_id']);
 Route::get('/viewDynamicAnalysisFile.php', function (Request $request) {
     $fileid = $request->integer('id');
@@ -145,14 +156,14 @@ Route::get('/viewDynamicAnalysisFile.php', function (Request $request) {
     return redirect("/builds/{$da_model->build?->id}/dynamic_analysis/{$fileid}", 301);
 });
 
-Route::get('/builds/{build_id}/targets', 'BuildController@targets')
+Route::get('/builds/{build_id}/targets', [BuildController::class, 'targets'])
     ->whereNumber('build_id');
 
-Route::get('/builds/{build_id}/instrumentation', 'BuildController@instrumentation')
+Route::get('/builds/{build_id}/instrumentation', [BuildController::class, 'instrumentation'])
     ->whereNumber('build_id');
 Route::permanentRedirect('/build/{build_id}/commands', url('/builds/{build_id}/instrumentation'));
 
-Route::get('/builds/{build_id}/files', 'BuildController@files')
+Route::get('/builds/{build_id}/files', [BuildController::class, 'files'])
     ->whereNumber('build_id');
 Route::permanentRedirect('/build/{build_id}/files', url('/builds/{build_id}/files'));
 Route::get('/viewFiles.php', function (Request $request) {
@@ -160,12 +171,12 @@ Route::get('/viewFiles.php', function (Request $request) {
     return redirect("/builds/{$buildid}/files", 301);
 });
 
-Route::get('/builds/{build_id}/files/{file_id}', 'BuildController@build_file')
+Route::get('/builds/{build_id}/files/{file_id}', [BuildController::class, 'build_file'])
     ->whereNumber('build_id')
     ->whereNumber('file_id');
 Route::permanentRedirect('/build/{build_id}/file/{file_id}', url('/builds/{build_id}/files/{file_id}'));
 
-Route::get('/builds/{build_id}/coverage', 'BuildController@coverage')
+Route::get('/builds/{build_id}/coverage', [BuildController::class, 'coverage'])
     ->whereNumber('build_id');
 Route::match(['get', 'post'], '/viewCoverage.php', function (Request $request) {
     $buildid = $request->query('buildid');
@@ -181,7 +192,7 @@ Route::get('/viewCoverageFile.php', function (Request $request) {
     return redirect("/builds/{$buildid}/coverage/{$fileid}", 301);
 });
 
-Route::get('/builds/{build_id}/build', 'BuildController@build')
+Route::get('/builds/{build_id}/build', [BuildController::class, 'build'])
     ->whereNumber('build_id');
 Route::permanentRedirect('/builds/{build_id}/errors', url('/builds/{build_id}/build'));
 Route::get('/viewBuildError.php', function (Request $request) {
@@ -229,7 +240,7 @@ Route::get('/viewMap.php', function (Request $request) {
     return redirect("/projects/{$project->id}/sites", 301);
 });
 
-Route::get('/tests/{id}', 'TestDetailsController@details')
+Route::get('/tests/{id}', [TestDetailsController::class, 'details'])
     ->whereNumber('id');
 Route::permanentRedirect('/test/{id}', url('/tests/{id}'));
 Route::get('/testDetails.php', function (Request $request) {
@@ -242,16 +253,16 @@ Route::get('/testDetails.php', function (Request $request) {
     abort(404);
 });
 
-Route::get('/overview.php', 'ProjectOverviewController@overview');
+Route::get('/overview.php', [ProjectOverviewController::class, 'overview']);
 
 // TODO: (williamjallen) This should be in the auth section, but needs to be here until we get rid of Protractor..
-Route::get('/manageOverview.php', 'ProjectOverviewController@manageOverview');
+Route::get('/manageOverview.php', [ProjectOverviewController::class, 'manageOverview']);
 
 Route::match(['get', 'post'], '/projects', ViewProjectsController::class);
 Route::permanentRedirect('/viewProjects.php', url('/projects'));
 Route::permanentRedirect('/projects/all', url('/projects'));
 
-Route::get('/queryTests.php', 'TestController@queryTests');
+Route::get('/queryTests.php', [TestController::class, 'queryTests']);
 Route::get('/testSummary.php', function (Request $request) {
     $project = Project::find($request->integer('project'));
     if ($project === null || Gate::denies('view', $project)) {
@@ -273,15 +284,15 @@ Route::get('/testSummary.php', function (Request $request) {
     return redirect(url()->query('/queryTests.php', $queryParams), 301);
 });
 
-Route::get('/testOverview.php', 'TestController@testOverview');
+Route::get('/testOverview.php', [TestController::class, 'testOverview']);
 
-Route::get('/viewBuildGroup.php', 'BuildController@viewBuildGroup');
+Route::get('/viewBuildGroup.php', [BuildController::class, 'viewBuildGroup']);
 
-Route::get('/viewSubProjects.php', 'SubProjectController@viewSubProjects');
+Route::get('/viewSubProjects.php', [SubProjectController::class, 'viewSubProjects']);
 
-Route::get('/manageSubProject.php', 'SubProjectController@manageSubProject');
+Route::get('/manageSubProject.php', [SubProjectController::class, 'manageSubProject']);
 
-Route::get('/projects/{project}/subprojects/dependencies', 'SubProjectController@dependenciesGraph');
+Route::get('/projects/{project}/subprojects/dependencies', [SubProjectController::class, 'dependenciesGraph']);
 Route::get('/viewSubProjectDependenciesGraph.php', function (Request $request) {
     $project = $request->string('project');
     return redirect("/projects/{$project}/subprojects/dependencies", 301);
@@ -294,7 +305,7 @@ Route::get('/viewSite.php', function (Request $request) {
     return redirect("/sites/$siteid", 301);
 });
 
-Route::get('/manageBuildGroup.php', 'BuildController@manageBuildGroup');
+Route::get('/manageBuildGroup.php', [BuildController::class, 'manageBuildGroup']);
 
 Route::get('/users', UsersController::class);
 
@@ -313,12 +324,12 @@ Route::middleware(['auth'])->group(function (): void {
     Route::permanentRedirect('/user.php', url('/projects'));
 
     // TODO: (williamjallen) send the POST route to a different function
-    Route::match(['get', 'post'], '/profile', 'UserController@edit');
+    Route::match(['get', 'post'], '/profile', [UserController::class, 'edit']);
     Route::permanentRedirect('/editUser.php', url('/profile'));
 
-    Route::get('/projects/{project_id}/notifications', 'ProjectNotificationsController@show')
+    Route::get('/projects/{project_id}/notifications', [ProjectNotificationsController::class, 'show'])
         ->whereNumber('project_id');
-    Route::post('/projects/{project_id}/notifications', 'ProjectNotificationsController@update')
+    Route::post('/projects/{project_id}/notifications', [ProjectNotificationsController::class, 'update'])
         ->whereNumber('project_id');
     Route::get('/subscribeProject.php', function (Request $request) {
         $projectid = $request->query('projectid');
@@ -345,7 +356,7 @@ Route::middleware(['auth'])->group(function (): void {
 
         Route::get('/authtokens/manage', AuthTokenController::class);
 
-        Route::get('/monitor', 'MonitorController@monitor');
+        Route::get('/monitor', [MonitorController::class, 'monitor']);
         Route::get('/monitor.php', fn () => redirect('/monitor', 301));
     });
 });

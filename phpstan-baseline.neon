@@ -5212,12 +5212,6 @@ parameters:
 			path: app/Providers/EventServiceProvider.php
 
 		-
-			rawMessage: PHPDoc type string of property App\Providers\RouteServiceProvider::$namespace is not the same as PHPDoc type string|null of overridden property Illuminate\Foundation\Support\Providers\RouteServiceProvider::$namespace.
-			identifier: property.phpDocType
-			count: 1
-			path: app/Providers/RouteServiceProvider.php
-
-		-
 			rawMessage: Cannot cast mixed to string.
 			identifier: cast.string
 			count: 1
