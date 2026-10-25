@@ -493,6 +493,8 @@ add_browser_test(/Browser/Pages/BuildBuildPageTest)
 
 add_browser_test(/Browser/Pages/BuildCoveragePageTest)
 
+add_browser_test(/Browser/Pages/CoverageFilePageTest)
+
 add_browser_test(/Browser/Pages/BuildDynamicAnalysisIdPageTest)
 
 add_browser_test(/Browser/Pages/BuildSummaryPageTest)
