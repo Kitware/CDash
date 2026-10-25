@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\GraphQL\Mutations;
 
+use App\Exceptions\GraphQLMutationException;
 use App\Models\PinnedTestMeasurement;
 use App\Models\Project;
 use Illuminate\Support\Facades\Gate;
@@ -18,11 +19,17 @@ final class CreatePinnedTestMeasurement extends AbstractMutation
      *     projectId: int,
      *     name: string,
      * } $args
+     *
+     * @throws GraphQLMutationException
      */
     public function __invoke(null $_, array $args): self
     {
         $project = Project::find((int) $args['projectId']);
         Gate::authorize('createPinnedTestMeasurement', $project);
+
+        if ($project?->pinnedTestMeasurements()->where('name', $args['name'])->exists() === true) {
+            throw new GraphQLMutationException('This test measurement is already pinned.');
+        }
 
         $nextAvailablePosition = $project?->pinnedTestMeasurements()->max('position');
         if ($nextAvailablePosition === null) {
