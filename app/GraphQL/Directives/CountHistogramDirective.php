@@ -37,6 +37,7 @@ final class CountHistogramDirective extends BaseDirective implements FieldResolv
         'interval' => 'TimeInterval',
         'by' => null,
         'timezone' => 'String',
+        'dayStart' => 'Time',
     ];
 
     public static function definition(): string
@@ -50,6 +51,7 @@ final class CountHistogramDirective extends BaseDirective implements FieldResolv
                 - `interval: TimeInterval!`
                 - `by`: an enum whose values are timestamp columns of the related model
                 - `timezone: String!`: the time zone used to determine interval boundaries
+                - `dayStart: Time!`: the time of day at which intervals of a day or longer start, in that time zone
                 """
                 directive @countHistogram(
                     "The relationship to count."
@@ -98,7 +100,12 @@ final class CountHistogramDirective extends BaseDirective implements FieldResolv
             $column = $args['by'];
             $interval = $args['interval'];
             $timezone = $args['timezone'];
-            if (!is_string($column) || preg_match('/^\w+$/', $column) !== 1 || !is_string($interval) || !is_string($timezone)) {
+            $dayStart = $args['dayStart'];
+            if (
+                !is_string($column) || preg_match('/^\w+$/', $column) !== 1
+                || !is_string($interval) || !is_string($timezone)
+                || !is_string($dayStart) || preg_match('/^\d{2}:\d{2}:\d{2}$/', $dayStart) !== 1
+            ) {
                 throw new InvalidArgumentException('Invalid histogram arguments.');
             }
 
@@ -116,10 +123,16 @@ final class CountHistogramDirective extends BaseDirective implements FieldResolv
             $query = $builder->toBase();
             $column = $query->getGrammar()->wrap($relation->getRelated()->qualifyColumn($column));
 
-            // Timestamps are stored in UTC without a time zone.  The three-argument form of
-            // date_trunc() returns a timestamptz, so each bucket start includes its UTC offset.
+            // Timestamps are stored in UTC without a time zone.  Longer intervals are truncated on the wall
+            // clock of the requested time zone after shifting by the day start, so a day spanning a daylight
+            // saving time change is 23 or 25 hours long like a testing day.  Hours are truncated in the time
+            // zone directly, which keeps the repeated hour at the end of daylight saving time separate.
+            // Either way, each bucket start is a timestamptz, so it includes its UTC offset.
+            [$bucketSql, $bindings] = $interval === 'hour'
+                ? ["date_trunc(?, {$column} AT TIME ZONE 'UTC', ?)", [$interval, $timezone]]
+                : ["(date_trunc(?, ({$column} AT TIME ZONE 'UTC' AT TIME ZONE ?) - ?::interval) + ?::interval) AT TIME ZONE ?", [$interval, $timezone, $dayStart, $dayStart, $timezone]];
             $buckets = $query
-                ->selectRaw("date_trunc(?, {$column} AT TIME ZONE 'UTC', ?) AS bucket, COUNT(*) AS count", [$interval, $timezone])
+                ->selectRaw("{$bucketSql} AS bucket, COUNT(*) AS count", $bindings)
                 ->groupBy('bucket')
                 ->orderBy('bucket')
                 ->limit(self::MAX_BUCKETS + 1)

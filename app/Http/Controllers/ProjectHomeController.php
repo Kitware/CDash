@@ -22,6 +22,13 @@ final class ProjectHomeController extends AbstractProjectController
         $latestStartTime = $eloquentProject->builds()->max('starttime');
         $dashboardDate = $latestStartTime === null ? null : TestingDay::get($this->project, $latestStartTime);
 
+        // The time zone which TestingDay compares times in.  See Project::SetNightlyTime().
+        $nightlyTimezone = $this->project->NightlyTimezone?->getName() ?? 'UTC';
+        $timezoneFromAbbreviation = timezone_name_from_abbr($nightlyTimezone);
+        if ($timezoneFromAbbreviation !== false) {
+            $nightlyTimezone = $timezoneFromAbbreviation;
+        }
+
         /** @var ?User $user */
         $user = auth()->user();
 
@@ -29,6 +36,8 @@ final class ProjectHomeController extends AbstractProjectController
             'project-id' => $this->project->Id,
             'dashboard-date' => $dashboardDate,
             'testing-day-start' => $this->project->NightlyDateTime?->format('H:i e'),
+            'nightly-time' => $this->project->NightlyDateTime?->format('H:i:s') ?? '00:00:00',
+            'nightly-timezone' => $nightlyTimezone,
             'can-update' => $user?->can('update', $eloquentProject) ?? false,
         ]);
     }

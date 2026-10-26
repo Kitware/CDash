@@ -46,7 +46,7 @@
         :href="dashboardUrl"
         data-test="view-dashboard-button"
       >
-        View dashboard
+        View Dashboard
         <FontAwesomeIcon :icon="FA.faArrowRight" />
       </a>
     </div>
@@ -99,10 +99,9 @@ export default {
       required: true,
     },
 
-    // The testing day the dashboard link should open, or null to open the current day.
-    dashboardDate: {
-      type: [String, null],
-      default: null,
+    dashboardUrl: {
+      type: String,
+      required: true,
     },
 
     canUpdate: {
@@ -117,14 +116,6 @@ export default {
         faArrowRight,
         faGear,
       };
-    },
-
-    dashboardUrl() {
-      let url = `${this.$baseURL}/index.php?project=${encodeURIComponent(this.projectName)}`;
-      if (this.dashboardDate !== null) {
-        url += `&date=${this.dashboardDate}`;
-      }
-      return url;
     },
 
     visibilityDetails() {

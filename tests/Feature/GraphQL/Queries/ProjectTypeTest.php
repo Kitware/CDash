@@ -1468,6 +1468,7 @@ class ProjectTypeTest extends TestCase
                 $interval: TimeInterval!
                 $by: BuildTimeField
                 $timezone: String
+                $dayStart: Time
             ) {
                 project(id: $projectId) {
                     buildCountHistogram(
@@ -1476,6 +1477,7 @@ class ProjectTypeTest extends TestCase
                         interval: $interval
                         by: $by
                         timezone: $timezone
+                        dayStart: $dayStart
                     ) {
                         start
                         count
@@ -1607,6 +1609,75 @@ class ProjectTypeTest extends TestCase
                 'project' => [
                     'buildCountHistogram' => [
                         ['start' => $expectedStart, 'count' => 1],
+                    ],
+                ],
+            ],
+        ]);
+    }
+
+    public function testBuildCountHistogramDayStart(): void
+    {
+        // Evening day starts, like a nightly start time of 21:00.  Daylight saving time started on
+        // 2026-03-08, so the second day starts at a different UTC offset.
+        $this->createBuild($this->projects['public1'], '2026-03-09 00:59:59'); // 2026-03-08 20:59:59 in New York
+        $this->createBuild($this->projects['public1'], '2026-03-09 01:00:00'); // 2026-03-08 21:00:00 in New York
+
+        $this->queryBuildCountHistogram([
+            'interval' => 'DAY',
+            'timezone' => 'America/New_York',
+            'dayStart' => '21:00:00',
+        ])->assertExactJson([
+            'data' => [
+                'project' => [
+                    'buildCountHistogram' => [
+                        ['start' => '2026-03-07T21:00:00-05:00', 'count' => 1],
+                        ['start' => '2026-03-08T21:00:00-04:00', 'count' => 1],
+                    ],
+                ],
+            ],
+        ]);
+
+        // Morning day starts.
+        $this->createBuild($this->projects['public2'], '2026-01-02 00:59:59');
+        $this->createBuild($this->projects['public2'], '2026-01-02 01:00:00');
+
+        $this->queryBuildCountHistogram([
+            'projectId' => $this->projects['public2']->id,
+            'interval' => 'DAY',
+            'dayStart' => '01:00:00',
+        ])->assertExactJson([
+            'data' => [
+                'project' => [
+                    'buildCountHistogram' => [
+                        ['start' => '2026-01-01T01:00:00+00:00', 'count' => 1],
+                        ['start' => '2026-01-02T01:00:00+00:00', 'count' => 1],
+                    ],
+                ],
+            ],
+        ]);
+
+        // Nightly start times may include a time zone, which must be passed separately.
+        $this->queryBuildCountHistogram([
+            'interval' => 'DAY',
+            'dayStart' => '21:00:00 America/New_York',
+        ])->assertGraphQLValidationKeys(['dayStart']);
+    }
+
+    public function testBuildCountHistogramHoursAtEndOfDaylightSavingTime(): void
+    {
+        // Daylight saving time ended on 2026-11-01, so 01:00 in New York happened twice.
+        $this->createBuild($this->projects['public1'], '2026-11-01 05:30:00');
+        $this->createBuild($this->projects['public1'], '2026-11-01 06:30:00');
+
+        $this->queryBuildCountHistogram([
+            'interval' => 'HOUR',
+            'timezone' => 'America/New_York',
+        ])->assertExactJson([
+            'data' => [
+                'project' => [
+                    'buildCountHistogram' => [
+                        ['start' => '2026-11-01T01:00:00-04:00', 'count' => 1],
+                        ['start' => '2026-11-01T01:00:00-05:00', 'count' => 1],
                     ],
                 ],
             ],

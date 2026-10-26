@@ -3,10 +3,15 @@
 namespace Tests\Browser\Pages;
 
 use App\Enums\ProjectRole;
+use App\Models\Build;
+use App\Models\BuildGroup;
 use App\Models\Project;
 use App\Models\Site;
 use App\Models\User;
 use App\Services\ProjectService;
+use App\Utils\TestingDay;
+use CDash\Model\Project as LegacyProject;
+use Facebook\WebDriver\Interactions\WebDriverActions;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Carbon;
@@ -79,18 +84,42 @@ class ProjectHomePageTest extends BrowserTestCase
         return $user;
     }
 
-    private function createBuild(Carbon $time): void
+    /**
+     * @param array<string,mixed> $attributes
+     */
+    private function createBuild(Carbon $time, array $attributes = []): Build
     {
         $this->site ??= Site::factory()->create();
 
-        $this->project->builds()->create([
+        return $this->project->builds()->create([
             'name' => Str::uuid()->toString(),
             'uuid' => Str::uuid()->toString(),
             'siteid' => $this->site->id,
             'starttime' => $time,
             'endtime' => $time,
             'submittime' => $time,
+            ...$attributes,
         ]);
+    }
+
+    private function buildGroup(string $name): BuildGroup
+    {
+        return $this->project->buildgroups()->where('name', $name)->firstOrFail();
+    }
+
+    /**
+     * Click near the right edge of a histogram, which is the current testing day's column.
+     */
+    private function clickRightmostBar(Browser $browser, string $selector): void
+    {
+        $chart = $browser->element($selector);
+        self::assertNotNull($chart);
+
+        // Offsets are relative to the center of the chart.
+        (new WebDriverActions($browser->driver))
+            ->moveToElement($chart, intdiv($chart->getSize()->getWidth(), 2) - 6, 0)
+            ->click()
+            ->perform();
     }
 
     /**
@@ -138,7 +167,7 @@ class ProjectHomePageTest extends BrowserTestCase
                         ->assertMissing('@edit-resources-button');
                 });
 
-            $resources = $browser->script("return [...document.querySelectorAll('[data-test=\"resources-section\"] a')].map(a => a.textContent.trim());")[0];
+            $resources = array_map(fn ($link): string => $link->getText(), $browser->elements('@resources-section a'));
             self::assertSame(['Repository', 'Website', 'Documentation', 'Issue Tracker', 'Report an Issue', 'Security Policy', 'Test Data'], $resources);
         });
     }
@@ -167,8 +196,10 @@ class ProjectHomePageTest extends BrowserTestCase
     {
         $siteAdmin = $this->createUser(true);
 
-        $this->browse(function (Browser $browser) use ($siteAdmin): void {
-            $browser->visit("/projects/{$this->project->id}")
+        // Each user has their own browser.  Otherwise, responses to requests which the previous user's page
+        // is still loading, such as the histograms, could restore that user's session after logging in.
+        $this->browse(function (Browser $guestBrowser, Browser $siteAdminBrowser) use ($siteAdmin): void {
+            $guestBrowser->visit("/projects/{$this->project->id}")
                 ->whenAvailable('@project-home-page', function (Browser $browser): void {
                     $browser->assertMissing('@project-description')
                         ->assertMissing('@administrators-section')
@@ -177,7 +208,7 @@ class ProjectHomePageTest extends BrowserTestCase
                 });
 
             // Users who can edit the project can add resources from here.
-            $browser->loginAs($siteAdmin)
+            $siteAdminBrowser->loginAs($siteAdmin)
                 ->visit("/projects/{$this->project->id}")
                 ->waitFor('@add-resources-button')
                 ->click('@add-resources-button')
@@ -216,6 +247,115 @@ class ProjectHomePageTest extends BrowserTestCase
         });
     }
 
+    public function testActivityChartShowsPassingAndFailingBuilds(): void
+    {
+        // Not run tests don't make a build fail.
+        $this->createBuild(Carbon::now()->subMinutes(90), ['configureerrors' => 0, 'builderrors' => 0, 'testfailed' => 0, 'testnotrun' => 2]);
+        $this->createBuild(Carbon::now()->subDays(2));
+        $this->createBuild(Carbon::now()->subDays(3), ['configureerrors' => 1]);
+        $this->createBuild(Carbon::now()->subDays(4), ['builderrors' => 1]);
+        $this->createBuild(Carbon::now()->subDays(5), ['testfailed' => 1]);
+        // Builds before the 30 day window aren't shown.
+        $this->createBuild(Carbon::now()->subDays(40), ['testfailed' => 1]);
+
+        $this->browse(function (Browser $browser): void {
+            $browser->visit("/projects/{$this->project->id}")
+                ->whenAvailable('@dashboard-card', function (Browser $browser): void {
+                    $browser->waitFor('@build-histogram')
+                        ->assertAttribute('@build-histogram', 'data-test-passed-count', '2')
+                        ->assertAttribute('@build-histogram', 'data-test-failed-count', '3')
+                        ->assertSeeIn('@build-histogram-legend', 'Last 30 days')
+                        ->assertSeeIn('@build-histogram-legend', 'Passed')
+                        ->assertSeeIn('@build-histogram-legend', 'Failed');
+                });
+        });
+    }
+
+    public function testShowsActiveBuildGroups(): void
+    {
+        $nightly = $this->buildGroup('Nightly');
+        $nightly->builds()->attach([
+            $this->createBuild(Carbon::now()->subMinutes(90))->id,
+            $this->createBuild(Carbon::now()->subDays(3), ['testfailed' => 1])->id,
+        ]);
+        $this->buildGroup('Continuous')->builds()->attach($this->createBuild(Carbon::now()->subDays(40)));
+
+        // Expired build groups aren't shown.
+        BuildGroup::factory()->for($this->project)->create([
+            'name' => 'Expired',
+            'endtime' => Carbon::now()->subDay(),
+        ])->builds()->attach($this->createBuild(Carbon::now()->subMinutes(30)));
+
+        $this->browse(function (Browser $browser): void {
+            $browser->visit("/projects/{$this->project->id}")
+                ->waitFor('@build-groups-section')
+                ->assertMissing('[data-test="build-group-card"]:nth-child(4)')
+                ->assertDontSeeIn('@build-groups-section', 'Expired');
+
+            // The histograms load separately from the rest of each card.
+            $browser->within('[data-test="build-group-card"]:nth-child(1)', function (Browser $browser): void {
+                $browser->waitFor('@build-histogram')
+                    ->assertSeeIn('@build-group-name', 'Nightly')
+                    ->assertSeeIn('@build-group-description', 'Nightly builds')
+                    ->assertSeeIn('@group-builds-last-day', '1')
+                    ->assertSeeIn('@group-builds-last-week', '2')
+                    ->assertSeeIn('@group-last-submission', '1 hour ago')
+                    ->assertAttribute('@build-histogram', 'data-test-passed-count', '1')
+                    ->assertAttribute('@build-histogram', 'data-test-failed-count', '1');
+            })->within('[data-test="build-group-card"]:nth-child(2)', function (Browser $browser): void {
+                // Only builds in the last 30 days are searched for the last submission.
+                $browser->waitFor('@build-histogram-empty')
+                    ->assertSeeIn('@build-group-name', 'Continuous')
+                    ->assertSeeIn('@group-builds-last-day', '0')
+                    ->assertSeeIn('@group-builds-last-week', '0')
+                    ->assertSeeIn('@group-last-submission', 'More than 30 days ago')
+                    ->assertSeeIn('@build-histogram-empty', 'No builds in the last 30 days');
+            })->within('[data-test="build-group-card"]:nth-child(3)', function (Browser $browser): void {
+                $browser->waitFor('@build-histogram-empty')
+                    ->assertSeeIn('@build-group-name', 'Experimental')
+                    ->assertSeeIn('@group-builds-last-day', '0')
+                    ->assertSeeIn('@group-last-submission', 'More than 30 days ago');
+            });
+        });
+    }
+
+    public function testClickingABarOpensItsTestingDay(): void
+    {
+        // Testing days start two hours ago, so the builds one and three hours ago are on different testing days.
+        $this->project->update([
+            'nightlytime' => Carbon::now('UTC')->subHours(2)->format('H:i:s') . ' UTC',
+        ]);
+        $this->buildGroup('Nightly')->builds()->attach([
+            $this->createBuild(Carbon::now()->subHour())->id,
+            $this->createBuild(Carbon::now()->subHours(3))->id,
+        ]);
+
+        $legacyProject = new LegacyProject();
+        $legacyProject->Id = $this->project->id;
+        $currentTestingDay = TestingDay::get($legacyProject, Carbon::now('UTC')->toDateTimeString());
+
+        $this->browse(function (Browser $browser) use ($currentTestingDay): void {
+            $browser->visit("/projects/{$this->project->id}")
+                ->whenAvailable('@dashboard-card', function (Browser $browser): void {
+                    $browser->waitFor('@build-histogram')
+                        ->assertAttribute('@build-histogram', 'data-test-passed-count', '2');
+                });
+
+            $this->clickRightmostBar($browser, '[data-test="dashboard-card"] [data-test="build-histogram"]');
+            $browser->waitForLocation('/index.php')
+                ->assertQueryStringHas('project', $this->project->name)
+                ->assertQueryStringHas('date', $currentTestingDay);
+
+            $groupChart = '[data-test="build-group-card"]:nth-child(1) [data-test="build-histogram"]';
+            $browser->visit("/projects/{$this->project->id}")
+                ->waitFor($groupChart);
+            $this->clickRightmostBar($browser, $groupChart);
+            $browser->waitForLocation('/viewBuildGroup.php')
+                ->assertQueryStringHas('buildgroup', 'Nightly')
+                ->assertQueryStringHas('date', $currentTestingDay);
+        });
+    }
+
     public function testDashboardLinkOpensMostRecentTestingDayWithBuilds(): void
     {
         // Project names may contain spaces and plus signs, which must be encoded in the link.
@@ -226,15 +366,29 @@ class ProjectHomePageTest extends BrowserTestCase
         ]);
         $this->createBuild(Carbon::parse('2020-01-15 22:00:00'));
         $this->createBuild(Carbon::parse('2020-01-10 12:00:00'));
+        // So can build group names.
+        BuildGroup::factory()->for($this->project)->create(['name' => 'Release Candidates+']);
 
         $this->browse(function (Browser $browser): void {
+            $dashboardUrl = 'index.php?project=' . rawurlencode($this->project->name) . '&date=2020-01-16';
+
             $browser->visit("/projects/{$this->project->id}")
-                ->whenAvailable('@project-home-page', function (Browser $browser): void {
-                    $browser->assertAttributeContains('@view-dashboard-button', 'href', 'index.php?project=' . rawurlencode($this->project->name) . '&date=2020-01-16')
+                ->whenAvailable('@project-home-page', function (Browser $browser) use ($dashboardUrl): void {
+                    $browser->assertAttributeContains('@view-dashboard-button', 'href', $dashboardUrl)
+                        ->assertAttributeContains('@activity-dashboard-link', 'href', $dashboardUrl)
                         ->assertSeeIn('@testing-day-start', 'Testing day starts at 21:00 UTC')
                         // Submissions older than a month show a date instead of a relative time.
                         ->assertSeeIn('@last-submission', '2020');
+                })
+                ->waitFor('@build-groups-section');
+
+            // Build groups link to their page on the dashboard for the same testing day.
+            $projectParameter = 'project=' . rawurlencode($this->project->name);
+            foreach (['Nightly', 'Continuous', 'Experimental', 'Release%20Candidates%2B'] as $position => $groupParameter) {
+                $browser->within('[data-test="build-group-card"]:nth-child(' . ($position + 1) . ')', function (Browser $browser) use ($projectParameter, $groupParameter): void {
+                    $browser->assertAttributeContains('@build-group-link', 'href', "/viewBuildGroup.php?{$projectParameter}&buildgroup={$groupParameter}&date=2020-01-16");
                 });
+            }
         });
     }
 
@@ -246,8 +400,11 @@ class ProjectHomePageTest extends BrowserTestCase
                     $browser->assertSeeIn('@no-builds-message', 'No builds have been submitted to this project yet.')
                         ->assertMissing('@builds-last-day')
                         ->assertMissing('@last-submission')
-                        ->assertAttributeDoesntContain('@view-dashboard-button', 'href', 'date=');
-                });
+                        ->assertAttributeDoesntContain('@view-dashboard-button', 'href', 'date=')
+                        ->assertAttributeDoesntContain('@activity-dashboard-link', 'href', 'date=');
+                })
+                ->waitFor('@build-groups-section')
+                ->assertAttributeDoesntContain('@build-group-link', 'href', 'date=');
         });
     }
 
@@ -257,27 +414,29 @@ class ProjectHomePageTest extends BrowserTestCase
         $user = $this->addUserToProject(ProjectRole::USER);
         $siteAdmin = $this->createUser(true);
 
-        $this->browse(function (Browser $browser) use ($admin, $user, $siteAdmin): void {
-            $browser->visit("/projects/{$this->project->id}")
+        // Each user has their own browser.  Otherwise, responses to requests which the previous user's page
+        // is still loading, such as the histograms, could restore that user's session after logging in.
+        $this->browse(function (Browser $guestBrowser, Browser $userBrowser, Browser $adminBrowser, Browser $siteAdminBrowser) use ($admin, $user, $siteAdmin): void {
+            $guestBrowser->visit("/projects/{$this->project->id}")
                 ->whenAvailable('@project-home-page', function (Browser $browser): void {
                     $browser->assertMissing('@settings-button');
                 });
 
-            $browser->loginAs($user)
+            $userBrowser->loginAs($user)
                 ->visit("/projects/{$this->project->id}")
                 ->whenAvailable('@project-home-page', function (Browser $browser): void {
                     $browser->assertMissing('@settings-button')
                         ->assertMissing('@edit-resources-button');
                 });
 
-            $browser->loginAs($admin)
+            $adminBrowser->loginAs($admin)
                 ->visit("/projects/{$this->project->id}")
                 ->whenAvailable('@project-home-page', function (Browser $browser): void {
                     $browser->assertAttributeContains('@settings-button', 'href', "/projects/{$this->project->id}/settings")
                         ->assertVisible('@edit-resources-button');
                 });
 
-            $browser->loginAs($siteAdmin)
+            $siteAdminBrowser->loginAs($siteAdmin)
                 ->visit("/projects/{$this->project->id}")
                 ->whenAvailable('@project-home-page', function (Browser $browser): void {
                     $browser->assertVisible('@settings-button')
@@ -319,7 +478,7 @@ class ProjectHomePageTest extends BrowserTestCase
         $member = $this->addUserToProject(ProjectRole::USER);
         $siteAdmin = $this->createUser(true);
 
-        $this->browse(function (Browser $browser) use ($nonMember, $member, $siteAdmin): void {
+        $this->browse(function (Browser $browser, Browser $siteAdminBrowser) use ($nonMember, $member, $siteAdmin): void {
             $browser->visit("/projects/{$this->project->id}")
                 ->assertSee('404')
                 ->assertMissing('@project-home-page');
@@ -334,7 +493,9 @@ class ProjectHomePageTest extends BrowserTestCase
                 ->waitFor('@project-home-page')
                 ->assertSeeIn('@project-visibility', 'Private');
 
-            $browser->loginAs($siteAdmin)
+            // The site administrator has their own browser.  Otherwise, responses to requests which the member's
+            // page is still loading, such as the histograms, could restore the member's session after logging in.
+            $siteAdminBrowser->loginAs($siteAdmin)
                 ->visit("/projects/{$this->project->id}")
                 ->waitFor('@project-home-page');
         });
@@ -353,7 +514,13 @@ class ProjectHomePageTest extends BrowserTestCase
             self::assertIsString($homeUrl);
             self::assertStringEndsWith("/projects/{$this->project->id}", $homeUrl);
 
-            $menuLinks = $browser->script("return [...document.querySelectorAll('#navigation a')].map(a => [a.textContent.trim(), a.getAttribute('href')]);")[0];
+            // The links are in hidden dropdown menus, so getText() would return an empty string.
+            $menuLinks = [];
+            foreach ($browser->elements('#navigation a') as $link) {
+                $text = $link->getDomProperty('textContent');
+                self::assertIsString($text);
+                $menuLinks[] = [trim($text), $link->getAttribute('href')];
+            }
             self::assertContains(['Home', $homeUrl], $menuLinks);
             self::assertContains(['Website', 'https://example.com'], $menuLinks);
         });

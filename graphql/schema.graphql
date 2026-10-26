@@ -402,6 +402,11 @@ type Project {
     by: BuildTimeField! = START_TIME
     "The IANA time zone used to determine interval boundaries, e.g. `America/New_York`."
     timezone: String! = "UTC" @rules(apply: ["timezone"])
+    """
+    The time of day at which intervals of a day or longer start, in the given time zone.  For
+    example, a project's nightly start time counts builds by testing day.
+    """
+    dayStart: Time! = "00:00:00" @rules(apply: ["date_format:H:i:s"])
   ): [CountHistogramBucket!]! @countHistogram(relation: "builds")
 
   """
@@ -876,7 +881,7 @@ type Build {
   binaryDirectory: String @filterable @rename(attribute: "binarydirectory")
 
   "The number of errors generated during the configuration step."
-  configureErrorsCount: Int @rename(attribute: "configureerrors")
+  configureErrorsCount: Int @rename(attribute: "configureerrors") @filterable
 
   "The number of warnings generated during the configuration step."
   configureWarningsCount: Int @rename(attribute: "configurewarnings")
@@ -885,7 +890,7 @@ type Build {
   configureDuration: Int! @rename(attribute: "configureduration")
 
   "The number of errors generated during the build step."
-  buildErrorsCount: Int @rename(attribute: "builderrors")
+  buildErrorsCount: Int @rename(attribute: "builderrors") @filterable
 
   "The number of warnings generated during the build step."
   buildWarningsCount: Int @rename(attribute: "buildwarnings")
@@ -894,7 +899,7 @@ type Build {
   buildDuration: Int! @rename(attribute: "buildduration")
 
   "The number of failed tests."
-  failedTestsCount: Int @rename(attribute: "testfailed")
+  failedTestsCount: Int @rename(attribute: "testfailed") @filterable
 
   "The number of tests which failed the time status."
   timeStatusFailedTestsCount: Int @rename(attribute: "testtimestatusfailed")
@@ -1039,6 +1044,11 @@ type BuildGroup {
     by: BuildTimeField! = START_TIME
     "The IANA time zone used to determine interval boundaries, e.g. `America/New_York`."
     timezone: String! = "UTC" @rules(apply: ["timezone"])
+    """
+    The time of day at which intervals of a day or longer start, in the given time zone.  For
+    example, a project's nightly start time counts builds by testing day.
+    """
+    dayStart: Time! = "00:00:00" @rules(apply: ["date_format:H:i:s"])
   ): [CountHistogramBucket!]! @countHistogram(relation: "builds")
 }
 
