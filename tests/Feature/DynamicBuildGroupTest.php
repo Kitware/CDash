@@ -13,8 +13,6 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Testing\TestResponse;
-use PHPUnit\Framework\Attributes\PreserveGlobalState;
-use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
@@ -63,8 +61,7 @@ class DynamicBuildGroupTest extends TestCase
 
     protected function tearDown(): void
     {
-        $_GET = $_POST = $_REQUEST = [];
-        unset($_SERVER['REQUEST_METHOD']);
+        $_GET = $_REQUEST = [];
 
         parent::tearDown();
     }
@@ -83,11 +80,7 @@ class DynamicBuildGroupTest extends TestCase
      */
     private function postToLegacyBuildGroupApi(array $data): TestResponse
     {
-        // The legacy API reads its parameters directly from the superglobals.
-        $_SERVER['REQUEST_METHOD'] = 'POST';
-        $_POST = $data;
-        $_REQUEST = ['projectid' => $this->project->id] + $data;
-        return $this->actingAs($this->admin)->post('/api/v1/buildgroup.php');
+        return $this->actingAs($this->admin)->postJson('/api/v1/buildgroup.php', ['projectid' => $this->project->id] + $data);
     }
 
     public function testCannotMoveBuildIntoDynamicGroup(): void
@@ -134,9 +127,6 @@ class DynamicBuildGroupTest extends TestCase
         $this->assertNothingAssignedToDynamicGroup();
     }
 
-    // buildgroup.php declares functions, so it can only be loaded once per process.
-    #[RunInSeparateProcess]
-    #[PreserveGlobalState(false)]
     public function testCannotMoveBuildsIntoDynamicGroupFromManagePage(): void
     {
         $this->postToLegacyBuildGroupApi([
@@ -147,8 +137,6 @@ class DynamicBuildGroupTest extends TestCase
         $this->assertNothingAssignedToDynamicGroup();
     }
 
-    #[RunInSeparateProcess]
-    #[PreserveGlobalState(false)]
     public function testCannotDefineWildcardRuleForDynamicGroup(): void
     {
         $this->postToLegacyBuildGroupApi([

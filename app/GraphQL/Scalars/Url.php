@@ -39,7 +39,7 @@ final class Url extends ScalarType
     public function parseValue(mixed $value): string
     {
         if (!$this->validate($value)) {
-            throw new InvariantViolation("Could not parse {$value} as URL.");
+            throw new InvariantViolation("Could not parse '{$value}' as URL.");
         }
 
         return (string) $value;
@@ -59,6 +59,10 @@ final class Url extends ScalarType
     {
         if (!$valueNode instanceof StringValueNode) {
             throw new Error("Query error: Can only parse Strings, got {$valueNode->kind}.", $valueNode);
+        }
+
+        if (!$this->validate($valueNode->value)) {
+            throw new Error("Could not parse '{$valueNode->value}' as URL.", $valueNode);
         }
 
         return (string) $valueNode->value;

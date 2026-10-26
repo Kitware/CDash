@@ -186,6 +186,7 @@ class UpdateProjectTest extends TestCase
             ['bugTrackerUrl', 'https://jira.kitware.com', 'bugtrackerurl', 'https://jira.kitware.com'],
             ['bugTrackerNewIssueUrl', 'https://jira.kitware.com/new', 'bugtrackernewissueurl', 'https://jira.kitware.com/new'],
             ['documentationUrl', 'https://cdash.org/documentation', 'documentationurl', 'https://cdash.org/documentation'],
+            ['securityPolicyUrl', 'https://github.com/Kitware/CDash/security/policy', 'securitypolicyurl', 'https://github.com/Kitware/CDash/security/policy'],
             ['testDataUrl', 'https://cdash.org/test-data', 'testingdataurl', 'https://cdash.org/test-data'],
             ['visibility', 'PROTECTED', 'public', 2],
             ['authenticateSubmissions', true, 'authenticatesubmissions', true],
@@ -242,6 +243,46 @@ class UpdateProjectTest extends TestCase
         ]);
 
         self::assertSame($expected, $project->fresh()?->getAttribute($dbField));
+    }
+
+    public function testCanSetUrlInline(): void
+    {
+        $project = $this->makePublicProject();
+        $user = User::factory()->adminUser()->create();
+
+        $this->actingAs($user)->graphQL("
+            mutation {
+                updateProject(input: { id: \"{$project->id}\", homeUrl: \"https://kitware.com\" }) {
+                    project {
+                        homeUrl
+                    }
+                }
+            }
+        ")->assertExactJson([
+            'data' => [
+                'updateProject' => [
+                    'project' => [
+                        'homeUrl' => 'https://kitware.com',
+                    ],
+                ],
+            ],
+        ]);
+    }
+
+    public function testCannotSetInvalidUrlInline(): void
+    {
+        $project = $this->makePublicProject();
+        $user = User::factory()->adminUser()->create();
+
+        $this->actingAs($user)->graphQL("
+            mutation {
+                updateProject(input: { id: \"{$project->id}\", homeUrl: \"not a url\" }) {
+                    project {
+                        homeUrl
+                    }
+                }
+            }
+        ")->assertGraphQLErrorMessage("Could not parse 'not a url' as URL.");
     }
 
     public function testCannotChangeNameToExistingProjectName(): void

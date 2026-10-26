@@ -103,6 +103,7 @@ const URL_FIELDS = [
   'documentationUrl',
   'bugTrackerUrl',
   'bugTrackerNewIssueUrl',
+  'securityPolicyUrl',
   'testDataUrl',
 ];
 
@@ -168,6 +169,11 @@ export default {
       default: null,
     },
 
+    securityPolicyUrl: {
+      type: [String, null],
+      default: null,
+    },
+
     testDataUrl: {
       type: [String, null],
       default: null,
@@ -200,6 +206,12 @@ export default {
           label: 'Report an Issue',
           description: 'The page where users can file a new issue.',
           testId: 'bug-tracker-new-issue-url-input',
+        },
+        {
+          name: 'securityPolicyUrl',
+          label: 'Security Policy',
+          description: 'Instructions for reporting security vulnerabilities.',
+          testId: 'security-policy-url-input',
         },
         {
           name: 'testDataUrl',
@@ -273,6 +285,7 @@ export default {
                   documentationUrl
                   bugTrackerUrl
                   bugTrackerNewIssueUrl
+                  securityPolicyUrl
                   testDataUrl
                 }
               }

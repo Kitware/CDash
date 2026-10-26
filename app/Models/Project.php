@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Auth;
  * @property ?string $bugtrackertype
  * @property ?string $documentationurl
  * @property ?string $logo_path Path to the project's logo on the default storage disk
+ * @property ?string $securitypolicyurl
  * @property int $public
  * @property int $coveragethreshold
  * @property ?string $testingdataurl
@@ -70,6 +71,7 @@ class Project extends Model
         'bugtrackernewissueurl',
         'bugtrackertype',
         'documentationurl',
+        'securitypolicyurl',
         'public',
         'coveragethreshold',
         'testingdataurl',

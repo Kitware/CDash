@@ -3,11 +3,17 @@
 namespace Tests\Feature\GraphQL\Queries;
 
 use App\Enums\ProjectRole;
+use App\GraphQL\Directives\CountHistogramDirective;
+use App\Models\Build;
 use App\Models\Project;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
 
@@ -132,6 +138,8 @@ class ProjectTypeTest extends TestCase
             ['bugtrackernewissueurl', null, 'bugTrackerNewIssueUrl', null],
             ['documentationurl', 'https://cmake.org/cmake/help/latest', 'documentationUrl', 'https://cmake.org/cmake/help/latest'],
             ['documentationurl', null, 'documentationUrl', null],
+            ['securitypolicyurl', 'https://github.com/Kitware/CDash/security/policy', 'securityPolicyUrl', 'https://github.com/Kitware/CDash/security/policy'],
+            ['securitypolicyurl', null, 'securityPolicyUrl', null],
             ['testingdataurl', 'https://example.com', 'testDataUrl', 'https://example.com'],
             ['testingdataurl', null, 'testDataUrl', null],
             ['authenticatesubmissions', true, 'authenticateSubmissions', true],
@@ -1430,5 +1438,337 @@ class ProjectTypeTest extends TestCase
                 ],
             ],
         ]);
+    }
+
+    /**
+     * @param array<string,mixed> $attributes
+     */
+    private function createBuild(Project $project, string $starttime, array $attributes = []): Build
+    {
+        return $project->builds()->create([
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+            'starttime' => $starttime,
+            ...$attributes,
+        ]);
+    }
+
+    /**
+     * @param array<string,mixed> $arguments
+     *
+     * @return TestResponse<Response>
+     */
+    private function queryBuildCountHistogram(array $arguments): TestResponse
+    {
+        return $this->graphQL('
+            query(
+                $projectId: ID!
+                $filters: ProjectBuildCountHistogramFiltersMultiFilterInput
+                $onlyParents: Boolean
+                $interval: TimeInterval!
+                $by: BuildTimeField
+                $timezone: String
+            ) {
+                project(id: $projectId) {
+                    buildCountHistogram(
+                        filters: $filters
+                        onlyParents: $onlyParents
+                        interval: $interval
+                        by: $by
+                        timezone: $timezone
+                    ) {
+                        start
+                        count
+                    }
+                }
+            }
+        ', [
+            'projectId' => $this->projects['public1']->id,
+            ...$arguments,
+        ]);
+    }
+
+    public function testBuildCountHistogramOnlyReturnsIntervalsWithBuilds(): void
+    {
+        $this->createBuild($this->projects['public1'], '2026-01-01 00:00:00');
+        $this->createBuild($this->projects['public1'], '2026-01-01 23:59:59');
+        $this->createBuild($this->projects['public1'], '2026-01-03 12:00:00');
+
+        // Builds from other projects are not counted.
+        $this->createBuild($this->projects['public2'], '2026-01-02 12:00:00');
+
+        $this->queryBuildCountHistogram(['interval' => 'DAY'])->assertExactJson([
+            'data' => [
+                'project' => [
+                    'buildCountHistogram' => [
+                        ['start' => '2026-01-01T00:00:00+00:00', 'count' => 2],
+                        ['start' => '2026-01-03T00:00:00+00:00', 'count' => 1],
+                    ],
+                ],
+            ],
+        ]);
+    }
+
+    public function testBuildCountHistogramWithNoBuilds(): void
+    {
+        $this->queryBuildCountHistogram(['interval' => 'DAY'])->assertExactJson([
+            'data' => [
+                'project' => [
+                    'buildCountHistogram' => [],
+                ],
+            ],
+        ]);
+    }
+
+    /**
+     * @return array<string,array{string, array<array{start: string, count: int}>}>
+     */
+    public static function histogramIntervals(): array
+    {
+        return [
+            'hour' => ['HOUR', [
+                ['start' => '2026-03-15T23:00:00+00:00', 'count' => 1],
+                ['start' => '2026-03-16T10:00:00+00:00', 'count' => 2],
+                ['start' => '2026-04-02T08:00:00+00:00', 'count' => 1],
+                ['start' => '2027-01-01T00:00:00+00:00', 'count' => 1],
+            ]],
+            'day' => ['DAY', [
+                ['start' => '2026-03-15T00:00:00+00:00', 'count' => 1],
+                ['start' => '2026-03-16T00:00:00+00:00', 'count' => 2],
+                ['start' => '2026-04-02T00:00:00+00:00', 'count' => 1],
+                ['start' => '2027-01-01T00:00:00+00:00', 'count' => 1],
+            ]],
+            // Weeks start on Monday, so the Sunday build belongs to the previous week.
+            'week' => ['WEEK', [
+                ['start' => '2026-03-09T00:00:00+00:00', 'count' => 1],
+                ['start' => '2026-03-16T00:00:00+00:00', 'count' => 2],
+                ['start' => '2026-03-30T00:00:00+00:00', 'count' => 1],
+                ['start' => '2026-12-28T00:00:00+00:00', 'count' => 1],
+            ]],
+            'month' => ['MONTH', [
+                ['start' => '2026-03-01T00:00:00+00:00', 'count' => 3],
+                ['start' => '2026-04-01T00:00:00+00:00', 'count' => 1],
+                ['start' => '2027-01-01T00:00:00+00:00', 'count' => 1],
+            ]],
+            'year' => ['YEAR', [
+                ['start' => '2026-01-01T00:00:00+00:00', 'count' => 4],
+                ['start' => '2027-01-01T00:00:00+00:00', 'count' => 1],
+            ]],
+        ];
+    }
+
+    /**
+     * @param array<array{start: string, count: int}> $expected
+     */
+    #[DataProvider('histogramIntervals')]
+    public function testBuildCountHistogramIntervals(string $interval, array $expected): void
+    {
+        $this->createBuild($this->projects['public1'], '2026-03-15 23:30:00'); // Sunday
+        $this->createBuild($this->projects['public1'], '2026-03-16 10:15:00'); // Monday
+        $this->createBuild($this->projects['public1'], '2026-03-16 10:45:00'); // Monday
+        $this->createBuild($this->projects['public1'], '2026-04-02 08:00:00'); // Thursday
+        $this->createBuild($this->projects['public1'], '2027-01-01 00:00:00'); // Friday
+
+        $this->queryBuildCountHistogram(['interval' => $interval])->assertExactJson([
+            'data' => [
+                'project' => [
+                    'buildCountHistogram' => $expected,
+                ],
+            ],
+        ]);
+    }
+
+    /**
+     * @return array<array{string, string, string}>
+     */
+    public static function histogramTimezones(): array
+    {
+        return [
+            ['UTC', 'DAY', '2026-03-10T00:00:00+00:00'],
+            ['UTC', 'HOUR', '2026-03-10T02:00:00+00:00'],
+            ['America/New_York', 'DAY', '2026-03-09T00:00:00-04:00'],
+            // Daylight saving time started on 2026-03-08, so the start of the month has a different offset.
+            ['America/New_York', 'MONTH', '2026-03-01T00:00:00-05:00'],
+            ['Asia/Kolkata', 'HOUR', '2026-03-10T08:00:00+05:30'],
+        ];
+    }
+
+    #[DataProvider('histogramTimezones')]
+    public function testBuildCountHistogramTimezones(string $timezone, string $interval, string $expectedStart): void
+    {
+        // 2026-03-09 22:45 in New York, and 2026-03-10 08:15 in Kolkata.
+        $this->createBuild($this->projects['public1'], '2026-03-10 02:45:00');
+
+        $this->queryBuildCountHistogram([
+            'interval' => $interval,
+            'timezone' => $timezone,
+        ])->assertExactJson([
+            'data' => [
+                'project' => [
+                    'buildCountHistogram' => [
+                        ['start' => $expectedStart, 'count' => 1],
+                    ],
+                ],
+            ],
+        ]);
+    }
+
+    public function testBuildCountHistogramRejectsInvalidTimezone(): void
+    {
+        $this->queryBuildCountHistogram([
+            'interval' => 'DAY',
+            'timezone' => 'Not/A_Timezone',
+        ])->assertGraphQLValidationKeys(['timezone']);
+    }
+
+    /**
+     * @return array<array{string|null, string}>
+     */
+    public static function histogramTimeFields(): array
+    {
+        return [
+            [null, '2026-01-01T00:00:00+00:00'],
+            ['START_TIME', '2026-01-01T00:00:00+00:00'],
+            ['SUBMISSION_TIME', '2026-02-01T00:00:00+00:00'],
+            ['END_TIME', '2026-03-01T00:00:00+00:00'],
+        ];
+    }
+
+    #[DataProvider('histogramTimeFields')]
+    public function testBuildCountHistogramByTimeField(?string $by, string $expectedStart): void
+    {
+        $this->createBuild($this->projects['public1'], '2026-01-01 12:00:00', [
+            'submittime' => '2026-02-01 12:00:00',
+            'endtime' => '2026-03-01 12:00:00',
+        ]);
+
+        $arguments = ['interval' => 'MONTH'];
+        if ($by !== null) {
+            $arguments['by'] = $by;
+        }
+
+        $this->queryBuildCountHistogram($arguments)->assertExactJson([
+            'data' => [
+                'project' => [
+                    'buildCountHistogram' => [
+                        ['start' => $expectedStart, 'count' => 1],
+                    ],
+                ],
+            ],
+        ]);
+    }
+
+    public function testBuildCountHistogramOnlyParentsArgument(): void
+    {
+        $parent = $this->createBuild($this->projects['public1'], '2026-01-01 10:00:00');
+        $this->createBuild($this->projects['public1'], '2026-01-01 11:00:00', [
+            'parentid' => $parent->id,
+        ]);
+
+        $this->queryBuildCountHistogram(['interval' => 'DAY'])->assertExactJson([
+            'data' => [
+                'project' => [
+                    'buildCountHistogram' => [
+                        ['start' => '2026-01-01T00:00:00+00:00', 'count' => 1],
+                    ],
+                ],
+            ],
+        ]);
+
+        $this->queryBuildCountHistogram([
+            'interval' => 'DAY',
+            'onlyParents' => false,
+        ])->assertExactJson([
+            'data' => [
+                'project' => [
+                    'buildCountHistogram' => [
+                        ['start' => '2026-01-01T00:00:00+00:00', 'count' => 2],
+                    ],
+                ],
+            ],
+        ]);
+    }
+
+    public function testBuildCountHistogramWithFilters(): void
+    {
+        $this->createBuild($this->projects['public1'], '2026-01-01 12:00:00', ['name' => 'a']);
+        $this->createBuild($this->projects['public1'], '2026-01-01 12:00:00', ['name' => 'b']);
+        $this->createBuild($this->projects['public1'], '2026-01-02 12:00:00', ['name' => 'a']);
+
+        $this->queryBuildCountHistogram([
+            'interval' => 'DAY',
+            'filters' => [
+                'eq' => [
+                    'name' => 'a',
+                ],
+            ],
+        ])->assertExactJson([
+            'data' => [
+                'project' => [
+                    'buildCountHistogram' => [
+                        ['start' => '2026-01-01T00:00:00+00:00', 'count' => 1],
+                        ['start' => '2026-01-02T00:00:00+00:00', 'count' => 1],
+                    ],
+                ],
+            ],
+        ]);
+
+        // The time window is selected with filters.
+        $this->queryBuildCountHistogram([
+            'interval' => 'DAY',
+            'filters' => [
+                'all' => [
+                    ['eq' => ['name' => 'a']],
+                    ['ge' => ['startTime' => '2026-01-02T00:00:00+00:00']],
+                ],
+            ],
+        ])->assertExactJson([
+            'data' => [
+                'project' => [
+                    'buildCountHistogram' => [
+                        ['start' => '2026-01-02T00:00:00+00:00', 'count' => 1],
+                    ],
+                ],
+            ],
+        ]);
+    }
+
+    public function testBuildCountHistogramMaximumIntervals(): void
+    {
+        $start = Carbon::parse('2026-01-01 00:00:00');
+        $builds = [];
+        for ($i = 0; $i < CountHistogramDirective::MAX_BUCKETS; $i++) {
+            $builds[] = [
+                'projectid' => $this->projects['public1']->id,
+                'name' => 'build',
+                'uuid' => Str::uuid()->toString(),
+                'starttime' => $start->copy()->addHours($i)->toDateTimeString(),
+            ];
+        }
+        DB::table('build')->insert($builds);
+
+        $histogram = $this->queryBuildCountHistogram(['interval' => 'HOUR'])
+            ->assertGraphQLErrorFree()
+            ->json('data.project.buildCountHistogram');
+        self::assertIsArray($histogram);
+        self::assertCount(CountHistogramDirective::MAX_BUCKETS, $histogram);
+
+        $this->createBuild(
+            $this->projects['public1'],
+            $start->copy()->addHours(CountHistogramDirective::MAX_BUCKETS)->toDateTimeString(),
+        );
+
+        $this->queryBuildCountHistogram(['interval' => 'HOUR'])
+            ->assertGraphQLErrorMessage('More than ' . CountHistogramDirective::MAX_BUCKETS . ' intervals matched.  Narrow the filters or choose a longer interval.');
+
+        // A longer interval reduces the number of intervals below the limit.
+        $numBuilds = CountHistogramDirective::MAX_BUCKETS + 1;
+        $histogram = $this->queryBuildCountHistogram(['interval' => 'DAY'])
+            ->assertGraphQLErrorFree()
+            ->json('data.project.buildCountHistogram');
+        self::assertIsArray($histogram);
+        self::assertCount((int) ceil($numBuilds / 24), $histogram);
+        self::assertSame(['start' => '2026-01-01T00:00:00+00:00', 'count' => 24], $histogram[0]);
+        self::assertSame($numBuilds, array_sum(array_column($histogram, 'count')));
     }
 }

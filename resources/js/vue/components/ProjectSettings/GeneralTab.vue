@@ -199,6 +199,15 @@
         />
 
         <InputField
+          v-model="form.securityPolicyUrl"
+          :validation-error="validationErrors?.securityPolicyUrl?.[0]"
+          label="Security Policy"
+          description="Instructions for reporting security vulnerabilities."
+          placeholder="https://example.com"
+          test-id="security-policy-url-input"
+        />
+
+        <InputField
           v-model="form.testDataUrl"
           :validation-error="validationErrors?.testDataUrl?.[0]"
           label="Test Data"
@@ -604,6 +613,7 @@ export default {
         bugTrackerUrl: '',
         bugTrackerNewIssueUrl: '',
         documentationUrl: '',
+        securityPolicyUrl: '',
         testDataUrl: '',
         ldapFilter: '',
         coverageThreshold: 70,
@@ -645,6 +655,7 @@ export default {
             bugTrackerUrl
             bugTrackerNewIssueUrl
             documentationUrl
+            securityPolicyUrl
             testDataUrl
             visibility
             authenticateSubmissions

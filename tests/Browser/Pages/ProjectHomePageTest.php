@@ -115,6 +115,7 @@ class ProjectHomePageTest extends BrowserTestCase
             'documentationurl' => 'https://example.com/docs',
             'bugtrackerurl' => 'https://example.com/issues',
             'bugtrackernewissueurl' => 'https://example.com/issues/new',
+            'securitypolicyurl' => 'https://example.com/security',
             'testingdataurl' => 'https://example.com/data',
         ]);
 
@@ -130,13 +131,15 @@ class ProjectHomePageTest extends BrowserTestCase
                         ->assertAttribute('@documentation-link', 'href', 'https://example.com/docs')
                         ->assertAttribute('@bug-tracker-link', 'href', 'https://example.com/issues')
                         ->assertAttribute('@new-issue-link', 'href', 'https://example.com/issues/new')
+                        ->assertAttribute('@security-policy-link', 'href', 'https://example.com/security')
+                        ->assertPresent('[data-test="security-policy-link"] svg[data-icon="shield-halved"]')
                         ->assertAttribute('@test-data-link', 'href', 'https://example.com/data')
                         ->assertMissing('@no-resources-message')
                         ->assertMissing('@edit-resources-button');
                 });
 
             $resources = $browser->script("return [...document.querySelectorAll('[data-test=\"resources-section\"] a')].map(a => a.textContent.trim());")[0];
-            self::assertSame(['Repository', 'Website', 'Documentation', 'Issue Tracker', 'Report an Issue', 'Test Data'], $resources);
+            self::assertSame(['Repository', 'Website', 'Documentation', 'Issue Tracker', 'Report an Issue', 'Security Policy', 'Test Data'], $resources);
         });
     }
 
@@ -394,6 +397,8 @@ class ProjectHomePageTest extends BrowserTestCase
                         ->assertInputValue('@vcs-url-input', 'https://gitlab.kitware.com/cmake/cmake')
                         ->assertInputValue('@documentation-url-input', '')
                         ->type('@documentation-url-input', 'https://example.com/docs')
+                        ->assertInputValue('@security-policy-url-input', '')
+                        ->type('@security-policy-url-input', 'https://example.com/security')
                         ->select('@vcs-viewer-input', 'GITLAB')
                         // Clear with key presses, since WebDriver's clear() doesn't trigger Vue's input listener.
                         ->keys('@home-url-input', ['{control}', 'a'], '{backspace}')
@@ -403,12 +408,14 @@ class ProjectHomePageTest extends BrowserTestCase
                 // The page shows the new resources without reloading.
                 ->waitFor('@documentation-link')
                 ->assertAttribute('@documentation-link', 'href', 'https://example.com/docs')
+                ->assertAttribute('@security-policy-link', 'href', 'https://example.com/security')
                 ->assertMissing('@website-link')
                 ->assertPresent('[data-test="repository-link"] svg[data-icon="gitlab"]');
         });
 
         $this->project->refresh();
         self::assertSame('https://example.com/docs', $this->project->documentationurl);
+        self::assertSame('https://example.com/security', $this->project->securitypolicyurl);
         self::assertNull($this->project->homeurl);
         self::assertSame('gitlab', $this->project->cvsviewertype);
         self::assertSame('https://gitlab.kitware.com/cmake/cmake', $this->project->cvsurl);

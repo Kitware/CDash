@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BuildGroupController;
 use App\Http\Controllers\ExpectedBuildController;
 use App\Http\Controllers\FilterController;
 use App\Http\Controllers\GitHubWebhookController;
@@ -57,6 +58,8 @@ Route::middleware(['auth'])->group(function (): void {
     Route::get('/v1/manageSubProject.php', 'SubProjectController@apiManageSubProject');
 
     Route::match(['get', 'post', 'put', 'delete'], '/v1/subproject.php', 'SubProjectController@apiSubProject');
+
+    Route::any('/v1/buildgroup.php', BuildGroupController::class);
 
     Route::match(['get', 'post'], '/v1/manageOverview.php', 'ProjectOverviewController@apiManageOverview');
 

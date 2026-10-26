@@ -94,6 +94,7 @@ class ProjectSettingsPageTest extends BrowserTestCase
         $banner = Str::uuid()->toString();
         $homeurl = fake()->url();
         $documentationurl = fake()->url();
+        $securitypolicyurl = fake()->url();
         $testdataurl = fake()->url();
         $vcsurl = fake()->url();
         $cmakeprojectroot = Str::uuid()->toString();
@@ -125,6 +126,8 @@ class ProjectSettingsPageTest extends BrowserTestCase
             ['@home-url-input', '', 'homeurl', null, 'string'],
             ['@documentation-url-input', $documentationurl, 'documentationurl', $documentationurl, 'string'],
             ['@documentation-url-input', '', 'documentationurl', null, 'string'],
+            ['@security-policy-url-input', $securitypolicyurl, 'securitypolicyurl', $securitypolicyurl, 'string'],
+            ['@security-policy-url-input', '', 'securitypolicyurl', null, 'string'],
             ['@test-data-url-input', $testdataurl, 'testingdataurl', $testdataurl, 'string'],
             ['@test-data-url-input', '', 'testingdataurl', null, 'string'],
             ['@vcs-viewer-input', 'None', 'vcsviewer', null, 'select'],
