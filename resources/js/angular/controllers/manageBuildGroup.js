@@ -61,6 +61,7 @@ export function ManageBuildGroupController($scope, $http, apiLoader, modalSvc) {
       {name: "Latest", value: "Latest"}
     ];
     $scope.buildType = $scope.cdash.buildgrouptypes[0];
+    $scope.wildcardBuildType = 'Nightly';
   };
 
   /** create a new buildgroup */

@@ -200,7 +200,7 @@
               </div>
               <div class="form-group">
                 <label for="buildType">Build Type:</label>
-                <select name="buildType" ng-model="buildType" class="form-control">
+                <select name="buildType" ng-model="wildcardBuildType" class="form-control">
                   <option>Nightly</option>
                   <option>Continuous</option>
                   <option>Experimental</option>
@@ -208,7 +208,7 @@
               </div>
 
               <div class="form-group">
-                <button type="submit" class="btn btn-default" ng-click="addWildcardRule(wildcardBuildGroupSelection, buildType, wildcardBuildNameMatch)">Define BuildGroup</button>
+                <button type="submit" class="btn btn-default" ng-click="addWildcardRule(wildcardBuildGroupSelection, wildcardBuildType, wildcardBuildNameMatch)">Define BuildGroup</button>
                 <img id="wildcard_defined" src="img/check.gif" style="display: none; height:16px; width:16px; margin-top:9px;" />
               </div>
             </div>
