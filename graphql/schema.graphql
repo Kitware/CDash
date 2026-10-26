@@ -388,6 +388,23 @@ type Project {
   ): [BuildGroup!]! @hasMany(relation: "buildgroups", type: CONNECTION, scopes: ["daily"]) @orderBy(column: "id")
 
   """
+  The number of builds matching a given filter in each time interval.  Only intervals
+  containing at least one build are returned, ordered from oldest to newest.  An error is
+  returned if more than 1000 intervals match.
+  """
+  buildCountHistogram(
+    filters: _ @filter(inputType: "BuildFilterInput")
+    "When true (default), only count parent builds. When false, count all builds including child builds."
+    onlyParents: Boolean = true @scope
+    "The length of each interval."
+    interval: TimeInterval!
+    "The timestamp used to assign each build to an interval."
+    by: BuildTimeField! = START_TIME
+    "The IANA time zone used to determine interval boundaries, e.g. `America/New_York`."
+    timezone: String! = "UTC" @rules(apply: ["timezone"])
+  ): [CountHistogramBucket!]! @countHistogram(relation: "builds")
+
+  """
   The most recent build submitted to this server.  Note: this is determined by
   submission time, not build start time.
   """
@@ -441,6 +458,26 @@ enum BugTracker {
   GITHUB @enum(value: "GitHub")
   BUGANIZER @enum(value: "Buganizer")
   JIRA @enum(value: "JIRA")
+}
+
+
+"The number of nodes in a single time interval."
+type CountHistogramBucket {
+  "The start of the interval, in the requested time zone."
+  start: DateTimeTz!
+
+  "The number of nodes in the interval."
+  count: Int!
+}
+
+
+enum TimeInterval {
+  HOUR @enum(value: "hour")
+  DAY @enum(value: "day")
+  "Weeks start on Monday."
+  WEEK @enum(value: "week")
+  MONTH @enum(value: "month")
+  YEAR @enum(value: "year")
 }
 
 
@@ -977,6 +1014,31 @@ type BuildGroup {
     "When true (default), only return parent builds. When false, return all builds including child builds."
     onlyParents: Boolean = true @scope
   ): [Build!]! @belongsToMany(type: CONNECTION)
+
+  """
+  The number of builds in this build group matching a given filter in each time interval.  Only
+  intervals containing at least one build are returned, ordered from oldest to newest.  An error
+  is returned if more than 1000 intervals match.
+  """
+  buildCountHistogram(
+    filters: _ @filter(inputType: "BuildFilterInput")
+    "When true (default), only count parent builds. When false, count all builds including child builds."
+    onlyParents: Boolean = true @scope
+    "The length of each interval."
+    interval: TimeInterval!
+    "The timestamp used to assign each build to an interval."
+    by: BuildTimeField! = START_TIME
+    "The IANA time zone used to determine interval boundaries, e.g. `America/New_York`."
+    timezone: String! = "UTC" @rules(apply: ["timezone"])
+  ): [CountHistogramBucket!]! @countHistogram(relation: "builds")
+}
+
+
+"A timestamp associated with each build."
+enum BuildTimeField {
+  START_TIME @enum(value: "starttime")
+  END_TIME @enum(value: "endtime")
+  SUBMISSION_TIME @enum(value: "submittime")
 }
 
 
