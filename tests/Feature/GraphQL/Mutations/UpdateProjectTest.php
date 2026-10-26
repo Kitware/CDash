@@ -245,6 +245,46 @@ class UpdateProjectTest extends TestCase
         self::assertSame($expected, $project->fresh()?->getAttribute($dbField));
     }
 
+    public function testCanSetUrlInline(): void
+    {
+        $project = $this->makePublicProject();
+        $user = User::factory()->adminUser()->create();
+
+        $this->actingAs($user)->graphQL("
+            mutation {
+                updateProject(input: { id: \"{$project->id}\", homeUrl: \"https://kitware.com\" }) {
+                    project {
+                        homeUrl
+                    }
+                }
+            }
+        ")->assertExactJson([
+            'data' => [
+                'updateProject' => [
+                    'project' => [
+                        'homeUrl' => 'https://kitware.com',
+                    ],
+                ],
+            ],
+        ]);
+    }
+
+    public function testCannotSetInvalidUrlInline(): void
+    {
+        $project = $this->makePublicProject();
+        $user = User::factory()->adminUser()->create();
+
+        $this->actingAs($user)->graphQL("
+            mutation {
+                updateProject(input: { id: \"{$project->id}\", homeUrl: \"not a url\" }) {
+                    project {
+                        homeUrl
+                    }
+                }
+            }
+        ")->assertGraphQLErrorMessage("Could not parse 'not a url' as URL.");
+    }
+
     public function testCannotChangeNameToExistingProjectName(): void
     {
         $project1 = $this->makePublicProject();
