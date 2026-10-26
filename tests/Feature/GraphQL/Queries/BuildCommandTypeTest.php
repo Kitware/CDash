@@ -273,6 +273,6 @@ class BuildCommandTypeTest extends TestCase
             }
         ', [
             'id' => $build->id,
-        ])->assertGraphQLErrorMessage('Could not parse -1 as non-negative integer milliseconds.');
+        ])->assertGraphQLErrorMessage("Could not parse '-1' as non-negative integer milliseconds.");
     }
 }

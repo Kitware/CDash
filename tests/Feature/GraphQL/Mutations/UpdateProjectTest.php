@@ -281,7 +281,7 @@ class UpdateProjectTest extends TestCase
                     }
                 }
             }
-        ")->assertGraphQLErrorMessage('Could not parse not a url as URL.');
+        ")->assertGraphQLErrorMessage("Could not parse 'not a url' as URL.");
     }
 
     public function testCannotChangeNameToExistingProjectName(): void

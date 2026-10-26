@@ -521,6 +521,6 @@ class TestTypeTest extends TestCase
             }
         ', [
             'id' => $build->id,
-        ])->assertGraphQLErrorMessage('Could not parse -1.0 as non-negative seconds.');
+        ])->assertGraphQLErrorMessage("Could not parse '-1.0' as non-negative seconds.");
     }
 }

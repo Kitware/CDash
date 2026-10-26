@@ -26,7 +26,7 @@ final class NonNegativeIntegerMilliseconds extends ScalarType
     public function serialize(mixed $value): float
     {
         if (!$this->validate($value)) {
-            throw new InvariantViolation("Could not serialize {$value} as non-negative integer milliseconds.");
+            throw new InvariantViolation("Could not serialize '{$value}' as non-negative integer milliseconds.");
         }
 
         return $this->parseValue($value);
@@ -40,7 +40,7 @@ final class NonNegativeIntegerMilliseconds extends ScalarType
     public function parseValue(mixed $value): int
     {
         if (!$this->validate($value)) {
-            throw new InvariantViolation("Could not parse {$value} as non-negative integer milliseconds.");
+            throw new InvariantViolation("Could not parse '{$value}' as non-negative integer milliseconds.");
         }
 
         return (int) $value;
@@ -63,7 +63,7 @@ final class NonNegativeIntegerMilliseconds extends ScalarType
         }
 
         if (!$this->validate($valueNode->value)) {
-            throw new Error("Could not parse {$valueNode->value} as non-negative integer milliseconds.", $valueNode);
+            throw new Error("Could not parse '{$valueNode->value}' as non-negative integer milliseconds.", $valueNode);
         }
 
         return (int) $valueNode->value;
