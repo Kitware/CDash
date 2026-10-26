@@ -4942,12 +4942,6 @@ parameters:
 			path: app/Models/CoverageView.php
 
 		-
-			rawMessage: Binary operation "." between '/image/' and mixed results in an error.
-			identifier: binaryOp.invalid
-			count: 1
-			path: app/Models/Project.php
-
-		-
 			rawMessage: 'Call to an undefined method Illuminate\Database\Eloquent\Builder::onlyParents().'
 			identifier: method.notFound
 			count: 1
@@ -4956,7 +4950,7 @@ parameters:
 		-
 			rawMessage: Cannot cast mixed to int.
 			identifier: cast.int
-			count: 2
+			count: 1
 			path: app/Models/Project.php
 
 		-
@@ -16469,18 +16463,6 @@ parameters:
 			identifier: argument.type
 			count: 2
 			path: app/cdash/tests/test_disabledtests.php
-
-		-
-			rawMessage: 'Call to deprecated method pass() of class SimpleTestCase.'
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/test_displayimage.php
-
-		-
-			rawMessage: 'Method DisplayImageTestCase::testDisplayImage() has no return type specified.'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_displayimage.php
 
 		-
 			rawMessage: 'Call to deprecated method pass() of class SimpleTestCase.'

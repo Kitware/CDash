@@ -6,7 +6,11 @@ use App\Enums\ProjectRole;
 use App\Models\Project;
 use App\Models\Site;
 use App\Models\User;
+use App\Services\ProjectService;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Laravel\Dusk\Browser;
 use Tests\BrowserTestCase;
@@ -35,6 +39,7 @@ class ProjectHomePageTest extends BrowserTestCase
     public function tearDown(): void
     {
         $this->project->delete();
+        Storage::deleteDirectory("logos/{$this->project->id}");
 
         $this->site?->delete();
         $this->site = null;
@@ -351,6 +356,29 @@ class ProjectHomePageTest extends BrowserTestCase
             $menuLinks = $browser->script("return [...document.querySelectorAll('#navigation a')].map(a => [a.textContent.trim(), a.getAttribute('href')]);")[0];
             self::assertContains(['Home', $homeUrl], $menuLinks);
             self::assertContains(['Website', 'https://example.com'], $menuLinks);
+        });
+    }
+
+    /**
+     * @throws FileNotFoundException
+     */
+    public function testShowsProjectLogo(): void
+    {
+        ProjectService::setLogo($this->project, UploadedFile::fake()->image('logo.png', 40, 40));
+        $logoPath = "/projects/{$this->project->id}/logo?v=";
+
+        $this->browse(function (Browser $browser) use ($logoPath): void {
+            $logoSelector = "img[alt=\"{$this->project->name} logo\"]";
+            $browser->visit("/projects/{$this->project->id}")
+                ->waitFor($logoSelector)
+                ->assertAttributeContains($logoSelector, 'src', $logoPath)
+                ->waitUntil("document.querySelector('{$logoSelector}').naturalWidth === 40");
+
+            // The header is shared by all project pages, so check it on a page other than the home page.
+            $browser->visit("/projects/{$this->project->id}/sites")
+                ->waitFor('#projectlogo')
+                ->assertAttributeContains('#projectlogo', 'src', $logoPath)
+                ->waitUntil("document.querySelector('#projectlogo').naturalWidth === 40");
         });
     }
 

@@ -442,7 +442,7 @@ function get_dashboard_JSON($projectname, $date, &$response): void
     $response['public'] = $project->Public;
     $response['previousdate'] = $previousdate;
     $response['nextdate'] = $nextdate;
-    $response['logoid'] = $project->ImageId;
+    $response['logoid'] = null;
     $response['nightlytime'] = date('H:i T', strtotime($project_array['nightlytime']));
     if (empty($project_array['homeurl'])) {
         $response['home'] = 'index.php?project=' . urlencode($project_array['name']);

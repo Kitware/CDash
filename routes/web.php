@@ -22,6 +22,7 @@ use App\Http\Controllers\IndexController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProjectHomeController;
 use App\Http\Controllers\ProjectInvitationController;
+use App\Http\Controllers\ProjectLogoController;
 use App\Http\Controllers\ProjectMembersController;
 use App\Http\Controllers\ProjectSettingsController;
 use App\Http\Controllers\SiteController;
@@ -188,6 +189,8 @@ Route::get('/viewBuildError.php', function (Request $request) {
     return redirect("/builds/{$buildid}/build", 301);
 });
 
+Route::get('/projects/{project_id}/logo', ProjectLogoController::class)
+    ->whereNumber('project_id');
 Route::post('/projects/{project_id}/logo', UpdateProjectLogoController::class)
     ->whereNumber('project_id');
 

@@ -50,7 +50,7 @@ describe('manageBuildGroup', () => {
 
     // switch project from the drop down at the top of the page
     cy.get('select[name="projectSelection"]').select('TestHistory');
-    cy.url().should('contain', 'manageBuildGroup.php?projectid=13');
+    cy.url().should('contain', 'manageBuildGroup.php?projectid=12');
 
     // switch back to original project
     cy.get('select[name="projectSelection"]').select('InsightExample');

@@ -4,8 +4,6 @@ namespace App\Console\Commands;
 
 use App\Utils\DatabaseCleanupUtils;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class CleanDatabase extends Command
 {
@@ -33,11 +31,6 @@ class CleanDatabase extends Command
         DatabaseCleanupUtils::deleteUnusedRows('testoutput', 'id', 'build2test', 'outputid');
         DatabaseCleanupUtils::deleteUnusedRows('uploadfile', 'id', 'build2uploadfile', 'fileid');
         DatabaseCleanupUtils::deleteUnusedRows('buildupdate', 'id', 'build', 'updateid');
-
-        Log::info('Deleting unused rows from `image`');
-        $num_deleted = DB::delete('DELETE FROM image WHERE
-                NOT EXISTS (SELECT 1 FROM project WHERE project.imageid = image.id) AND
-                NOT EXISTS (SELECT 1 FROM test2image WHERE test2image.imgid = image.id)');
-        Log::info("{$num_deleted} rows deleted from `image`");
+        DatabaseCleanupUtils::deleteUnusedRows('image', 'id', 'test2image', 'imgid');
     }
 }
