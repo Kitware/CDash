@@ -302,6 +302,134 @@ class BuildGroupTypeTest extends TestCase
      *
      * @return TestResponse<Response>
      */
+    private function queryBuildCount(array $arguments = []): TestResponse
+    {
+        return $this->graphQL('
+            query(
+                $id: ID
+                $filters: BuildGroupBuildCountFiltersMultiFilterInput
+                $onlyParents: Boolean
+            ) {
+                project(id: $id) {
+                    buildGroups {
+                        edges {
+                            node {
+                                name
+                                buildCount(
+                                    filters: $filters
+                                    onlyParents: $onlyParents
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        ', [
+            'id' => $this->project->id,
+            ...$arguments,
+        ]);
+    }
+
+    /**
+     * @param array<string,int> $counts Build counts keyed by build group name
+     *
+     * @return array<string,mixed>
+     */
+    private static function buildCountJson(array $counts): array
+    {
+        $edges = [];
+        foreach ($counts as $name => $count) {
+            $edges[] = ['node' => ['name' => $name, 'buildCount' => $count]];
+        }
+
+        return [
+            'data' => [
+                'project' => [
+                    'buildGroups' => [
+                        'edges' => $edges,
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    public function testBuildCountOnlyCountsBuildsInBuildGroup(): void
+    {
+        $buildGroup1 = BuildGroup::factory()->for($this->project)->create();
+        $buildGroup2 = BuildGroup::factory()->for($this->project)->create();
+        $emptyBuildGroup = BuildGroup::factory()->for($this->project)->create();
+
+        $buildGroup1->builds()->attach([
+            $this->createBuild('build1')->id,
+            $this->createBuild('build2')->id,
+        ]);
+        $buildGroup2->builds()->attach($this->createBuild('build3'));
+
+        // Builds which are not in a build group are not counted.
+        $this->createBuild('build4');
+
+        $this->queryBuildCount()->assertExactJson(self::buildCountJson([
+            $buildGroup1->name => 2,
+            $buildGroup2->name => 1,
+            $emptyBuildGroup->name => 0,
+        ]));
+    }
+
+    public function testBuildCountOnlyParentsArgument(): void
+    {
+        $buildGroup = BuildGroup::factory()->for($this->project)->create();
+
+        $parent = $this->createBuild('parent');
+        $child = $this->createBuild('child', $parent);
+        $buildGroup->builds()->attach([$parent->id, $child->id]);
+
+        // Default behavior: only parent builds counted
+        $this->queryBuildCount()->assertExactJson(self::buildCountJson([
+            $buildGroup->name => 1,
+        ]));
+
+        $this->queryBuildCount([
+            'onlyParents' => true,
+        ])->assertExactJson(self::buildCountJson([
+            $buildGroup->name => 1,
+        ]));
+
+        $this->queryBuildCount([
+            'onlyParents' => false,
+        ])->assertExactJson(self::buildCountJson([
+            $buildGroup->name => 2,
+        ]));
+    }
+
+    public function testBuildCountWithFilters(): void
+    {
+        $buildGroup1 = BuildGroup::factory()->for($this->project)->create();
+        $buildGroup2 = BuildGroup::factory()->for($this->project)->create();
+
+        $buildGroup1->builds()->attach([
+            $this->createBuild('a')->id,
+            $this->createBuild('b')->id,
+            $this->createBuild('a')->id,
+        ]);
+        $buildGroup2->builds()->attach($this->createBuild('b'));
+
+        $this->queryBuildCount([
+            'filters' => [
+                'eq' => [
+                    'name' => 'a',
+                ],
+            ],
+        ])->assertExactJson(self::buildCountJson([
+            $buildGroup1->name => 2,
+            $buildGroup2->name => 0,
+        ]));
+    }
+
+    /**
+     * @param array<string,mixed> $arguments
+     *
+     * @return TestResponse<Response>
+     */
     private function queryBuildCountHistogram(array $arguments): TestResponse
     {
         return $this->graphQL('
