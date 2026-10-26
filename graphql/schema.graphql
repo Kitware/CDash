@@ -1016,6 +1016,15 @@ type BuildGroup {
   ): [Build!]! @belongsToMany(type: CONNECTION)
 
   """
+  An efficient way to get the number of builds in this build group matching a given filter.
+  """
+  buildCount(
+    filters: _ @filter(inputType: "BuildFilterInput")
+    "When true (default), only count parent builds. When false, count all builds including child builds."
+    onlyParents: Boolean = true @scope
+  ): Int! @count(relation: "builds")
+
+  """
   The number of builds in this build group matching a given filter in each time interval.  Only
   intervals containing at least one build are returned, ordered from oldest to newest.  An error
   is returned if more than 1000 intervals match.
