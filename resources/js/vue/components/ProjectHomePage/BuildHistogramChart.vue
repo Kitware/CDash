@@ -61,6 +61,8 @@ use([
 const AXIS_COLOR = '#e5e7eb';
 const LABEL_COLOR = '#6b7280';
 const ROUNDED_TOP = [4, 4, 0, 0];
+// The distance between the cursor and the tooltip, as in ECharts.
+const TOOLTIP_GAP = 20;
 
 export default {
   name: 'BuildHistogramChart',
@@ -121,6 +123,9 @@ export default {
           axisPointer: {
             type: 'shadow',
           },
+          // The cards would clip the tooltip where it extends past the chart.
+          appendTo: 'body',
+          position: this.tooltipPosition,
           // Only dates and counts are shown, so there are no XSS concerns.
           formatter: ([{ dataIndex }]) => {
             const { date, passed, failed } = this.histogram[dataIndex];
@@ -202,6 +207,20 @@ export default {
   },
 
   methods: {
+    // Like ECharts' default position, except that the tooltip only moves to the left of the cursor when it
+    // would run off the page, rather than the chart, which is often narrower than the tooltip.
+    tooltipPosition([x, y], params, dom, rect, { contentSize: [width, height], viewSize: [, chartHeight] }) {
+      const chartLeft = this.$refs.chart.$el.getBoundingClientRect().left;
+      const pageWidth = document.documentElement.clientWidth;
+
+      let left = chartLeft + x + TOOLTIP_GAP + width > pageWidth ? x - TOOLTIP_GAP - width : x + TOOLTIP_GAP;
+      // Keep the tooltip on narrow screens, even if it covers the cursor.
+      left = Math.max(-chartLeft, Math.min(left, pageWidth - chartLeft - width));
+
+      const top = y + TOOLTIP_GAP + height > chartHeight ? y - TOOLTIP_GAP - height : y + TOOLTIP_GAP;
+      return [left, top];
+    },
+
     // Open the testing day of the clicked column, so days with few builds are easy to click.
     openDay({ offsetX, offsetY }) {
       const chart = this.$refs.chart;
