@@ -91,6 +91,7 @@ class ProjectSettingsPageTest extends BrowserTestCase
     {
         $name = Str::uuid()->toString();
         $description = Str::uuid()->toString();
+        $contactInfo = Str::uuid()->toString();
         $banner = Str::uuid()->toString();
         $homeurl = fake()->url();
         $documentationurl = fake()->url();
@@ -110,6 +111,7 @@ class ProjectSettingsPageTest extends BrowserTestCase
             ['@name-input', $name, 'name', $name, 'string'],
             ['@description-input', $description, 'description', $description, 'string'],
             ['@description-input', '', 'description', null, 'string'],
+            ['@contact-info-input', $contactInfo, 'contact_info', $contactInfo, 'string'],
             ['@authenticated-submissions-input', true, 'authenticatesubmissions', true, 'checkbox'],
             ['@authenticated-submissions-input', false, 'authenticatesubmissions', false, 'checkbox'],
             ['visibility', 'PUBLIC', 'public', Project::ACCESS_PUBLIC, 'radio'],

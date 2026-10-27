@@ -134,6 +134,18 @@ class ProjectHomePageTest extends BrowserTestCase
             ->waitFor('[data-test="edit-resources-dialog"][open]');
     }
 
+    /**
+     * Log in as a project administrator without contact information, and open the contact information editor.
+     */
+    private function openContactInfoEditor(Browser $browser, User $admin): Browser
+    {
+        return $browser->loginAs($admin)
+            ->visit("/projects/{$this->project->id}")
+            ->waitFor('@add-contact-button')
+            ->click('@add-contact-button')
+            ->waitFor('[data-test="edit-contact-dialog"][open]');
+    }
+
     public function testShowsProjectInformation(): void
     {
         $this->project->update([
@@ -146,7 +158,9 @@ class ProjectHomePageTest extends BrowserTestCase
             'bugtrackernewissueurl' => 'https://example.com/issues/new',
             'securitypolicyurl' => 'https://example.com/security',
             'testingdataurl' => 'https://example.com/data',
+            'contact_info' => 'maintainers@example.com',
         ]);
+        $this->addUserToProject(ProjectRole::ADMINISTRATOR);
 
         $this->browse(function (Browser $browser): void {
             $browser->visit("/projects/{$this->project->id}")
@@ -164,7 +178,10 @@ class ProjectHomePageTest extends BrowserTestCase
                         ->assertPresent('[data-test="security-policy-link"] svg[data-icon="shield-halved"]')
                         ->assertAttribute('@test-data-link', 'href', 'https://example.com/data')
                         ->assertMissing('@no-resources-message')
-                        ->assertMissing('@edit-resources-button');
+                        ->assertMissing('@edit-resources-button')
+                        ->assertSeeIn('@contact-info', 'maintainers@example.com')
+                        ->assertPresent('[data-test="resources-section"] + [data-test="contact-section"] + [data-test="administrators-section"]')
+                        ->assertMissing('@edit-contact-button');
                 });
 
             $resources = array_map(fn ($link): string => $link->getText(), $browser->elements('@resources-section a'));
@@ -203,14 +220,17 @@ class ProjectHomePageTest extends BrowserTestCase
                 ->whenAvailable('@project-home-page', function (Browser $browser): void {
                     $browser->assertMissing('@project-description')
                         ->assertMissing('@administrators-section')
+                        ->assertMissing('@contact-section')
                         ->assertSeeIn('@resources-section', 'No resources have been added to this project.')
                         ->assertMissing('@add-resources-button');
                 });
 
-            // Users who can edit the project can add resources from here.
+            // Users who can edit the project can add resources and contact information from here.
             $siteAdminBrowser->loginAs($siteAdmin)
                 ->visit("/projects/{$this->project->id}")
                 ->waitFor('@add-resources-button')
+                ->assertSeeIn('@contact-section', 'No contact information has been added to this project.')
+                ->assertPresent('@add-contact-button')
                 ->click('@add-resources-button')
                 ->waitFor('[data-test="edit-resources-dialog"][open]');
         });
@@ -681,5 +701,85 @@ class ProjectHomePageTest extends BrowserTestCase
         });
 
         self::assertNull($this->project->refresh()->documentationurl);
+    }
+
+    public function testEditContactInfo(): void
+    {
+        $admin = $this->addUserToProject(ProjectRole::ADMINISTRATOR);
+
+        $this->browse(function (Browser $browser) use ($admin): void {
+            $this->openContactInfoEditor($browser, $admin)
+                ->within('@edit-contact-dialog', function (Browser $browser): void {
+                    $browser->assertInputValue('@contact-info-input', '')
+                        ->type('@contact-info-input', 'maintainers@example.com')
+                        ->click('@edit-contact-save-button');
+                })
+                ->waitUntilMissing('[data-test="edit-contact-dialog"][open]')
+                // The page shows the new contact information without reloading.
+                ->waitFor('@contact-info')
+                ->assertSeeIn('@contact-info', 'maintainers@example.com');
+
+            self::assertSame('maintainers@example.com', $this->project->refresh()->contact_info);
+
+            // An empty field removes the contact information.
+            $browser->click('@edit-contact-button')
+                ->waitFor('[data-test="edit-contact-dialog"][open]')
+                ->within('@edit-contact-dialog', function (Browser $browser): void {
+                    $browser->assertInputValue('@contact-info-input', 'maintainers@example.com')
+                        ->keys('@contact-info-input', ['{control}', 'a'], '{backspace}')
+                        ->click('@edit-contact-save-button');
+                })
+                ->waitUntilMissing('[data-test="edit-contact-dialog"][open]')
+                ->waitFor('@no-contact-message');
+        });
+
+        self::assertNull($this->project->refresh()->contact_info);
+    }
+
+    public function testEditContactInfoShowsRemainingCharactersNearTheLimit(): void
+    {
+        $admin = $this->addUserToProject(ProjectRole::ADMINISTRATOR);
+
+        $this->browse(function (Browser $browser) use ($admin): void {
+            $this->openContactInfoEditor($browser, $admin)
+                ->within('@edit-contact-dialog', function (Browser $browser): void {
+                    $browser->type('@contact-info-input', str_repeat('a', 80))
+                        ->assertMissing('@contact-info-input-remaining-characters')
+                        ->append('@contact-info-input', 'a')
+                        ->assertSeeIn('@contact-info-input-remaining-characters', '19 characters remaining')
+                        ->append('@contact-info-input', str_repeat('a', 18))
+                        ->assertSeeIn('@contact-info-input-remaining-characters', '1 character remaining')
+                        // The field stops at 100 characters.
+                        ->append('@contact-info-input', 'aa')
+                        ->assertInputValue('@contact-info-input', str_repeat('a', 100))
+                        ->assertSeeIn('@contact-info-input-remaining-characters', '0 characters remaining')
+                        // Deleting characters updates the count, and hides it again further from the limit.
+                        ->keys('@contact-info-input', '{backspace}', '{backspace}', '{backspace}')
+                        ->assertSeeIn('@contact-info-input-remaining-characters', '3 characters remaining')
+                        ->keys('@contact-info-input', ['{control}', 'a'], '{backspace}')
+                        ->assertMissing('@contact-info-input-remaining-characters');
+                });
+        });
+    }
+
+    public function testEditContactInfoExplainsMissingPermission(): void
+    {
+        $admin = $this->addUserToProject(ProjectRole::ADMINISTRATOR);
+
+        $this->browse(function (Browser $browser) use ($admin): void {
+            $this->openContactInfoEditor($browser, $admin);
+
+            // Simulate the user losing access while the page is open.
+            $this->project->users()->updateExistingPivot($admin->id, ['role' => ProjectRole::USER]);
+
+            $browser->within('@edit-contact-dialog', function (Browser $browser): void {
+                $browser->type('@contact-info-input', 'maintainers@example.com')
+                    ->click('@edit-contact-save-button')
+                    ->waitFor('@edit-contact-error')
+                    ->assertSeeIn('@edit-contact-error', 'You do not have permission to edit this project.');
+            });
+        });
+
+        self::assertNull($this->project->refresh()->contact_info);
     }
 }
