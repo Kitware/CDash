@@ -375,6 +375,24 @@ class SitesIdPageTest extends BrowserTestCase
                 ->waitForTextIn('[data-test="site-history-item"]:nth-child(1)', $description2)
                 ->waitForTextIn('[data-test="site-history-item"]:nth-child(2)', $description1)
             ;
+
+            $this->sites['site1']->refresh()->mostRecentInformation?->forceFill([
+                'timestamp' => Carbon::now()->subSeconds(20),
+            ])->save();
+
+            // Clear the description.  clear() doesn't fire an input event, so Vue wouldn't see the empty value.
+            $browser->click('@edit-description-button')
+                ->assertValue('@edit-description-textarea', $description2)
+                ->keys('@edit-description-textarea', ['{control}', 'a'], '{backspace}')
+                ->click('@save-description-button')
+                ->waitForTextIn('@site-description', 'No description provided')
+                ->waitForTextIn('[data-test="site-history-item"]:nth-child(1) [data-test="old-description"]', $description2)
+                ->refresh()
+                ->waitFor('@site-description')
+                ->waitForTextIn('@site-description', 'No description provided')
+                ->waitForTextIn('[data-test="site-history-item"]:nth-child(1)', 'No description provided')
+                ->waitForTextIn('[data-test="site-history-item"]:nth-child(1) [data-test="old-description"]', $description2)
+            ;
         });
     }
 }

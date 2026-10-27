@@ -15,7 +15,7 @@ final class UpdateSiteDescription extends AbstractMutation
 
     /** @param array{
      *     siteId: int,
-     *     description: string
+     *     description?: ?string
      * } $args
      *
      * @throws GraphQLMutationException
@@ -39,7 +39,7 @@ final class UpdateSiteDescription extends AbstractMutation
         unset($newSiteInformation['id']);
         unset($newSiteInformation['siteid']);
         unset($newSiteInformation['timestamp']);
-        $newSiteInformation['description'] = $args['description'];
+        $newSiteInformation['description'] = $args['description'] ?? null;
         $site->information()->create($newSiteInformation);
 
         Log::info("User {$user->id} updated description for site {$site->id}.");

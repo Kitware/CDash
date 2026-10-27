@@ -1337,7 +1337,9 @@ input UnclaimSiteInput {
 
 input UpdateSiteDescriptionInput {
   siteId: ID!
-  description: String!
+
+  "Empty descriptions are stored as null."
+  description: String
 }
 
 type UpdateSiteDescriptionMutationPayload implements MutationPayloadInterface {
