@@ -156,6 +156,7 @@ class ProjectHomePageTest extends BrowserTestCase
             'documentationurl' => 'https://example.com/docs',
             'bugtrackerurl' => 'https://example.com/issues',
             'bugtrackernewissueurl' => 'https://example.com/issues/new',
+            'licenseurl' => 'https://example.com/license',
             'securitypolicyurl' => 'https://example.com/security',
             'testingdataurl' => 'https://example.com/data',
             'contact_info' => 'maintainers@example.com',
@@ -174,6 +175,8 @@ class ProjectHomePageTest extends BrowserTestCase
                         ->assertAttribute('@documentation-link', 'href', 'https://example.com/docs')
                         ->assertAttribute('@bug-tracker-link', 'href', 'https://example.com/issues')
                         ->assertAttribute('@new-issue-link', 'href', 'https://example.com/issues/new')
+                        ->assertAttribute('@license-link', 'href', 'https://example.com/license')
+                        ->assertPresent('[data-test="license-link"] svg[data-icon="scale-balanced"]')
                         ->assertAttribute('@security-policy-link', 'href', 'https://example.com/security')
                         ->assertPresent('[data-test="security-policy-link"] svg[data-icon="shield-halved"]')
                         ->assertAttribute('@test-data-link', 'href', 'https://example.com/data')
@@ -185,7 +188,7 @@ class ProjectHomePageTest extends BrowserTestCase
                 });
 
             $resources = array_map(fn ($link): string => $link->getText(), $browser->elements('@resources-section a'));
-            self::assertSame(['Repository', 'Website', 'Documentation', 'Issue Tracker', 'Report an Issue', 'Security Policy', 'Test Data'], $resources);
+            self::assertSame(['Repository', 'Website', 'Documentation', 'Issue Tracker', 'Report an Issue', 'License', 'Security Policy', 'Test Data'], $resources);
         });
     }
 
@@ -584,6 +587,8 @@ class ProjectHomePageTest extends BrowserTestCase
                         ->assertInputValue('@vcs-url-input', 'https://gitlab.kitware.com/cmake/cmake')
                         ->assertInputValue('@documentation-url-input', '')
                         ->type('@documentation-url-input', 'https://example.com/docs')
+                        ->assertInputValue('@license-url-input', '')
+                        ->type('@license-url-input', 'https://example.com/license')
                         ->assertInputValue('@security-policy-url-input', '')
                         ->type('@security-policy-url-input', 'https://example.com/security')
                         ->select('@vcs-viewer-input', 'GITLAB')
@@ -595,6 +600,7 @@ class ProjectHomePageTest extends BrowserTestCase
                 // The page shows the new resources without reloading.
                 ->waitFor('@documentation-link')
                 ->assertAttribute('@documentation-link', 'href', 'https://example.com/docs')
+                ->assertAttribute('@license-link', 'href', 'https://example.com/license')
                 ->assertAttribute('@security-policy-link', 'href', 'https://example.com/security')
                 ->assertMissing('@website-link')
                 ->assertPresent('[data-test="repository-link"] svg[data-icon="gitlab"]');
@@ -602,6 +608,7 @@ class ProjectHomePageTest extends BrowserTestCase
 
         $this->project->refresh();
         self::assertSame('https://example.com/docs', $this->project->documentationurl);
+        self::assertSame('https://example.com/license', $this->project->licenseurl);
         self::assertSame('https://example.com/security', $this->project->securitypolicyurl);
         self::assertNull($this->project->homeurl);
         self::assertSame('gitlab', $this->project->cvsviewertype);

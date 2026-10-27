@@ -140,6 +140,8 @@ class ProjectTypeTest extends TestCase
             ['bugtrackernewissueurl', null, 'bugTrackerNewIssueUrl', null],
             ['documentationurl', 'https://cmake.org/cmake/help/latest', 'documentationUrl', 'https://cmake.org/cmake/help/latest'],
             ['documentationurl', null, 'documentationUrl', null],
+            ['licenseurl', 'https://github.com/Kitware/CDash/blob/master/LICENSE', 'licenseUrl', 'https://github.com/Kitware/CDash/blob/master/LICENSE'],
+            ['licenseurl', null, 'licenseUrl', null],
             ['securitypolicyurl', 'https://github.com/Kitware/CDash/security/policy', 'securityPolicyUrl', 'https://github.com/Kitware/CDash/security/policy'],
             ['securitypolicyurl', null, 'securityPolicyUrl', null],
             ['testingdataurl', 'https://example.com', 'testDataUrl', 'https://example.com'],

@@ -208,6 +208,14 @@
         />
 
         <InputField
+          v-model="form.licenseUrl"
+          :validation-error="validationErrors?.licenseUrl?.[0]"
+          label="License"
+          placeholder="https://example.com"
+          test-id="license-url-input"
+        />
+
+        <InputField
           v-model="form.securityPolicyUrl"
           :validation-error="validationErrors?.securityPolicyUrl?.[0]"
           label="Security Policy"
@@ -623,6 +631,7 @@ export default {
         bugTrackerUrl: '',
         bugTrackerNewIssueUrl: '',
         documentationUrl: '',
+        licenseUrl: '',
         securityPolicyUrl: '',
         testDataUrl: '',
         ldapFilter: '',
@@ -666,6 +675,7 @@ export default {
             bugTrackerUrl
             bugTrackerNewIssueUrl
             documentationUrl
+            licenseUrl
             securityPolicyUrl
             testDataUrl
             visibility
