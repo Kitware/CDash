@@ -349,7 +349,9 @@ Route::middleware(['auth'])->group(function (): void {
 
     Route::get('/projects/{projectId}/invitations/{invitationId}', ProjectInvitationController::class)
         ->whereNumber('projectId')
-        ->whereNumber('invitationId');
+        ->whereNumber('invitationId')
+        ->name('project-invitations')
+        ->middleware('signed');
 
     Route::middleware(['admin'])->group(function (): void {
         Route::get('/administration', AdministrationController::class);

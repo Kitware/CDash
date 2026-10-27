@@ -8,6 +8,7 @@ use App\Models\ProjectInvitation;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\URL;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
 
@@ -63,7 +64,7 @@ class ProjectInvitationAcceptanceTest extends TestCase
         $invitation = $this->createInvitation();
         self::assertContains($invitation->id, $this->project->invitations()->pluck('id'));
 
-        $this->get('/projects/' . $invitation->project_id . '/invitations/' . $invitation->id)
+        $this->get($invitation->invitation_url)
             ->assertRedirect('/login');
 
         self::assertContains($invitation->id, $this->project->invitations()->pluck('id'));
@@ -75,7 +76,10 @@ class ProjectInvitationAcceptanceTest extends TestCase
         self::assertContains($invitation->id, $this->project->invitations()->pluck('id'));
 
         $this->actingAs($this->users['normal'])
-            ->get('/projects/' . $invitation->project_id . '/invitations/' . 1234567)
+            ->get(URL::temporarySignedRoute('project-invitations', Carbon::now()->addDays(7), [
+                'projectId' => $invitation->project_id,
+                'invitationId' => 1234567,
+            ]))
             ->assertUnauthorized();
 
         self::assertContains($invitation->id, $this->project->invitations()->pluck('id'));
@@ -87,7 +91,7 @@ class ProjectInvitationAcceptanceTest extends TestCase
         self::assertContains($invitation->id, $this->project->invitations()->pluck('id'));
 
         $this->actingAs($this->users['normal'])
-            ->get('/projects/' . $invitation->project_id . '/invitations/' . $invitation->id)
+            ->get($invitation->invitation_url)
             ->assertUnauthorized();
 
         self::assertContains($invitation->id, $this->project->invitations()->pluck('id'));
@@ -111,7 +115,7 @@ class ProjectInvitationAcceptanceTest extends TestCase
             ]);
 
         $this->actingAs($this->users['normal'])
-            ->get('/projects/' . $invitation->project_id . '/invitations/' . $invitation->id)
+            ->get($invitation->invitation_url)
             ->assertUnauthorized();
 
         self::assertNotContains($invitation->id, $this->project->invitations()->pluck('id'));
@@ -125,8 +129,35 @@ class ProjectInvitationAcceptanceTest extends TestCase
         self::assertContains($invitation->id, $this->project->invitations()->pluck('id'));
 
         $this->actingAs($this->users['admin'])
-            ->get('/projects/' . $invitation->project_id . '/invitations/' . $invitation->id)
+            ->get($invitation->invitation_url)
             ->assertUnauthorized();
+
+        self::assertContains($invitation->id, $this->project->invitations()->pluck('id'));
+    }
+
+    public function testCannotAcceptInvitationWithUnsignedLink(): void
+    {
+        $invitation = $this->createInvitation();
+        $invitation->email = $this->users['normal']->email;
+        $invitation->save();
+
+        $this->actingAs($this->users['normal'])
+            ->get('/projects/' . $invitation->project_id . '/invitations/' . $invitation->id)
+            ->assertForbidden();
+
+        self::assertContains($invitation->id, $this->project->invitations()->pluck('id'));
+    }
+
+    public function testCannotAcceptExpiredInvitation(): void
+    {
+        $invitation = $this->createInvitation();
+        $invitation->email = $this->users['normal']->email;
+        $invitation->invitation_timestamp = Carbon::now()->subDays(8);
+        $invitation->save();
+
+        $this->actingAs($this->users['normal'])
+            ->get($invitation->invitation_url)
+            ->assertForbidden();
 
         self::assertContains($invitation->id, $this->project->invitations()->pluck('id'));
     }
@@ -139,7 +170,7 @@ class ProjectInvitationAcceptanceTest extends TestCase
         self::assertContains($invitation->id, $this->project->invitations()->pluck('id'));
 
         $this->actingAs($this->users['normal'])
-            ->get('/projects/' . $invitation->project_id . '/invitations/' . $invitation->id)
+            ->get($invitation->invitation_url)
             ->assertRedirect("/index.php?project={$this->project->name}");
 
         self::assertNotContains($invitation->id, $this->project->invitations()->pluck('id'));
@@ -155,7 +186,7 @@ class ProjectInvitationAcceptanceTest extends TestCase
         self::assertContains($invitation->id, $this->project->invitations()->pluck('id'));
 
         $this->actingAs($this->users['normal'])
-            ->get('/projects/' . $invitation->project_id . '/invitations/' . $invitation->id)
+            ->get($invitation->invitation_url)
             ->assertRedirect("/index.php?project={$this->project->name}");
 
         self::assertNotContains($invitation->id, $this->project->invitations()->pluck('id'));

@@ -5131,12 +5131,6 @@ parameters:
 			path: app/Models/Project.php
 
 		-
-			rawMessage: Binary operation "." between non-falsy-string and mixed results in an error.
-			identifier: binaryOp.invalid
-			count: 1
-			path: app/Models/ProjectInvitation.php
-
-		-
 			rawMessage: 'Method App\Models\Test::getLabels() return type with generic class Illuminate\Support\Collection does not specify its types: TKey, TValue'
 			identifier: missingType.generics
 			count: 1
