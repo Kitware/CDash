@@ -174,22 +174,37 @@ export default {
         return new Map();
       }
 
-      const regexPrefixes = [
-        ...(this.sourceDirectory ? [`${RegExp.escape(this.sourceDirectory)}/`] : []),
-        `${RegExp.escape('/.../')}[^/]+/`, // CTest includes the repository name in the path.
-      ];
+      const sourceDirectoryPrefixes = this.sourceDirectory ? [`${RegExp.escape(this.sourceDirectory)}/`] : [];
 
-      const matches = text.match(new RegExp(`(${regexPrefixes.join('|')})[^:]*:[0-9]+:[0-9]+`, 'g'));
+      // Paths may contain spaces, but end at a line break, an escape sequence, or a delimiter followed by another
+      // path.  Otherwise, a match could start at an earlier mention of the prefix.
+      const pathStartPattern = `(?:${[...sourceDirectoryPrefixes, RegExp.escape('/.../')].join('|')})`;
+      const pathCharacterPattern = `(?![\\s"'\`(),;=]${pathStartPattern}|\\[NON-XML-CHAR-0x1B\\])[^:\\r\\n\\x1B]`;
+
+      const regexPrefixes = [
+        ...sourceDirectoryPrefixes,
+        `${RegExp.escape('/.../')}(?:(?!/)${pathCharacterPattern})+/`, // CTest includes the repository name in the path.
+      ];
+      const prefixPattern = `(?:${regexPrefixes.join('|')})`;
+
+      // Match each path whether or not a line and column follow it, so later mentions of the prefix within the path
+      // aren't searched again.  Otherwise, long lines which mention the prefix many times are slow to search.
+      const pathRegex = new RegExp(`${prefixPattern}(?:${pathCharacterPattern})*(:[0-9]+:[0-9]+)?`, 'g');
+      const matches = [...text.matchAll(pathRegex)]
+        .filter(([, lineAndColumn]) => lineAndColumn)
+        .map(([match]) => match);
       const repository = getRepository(this.repositoryType, this.repositoryUrl, this.repositoryCmakeProjectRoot);
 
-      if (!repository || !matches) {
+      if (!repository || matches.length === 0) {
         return new Map();
       }
 
       return new Map(
         matches.map((match) => {
-          let filePath = match.replace(new RegExp(`(${regexPrefixes.join('|')})`), '');
+          let filePath = match.replace(new RegExp(`^${prefixPattern}`), '');
           filePath = filePath.split(':')[0]; // Trim off the line:col anchor.
+          // Encode each directory separately so characters such as "#" and "?" stay part of the path.
+          filePath = filePath.split('/').map((part) => encodeURIComponent(part)).join('/');
 
           return [
             match,
