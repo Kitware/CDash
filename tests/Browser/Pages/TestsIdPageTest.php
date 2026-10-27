@@ -11,6 +11,7 @@ use App\Models\Site;
 use App\Models\SiteInformation;
 use App\Models\SubProject;
 use App\Models\Test;
+use App\Models\TestMeasurement;
 use App\Services\SiteService;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
@@ -150,10 +151,8 @@ class TestsIdPageTest extends BrowserTestCase
             'status' => 'passed',
         ]);
 
-        $measurement = $test->testMeasurements()->create([
+        $measurement = TestMeasurement::factory()->for($test)->create([
             'name' => 'Environment',
-            'type' => 'text/string',
-            'value' => (string) Str::uuid(),
         ]);
 
         $this->browse(function (Browser $browser) use ($test, $measurement): void {
@@ -173,16 +172,10 @@ class TestsIdPageTest extends BrowserTestCase
             'status' => 'passed',
         ]);
 
-        $test->testMeasurements()->create([
+        TestMeasurement::factory()->for($test)->create([
             'name' => 'Environment',
-            'type' => 'text/string',
-            'value' => (string) Str::uuid(),
         ]);
-        $otherMeasurement = $test->testMeasurements()->create([
-            'name' => (string) Str::uuid(),
-            'type' => 'text/string',
-            'value' => (string) Str::uuid(),
-        ]);
+        $otherMeasurement = TestMeasurement::factory()->for($test)->create();
 
         $this->browse(function (Browser $browser) use ($test, $otherMeasurement): void {
             $browser->visit("/tests/{$test->id}")
@@ -203,8 +196,7 @@ class TestsIdPageTest extends BrowserTestCase
             'status' => 'passed',
         ]);
 
-        $measurement = $test->testMeasurements()->create([
-            'name' => (string) Str::uuid(),
+        $measurement = TestMeasurement::factory()->for($test)->create([
             'type' => 'numeric/double',
             'value' => '99.99',
         ]);
@@ -254,8 +246,7 @@ class TestsIdPageTest extends BrowserTestCase
             'status' => 'passed',
         ]);
 
-        $measurement = $test->testMeasurements()->create([
-            'name' => (string) Str::uuid(),
+        $measurement = TestMeasurement::factory()->for($test)->create([
             'type' => $type,
             'value' => $value,
         ]);
@@ -305,8 +296,7 @@ class TestsIdPageTest extends BrowserTestCase
         $previousTest->save();
 
         // Add a numeric measurement to test switching
-        $measurement = $test->testMeasurements()->create([
-            'name' => (string) Str::uuid(),
+        $measurement = TestMeasurement::factory()->for($test)->create([
             'type' => 'numeric/double',
             'value' => '100',
         ]);
