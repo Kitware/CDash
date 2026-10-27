@@ -123,6 +123,8 @@ class ProjectTypeTest extends TestCase
         return [
             ['description', 'abc', 'description', 'abc'],
             ['description', null, 'description', null],
+            ['contact_info', 'maintainers@example.com', 'contactInfo', 'maintainers@example.com'],
+            ['contact_info', null, 'contactInfo', null],
             ['homeurl', 'cdash.org', 'homeUrl', 'cdash.org'],
             ['homeurl', 'https://cdash.org', 'homeUrl', 'https://cdash.org'],
             ['homeurl', null, 'homeUrl', null],

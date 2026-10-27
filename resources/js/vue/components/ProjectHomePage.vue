@@ -45,6 +45,12 @@
             :security-policy-url="project.securityPolicyUrl"
             :test-data-url="project.testDataUrl"
           />
+          <ContactSection
+            v-if="project.contactInfo || canUpdate"
+            :project-id="projectId"
+            :can-update="canUpdate"
+            :contact-info="project.contactInfo"
+          />
           <AdministratorsSection
             v-if="administrators.length > 0"
             :administrators="administrators"
@@ -63,6 +69,7 @@ import LoadingIndicator from './shared/LoadingIndicator.vue';
 import AdministratorsSection from './ProjectHomePage/AdministratorsSection.vue';
 import BuildGroupsSection from './ProjectHomePage/BuildGroupsSection.vue';
 import BuildHistogram from './ProjectHomePage/BuildHistogram';
+import ContactSection from './ProjectHomePage/ContactSection.vue';
 import ProjectHeader from './ProjectHomePage/ProjectHeader.vue';
 import RecentActivityCard from './ProjectHomePage/RecentActivityCard.vue';
 import ResourcesSection from './ProjectHomePage/ResourcesSection.vue';
@@ -73,6 +80,7 @@ export default {
   components: {
     AdministratorsSection,
     BuildGroupsSection,
+    ContactSection,
     LoadingIndicator,
     ProjectHeader,
     RecentActivityCard,
@@ -132,6 +140,7 @@ export default {
             id
             name
             description
+            contactInfo
             logoUrl
             visibility
             homeUrl

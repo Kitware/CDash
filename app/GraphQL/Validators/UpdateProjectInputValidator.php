@@ -25,6 +25,9 @@ final class UpdateProjectInputValidator extends Validator
             'authenticateSubmissions' => [
                 new ProjectAuthenticateSubmissionsRule(),
             ],
+            'contactInfo' => [
+                'max:100',
+            ],
         ];
     }
 
@@ -32,6 +35,7 @@ final class UpdateProjectInputValidator extends Validator
     {
         return [
             'name.unique' => 'A project with this name already exists.',
+            'contactInfo.max' => 'The contact information must be at most 100 characters.',
         ];
     }
 }

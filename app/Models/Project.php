@@ -50,6 +50,7 @@ use Illuminate\Support\Facades\Auth;
  * @property ?string $banner
  * @property ?string $logoUrl
  * @property ?string $cmakeprojectroot
+ * @property ?string $contact_info
  *
  * @method Builder<Project> forUser()
  * @method Builder<Project> administeredByUser()
@@ -96,6 +97,7 @@ class Project extends Model
         'ldapfilter',
         'banner',
         'cmakeprojectroot',
+        'contact_info',
     ];
 
     protected $casts = [

@@ -247,6 +247,9 @@ type Project {
   "Description."
   description: String
 
+  "How to contact the project's maintainers, such as an email address or a mailing list. At most 100 characters."
+  contactInfo: String @rename(attribute: "contact_info")
+
   "Homepage for this project."
   homeUrl: Url @rename(attribute: "homeurl")
 
@@ -507,6 +510,8 @@ input UpdateProjectInput @validator {
   name: String
 
   description: String
+
+  contactInfo: String @rename(attribute: "contact_info")
 
   homeUrl: Url @rename(attribute: "homeurl")
 

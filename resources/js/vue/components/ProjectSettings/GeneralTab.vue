@@ -50,6 +50,15 @@
           label="Description"
           test-id="description-input"
         />
+
+        <InputField
+          v-model="form.contactInfo"
+          :validation-error="validationErrors?.contactInfo?.[0]"
+          label="Contact Information"
+          description="How to reach the project's maintainers, such as an email address or mailing list."
+          maxlength="100"
+          test-id="contact-info-input"
+        />
       </FormSection>
 
       <FormSection
@@ -603,6 +612,7 @@ export default {
       form: {
         name: '',
         description: '',
+        contactInfo: '',
         visibility: 'PRIVATE',
         authenticateSubmissions: false,
         homeUrl: '',
@@ -647,6 +657,7 @@ export default {
             id
             name
             description
+            contactInfo
             homeUrl
             vcsViewer
             vcsUrl

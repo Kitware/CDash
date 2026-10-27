@@ -19,8 +19,16 @@
       :placeholder="placeholder"
       :min="min"
       :max="max"
+      :maxlength="maxlength"
       :data-test="testId"
     >
+    <span
+      v-if="remainingCharacters < REMAINING_CHARACTERS_WARNING"
+      class="tw-label tw-text-xs tw-text-neutral-500"
+      :data-test="testId && `${testId}-remaining-characters`"
+    >
+      {{ remainingCharacters }} {{ remainingCharacters === 1 ? 'character' : 'characters' }} remaining
+    </span>
     <span
       v-if="validationError"
       class="tw-label tw-text-error"
@@ -31,12 +39,17 @@
 </template>
 
 <script setup>
+import { computed } from 'vue';
+
+// Show how many characters are left once a value is this close to its maximum length.
+const REMAINING_CHARACTERS_WARNING = 20;
+
 const model = defineModel({
   type: [String, Number, null],
   required: true,
 });
 
-defineProps({
+const props = defineProps({
   label: {
     type: String,
     required: true,
@@ -84,6 +97,12 @@ defineProps({
     default: undefined,
   },
 
+  maxlength: {
+    type: [String, Number],
+    required: false,
+    default: undefined,
+  },
+
   placeholder: {
     type: [String, Number],
     required: false,
@@ -96,4 +115,9 @@ defineProps({
     default: undefined,
   },
 });
+
+// Counted like the browser's maxlength, in UTF-16 code units.
+const remainingCharacters = computed(() => (
+  props.maxlength === undefined ? Infinity : Number(props.maxlength) - String(model.value ?? '').length
+));
 </script>

@@ -178,6 +178,7 @@ class UpdateProjectTest extends TestCase
     {
         return [
             ['description', 'new description', 'description', 'new description'],
+            ['contactInfo', 'maintainers@example.com', 'contact_info', 'maintainers@example.com'],
             ['homeUrl', 'https://kitware.com', 'homeurl', 'https://kitware.com'],
             ['vcsViewer', 'GITLAB', 'cvsviewertype', 'gitlab'],
             ['vcsUrl', 'https://gitlab.kitware.com/kitware/cdash', 'cvsurl', 'https://gitlab.kitware.com/kitware/cdash'],
@@ -332,6 +333,38 @@ class UpdateProjectTest extends TestCase
             ],
         ])->assertGraphQLErrorMessage('Validation failed for the field [updateProject].');
         self::assertSame($original_name, $project->fresh()?->name);
+    }
+
+    public function testContactInfoIsLimitedTo100Characters(): void
+    {
+        $project = $this->makePublicProject();
+        $user = User::factory()->adminUser()->create();
+        $query = '
+            mutation updateProject($input: UpdateProjectInput!) {
+                updateProject(input: $input) {
+                    project {
+                        contactInfo
+                    }
+                }
+            }
+        ';
+
+        $this->actingAs($user)->graphQL($query, [
+            'input' => [
+                'id' => $project->id,
+                'contactInfo' => str_repeat('a', 101),
+            ],
+        ])->assertGraphQLValidationKeys(['input.contactInfo']);
+        self::assertNull($project->fresh()?->contact_info);
+
+        $contactInfo = str_repeat('a', 100);
+        $this->actingAs($user)->graphQL($query, [
+            'input' => [
+                'id' => $project->id,
+                'contactInfo' => $contactInfo,
+            ],
+        ])->assertGraphQLErrorFree();
+        self::assertSame($contactInfo, $project->fresh()?->contact_info);
     }
 
     public function testCanChangeNameToCurrentName(): void
