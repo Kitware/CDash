@@ -434,7 +434,7 @@
             </a>
           </div>
           <div class="tw-p-1">
-            <LoadingIndicator :is-loading="!buildTimeData">
+            <LoadingIndicator :is-loading="!buildHistory">
               <BuildTimeChart :data="buildTimeData" />
             </LoadingIndicator>
           </div>
