@@ -6,6 +6,8 @@ function(add_js_unit_test TestName)
   )
 endfunction()
 
+add_js_unit_test(build-histogram)
 add_js_unit_test(flame-chart-layout)
 add_js_unit_test(repository-integrations)
+add_js_unit_test(testing-day)
 add_js_unit_test(utils)

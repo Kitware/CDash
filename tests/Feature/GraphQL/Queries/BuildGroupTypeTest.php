@@ -440,6 +440,7 @@ class BuildGroupTypeTest extends TestCase
                 $interval: TimeInterval!
                 $by: BuildTimeField
                 $timezone: String
+                $dayStart: Time
             ) {
                 project(id: $id) {
                     buildGroups {
@@ -452,6 +453,7 @@ class BuildGroupTypeTest extends TestCase
                                     interval: $interval
                                     by: $by
                                     timezone: $timezone
+                                    dayStart: $dayStart
                                 ) {
                                     start
                                     count
@@ -581,7 +583,7 @@ class BuildGroupTypeTest extends TestCase
         ]));
     }
 
-    public function testBuildCountHistogramByTimeFieldAndTimezone(): void
+    public function testBuildCountHistogramByTimeFieldTimezoneAndDayStart(): void
     {
         $buildGroup = BuildGroup::factory()->for($this->project)->create();
 
@@ -598,6 +600,18 @@ class BuildGroupTypeTest extends TestCase
         ])->assertExactJson(self::buildCountHistogramJson([
             $buildGroup->name => [
                 ['start' => '2026-03-09T00:00:00-04:00', 'count' => 1],
+            ],
+        ]));
+
+        // With days starting at 21:00, the submission at 22:45 belongs to the day starting that evening.
+        $this->queryBuildCountHistogram([
+            'interval' => 'DAY',
+            'by' => 'SUBMISSION_TIME',
+            'timezone' => 'America/New_York',
+            'dayStart' => '21:00:00',
+        ])->assertExactJson(self::buildCountHistogramJson([
+            $buildGroup->name => [
+                ['start' => '2026-03-09T21:00:00-04:00', 'count' => 1],
             ],
         ]));
 
