@@ -48,7 +48,10 @@ class ProjectInvitation extends Model
     protected function invitationUrl(): Attribute
     {
         return Attribute::make(
-            get: fn (mixed $value, array $attributes): string => url('/projects/' . $this->project_id . '/invitations/' . $attributes['id']),
+            get: fn (mixed $value, array $attributes): string => URL::temporarySignedRoute('project-invitations', $this->invitation_timestamp->copy()->addDays(7), [
+                'projectId' => $this->project_id,
+                'invitationId' => $attributes['id'],
+            ]),
         );
     }
 
