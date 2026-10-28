@@ -15,6 +15,7 @@ use Nuwave\Lighthouse\Support\Utils;
 use ReflectionMethod;
 use ReflectionNamedType;
 use Tests\TestCase;
+use Tests\Traits\DisablesSchemaCache;
 
 /**
  * Without a resolver directive, Lighthouse reads a relationship as a model property, which lazy loads it
@@ -22,10 +23,11 @@ use Tests\TestCase;
  */
 class RelationshipDirectivesTest extends TestCase
 {
+    use DisablesSchemaCache;
+
     public function testRelationshipFieldsHaveResolverDirectives(): void
     {
-        // Check the schema file itself rather than a potentially stale schema cache.
-        config(['lighthouse.schema_cache.enable' => false]);
+        $this->disableSchemaCache();
 
         $directiveLocator = app(DirectiveLocator::class);
 

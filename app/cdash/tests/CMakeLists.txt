@@ -131,6 +131,12 @@ add_unit_test(/Unit/GraphQL/SchemaValidationTest)
 
 add_unit_test(/Unit/GraphQL/RelationshipDirectivesTest)
 
+add_unit_test(/Unit/GraphQL/Directives/CountHistogramDirectiveTest)
+
+add_unit_test(/Unit/GraphQL/Directives/FilterDirectiveTest)
+
+add_unit_test(/Unit/GraphQL/Directives/FilterableDirectiveTest)
+
 add_php_test(seconds_from_interval)
 
 add_php_test(extracttar)
