@@ -916,14 +916,191 @@ parameters:
 			path: app/Http/Controllers/FilterController.php
 
 		-
+			rawMessage: 'Call to an undefined method App\Models\Project|Illuminate\Database\Eloquent\Collection<int, App\Models\Project>::pinnedTestMeasurements().'
+			identifier: method.notFound
+			count: 1
+			path: app/Http/Controllers/IndexController.php
+
+		-
+			rawMessage: '''
+				Call to deprecated function pdo_real_escape_string():
+				04/01/2023
+			'''
+			identifier: function.deprecated
+			count: 3
+			path: app/Http/Controllers/IndexController.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method getNumberOfSubProjects() of class App\Services\ProjectService:
+				12/06/2025  Use Eloquent relationships for all new code
+			'''
+			identifier: staticMethod.deprecated
+			count: 2
+			path: app/Http/Controllers/IndexController.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method getSubProjectGroups() of class App\Services\ProjectService:
+				12/06/2025  Use Eloquent relationships for all new code
+			'''
+			identifier: staticMethod.deprecated
+			count: 1
+			path: app/Http/Controllers/IndexController.php
+
+		-
+			rawMessage: Cannot access offset 'nbuilderrors' on array|false.
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Http/Controllers/IndexController.php
+
+		-
+			rawMessage: Cannot access offset 'nbuildwarnings' on array|false.
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Http/Controllers/IndexController.php
+
+		-
+			rawMessage: Cannot access offset 'nconfigureerrors' on array|false.
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Http/Controllers/IndexController.php
+
+		-
+			rawMessage: Cannot access offset 'nconfigurewarnings' on array|false.
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Http/Controllers/IndexController.php
+
+		-
+			rawMessage: Cannot access offset 'npassingbuilds' on array|false.
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Http/Controllers/IndexController.php
+
+		-
+			rawMessage: Cannot access offset 'npassingconfigures' on array|false.
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Http/Controllers/IndexController.php
+
+		-
+			rawMessage: Cannot access offset 'ntestsfailed' on array|false.
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Http/Controllers/IndexController.php
+
+		-
+			rawMessage: Cannot access offset 'ntestsnotrun' on array|false.
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Http/Controllers/IndexController.php
+
+		-
+			rawMessage: Cannot access offset 'ntestspassed' on array|false.
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Http/Controllers/IndexController.php
+
+		-
+			rawMessage: 'Cannot call method GetCurrentBuildId() on CDash\Model\Build|null.'
+			identifier: method.nonObject
+			count: 1
+			path: app/Http/Controllers/IndexController.php
+
+		-
+			rawMessage: 'Cannot call method GetNextBuildId() on CDash\Model\Build|null.'
+			identifier: method.nonObject
+			count: 1
+			path: app/Http/Controllers/IndexController.php
+
+		-
+			rawMessage: 'Cannot call method GetPreviousBuildId() on CDash\Model\Build|null.'
+			identifier: method.nonObject
+			count: 1
+			path: app/Http/Controllers/IndexController.php
+
+		-
+			rawMessage: Cannot cast mixed to int.
+			identifier: cast.int
+			count: 2
+			path: app/Http/Controllers/IndexController.php
+
+		-
+			rawMessage: 'Construct empty() is not allowed. Use more strict comparison.'
+			identifier: empty.notAllowed
+			count: 3
+			path: app/Http/Controllers/IndexController.php
+
+		-
+			rawMessage: 'Offset ''loctested'' might not exist on array{thresholdgreen?: int|null, thresholdyellow?: float, label?: string, loctested?: int, locuntested?: int, position?: int, coverages?: list<array{buildid: int, childlink?: non-falsy-string, percentage: float, locuntested: int, loctested: int, datefull: int|false, date: string, dateelapsed: string, ...}|array{buildid: int, childlink?: non-falsy-string, percentage: float, locuntested: int, loctested: int, percentagediff: float, locuntesteddiff: int, loctesteddiff: int<1, max>, ...}>}.'
+			identifier: offsetAccess.notFound
+			count: 2
+			path: app/Http/Controllers/IndexController.php
+
+		-
+			rawMessage: 'Offset ''locuntested'' might not exist on array{thresholdgreen?: int|null, thresholdyellow?: float, label?: string, loctested: int, locuntested?: int, position?: int, coverages?: list<array{buildid: int, childlink?: non-falsy-string, percentage: float, locuntested: int, loctested: int, datefull: int|false, date: string, dateelapsed: string, ...}|array{buildid: int, childlink?: non-falsy-string, percentage: float, locuntested: int, loctested: int, percentagediff: float, locuntesteddiff: int, loctesteddiff: int<1, max>, ...}>}.'
+			identifier: offsetAccess.notFound
+			count: 2
+			path: app/Http/Controllers/IndexController.php
+
+		-
+			rawMessage: 'Offset ''locuntested'' might not exist on array{thresholdgreen?: int|null, thresholdyellow?: float, label?: string, loctested?: int, locuntested?: int, position?: int, coverages?: list<array{buildid: int, childlink?: non-falsy-string, percentage: float, locuntested: int, loctested: int, datefull: int|false, date: string, dateelapsed: string, ...}|array{buildid: int, childlink?: non-falsy-string, percentage: float, locuntested: int, loctested: int, percentagediff: float, locuntesteddiff: int, loctesteddiff: int<1, max>, ...}>}.'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: app/Http/Controllers/IndexController.php
+
+		-
+			rawMessage: 'Offset ''thresholdgreen'' might not exist on array{thresholdgreen?: int|null, thresholdyellow?: float, label?: string, loctested?: int, locuntested?: int, position?: int, coverages?: list<array{buildid: int, childlink?: non-falsy-string, percentage: float, locuntested: int, loctested: int, datefull: int|false, date: string, dateelapsed: string, ...}|array{buildid: int, childlink?: non-falsy-string, percentage: float, locuntested: int, loctested: int, percentagediff: float, locuntesteddiff: int, loctesteddiff: int<1, max>, ...}>}.'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: app/Http/Controllers/IndexController.php
+
+		-
 			rawMessage: 'Only booleans are allowed in a ternary operator condition, bool|string|null given.'
 			identifier: ternary.condNotBoolean
 			count: 1
 			path: app/Http/Controllers/IndexController.php
 
 		-
+			rawMessage: 'Only numeric types are allowed in *, int|null given on the left side.'
+			identifier: mul.leftNonNumeric
+			count: 1
+			path: app/Http/Controllers/IndexController.php
+
+		-
+			rawMessage: 'Only numeric types are allowed in -, int|false given on the right side.'
+			identifier: minus.rightNonNumeric
+			count: 6
+			path: app/Http/Controllers/IndexController.php
+
+		-
 			rawMessage: 'Parameter #1 $project_name of method App\Http\Controllers\AbstractProjectController::setProjectByName() expects string, mixed given.'
 			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/IndexController.php
+
+		-
+			rawMessage: 'Parameter #1 $string of function strlen expects string, string|false given.'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/IndexController.php
+
+		-
+			rawMessage: 'Parameter #2 $timestamp of function date expects int|null, int|false given.'
+			identifier: argument.type
+			count: 4
+			path: app/Http/Controllers/IndexController.php
+
+		-
+			rawMessage: 'Part $buildgroup (mixed) of encapsed string cannot be cast to string.'
+			identifier: encapsedStringPart.nonString
+			count: 1
+			path: app/Http/Controllers/IndexController.php
+
+		-
+			rawMessage: Value assigned to variable $coverageThreshold is never read before being overwritten.
+			identifier: assign.overwritten
 			count: 1
 			path: app/Http/Controllers/IndexController.php
 
@@ -12287,177 +12464,6 @@ parameters:
 			identifier: assign.redundant
 			count: 1
 			path: app/cdash/include/filterdataFunctions.php
-
-		-
-			rawMessage: 'Call to an undefined method App\Models\Project|Illuminate\Database\Eloquent\Collection<int, App\Models\Project>::pinnedTestMeasurements().'
-			identifier: method.notFound
-			count: 1
-			path: app/cdash/public/api/v1/index.php
-
-		-
-			rawMessage: '''
-				Call to deprecated function pdo_real_escape_string():
-				04/01/2023
-			'''
-			identifier: function.deprecated
-			count: 3
-			path: app/cdash/public/api/v1/index.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method getNumberOfSubProjects() of class App\Services\ProjectService:
-				12/06/2025  Use Eloquent relationships for all new code
-			'''
-			identifier: staticMethod.deprecated
-			count: 2
-			path: app/cdash/public/api/v1/index.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method getSubProjectGroups() of class App\Services\ProjectService:
-				12/06/2025  Use Eloquent relationships for all new code
-			'''
-			identifier: staticMethod.deprecated
-			count: 1
-			path: app/cdash/public/api/v1/index.php
-
-		-
-			rawMessage: Cannot access offset 'nbuilderrors' on array|false.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/public/api/v1/index.php
-
-		-
-			rawMessage: Cannot access offset 'nbuildwarnings' on array|false.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/public/api/v1/index.php
-
-		-
-			rawMessage: Cannot access offset 'nconfigureerrors' on array|false.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/public/api/v1/index.php
-
-		-
-			rawMessage: Cannot access offset 'nconfigurewarnings' on array|false.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/public/api/v1/index.php
-
-		-
-			rawMessage: Cannot access offset 'npassingbuilds' on array|false.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/public/api/v1/index.php
-
-		-
-			rawMessage: Cannot access offset 'npassingconfigures' on array|false.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/public/api/v1/index.php
-
-		-
-			rawMessage: Cannot access offset 'ntestsfailed' on array|false.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/public/api/v1/index.php
-
-		-
-			rawMessage: Cannot access offset 'ntestsnotrun' on array|false.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/public/api/v1/index.php
-
-		-
-			rawMessage: Cannot access offset 'ntestspassed' on array|false.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/public/api/v1/index.php
-
-		-
-			rawMessage: 'Cannot call method GetCurrentBuildId() on CDash\Model\Build|null.'
-			identifier: method.nonObject
-			count: 1
-			path: app/cdash/public/api/v1/index.php
-
-		-
-			rawMessage: 'Cannot call method GetNextBuildId() on CDash\Model\Build|null.'
-			identifier: method.nonObject
-			count: 1
-			path: app/cdash/public/api/v1/index.php
-
-		-
-			rawMessage: 'Cannot call method GetPreviousBuildId() on CDash\Model\Build|null.'
-			identifier: method.nonObject
-			count: 1
-			path: app/cdash/public/api/v1/index.php
-
-		-
-			rawMessage: Cannot cast mixed to int.
-			identifier: cast.int
-			count: 2
-			path: app/cdash/public/api/v1/index.php
-
-		-
-			rawMessage: 'Construct empty() is not allowed. Use more strict comparison.'
-			identifier: empty.notAllowed
-			count: 3
-			path: app/cdash/public/api/v1/index.php
-
-		-
-			rawMessage: 'Offset ''loctested'' might not exist on array{thresholdgreen?: int|null, thresholdyellow?: float, label?: string, loctested?: int, locuntested?: int, position?: int, coverages?: list<array{buildid: int, childlink?: non-falsy-string, percentage: float, locuntested: int, loctested: int, datefull: int|false, date: string, dateelapsed: string, ...}|array{buildid: int, childlink?: non-falsy-string, percentage: float, locuntested: int, loctested: int, percentagediff: float, locuntesteddiff: int, loctesteddiff: int<1, max>, ...}>}.'
-			identifier: offsetAccess.notFound
-			count: 2
-			path: app/cdash/public/api/v1/index.php
-
-		-
-			rawMessage: 'Offset ''locuntested'' might not exist on array{thresholdgreen?: int|null, thresholdyellow?: float, label?: string, loctested: int, locuntested?: int, position?: int, coverages?: list<array{buildid: int, childlink?: non-falsy-string, percentage: float, locuntested: int, loctested: int, datefull: int|false, date: string, dateelapsed: string, ...}|array{buildid: int, childlink?: non-falsy-string, percentage: float, locuntested: int, loctested: int, percentagediff: float, locuntesteddiff: int, loctesteddiff: int<1, max>, ...}>}.'
-			identifier: offsetAccess.notFound
-			count: 2
-			path: app/cdash/public/api/v1/index.php
-
-		-
-			rawMessage: 'Offset ''locuntested'' might not exist on array{thresholdgreen?: int|null, thresholdyellow?: float, label?: string, loctested?: int, locuntested?: int, position?: int, coverages?: list<array{buildid: int, childlink?: non-falsy-string, percentage: float, locuntested: int, loctested: int, datefull: int|false, date: string, dateelapsed: string, ...}|array{buildid: int, childlink?: non-falsy-string, percentage: float, locuntested: int, loctested: int, percentagediff: float, locuntesteddiff: int, loctesteddiff: int<1, max>, ...}>}.'
-			identifier: offsetAccess.notFound
-			count: 1
-			path: app/cdash/public/api/v1/index.php
-
-		-
-			rawMessage: 'Offset ''thresholdgreen'' might not exist on array{thresholdgreen?: int|null, thresholdyellow?: float, label?: string, loctested?: int, locuntested?: int, position?: int, coverages?: list<array{buildid: int, childlink?: non-falsy-string, percentage: float, locuntested: int, loctested: int, datefull: int|false, date: string, dateelapsed: string, ...}|array{buildid: int, childlink?: non-falsy-string, percentage: float, locuntested: int, loctested: int, percentagediff: float, locuntesteddiff: int, loctesteddiff: int<1, max>, ...}>}.'
-			identifier: offsetAccess.notFound
-			count: 1
-			path: app/cdash/public/api/v1/index.php
-
-		-
-			rawMessage: 'Only numeric types are allowed in *, int|null given on the left side.'
-			identifier: mul.leftNonNumeric
-			count: 1
-			path: app/cdash/public/api/v1/index.php
-
-		-
-			rawMessage: 'Only numeric types are allowed in -, int|false given on the right side.'
-			identifier: minus.rightNonNumeric
-			count: 6
-			path: app/cdash/public/api/v1/index.php
-
-		-
-			rawMessage: 'Parameter #1 $string of function strlen expects string, string|false given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/public/api/v1/index.php
-
-		-
-			rawMessage: 'Parameter #2 $timestamp of function date expects int|null, int|false given.'
-			identifier: argument.type
-			count: 4
-			path: app/cdash/public/api/v1/index.php
-
-		-
-			rawMessage: 'Part $buildgroup (mixed) of encapsed string cannot be cast to string.'
-			identifier: encapsedStringPart.nonString
-			count: 1
-			path: app/cdash/public/api/v1/index.php
 
 		-
 			rawMessage: 'Call to an undefined method CDash\Test\UseCase\UseCase::setBuildCommand().'
