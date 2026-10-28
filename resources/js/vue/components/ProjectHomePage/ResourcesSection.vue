@@ -70,6 +70,7 @@
       :documentation-url="documentationUrl"
       :bug-tracker-url="bugTrackerUrl"
       :bug-tracker-new-issue-url="bugTrackerNewIssueUrl"
+      :license-url="licenseUrl"
       :security-policy-url="securityPolicyUrl"
       :test-data-url="testDataUrl"
     />
@@ -87,6 +88,7 @@ import {
   faGlobe,
   faPen,
   faPlus,
+  faScaleBalanced,
   faShieldHalved,
 } from '@fortawesome/free-solid-svg-icons';
 import {
@@ -147,6 +149,11 @@ export default {
       default: null,
     },
 
+    licenseUrl: {
+      type: [String, null],
+      default: null,
+    },
+
     securityPolicyUrl: {
       type: [String, null],
       default: null,
@@ -180,6 +187,7 @@ export default {
         { label: 'Documentation', url: this.documentationUrl, icon: faBook, testId: 'documentation-link' },
         { label: 'Issue Tracker', url: this.bugTrackerUrl, icon: faBug, testId: 'bug-tracker-link' },
         { label: 'Report an Issue', url: this.bugTrackerNewIssueUrl, icon: faCirclePlus, testId: 'new-issue-link' },
+        { label: 'License', url: this.licenseUrl, icon: faScaleBalanced, testId: 'license-link' },
         { label: 'Security Policy', url: this.securityPolicyUrl, icon: faShieldHalved, testId: 'security-policy-link' },
         { label: 'Test Data', url: this.testDataUrl, icon: faDatabase, testId: 'test-data-link' },
       ].filter((resource) => resource.url);

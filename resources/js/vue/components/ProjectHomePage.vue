@@ -42,6 +42,7 @@
             :documentation-url="project.documentationUrl"
             :bug-tracker-url="project.bugTrackerUrl"
             :bug-tracker-new-issue-url="project.bugTrackerNewIssueUrl"
+            :license-url="project.licenseUrl"
             :security-policy-url="project.securityPolicyUrl"
             :test-data-url="project.testDataUrl"
           />
@@ -149,6 +150,7 @@ export default {
             vcsViewer
             bugTrackerUrl
             bugTrackerNewIssueUrl
+            licenseUrl
             securityPolicyUrl
             testDataUrl
             buildsLastDay: buildCount(filters: {

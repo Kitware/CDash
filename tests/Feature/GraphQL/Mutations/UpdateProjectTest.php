@@ -187,6 +187,7 @@ class UpdateProjectTest extends TestCase
             ['bugTrackerUrl', 'https://jira.kitware.com', 'bugtrackerurl', 'https://jira.kitware.com'],
             ['bugTrackerNewIssueUrl', 'https://jira.kitware.com/new', 'bugtrackernewissueurl', 'https://jira.kitware.com/new'],
             ['documentationUrl', 'https://cdash.org/documentation', 'documentationurl', 'https://cdash.org/documentation'],
+            ['licenseUrl', 'https://github.com/Kitware/CDash/blob/master/LICENSE', 'licenseurl', 'https://github.com/Kitware/CDash/blob/master/LICENSE'],
             ['securityPolicyUrl', 'https://github.com/Kitware/CDash/security/policy', 'securitypolicyurl', 'https://github.com/Kitware/CDash/security/policy'],
             ['testDataUrl', 'https://cdash.org/test-data', 'testingdataurl', 'https://cdash.org/test-data'],
             ['visibility', 'PROTECTED', 'public', 2],
