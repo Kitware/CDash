@@ -1,7 +1,7 @@
-An authentication token associated with your account will expire on {{ $authToken->expires->toDateString() }}:
+An authentication token associated with your account will expire on {!! $authToken->expires->toDateString() !!}:
 
-  * {{ $authToken->description ?? 'No Description' }}
+  * {!! $authToken->description ?? 'No Description' !!}
 
-Visit {{ url('/profile') }} to manage your authentication tokens.
+Visit {!! url('/profile') !!} to manage your authentication tokens.
 
 -CDash

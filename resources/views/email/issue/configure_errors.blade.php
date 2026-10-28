@@ -21,5 +21,5 @@ $lines = array_map(function ($idx, $line) {
 }, array_keys($lines), $lines);
 $log = implode("\n", $lines);
 ?>
-Status: {{ $configure->Status }}
-Output: {{ $log }}
+Status: {!! $configure->Status !!}
+Output: {!! $log !!}

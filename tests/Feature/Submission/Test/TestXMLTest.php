@@ -2,8 +2,13 @@
 
 namespace Feature\Submission\Test;
 
+use App\Enums\ProjectRole;
 use App\Models\Project;
+use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Mail\Transport\ArrayTransport;
+use Symfony\Component\Mailer\SentMessage;
+use Symfony\Component\Mime\Email;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
 use Tests\Traits\CreatesSubmissions;
@@ -69,6 +74,44 @@ class TestXMLTest extends TestCase
                 ],
             ],
         ]);
+    }
+
+    /**
+     * Test that notification emails show special characters in names as-is.
+     */
+    public function testSpecialCharactersInNotificationEmail(): void
+    {
+        // Otherwise, only failures that are new since the previous build send email.
+        $this->project->emailredundantfailures = true;
+        $this->project->save();
+        // The build groups created by makePublicProject() never send email.
+        $this->project->buildgroups()->update(['summaryemail' => 0]);
+
+        $this->project->users()->attach(User::factory()->create(), [
+            'role' => ProjectRole::USER,
+            'emailtype' => 3,
+            'emailcategory' => 32,
+            'emailsuccess' => false,
+            'emailmissingsites' => false,
+        ]);
+
+        $this->makeSubmission($this->project->name, base_path(
+            'tests/Feature/Submission/Test/data/special_characters_in_failing_test.xml'
+        ));
+
+        $transport = app('mailer')->getSymfonyTransport();
+        self::assertInstanceOf(ArrayTransport::class, $transport);
+        self::assertCount(1, $transport->messages());
+        $sent_message = $transport->messages()->first();
+        self::assertInstanceOf(SentMessage::class, $sent_message);
+        $email = $sent_message->getOriginalMessage();
+        self::assertInstanceOf(Email::class, $email);
+
+        self::assertStringContainsString(" - Linux & <GCC> 'Debug' - ", (string) $email->getSubject());
+        $body = (string) $email->getTextBody();
+        self::assertStringContainsString('Site: Kitware & "Friends"', $body);
+        self::assertStringContainsString("Build Name: Linux & <GCC> 'Debug'", $body);
+        self::assertStringContainsString("MyTest<int> & 'char' | Completed (Failed <signal> & \"abort\") |", $body);
     }
 
     /**
