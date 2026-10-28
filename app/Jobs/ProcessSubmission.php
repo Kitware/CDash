@@ -188,6 +188,13 @@ class ProcessSubmission implements ShouldQueue
         }
 
         $handler = DB::transaction(function () use ($filehandle, $buildid, $expected_md5, $project, $filename) {
+            // Process submissions for the same build one at a time.  Concurrent workers can otherwise
+            // deadlock, e.g. when one replaces a build that was marked as done while another updates it.
+            // The lock is released automatically when the transaction commits or rolls back.
+            if ($buildid !== null) {
+                DB::select('SELECT pg_advisory_xact_lock(?)', [(int) $buildid]);
+            }
+
             // Special handling for unparsed (non-XML) submissions.
             $handler = self::parse_put_submission($filename, $project, $expected_md5, $buildid);
             if ($handler === false) {
