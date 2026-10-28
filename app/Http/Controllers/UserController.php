@@ -18,6 +18,7 @@ final class UserController extends AbstractController
 
         $error_msg = '';
         $other_msg = '';
+        $can_change_password = $user->can('changePassword', $user);
 
         if (isset($_POST['updateprofile'])) {
             $email = $_POST['email'] ?? '';
@@ -45,7 +46,12 @@ final class UserController extends AbstractController
 
             $password_is_good = true;
 
-            if (!password_verify($oldpasswd, $user->password)) {
+            if (!$can_change_password) {
+                $password_is_good = false;
+                $error_msg = 'Password changes are disabled.';
+            }
+
+            if ($password_is_good && !password_verify($oldpasswd, $user->password)) {
                 $password_is_good = false;
                 $error_msg = 'Your old password is incorrect.';
             }
@@ -96,11 +102,11 @@ final class UserController extends AbstractController
             }
         }
 
-        if (request('password_expired')) {
+        if ($can_change_password && request()->boolean('password_expired')) {
             $error_msg = 'Password has expired';
         }
 
-        if (($_GET['reason'] ?? '') === 'expired') {
+        if ($can_change_password && ($_GET['reason'] ?? '') === 'expired') {
             $error_msg = 'Your password has expired. Please set a new one.';
         }
 
@@ -111,6 +117,7 @@ final class UserController extends AbstractController
             'user' => $user,
             'error' => $error_msg,
             'message' => $other_msg,
+            'can-change-password' => $can_change_password,
             'max-token-expiration' => $maximumExpiration->subDay()->toDateString(),
         ]);
     }
