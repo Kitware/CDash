@@ -72,11 +72,11 @@ class AuthTokenExpiredTest extends TestCase
             'hash' => Str::uuid()->toString(),
             'expires' => Carbon::now(),
             'scope' => AuthTokenScope::FULL_ACCESS,
-            'description' => Str::uuid()->toString(),
+            'description' => "Pat's <CI> & runner",
         ]);
 
         $mailable = new AuthTokenExpired($authtoken);
 
-        $mailable->assertSeeInHtml('* ' . $authtoken->description);
+        $mailable->assertSeeInText('* ' . $authtoken->description);
     }
 }

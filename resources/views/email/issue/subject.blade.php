@@ -41,4 +41,4 @@ $build = $summary['build_name'];
 $group = $summary['build_type'];
 $total = implode(', ', $totals);
 ?>
-FAILED ({{ $total }}): {{ $project }} - {{ $build }} - {{ $group }}
+FAILED ({!! $total !!}): {!! $project !!} - {!! $build !!} - {!! $group !!}

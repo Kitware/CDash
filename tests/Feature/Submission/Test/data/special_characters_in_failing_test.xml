@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="Linux &amp; &lt;GCC&gt; 'Debug'"
+  BuildStamp="20261028-1200-Experimental"
+  Name="Kitware &amp; &quot;Friends&quot;"
+  >
+	<Testing>
+		<StartDateTime>Oct 28 12:00 EDT</StartDateTime>
+		<StartTestTime>1793203200</StartTestTime>
+		<TestList>
+			<Test>./MyTest&lt;int&gt; &amp; 'char'</Test>
+		</TestList>
+		<Test Status="failed">
+			<Name>MyTest&lt;int&gt; &amp; 'char'</Name>
+			<Path>.</Path>
+			<FullName>./MyTest&lt;int&gt; &amp; 'char'</FullName>
+			<FullCommandLine>/tmp/bin/mytest</FullCommandLine>
+			<Results>
+				<NamedMeasurement type="text/string" name="Exit Code">
+					<Value>Failed &lt;signal&gt; &amp; "abort"</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="text/string" name="Completion Status">
+					<Value>Completed</Value>
+				</NamedMeasurement>
+			</Results>
+		</Test>
+		<EndDateTime>Oct 28 12:00 EDT</EndDateTime>
+		<EndTestTime>1793203200</EndTestTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Testing>
+</Site>

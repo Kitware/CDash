@@ -36,4 +36,4 @@ if (isset($fixes['TestFailure'])) {
 }
 $total = implode(", ", $total);
 ?>
-PASSED ({{ $total }}): {{ $project }} - {{ $build }} - {{ $group }}
+PASSED ({!! $total !!}): {!! $project !!} - {!! $build !!} - {!! $group !!}
