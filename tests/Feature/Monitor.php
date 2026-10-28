@@ -70,7 +70,7 @@ class Monitor extends TestCase
         $this->actingAs($this->normal_user)->get('/api/monitor')->assertForbidden();
 
         // Each session belongs to a single user, so start a new one to switch users.
-        $this->flushSession();
+        $this->startNewSession();
 
         // Verify default (empty) JSON result.
         $this->actingAs($this->admin_user)->get('/api/monitor')->assertJsonFragment([

@@ -199,6 +199,8 @@ add_feature_test_in_transaction(/Feature/GitHubWebhook)
 
 add_feature_test_in_transaction(/Feature/GlobalBannerTest)
 
+add_feature_test_in_transaction(/Feature/SessionMiddlewareTest)
+
 add_feature_test_in_transaction(/Feature/GraphQL/Queries/BuildTypeTest)
 
 add_feature_test_in_transaction(/Feature/ProjectInvitationAcceptanceTest)

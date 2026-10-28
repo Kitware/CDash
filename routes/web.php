@@ -33,7 +33,6 @@ use App\Http\Controllers\ProjectNotificationsController;
 use App\Http\Controllers\ProjectOverviewController;
 use App\Http\Controllers\ProjectSettingsController;
 use App\Http\Controllers\SiteController;
-use App\Http\Controllers\SubmissionController;
 use App\Http\Controllers\SubProjectController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\TestDetailsController;
@@ -45,9 +44,7 @@ use App\Models\DynamicAnalysis;
 use App\Models\Project;
 use App\Models\Test;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 
@@ -73,20 +70,8 @@ Route::get('/recoverPassword.php', fn () => redirect('/password/reset', 301));
 
 Route::get('/login.php', fn () => redirect('/login', 301));
 
-Route::get('ping', function (Response $response) {
-    try {
-        DB::connection()->getPdo();
-        $response->setContent('OK');
-    } catch (Exception) {
-        $response->setStatusCode(503);
-    }
-    return $response;
-});
-
 Route::get('/index.php', IndexController::class);
 Route::get('/', IndexController::class);
-
-Route::any('/submit.php', SubmissionController::class);
 
 Route::get('/image/{image}', ImageController::class)
     ->whereNumber('image');

@@ -1846,12 +1846,6 @@ parameters:
 			path: app/Http/Kernel.php
 
 		-
-			rawMessage: PHPDoc type array of property App\Http\Kernel::$middlewarePriority is not the same as PHPDoc type array<string> of overridden property Illuminate\Foundation\Http\Kernel::$middlewarePriority.
-			identifier: property.phpDocType
-			count: 1
-			path: app/Http/Kernel.php
-
-		-
 			rawMessage: 'PHPDoc type array of property App\Http\Kernel::$routeMiddleware is not the same as PHPDoc type array<string, string> of overridden property Illuminate\Foundation\Http\Kernel::$routeMiddleware.'
 			identifier: property.phpDocType
 			count: 1
@@ -1865,12 +1859,6 @@ parameters:
 
 		-
 			rawMessage: Property App\Http\Kernel::$middlewareGroups type has no value type specified in iterable type array.
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/Http/Kernel.php
-
-		-
-			rawMessage: Property App\Http\Kernel::$middlewarePriority type has no value type specified in iterable type array.
 			identifier: missingType.iterableValue
 			count: 1
 			path: app/Http/Kernel.php
@@ -14305,19 +14293,19 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			rawMessage: 'Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester.php:804::__construct() has parameter $response with no type specified.'
+			rawMessage: 'Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester.php:815::__construct() has parameter $response with no type specified.'
 			identifier: missingType.parameter
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			rawMessage: 'Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester.php:804::getSent() has no return type specified.'
+			rawMessage: 'Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester.php:815::getSent() has no return type specified.'
 			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			rawMessage: 'Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester.php:804::read() has no return type specified.'
+			rawMessage: 'Method class@anonymous/app/cdash/tests/kwtest/kw_web_tester.php:815::read() has no return type specified.'
 			identifier: missingType.return
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php
@@ -14551,7 +14539,7 @@ parameters:
 			path: app/cdash/tests/kwtest/kw_web_tester.php
 
 		-
-			rawMessage: Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester.php:804::$read has no type specified.
+			rawMessage: Property class@anonymous/app/cdash/tests/kwtest/kw_web_tester.php:815::$read has no type specified.
 			identifier: missingType.property
 			count: 1
 			path: app/cdash/tests/kwtest/kw_web_tester.php

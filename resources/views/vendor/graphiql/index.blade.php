@@ -40,9 +40,25 @@
 <script src="{{ GraphiQLAsset::graphiQLJS() }}"></script>
 <script src="{{ GraphiQLAsset::pluginExplorerJS() }}"></script>
 <script>
+    // Sends the current CSRF token from the XSRF-TOKEN cookie, which stays current even if the
+    // token changes after this page loads. A 419 response refreshes the cookie, so retry once.
+    // This mirrors fetchWithCsrfToken() in resources/js/vue/components/shared/CsrfFetch.js.
+    async function fetchWithCsrfToken(url, options = {}) {
+        const send = () => {
+            const cookie = document.cookie.split('; ').find((c) => c.startsWith('XSRF-TOKEN='));
+            const token = cookie === undefined ? '' : decodeURIComponent(cookie.slice('XSRF-TOKEN='.length));
+            const headers = new Headers(options.headers);
+            headers.set('X-XSRF-TOKEN', token);
+            return fetch(url, {...options, headers});
+        };
+        const response = await send();
+        return response.status === 419 ? send() : response;
+    }
+
     const fetcher = GraphiQL.createFetcher({
         url: '{{ $url }}',
         subscriptionUrl: '{{ $subscriptionUrl }}',
+        fetch: fetchWithCsrfToken,
     });
     const explorer = GraphiQLPluginExplorer.explorerPlugin();
 

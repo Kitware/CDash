@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+use App\Http\Middleware\VerifyCsrfTokenForSessions;
 use GraphQL\Error\DebugFlag;
 use GraphQL\Validator\Rules\DisableIntrospection;
 use GraphQL\Validator\Rules\QueryComplexity;
@@ -52,11 +53,19 @@ return [
          * make sure to return spec-compliant responses in case an error is thrown.
          */
         'middleware' => [
+            // This route isn't in the "web" middleware group, so it needs the "stateful" cookie and
+            // session middleware group (see App\Http\Kernel) itself. It comes first so that error
+            // pages for requests rejected below still know who is logged in.
+            'stateful',
+
             // Ensures the request is not vulnerable to cross-site request forgery.
             EnsureXHR::class,
 
             // Always set the `Accept: application/json` header.
             AcceptJson::class,
+
+            // Requires a CSRF token from users logged in by a cookie.
+            VerifyCsrfTokenForSessions::class,
 
             // Logs out sessions whose user has changed their password since logging in.
             AuthenticateSession::class,

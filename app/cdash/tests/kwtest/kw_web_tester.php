@@ -29,6 +29,7 @@ use App\Http\Kernel;
 use App\Models\User;
 use CDash\Model\Project;
 use GuzzleHttp\Client;
+use GuzzleHttp\Cookie\CookieJar;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -512,7 +513,8 @@ class KWWebTestCase extends WebTestCase
     public function getGuzzleClient($username = 'simpletest@localhost',
         $password = 'simpletest')
     {
-        $client = new Client(['cookies' => true]);
+        $cookies = new CookieJar();
+        $client = new Client(['cookies' => $cookies]);
         try {
             // first get the csrf token
             $response = $client->request('GET', "{$this->url}/login");
@@ -534,7 +536,16 @@ class KWWebTestCase extends WebTestCase
             $this->fail($e->getMessage());
             return false;
         }
-        return $client;
+
+        // Requests authenticated by the session cookie need the session's CSRF token, which
+        // changes on login, so send the token from the XSRF-TOKEN cookie set by logging in.
+        $xsrf_cookie = $cookies->getCookieByName('XSRF-TOKEN');
+        if ($xsrf_cookie === null) {
+            $this->fail('Logging in did not set an XSRF-TOKEN cookie.');
+            return false;
+        }
+        $xsrf_token = rawurldecode((string) $xsrf_cookie->getValue());
+        return new Client(['cookies' => $cookies, 'headers' => ['X-XSRF-TOKEN' => $xsrf_token]]);
     }
 }
 

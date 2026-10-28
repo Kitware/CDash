@@ -15,9 +15,12 @@ use App\Http\Middleware\Timer;
 use App\Http\Middleware\TrimStrings;
 use App\Http\Middleware\TrustProxies;
 use App\Http\Middleware\VerifyCsrfToken;
+use App\Http\Middleware\VerifyCsrfTokenForSessions;
 use Illuminate\Auth\Middleware\AuthenticateWithBasicAuth;
 use Illuminate\Auth\Middleware\Authorize;
 use Illuminate\Auth\Middleware\EnsureEmailIsVerified;
+use Illuminate\Contracts\Auth\Middleware\AuthenticatesRequests;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 use Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull;
@@ -25,9 +28,11 @@ use Illuminate\Http\Middleware\SetCacheHeaders;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Routing\Middleware\ThrottleRequests;
 use Illuminate\Routing\Middleware\ValidateSignature;
+use Illuminate\Routing\Router;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Slides\Saml2\Http\Middleware\ResolveTenant;
 
 class Kernel extends HttpKernel
 {
@@ -44,7 +49,6 @@ class Kernel extends HttpKernel
         ConvertEmptyStringsToNull::class,
         TrustProxies::class,
         Timer::class,
-        StartSession::class,
     ];
 
     /**
@@ -53,9 +57,13 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $middlewareGroups = [
-        'web' => [
+        'stateful' => [
             EncryptCookies::class,
             AddQueuedCookiesToResponse::class,
+            StartSession::class,
+        ],
+        'web' => [
+            'stateful',
             AuthenticateSession::class,
             ShareErrorsFromSession::class,
             VerifyCsrfToken::class,
@@ -63,18 +71,14 @@ class Kernel extends HttpKernel
             'password.expired',
         ],
         'api' => [
-            EncryptCookies::class,
-            AddQueuedCookiesToResponse::class,
+            'stateful',
+            VerifyCsrfTokenForSessions::class,
             ShareErrorsFromSession::class,
             JsonOnly::class,
             // 'throttle:60,1',
             SubstituteBindings::class,
             AuthenticateToken::class,
             AuthenticateSession::class,
-        ],
-        'saml' => [
-            EncryptCookies::class,
-            AddQueuedCookiesToResponse::class,
         ],
     ];
 
@@ -100,24 +104,15 @@ class Kernel extends HttpKernel
     ];
 
     /**
-     * The priority-sorted list of middleware.
-     *
-     * This forces non-global middleware to always be in the given order.
-     *
-     * @var array
+     * Add CDash's middleware to Laravel's default middleware priority list.
      */
-    protected $middlewarePriority = [
-        JsonOnly::class,
-        StartSession::class,
-        ShareErrorsFromSession::class,
-        AuthenticateToken::class,
-        Authenticate::class,
-        AuthenticateSession::class,
-        SubstituteBindings::class,
-        Authorize::class,
-        'auth',
-        'admin',
-        'password.expired',
-        Timer::class,
-    ];
+    public function __construct(Application $app, Router $router)
+    {
+        parent::__construct($app, $router);
+
+        $this->prependToMiddlewarePriority(JsonOnly::class);
+        $this->addToMiddlewarePriorityAfter(StartSession::class, ResolveTenant::class);
+        $this->addToMiddlewarePriorityBefore(AuthenticatesRequests::class, AuthenticateToken::class);
+        $this->addToMiddlewarePriorityBefore(AuthenticateToken::class, VerifyCsrfTokenForSessions::class);
+    }
 }
