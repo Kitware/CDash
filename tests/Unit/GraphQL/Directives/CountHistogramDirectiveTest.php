@@ -14,6 +14,8 @@ class CountHistogramDirectiveTest extends DirectiveTestCase
                 project: Project @first
             }
 
+            scalar Time
+
             enum TimeInterval {
                 HOUR @enum(value: \"hour\")
                 DAY @enum(value: \"day\")
@@ -48,6 +50,7 @@ class CountHistogramDirectiveTest extends DirectiveTestCase
             interval: TimeInterval!
             by: BuildTimeField! = START_TIME
             timezone: String! = "UTC" @rules(apply: ["timezone"])
+            dayStart: Time! = "00:00:00" @rules(apply: ["date_format:H:i:s"])
         '));
 
         self::assertSame([
@@ -56,6 +59,7 @@ class CountHistogramDirectiveTest extends DirectiveTestCase
             'interval' => 'TimeInterval!',
             'by' => 'BuildTimeField! = START_TIME',
             'timezone' => 'String! = "UTC" @rules(apply: ["timezone"])',
+            'dayStart' => 'Time! = "00:00:00" @rules(apply: ["date_format:H:i:s"])',
         ], self::fieldArguments($documentAST, 'Project', 'buildCountHistogram'));
     }
 
@@ -67,18 +71,22 @@ class CountHistogramDirectiveTest extends DirectiveTestCase
         $interval = '`interval: TimeInterval!`';
         $by = '`by`, a non-null enum of timestamp columns';
         $timezone = '`timezone: String!`';
+        $dayStart = '`dayStart: Time!`';
 
         return [
-            'missing interval' => ['by: BuildTimeField!, timezone: String!', $interval],
-            'nullable interval' => ['interval: TimeInterval, by: BuildTimeField!, timezone: String!', $interval],
-            'interval of the wrong type' => ['interval: String!, by: BuildTimeField!, timezone: String!', $interval],
-            'missing by' => ['interval: TimeInterval!, timezone: String!', $by],
-            'nullable by' => ['interval: TimeInterval!, by: BuildTimeField, timezone: String!', $by],
-            'by is not an enum' => ['interval: TimeInterval!, by: String!, timezone: String!', $by],
-            'by is a list' => ['interval: TimeInterval!, by: [BuildTimeField!]!, timezone: String!', $by],
-            'missing timezone' => ['interval: TimeInterval!, by: BuildTimeField!', $timezone],
-            'nullable timezone' => ['interval: TimeInterval!, by: BuildTimeField!, timezone: String', $timezone],
-            'timezone of the wrong type' => ['interval: TimeInterval!, by: BuildTimeField!, timezone: ID!', $timezone],
+            'missing interval' => ['by: BuildTimeField!, timezone: String!, dayStart: Time!', $interval],
+            'nullable interval' => ['interval: TimeInterval, by: BuildTimeField!, timezone: String!, dayStart: Time!', $interval],
+            'interval of the wrong type' => ['interval: String!, by: BuildTimeField!, timezone: String!, dayStart: Time!', $interval],
+            'missing by' => ['interval: TimeInterval!, timezone: String!, dayStart: Time!', $by],
+            'nullable by' => ['interval: TimeInterval!, by: BuildTimeField, timezone: String!, dayStart: Time!', $by],
+            'by is not an enum' => ['interval: TimeInterval!, by: String!, timezone: String!, dayStart: Time!', $by],
+            'by is a list' => ['interval: TimeInterval!, by: [BuildTimeField!]!, timezone: String!, dayStart: Time!', $by],
+            'missing timezone' => ['interval: TimeInterval!, by: BuildTimeField!, dayStart: Time!', $timezone],
+            'nullable timezone' => ['interval: TimeInterval!, by: BuildTimeField!, timezone: String, dayStart: Time!', $timezone],
+            'timezone of the wrong type' => ['interval: TimeInterval!, by: BuildTimeField!, timezone: ID!, dayStart: Time!', $timezone],
+            'missing dayStart' => ['interval: TimeInterval!, by: BuildTimeField!, timezone: String!', $dayStart],
+            'nullable dayStart' => ['interval: TimeInterval!, by: BuildTimeField!, timezone: String!, dayStart: Time', $dayStart],
+            'dayStart of the wrong type' => ['interval: TimeInterval!, by: BuildTimeField!, timezone: String!, dayStart: String!', $dayStart],
         ];
     }
 
