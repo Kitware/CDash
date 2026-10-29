@@ -49,7 +49,7 @@ return [
     |
     */
 
-    'routesMiddleware' => ['saml'],
+    'routesMiddleware' => ['stateful'],
 
     /*
     |--------------------------------------------------------------------------

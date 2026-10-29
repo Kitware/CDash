@@ -15,4 +15,13 @@ abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
     use MakesGraphQLRequests;
+
+    /**
+     * Discards the current session, as though the next request came from a different browser.
+     */
+    public function startNewSession(): void
+    {
+        $this->app['auth']->forgetGuards();
+        $this->flushSession();
+    }
 }

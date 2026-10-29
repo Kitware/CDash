@@ -16,10 +16,12 @@ use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
+use Tests\Traits\LogsInThroughLoginForm;
 
 class PasswordResetTest extends TestCase
 {
     use DatabaseTransactions;
+    use LogsInThroughLoginForm;
 
     private const OLD_PASSWORD = 'old-password';
     private const NEW_PASSWORD = 'new-password';
@@ -36,15 +38,6 @@ class PasswordResetTest extends TestCase
             'password' => Hash::make(self::OLD_PASSWORD),
             'password_updated_at' => Carbon::now()->subYear(),
         ]);
-    }
-
-    /**
-     * Discards the current session, as though the next request came from a different browser.
-     */
-    private function startNewSession(): void
-    {
-        $this->app['auth']->forgetGuards();
-        $this->flushSession();
     }
 
     /**
@@ -65,17 +58,6 @@ class PasswordResetTest extends TestCase
             'email' => $email ?? $this->user->email,
             'password' => $password,
             'password_confirmation' => $password,
-        ]);
-    }
-
-    /**
-     * @return TestResponse<Response>
-     */
-    private function login(string $password): TestResponse
-    {
-        return $this->post('/login', [
-            'email' => $this->user->email,
-            'password' => $password,
         ]);
     }
 
@@ -221,9 +203,9 @@ class PasswordResetTest extends TestCase
         self::assertNotSame($old_remember_token, $this->user->getRememberToken());
         self::assertFalse(Password::tokenExists($this->user, $token));
 
-        $this->login(self::OLD_PASSWORD);
+        $this->loginThroughForm($this->user, self::OLD_PASSWORD);
         $this->assertGuest();
-        $this->login(self::NEW_PASSWORD);
+        $this->loginThroughForm($this->user, self::NEW_PASSWORD);
         $this->assertAuthenticatedAs($this->user);
     }
 
@@ -341,25 +323,25 @@ class PasswordResetTest extends TestCase
     {
         config(['cdash.password.expires' => 30]);
 
-        $this->login(self::OLD_PASSWORD);
+        $this->loginThroughForm($this->user, self::OLD_PASSWORD);
         $this->get('/projects')->assertRedirect('/profile?password_expired=1');
 
         $this->startNewSession();
         $this->resetPassword(Password::createToken($this->user));
-        $this->login(self::NEW_PASSWORD);
+        $this->loginThroughForm($this->user, self::NEW_PASSWORD);
         $this->get('/projects')->assertOk();
     }
 
     public function testResetLogsOutOtherSessions(): void
     {
         // Log in on another device and use CDash.
-        $this->login(self::OLD_PASSWORD);
+        $this->loginThroughForm($this->user, self::OLD_PASSWORD);
         $this->get('/profile')->assertOk();
         $other_session = session()->all();
 
         $this->startNewSession();
         $this->resetPassword(Password::createToken($this->user))->assertSessionHasNoErrors();
-        $this->login(self::NEW_PASSWORD);
+        $this->loginThroughForm($this->user, self::NEW_PASSWORD);
         $this->assertAuthenticatedAs($this->user);
         $new_session = session()->all();
 
@@ -389,7 +371,7 @@ class PasswordResetTest extends TestCase
 
     public function testLoggingInAsAnotherUserReplacesSessionPasswordHash(): void
     {
-        $this->login(self::OLD_PASSWORD);
+        $this->loginThroughForm($this->user, self::OLD_PASSWORD);
         $this->get('/profile')->assertOk();
 
         // Use another user's API token with the same session.

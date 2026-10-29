@@ -1,8 +1,9 @@
 import { createApp } from 'vue';
-import { ApolloClient, InMemoryCache } from '@apollo/client/core';
+import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client/core';
 import { createApolloProvider } from '@vue/apollo-option';
 import { relayStylePagination } from '@apollo/client/utilities';
 import { DefaultApolloClient } from '@vue/apollo-composable';
+import { fetchWithCsrfToken } from './components/shared/CsrfFetch';
 
 const components = {
   'build-configure-page': () => import('./components/BuildConfigurePage.vue'),
@@ -81,7 +82,10 @@ const apolloClient = new ApolloClient({
       },
     },
   }),
-  uri: `${baseURL}/graphql`,
+  link: new HttpLink({
+    uri: `${baseURL}/graphql`,
+    fetch: fetchWithCsrfToken,
+  }),
 });
 
 const apolloProvider = createApolloProvider({

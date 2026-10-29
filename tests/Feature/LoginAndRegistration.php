@@ -19,11 +19,13 @@ use Psr\SimpleCache\InvalidArgumentException;
 use Slides\Saml2\Events\SignedIn as Saml2SignedInEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Tests\TestCase;
+use Tests\Traits\LogsInThroughLoginForm;
 use Throwable;
 
 class LoginAndRegistration extends TestCase
 {
     use DatabaseTransactions;
+    use LogsInThroughLoginForm;
 
     protected static string $email = 'logintest@user.com';
     protected static string $password = '54321';
@@ -79,10 +81,7 @@ class LoginAndRegistration extends TestCase
         $this->assertModelExists($this->user);
 
         // Verify that users can login with their username and password.
-        $response = $this->post('/login', [
-            'email' => $this->user->email,
-            'password' => '12345',
-        ]);
+        $response = $this->loginThroughForm($this->user, '12345');
         $this->assertModelExists($this->user);
         $this->assertAuthenticatedAs($this->user);
     }
@@ -102,11 +101,7 @@ class LoginAndRegistration extends TestCase
         $this->assertModelExists($this->user);
 
         // Verify that logging in with "remember me" checked sets the recaller cookie.
-        $response = $this->post('/login', [
-            'email' => $this->user->email,
-            'password' => '12345',
-            'remember' => '1',
-        ]);
+        $response = $this->loginThroughForm($this->user, '12345', remember: true);
         $this->assertAuthenticatedAs($this->user);
         $response->assertCookie(Auth::guard()->getRecallerName());
     }
@@ -117,10 +112,7 @@ class LoginAndRegistration extends TestCase
         $this->assertModelExists($this->user);
 
         // Verify that logging in without "remember me" does not set the recaller cookie.
-        $response = $this->post('/login', [
-            'email' => $this->user->email,
-            'password' => '12345',
-        ]);
+        $response = $this->loginThroughForm($this->user, '12345');
         $this->assertAuthenticatedAs($this->user);
         $response->assertCookieMissing(Auth::guard()->getRecallerName());
     }
@@ -130,10 +122,7 @@ class LoginAndRegistration extends TestCase
         $this->user = User::factory()->create(['password' => '12345']);
 
         // Test the incorrect password workflow.
-        $response = $this->post('/login', [
-            'email' => $this->user->email,
-            'password' => 'not_the_right_password',
-        ]);
+        $response = $this->loginThroughForm($this->user, 'not_the_right_password');
         $response->assertStatus(401);
         $this->assertGuest();
     }
@@ -155,10 +144,7 @@ class LoginAndRegistration extends TestCase
         // Verify that we can't login by POSTing to /login when the
         // relevant config setting is disabled.
         config(['cdash.username_password_authentication_enabled' => false]);
-        $response = $this->post('/login', [
-            'email' => $this->user->email,
-            'password' => '12345',
-        ]);
+        $response = $this->loginThroughForm($this->user, '12345');
         $this->assertGuest();
     }
 

@@ -20,6 +20,22 @@ const CDash = angular.module('CDash', [
   'ui.bootstrap',
 ]);
 
+// $http sends the CSRF token from the XSRF-TOKEN cookie. If that token was stale (e.g., the
+// session expired and "remember me" logged the user back in), the 419 response sets a fresh
+// cookie, so retry once.
+CDash.config(['$httpProvider', function ($httpProvider) {
+  $httpProvider.interceptors.push(['$injector', '$q', function ($injector, $q) {
+    return {
+      responseError: function (rejection) {
+        if (rejection.status !== 419 || rejection.config.csrfRetried) {
+          return $q.reject(rejection);
+        }
+        return $injector.get('$http')({ ...rejection.config, csrfRetried: true });
+      },
+    };
+  }]);
+}]);
+
 // filterdataTemplate.html and subProjectTable.html are only ever reached via
 // ng-include in server-rendered view HTML (not through Angular DI), so their
 // content is pre-loaded into $templateCache under the same path ng-include

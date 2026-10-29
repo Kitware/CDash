@@ -121,7 +121,7 @@ class ProjectPermissions extends TestCase
         $response->assertJson(['error' => 'You do not have access to the requested project or the requested project does not exist.']);
 
         // Each session belongs to a single user, so start a new one to switch users.
-        $this->flushSession();
+        $this->startNewSession();
 
         // Verify that they can access all 4 projects.
         $_GET['project'] = $this->public_project->name;
