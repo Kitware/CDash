@@ -161,6 +161,34 @@ class ProjectPolicy
         return $this->update($currentUser, $project);
     }
 
+    public function createProjectMetric(User $currentUser, Project $project): bool
+    {
+        return $this->update($currentUser, $project);
+    }
+
+    public function updateProjectMetric(User $currentUser, Project $project): bool
+    {
+        return $this->update($currentUser, $project);
+    }
+
+    public function deleteProjectMetric(User $currentUser, Project $project): bool
+    {
+        return $this->update($currentUser, $project);
+    }
+
+    public function updateProjectMetricOrder(User $currentUser, Project $project): bool
+    {
+        return $this->update($currentUser, $project);
+    }
+
+    /**
+     * Any signed-in user who can see the project can submit metric values.
+     */
+    public function createProjectMetricValues(User $currentUser, Project $project): bool
+    {
+        return $this->view($currentUser, $project);
+    }
+
     public function createRepository(User $currentUser, Project $project): bool
     {
         return $this->update($currentUser, $project);

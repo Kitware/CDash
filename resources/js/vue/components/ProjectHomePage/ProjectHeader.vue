@@ -29,6 +29,7 @@
         >
           {{ description }}
         </div>
+        <slot />
       </div>
     </div>
     <div class="tw-flex tw-flex-row tw-gap-2 tw-shrink-0">
