@@ -56,9 +56,6 @@ class ProjectPermissions extends TestCase
     {
         URL::forceRootUrl('http://localhost');
 
-        // Get the missing project response so we can verify that all responses are the same
-        $missing_project_response = $this->get('/api/v2/projects/9999999')->json();
-
         // Verify that we can access the public project.
         $_GET['project'] = $this->public_project->name;
         $response = $this->get('/api/v1/index.php');
