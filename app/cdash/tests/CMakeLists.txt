@@ -255,6 +255,8 @@ add_feature_test_in_transaction(/Feature/GraphQL/Queries/UpdateFileTypeTest)
 
 add_feature_test_in_transaction(/Feature/GraphQL/Queries/PinnedTestMeasurementTypeTest)
 
+add_feature_test_in_transaction(/Feature/GraphQL/Queries/ProjectMetricTypeTest)
+
 add_feature_test_in_transaction(/Feature/GraphQL/Queries/BuildErrorTypeTest)
 
 add_feature_test_in_transaction(/Feature/GraphQL/Queries/CommentTypeTest)
@@ -324,6 +326,16 @@ add_feature_test_in_transaction(/Feature/GraphQL/Mutations/CreatePinnedTestMeasu
 add_feature_test_in_transaction(/Feature/GraphQL/Mutations/DeletePinnedTestMeasurementTest)
 
 add_feature_test_in_transaction(/Feature/GraphQL/Mutations/UpdatePinnedTestMeasurementOrderTest)
+
+add_feature_test_in_transaction(/Feature/GraphQL/Mutations/CreateProjectMetricTest)
+
+add_feature_test_in_transaction(/Feature/GraphQL/Mutations/UpdateProjectMetricTest)
+
+add_feature_test_in_transaction(/Feature/GraphQL/Mutations/DeleteProjectMetricTest)
+
+add_feature_test_in_transaction(/Feature/GraphQL/Mutations/UpdateProjectMetricOrderTest)
+
+add_feature_test_in_transaction(/Feature/GraphQL/Mutations/CreateProjectMetricValuesTest)
 
 add_feature_test_in_transaction(/Feature/GraphQL/Mutations/CreateRepositoryTest)
 
