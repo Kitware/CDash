@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\BuildController;
 use App\Http\Controllers\BuildGroupController;
-use App\Http\Controllers\CDash;
 use App\Http\Controllers\DynamicAnalysisController;
 use App\Http\Controllers\ExpectedBuildController;
 use App\Http\Controllers\FilterController;
@@ -78,6 +77,3 @@ Route::middleware(['auth'])->group(function (): void {
         Route::get('/monitor', [MonitorController::class, 'get']);
     });
 });
-
-// this *MUST* be the last route in the file
-Route::any('{url}', CDash::class)->where('url', '.*');

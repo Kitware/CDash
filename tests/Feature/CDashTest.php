@@ -2,11 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Http\Controllers\CDash;
 use App\Models\User;
-use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Tests\TestCase;
 
@@ -17,46 +14,6 @@ use Tests\TestCase;
  */
 class CDashTest extends TestCase
 {
-    public function testCDashFilesystemConfigExists(): void
-    {
-        $expected = [
-            'driver' => 'local',
-            'root' => app_path('cdash/public'),
-            'visibility' => 'private',
-        ];
-
-        $actual = Config::get('filesystems.disks.cdash');
-        $this::assertEquals($expected, $actual);
-    }
-
-    public function testFilesystemAdapterConfiguredForCDash(): void
-    {
-        $cdashfs = Storage::disk('cdash');
-        $this::assertInstanceOf(FilesystemAdapter::class, $cdashfs);
-    }
-
-    // There are some things to note about the approach to setting up this test.
-
-    // First, consider that we're simply creating an output buffer requiring the
-    // file that is being requested then requiring the file, e.g:
-    //   ob_start();
-    //   require $requested_file;
-    //   $content = ob_get_contents()
-    //   ob_end();
-    // This is all well and good except that a few things can happen when requiring
-    // the file that may be both unexpected and problematic. The first problem is this,
-    // being a testing framework, needs to output information regarding the tests. PHP
-    // believes that this output constitutes headers having already been sent and will
-    // die with an error stating that "headers have already been sent". This may be
-    // easily fixed by editing the phpunit.xml file and adding the stderr attribute to
-    // the root node (phpunit), setting its value to "true", e.g. stderr="true".
-    //
-    // Secondly any time the exit method is called in our required file, the entire
-    // application will quit, which is fine if we're not testing, but problematic
-    // otherwise. Output of headers, specifically, `Location` seems to be the primary
-    // reason for using the `exit` language construct in CDash so avoid testing scripts
-    // (URIs) that want to redirect.
-
     public function testCDashBasicRequest(): void
     {
         URL::forceRootUrl('http://localhost');

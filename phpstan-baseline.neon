@@ -805,54 +805,6 @@ parameters:
 			path: app/Http/Controllers/BuildGroupController.php
 
 		-
-			rawMessage: 'Construct empty() is not allowed. Use more strict comparison.'
-			identifier: empty.notAllowed
-			count: 1
-			path: app/Http/Controllers/CDash.php
-
-		-
-			rawMessage: 'Method App\Http\Controllers\CDash::getRequestContents() has no return type specified.'
-			identifier: missingType.return
-			count: 1
-			path: app/Http/Controllers/CDash.php
-
-		-
-			rawMessage: 'Only booleans are allowed in a negated boolean, string given.'
-			identifier: booleanNot.exprNotBoolean
-			count: 1
-			path: app/Http/Controllers/CDash.php
-
-		-
-			rawMessage: 'Only booleans are allowed in an elseif condition, mixed given.'
-			identifier: elseif.condNotBoolean
-			count: 1
-			path: app/Http/Controllers/CDash.php
-
-		-
-			rawMessage: 'Only booleans are allowed in an if condition, bool|int given.'
-			identifier: if.condNotBoolean
-			count: 1
-			path: app/Http/Controllers/CDash.php
-
-		-
-			rawMessage: 'Parameter #1 $code of method Symfony\Component\HttpFoundation\Response::setStatusCode() expects int, int<min, -1>|int<1, max>|true given.'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/CDash.php
-
-		-
-			rawMessage: 'Parameter #2 $status of function response expects int, int<min, -1>|int<1, max>|true given.'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/CDash.php
-
-		-
-			rawMessage: Short ternary operator is not allowed. Use null coalesce operator if applicable or consider using long ternary.
-			identifier: ternary.shortNotAllowed
-			count: 1
-			path: app/Http/Controllers/CDash.php
-
-		-
 			rawMessage: '''
 				Call to deprecated method getSubProjects() of class App\Services\ProjectService:
 				12/06/2025  Use Eloquent relationships for all new code
@@ -21375,12 +21327,6 @@ parameters:
 				Use useOrigin
 			'''
 			identifier: staticMethod.deprecated
-			count: 1
-			path: tests/Feature/ProjectPermissions.php
-
-		-
-			rawMessage: Variable $missing_project_response is never read.
-			identifier: variable.unused
 			count: 1
 			path: tests/Feature/ProjectPermissions.php
 
