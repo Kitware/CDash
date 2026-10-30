@@ -195,4 +195,79 @@ class CreatePinnedTestMeasurementTest extends TestCase
         self::assertContains($name1, $project->pinnedTestMeasurements()->pluck('name')->toArray());
         self::assertContains($name2, $project->pinnedTestMeasurements()->pluck('name')->toArray());
     }
+
+    public function testFailsWhenDuplicateName(): void
+    {
+        $project = $this->makePublicProject();
+        $user = User::factory()->adminUser()->create();
+
+        $name = Str::uuid()->toString();
+        $project->pinnedTestMeasurements()->create([
+            'name' => $name,
+            'position' => 1,
+        ]);
+
+        $this->actingAs($user)->graphQL('
+            mutation createPinnedTestMeasurement($input: CreatePinnedTestMeasurementInput!) {
+                createPinnedTestMeasurement(input: $input) {
+                    message
+                    pinnedTestMeasurement {
+                        name
+                        position
+                    }
+                }
+            }
+        ', [
+            'input' => [
+                'projectId' => $project->id,
+                'name' => $name,
+            ],
+        ])->assertJsonPath('data.createPinnedTestMeasurement', null)
+            ->assertGraphQLErrorMessage('This test measurement is already pinned.');
+
+        self::assertSame([$name], $project->pinnedTestMeasurements()->pluck('name')->toArray());
+    }
+
+    public function testAllowsSameNameInDifferentProjects(): void
+    {
+        $project1 = $this->makePublicProject();
+        $project2 = $this->makePublicProject();
+        $user = User::factory()->adminUser()->create();
+
+        $name = Str::uuid()->toString();
+        $project1->pinnedTestMeasurements()->create([
+            'name' => $name,
+            'position' => 1,
+        ]);
+
+        $this->actingAs($user)->graphQL('
+            mutation createPinnedTestMeasurement($input: CreatePinnedTestMeasurementInput!) {
+                createPinnedTestMeasurement(input: $input) {
+                    message
+                    pinnedTestMeasurement {
+                        name
+                        position
+                    }
+                }
+            }
+        ', [
+            'input' => [
+                'projectId' => $project2->id,
+                'name' => $name,
+            ],
+        ])->assertExactJson([
+            'data' => [
+                'createPinnedTestMeasurement' => [
+                    'message' => null,
+                    'pinnedTestMeasurement' => [
+                        'name' => $name,
+                        'position' => 1,
+                    ],
+                ],
+            ],
+        ]);
+
+        self::assertSame([$name], $project1->pinnedTestMeasurements()->pluck('name')->toArray());
+        self::assertSame([$name], $project2->pinnedTestMeasurements()->pluck('name')->toArray());
+    }
 }
