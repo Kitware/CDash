@@ -30,6 +30,25 @@ describe('manageBuildGroup', () => {
   });
 
 
+  it('can create a buildgroup after choosing a wildcard build type', () => {
+    cy.login();
+    cy.visit('manageBuildGroup.php?projectid=5');
+
+    // choose a build type on the wildcard tab without submitting the form
+    cy.get('a').contains('Wildcard BuildGroups').click();
+    cy.get('select[name="buildType"]').select('Experimental');
+
+    // create a Daily group from the same page
+    cy.get('a').contains('Create new BuildGroup').click();
+    cy.get('input[name="newBuildGroupName"]').type('anotherBuildGroup');
+    cy.get('select[name="newBuildGroupType"]').find('option').contains('Daily').should('be.selected');
+    cy.get('button').contains('Create BuildGroup').click();
+    cy.get('#buildgroup_created').should('be.visible');
+    cy.get('a').contains('Current BuildGroups').click();
+    cy.get('#current').should('contain', 'anotherBuildGroup');
+  });
+
+
   it('prevents creating duplicate buildgroups', () => {
     cy.login();
     cy.visit('manageBuildGroup.php?projectid=5');
@@ -118,6 +137,7 @@ describe('manageBuildGroup', () => {
     // cy.get('input[name="wildcardBuildNameMatch"]').should('contain', ''); // TODO: (sbelsk) uncomment once in Vue
     cy.get('input[name="wildcardBuildNameMatch"]').clear();
     cy.get('input[name="wildcardBuildNameMatch"]').type('simple');
+    cy.get('select[name="buildType"]').find('option').contains('Nightly').should('be.selected');
     cy.get('select[name="buildType"]').select('Experimental');
     cy.get('button[type="submit"]').contains('Define BuildGroup').click();
 
@@ -209,5 +229,6 @@ describe('manageBuildGroup', () => {
 
     deleteBuildGroup('aNewBuildGroup');
     deleteBuildGroup('latestBuildGroup');
+    deleteBuildGroup('anotherBuildGroup');
   });
 });
