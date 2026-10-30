@@ -384,6 +384,31 @@ class CoverageTypeTest extends TestCase
         ]);
     }
 
+    public function testCodeIsNotFilterable(): void
+    {
+        /** @var Build $build */
+        $build = $this->project->builds()->create([
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        $this->graphQL('
+            query build($id: ID) {
+                build(id: $id) {
+                    coverage(filters: { contains: { file: "int" } }) {
+                        edges {
+                            node {
+                                filePath
+                            }
+                        }
+                    }
+                }
+            }
+        ', [
+            'id' => $build->id,
+        ])->assertGraphQLErrorMessage('Field "file" is not defined by type "CoverageFilterInput".');
+    }
+
     public function testCodeShownWhenShowCoverageCodeIsTrue(): void
     {
         $coverageFile = CoverageFile::create([
