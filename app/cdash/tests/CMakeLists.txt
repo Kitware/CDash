@@ -393,6 +393,8 @@ add_feature_test_in_transaction(/Feature/Submission/Build/BuildXMLTest)
 
 add_feature_test_in_transaction(/Feature/Submission/CoverageLog/CoverageLogXMLTest)
 
+add_feature_test_in_transaction(/Feature/Submission/Coverage/GcovTarTest)
+
 add_feature_test_in_transaction(/Feature/Submission/Coverage/JavaJSONTarTest)
 
 add_feature_test_in_transaction(/Feature/Submission/Coverage/JSCoverTarTest)
