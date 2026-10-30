@@ -99,6 +99,48 @@ class BuildDynamicAnalysisIdPageTest extends BrowserTestCase
         });
     }
 
+    public function testShows404WhenDynamicAnalysisDoesNotExist(): void
+    {
+        /** @var Build $build */
+        $build = $this->project->builds()->create([
+            'siteid' => $this->site->id,
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        $this->browse(function (Browser $browser) use ($build): void {
+            $browser->visit("/builds/{$build->id}/dynamic_analysis/123456789")
+                ->assertSee('404')
+            ;
+        });
+    }
+
+    public function testShows404WhenDynamicAnalysisBelongsToAnotherBuild(): void
+    {
+        /** @var Build $build */
+        $build = $this->project->builds()->create([
+            'siteid' => $this->site->id,
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        /** @var Build $otherBuild */
+        $otherBuild = $this->project->builds()->create([
+            'siteid' => $this->site->id,
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+        ]);
+
+        /** @var DynamicAnalysis $da */
+        $da = $otherBuild->dynamicAnalyses()->save(DynamicAnalysis::factory()->make());
+
+        $this->browse(function (Browser $browser) use ($da, $build): void {
+            $browser->visit("/builds/{$build->id}/dynamic_analysis/{$da->id}")
+                ->assertSee('404')
+            ;
+        });
+    }
+
     /**
      * @return array<array{
      *     string, string,

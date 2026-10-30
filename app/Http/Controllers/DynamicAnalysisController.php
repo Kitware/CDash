@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Build;
 use App\Utils\PageTimer;
 use App\Utils\TestingDay;
 use CDash\Model\DynamicAnalysis;
@@ -21,7 +22,10 @@ final class DynamicAnalysisController extends AbstractBuildController
     {
         $this->setBuildById($buildid);
 
-        $da = \App\Models\DynamicAnalysis::find($fileid);
+        $da = Build::findOrFail($buildid)->dynamicAnalyses()->find($fileid);
+        if ($da === null) {
+            abort(404, 'Dynamic analysis not found');
+        }
 
         return $this->vue(
             'build-dynamic-analysis-id-page',
@@ -29,7 +33,7 @@ final class DynamicAnalysisController extends AbstractBuildController
             [
                 'build-id' => $buildid,
                 'dynamic-analysis-id' => $fileid,
-                'link' => url("queryTests.php?project={$this->project->Name}&date={$this->date}&filtercount=1&showfilters=1&field1=testname&compare1=61&value1={$da?->name}"),
+                'link' => url("queryTests.php?project={$this->project->Name}&date={$this->date}&filtercount=1&showfilters=1&field1=testname&compare1=61&value1={$da->name}"),
             ],
         );
     }
