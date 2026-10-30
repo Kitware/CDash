@@ -469,6 +469,197 @@ class BuildBuildPageTest extends BrowserTestCase
         });
     }
 
+    public function testLinksKeepAnsiStylesExceptColors(): void
+    {
+        $this->project->cvsviewertype = 'github';
+        $this->project->cvsurl = 'https://example.com/org/repo';
+        $this->project->save();
+
+        $stdOutPart = Str::uuid()->toString();
+        $sourceDirectory = '/absolute/path/to/source';
+        $filePath = $sourceDirectory . '/foo/bar.cpp:10:20';
+
+        /** @var Build $build */
+        $build = $this->project->builds()->create([
+            'siteid' => $this->site->id,
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+            'sourcedirectory' => $sourceDirectory,
+        ]);
+
+        // GCC-style output with a bold, cyan on red path, with the escape characters encoded the way CTest submits them.
+        $build->buildErrors()->save(BuildError::factory()->make([
+            'stdoutput' => '[NON-XML-CHAR-0x1B][01;36;41m[NON-XML-CHAR-0x1B][K' . $filePath . ':[NON-XML-CHAR-0x1B][m[NON-XML-CHAR-0x1B][K ' . $stdOutPart,
+        ]));
+
+        $this->browse(function (Browser $browser) use ($filePath, $stdOutPart, $build): void {
+            $browser->visit("/builds/{$build->id}/build")
+                ->waitForText('1 ERROR')
+                ->assertSee($stdOutPart)
+                ->assertSeeLink($filePath)
+                ->assertPresent('a[href="https://example.com/org/repo/blob/main/foo/bar.cpp"]')
+            ;
+
+            [$linkStyle, $pathStyle, $afterStyle] = $browser->script(
+                'const link = document.querySelector(\'[data-test="stdout"] + pre a\');'
+                . 'return [link, link.firstElementChild, link.nextElementSibling.firstElementChild].map((element) => {'
+                . '  const style = getComputedStyle(element);'
+                . '  return [style.fontWeight, style.color, style.backgroundColor];'
+                . '});'
+            )[0];
+
+            // The link and the text after it stay bold, but only the text after the link keeps the output's colors.
+            self::assertSame(['700', $linkStyle[1], $linkStyle[2]], $pathStyle);
+            self::assertSame(['700', 'rgb(0, 187, 187)', 'rgb(187, 0, 0)'], $afterStyle);
+        });
+    }
+
+    public function testLinksPathsContainingHtmlWithoutRenderingIt(): void
+    {
+        $this->project->cvsviewertype = 'github';
+        $this->project->cvsurl = 'https://example.com/org/repo';
+        $this->project->save();
+
+        $html = '<img/src/onerror=window.xss=1>';
+        $sourceDirectory = '/absolute/path/to/source';
+        $filePath = $sourceDirectory . '/R&D/<img/src/onerror=window.xss=2>.cpp:10:20';
+
+        /** @var Build $build */
+        $build = $this->project->builds()->create([
+            'siteid' => $this->site->id,
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+            'sourcedirectory' => $sourceDirectory,
+        ]);
+
+        $build->buildErrors()->save(BuildError::factory()->make([
+            'stdoutput' => $html . '[NON-XML-CHAR-0x1B][01m' . $filePath . ':[NON-XML-CHAR-0x1B][m ' . $html,
+        ]));
+
+        $this->browse(function (Browser $browser) use ($html, $filePath, $build): void {
+            $browser->visit("/builds/{$build->id}/build")
+                ->waitForText('1 ERROR')
+                ->assertSee($html)
+                ->assertSeeLink($filePath)
+                ->assertPresent('a[href="https://example.com/org/repo/blob/main/R%26D/%3Cimg/src/onerror%3Dwindow.xss%3D2%3E.cpp"]')
+                ->assertMissing('pre img')
+            ;
+            self::assertNull($browser->script('return window.xss;')[0]);
+        });
+    }
+
+    public function testLinksOnlyPathsWhenSourceDirectoryAppearsEarlier(): void
+    {
+        $this->project->cvsviewertype = 'github';
+        $this->project->cvsurl = 'https://example.com/org/repo';
+        $this->project->save();
+
+        $sourceDirectory = '/absolute/path/to/source';
+
+        /** @var Build $build */
+        $build = $this->project->builds()->create([
+            'siteid' => $this->site->id,
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+            'sourcedirectory' => $sourceDirectory,
+        ]);
+
+        $build->buildErrors()->save(BuildError::factory()->make([
+            'stdoutput' => implode("\n", [
+                "/usr/bin/c++ -I{$sourceDirectory}/include -c {$sourceDirectory}/foo/a.cpp",
+                "{$sourceDirectory}/foo/a.cpp:1:2: see {$sourceDirectory}/docs and {$sourceDirectory}/foo/b.cpp:3:4",
+                "\"{$sourceDirectory}/x y.cpp\", \"{$sourceDirectory}/foo/c.cpp:5:6\"",
+                "{$sourceDirectory}/docs,{$sourceDirectory}/foo/d.cpp:7:8",
+                "{$sourceDirectory}/x y.cpp[NON-XML-CHAR-0x1B][0m [NON-XML-CHAR-0x1B][1m{$sourceDirectory}/foo/e.cpp:9:10",
+                '/.../ omitted',
+                '/.../repo/foo/f.cpp:11:12',
+                'see /.../repo and /.../repo/foo/g.cpp:13:14',
+            ]),
+        ]));
+
+        $this->browse(function (Browser $browser) use ($sourceDirectory, $build): void {
+            $browser->visit("/builds/{$build->id}/build")
+                ->waitForText('1 ERROR')
+            ;
+
+            $links = array_map(
+                fn ($link) => [$link->getText(), $link->getAttribute('href')],
+                $browser->elements('@stdout + pre a'),
+            );
+            self::assertSame([
+                ["{$sourceDirectory}/foo/a.cpp:1:2", 'https://example.com/org/repo/blob/main/foo/a.cpp'],
+                ["{$sourceDirectory}/foo/b.cpp:3:4", 'https://example.com/org/repo/blob/main/foo/b.cpp'],
+                ["{$sourceDirectory}/foo/c.cpp:5:6", 'https://example.com/org/repo/blob/main/foo/c.cpp'],
+                ["{$sourceDirectory}/foo/d.cpp:7:8", 'https://example.com/org/repo/blob/main/foo/d.cpp'],
+                ["{$sourceDirectory}/foo/e.cpp:9:10", 'https://example.com/org/repo/blob/main/foo/e.cpp'],
+                ['/.../repo/foo/f.cpp:11:12', 'https://example.com/org/repo/blob/main/foo/f.cpp'],
+                ['/.../repo/foo/g.cpp:13:14', 'https://example.com/org/repo/blob/main/foo/g.cpp'],
+            ], $links);
+        });
+    }
+
+    public function testLinksPathsContainingSpacesAndUrlCharacters(): void
+    {
+        $this->project->cvsviewertype = 'github';
+        $this->project->cvsurl = 'https://example.com/org/repo';
+        $this->project->save();
+
+        $sourceDirectory = '/absolute/path/to/source';
+        $filePath = $sourceDirectory . '/foo bar/C#/baz?.cpp:10:20';
+
+        /** @var Build $build */
+        $build = $this->project->builds()->create([
+            'siteid' => $this->site->id,
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+            'sourcedirectory' => $sourceDirectory,
+        ]);
+
+        $build->buildErrors()->save(BuildError::factory()->make([
+            'stdoutput' => "{$filePath}: error",
+        ]));
+
+        $this->browse(function (Browser $browser) use ($filePath, $build): void {
+            $browser->visit("/builds/{$build->id}/build")
+                ->waitForText('1 ERROR')
+                ->assertSeeLink($filePath)
+                ->assertPresent('a[href="https://example.com/org/repo/blob/main/foo%20bar/C%23/baz%3F.cpp"]')
+            ;
+        });
+    }
+
+    public function testLinksPathWhichExtendsAnotherLinkedPath(): void
+    {
+        $this->project->cvsviewertype = 'github';
+        $this->project->cvsurl = 'https://example.com/org/repo';
+        $this->project->save();
+
+        $sourceDirectory = '/absolute/path/to/source';
+        $filePath1 = $sourceDirectory . '/foo/bar.cpp:1:2';
+        $filePath2 = $sourceDirectory . '/foo/bar.cpp:1:23';
+
+        /** @var Build $build */
+        $build = $this->project->builds()->create([
+            'siteid' => $this->site->id,
+            'name' => Str::uuid()->toString(),
+            'uuid' => Str::uuid()->toString(),
+            'sourcedirectory' => $sourceDirectory,
+        ]);
+
+        $build->buildErrors()->save(BuildError::factory()->make([
+            'stdoutput' => "{$filePath1}: error\n{$filePath2}: error",
+        ]));
+
+        $this->browse(function (Browser $browser) use ($filePath1, $filePath2, $build): void {
+            $browser->visit("/builds/{$build->id}/build")
+                ->waitForText('1 ERROR')
+            ;
+
+            $links = array_map(fn ($link) => $link->getText(), $browser->elements('@stdout + pre a'));
+            self::assertSame([$filePath1, $filePath2], $links);
+        });
+    }
+
     public function testShowsListOfSubProjects(): void
     {
         /** @var Build $parent_build */
