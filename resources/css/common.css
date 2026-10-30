@@ -1024,16 +1024,6 @@ div#main_content {
   background-position: bottom center;
   cursor: pointer;
 }
-.tabb thead tr .headerSortUp {
-  background-image: url(../../public/img/asc.gif);
-}
-.tabb thead tr .headerSortDown {
-  background-image: url(../../public/img/desc.gif);
-}
-.tabb thead tr .headerSortDown, .tabb thead tr .headerSortUp {
-background-color: #adcae6
-;
-}
 
  .treven, tr.even {
  background-color : #ececec;

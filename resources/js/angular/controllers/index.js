@@ -291,13 +291,6 @@ export function IndexController($scope, $rootScope, $location, $http, $filter, $
 
 
   // The following functions were moved here from cdashBuildGroup.js
-  $scope.URLencode = function(sStr) {
-    return escape(sStr)
-      .replace(/\+/g, '%2B')
-      .replace(/\"/g,'%22')
-      .replace(/\'/g, '%27');
-  };
-
   $scope.toggleAdminOptions = function(build) {
     if (!("expectedandmissing" in build) &&
         (!("expected" in build) || (build.expected != 0 && build.expected != 1))) {
@@ -716,10 +709,6 @@ export function IndexController($scope, $rootScope, $location, $http, $filter, $
     }
     // Save the new sort order in a cookie.
     $.cookie(cookie_name, obj.orderByFields);
-  };
-
-  $scope.normalBuild = function(build) {
-    return build.numchildren == 0 || build.expectedandmissing == 1;
   };
 
   $scope.parentBuild = function(build) {

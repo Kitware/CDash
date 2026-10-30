@@ -1,25 +1,5 @@
 import { getSortedElements } from '../cdashSortable.js';
 
-export function filter_builds() {
-  // Filter the builds based on what group they belong to.
-  return function(input, group) {
-    if (typeof group === 'undefined' || group === null) {
-      // No filtering required for default "All" group.
-      return input;
-    }
-
-    var group_id = Number(group.id);
-    var output = [];
-    for (var i = 0; i < input.length; i++) {
-      if (Number(input[i].groupid) === group_id) {
-        output.push(input[i]);
-      }
-
-    }
-    return output;
-  };
-}
-
 export function filter_buildgroups() {
   // Filter BuildGroups based on their type
   return function(input, type) {
@@ -164,27 +144,6 @@ export function ManageBuildGroupController($scope, $http, apiLoader, modalSvc) {
   $scope.showModal = function(buildgroupid) {
     modalSvc.showModal(buildgroupid, $scope.deleteBuildGroup, 'modal-template');
   };
-
-  /** move builds to a different group */
-  $scope.moveBuilds = function(builds, group, expected) {
-    var parameters = {
-      projectid: $scope.cdash.projectid,
-      builds: builds,
-      group: group,
-      expected: expected
-    };
-    $http.post('api/v1/buildgroup.php', parameters)
-    .then(function success(s) {
-      if (s.data.error) {
-        $scope.cdash.error = s.data.error;
-      }
-      else {
-        $("#builds_moved").show();
-        $("#builds_moved").delay(3000).fadeOut(400);
-      }
-    });
-  };
-
 
   /** Add rule for a wildcard BuildGroup */
   $scope.addWildcardRule = function(group, type, nameMatch) {
