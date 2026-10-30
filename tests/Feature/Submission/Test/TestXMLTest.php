@@ -768,4 +768,59 @@ class TestXMLTest extends TestCase
             ],
         ]);
     }
+
+    /**
+     * Test parsing a Test.xml file for an image comparison test, which attaches several images to a
+     * single test.  Each image should be stored intact.
+     */
+    public function testImageComparison(): void
+    {
+        $this->makeSubmission($this->project->name, base_path(
+            'tests/Feature/Submission/Test/data/image_comparison.xml'
+        ));
+
+        $test_images = $this->graphQL('
+            query project($id: ID) {
+              project(id: $id) {
+                builds {
+                  edges {
+                    node {
+                      tests {
+                        edges {
+                          node {
+                            testImages {
+                              edges {
+                                node {
+                                  role
+                                  url
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+        ', [
+            'id' => $this->project->id,
+        ])->collect('data.project.builds.edges.0.node.tests.edges.0.node.testImages.edges');
+
+        // Images are stored in an arbitrary order.
+        $this->assertEqualsCanonicalizing(
+            ['TestImage', 'DifferenceImage', 'ValidImage'],
+            $test_images->pluck('node.role')->all(),
+        );
+
+        $this->assertCount(3, $test_images->pluck('node.url')->unique());
+        foreach ($test_images->pluck('node.url') as $url) {
+            $this->assertIsString($url);
+            $response = $this->get($url);
+            $response->assertOk();
+            $response->assertHeader('Content-Type', 'image/png');
+            $this->assertNotFalse(imagecreatefromstring($response->streamedContent()));
+        }
+    }
 }

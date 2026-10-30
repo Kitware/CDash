@@ -413,6 +413,12 @@ add_feature_test_in_transaction(/Feature/Submission/Upload/UploadXMLTest)
 
 add_feature_test_in_transaction(/Feature/Submission/Done/DoneXMLTest)
 
+add_feature_test_in_transaction(/Feature/Submission/SubmissionBackupTest)
+
+add_feature_test_in_transaction(/Feature/Submission/SubmissionOrderTest)
+
+add_feature_test_in_transaction(/Feature/Submission/Project/ProjectXMLTest)
+
 ###################################################################################################
 # Tests from this point to the next cdash_install() are expected to be completely independent.
 # Tests may wipe the database, provided that they use RUN_SERIAL. All tests in this section should
@@ -531,9 +537,6 @@ set_tests_properties(image PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 add_php_test(consistenttestingday)
 set_tests_properties(consistenttestingday PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
-add_php_test(numericupdate)
-set_tests_properties(numericupdate PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
-
 add_php_test(attachedfiles)
 set_tests_properties(attachedfiles PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
@@ -570,7 +573,6 @@ set_property(TEST install_2 APPEND PROPERTY DEPENDS
   /CDash/Messaging/Topic/TopicDecorator
   image
   consistenttestingday
-  numericupdate
   attachedfiles
   subprojectorder
   buildproperties
@@ -627,11 +629,8 @@ set_tests_properties(testoverview PROPERTIES DEPENDS querytests)
 add_php_test(buildmodel)
 set_tests_properties(buildmodel PROPERTIES DEPENDS testoverview)
 
-add_php_test(projectxmlsequence)
-set_tests_properties(projectxmlsequence PROPERTIES DEPENDS buildmodel)
-
 add_php_test(uploadfile)
-set_tests_properties(uploadfile PROPERTIES DEPENDS projectxmlsequence)
+set_tests_properties(uploadfile PROPERTIES DEPENDS buildmodel)
 
 add_php_test(actualbranchcoverage)
 set_tests_properties(actualbranchcoverage PROPERTIES DEPENDS uploadfile)
@@ -642,14 +641,8 @@ set_tests_properties(unparsedsubmissionshonorbuildid PROPERTIES DEPENDS actualbr
 add_php_test(multicoverage)
 set_tests_properties(multicoverage PROPERTIES DEPENDS unparsedsubmissionshonorbuildid)
 
-add_php_test(buildfailuredetails)
-set_tests_properties(buildfailuredetails PROPERTIES DEPENDS multicoverage)
-
-add_php_test(updateappend)
-set_tests_properties(updateappend PROPERTIES DEPENDS buildfailuredetails)
-
 add_php_test(hidecolumns)
-set_tests_properties(hidecolumns PROPERTIES DEPENDS updateappend)
+set_tests_properties(hidecolumns PROPERTIES DEPENDS multicoverage)
 
 add_php_test(subprojectnextprevious)
 set_tests_properties(subprojectnextprevious PROPERTIES DEPENDS hidecolumns)
@@ -672,11 +665,8 @@ set_tests_properties(buildgetdate PROPERTIES DEPENDS timesummary)
 add_php_test(replacebuild)
 set_tests_properties(replacebuild PROPERTIES DEPENDS buildgetdate)
 
-add_php_test(sequenceindependence)
-set_tests_properties(sequenceindependence PROPERTIES DEPENDS replacebuild)
-
 add_php_test(crosssubprojectcoverage)
-set_tests_properties(crosssubprojectcoverage PROPERTIES DEPENDS sequenceindependence)
+set_tests_properties(crosssubprojectcoverage PROPERTIES DEPENDS replacebuild)
 
 add_php_test(aggregatesubprojectcoverage)
 set_tests_properties(aggregatesubprojectcoverage PROPERTIES DEPENDS crosssubprojectcoverage)
@@ -690,11 +680,8 @@ set_tests_properties(viewsubprojects PROPERTIES DEPENDS filtertestlabels)
 add_php_test(uniquediffs)
 set_tests_properties(uniquediffs PROPERTIES DEPENDS viewsubprojects)
 
-add_php_test(imagecomparison)
-set_tests_properties(imagecomparison PROPERTIES DEPENDS uniquediffs)
-
 add_php_test(testgraphpermissions)
-set_tests_properties(testgraphpermissions PROPERTIES DEPENDS imagecomparison)
+set_tests_properties(testgraphpermissions PROPERTIES DEPENDS uniquediffs)
 
 add_php_test(pdoexecutelogserrors)
 set_tests_properties(pdoexecutelogserrors PROPERTIES DEPENDS testgraphpermissions)
