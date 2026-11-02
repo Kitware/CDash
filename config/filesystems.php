@@ -75,11 +75,5 @@ return [
             'retain_visibility' => false,
             'throw' => true,
         ],
-
-        'cdash' => [
-            'driver' => 'local',
-            'root' => app_path('cdash/public'),
-            'visibility' => 'private',
-        ],
     ],
 ];
