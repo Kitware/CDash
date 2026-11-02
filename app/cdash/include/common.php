@@ -684,7 +684,7 @@ function extract_tar(string $stored_filepath): string
         $tar->setErrorHandling(PEAR_ERROR_CALLBACK, function ($pear_error): void {
             throw new PEAR_Exception($pear_error->getMessage());
         });
-        $tar_extract_result = $tar->extract($dirName);
+        $tar_extract_result = $tar->extract($dirName, false, false);
         if (config('filesystems.default') !== 'local') {
             Storage::disk('local')->delete($stored_filepath);
         }
