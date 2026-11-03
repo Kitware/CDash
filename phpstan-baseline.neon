@@ -109,12 +109,6 @@ parameters:
 			path: app/Exceptions/Handler.php
 
 		-
-			rawMessage: Foreach overwrites $directive with its value variable.
-			identifier: foreach.valueOverwrite
-			count: 1
-			path: app/GraphQL/Directives/FilterDirective.php
-
-		-
 			rawMessage: 'Generic type Illuminate\Database\Eloquent\Relations\Relation<Illuminate\Database\Eloquent\Model> in PHPDoc tag @param for parameter $builder does not specify all template types of class Illuminate\Database\Eloquent\Relations\Relation: TRelatedModel, TDeclaringModel, TResult'
 			identifier: generics.lessTypes
 			count: 1
@@ -688,12 +682,6 @@ parameters:
 			path: app/Http/Controllers/BuildController.php
 
 		-
-			rawMessage: Foreach overwrites $buildgroup with its value variable.
-			identifier: foreach.valueOverwrite
-			count: 1
-			path: app/Http/Controllers/BuildController.php
-
-		-
 			rawMessage: 'Loose comparison via "==" between int and mixed is not allowed.'
 			identifier: equal.notAllowed
 			count: 1
@@ -1161,12 +1149,6 @@ parameters:
 		-
 			rawMessage: 'Construct empty() is not allowed. Use more strict comparison.'
 			identifier: empty.notAllowed
-			count: 2
-			path: app/Http/Controllers/ProjectOverviewController.php
-
-		-
-			rawMessage: Foreach overwrites $coverage_category with its value variable.
-			identifier: foreach.valueOverwrite
 			count: 2
 			path: app/Http/Controllers/ProjectOverviewController.php
 
@@ -2110,12 +2092,6 @@ parameters:
 			rawMessage: Foreach key variable $subproject_name is never read.
 			identifier: foreach.unusedKey
 			count: 1
-			path: app/Http/Submission/Handlers/BazelJSONHandler.php
-
-		-
-			rawMessage: Foreach overwrites $line with its value variable.
-			identifier: foreach.valueOverwrite
-			count: 2
 			path: app/Http/Submission/Handlers/BazelJSONHandler.php
 
 		-
@@ -3445,12 +3421,6 @@ parameters:
 			path: app/Http/Submission/Handlers/JSCoverTarHandler.php
 
 		-
-			rawMessage: Foreach overwrites $coverageSummary with its value variable.
-			identifier: foreach.valueOverwrite
-			count: 1
-			path: app/Http/Submission/Handlers/JSCoverTarHandler.php
-
-		-
 			rawMessage: 'Loose comparison via "==" between mixed and int is not allowed.'
 			identifier: equal.notAllowed
 			count: 1
@@ -3771,12 +3741,6 @@ parameters:
 		-
 			rawMessage: Class App\Http\Submission\Handlers\OpenCoverTarHandler has an uninitialized property $tarDir. Give it default value or assign it in the constructor.
 			identifier: property.uninitialized
-			count: 1
-			path: app/Http/Submission/Handlers/OpenCoverTarHandler.php
-
-		-
-			rawMessage: Foreach overwrites $coverageSummary with its value variable.
-			identifier: foreach.valueOverwrite
 			count: 1
 			path: app/Http/Submission/Handlers/OpenCoverTarHandler.php
 
@@ -5206,12 +5170,6 @@ parameters:
 			path: app/Services/ProjectService.php
 
 		-
-			rawMessage: Foreach overwrites $attribute with its value variable.
-			identifier: foreach.valueOverwrite
-			count: 1
-			path: app/Services/SiteService.php
-
-		-
 			rawMessage: 'Parameter #1 $buildid of static method App\Utils\DatabaseCleanupUtils::removeBuild() expects array<int>|int, array<mixed> given.'
 			identifier: argument.type
 			count: 1
@@ -5347,18 +5305,6 @@ parameters:
 			rawMessage: 'Construct empty() is not allowed. Use more strict comparison.'
 			identifier: empty.notAllowed
 			count: 3
-			path: app/Utils/RepositoryUtils.php
-
-		-
-			rawMessage: Foreach overwrites $key with its key variable.
-			identifier: foreach.keyOverwrite
-			count: 1
-			path: app/Utils/RepositoryUtils.php
-
-		-
-			rawMessage: Foreach overwrites $value with its value variable.
-			identifier: foreach.valueOverwrite
-			count: 1
 			path: app/Utils/RepositoryUtils.php
 
 		-
@@ -6403,12 +6349,6 @@ parameters:
 			path: app/cdash/app/Controller/Api/Index.php
 
 		-
-			rawMessage: Foreach overwrites $rule with its value variable.
-			identifier: foreach.valueOverwrite
-			count: 2
-			path: app/cdash/app/Controller/Api/Index.php
-
-		-
 			rawMessage: 'Loose comparison via "!=" between mixed and int is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 10
@@ -7209,12 +7149,6 @@ parameters:
 		-
 			rawMessage: 'Construct empty() is not allowed. Use more strict comparison.'
 			identifier: empty.notAllowed
-			count: 1
-			path: app/cdash/app/Controller/Api/Timeline.php
-
-		-
-			rawMessage: Foreach overwrites $start_of_day with its key variable.
-			identifier: foreach.keyOverwrite
 			count: 1
 			path: app/cdash/app/Controller/Api/Timeline.php
 
@@ -16048,12 +15982,6 @@ parameters:
 			path: app/cdash/tests/test_crosssubprojectcoverage.php
 
 		-
-			rawMessage: Foreach overwrites $row with its value variable.
-			identifier: foreach.valueOverwrite
-			count: 1
-			path: app/cdash/tests/test_crosssubprojectcoverage.php
-
-		-
 			rawMessage: 'Loose comparison via "!=" between int<0, max> and int is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 2
@@ -18004,12 +17932,6 @@ parameters:
 			path: app/cdash/tests/test_multiplesubprojects.php
 
 		-
-			rawMessage: Foreach overwrites $build with its value variable.
-			identifier: foreach.valueOverwrite
-			count: 3
-			path: app/cdash/tests/test_multiplesubprojects.php
-
-		-
 			rawMessage: 'Loose comparison via "!=" between int<0, max> and int is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 7
@@ -19947,12 +19869,6 @@ parameters:
 		-
 			rawMessage: Cannot access offset mixed on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/trilinos_submission_test.php
-
-		-
-			rawMessage: Foreach overwrites $build with its value variable.
-			identifier: foreach.valueOverwrite
 			count: 1
 			path: app/cdash/tests/trilinos_submission_test.php
 
