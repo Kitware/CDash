@@ -64,7 +64,7 @@
     "eslint-plugin-cypress": "^7.0.2",
     "eslint-plugin-vue": "^10.11.1",
     "globals": "^17.13.0",
-    "postcss": "^8.5.28",
+    "postcss": "^8.5.32",
     "vite": "^8.3.3",
     "vitest": "^5.0.5"
   }
