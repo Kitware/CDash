@@ -79,14 +79,12 @@ class DoneHandler extends AbstractXmlHandler
 
     public function text($parser, $data): void
     {
+        // The <buildId> element is deliberately ignored.  The build comes from the submission's
+        // parameters instead, so that a Done.xml file can't mark an arbitrary build as done.
         $parent = $this->getParent();
         $element = $this->getElement();
         if ($parent === 'DONE') {
             switch ($element) {
-                case 'BUILDID':
-                    $this->Build->Id = $data;
-                    $this->Build->FillFromId($this->Build->Id);
-                    break;
                 case 'TIME':
                     $this->Build->EndTime = gmdate(FMT_DATETIME, $data);
                     break;

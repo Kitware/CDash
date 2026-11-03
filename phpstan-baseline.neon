@@ -4987,12 +4987,6 @@ parameters:
 			path: app/Jobs/ProcessSubmission.php
 
 		-
-			rawMessage: 'Method App\Jobs\ProcessSubmission::requeueSubmissionFile() has parameter $buildid with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
 			rawMessage: 'Parameter #2 $data of function xml_parse expects string, string|false given.'
 			identifier: argument.type
 			count: 2

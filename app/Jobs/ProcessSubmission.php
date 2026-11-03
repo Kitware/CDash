@@ -84,7 +84,7 @@ class ProcessSubmission implements ShouldQueue
         return Storage::delete($filename);
     }
 
-    private function requeueSubmissionFile($buildid): bool
+    private function requeueSubmissionFile(): bool
     {
         // Increment retry count.
         $retry_handler = new RetryHandler("inprogress/{$this->filename}");
@@ -96,7 +96,7 @@ class ProcessSubmission implements ShouldQueue
         // Requeue the file with exponential backoff.
         PendingSubmissions::where('buildid', $this->buildid)->increment('numfiles');
         $delay = ((int) config('cdash.retry_base')) ** $retry_handler->Retries;
-        self::dispatch($this->filename, $this->projectid, $buildid, $this->expected_md5)->delay(now()->addSeconds($delay));
+        self::dispatch($this->filename, $this->projectid, $this->buildid, $this->expected_md5)->delay(now()->addSeconds($delay));
 
         return true;
     }
@@ -127,7 +127,7 @@ class ProcessSubmission implements ShouldQueue
 
         // Resubmit the file if necessary.
         if (is_a($handler, DoneHandler::class) && $handler->shouldRequeue()) {
-            $this->requeueSubmissionFile($handler->getBuild()->Id);
+            $this->requeueSubmissionFile();
             return;
         }
 
