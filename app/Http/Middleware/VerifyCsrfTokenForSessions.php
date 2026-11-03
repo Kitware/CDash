@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Cookie;
  * "remember me"), since a browser sends those cookies with requests forged by other sites.
  * Anonymous requests and requests authenticated by a bearer token don't need a CSRF token.
  *
- * This must run before AuthenticateToken, which logs bearer token users into the session.
+ * This must run before AuthenticateToken, which logs in bearer token users.
  */
 class VerifyCsrfTokenForSessions extends VerifyCsrfToken
 {

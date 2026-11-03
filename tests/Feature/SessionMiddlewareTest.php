@@ -229,6 +229,34 @@ class SessionMiddlewareTest extends TestCase
         $this->withToken($rawToken)->post(self::API_POST_ROUTE)->assertNotFound();
     }
 
+    public function testGraphQLUsesBearerToken(): void
+    {
+        $this->enforceCsrfChecks();
+        $user = User::factory()->create();
+        ['raw_token' => $rawToken] = AuthTokenService::generate($user->id, -1, AuthTokenScope::FULL_ACCESS, '');
+
+        $this->withToken($rawToken)
+            ->graphQL('{ me { id } }')
+            ->assertExactJson(['data' => ['me' => ['id' => (string) $user->id]]]);
+    }
+
+    public function testBearerTokenClientsKeepingCookiesDoNotNeedCsrfToken(): void
+    {
+        $this->enforceCsrfChecks();
+        $user = User::factory()->create();
+        ['raw_token' => $rawToken] = AuthTokenService::generate($user->id, -1, AuthTokenScope::FULL_ACCESS, '');
+
+        $cookie = $this->withToken($rawToken)
+            ->graphQL('{ me { id } }')
+            ->getCookie((string) config('session.cookie'), false);
+        $this->assertNotNull($cookie);
+        $this->continueInNewSessionWith($cookie);
+
+        $this->withToken($rawToken)
+            ->graphQL('{ me { id } }')
+            ->assertExactJson(['data' => ['me' => ['id' => (string) $user->id]]]);
+    }
+
     public function testAnonymousRequestsDoNotNeedCsrfToken(): void
     {
         $this->enforceCsrfChecks();

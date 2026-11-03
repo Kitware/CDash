@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+use App\Http\Middleware\AuthenticateToken;
 use App\Http\Middleware\VerifyCsrfTokenForSessions;
 use GraphQL\Error\DebugFlag;
 use GraphQL\Validator\Rules\DisableIntrospection;
@@ -66,6 +67,9 @@ return [
 
             // Requires a CSRF token from users logged in by a cookie.
             VerifyCsrfTokenForSessions::class,
+
+            // Logs in users who send a full-access bearer token.
+            AuthenticateToken::class,
 
             // Logs out sessions whose user has changed their password since logging in.
             AuthenticateSession::class,
