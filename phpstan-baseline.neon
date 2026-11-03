@@ -9187,12 +9187,6 @@ parameters:
 			path: app/cdash/app/Model/Project.php
 
 		-
-			rawMessage: 'Method CDash\Model\Project::Save() throws checked exception Illuminate\Database\Eloquent\MassAssignmentException but it''s missing from the PHPDoc @throws tag.'
-			identifier: missingType.checkedException
-			count: 1
-			path: app/cdash/app/Model/Project.php
-
-		-
 			rawMessage: 'Only booleans are allowed in a negated boolean, CDash\Collection\SubscriberCollection given.'
 			identifier: booleanNot.exprNotBoolean
 			count: 1
@@ -9471,6 +9465,12 @@ parameters:
 		-
 			rawMessage: 'Only booleans are allowed in a negated boolean, bool|string given.'
 			identifier: booleanNot.exprNotBoolean
+			count: 1
+			path: app/cdash/app/Model/SubProject.php
+
+		-
+			rawMessage: 'Parameter #1 $options of method Illuminate\Database\Eloquent\Model::save() expects array{touch?: bool|null}, array{starttime: Illuminate\Support\Carbon} given.'
+			identifier: argument.type
 			count: 1
 			path: app/cdash/app/Model/SubProject.php
 
