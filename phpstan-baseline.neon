@@ -12598,6 +12598,12 @@ parameters:
 			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
 
 		-
+			rawMessage: 'assertEmpty() is not allowed. Use more strict assertion.'
+			identifier: phpunit.assertEmpty
+			count: 1
+			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
+
+		-
 			rawMessage: '''
 				Call to deprecated method any() of class PHPUnit\Framework\TestCase:
 				https://github.com/sebastianbergmann/phpunit/issues/6461
@@ -12802,6 +12808,12 @@ parameters:
 			rawMessage: 'You should use assertSame() instead of assertEquals(), because both values are scalars of the same type'
 			identifier: phpunit.assertEquals
 			count: 6
+			path: app/cdash/tests/case/CDash/Messaging/Topic/ConfigureTopicTest.php
+
+		-
+			rawMessage: 'assertEmpty() is not allowed. Use more strict assertion.'
+			identifier: phpunit.assertEmpty
+			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/Topic/ConfigureTopicTest.php
 
 		-
@@ -13027,6 +13039,12 @@ parameters:
 			rawMessage: 'You should use assertSame() instead of assertEquals(), because both values are scalars of the same type'
 			identifier: phpunit.assertEquals
 			count: 4
+			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
+
+		-
+			rawMessage: 'assertEmpty() is not allowed. Use more strict assertion.'
+			identifier: phpunit.assertEmpty
+			count: 1
 			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
 
 		-
@@ -13375,6 +13393,12 @@ parameters:
 			rawMessage: 'You should use assertSame() instead of assertEquals(), because both values are scalars of the same type'
 			identifier: phpunit.assertEquals
 			count: 13
+			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
+
+		-
+			rawMessage: 'assertEmpty() is not allowed. Use more strict assertion.'
+			identifier: phpunit.assertEmpty
+			count: 1
 			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
 
 		-
@@ -20260,6 +20284,12 @@ parameters:
 			path: tests/Browser/Pages/ProjectMembersPageTest.php
 
 		-
+			rawMessage: 'assertEmpty() is not allowed. Use more strict assertion.'
+			identifier: phpunit.assertEmpty
+			count: 2
+			path: tests/Browser/Pages/ProjectMembersPageTest.php
+
+		-
 			rawMessage: 'Only booleans are allowed in a ternary operator condition, mixed given.'
 			identifier: ternary.condNotBoolean
 			count: 2
@@ -20455,6 +20485,24 @@ parameters:
 			path: tests/Feature/GraphQL/Mutations/CreateGlobalInvitationTest.php
 
 		-
+			rawMessage: 'assertEmpty() is not allowed. Use more strict assertion.'
+			identifier: phpunit.assertEmpty
+			count: 12
+			path: tests/Feature/GraphQL/Mutations/CreateGlobalInvitationTest.php
+
+		-
+			rawMessage: 'assertEmpty() is not allowed. Use more strict assertion.'
+			identifier: phpunit.assertEmpty
+			count: 3
+			path: tests/Feature/GraphQL/Mutations/CreatePinnedTestMeasurementTest.php
+
+		-
+			rawMessage: 'assertEmpty() is not allowed. Use more strict assertion.'
+			identifier: phpunit.assertEmpty
+			count: 1
+			path: tests/Feature/GraphQL/Mutations/DeletePinnedTestMeasurementTest.php
+
+		-
 			rawMessage: 'Method Tests\Feature\GraphQL\Mutations\InviteToProjectTest::testAdminCreatesInvitationCorrectly() throws checked exception OverflowException but it''s missing from the PHPDoc @throws tag.'
 			identifier: missingType.checkedException
 			count: 1
@@ -20497,6 +20545,12 @@ parameters:
 			path: tests/Feature/GraphQL/Mutations/InviteToProjectTest.php
 
 		-
+			rawMessage: 'assertEmpty() is not allowed. Use more strict assertion.'
+			identifier: phpunit.assertEmpty
+			count: 16
+			path: tests/Feature/GraphQL/Mutations/InviteToProjectTest.php
+
+		-
 			rawMessage: Using nullsafe method call on non-nullable type App\Models\Project. Use -> instead.
 			identifier: nullsafe.neverNull
 			count: 5
@@ -20506,6 +20560,12 @@ parameters:
 			rawMessage: Using nullsafe property access on non-nullable type App\Models\Project. Use -> instead.
 			identifier: nullsafe.neverNull
 			count: 3
+			path: tests/Feature/GraphQL/Mutations/JoinProjectTest.php
+
+		-
+			rawMessage: 'assertEmpty() is not allowed. Use more strict assertion.'
+			identifier: phpunit.assertEmpty
+			count: 6
 			path: tests/Feature/GraphQL/Mutations/JoinProjectTest.php
 
 		-
@@ -20557,6 +20617,12 @@ parameters:
 			path: tests/Feature/GraphQL/Mutations/RevokeProjectInvitationTest.php
 
 		-
+			rawMessage: 'assertEmpty() is not allowed. Use more strict assertion.'
+			identifier: phpunit.assertEmpty
+			count: 2
+			path: tests/Feature/GraphQL/Mutations/RevokeProjectInvitationTest.php
+
+		-
 			rawMessage: Variable $measurement1 is never read.
 			identifier: variable.unused
 			count: 1
@@ -20567,6 +20633,12 @@ parameters:
 			identifier: argument.type
 			count: 2
 			path: tests/Feature/GraphQL/Mutations/UpdateProjectTest.php
+
+		-
+			rawMessage: 'assertEmpty() is not allowed. Use more strict assertion.'
+			identifier: phpunit.assertEmpty
+			count: 4
+			path: tests/Feature/GraphQL/Mutations/UpdateSiteDescriptionTest.php
 
 		-
 			rawMessage: '''
@@ -20716,6 +20788,12 @@ parameters:
 			path: tests/Feature/LdapIntegration.php
 
 		-
+			rawMessage: 'assertEmpty() is not allowed. Use more strict assertion.'
+			identifier: phpunit.assertEmpty
+			count: 3
+			path: tests/Feature/LdapIntegration.php
+
+		-
 			rawMessage: '''
 				Call to deprecated method forceRootUrl() of class Illuminate\Routing\UrlGenerator:
 				Use useOrigin
@@ -20860,6 +20938,24 @@ parameters:
 			path: tests/Feature/Services/ProjectServiceTest.php
 
 		-
+			rawMessage: 'assertEmpty() is not allowed. Use more strict assertion.'
+			identifier: phpunit.assertEmpty
+			count: 1
+			path: tests/Feature/Services/SiteServiceTest.php
+
+		-
+			rawMessage: 'assertNotEmpty() is not allowed. Use more strict assertion.'
+			identifier: phpunit.assertEmpty
+			count: 1
+			path: tests/Feature/SessionMiddlewareTest.php
+
+		-
+			rawMessage: 'assertNotEmpty() is not allowed. Use more strict assertion.'
+			identifier: phpunit.assertEmpty
+			count: 2
+			path: tests/Feature/SlowPageTest.php
+
+		-
 			rawMessage: 'Parameter #1 $objectOrClass of class ReflectionClass constructor expects class-string<T of object>|T of object, array<string>|string given.'
 			identifier: argument.type
 			count: 1
@@ -20882,3 +20978,15 @@ parameters:
 			identifier: phpunit.assertEquals
 			count: 1
 			path: tests/Unit/Middleware/InternalTest.php
+
+		-
+			rawMessage: 'assertNotEmpty() is not allowed. Use more strict assertion.'
+			identifier: phpunit.assertEmpty
+			count: 1
+			path: tests/Unit/TimezoneConfigTest.php
+
+		-
+			rawMessage: 'assertEmpty() is not allowed. Use more strict assertion.'
+			identifier: phpunit.assertEmpty
+			count: 1
+			path: tests/Unit/Validators/PasswordTest.php
