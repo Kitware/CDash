@@ -29,7 +29,7 @@
     "laravel/framework": "12.69.0",
     "laravel/socialite": "5.31.0",
     "laravel/ui": "4.6.3",
-    "lcobucci/jwt": "5.6.0",
+    "lcobucci/jwt": "5.6.1",
     "league/flysystem-aws-s3-v3": "^3.29",
     "mll-lab/laravel-graphiql": "4.1.0",
     "nuwave/lighthouse": "6.72.5",
