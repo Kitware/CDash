@@ -241,20 +241,51 @@
         </div>
         <div class="tw-p-4">
           <div
-            v-if="compareImages.length > 0"
+            v-if="compareImages"
             data-test="interactive-image"
           >
             <div class="tw-font-bold tw-mb-2">
               Interactive Image
             </div>
-            <div class="je_compare">
+            <!-- The diff component doesn't size itself, so a hidden copy of the image sets its size. -->
+            <div class="tw-relative tw-inline-block tw-max-w-full">
               <img
-                v-for="(image, index) in compareImages"
-                :key="image.id"
-                :src="image.url"
-                :alt="image.role"
-                @load="index === 0 && initializeJeCompare()"
+                :src="compareImages.validImage.url"
+                alt=""
+                class="tw-invisible"
               >
+              <div class="tw-diff tw-absolute tw-inset-0">
+                <!-- Each label sits in its image's layer so the divider clips it along with the image. -->
+                <div class="tw-diff-item-1">
+                  <div>
+                    <img
+                      :src="compareImages.testImage.url"
+                      :alt="compareImages.testImage.role"
+                      class="tw-w-full tw-h-full tw-object-cover"
+                    >
+                    <span class="tw-badge tw-badge-sm tw-badge-neutral tw-absolute tw-top-2 tw-right-2">
+                      {{ compareImages.testImage.role }}
+                    </span>
+                  </div>
+                </div>
+                <div class="tw-diff-item-2">
+                  <div>
+                    <img
+                      :src="compareImages.validImage.url"
+                      :alt="compareImages.validImage.role"
+                      class="tw-w-full tw-h-full tw-object-cover"
+                    >
+                    <span class="tw-badge tw-badge-sm tw-badge-neutral tw-absolute tw-top-2 tw-left-2">
+                      {{ compareImages.validImage.role }}
+                    </span>
+                  </div>
+                </div>
+                <!--
+                  daisyUI 4 scales the resizer by 4 in both directions, so the divider only moves a quarter
+                  as far as the mouse. Scale it vertically only (as daisyUI 5 does) and start it in the middle.
+                -->
+                <div class="tw-diff-resizer tw-w-[50cqi] [scale:1_4] [translate:0.375rem_-1.5rem] tw-cursor-ew-resize" />
+              </div>
             </div>
           </div>
 
@@ -311,7 +342,6 @@
 </template>
 
 <script>
-import $ from 'jquery';
 import TestTrendChart from './TestIdPage/TestTrendChart.vue';
 import CodeBox from './shared/CodeBox.vue';
 import BuildSummaryCard from './shared/BuildSummaryCard.vue';
@@ -442,12 +472,6 @@ export default {
     },
   },
 
-  data() {
-    return {
-      jeCompareInitialized: false,
-    };
-  },
-
   computed: {
     FA() {
       return {
@@ -561,26 +585,19 @@ export default {
 
     compareImages() {
       if (!this.test || !this.test.testImages) {
-        return [];
+        return null;
       }
 
-      const validImages = [];
-      const testImages = [];
+      const images = this.test.testImages.edges.map(({ node: image }) => image);
+      // BaselineImage is accepted as an alternative to ValidImage for backwards compatibility.
+      const validImage = images.find((image) => image.role === 'ValidImage' || image.role === 'BaselineImage');
+      const testImage = images.find((image) => image.role === 'TestImage');
 
-      this.test.testImages.edges.forEach(({ node: image }) => {
-        // BaselineImage is accepted as an alternative to ValidImage for backwards compatibility.
-        if (image.role === 'ValidImage' || image.role === 'BaselineImage') {
-          validImages.push(image);
-        } else if (image.role === 'TestImage') {
-          testImages.push(image);
-        }
-      });
-
-      if (validImages.length === 0 || testImages.length === 0) {
-        return [];
+      if (!validImage || !testImage) {
+        return null;
       }
 
-      return [...validImages, ...testImages];
+      return { validImage, testImage };
     },
 
     allMeasurements() {
@@ -606,23 +623,9 @@ export default {
     },
   },
 
-  async mounted() {
-    // Ensure jQuery is globally available before loading plugins
-    window.jQuery = $;
-    await import('../../angular/je_compare.js');
-  },
-
   methods: {
     getFileIndex(measurement) {
       return this.files.findIndex((file) => file.id === measurement.id);
-    },
-
-    initializeJeCompare() {
-      if (this.jeCompareInitialized) {
-        return;
-      }
-      $('.je_compare').je_compare({ caption: true });
-      this.jeCompareInitialized = true;
     },
   },
 };
