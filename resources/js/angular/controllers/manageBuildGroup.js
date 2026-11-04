@@ -48,7 +48,7 @@ export function ManageBuildGroupController($scope, $http, apiLoader, modalSvc) {
   $scope.createBuildGroup = function(newBuildGroup, type) {
     var parameters = {
       projectid: $scope.cdash.projectid,
-      newbuildgroup: newBuildGroup,
+      newbuildgroup: newBuildGroup ?? '',
       type: type
     };
     $scope.cdash.buildgroup_error = '';
@@ -99,6 +99,7 @@ export function ManageBuildGroupController($scope, $http, apiLoader, modalSvc) {
       projectid: $scope.cdash.projectid,
       buildgroup: buildgroup
     };
+    $scope.cdash.buildgroup_error = "";
     $http({
       url: 'api/v1/buildgroup.php',
       method: 'PUT',
@@ -111,6 +112,8 @@ export function ManageBuildGroupController($scope, $http, apiLoader, modalSvc) {
         $("#buildgroup_updated_" + buildgroup.id).show();
         $("#buildgroup_updated_" + buildgroup.id).delay(3000).fadeOut(400);
       }
+    }, function error(e) {
+      $scope.cdash.buildgroup_error = e.data.error;
     });
   };
 
