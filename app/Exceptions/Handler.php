@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use App\Utils\RedirectUtils;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
@@ -76,6 +77,8 @@ class Handler extends ExceptionHandler
         if ($request->expectsJson()) {
             return response()->json(['requirelogin' => 1], 401);
         }
-        return redirect()->guest('login');
+        // Not redirect()->guest(), which remembers the Referer of a form submission even if it is another site.
+        RedirectUtils::setIntendedUrl($request);
+        return redirect('login');
     }
 }

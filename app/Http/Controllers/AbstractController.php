@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Utils\RedirectUtils;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -21,15 +22,13 @@ abstract class AbstractController extends BaseController
      */
     protected function view(string $view, string $title): View
     {
-        session()->put('url.intended', url()->full());
+        // A hack to ensure that redirects work properly after being redirected to the login page
+        RedirectUtils::setIntendedUrl(request());
         return view($view)->with('title', $title);
     }
 
     protected function angular_view(string $view, string $title = ''): View
     {
-        // A hack to ensure that redirects work properly after being redirected to the login page
-        session(['url.intended' => url()->full()]);
-
         $path = request()->path() === '/' ? 'index.php' : request()->path();
         $file = pathinfo(substr($path, strrpos($path, '/')), PATHINFO_FILENAME);
 
@@ -63,7 +62,7 @@ abstract class AbstractController extends BaseController
 
     protected function redirectToLogin(): RedirectResponse
     {
-        session(['url.intended' => url()->full()]);
+        RedirectUtils::setIntendedUrl(request());
         return redirect()->route('login');
     }
 }

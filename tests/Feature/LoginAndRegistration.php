@@ -86,6 +86,60 @@ class LoginAndRegistration extends TestCase
         $this->assertAuthenticatedAs($this->user);
     }
 
+    public function testLoginReturnsToRequestedPage(): void
+    {
+        $this->user = User::factory()->create(['password' => '12345']);
+
+        $this->get('/profile')->assertRedirect('/login');
+
+        $this->loginThroughForm($this->user, '12345')->assertRedirect('/profile');
+    }
+
+    public function testLoginAfterUnauthenticatedPostReturnsToSubmittingPage(): void
+    {
+        $this->user = User::factory()->create(['password' => '12345']);
+
+        $this->post('/profile', [], ['Referer' => 'http://localhost/projects/5/settings'])
+            ->assertRedirect('/login');
+
+        $this->loginThroughForm($this->user, '12345')->assertRedirect('/projects/5/settings');
+    }
+
+    public function testLoginAfterUnauthenticatedPostIgnoresOffsiteReferer(): void
+    {
+        $this->user = User::factory()->create(['password' => '12345']);
+
+        // A page viewed earlier isn't where the form was submitted from, so it is forgotten too.
+        $this->withSession(['url.intended' => 'http://localhost/projects'])
+            ->post('/profile', [], ['Referer' => 'https://example.org/elsewhere'])
+            ->assertRedirect('/login')
+            ->assertSessionMissing('url.intended');
+
+        $this->loginThroughForm($this->user, '12345')->assertRedirect('/');
+    }
+
+    public function testLoginAfterUnauthenticatedPostWithoutRefererGoesHome(): void
+    {
+        $this->user = User::factory()->create(['password' => '12345']);
+
+        // The last URL in the session might not be where the form was submitted from, or even a page.
+        $this->withSession(['_previous' => ['url' => 'http://localhost/api/v1/index.php?project=Test']])
+            ->post('/profile')
+            ->assertRedirect('/login')
+            ->assertSessionMissing('url.intended');
+
+        $this->loginThroughForm($this->user, '12345')->assertRedirect('/');
+    }
+
+    public function testLoginIgnoresOffsiteIntendedUrl(): void
+    {
+        $this->user = User::factory()->create(['password' => '12345']);
+
+        $this->withSession(['url.intended' => 'https://example.org/elsewhere'])
+            ->loginThroughForm($this->user, '12345')
+            ->assertRedirect('/');
+    }
+
     public function testLoginFormHasRememberMe(): void
     {
         // Verify that the login form displays a "remember me" checkbox.
@@ -346,18 +400,23 @@ class LoginAndRegistration extends TestCase
         $response->assertSeeText($displayName);
     }
 
-    /**
-     * Test PingIdentity authentication
-     */
-    public function testPingIdentityProvider(): void
+    private function fakePingIdentityUser(string $name): void
     {
         Socialite::fake('pingidentity', SocialiteUser::fake([
             'id' => 1234567890,
             'email' => 'cdash@test.com',
             'nickname' => 'Pseudo',
-            'name' => 'Arlette Laguiller',
+            'name' => $name,
             'avatar' => 'https://en.gravatar.com/userimage',
         ]));
+    }
+
+    /**
+     * Test PingIdentity authentication
+     */
+    public function testPingIdentityProvider(): void
+    {
+        $this->fakePingIdentityUser('Arlette Laguiller');
 
         $response = $this->get('auth/pingidentity/callback');
         $response->assertRedirect('/profile');
@@ -365,16 +424,19 @@ class LoginAndRegistration extends TestCase
 
     public function testNoFullNamePingIdentityProvider(): void
     {
-        Socialite::fake('pingidentity', SocialiteUser::fake([
-            'id' => 1234567890,
-            'email' => 'cdash@test.com',
-            'nickname' => 'Pseudo',
-            'name' => 'Pseudo',
-            'avatar' => 'https://en.gravatar.com/userimage',
-        ]));
+        $this->fakePingIdentityUser('Pseudo');
 
         $response = $this->get('auth/pingidentity/callback');
         $response->assertRedirect('/profile');
+    }
+
+    public function testOAuthLoginIgnoresOffsiteIntendedUrl(): void
+    {
+        $this->fakePingIdentityUser('Pseudo');
+
+        $this->withSession(['url.intended' => 'https://example.org/elsewhere'])
+            ->get('auth/pingidentity/callback')
+            ->assertRedirect('/profile');
     }
 
     public function testRegisterUserWhenDisabled(): void

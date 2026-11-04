@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\AbstractController;
+use App\Utils\RedirectUtils;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -119,9 +120,13 @@ final class LoginController extends AbstractController
         throw $e;
     }
 
-    public function redirectTo(): string
+    /**
+     * Send the user back to the page they were on.  Not redirect()->intended(), which doesn't check the URL.
+     */
+    protected function authenticated(Request $request, mixed $user): ?RedirectResponse
     {
-        return session('url.intended') ?? '/';
+        // Let AuthenticatesUsers answer JSON requests.
+        return $request->wantsJson() ? null : redirect(RedirectUtils::consumeIntendedUrl('/'));
     }
 
     public static function saml2Login(): Response|RedirectResponse
