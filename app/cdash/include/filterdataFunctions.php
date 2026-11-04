@@ -868,7 +868,7 @@ function get_label_ids_from_filterdata($filterdata): array
     $label_ids = [];
     $clauses = 0;
     $label_sql = '';
-    $sql_combine = $filterdata['filtercombine'];
+    $sql_combine = strtolower($filterdata['filtercombine']) === 'or' ? 'OR' : 'AND';
 
     foreach ($filterdata['filters'] as $filter) {
         if ($filter['field'] === 'label') {
