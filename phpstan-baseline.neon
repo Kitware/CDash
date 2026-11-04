@@ -1075,18 +1075,6 @@ parameters:
 			path: app/Http/Controllers/ProjectOverviewController.php
 
 		-
-			rawMessage: 'Binary operation "+=" between (array|float|int) and int results in an error.'
-			identifier: assignOp.invalid
-			count: 2
-			path: app/Http/Controllers/ProjectOverviewController.php
-
-		-
-			rawMessage: 'Binary operation "/" between (array|float|int) and int<min, -1>|int<1, max> results in an error.'
-			identifier: binaryOp.invalid
-			count: 1
-			path: app/Http/Controllers/ProjectOverviewController.php
-
-		-
 			rawMessage: '''
 				Call to deprecated method getNumberOfSubProjects() of class App\Services\ProjectService:
 				12/06/2025  Use Eloquent relationships for all new code
@@ -4798,18 +4786,6 @@ parameters:
 			rawMessage: Access to an undefined property App\Utils\UnparsedSubmissionProcessor::$backupFileName.
 			identifier: property.notFound
 			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
-			rawMessage: 'Binary operation "." between (array<string>|string|null) and ''_'' results in an error.'
-			identifier: binaryOp.invalid
-			count: 2
-			path: app/Jobs/ProcessSubmission.php
-
-		-
-			rawMessage: 'Binary operation "." between non-falsy-string and (array<string>|string|null) results in an error.'
-			identifier: binaryOp.invalid
-			count: 2
 			path: app/Jobs/ProcessSubmission.php
 
 		-
