@@ -22,9 +22,12 @@ use Illuminate\Support\Str;
 use InvalidArgumentException;
 use JsonException;
 use Nuwave\Lighthouse\OrderBy\OrderByDirective;
+use Nuwave\Lighthouse\Schema\AST\ASTBuilder;
 use Nuwave\Lighthouse\Schema\AST\ASTHelper;
 use Nuwave\Lighthouse\Schema\AST\DocumentAST;
+use Nuwave\Lighthouse\Schema\DirectiveLocator;
 use Nuwave\Lighthouse\Schema\Directives\BaseDirective;
+use Nuwave\Lighthouse\Schema\Directives\RelationDirective;
 use Nuwave\Lighthouse\Support\Contracts\ArgBuilderDirective;
 use Nuwave\Lighthouse\Support\Contracts\ArgManipulator;
 use Nuwave\Lighthouse\Support\Utils;
@@ -240,29 +243,40 @@ final class FilterDirective extends BaseDirective implements ArgBuilderDirective
             throw new InvalidArgumentException('Query builder is not allowed.');
         }
 
-        $this->applyFilters($builder, $value);
+        $this->applyFilters($builder, $value, $this->filteredTypeName());
 
         return $builder;
     }
 
-    protected function applyFilters(EloquentBuilder|Relation $builder, mixed $filter, string $context = 'and'): void
+    /**
+     * The name of the type being filtered, which the relationship filter input for this argument is named after.
+     */
+    private function filteredTypeName(): string
+    {
+        $multiFilterInput = app(ASTBuilder::class)->documentAST()->types[ASTHelper::getUnderlyingTypeName($this->definitionNode)] ?? null;
+        $hasField = $multiFilterInput instanceof InputObjectTypeDefinitionNode ? ASTHelper::firstByName($multiFilterInput->fields, 'has') : null;
+
+        return $hasField === null ? '' : Str::replaceEnd('RelationshipFilterInput', '', ASTHelper::getUnderlyingTypeName($hasField));
+    }
+
+    protected function applyFilters(EloquentBuilder|Relation $builder, mixed $filter, string $typeName, string $context = 'and'): void
     {
         $table = $builder->getModel()->getTable();
 
         if (array_key_exists('all', $filter)) {
             $builder->where(
-                function ($subfilterBuilder) use ($filter): void {
+                function ($subfilterBuilder) use ($filter, $typeName): void {
                     foreach ($filter['all'] as $subfilter) {
-                        $this->applyFilters($subfilterBuilder, $subfilter, 'and');
+                        $this->applyFilters($subfilterBuilder, $subfilter, $typeName, 'and');
                     }
                 },
                 boolean: $context,
             );
         } elseif (array_key_exists('any', $filter)) {
             $builder->where(
-                function ($subfilterBuilder) use ($filter): void {
+                function ($subfilterBuilder) use ($filter, $typeName): void {
                     foreach ($filter['any'] as $subfilter) {
-                        $this->applyFilters($subfilterBuilder, $subfilter, 'or');
+                        $this->applyFilters($subfilterBuilder, $subfilter, $typeName, 'or');
                     }
                 },
                 boolean: $context,
@@ -270,14 +284,28 @@ final class FilterDirective extends BaseDirective implements ArgBuilderDirective
         } elseif (array_key_exists('has', $filter)) {
             $relationshipName = array_key_first($filter['has']);
             $relationshipFilters = $filter['has'][$relationshipName];
+
+            $type = app(ASTBuilder::class)->documentAST()->types[$typeName] ?? null;
+            $relationshipField = $type instanceof ObjectTypeDefinitionNode || $type instanceof InterfaceTypeDefinitionNode
+                ? ASTHelper::firstByName($type->fields, $relationshipName)
+                : null;
+            if (!$relationshipField instanceof FieldDefinitionNode) {
+                throw new InvalidArgumentException("Unknown relationship {$typeName}.{$relationshipName}");
+            }
+            $relatedTypeName = Str::replaceEnd('Connection', '', ASTHelper::getUnderlyingTypeName($relationshipField));
+            $relationDirective = app(DirectiveLocator::class)->exclusiveOfType($relationshipField, RelationDirective::class);
+            /** @var array<string> $scopes */
+            $scopes = $relationDirective === null ? [] : ASTHelper::directiveArgValue($relationDirective->directiveNode, 'scopes', []);
+
+            $applyRelationshipFilters = function (EloquentBuilder $subfilterBuilder) use ($relationshipFilters, $relatedTypeName, $scopes): void {
+                $subfilterBuilder->scopes($scopes);
+                $this->applyFilters($subfilterBuilder, $relationshipFilters, $relatedTypeName);
+            };
+
             if ($context === 'and') {
-                $builder->whereHas($relationshipName, function ($subfilterBuilder) use ($relationshipFilters): void {
-                    $this->applyFilters($subfilterBuilder, $relationshipFilters);
-                });
+                $builder->whereHas($relationshipName, $applyRelationshipFilters);
             } else {
-                $builder->orWhereHas($relationshipName, function ($subfilterBuilder) use ($relationshipFilters): void {
-                    $this->applyFilters($subfilterBuilder, $relationshipFilters);
-                });
+                $builder->orWhereHas($relationshipName, $applyRelationshipFilters);
             }
         } else {
             $operators = [

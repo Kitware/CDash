@@ -241,6 +241,84 @@ class UserTypeTest extends TestCase
         ]);
     }
 
+    #[DataProvider('projectsRelationshipVisibilityCases')]
+    public function testProjectsRelationshipFilterVisibility(
+        ?string $user,
+        bool $canSeePublicProject,
+        bool $canSeeProtectedProject,
+        bool $canSeePrivateProject,
+    ): void {
+        $publicProject = $this->makePublicProject();
+        $protectedProject = $this->makeProtectedProject();
+        $privateProject = $this->makePrivateProject();
+
+        $projectUser = User::factory()->create();
+        $publicProject->users()->attach($projectUser, ['role' => ProjectRole::USER]);
+        $protectedProject->users()->attach($projectUser, ['role' => ProjectRole::USER]);
+        $privateProject->users()->attach($projectUser, ['role' => ProjectRole::USER]);
+
+        if ($user === 'normal') {
+            $user = User::factory()->create();
+        } elseif ($user === 'project_member') {
+            $user = User::factory()->create();
+            $publicProject->users()->attach($user, ['role' => ProjectRole::USER]);
+            $protectedProject->users()->attach($user, ['role' => ProjectRole::USER]);
+            $privateProject->users()->attach($user, ['role' => ProjectRole::USER]);
+        } elseif ($user === 'project_admin') {
+            $user = User::factory()->create();
+            $publicProject->users()->attach($user, ['role' => ProjectRole::ADMINISTRATOR]);
+            $protectedProject->users()->attach($user, ['role' => ProjectRole::ADMINISTRATOR]);
+            $privateProject->users()->attach($user, ['role' => ProjectRole::ADMINISTRATOR]);
+        } elseif ($user === 'admin') {
+            $user = User::factory()->adminUser()->create();
+        } elseif ($user !== null) {
+            throw new Exception('Invalid user.');
+        }
+
+        ($user === null ? $this : $this->actingAs($user))->graphQL('
+            query($userid: ID!, $public: ID!, $protected: ID!, $private: ID!) {
+                public: users(filters: { all: [{ eq: { id: $userid } }, { has: { projects: { eq: { id: $public } } } }] }) {
+                    edges {
+                        node {
+                            id
+                        }
+                    }
+                }
+                protected: users(filters: { all: [{ eq: { id: $userid } }, { has: { projects: { eq: { id: $protected } } } }] }) {
+                    edges {
+                        node {
+                            id
+                        }
+                    }
+                }
+                private: users(filters: { all: [{ eq: { id: $userid } }, { has: { projects: { eq: { id: $private } } } }] }) {
+                    edges {
+                        node {
+                            id
+                        }
+                    }
+                }
+            }
+        ', [
+            'userid' => $projectUser->id,
+            'public' => $publicProject->id,
+            'protected' => $protectedProject->id,
+            'private' => $privateProject->id,
+        ])->assertExactJson([
+            'data' => [
+                'public' => [
+                    'edges' => $canSeePublicProject ? [['node' => ['id' => (string) $projectUser->id]]] : [],
+                ],
+                'protected' => [
+                    'edges' => $canSeeProtectedProject ? [['node' => ['id' => (string) $projectUser->id]]] : [],
+                ],
+                'private' => [
+                    'edges' => $canSeePrivateProject ? [['node' => ['id' => (string) $projectUser->id]]] : [],
+                ],
+            ],
+        ]);
+    }
+
     /**
      * @return array<array<mixed>>
      */
