@@ -24,7 +24,7 @@ class AuthenticateToken
             && !$auth_token->expires->isPast()
             && $auth_token->scope === AuthTokenScope::FULL_ACCESS
         ) {
-            Auth::loginUsingId($auth_token->userid);
+            Auth::onceUsingId($auth_token->userid);
         }
 
         return $next($request);

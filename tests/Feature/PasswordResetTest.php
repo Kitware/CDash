@@ -371,15 +371,16 @@ class PasswordResetTest extends TestCase
 
     public function testLoggingInAsAnotherUserReplacesSessionPasswordHash(): void
     {
-        $this->loginThroughForm($this->user, self::OLD_PASSWORD);
-        $this->get('/profile')->assertOk();
-
         // Use another user's API token with the same session.
         $other_user = User::factory()->adminUser()->create();
         ['raw_token' => $raw_token] = AuthTokenService::generate($other_user->id, -1, AuthTokenScope::FULL_ACCESS, '');
-        $this->app['auth']->forgetGuards();
         $this->withToken($raw_token)->getJson('/api/monitor')->assertOk();
-        $this->assertAuthenticatedAs($other_user);
+        $this->flushHeaders();
+
+        $this->app['auth']->forgetGuards();
+        $this->loginThroughForm($this->user, self::OLD_PASSWORD);
+        $this->get('/profile')->assertOk();
+        $this->assertAuthenticatedAs($this->user);
     }
 
     /**
