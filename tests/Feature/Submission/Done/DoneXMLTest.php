@@ -9,6 +9,7 @@ use CDash\Model\Build;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Mockery\MockInterface;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
@@ -58,14 +59,14 @@ class DoneXMLTest extends TestCase
     /**
      * Submit a Done.xml file for the build, returning the build id from the response.
      */
-    private function submitDone(): ?int
+    private function submitDone(?int $file_build_id = null): ?int
     {
         $file_to_submit = tempnam(sys_get_temp_dir(), 'Done');
         $this->assertNotFalse($file_to_submit);
         try {
             file_put_contents(
                 $file_to_submit,
-                '<?xml version="1.0" encoding="UTF-8"?><Done><buildId>' . $this->build->Id
+                '<?xml version="1.0" encoding="UTF-8"?><Done><buildId>' . ($file_build_id ?? $this->build->Id)
                     . '</buildId><time>' . self::BUILD_TIMESTAMP . '</time></Done>',
             );
             return $this->makeSubmission($this->project->name, $file_to_submit, parameters: [
@@ -82,6 +83,22 @@ class DoneXMLTest extends TestCase
     {
         $this->assertSame((int) $this->build->Id, $this->submitDone());
 
+        $this->assertTrue($this->project->builds()->findOrFail((int) $this->build->Id)->done);
+        $this->log->shouldNotHaveReceived('error');
+        $this->log->shouldNotHaveReceived('warning');
+    }
+
+    public function testMarksBuildFromSubmissionParametersAsDone(): void
+    {
+        $other_build = $this->makePublicProject()->builds()->create([
+            'name' => self::BUILD_NAME,
+            'uuid' => Str::uuid()->toString(),
+            'siteid' => $this->site->id,
+        ]);
+
+        $this->assertSame((int) $this->build->Id, $this->submitDone($other_build->id));
+
+        $this->assertFalse($other_build->fresh()?->done);
         $this->assertTrue($this->project->builds()->findOrFail((int) $this->build->Id)->done);
         $this->log->shouldNotHaveReceived('error');
         $this->log->shouldNotHaveReceived('warning');
