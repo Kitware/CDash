@@ -124,6 +124,8 @@ add_unit_test(/Unit/Middleware/InternalTest)
 
 add_unit_test(/Unit/Utils/SubmissionUtilsTest)
 
+add_unit_test(/Unit/Utils/RedirectUtilsTest)
+
 # TODO: Is this test useful now?
 add_legacy_unit_test(/PHPUnitTest)
 

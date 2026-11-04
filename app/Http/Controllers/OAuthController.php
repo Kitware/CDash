@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Utils\RedirectUtils;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
@@ -59,6 +60,6 @@ final class OAuthController extends AbstractController
             }
         }
         Auth::login($user, true);
-        return redirect(session('url.intended') ?? '/profile');
+        return redirect(RedirectUtils::consumeIntendedUrl('/profile'));
     }
 }
