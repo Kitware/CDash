@@ -303,8 +303,6 @@ class TestsIdPageTest extends BrowserTestCase
 
         $this->browse(function (Browser $browser) use ($test, $measurement): void {
             $browser->visit("/tests/{$test->id}")
-                ->waitFor('@trend-collapse')
-                ->click('@trend-collapse')
                 ->waitFor('@measurement-switcher')
                 ->waitFor('@trend-chart')
                 ->assertAttribute('@trend-chart', 'data-test-point-count', '2')
@@ -355,8 +353,6 @@ class TestsIdPageTest extends BrowserTestCase
 
         $this->browse(function (Browser $browser) use ($tests): void {
             $browser->visit("/tests/{$tests[1]->id}")
-                ->waitFor('@trend-collapse')
-                ->click('@trend-collapse')
                 ->waitFor('@trend-chart')
                 ->assertAttribute('@trend-chart', 'data-test-point-count', '2');
         });

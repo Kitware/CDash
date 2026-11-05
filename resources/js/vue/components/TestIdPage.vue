@@ -191,6 +191,7 @@
           </div>
         </details>
         <details
+          open
           class="tw-collapse tw-collapse-plus tw-join-item tw-border tw-border-base-300"
           data-test="trend-collapse"
         >
