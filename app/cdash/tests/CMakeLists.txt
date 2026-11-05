@@ -197,6 +197,8 @@ add_feature_test_in_transaction(/Feature/SlowPageTest)
 
 add_feature_test_in_transaction(/Feature/IndexSubProjectFiltersTest)
 
+add_feature_test_in_transaction(/Feature/IndexLabelFiltersTest)
+
 add_feature_test_in_transaction(/Feature/GitHubWebhook)
 
 add_feature_test_in_transaction(/Feature/GlobalBannerTest)
