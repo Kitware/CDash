@@ -268,6 +268,29 @@ class TestsIdPageTest extends BrowserTestCase
         });
     }
 
+    public function testLinkMeasurementWithoutHttpUrlIsShownAsText(): void
+    {
+        /** @var Test $test */
+        $test = $this->createTest([
+            'testname' => (string) Str::uuid(),
+            'status' => 'passed',
+        ]);
+
+        $measurement = $test->testMeasurements()->create([
+            'name' => (string) Str::uuid(),
+            'type' => 'text/link',
+            'value' => 'javascript:void(0)',
+        ]);
+
+        $this->browse(function (Browser $browser) use ($test, $measurement): void {
+            $browser->visit("/tests/{$test->id}")
+                ->waitFor('@measurements-collapse')
+                ->waitForText($measurement->name)
+                ->assertMissing('@measurement-link')
+                ->assertSeeIn('@measurement-value', $measurement->value);
+        });
+    }
+
     public function testTrendChartMeasurementSwitching(): void
     {
         /** @var Test $test */
