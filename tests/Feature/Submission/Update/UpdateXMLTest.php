@@ -97,6 +97,24 @@ class UpdateXMLTest extends TestCase
     }
 
     /**
+     * Test that a SubProject build is not linked to the update of a build with the same site, name,
+     * and stamp in another project.
+     */
+    public function testUpdateNotSharedAcrossProjects(): void
+    {
+        $other_project = $this->makePublicProject();
+        $this->makeSubmission($other_project->name, base_path(
+            'tests/Feature/Submission/Update/data/change_id_update.xml'
+        ));
+        $this->makeSubmission($this->project->name, base_path(
+            'tests/Feature/Submission/Update/data/subproject_build.xml'
+        ));
+
+        $this->assertSame(2, $this->project->builds()->count());
+        $this->assertSame(0, $this->project->builds()->whereHas('updateStep')->count());
+    }
+
+    /**
      * Test that revisions which look like numbers are stored as strings, keeping their leading zeros.
      */
     public function testNumericRevision(): void

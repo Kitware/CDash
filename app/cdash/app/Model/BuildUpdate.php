@@ -156,6 +156,7 @@ class BuildUpdate
 
         // Find the update id from a similar build
         $similar_build = Build::where([
+            'projectid' => $build->projectid,
             'stamp' => $stamp,
             'name' => $name,
             'siteid' => $siteid,
