@@ -107,6 +107,25 @@ class BuildFilesPageTest extends BrowserTestCase
         });
     }
 
+    public function testShowsUrlWithoutHttpSchemeAsText(): void
+    {
+        $file = UploadFile::create([
+            'filename' => 'javascript:void(0)',
+            'sha1sum' => Str::uuid()->toString(),
+            'isurl' => true,
+        ]);
+        $this->build->uploadedFiles()->attach($file);
+        $this->files[] = $file;
+
+        $this->browse(function (Browser $browser) use ($file): void {
+            $browser->visit("/builds/{$this->build->id}/files")
+                ->waitFor('@urls-table')
+                ->assertSeeIn('@urls-table', $file->filename)
+                ->assertMissing('@urls-table a')
+            ;
+        });
+    }
+
     public function testShowsOnlyFilesIfOnlyFilesUploaded(): void
     {
         $file = $this->addUploadedFile();

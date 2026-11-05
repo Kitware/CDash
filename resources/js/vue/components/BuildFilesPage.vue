@@ -176,7 +176,7 @@ export default {
           url: {
             value: edge.node.href,
             text: edge.node.href,
-            href: edge.node.href,
+            ...(Utils.isSafeLink(edge.node.href) ? { href: edge.node.href } : {}),
           },
         };
       });

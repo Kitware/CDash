@@ -171,7 +171,7 @@
                         <img :src="$baseURL + '/img/package.png'">
                       </a>
                     </template>
-                    <template v-else-if="measurement.type === 'text/link'">
+                    <template v-else-if="measurement.type === 'text/link' && isSafeLink(measurement.value)">
                       <a
                         class="cdash-link"
                         :href="measurement.value"
@@ -613,6 +613,8 @@ export default {
   },
 
   methods: {
+    isSafeLink: Utils.isSafeLink,
+
     getFileIndex(measurement) {
       return this.files.findIndex((file) => file.id === measurement.id);
     },

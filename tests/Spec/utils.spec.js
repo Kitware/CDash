@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import Utils from '../../resources/js/vue/components/shared/Utils';
 
 describe('Utils', () => {
@@ -241,6 +241,29 @@ describe('Utils', () => {
     it('returns non-finite values as strings', () => {
       expect(Utils.formatMeasurement('MaxRSS', NaN)).toBe('NaN');
       expect(Utils.formatMeasurement('MaxRSS', null)).toBe('null');
+    });
+  });
+
+  describe('isSafeLink', () => {
+    afterEach(() => {
+      vi.unstubAllGlobals();
+    });
+
+    it('accepts http and https URLs', () => {
+      expect(Utils.isSafeLink('http://example.com/log.txt')).toBe(true);
+      expect(Utils.isSafeLink('https://example.com/log.txt')).toBe(true);
+    });
+
+    it('accepts URLs relative to the current page', () => {
+      vi.stubGlobal('location', { href: 'https://cdash.example.com/tests/1' });
+      expect(Utils.isSafeLink('../builds/2')).toBe(true);
+    });
+
+    it('rejects other schemes', () => {
+      expect(Utils.isSafeLink('javascript:void(0)')).toBe(false);
+      expect(Utils.isSafeLink(' JavaScript:void(0)')).toBe(false);
+      expect(Utils.isSafeLink('data:text/html,hello')).toBe(false);
+      expect(Utils.isSafeLink('mailto:someone@example.com')).toBe(false);
     });
   });
 });

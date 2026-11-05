@@ -100,4 +100,16 @@ export default {
     }
     return Number.isInteger(value) ? value.toLocaleString() : value.toFixed(2);
   },
+
+  /**
+   * Whether a submitted URL can be used as a link: an http(s) URL, or one relative to the current page.
+   * Links with other schemes, such as javascript:, can run code when clicked.
+   */
+  isSafeLink(url) {
+    try {
+      return ['http:', 'https:'].includes(new URL(url, globalThis.location?.href).protocol);
+    } catch {
+      return false;
+    }
+  },
 };
