@@ -111,10 +111,15 @@ final class BuildGroupController extends AbstractController
         $now = gmdate(FMT_DATETIME);
 
         if ($request->has('newbuildgroup')) {
+            $build_group_name = $request->input('newbuildgroup');
+            if (!is_string($build_group_name) || trim($build_group_name) === '') {
+                abort(400, 'Name of the BuildGroup must be a non-empty string.');
+            }
+            $build_group_name = trim($build_group_name);
             // Create a new buildgroup or return an existing one.
             $BuildGroup = new BuildGroup();
             $BuildGroup->SetProjectId($projectid);
-            $BuildGroup->SetName(htmlspecialchars(pdo_real_escape_string($request->input('newbuildgroup'))));
+            $BuildGroup->SetName(htmlspecialchars(pdo_real_escape_string($build_group_name)));
 
             if ($BuildGroup->Exists()) {
                 $status_code = 200;
@@ -262,9 +267,15 @@ final class BuildGroupController extends AbstractController
             // Modify an existing buildgroup.  Unchecked checkboxes are not included in the request.
             $buildgroup = new Fluent((array) json_decode($request->string('buildgroup')->toString(), true));
 
+            $build_group_name = $buildgroup->get('name');
+            if (!is_string($build_group_name) || trim($build_group_name) === '') {
+                abort(400, 'Name of the BuildGroup must be a non-empty string.');
+            }
+            $build_group_name = trim($build_group_name);
+
             $BuildGroup = new BuildGroup();
             $BuildGroup->SetId(self::getProjectBuildGroup($projectid, $buildgroup->integer('id'))->id);
-            $BuildGroup->SetName(pdo_real_escape_string($buildgroup->get('name')));
+            $BuildGroup->SetName(pdo_real_escape_string($build_group_name));
             $BuildGroup->SetDescription(pdo_real_escape_string($buildgroup->get('description')));
             $BuildGroup->SetSummaryEmail($buildgroup->integer('summaryemail'));
             $BuildGroup->SetEmailCommitters($buildgroup->integer('emailcommitters'));
