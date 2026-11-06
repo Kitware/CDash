@@ -59,6 +59,20 @@ final class ResetPasswordController extends AbstractController
     }
 
     /**
+     * Users who have logged in with LDAP, OAuth, or SAML can't log in with a CDash password, so
+     * they're treated like addresses without accounts.
+     *
+     * @return array<string, mixed>
+     */
+    protected function credentials(Request $request): array
+    {
+        return [
+            ...$request->only('email', 'password', 'password_confirmation', 'token'),
+            ...User::passwordLoginCredential(),
+        ];
+    }
+
+    /**
      * @return array<string, mixed>
      */
     protected function rules(): array

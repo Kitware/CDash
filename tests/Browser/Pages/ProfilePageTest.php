@@ -119,6 +119,34 @@ class ProfilePageTest extends BrowserTestCase
         });
     }
 
+    public function testUsersWhoLoggedInExternallyCannotChangeEmailOrPassword(): void
+    {
+        $this->users['user'] = User::factory()->create([
+            'firstname' => 'first',
+            'password_login_disabled' => true,
+        ]);
+        $email = $this->users['user']->email;
+
+        $this->browse(function (Browser $browser) use ($email): void {
+            $browser->loginAs($this->users['user'])
+                ->visit('/profile')
+                ->waitFor('@fname-input')
+                ->assertDisabled('@email-input')
+                ->assertInputValue('@email-input', $email)
+                ->assertSee("Your email address can't be changed")
+                ->assertMissing('@oldpasswd-input')
+
+                ->clear('@fname-input')
+                ->type('@fname-input', 'changed')
+                ->click('@update-profile-button')
+                ->waitForTextIn('#app', 'Your profile has been updated');
+        });
+
+        $this->users['user']->refresh();
+        self::assertSame('changed', $this->users['user']->firstname);
+        self::assertSame($email, $this->users['user']->email);
+    }
+
     public function testIncorrectPasswordPreventsPasswordReset(): void
     {
         $this->users['admin'] = User::factory()->adminUser()->create();

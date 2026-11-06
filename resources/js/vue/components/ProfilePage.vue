@@ -42,6 +42,8 @@
           v-model="profileForm.email"
           name="email"
           label="Email"
+          :description="canChangeEmail ? undefined : 'Your email address can\'t be changed because you log in with LDAP, OAuth, or SAML.'"
+          :disabled="!canChangeEmail"
           test-id="email-input"
         />
         <InputField
@@ -63,7 +65,10 @@
       </form>
     </FormSection>
 
-    <FormSection title="Change Password">
+    <FormSection
+      v-if="canChangePassword"
+      title="Change Password"
+    >
       <form
         id="password_form"
         method="post"
@@ -320,6 +325,14 @@ export default {
     message: {
       type: String,
       default: '',
+    },
+    canChangeEmail: {
+      type: Boolean,
+      required: true,
+    },
+    canChangePassword: {
+      type: Boolean,
+      required: true,
     },
     maxTokenExpiration: {
       type: String,

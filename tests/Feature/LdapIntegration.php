@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Enums\ProjectRole;
 use App\Models\Project;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use LdapRecord\LdapRecordException;
@@ -165,8 +166,65 @@ class LdapIntegration extends TestCase
             'password' => $user->getAttribute('userpassword')[0],
         ])->assertRedirect('/');
 
-        // Ensure the user was actually created in the database, and then clean it up
-        \App\Models\User::where(['email' => $user->getAttribute('uid')[0]])->firstOrFail()->delete();
+        // Ensure the user was actually created in the database, and clean it up afterwards
+        $database_user = \App\Models\User::where(['email' => $user->getAttribute('uid')[0]])->firstOrFail();
+        $this->database_users[] = $database_user;
+
+        // LDAP users can't change their password from their profile page.
+        $this->get('/profile')
+            ->assertOk()
+            ->assertViewHas('props', fn (array $props): bool => $props['can-change-password'] === false);
+
+        $this->get('/logout')->assertRedirect('/');
+        $this->post('/login', [
+            'email' => $user->getAttribute('uid')[0],
+            'password' => $user->getAttribute('userpassword')[0],
+        ])->assertRedirect('/');
+
+        self::assertTrue($database_user->refresh()->password_login_disabled);
+    }
+
+    public function testLocalUsersWhoLoggedInExternallyCannotLogInWithPassword(): void
+    {
+        $password = Str::uuid()->toString();
+        $user = \App\Models\User::factory()->create(['password' => Hash::make($password)]);
+        $this->database_users[] = $user;
+
+        $this->post('/login', [
+            'email' => $user->email,
+            'password' => $password,
+        ])->assertRedirect('/');
+        $this->get('/logout')->assertRedirect('/');
+        self::assertFalse($user->refresh()->password_login_disabled);
+
+        $user->password_login_disabled = true;
+        $user->save();
+
+        $this->post('/login', [
+            'email' => $user->email,
+            'password' => $password,
+        ])->assertUnauthorized();
+    }
+
+    public function testUsersWithLdapAccountsCannotLogInWithPassword(): void
+    {
+        $password = Str::uuid()->toString();
+        $user = \App\Models\User::factory()->create(['password' => Hash::make($password)]);
+        $this->database_users[] = $user;
+
+        $this->post('/login', [
+            'email' => $user->email,
+            'password' => $password,
+        ])->assertRedirect('/');
+        $this->get('/logout')->assertRedirect('/');
+
+        $user->ldapguid = Str::uuid()->toString();
+        $user->save();
+
+        $this->post('/login', [
+            'email' => $user->email,
+            'password' => $password,
+        ])->assertUnauthorized();
     }
 
     public function testLoginWithFilters(): void

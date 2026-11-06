@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\AbstractController;
+use App\Models\User;
 use App\Utils\RedirectUtils;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\JsonResponse;
@@ -82,18 +83,25 @@ final class LoginController extends AbstractController
     }
 
     /**
+     * Users who have logged in with LDAP, OAuth, or SAML can't log in with a CDash password.  Users
+     * with LDAP accounts still log in with their LDAP password.
+     *
      * @return array<string, mixed>
      */
     public function credentials(Request $request): array
     {
+        $credentials = [
+            ...$this->traitCredentials($request),
+            ...User::passwordLoginCredential(),
+        ];
         if ((bool) config('cdash.ldap_enabled')) {
             return [
                 config()->string('cdash.ldap_locate_users_by') => $request->post('email'),
                 'password' => $request->post('password'),
-                'fallback' => $this->traitCredentials($request),
+                'fallback' => $credentials,
             ];
         }
-        return $this->traitCredentials($request);
+        return $credentials;
     }
 
     /**

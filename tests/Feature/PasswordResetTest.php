@@ -418,6 +418,22 @@ class PasswordResetTest extends TestCase
         $this->assertPasswordIs(self::OLD_PASSWORD);
     }
 
+    public function testUsersWhoLoggedInExternallyCannotResetPassword(): void
+    {
+        $this->user->password_login_disabled = true;
+        $this->user->save();
+
+        $this->requestResetLink($this->user->email)
+            ->assertRedirect('/password/reset')
+            ->assertSessionHasNoErrors()
+            ->assertSessionHas('status', self::message('passwords.sent'));
+        Notification::assertNothingSent();
+
+        $this->resetPassword(Password::createToken($this->user))
+            ->assertSessionHasErrors(['email' => self::message('passwords.token')]);
+        $this->assertPasswordIs(self::OLD_PASSWORD);
+    }
+
     public function testFormerLdapUsersCanResetPasswordWhenLdapDisabled(): void
     {
         $this->user->ldapguid = Str::uuid()->toString();

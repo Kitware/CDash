@@ -39,6 +39,7 @@ class Saml2Login
         // Login as this user if they already have an account with CDash.
         $user = User::firstWhere('email', $email);
         if ($user !== null) {
+            $user->recordExternalLogin();
             Auth::login($user);
             return;
         }
@@ -58,6 +59,7 @@ class Saml2Login
                 Log::error("Error registering new SAML2 user: $email");
                 abort(500, 'Error registering new SAML2 user');
             }
+            $user->recordExternalLogin();
             Auth::login($user);
         } else {
             abort(401);

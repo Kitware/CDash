@@ -29,6 +29,11 @@ After resetting their password, users must log in again with their new password.
 Password resets are disabled when `USERNAME_PASSWORD_AUTHENTICATION_ENABLED` is `false` or when LDAP authentication
 is enabled.
 
+The profile page's Change Password form is hidden, and password expiration is not enforced, when
+`USERNAME_PASSWORD_AUTHENTICATION_ENABLED` is `false`, or for users who log in with LDAP, OAuth, or SAML.  Users
+without an LDAP account can still change their password from the profile page when LDAP authentication is enabled,
+unless they have logged in with OAuth or SAML.
+
 ## Customizing the login page
 You can add your own custom content to the login page by writing a
 [Blade template file](https://laravel.com/docs/9.x/blade) named `login.blade.php` in `resources/views/local/`.

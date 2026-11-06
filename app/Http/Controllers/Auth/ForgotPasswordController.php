@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\AbstractController;
+use App\Models\User;
 use Closure;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 use Illuminate\Http\JsonResponse;
@@ -42,6 +43,20 @@ final class ForgotPasswordController extends AbstractController
             return $next($request);
         });
         $this->middleware('throttle:6,1')->only('sendResetLinkEmail');
+    }
+
+    /**
+     * Users who have logged in with LDAP, OAuth, or SAML can't log in with a CDash password, so
+     * they're treated like addresses without accounts.
+     *
+     * @return array<string, mixed>
+     */
+    protected function credentials(Request $request): array
+    {
+        return [
+            ...$request->only('email'),
+            ...User::passwordLoginCredential(),
+        ];
     }
 
     /**

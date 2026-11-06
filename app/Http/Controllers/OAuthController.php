@@ -59,6 +59,7 @@ final class OAuthController extends AbstractController
                 abort(500, 'Error registering new user');
             }
         }
+        $user->recordExternalLogin();
         Auth::login($user, true);
         return redirect(RedirectUtils::consumeIntendedUrl('/profile'));
     }
