@@ -68,4 +68,30 @@ class UserPolicy
     {
         return $currentUser->admin || $currentUser->id === $user->id;
     }
+
+    public function changeEmail(?User $currentUser, User $user): bool
+    {
+        // Users can only change their own email address.
+        if ($currentUser === null || $currentUser->id !== $user->id) {
+            return false;
+        }
+
+        // Users who log in with LDAP, OAuth, or SAML are found by their email address.
+        return $user->canLogInWithPassword();
+    }
+
+    public function changePassword(?User $currentUser, User $user): bool
+    {
+        // Users can only change their own password.
+        if ($currentUser === null || $currentUser->id !== $user->id) {
+            return false;
+        }
+
+        // Passwords can't be changed when password login is disabled.
+        if (config('cdash.username_password_authentication_enabled') === false) {
+            return false;
+        }
+
+        return $user->canLogInWithPassword();
+    }
 }

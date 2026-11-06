@@ -98,6 +98,23 @@ class SaveUserCommandTest extends TestCase
         self::assertSame($password, $user->password);
     }
 
+    public function testCannotSetPasswordOfUserWhoLoggedInExternally(): void
+    {
+        $user = User::factory()->create(['password_login_disabled' => true]);
+        $password = $user->password;
+
+        Artisan::call('user:save', [
+            '--email' => $user->email,
+            '--institution' => 'CTest',
+            '--password' => 'correct horse battery staple',
+        ]);
+
+        self::assertSame("{$user->email} logs in with LDAP, OAuth, or SAML, so their password can't be set\n", Artisan::output());
+        $user->refresh();
+        self::assertSame($password, $user->password);
+        self::assertNotSame('CTest', $user->institution);
+    }
+
     public function testGrantsAdmin(): void
     {
         $user = User::factory()->create();

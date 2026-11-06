@@ -277,6 +277,12 @@ add_feature_test_in_transaction(/Feature/PasswordRotation)
 
 add_feature_test_in_transaction(/Feature/PasswordResetTest)
 
+add_feature_test_in_transaction(/Feature/ProfilePasswordChangeTest)
+
+add_feature_test_in_transaction(/Feature/ProfileEmailChangeTest)
+
+add_feature_test_in_transaction(/Feature/ExternalLoginTest)
+
 add_feature_test_in_transaction(/Feature/Console/PurgeUnusedProjectsCommandTest)
 
 add_feature_test_in_transaction(/Feature/Jobs/PruneJobsTest)

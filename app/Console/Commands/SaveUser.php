@@ -54,6 +54,11 @@ class SaveUser extends Command
             $message = "Updated $email";
         }
 
+        if (!$create_new_user && $this->option('password') !== null && !$user->canLogInWithPassword()) {
+            $this->error("$email logs in with LDAP, OAuth, or SAML, so their password can't be set");
+            return;
+        }
+
         $options = ['firstname', 'lastname', 'institution', 'password'];
         foreach ($options as $option_name) {
             $option_value = $this->option($option_name);

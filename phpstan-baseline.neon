@@ -1690,12 +1690,6 @@ parameters:
 			path: app/Http/Controllers/UserController.php
 
 		-
-			rawMessage: 'Only booleans are allowed in an if condition, mixed given.'
-			identifier: if.condNotBoolean
-			count: 1
-			path: app/Http/Controllers/UserController.php
-
-		-
 			rawMessage: 'Parameter #1 $haystack of function str_contains expects string, mixed given.'
 			identifier: argument.type
 			count: 1
@@ -20634,7 +20628,7 @@ parameters:
 		-
 			rawMessage: Cannot access offset 0 on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 52
+			count: 54
 			path: tests/Feature/LdapIntegration.php
 
 		-
