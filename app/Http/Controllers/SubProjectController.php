@@ -128,7 +128,7 @@ final class SubProjectController extends AbstractProjectController
 
         // Route based on what type of request this is.
         return match ($request->method()) {
-            'DELETE' => self::apiSubProjectDelete($request),
+            'DELETE' => self::apiSubProjectDelete($request, $projectid),
             'POST' => self::apiSubProjectPost($request, $projectid),
             'PUT' => self::apiSubProjectPut($request, $projectid),
             default => self::apiSubProjectGet($request, $projectid),
@@ -137,7 +137,7 @@ final class SubProjectController extends AbstractProjectController
 
     private static function apiSubProjectGet(Request $request, int $projectid): JsonResponse
     {
-        $subprojectid = self::getSubProjectIdFromRequest($request);
+        $subprojectid = self::getSubProjectIdFromRequest($request, $projectid);
 
         $pageTimer = new PageTimer();
         $response = begin_JSON_response();
@@ -179,12 +179,12 @@ final class SubProjectController extends AbstractProjectController
         return response()->json(cast_data_for_JSON($response));
     }
 
-    private static function apiSubProjectDelete(Request $request): Response
+    private static function apiSubProjectDelete(Request $request, int $projectid): Response
     {
         if ($request->has('groupid')) {
             // Delete subproject group.
             $Group = new SubProjectGroup();
-            $Group->SetId($request->integer('groupid'));
+            $Group->SetId(EloquentSubProjectGroup::where('projectid', $projectid)->findOrFail($request->integer('groupid'))->id);
             $Group->Delete();
         }
 
@@ -219,7 +219,8 @@ final class SubProjectController extends AbstractProjectController
             // Update the order of the SubProject groups.
             foreach (array_keys((array) $request->input('newLayout')) as $index) {
                 // TODO: (williamjallen) refactor this to execute a constant number of queries
-                EloquentSubProjectGroup::findOrFail($request->integer("newLayout.{$index}.id"))
+                EloquentSubProjectGroup::where('projectid', $projectid)
+                    ->findOrFail($request->integer("newLayout.{$index}.id"))
                     ->update([
                         'position' => $request->integer("newLayout.{$index}.position"),
                     ]);
@@ -235,7 +236,7 @@ final class SubProjectController extends AbstractProjectController
             // Modify an existing subproject group.
             $Group = new SubProjectGroup();
             $Group->SetProjectId($projectid);
-            $Group->SetId($request->integer('groupid'));
+            $Group->SetId(EloquentSubProjectGroup::where('projectid', $projectid)->findOrFail($request->integer('groupid'))->id);
             $Group->SetName($request->string('name')->toString());
             $Group->SetCoverageThreshold($request->integer('threshold'));
             $Group->SetIsDefault($request->input('is_default') === 'true' ? 1 : 0);
@@ -245,7 +246,7 @@ final class SubProjectController extends AbstractProjectController
         }
 
         $SubProject = new SubProject();
-        $SubProject->SetId(self::getSubProjectIdFromRequest($request));
+        $SubProject->SetId(self::getSubProjectIdFromRequest($request, $projectid));
 
         if ($request->has('groupname')) {
             // Change which group a subproject belongs to.
@@ -256,12 +257,12 @@ final class SubProjectController extends AbstractProjectController
         return response()->noContent();
     }
 
-    private static function getSubProjectIdFromRequest(Request $request): int
+    private static function getSubProjectIdFromRequest(Request $request, int $projectid): int
     {
         if (!$request->has('subprojectid')) {
             abort(400, 'subprojectid not specified.');
         }
-        return $request->integer('subprojectid');
+        return EloquentSubProject::where('projectid', $projectid)->findOrFail($request->integer('subprojectid'))->id;
     }
 
     public function dependenciesGraph(Request $request, string $project): View
