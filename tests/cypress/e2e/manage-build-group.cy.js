@@ -29,6 +29,32 @@ describe('manageBuildGroup', () => {
     cy.get('#current').should('contain', 'latestBuildGroup');
   });
 
+  it("can't create a buildgroup with an empty name", () => {
+    cy.login();
+    cy.visit('manageBuildGroup.php?projectid=5');
+
+    // Submit form as its found
+    cy.get('a').contains('Create new BuildGroup').click();
+    cy.get('select[name="newBuildGroupType"]').find('option').contains('Daily').should('be.selected');
+    cy.get('button').contains('Create BuildGroup').click();
+    cy.get('#buildgroup_created').should('not.be.visible');
+    // validate error message
+    cy.get('#create_group_error').should('contain', 'Name of the BuildGroup must be a non-empty string.');
+
+    // Create a valid entry to clear errors.
+    cy.get('input[name="newBuildGroupName"]').clear();
+    cy.get('input[name="newBuildGroupName"]').type('a');
+    cy.get('button').contains('Create BuildGroup').click();
+    cy.get('#buildgroup_created').should('be.visible');
+
+    // Add an entry that is nothing but spaces
+    cy.get('input[name="newBuildGroupName"]').clear();
+    cy.get('input[name="newBuildGroupName"]').type('        ');
+    cy.get('button').contains('Create BuildGroup').click();
+    cy.get('#buildgroup_created').should('not.be.visible');
+    // validate error message
+    cy.get('#create_group_error').should('contain', 'Name of the BuildGroup must be a non-empty string.');
+  });
 
   it('can create a buildgroup after choosing a wildcard build type', () => {
     cy.login();
