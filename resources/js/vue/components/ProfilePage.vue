@@ -47,6 +47,15 @@
           test-id="email-input"
         />
         <InputField
+          v-if="canChangeEmail && profileForm.email !== user.email"
+          v-model="profileForm.password"
+          name="password"
+          type="password"
+          label="Current Password"
+          description="Required to change your email address."
+          test-id="email-password-input"
+        />
+        <InputField
           v-model="profileForm.institution"
           name="institution"
           label="Institution"
@@ -346,6 +355,7 @@ export default {
         fname: this.user.firstname || '',
         lname: this.user.lastname || '',
         email: this.user.email || '',
+        password: '',
         institution: this.user.institution || '',
       },
       passwordForm: {

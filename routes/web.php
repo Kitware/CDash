@@ -311,6 +311,9 @@ Route::middleware(['auth'])->group(function (): void {
     // TODO: (williamjallen) send the POST route to a different function
     Route::match(['get', 'post'], '/profile', [UserController::class, 'edit']);
     Route::permanentRedirect('/editUser.php', url('/profile'));
+    Route::get('/profile/email', [UserController::class, 'confirmEmailChange'])
+        ->name('confirm-email-change')
+        ->middleware('signed');
 
     Route::get('/projects/{project_id}/notifications', [ProjectNotificationsController::class, 'show'])
         ->whereNumber('project_id');

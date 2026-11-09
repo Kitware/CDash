@@ -1690,12 +1690,6 @@ parameters:
 			path: app/Http/Controllers/UserController.php
 
 		-
-			rawMessage: 'Parameter #1 $haystack of function str_contains expects string, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/UserController.php
-
-		-
 			rawMessage: 'Parameter #1 $password of function password_hash expects string, mixed given.'
 			identifier: argument.type
 			count: 1
@@ -1710,12 +1704,6 @@ parameters:
 		-
 			rawMessage: 'Parameter #1 $string of function strlen expects string, mixed given.'
 			identifier: argument.type
-			count: 2
-			path: app/Http/Controllers/UserController.php
-
-		-
-			rawMessage: 'Property App\Models\User::$email (string) does not accept mixed.'
-			identifier: assign.propertyType
 			count: 1
 			path: app/Http/Controllers/UserController.php
 
