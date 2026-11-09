@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\AbstractController;
 use App\Models\User;
+use App\Rules\UniqueEmailRule;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\RedirectResponse;
@@ -76,7 +77,7 @@ final class RegisterController extends AbstractController
             'url' => ['bail', 'required', 'string', 'regex:/^catchbot$/'],
             'fname' => ['required', 'string', 'max:255'],
             'lname' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'email' => ['required', 'string', 'email', 'max:255', new UniqueEmailRule()],
             'password' => ['required', 'string', "min:{$password_min}", 'complexity', 'confirmed'],
         ];
 

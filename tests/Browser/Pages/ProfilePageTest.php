@@ -4,6 +4,7 @@ namespace Tests\Browser\Pages;
 
 use App\Enums\AuthTokenScope;
 use App\Enums\ProjectRole;
+use App\Mail\ConfirmEmailChange;
 use App\Models\AuthToken;
 use App\Models\Project;
 use App\Models\User;
@@ -54,69 +55,49 @@ class ProfilePageTest extends BrowserTestCase
         $this->users['admin'] = User::factory()->adminUser()->create([
             'firstname' => 'admin',
             'lastname' => 'admin',
-            'email' => 'admin@example.com',
+            'password' => 'Password1!',
             'institution' => 'testing',
         ]);
+        $old_email = $this->users['admin']->email;
+        $new_email = Str::uuid()->toString() . '@example.com';
 
-        $this->browse(function (Browser $browser): void {
+        $this->browse(function (Browser $browser) use ($old_email, $new_email): void {
             $browser->loginAs($this->users['admin'])
                 ->visit('/profile')
                 ->waitFor('@fname-input')
                 ->assertInputValue('@fname-input', 'admin')
                 ->assertInputValue('@lname-input', 'admin')
-                ->assertInputValue('@email-input', 'admin@example.com')
+                ->assertInputValue('@email-input', $old_email)
                 ->assertInputValue('@institution-input', 'testing')
+                ->assertMissing('@email-password-input')
 
                 ->clear('@fname-input')
                 ->type('@fname-input', 'first name here')
                 ->clear('@lname-input')
                 ->type('@lname-input', 'last name here')
                 ->clear('@email-input')
-                ->type('@email-input', 'emailtest@example.com')
+                ->type('@email-input', $new_email)
+                ->type('@email-password-input', 'Password1!')
                 ->clear('@institution-input')
                 ->type('@institution-input', 'Kitware (Test)')
 
                 ->click('@update-profile-button')
-                ->waitForTextIn('#app', 'Your profile has been updated');
+                ->waitForTextIn('#app', "To finish changing your email address, click the link sent to {$new_email}.");
         });
 
-        $user = User::where('email', 'emailtest@example.com')->firstOrFail();
+        $user = $this->users['admin']->refresh();
+        self::assertSame($old_email, $user->email);
 
-        $this->browse(function (Browser $browser) use ($user): void {
-            $browser->logout()
-                ->loginAs($user)
-                ->visit('/profile')
-                ->waitFor('@fname-input')
-
+        $this->browse(function (Browser $browser) use ($user, $new_email): void {
+            $browser->visit((new ConfirmEmailChange($user, $new_email))->url)
+                ->waitForTextIn('#app', 'Your email address has been changed.')
                 ->assertInputValue('@fname-input', 'first name here')
-                ->clear('@fname-input')
-                ->type('@fname-input', 'admin')
                 ->assertInputValue('@lname-input', 'last name here')
-                ->clear('@lname-input')
-                ->type('@lname-input', 'admin')
-                ->assertInputValue('@email-input', 'emailtest@example.com')
-                ->clear('@email-input')
-                ->type('@email-input', 'admin@example.com')
-                ->assertInputValue('@institution-input', 'Kitware (Test)')
-                ->clear('@institution-input')
-                ->type('@institution-input', 'testing')
-
-                ->click('@update-profile-button')
-                ->waitForTextIn('#app', 'Your profile has been updated');
+                ->assertInputValue('@email-input', $new_email)
+                ->assertInputValue('@institution-input', 'Kitware (Test)');
         });
 
-        $user = User::where('email', 'admin@example.com')->firstOrFail();
-
-        $this->browse(function (Browser $browser) use ($user): void {
-            $browser->logout()
-                ->loginAs($user)
-                ->visit('/profile')
-                ->waitFor('@fname-input')
-                ->assertInputValue('@fname-input', 'admin')
-                ->assertInputValue('@lname-input', 'admin')
-                ->assertInputValue('@email-input', 'admin@example.com')
-                ->assertInputValue('@institution-input', 'testing');
-        });
+        self::assertSame($new_email, $this->users['admin']->refresh()->email);
     }
 
     public function testUsersWhoLoggedInExternallyCannotChangeEmailOrPassword(): void

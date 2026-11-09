@@ -75,6 +75,23 @@ class LoginAndRegistration extends TestCase
         $this->assertDatabaseHas('users', ['email' => self::$email]);
     }
 
+    public function testCannotRegisterExistingEmailInDifferentCase(): void
+    {
+        $this->user = User::factory()->create();
+
+        $this->post(route('register'), [
+            'fname' => 'Test',
+            'lname' => 'User',
+            'email' => Str::upper($this->user->email),
+            'password' => self::$password,
+            'password_confirmation' => self::$password,
+            'institution' => 'home',
+            'url' => 'catchbot',
+        ])->assertStatus(422)->assertSee('The email has already been taken.');
+
+        $this->assertDatabaseMissing('users', ['email' => Str::upper($this->user->email)]);
+    }
+
     public function testUserCanLoginWithCorrectCredentials(): void
     {
         $this->user = User::factory()->create(['password' => '12345']);

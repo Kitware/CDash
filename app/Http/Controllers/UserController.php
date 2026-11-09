@@ -2,11 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ConfirmEmailChange;
+use App\Mail\EmailChanged;
 use App\Models\User;
+use App\Rules\UniqueEmailRule;
 use App\Validators\Password;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 
 final class UserController extends AbstractController
@@ -17,23 +24,31 @@ final class UserController extends AbstractController
         $user = Auth::user();
 
         $error_msg = '';
-        $other_msg = '';
+        $status = session('status');
+        $other_msg = is_string($status) ? $status : '';
         $can_change_email = $user->can('changeEmail', $user);
         $can_change_password = $user->can('changePassword', $user);
 
         if (isset($_POST['updateprofile'])) {
             // The email field is disabled for users who can't change their email address.
-            $email = $can_change_email ? ($_POST['email'] ?? '') : $user->email;
-            // TODO: (williamjallen) validate email addresses using proper email validation regex
-            if (strlen($email) < 3 || !str_contains($email, '@')) {
-                $error_msg = 'Email should be a valid address.';
+            $posted_email = $_POST['email'] ?? '';
+            $email = $can_change_email && is_string($posted_email) ? trim($posted_email) : $user->email;
+            $email_changed = $email !== $user->email;
+            $password = $_POST['password'] ?? '';
+            $email_error = $email_changed ? self::emailChangeError($user, $email, is_string($password) ? $password : '') : null;
+            if ($email_error !== null) {
+                $error_msg = $email_error;
             } else {
-                $user->email = $email;
                 $user->institution = $_POST['institution'] ?? '';
                 $user->lastname = $_POST['lname'] ?? '';
                 $user->firstname = $_POST['fname'] ?? '';
                 if ($user->save()) {
                     $other_msg = 'Your profile has been updated.';
+                    // The address only changes once the user clicks the link sent to it.
+                    if ($email_changed) {
+                        Mail::to($email)->send(new ConfirmEmailChange($user, $email));
+                        $other_msg .= " To finish changing your email address, click the link sent to {$email}.";
+                    }
                 } else {
                     $error_msg = 'Cannot update profile.';
                 }
@@ -123,5 +138,62 @@ final class UserController extends AbstractController
             'can-change-password' => $can_change_password,
             'max-token-expiration' => $maximumExpiration->subDay()->toDateString(),
         ]);
+    }
+
+    /**
+     * Changes the user's email address to the one in a link sent by ConfirmEmailChange.
+     */
+    public function confirmEmailChange(Request $request): RedirectResponse
+    {
+        /** @var User $user */
+        $user = $request->user();
+
+        if ($request->integer('id') !== $user->id
+            || !hash_equals(sha1($user->email), $request->string('hash')->toString())
+            || $user->cannot('changeEmail', $user)
+        ) {
+            abort(403, 'This link is not valid.');
+        }
+
+        // Someone else may have taken the address since the link was sent.
+        $email = $request->string('email')->toString();
+        $validator = Validator::make(['email' => $email], ['email' => self::emailRules($user)]);
+        if ($validator->fails()) {
+            abort(409, $validator->errors()->first('email'));
+        }
+
+        $old_email = $user->email;
+        $user->email = $email;
+        // Also saves the new address.
+        $user->markEmailAsVerified();
+
+        Mail::to($old_email)->send(new EmailChanged($old_email, $email));
+
+        return redirect('/profile')->with('status', 'Your email address has been changed.');
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    private static function emailRules(User $user): array
+    {
+        return ['required', 'string', 'email', 'max:255', new UniqueEmailRule($user)];
+    }
+
+    /**
+     * Returns the reason the user can't change their email address to $email, if any.
+     */
+    private static function emailChangeError(User $user, string $email, string $password): ?string
+    {
+        $validator = Validator::make(['email' => $email], ['email' => self::emailRules($user)]);
+        if ($validator->fails()) {
+            return $validator->errors()->first('email');
+        }
+
+        if (!password_verify($password, $user->password)) {
+            return 'Your password is incorrect.';
+        }
+
+        return null;
     }
 }
