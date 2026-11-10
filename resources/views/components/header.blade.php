@@ -87,17 +87,17 @@ $showHeaderNav = isset($build);
                 @verbatim
                     <ul ng-if="cdash.menu.previous || cdash.menu.current || cdash.menu.next" class="projectnav_controls clearfix">
                         <li class="btnprev">
-                            <a class="cdash-link" ng-if="cdash.menu.previous"
+                            <a class="cdash-link" data-test="header-nav-previous" ng-if="cdash.menu.previous"
                                ng-href="{{::cdash.menu.previous}}{{::cdash.filterurl}}">Prev</a>
                         </li>
                         <li class="btncurr">
-                            <a class="cdash-link" ng-if="cdash.menu.current"
+                            <a class="cdash-link" data-test="header-nav-latest" ng-if="cdash.menu.current"
                                ng-href="{{::cdash.menu.current}}{{::cdash.filterurl}}">
                                 Latest
                             </a>
                         </li>
                         <li class="btnnext">
-                            <a class="cdash-link" ng-if="cdash.menu.next"
+                            <a class="cdash-link" data-test="header-nav-next" ng-if="cdash.menu.next"
                                ng-href="{{::cdash.menu.next}}{{::cdash.filterurl}}">
                                 Next
                             </a>
@@ -152,7 +152,7 @@ $showHeaderNav = isset($build);
                 @endif
                 @if(isset($angular) && $angular === true)
                     <li ng-if="cdash.showcalendar">
-                        <a class="cdash-link" id="cal" href="" ng-click="toggleCalendar()">Calendar</a>
+                        <a class="cdash-link" id="cal" data-test="calendar-toggle" href="" ng-click="toggleCalendar()">Calendar</a>
                         <span id="date_now" style="display:none;">@{{::cdash.date}}</span>
                     </li>
                 @endif
@@ -222,6 +222,6 @@ $showHeaderNav = isset($build);
     </div>
 
     @if(isset($angular) && $angular === true)
-        <div id="calendar"></div>
+        <div id="calendar" data-test="calendar"></div>
     @endif
 </div>

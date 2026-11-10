@@ -4,17 +4,18 @@
          ng-if="::build.id"
          ng-model="build.selected"
          ng-change="toggleBuildSelection(build, buildgroup)"
-         data-cy="build-selection-checkbox">
+         data-test="build-selection-checkbox">
 </td>
 
 <!-- For child view, display the label(s) as a link to the build summary -->
-<td ng-if="::cdash.childview == 1" align="left" class="paddt" colspan="2">
-  <a class="cdash-link" ng-href="builds/{{::build.id}}">
+<td ng-if="::cdash.childview == 1" align="left" class="paddt" colspan="2" data-test="subproject">
+  <a class="cdash-link" data-test="build-summary-link" ng-href="builds/{{::build.id}}">
     {{::build.label}}
   </a>
 
   <!-- Icon for build errors / test failing -->
   <a class="cdash-link" ng-if="::build.compilation.error > 0 || build.test.fail > 0" href=""
+     data-test="build-problems-toggle"
      ng-click="toggleBuildProblems(build)">
     <span class="glyphicon glyphicon-info-sign" style="color: #777;" title="Build information"></span>
   </a>
@@ -23,6 +24,7 @@
   <a class="cdash-link"
      title="View notes"
      name="notesLink"
+     data-test="build-notes-link"
      ng-if="::build.notes > 0"
      ng-href="builds/{{::build.id}}/notes">
     <span class="glyphicon glyphicon-file" style="color: #777;"></span>
@@ -30,35 +32,38 @@
 </td>
 
 <!-- Otherwise, show build name & site on the row. -->
-<td ng-if="::cdash.childview != 1" align="left" class="paddt">
+<td ng-if="::cdash.childview != 1" align="left" class="paddt" data-test="site">
   <a class="cdash-link" ng-href="sites/{{::build.siteid}}?project={{::cdash.projectid}}&currenttime={{::cdash.unixtimestamp}}">{{::build.site}}</a>
-  <span ng-if="::build.siteoutoforder == 1" class="glyphicon glyphicon-flag" style="color: #d9534f;" title="Site out of order"></span>
+  <span ng-if="::build.siteoutoforder == 1" data-test="site-out-of-order" class="glyphicon glyphicon-flag" style="color: #d9534f;" title="Site out of order"></span>
 </td>
 
-<td ng-if="::cdash.childview != 1" align="left">
+<td ng-if="::cdash.childview != 1" align="left" data-test="build-name">
   <div ng-if="::build.id && build.buildplatform.length > 0" style="float:left;">
     <img class="icon" alt="platform" ng-src="img/platform_{{::build.buildplatform}}.png"/>
   </div>
 
-  <div ng-if="::build.id" style="float: left; margin: 0px 4px;">
+  <div ng-if="::build.id" style="float: left; margin: 0px 4px;" data-test="build-name-text">
     <a class="buildinfo cdash-link" alt="generator"
+       data-test="build-summary-link"
        ng-if="::build.numchildren == 0"
        ng-href="builds/{{::build.id}}">
       {{::build.buildname}}
     </a>
     <a class="buildinfo cdash-link" alt="generator"
+       data-test="child-builds-link"
        ng-if="::build.numchildren > 0"
        ng-href="{{::build.multiplebuildshyperlink}}">
       {{::build.buildname}}
     </a>
   </div>
 
-  <div ng-if="::!build.id" style="float: left; margin: 0px 4px;">{{::build.buildname}}</div>
+  <div ng-if="::!build.id" style="float: left; margin: 0px 4px;" data-test="build-name-text">{{::build.buildname}}</div>
 
   <div style="float:left;">
     <a class="cdash-link"
        title="View notes"
        name="notesLink"
+       data-test="build-notes-link"
        ng-if="::build.notes > 0"
        ng-href="builds/{{::build.id}}/notes">
       <span class="glyphicon glyphicon-file" style="color: #777; margin-right: 4px;"></span>
@@ -66,6 +71,7 @@
 
     <a class="cdash-link"
        href="" style="float: left;"
+       data-test="build-files-link"
        ng-if="::build.uploadfilecount > 0"
        ng-href="builds/{{::build.id}}/files"
        title="{{::build.uploadfilecount}} files uploaded with this build">
@@ -75,6 +81,7 @@
     <!-- If the build has errors or test failing -->
     <a class="cdash-link"
        href="" style="float: left;"
+       data-test="build-problems-toggle"
        ng-if="::build.compilation.error > 0 || build.test.fail > 0"
        ng-click="toggleBuildProblems(build)">
       <span class="glyphicon glyphicon-info-sign" style="color: #777; margin-right: 4px;" title="Build information"></span>
@@ -83,13 +90,14 @@
     <!-- If the build is expected and missing -->
     <a class="cdash-link"
        href="" style="float: left;"
+       data-test="expected-build-info-toggle"
        ng-if="::build.expectedandmissing == 1"
        ng-click="toggleExpectedInfo(build)">
       <span class="glyphicon glyphicon-info-sign" style="color: #777; margin-right: 4px;" title="Expected build information"></span>
     </a>
 
     <!-- Display the note icon -->
-    <a class="cdash-link" name="Build Notes" id="buildnote_{{::build.id}}"
+    <a class="cdash-link" name="Build Notes" id="buildnote_{{::build.id}}" data-test="build-comments-link"
        ng-if="::build.buildnotes > 0"
        ng-href="builds/{{::build.id}}/comments">
       <span class="glyphicon glyphicon-comment" style="color: #337ab7; margin-right: 4px;"></span>
@@ -98,17 +106,17 @@
     <div style="float: left;" ng-if="::cdash.user.admin == 1">
       <!-- Display cog icon to edit this build for administrative users -->
       <a class="cdash-link" href="" ng-click="toggleAdminOptions(build)">
-        <span name="adminoptions" class="glyphicon glyphicon-cog" style="color: #777; margin-right: 4px;" data-cy="build-admin-options"></span>
+        <span name="adminoptions" class="glyphicon glyphicon-cog" style="color: #777; margin-right: 4px;" data-test="build-admin-options-toggle"></span>
       </a>
-      <span class="glyphicon glyphicon-refresh glyphicon-spin" ng-if="build.loading == 1" style="color: #5bc0de;"></span>
+      <span class="glyphicon glyphicon-refresh glyphicon-spin" data-test="build-loading" ng-if="build.loading == 1" style="color: #5bc0de;"></span>
     </div>
   </div>
 
   <!-- Problematic build history table -->
   <div ng-if="::build.compilation.error > 0 || build.test.fail > 0">
-    <table width="100%" border="0" ng-if="build.showProblems" class="animate-show">
+    <table width="100%" border="0" ng-if="build.showProblems" class="animate-show" data-test="build-problems">
       <tbody>
-        <tr ng-if="::build.hasErrors">
+        <tr ng-if="::build.hasErrors" data-test="build-failing-since">
           <td bgcolor="#DDDDDD" id="nob">
             <font size="2">
               Build has been failing since
@@ -125,7 +133,7 @@
             </font>
           </td>
         </tr>
-        <tr ng-if="::build.hasFailingTests">
+        <tr ng-if="::build.hasFailingTests" data-test="tests-failing-since">
           <td bgcolor="#DDDDDD" id="nob">
             <font size="2">
               Tests have been failing since
@@ -148,7 +156,7 @@
 
   <!-- expected info table -->
   <div ng-if="::build.expectedandmissing == 1">
-    <table width="100%" border="0" ng-if="build.showExpectedInfo" class="animate-show">
+    <table width="100%" border="0" ng-if="build.showExpectedInfo" class="animate-show" data-test="expected-build-info">
       <tbody>
         <tr>
           <td bgcolor="#DDDDDD" id="nob">
@@ -179,7 +187,7 @@
   <div ng-if="::cdash.user.admin == 1" style="clear: both;">
     <div ng-if="build.showAdminOptions == 1"
          class="animate-show"
-         data-cy="build-admin-options-panel"
+         data-test="build-admin-options"
          style="padding: 8px 0; display: flex; flex-direction: column; gap: 8px;">
       <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px;">
         <!-- Expected builds belong to daily groups.  Expected-and-missing rows in dynamic groups
@@ -189,7 +197,7 @@
                 ng-class="(build.expected == 1 || build.expectedandmissing == 1) ? 'btn-warning' : 'btn-success'"
                 ng-click="toggleExpected(build, buildgroup.id)"
                 ng-disabled="build.expectedLoading"
-                data-cy="{{(build.expected == 1 || build.expectedandmissing == 1) ? 'mark-as-non-expected-btn' : 'mark-as-expected-btn'}}">
+                data-test="toggle-expected-button">
           <span class="glyphicon" ng-class="{
             'glyphicon-ok': !build.expectedLoading && (build.expected != 1 && build.expectedandmissing != 1),
             'glyphicon-remove': !build.expectedLoading && (build.expected == 1 || build.expectedandmissing == 1)
@@ -198,7 +206,7 @@
           <span ng-if="!build.expectedLoading && (build.expected == 1 || build.expectedandmissing == 1)">Mark this build as not expected</span>
         </button>
 
-        <button class="btn btn-xs btn-danger" ng-click="showModal(build)">
+        <button class="btn btn-xs btn-danger" data-test="remove-build-button" ng-click="showModal(build)">
           <span class="glyphicon glyphicon-trash"></span> Remove This Build
         </button>
 
@@ -207,6 +215,7 @@
               tooltip-append-to-body="true"
               uib-tooltip="Done builds will be overwritten if a new one is submitted with the same site, build name, and timestamp.">
           <button class="btn btn-xs"
+                  data-test="toggle-done-button"
                   ng-class="build.done == 1 ? 'btn-default' : 'btn-info'"
                   ng-click="toggleDone(build)"
                   ng-disabled="build.doneLoading">
@@ -223,14 +232,14 @@
       <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px;">
         <select ng-model="build.moveTargetGroup"
                 style="padding: 2px 6px;"
-                data-cy="move-to-group-select">
+                data-test="move-to-group-select">
           <option ng-repeat="group in ::cdash.all_buildgroups"
                   value="{{group.id}}">{{group.name}}</option>
         </select>
         <button class="btn btn-xs btn-primary"
                 ng-click="moveToGroup(build, build.moveTargetGroup)"
                 ng-disabled="!build.moveTargetGroup || build.moveTargetGroup == buildgroup.id"
-                data-cy="move-to-group-btn">
+                data-test="move-to-group-button">
           <span class="glyphicon glyphicon-arrow-right"></span> Move to group
         </button>
       </div>
@@ -239,14 +248,14 @@
 
   <!-- changeid link/icon -->
   <div ng-if="::build.changelink">
-    <a class="cdash-link" target="_blank" ng-href="{{::build.changelink}}">
+    <a class="cdash-link" target="_blank" data-test="change-link" ng-href="{{::build.changelink}}">
       <img class="smallicon" ng-src="{{::build.changeicon}}"/>
     </a>
   </div>
 
 </td>
 
-<td ng-if="::buildgroup.hasupdatedata" align="center"
+<td ng-if="::buildgroup.hasupdatedata" align="center" data-test="update-files"
     ng-class="::!build.hasupdate ? '' : (
                 build.update.errors == 1 ? 'error': (
                 build.update.warning == 1 ? 'warning' : 'normal'))">
@@ -257,14 +266,14 @@
   </div>
 </td>
 
-<td ng-if="::buildgroup.hasupdatedata && cdash.advancedview != 0 && cdash.showstarttime"
+<td ng-if="::buildgroup.hasupdatedata && cdash.advancedview != 0 && cdash.showstarttime" data-test="update-time"
     align="center">
   <div ng-if="::build.hasupdate">
     {{::build.update.time}}
   </div>
 </td>
 
-<td ng-if="::buildgroup.hasconfiguredata" align="center" ng-class="::{'error': build.configure.error > 0, 'normal': build.configure.error == 0}">
+<td ng-if="::buildgroup.hasconfiguredata" align="center" data-test="configure-errors" ng-class="::{'error': build.configure.error > 0, 'normal': build.configure.error == 0}">
   <div ng-if="::build.hasconfigure">
     <a class="cdash-link" ng-href="builds/{{::build.id}}/configure">
       {{::build.configure.error}}
@@ -272,7 +281,7 @@
   </div>
 </td>
 
-<td ng-if="::buildgroup.hasconfiguredata" align="center" ng-class="::{'warning': build.configure.warning > 0, 'normal': build.configure.warning == 0}">
+<td ng-if="::buildgroup.hasconfiguredata" align="center" data-test="configure-warnings" ng-class="::{'warning': build.configure.warning > 0, 'normal': build.configure.warning == 0}">
   <div ng-if="::build.hasconfigure">
     <a class="cdash-link" ng-href="builds/{{::build.id}}/configure">
       {{::build.configure.warning}}
@@ -282,14 +291,14 @@
   </div>
 </td>
 
-<td ng-if="::buildgroup.hasconfiguredata && cdash.advancedview != 0 && cdash.showstarttime"
+<td ng-if="::buildgroup.hasconfiguredata && cdash.advancedview != 0 && cdash.showstarttime" data-test="configure-time"
     align="center">
   <div ng-if="::build.hasconfigure">
     {{::build.configure.time}}
   </div>
 </td>
 
-<td ng-if="::buildgroup.hascompilationdata" align="center" ng-class="::{'error': build.compilation.error > 0, 'normal': build.compilation.error == 0}">
+<td ng-if="::buildgroup.hascompilationdata" align="center" data-test="build-errors" ng-class="::{'error': build.compilation.error > 0, 'normal': build.compilation.error == 0}">
   <div ng-if="::build.hascompilation"
        ng-class="::{'valuewithsub': build.compilation.nerrordiffp > 0 || build.compilation.nerrordiffn > 0}">
     <a class="cdash-link" ng-href="builds/{{::build.id}}/build">
@@ -305,7 +314,7 @@
   </div>
 </td>
 
-<td ng-if="::buildgroup.hascompilationdata" align="center" ng-class="::{'warning': build.compilation.warning > 0, 'normal': build.compilation.warning == 0}">
+<td ng-if="::buildgroup.hascompilationdata" align="center" data-test="build-warnings" ng-class="::{'warning': build.compilation.warning > 0, 'normal': build.compilation.warning == 0}">
   <div ng-if="::build.hascompilation"
        ng-class="::{'valuewithsub': build.compilation.nwarningdiffp > 0 || build.compilation.nwarningdiffn > 0}">
     <a class="cdash-link" ng-href="builds/{{::build.id}}/build">
@@ -321,14 +330,14 @@
   </div>
 </td>
 
-<td ng-if="::buildgroup.hascompilationdata && cdash.advancedview != 0 && cdash.showstarttime"
+<td ng-if="::buildgroup.hascompilationdata && cdash.advancedview != 0 && cdash.showstarttime" data-test="build-time"
     align="center">
   <div ng-if="::build.hascompilation">
     {{::build.compilation.time}}
   </div>
 </td>
 
-<td ng-if="::buildgroup.hastestdata" align="center" ng-class="::{'warning': build.test.notrun > 0, 'normal': build.test.notrun == 0}">
+<td ng-if="::buildgroup.hastestdata" align="center" data-test="tests-not-run" ng-class="::{'warning': build.test.notrun > 0, 'normal': build.test.notrun == 0}">
   <div ng-if="::build.hastest"
        ng-class="::{'valuewithsub': build.test.nnotrundiffp > 0 || build.test.nnotrundiffn > 0}">
     <a class="cdash-link" ng-href="{{ 'builds/' + build.id + '/tests?filters=%7B%22all%22%3A%5B%7B%22eq%22%3A%7B%22status%22%3A%22NOT_RUN%22%7D%7D%5D%7D' + (cdash.subprojecttestsquery || '') }}">
@@ -341,7 +350,7 @@
   </div>
 </td>
 
-<td ng-if="::buildgroup.hastestdata" align="center" ng-class="::{'error': build.test.fail > 0, 'normal': build.test.fail < 1}">
+<td ng-if="::buildgroup.hastestdata" align="center" data-test="tests-failed" ng-class="::{'error': build.test.fail > 0, 'normal': build.test.fail < 1}">
   <div ng-if="::build.hastest"
        ng-class="::{'valuewithsub': build.test.nfaildiffp > 0 || build.test.nfaildiffn > 0}">
     <a class="cdash-link" ng-href="{{'builds/' + build.id + '/tests?filters=%7B%22all%22%3A%5B%7B%22eq%22%3A%7B%22status%22%3A%22FAILED%22%7D%7D%5D%7D' + (cdash.subprojecttestsquery || '') }}">
@@ -356,7 +365,7 @@
   </div>
 </td>
 
-<td ng-if="::buildgroup.hastestdata" align="center" ng-class="::{'normal': build.test.pass > -1}">
+<td ng-if="::buildgroup.hastestdata" align="center" data-test="tests-passed" ng-class="::{'normal': build.test.pass > -1}">
   <div ng-if="::build.hastest"
        ng-class="::{'valuewithsub': build.test.npassdiffp > 0 || build.test.npassdiffn > 0}">
     <a class="cdash-link" ng-href="{{ 'builds/' + build.id + '/tests?filters=%7B%22all%22%3A%5B%7B%22eq%22%3A%7B%22status%22%3A%22PASSED%22%7D%7D%5D%7D' + (cdash.subprojecttestsquery || '') }}">
@@ -373,6 +382,7 @@
 </td>
 
 <td align="center"
+    data-test="test-time"
     ng-if="::buildgroup.hastestdata && cdash.showtesttime"
     ng-class="::{'error': build.test.timestatus > 0, 'normal': build.test.timestatus == 0}">
   <div ng-if="::build.hastest"
@@ -406,11 +416,12 @@
 </td>
 
 <td align="center"
+    data-test="proc-time"
     ng-if="::buildgroup.hastestdata && cdash.advancedview != 0 && cdash.showProcTime">
   {{::build.test.procTime}}
 </td>
 
-<td align="center" ng-if="::cdash.showstarttime">
+<td align="center" data-test="start-time" ng-if="::cdash.showstarttime">
   <span ng-if="::!build.builddate" class="builddateelapsed" alt="Expected submit time: {{::build.expectedstarttime}}">
     Expected build
   </span>
@@ -422,11 +433,11 @@
   </div>
 </td>
 
-<td align="center" ng-if="::cdash.showorder">
+<td align="center" data-test="order" ng-if="::cdash.showorder">
   {{::build.position}}
 </td>
 
 <!-- display the labels -->
-<td ng-if="::cdash.childview != 1 && cdash.displaylabels == 1" class="nob" align="left">
+<td ng-if="::cdash.childview != 1 && cdash.displaylabels == 1" class="nob" align="left" data-test="labels">
   {{::build.label}}
 </td>

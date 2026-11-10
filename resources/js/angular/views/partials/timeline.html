@@ -1,10 +1,10 @@
 <div>
   <img ng-show="loading" id="spinner" src="img/loading.gif"/>
-  <div ng-show="::error">
+  <div ng-show="::error" data-test="timeline-error">
     <b>Error loading timeline: {{::error}}</b>
   </div>
   <div ng-show="!loading && !error && timeline.data.length">
-    <div id="timechart" class="row">
+    <div id="timechart" class="row" data-test="timeline-chart">
       <div class="col-md-12">
         <svg width="100%" style="height:175px"></svg>
       </div>
@@ -12,6 +12,7 @@
     <div class="row">
       <div class="text-center">
         <button type="submit" class="btn btn-default"
+                data-test="timeline-update"
                 ng-click="updateSelection()">
           Update
         </button>

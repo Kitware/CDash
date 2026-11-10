@@ -1,137 +1,137 @@
-<table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb" id="subproject">
+<table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb" id="subproject" data-test="subproject-table">
   <thead>
     <tr class="table-heading1">
       <td colspan="11" align="left" class="nob"><h3>{{cdash.tableName}}</h3></td>
     </tr>
     <tr class="table-heading">
 
-      <th rowspan="2" style="cursor: pointer; text-align: center;" ng-click="updateOrderByFields(sortSubProjects, 'name', $event)">
+      <th rowspan="2" style="cursor: pointer; text-align: center;" ng-click="updateOrderByFields(sortSubProjects, 'name', $event)" data-test="header-subproject">
         <b>SubProject</b>
-        <span class="glyphicon" ng-class="sortSubProjects.orderByFields.indexOf ('-name') != -1 ? 'glyphicon-chevron-down' : (sortSubProjects.orderByFields.indexOf ('name') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+        <span class="glyphicon" ng-class="sortSubProjects.orderByFields.indexOf ('-name') != -1 ? 'glyphicon-chevron-down' : (sortSubProjects.orderByFields.indexOf ('name') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')" data-test="{{ sortSubProjects.orderByFields.indexOf ('-name') != -1 ? 'sort-descending' : (sortSubProjects.orderByFields.indexOf ('name') != -1 ? 'sort-ascending' : 'sort-none') }}"></span>
       </th>
 
       <td colspan="3" style="text-align: center;"><b>Configure</b></td>
       <td colspan="3" style="text-align: center;"><b>Build</b></td>
       <td colspan="3" style="text-align: center;"><b>Test</b></td>
 
-      <th ng-if="cdash.showlastsubmission" rowspan="2" class="nob" style="cursor: pointer; text-align: center;" ng-click="updateOrderByFields(sortSubProjects, 'lastsubmission', $event)">
+      <th ng-if="cdash.showlastsubmission" rowspan="2" class="nob" style="cursor: pointer; text-align: center;" ng-click="updateOrderByFields(sortSubProjects, 'lastsubmission', $event)" data-test="header-start-time">
         <b>Start Time</b>
-        <span class="glyphicon" ng-class="sortSubProjects.orderByFields.indexOf ('-lastsubmission') != -1 ? 'glyphicon-chevron-down' : (sortSubProjects.orderByFields.indexOf ('lastsubmission') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+        <span class="glyphicon" ng-class="sortSubProjects.orderByFields.indexOf ('-lastsubmission') != -1 ? 'glyphicon-chevron-down' : (sortSubProjects.orderByFields.indexOf ('lastsubmission') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')" data-test="{{ sortSubProjects.orderByFields.indexOf ('-lastsubmission') != -1 ? 'sort-descending' : (sortSubProjects.orderByFields.indexOf ('lastsubmission') != -1 ? 'sort-ascending' : 'sort-none') }}"></span>
       </th>
 
     </tr>
     <tr class="table-heading">
 
-      <th style="cursor: pointer; text-align: center;" ng-click="updateOrderByFields(sortSubProjects, 'nconfigureerror', $event)">
+      <th style="cursor: pointer; text-align: center;" ng-click="updateOrderByFields(sortSubProjects, 'nconfigureerror', $event)" data-test="header-configure-errors">
         <b>Error</b>
-        <span class="glyphicon" ng-class="sortSubProjects.orderByFields.indexOf ('-nconfigureerror') != -1 ? 'glyphicon-chevron-down' : (sortSubProjects.orderByFields.indexOf ('nconfigureerror') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+        <span class="glyphicon" ng-class="sortSubProjects.orderByFields.indexOf ('-nconfigureerror') != -1 ? 'glyphicon-chevron-down' : (sortSubProjects.orderByFields.indexOf ('nconfigureerror') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')" data-test="{{ sortSubProjects.orderByFields.indexOf ('-nconfigureerror') != -1 ? 'sort-descending' : (sortSubProjects.orderByFields.indexOf ('nconfigureerror') != -1 ? 'sort-ascending' : 'sort-none') }}"></span>
       </th>
 
-      <th style="cursor: pointer; text-align: center;" ng-click="updateOrderByFields(sortSubProjects, 'nconfigurewarning', $event)">
+      <th style="cursor: pointer; text-align: center;" ng-click="updateOrderByFields(sortSubProjects, 'nconfigurewarning', $event)" data-test="header-configure-warnings">
         <b>Warning</b>
-        <span class="glyphicon" ng-class="sortSubProjects.orderByFields.indexOf ('-nconfigurewarning') != -1 ? 'glyphicon-chevron-down' : (sortSubProjects.orderByFields.indexOf ('nconfigurewarning') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+        <span class="glyphicon" ng-class="sortSubProjects.orderByFields.indexOf ('-nconfigurewarning') != -1 ? 'glyphicon-chevron-down' : (sortSubProjects.orderByFields.indexOf ('nconfigurewarning') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')" data-test="{{ sortSubProjects.orderByFields.indexOf ('-nconfigurewarning') != -1 ? 'sort-descending' : (sortSubProjects.orderByFields.indexOf ('nconfigurewarning') != -1 ? 'sort-ascending' : 'sort-none') }}"></span>
       </th>
 
-      <th style="cursor: pointer; text-align: center;" ng-click="updateOrderByFields(sortSubProjects, 'nconfigurepass', $event)">
+      <th style="cursor: pointer; text-align: center;" ng-click="updateOrderByFields(sortSubProjects, 'nconfigurepass', $event)" data-test="header-configure-passed">
         <b>Pass</b>
-        <span class="glyphicon" ng-class="sortSubProjects.orderByFields.indexOf ('-nconfigurepass') != -1 ? 'glyphicon-chevron-down' : (sortSubProjects.orderByFields.indexOf ('nconfigurepass') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+        <span class="glyphicon" ng-class="sortSubProjects.orderByFields.indexOf ('-nconfigurepass') != -1 ? 'glyphicon-chevron-down' : (sortSubProjects.orderByFields.indexOf ('nconfigurepass') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')" data-test="{{ sortSubProjects.orderByFields.indexOf ('-nconfigurepass') != -1 ? 'sort-descending' : (sortSubProjects.orderByFields.indexOf ('nconfigurepass') != -1 ? 'sort-ascending' : 'sort-none') }}"></span>
       </th>
 
-      <th style="cursor: pointer; text-align: center;" ng-click="updateOrderByFields(sortSubProjects, 'nbuilderror', $event)">
+      <th style="cursor: pointer; text-align: center;" ng-click="updateOrderByFields(sortSubProjects, 'nbuilderror', $event)" data-test="header-build-errors">
         <b>Error</b>
-        <span class="glyphicon" ng-class="sortSubProjects.orderByFields.indexOf ('-nbuilderror') != -1 ? 'glyphicon-chevron-down' : (sortSubProjects.orderByFields.indexOf ('nbuilderror') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+        <span class="glyphicon" ng-class="sortSubProjects.orderByFields.indexOf ('-nbuilderror') != -1 ? 'glyphicon-chevron-down' : (sortSubProjects.orderByFields.indexOf ('nbuilderror') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')" data-test="{{ sortSubProjects.orderByFields.indexOf ('-nbuilderror') != -1 ? 'sort-descending' : (sortSubProjects.orderByFields.indexOf ('nbuilderror') != -1 ? 'sort-ascending' : 'sort-none') }}"></span>
       </th>
 
-      <th style="cursor: pointer; text-align: center;" ng-click="updateOrderByFields(sortSubProjects, 'nbuildwarning', $event)">
+      <th style="cursor: pointer; text-align: center;" ng-click="updateOrderByFields(sortSubProjects, 'nbuildwarning', $event)" data-test="header-build-warnings">
         <b>Warning</b>
-        <span class="glyphicon" ng-class="sortSubProjects.orderByFields.indexOf ('-nbuildwarning') != -1 ? 'glyphicon-chevron-down' : (sortSubProjects.orderByFields.indexOf ('nbuildwarning') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+        <span class="glyphicon" ng-class="sortSubProjects.orderByFields.indexOf ('-nbuildwarning') != -1 ? 'glyphicon-chevron-down' : (sortSubProjects.orderByFields.indexOf ('nbuildwarning') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')" data-test="{{ sortSubProjects.orderByFields.indexOf ('-nbuildwarning') != -1 ? 'sort-descending' : (sortSubProjects.orderByFields.indexOf ('nbuildwarning') != -1 ? 'sort-ascending' : 'sort-none') }}"></span>
       </th>
 
-      <th style="cursor: pointer; text-align: center;" ng-click="updateOrderByFields(sortSubProjects, 'nbuildpass', $event)">
+      <th style="cursor: pointer; text-align: center;" ng-click="updateOrderByFields(sortSubProjects, 'nbuildpass', $event)" data-test="header-build-passed">
         <b>Pass</b>
-        <span class="glyphicon" ng-class="sortSubProjects.orderByFields.indexOf ('-nbuildpass') != -1 ? 'glyphicon-chevron-down' : (sortSubProjects.orderByFields.indexOf ('nbuildpass') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+        <span class="glyphicon" ng-class="sortSubProjects.orderByFields.indexOf ('-nbuildpass') != -1 ? 'glyphicon-chevron-down' : (sortSubProjects.orderByFields.indexOf ('nbuildpass') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')" data-test="{{ sortSubProjects.orderByFields.indexOf ('-nbuildpass') != -1 ? 'sort-descending' : (sortSubProjects.orderByFields.indexOf ('nbuildpass') != -1 ? 'sort-ascending' : 'sort-none') }}"></span>
       </th>
 
-      <th style="cursor: pointer; text-align: center;" ng-click="updateOrderByFields(sortSubProjects, 'ntestnotrun', $event)">
+      <th style="cursor: pointer; text-align: center;" ng-click="updateOrderByFields(sortSubProjects, 'ntestnotrun', $event)" data-test="header-tests-not-run">
         <b>Not Run</b>
-        <span class="glyphicon" ng-class="sortSubProjects.orderByFields.indexOf ('-ntestnotrun') != -1 ? 'glyphicon-chevron-down' : (sortSubProjects.orderByFields.indexOf ('ntestnotrun') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+        <span class="glyphicon" ng-class="sortSubProjects.orderByFields.indexOf ('-ntestnotrun') != -1 ? 'glyphicon-chevron-down' : (sortSubProjects.orderByFields.indexOf ('ntestnotrun') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')" data-test="{{ sortSubProjects.orderByFields.indexOf ('-ntestnotrun') != -1 ? 'sort-descending' : (sortSubProjects.orderByFields.indexOf ('ntestnotrun') != -1 ? 'sort-ascending' : 'sort-none') }}"></span>
       </th>
 
-      <th style="cursor: pointer; text-align: center;" ng-click="updateOrderByFields(sortSubProjects, 'ntestfail', $event)">
+      <th style="cursor: pointer; text-align: center;" ng-click="updateOrderByFields(sortSubProjects, 'ntestfail', $event)" data-test="header-tests-failed">
         <b>Fail</b>
-        <span class="glyphicon" ng-class="sortSubProjects.orderByFields.indexOf ('-ntestfail') != -1 ? 'glyphicon-chevron-down' : (sortSubProjects.orderByFields.indexOf ('ntestfail') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+        <span class="glyphicon" ng-class="sortSubProjects.orderByFields.indexOf ('-ntestfail') != -1 ? 'glyphicon-chevron-down' : (sortSubProjects.orderByFields.indexOf ('ntestfail') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')" data-test="{{ sortSubProjects.orderByFields.indexOf ('-ntestfail') != -1 ? 'sort-descending' : (sortSubProjects.orderByFields.indexOf ('ntestfail') != -1 ? 'sort-ascending' : 'sort-none') }}"></span>
       </th>
 
-      <th style="cursor: pointer; text-align: center;" ng-click="updateOrderByFields(sortSubProjects, 'ntestpass', $event)">
+      <th style="cursor: pointer; text-align: center;" ng-click="updateOrderByFields(sortSubProjects, 'ntestpass', $event)" data-test="header-tests-passed">
         <b>Pass</b>
-        <span class="glyphicon" ng-class="sortSubProjects.orderByFields.indexOf ('-ntestpass') != -1 ? 'glyphicon-chevron-down' : (sortSubProjects.orderByFields.indexOf ('ntestpass') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+        <span class="glyphicon" ng-class="sortSubProjects.orderByFields.indexOf ('-ntestpass') != -1 ? 'glyphicon-chevron-down' : (sortSubProjects.orderByFields.indexOf ('ntestpass') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')" data-test="{{ sortSubProjects.orderByFields.indexOf ('-ntestpass') != -1 ? 'sort-descending' : (sortSubProjects.orderByFields.indexOf ('ntestpass') != -1 ? 'sort-ascending' : 'sort-none') }}"></span>
       </th>
     </tr>
   </thead>
 
   <tbody>
-    <tr ng-repeat="subproject in cdash.subprojects |orderBy:sortSubProjects.orderByFields|showEmptySubProjectsLast:sortSubProjects.orderByFields" ng-class-odd="'odd'" ng-class-even="'even'">
-      <td align="center" >
+    <tr ng-repeat="subproject in cdash.subprojects |orderBy:sortSubProjects.orderByFields|showEmptySubProjectsLast:sortSubProjects.orderByFields" ng-class-odd="'odd'" ng-class-even="'even'" data-test="subproject-row">
+      <td align="center" data-test="subproject">
         <a class="cdash-link" ng-href="index.php?subproject={{subproject.name_encoded}}&project={{::cdash.projectname_encoded}}&date={{::cdash.date}}">
           {{subproject.name}}
         </a>
       </td>
 
-      <td align="center" ng-class="{'error': subproject.nconfigureerror > 0, 'normal': subproject.nconfigureerror == 0 && !(subproject.nconfigurewarning == 0 && subproject.nconfigurepass == 0)}">
+      <td align="center" data-test="configure-errors" ng-class="{'error': subproject.nconfigureerror > 0, 'normal': subproject.nconfigureerror == 0 && !(subproject.nconfigurewarning == 0 && subproject.nconfigurepass == 0)}">
         <span ng-show="subproject.nconfigureerror != 0 || subproject.nconfigurewarning != 0 || subproject.nconfigurepass != 0">
           {{subproject.nconfigureerror}}
         </span>
       </td>
 
-      <td align="center" ng-class="{'warning': subproject.nconfigurewarning > 0, 'normal': subproject.nconfigurewarning == 0 && !(subproject.nconfigureerror == 0 && subproject.nconfigurepass == 0)}">
+      <td align="center" data-test="configure-warnings" ng-class="{'warning': subproject.nconfigurewarning > 0, 'normal': subproject.nconfigurewarning == 0 && !(subproject.nconfigureerror == 0 && subproject.nconfigurepass == 0)}">
         <span ng-show="subproject.nconfigureerror != 0 || subproject.nconfigurewarning != 0 || subproject.nconfigurepass != 0">
           {{subproject.nconfigurewarning}}
         </span>
       </td>
 
-      <td align="center" ng-class="{'normal': subproject.nconfigureerror != 0 || subproject.nconfigurewarning != 0 || subproject.nconfigurepass != 0}">
+      <td align="center" data-test="configure-passed" ng-class="{'normal': subproject.nconfigureerror != 0 || subproject.nconfigurewarning != 0 || subproject.nconfigurepass != 0}">
         <span ng-show="subproject.nconfigureerror != 0 || subproject.nconfigurewarning != 0 || subproject.nconfigurepass != 0">
           {{subproject.nconfigurepass}}
         </span>
       </td>
 
-      <td align="center" ng-class="{'error': subproject.nbuilderror > 0, 'normal': subproject.nbuilderror == 0 && !(subproject.nbuildwarning == 0 && subproject.nbuildpass == 0)}">
+      <td align="center" data-test="build-errors" ng-class="{'error': subproject.nbuilderror > 0, 'normal': subproject.nbuilderror == 0 && !(subproject.nbuildwarning == 0 && subproject.nbuildpass == 0)}">
         <span ng-show="subproject.nbuilderror != 0 || subproject.nbuildwarning != 0 || subproject.nbuildpass != 0">
           {{subproject.nbuilderror}}
         </span>
       </td>
 
-      <td align="center" ng-class="{'warning': subproject.nbuildwarning > 0, 'normal': subproject.nbuildwarning == 0 && !(subproject.nbuilderror == 0 && subproject.nbuildpass == 0)}">
+      <td align="center" data-test="build-warnings" ng-class="{'warning': subproject.nbuildwarning > 0, 'normal': subproject.nbuildwarning == 0 && !(subproject.nbuilderror == 0 && subproject.nbuildpass == 0)}">
         <span ng-show="subproject.nbuilderror != 0 || subproject.nbuildwarning != 0 || subproject.nbuildpass != 0">
           {{subproject.nbuildwarning}}
         </span>
       </td>
 
-      <td align="center" ng-class="{'normal': subproject.nbuilderror != 0 || subproject.nbuildwarning != 0 || subproject.nbuildpass != 0}">
+      <td align="center" data-test="build-passed" ng-class="{'normal': subproject.nbuilderror != 0 || subproject.nbuildwarning != 0 || subproject.nbuildpass != 0}">
         <span ng-show="subproject.nbuilderror != 0 || subproject.nbuildwarning != 0 || subproject.nbuildpass != 0">
           {{subproject.nbuildpass}}
         </span>
       </td>
 
-      <td align="center" ng-class="{'warning': subproject.ntestnotrun > 0, 'normal': subproject.ntestnotrun == 0 && (subproject.ntestfail != 0 || subproject.ntestpass != 0)}">
+      <td align="center" data-test="tests-not-run" ng-class="{'warning': subproject.ntestnotrun > 0, 'normal': subproject.ntestnotrun == 0 && (subproject.ntestfail != 0 || subproject.ntestpass != 0)}">
         <span ng-show="subproject.ntestfail != 0 || subproject.ntestpass != 0 || subproject.ntestnotrun != 0">
           {{subproject.ntestnotrun}}
         </span>
       </td>
 
-      <td align="center" ng-class="{'error': subproject.ntestfail > 0, 'normal': subproject.ntestfail == 0 && (subproject.ntestpass != 0 || subproject.ntestnotrun != 0)}">
+      <td align="center" data-test="tests-failed" ng-class="{'error': subproject.ntestfail > 0, 'normal': subproject.ntestfail == 0 && (subproject.ntestpass != 0 || subproject.ntestnotrun != 0)}">
         <span ng-show="subproject.ntestfail != 0 || subproject.ntestpass != 0 || subproject.ntestnotrun != 0">
           {{subproject.ntestfail}}
         </span>
       </td>
 
-      <td align="center" ng-class="{'normal': subproject.ntestpass > 0 || subproject.ntestfail > 0 || subproject.ntestnotrun > 0}">
+      <td align="center" data-test="tests-passed" ng-class="{'normal': subproject.ntestpass > 0 || subproject.ntestfail > 0 || subproject.ntestnotrun > 0}">
         <span ng-show="subproject.ntestfail != 0 || subproject.ntestpass != 0 || subproject.ntestnotrun != 0">
           {{subproject.ntestpass}}
         </span>
       </td>
 
-      <td ng-if="cdash.showlastsubmission" align="center" class="nob">
+      <td ng-if="cdash.showlastsubmission" align="center" class="nob" data-test="start-time">
         {{subproject.starttime}}
       </td>
     </tr>
