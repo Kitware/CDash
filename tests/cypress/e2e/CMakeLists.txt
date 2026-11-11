@@ -47,10 +47,10 @@ set_tests_properties(cypress_setup_admin cypress_setup_user PROPERTIES
 
 # These tests have the correct dependencies set up
 add_cypress_e2e_test(query-tests)
-set_tests_properties(cypress/e2e/query-tests PROPERTIES DEPENDS deferredsubmissions)
+set_tests_properties(cypress/e2e/query-tests PROPERTIES DEPENDS timeline)
 
 add_cypress_e2e_test(tests)
-set_tests_properties(cypress/e2e/tests PROPERTIES DEPENDS deferredsubmissions)
+set_tests_properties(cypress/e2e/tests PROPERTIES DEPENDS timeline)
 
 add_cypress_e2e_test(view-sub-projects)
 set_tests_properties(cypress/e2e/view-sub-projects PROPERTIES DEPENDS subproject)
