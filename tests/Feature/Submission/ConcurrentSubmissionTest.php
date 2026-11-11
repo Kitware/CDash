@@ -5,8 +5,10 @@ namespace Tests\Feature\Submission;
 use App\Exceptions\BadSubmissionException;
 use App\Jobs\ProcessSubmission;
 use App\Models\Build;
+use App\Models\BuildFile;
 use App\Models\Project;
 use App\Models\Site;
+use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\DB;
@@ -92,5 +94,39 @@ class ConcurrentSubmissionTest extends TestCase
 
         $this->processDoneFile($locked_build);
         $this->assertTrue($locked_build->fresh()?->done);
+    }
+
+    /**
+     * A duplicate job can find a data file's buildfile row before another job parses the file and
+     * deletes the row.  Once it gets the build's lock, it must fail and roll back its own parse
+     * rather than keep a second copy of the results.
+     */
+    public function testRejectsDataFileAlreadyParsedByAnotherJob(): void
+    {
+        $build = $this->createBuild();
+        $contents = '{"key": "value"}';
+        $md5 = md5($contents);
+        $filename = Str::uuid()->toString() . '.json';
+        Storage::put("inbox/{$filename}", $contents);
+        $buildfile = BuildFile::create([
+            'buildid' => $build->id,
+            'type' => 'BuildPropertiesJSON',
+            'md5' => $md5,
+            'filename' => 'properties.json',
+        ]);
+
+        // Delete the row when this job takes the build's lock, as the other job would have done by then.
+        DB::listen(function (QueryExecuted $query) use ($buildfile): void {
+            if (str_contains($query->sql, 'pg_advisory_xact_lock')) {
+                BuildFile::whereKey($buildfile->getKey())->delete();
+            }
+        });
+
+        $this->assertThrows(
+            fn () => (new ProcessSubmission($filename, $this->project->id, $build->id, $md5))->handle(),
+            BadSubmissionException::class,
+            'was already parsed',
+        );
+        $this->assertDatabaseMissing('buildproperties', ['buildid' => $build->id]);
     }
 }

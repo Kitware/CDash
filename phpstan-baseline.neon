@@ -4729,25 +4729,13 @@ parameters:
 			path: app/Jobs/PerformLegacyDailyUpdates.php
 
 		-
+			rawMessage: Access to an undefined property App\Http\Submission\Handlers\AbstractSubmissionHandler::$backupFileName.
+			identifier: property.notFound
+			count: 1
+			path: app/Jobs/ProcessSubmission.php
+
+		-
 			rawMessage: Access to an undefined property App\Http\Submission\Handlers\AbstractSubmissionHandler|App\Utils\UnparsedSubmissionProcessor::$backupFileName.
-			identifier: property.notFound
-			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
-			rawMessage: Access to an undefined property App\Http\Submission\Handlers\BazelJSONHandler|App\Http\Submission\Handlers\BuildPropertiesJSONHandler|App\Http\Submission\Handlers\GcovTarHandler|App\Http\Submission\Handlers\JavaJSONTarHandler|App\Http\Submission\Handlers\JSCoverTarHandler|App\Http\Submission\Handlers\OpenCoverTarHandler|App\Http\Submission\Handlers\SubProjectDirectoriesHandler::$backupFileName.
-			identifier: property.notFound
-			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
-			rawMessage: Access to an undefined property App\Http\Submission\Handlers\BuildHandler|App\Http\Submission\Handlers\ConfigureHandler|App\Http\Submission\Handlers\CoverageHandler|App\Http\Submission\Handlers\CoverageJUnitHandler|App\Http\Submission\Handlers\CoverageLogHandler|App\Http\Submission\Handlers\DoneHandler|App\Http\Submission\Handlers\DynamicAnalysisHandler|App\Http\Submission\Handlers\NoteHandler|App\Http\Submission\Handlers\ProjectHandler|App\Http\Submission\Handlers\TestingHandler|App\Http\Submission\Handlers\TestingJUnitHandler|App\Http\Submission\Handlers\UpdateHandler|App\Http\Submission\Handlers\UploadHandler::$backupFileName.
-			identifier: property.notFound
-			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
-			rawMessage: Access to an undefined property App\Http\Submission\Handlers\UpdateHandler::$BuildId.
 			identifier: property.notFound
 			count: 1
 			path: app/Jobs/ProcessSubmission.php
@@ -4756,18 +4744,6 @@ parameters:
 			rawMessage: Access to an undefined property App\Utils\UnparsedSubmissionProcessor::$backupFileName.
 			identifier: property.notFound
 			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
-			rawMessage: 'Cannot call method build() on mixed.'
-			identifier: method.nonObject
-			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
-			rawMessage: 'Loose comparison via "==" between mixed and int is not allowed.'
-			identifier: equal.notAllowed
-			count: 4
 			path: app/Jobs/ProcessSubmission.php
 
 		-
@@ -4790,18 +4766,6 @@ parameters:
 
 		-
 			rawMessage: 'Method App\Jobs\ProcessSubmission::__construct() has parameter $projectid with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
-			rawMessage: 'Method App\Jobs\ProcessSubmission::check_email_update_errors() return type has no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
-			rawMessage: 'Method App\Jobs\ProcessSubmission::ctest_parse() has parameter $filehandle with no type specified.'
 			identifier: missingType.parameter
 			count: 1
 			path: app/Jobs/ProcessSubmission.php
@@ -4831,60 +4795,6 @@ parameters:
 			path: app/Jobs/ProcessSubmission.php
 
 		-
-			rawMessage: 'Method App\Jobs\ProcessSubmission::doSubmit() invoked with 5 parameters, 2-4 required.'
-			identifier: arguments.count
-			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
-			rawMessage: 'Method App\Jobs\ProcessSubmission::generateBackupFileName() has parameter $buildname with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
-			rawMessage: 'Method App\Jobs\ProcessSubmission::generateBackupFileName() has parameter $fileNameWithExt with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
-			rawMessage: 'Method App\Jobs\ProcessSubmission::generateBackupFileName() has parameter $projectname with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
-			rawMessage: 'Method App\Jobs\ProcessSubmission::generateBackupFileName() has parameter $sitename with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
-			rawMessage: 'Method App\Jobs\ProcessSubmission::generateBackupFileName() has parameter $stamp with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
-			rawMessage: 'Method App\Jobs\ProcessSubmission::generateBackupFileName() has parameter $subprojectname with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
-			rawMessage: 'Method App\Jobs\ProcessSubmission::getSubmissionFileHandle() has no return type specified.'
-			identifier: missingType.return
-			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
-			rawMessage: 'Method App\Jobs\ProcessSubmission::getSubmissionFileHandle() has parameter $filename with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
 			rawMessage: 'Method App\Jobs\ProcessSubmission::renameSubmissionFile() has parameter $dst with no type specified.'
 			identifier: missingType.parameter
 			count: 1
@@ -4894,12 +4804,6 @@ parameters:
 			rawMessage: 'Method App\Jobs\ProcessSubmission::renameSubmissionFile() has parameter $src with no type specified.'
 			identifier: missingType.parameter
 			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
-			rawMessage: 'Parameter #2 $data of function xml_parse expects string, string|false given.'
-			identifier: argument.type
-			count: 2
 			path: app/Jobs/ProcessSubmission.php
 
 		-
@@ -5108,6 +5012,84 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: app/Services/ProjectService.php
+
+		-
+			rawMessage: Access to an undefined property App\Http\Submission\Handlers\BuildHandler|App\Http\Submission\Handlers\ConfigureHandler|App\Http\Submission\Handlers\CoverageHandler|App\Http\Submission\Handlers\CoverageJUnitHandler|App\Http\Submission\Handlers\CoverageLogHandler|App\Http\Submission\Handlers\DoneHandler|App\Http\Submission\Handlers\DynamicAnalysisHandler|App\Http\Submission\Handlers\NoteHandler|App\Http\Submission\Handlers\ProjectHandler|App\Http\Submission\Handlers\TestingHandler|App\Http\Submission\Handlers\TestingJUnitHandler|App\Http\Submission\Handlers\UpdateHandler|App\Http\Submission\Handlers\UploadHandler::$backupFileName.
+			identifier: property.notFound
+			count: 1
+			path: app/Services/SubmissionService.php
+
+		-
+			rawMessage: Access to an undefined property App\Http\Submission\Handlers\UpdateHandler::$BuildId.
+			identifier: property.notFound
+			count: 1
+			path: app/Services/SubmissionService.php
+
+		-
+			rawMessage: 'Cannot call method build() on mixed.'
+			identifier: method.nonObject
+			count: 1
+			path: app/Services/SubmissionService.php
+
+		-
+			rawMessage: 'Loose comparison via "==" between mixed and int is not allowed.'
+			identifier: equal.notAllowed
+			count: 4
+			path: app/Services/SubmissionService.php
+
+		-
+			rawMessage: 'Method App\Services\SubmissionService::checkUpdateErrors() return type has no value type specified in iterable type array.'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/SubmissionService.php
+
+		-
+			rawMessage: 'Method App\Services\SubmissionService::generateBackupFileName() has parameter $buildname with no type specified.'
+			identifier: missingType.parameter
+			count: 1
+			path: app/Services/SubmissionService.php
+
+		-
+			rawMessage: 'Method App\Services\SubmissionService::generateBackupFileName() has parameter $fileNameWithExt with no type specified.'
+			identifier: missingType.parameter
+			count: 1
+			path: app/Services/SubmissionService.php
+
+		-
+			rawMessage: 'Method App\Services\SubmissionService::generateBackupFileName() has parameter $projectname with no type specified.'
+			identifier: missingType.parameter
+			count: 1
+			path: app/Services/SubmissionService.php
+
+		-
+			rawMessage: 'Method App\Services\SubmissionService::generateBackupFileName() has parameter $sitename with no type specified.'
+			identifier: missingType.parameter
+			count: 1
+			path: app/Services/SubmissionService.php
+
+		-
+			rawMessage: 'Method App\Services\SubmissionService::generateBackupFileName() has parameter $stamp with no type specified.'
+			identifier: missingType.parameter
+			count: 1
+			path: app/Services/SubmissionService.php
+
+		-
+			rawMessage: 'Method App\Services\SubmissionService::generateBackupFileName() has parameter $subprojectname with no type specified.'
+			identifier: missingType.parameter
+			count: 1
+			path: app/Services/SubmissionService.php
+
+		-
+			rawMessage: 'Method App\Services\SubmissionService::parseCTestXmlStream() has parameter $filehandle with no type specified.'
+			identifier: missingType.parameter
+			count: 1
+			path: app/Services/SubmissionService.php
+
+		-
+			rawMessage: 'Parameter #2 $data of function xml_parse expects string, string|false given.'
+			identifier: argument.type
+			count: 2
+			path: app/Services/SubmissionService.php
 
 		-
 			rawMessage: 'Parameter #1 $buildid of static method App\Utils\DatabaseCleanupUtils::removeBuild() expects array<int>|int, array<mixed> given.'
