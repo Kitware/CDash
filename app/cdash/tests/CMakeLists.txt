@@ -391,6 +391,8 @@ add_feature_test_in_transaction(/Feature/Submission/XmlSubmissionTest)
 
 add_feature_test_in_transaction(/Feature/Submission/UnparsedSubmissionTest)
 
+add_feature_test_in_transaction(/Feature/Submission/DeferredSubmissionTest)
+
 add_feature_test_in_transaction(/Feature/Submission/ConcurrentSubmissionTest)
 
 add_feature_test_in_transaction(/Feature/Submission/XmlValidationTest)
