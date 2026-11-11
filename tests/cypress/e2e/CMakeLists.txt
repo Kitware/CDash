@@ -61,10 +61,10 @@ set_tests_properties(cypress/e2e/sub-project-group-order PROPERTIES DEPENDS aggr
 
 # These tests don't have all of the dependencies worked out
 add_cypress_e2e_test(manage-overview)
-set_tests_properties(cypress/e2e/manage-overview PROPERTIES DEPENDS deferredsubmissions)
+set_tests_properties(cypress/e2e/manage-overview PROPERTIES DEPENDS timeline)
 
 add_cypress_e2e_test(manage-build-group)
-set_tests_properties(cypress/e2e/manage-build-group PROPERTIES DEPENDS deferredsubmissions)
+set_tests_properties(cypress/e2e/manage-build-group PROPERTIES DEPENDS timeline)
 
 add_cypress_e2e_test(manage-sub-project)
-set_tests_properties(cypress/e2e/manage-sub-project PROPERTIES DEPENDS deferredsubmissions)
+set_tests_properties(cypress/e2e/manage-sub-project PROPERTIES DEPENDS timeline)

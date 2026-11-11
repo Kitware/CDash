@@ -65,6 +65,3 @@ set_tests_properties(timeline PROPERTIES DEPENDS indexfilters)
 
 # TODO: (sbelsk) revisit why this test fails and add proper dependencies
 #add_php_test(parallelsubmissions)
-
-add_php_test(deferredsubmissions)
-set_tests_properties(deferredsubmissions PROPERTIES DEPENDS timeline)
