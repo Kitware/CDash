@@ -8,6 +8,7 @@ use App\Models\Comment;
 use App\Models\DynamicAnalysisSummary;
 use App\Models\Note;
 use App\Models\SubProject;
+use App\Models\SubProjectGroup;
 use App\Models\UploadFile;
 use Facebook\WebDriver\WebDriverBy;
 use Illuminate\Support\Carbon;
@@ -347,6 +348,155 @@ class ProjectBuildsPageTest extends ProjectBuildsPageTestCase
                     $this->href($count_cell, 'a'),
                 );
             }
+        });
+    }
+
+    public function testShowsCoverageAndDynamicAnalysisOfChildBuildsBySubProject(): void
+    {
+        $parent = $this->createBuild(['name' => 'parent']);
+        $first = 'first-' . Str::uuid()->toString();
+        $second = 'second-' . Str::uuid()->toString();
+        $children = [
+            $first => $this->createChildBuild($parent, $first, 1),
+            $second => $this->createChildBuild($parent, $second, 2),
+        ];
+        foreach ([$first => [80, 20], $second => [40, 60]] as $name => [$tested, $untested]) {
+            DB::table('coveragesummary')->insert([
+                'buildid' => $children[$name]->id,
+                'loctested' => $tested,
+                'locuntested' => $untested,
+            ]);
+        }
+        DynamicAnalysisSummary::create([
+            'buildid' => $children[$first]->id,
+            'checker' => 'Valgrind',
+            'numdefects' => 2,
+        ]);
+
+        $this->browse(function (Browser $browser) use ($parent, $children, $first, $second): void {
+            $browser->visit($this->indexUrl("&parentid={$parent->id}", null))
+                ->waitFor('@coverage @coverage-row')
+                ->assertPresent('@coverage @header-subproject')
+                ->assertNotPresent('@coverage @header-site')
+                ->assertNotPresent('@coverage @header-build-name');
+
+            $rows = $this->rowsByCell($browser, '@coverage @coverage-row', 'subproject');
+            self::assertEqualsCanonicalizing([$first, $second], array_keys($rows));
+            foreach ([$first => '80%', $second => '40%'] as $name => $percentage) {
+                $cell = $this->cell($rows[$name], 'percentage');
+                self::assertSame($percentage, trim($cell->getText()));
+                self::assertStringEndsWith("/builds/{$children[$name]->id}/coverage", $this->href($cell, 'a'));
+            }
+
+            $browser->assertPresent('@dynamic-analysis @header-subproject')
+                ->assertNotPresent('@dynamic-analysis @header-site')
+                ->assertNotPresent('@dynamic-analysis @header-build-name');
+            $rows = $this->rowsByCell($browser, '@dynamic-analysis @dynamic-analysis-row', 'subproject');
+            self::assertSame([$first], array_keys($rows));
+            $cell = $this->cell($rows[$first], 'defect-count');
+            self::assertSame('2', trim($cell->getText()));
+            self::assertStringEndsWith("/builds/{$children[$first]->id}/dynamic_analysis", $this->href($cell, 'a'));
+        });
+    }
+
+    public function testGroupsCoverageOfChildBuildsBySubProjectGroup(): void
+    {
+        // Each group's coverage is colored using the group's threshold.
+        $production = $this->createSubProjectGroup('Production', 1, 50);
+        $experimental = $this->createSubProjectGroup('Experimental', 2, 80);
+        $parent = $this->createBuild(['name' => 'parent']);
+        $names = [
+            'production-high' => 'production-high-' . Str::uuid()->toString(),
+            'production-low' => 'production-low-' . Str::uuid()->toString(),
+            'experimental' => 'experimental-' . Str::uuid()->toString(),
+        ];
+        $coverage = [
+            [$names['production-high'], $production, 90, 10],
+            [$names['production-low'], $production, 30, 70],
+            [$names['experimental'], $experimental, 40, 60],
+        ];
+        foreach ($coverage as [$name, $group, $tested, $untested]) {
+            $this->project->subprojects()->create(['name' => $name, 'groupid' => $group->id]);
+            DB::table('coveragesummary')->insert([
+                'buildid' => $this->createChildBuild($parent, $name)->id,
+                'loctested' => $tested,
+                'locuntested' => $untested,
+            ]);
+        }
+
+        $this->browse(function (Browser $browser) use ($parent, $names): void {
+            $browser->visit($this->indexUrl("&parentid={$parent->id}", null))
+                ->waitFor('@coverage @coverage-group');
+
+            // The project's total comes first, then the groups in the project's order.
+            $summaries = '@coverage @coverage-group-summary';
+            $this->assertTexts($browser, "{$summaries} @subproject", ['Total', 'Production', 'Experimental']);
+            $this->assertTexts($browser, "{$summaries} @percentage", ['53.33%', '60%', '40%']);
+            $this->assertTexts($browser, "{$summaries} @loc-tested", ['160', '120', '40']);
+            $this->assertTexts($browser, "{$summaries} @loc-untested", ['140', '80', '60']);
+            $statuses = array_map(
+                fn ($cell): array => explode(' ', (string) $cell->getAttribute('class')),
+                $browser->elements("{$summaries} @percentage"),
+            );
+            foreach (['warning', 'normal', 'error'] as $i => $status) {
+                self::assertContains($status, $statuses[$i]);
+            }
+
+            $total = '@coverage [data-test="coverage-group"]:nth-of-type(1)';
+            $production = '@coverage [data-test="coverage-group"]:nth-of-type(2)';
+            $experimental = '@coverage [data-test="coverage-group"]:nth-of-type(3)';
+            $browser->assertNotPresent("{$total} @coverage-row")
+                ->assertNotPresent("{$total} @coverage-group-toggle");
+            $rows = $this->rowsByCell($browser, "{$production} @coverage-row", 'subproject');
+            self::assertEqualsCanonicalizing([$names['production-high'], $names['production-low']], array_keys($rows));
+            self::assertContains('normal', explode(' ', (string) $this->cell($rows[$names['production-high']], 'percentage')->getAttribute('class')));
+            self::assertContains('error', explode(' ', (string) $this->cell($rows[$names['production-low']], 'percentage')->getAttribute('class')));
+            $this->assertTexts($browser, "{$experimental} @coverage-row @subproject", [$names['experimental']]);
+
+            // Each group's builds can be hidden.
+            $browser->click("{$production} @coverage-group-toggle")
+                ->waitUntilMissing("{$production} @coverage-row")
+                ->assertVisible("{$experimental} @coverage-row")
+                ->click("{$production} @coverage-group-toggle")
+                ->waitFor("{$production} @coverage-row");
+        });
+    }
+
+    private function createSubProjectGroup(string $name, int $position, int $coverage_threshold): SubProjectGroup
+    {
+        return SubProjectGroup::create([
+            'name' => $name,
+            'projectid' => $this->project->id,
+            'coveragethreshold' => $coverage_threshold,
+            'is_default' => 0,
+            'position' => $position,
+        ]);
+    }
+
+    public function testLinksToPullRequests(): void
+    {
+        $this->project->cvsviewertype = 'github';
+        $this->project->cvsurl = 'https://github.com/example/repository';
+        $this->project->save();
+        $this->createBuild(['changeid' => '123']);
+        $parent = $this->createBuild(['name' => 'parent', 'changeid' => '456']);
+        $this->createChildBuild($parent, 'subproject-' . Str::uuid()->toString(), 1, ['changeid' => '456']);
+
+        $this->browse(function (Browser $browser) use ($parent): void {
+            $browser->visit($this->indexUrl())
+                ->waitFor('@build-group-Nightly @change-link');
+
+            $links = array_map(fn ($link): string => $this->href($link), $browser->elements('@build-group-Nightly @change-link'));
+            self::assertEqualsCanonicalizing([
+                'https://github.com/example/repository/pull/123',
+                'https://github.com/example/repository/pull/456',
+            ], $links);
+            self::assertStringEndsWith('img/Octocat.png', (string) $browser->attribute('@build-group-Nightly @change-link img', 'src'));
+
+            // The child builds' pull request is shown with the parent build's details.
+            $browser->visit($this->indexUrl("&parentid={$parent->id}", null))
+                ->waitFor('@parent-build-name @change-link');
+            self::assertSame('https://github.com/example/repository/pull/456', $this->href($browser, '@parent-build-name @change-link'));
         });
     }
 

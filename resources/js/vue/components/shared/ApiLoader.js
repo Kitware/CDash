@@ -3,6 +3,38 @@ import axios from 'axios';
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 export default {
+  /**
+   * Show the API endpoint, the testing day and the time taken to generate the page in the page's footer.
+   *
+   * @param {Object} cdash The API response, with its endpoint's URL added as `endpoint`.
+   * @param {number} start When the page started loading the response, in milliseconds.
+   */
+  showInFooter: function (cdash, start) {
+    // Add vuejs render time to page load time in footer.
+    const renderTime = +((new Date().getTime() - start) / 1000);
+    if (cdash.generationtime === undefined) {
+      cdash.generationtime = 0;
+    }
+    let generationTimeStr = (renderTime + cdash.generationtime).toFixed(2);
+    generationTimeStr += `s (${cdash.generationtime}s)`;
+    cdash.generationtime = generationTimeStr;
+
+    // A brutal hack to populate the footer with content
+    // TODO: (williamjallen) Clean this up
+    if (document.getElementById('api-endpoint')) {
+      document.getElementById('api-endpoint')?.setAttribute('href', cdash.endpoint);
+    }
+    if (document.getElementById('api-endpoint-container')) {
+      document.getElementById('api-endpoint-container').style.display = 'inline';
+    }
+    if (document.getElementById('generation-time')) {
+      document.getElementById('generation-time').textContent = cdash.generationtime;
+    }
+    if (document.getElementById('testing-day') && cdash.nightlytime !== undefined) {
+      document.getElementById('testing-day').textContent = `| Testing day ${cdash.currentdate} started at ${cdash.nightlytime}`;
+    }
+  },
+
   loadPageData: function (vm, endpoint_path) {
     vm.start = new Date().getTime();
     axios
@@ -21,30 +53,7 @@ export default {
           vm.postSetup(response);
         }
 
-        // Add vuejs render time to page load time in footer.
-        const renderTime = +((new Date().getTime() - vm.start) / 1000);
-        if (vm.cdash.generationtime === undefined) {
-          vm.cdash.generationtime = 0;
-        }
-        let generationTimeStr = (renderTime + vm.cdash.generationtime).toFixed(2);
-        generationTimeStr += `s (${vm.cdash.generationtime}s)`;
-        vm.cdash.generationtime = generationTimeStr;
-
-
-        // A brutal hack to populate the footer with content
-        // TODO: (williamjallen) Clean this up
-        if (document.getElementById('api-endpoint')) {
-          document.getElementById('api-endpoint')?.setAttribute('href', vm.cdash.endpoint);
-        }
-        if (document.getElementById('api-endpoint-container')) {
-          document.getElementById('api-endpoint-container').style.display = 'inline';
-        }
-        if (document.getElementById('generation-time')) {
-          document.getElementById('generation-time').textContent = vm.cdash.generationtime;
-        }
-        if (document.getElementById('testing-day') && vm.cdash.nightlytime !== undefined) {
-          document.getElementById('testing-day').textContent = `| Testing day ${vm.cdash.currentdate} started at ${vm.cdash.nightlytime}`;
-        }
+        this.showInFooter(vm.cdash, vm.start);
       })
       .catch((error) => {
         console.log(error);

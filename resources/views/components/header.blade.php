@@ -155,6 +155,8 @@ $showHeaderNav = isset($build);
                         <a class="cdash-link" id="cal" data-test="calendar-toggle" href="" ng-click="toggleCalendar()">Calendar</a>
                         <span id="date_now" style="display:none;">@{{::cdash.date}}</span>
                     </li>
+                @elseif(isset($vue) && $vue === true && ($showCalendar ?? false))
+                    <li data-vue-component="header-calendar"></li>
                 @endif
                 @if(isset($project))
                     <li>

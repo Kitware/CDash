@@ -62,10 +62,6 @@ CDash.controller('TestOverviewController', ["$scope", "$rootScope", "$filter", "
 import { HeadController } from "./controllers/head";
 CDash.controller('HeadController', ["$rootScope", "$document", HeadController]);
 
-import { IndexController, showEmptyBuildsLast } from "./controllers/index";
-CDash.controller('IndexController', ["$scope", "$rootScope", "$location", "$http", "$filter", "$timeout", "$q", "anchors", "apiLoader", "filters", "multisort", "modalSvc", IndexController]);
-CDash.filter('showEmptyBuildsLast', showEmptyBuildsLast);
-
 import { SubProjectController } from "./controllers/subproject";
 CDash.controller('SubProjectController', ["$scope", "$rootScope", "$http", SubProjectController]);
 
@@ -100,17 +96,11 @@ CDash.factory('multisort', multisort);
 import { renderTimer } from './services/renderTimer.js';
 CDash.factory('renderTimer', ["$timeout", renderTimer]);
 
-import { build } from './directives/build.js';
-CDash.directive('build', build);
-
 import { timeline } from './directives/timeline.js';
 CDash.directive('timeline', timeline);
 
 import { daterange } from './directives/daterange.js';
 CDash.directive('daterange', daterange);
-
-import { buildgroup } from './directives/buildgroup.js';
-CDash.directive('buildgroup', buildgroup);
 
 import { convertToNumber } from './directives/convertToNumber.js';
 CDash.directive('convertToNumber', convertToNumber);

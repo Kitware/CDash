@@ -48,7 +48,7 @@ class SubProjectGroup
 
         $this->Name = $model->name;
         $this->ProjectId = $model->projectid;
-        $this->CoverageThreshold = $model->coveragetheshold;
+        $this->CoverageThreshold = $model->coveragethreshold;
         $this->IsDefault = $model->is_default;
         $this->Position = $model->position;
     }
@@ -143,7 +143,7 @@ class SubProjectGroup
         }
 
         $this->Id = $model->id;
-        $this->CoverageThreshold = $model->coveragetheshold;
+        $this->CoverageThreshold = $model->coveragethreshold;
         $this->IsDefault = $model->is_default;
     }
 

@@ -3,6 +3,7 @@
 namespace Tests\Browser\Pages;
 
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 use Laravel\Dusk\Browser;
 use PHPUnit\Framework\Attributes\DataProvider;
 
@@ -53,6 +54,22 @@ class ProjectBuildsPageFiltersTest extends ProjectBuildsPageTestCase
             self::assertSame('', $browser->value("{$this->filter(1)} @filter-value"));
             // A filter can't be removed if it is the only one.
             self::assertFalse($browser->element("{$this->filter(1)} @filter-remove")?->isEnabled());
+        });
+    }
+
+    public function testShowsDefaultFilterOfChildBuildsWhenRequested(): void
+    {
+        $parent = $this->createBuild();
+        $this->createChildBuild($parent, 'subproject-' . Str::uuid()->toString());
+
+        $this->browse(function (Browser $browser) use ($parent): void {
+            $browser->visit($this->indexUrl("&parentid={$parent->id}&showfilters=1", null))
+                ->waitFor('@filters @filter');
+
+            // A parent build's children are filtered by SubProject by default.
+            self::assertCount(1, $browser->elements('@filters @filter'));
+            self::assertSame('subprojects', $browser->value("{$this->filter(1)} @filter-field"));
+            self::assertSame('92', $browser->value("{$this->filter(1)} @filter-compare"));
         });
     }
 
@@ -363,11 +380,10 @@ class ProjectBuildsPageFiltersTest extends ProjectBuildsPageTestCase
             self::assertStringContainsString($this->indexUrl($filters, '2025-01-13'), $this->href($browser, '@header-nav-previous'));
             self::assertStringContainsString($this->indexUrl($filters, '2025-01-17'), $this->href($browser, '@header-nav-next'));
             self::assertStringContainsString($this->indexUrl($filters, null), $this->href($browser, '@header-nav-latest'));
-            self::assertStringContainsString(
-                "viewBuildGroup.php?project={$this->project->name}&buildgroup=Nightly&date=" . self::DATE,
+            self::assertStringEndsWith(
+                "/viewBuildGroup.php?project={$this->project->name}&buildgroup=Nightly&date=" . self::DATE . $filters,
                 $this->href($browser, '@build-group-Nightly @view-timeline-link'),
             );
-            self::assertStringContainsString($filters, $this->href($browser, '@build-group-Nightly @view-timeline-link'));
 
             $browser->waitForReload(fn (Browser $browser) => $browser->click('@header-nav-next'))
                 ->waitFor('@build-group-Nightly');
