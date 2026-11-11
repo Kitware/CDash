@@ -47,10 +47,10 @@ set_tests_properties(cypress_setup_admin cypress_setup_user PROPERTIES
 
 # These tests have the correct dependencies set up
 add_cypress_e2e_test(query-tests)
-set_tests_properties(cypress/e2e/query-tests PROPERTIES DEPENDS cypress/e2e/remove-build)
+set_tests_properties(cypress/e2e/query-tests PROPERTIES DEPENDS timeline)
 
 add_cypress_e2e_test(tests)
-set_tests_properties(cypress/e2e/tests PROPERTIES DEPENDS cypress/e2e/remove-build)
+set_tests_properties(cypress/e2e/tests PROPERTIES DEPENDS timeline)
 
 add_cypress_e2e_test(view-sub-projects)
 set_tests_properties(cypress/e2e/view-sub-projects PROPERTIES DEPENDS subproject)
@@ -58,18 +58,6 @@ set_tests_properties(cypress/e2e/view-sub-projects PROPERTIES DEPENDS subproject
 add_cypress_e2e_test(sub-project-group-order)
 set_tests_properties(cypress/e2e/sub-project-group-order PROPERTIES DEPENDS crosssubprojectcoverage)
 set_tests_properties(cypress/e2e/sub-project-group-order PROPERTIES DEPENDS aggregatesubprojectcoverage)
-
-add_cypress_e2e_test(filter-labels)
-set_tests_properties(cypress/e2e/filter-labels PROPERTIES DEPENDS actualtrilinossubmission)
-
-add_cypress_e2e_test(colorblind)
-set_tests_properties(cypress/e2e/colorblind PROPERTIES DEPENDS testgraphpermissions)
-
-add_cypress_e2e_test(calendar)
-set_tests_properties(cypress/e2e/calendar PROPERTIES DEPENDS testgraphpermissions)
-
-add_cypress_e2e_test(daterange)
-set_tests_properties(cypress/e2e/daterange PROPERTIES DEPENDS testgraphpermissions)
 
 # These tests don't have all of the dependencies worked out
 add_cypress_e2e_test(manage-overview)
@@ -80,15 +68,3 @@ set_tests_properties(cypress/e2e/manage-build-group PROPERTIES DEPENDS timeline)
 
 add_cypress_e2e_test(manage-sub-project)
 set_tests_properties(cypress/e2e/manage-sub-project PROPERTIES DEPENDS timeline)
-
-add_cypress_e2e_test(sort-index)
-set_tests_properties(cypress/e2e/sort-index PROPERTIES DEPENDS timeline)
-
-add_cypress_e2e_test(expected-build)
-set_tests_properties(cypress/e2e/expected-build PROPERTIES DEPENDS timeline)
-
-add_cypress_e2e_test(remove-build)
-set_tests_properties(cypress/e2e/remove-build PROPERTIES DEPENDS timeline)
-
-add_cypress_e2e_test(done-build)
-set_tests_properties(cypress/e2e/done-build PROPERTIES DEPENDS timeline)

@@ -1,4 +1,5 @@
 <button class="btn btn-default btn-xs"
+        data-test="filter-add-block"
         ng-click="addFilterBlock($index+1)"
         tooltip-popup-delay="1500"
         tooltip-append-to-body="true"
@@ -6,11 +7,12 @@
   <img class="smallicon" src="img/nested_list.svg"></img>
 </button>
 <select ng-if="filterdata.filters.length > 1 && $first"
+        data-test="filter-combine"
         ng-model="filterdata.filtercombine"
         ng-change="updateCombine(filterdata)">
   <option value="and">and</option>
   <option value="or">or</option>
 </select>
-<span ng-if="$middle">
+<span ng-if="$middle" data-test="filter-combine-label">
   {{filterdata.filtercombine}}
 </span>

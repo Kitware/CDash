@@ -8,33 +8,33 @@
           {{::banner}}
         </div>
 
-        <div id="settings" data-cy="settings-dropdown" ng-click="showsettings = ! showsettings">
+        <div id="settings" data-test="settings-menu-toggle" ng-click="showsettings = ! showsettings">
           <span class="glyphicon glyphicon-filter"
                 tooltip-popup-delay="1000"
                 tooltip-append-to-body="true"
                 tooltip-placement="left"
                 uib-tooltip="More display options"></span>
-          <ul ng-show="showsettings">
+          <ul ng-show="showsettings" data-test="settings-menu">
             <li>
-              <a class="cdash-link" id="label_advancedview" ng-click="toggleAdvancedView()">
+              <a class="cdash-link" id="label_advancedview" data-test="advanced-view-toggle" ng-click="toggleAdvancedView()">
                 <span ng-if="::cdash.advancedview == 0">Advanced View</span>
                 <span ng-if="::cdash.advancedview != 0">Simple View</span>
               </a>
             </li>
             <li>
-              <a class="autorefresh cdash-link" ng-click="toggleAutoRefresh()">
+              <a class="autorefresh cdash-link" data-test="auto-refresh-toggle" ng-click="toggleAutoRefresh()">
                 <span ng-if="::!autoRefresh">Auto-refresh</span>
                 <span ng-if="::autoRefresh">Stop auto-refresh</span>
               </a>
             </li>
             <li>
-              <a class="cdash-link" id="label_colorblind" href="" ng-click="cdash.filterdata.colorblind=!cdash.filterdata.colorblind; colorblind_toggle()">
-                <span ng-show="cdash.filterdata.colorblind == 0" data-cy="color-mode-colorblind">Colorblind palette</span>
-                <span ng-show="cdash.filterdata.colorblind != 0" data-cy="color-mode-classic">Classic palette</span>
+              <a class="cdash-link" id="label_colorblind" data-test="colorblind-toggle" href="" ng-click="cdash.filterdata.colorblind=!cdash.filterdata.colorblind; colorblind_toggle()">
+                <span ng-show="cdash.filterdata.colorblind == 0">Colorblind palette</span>
+                <span ng-show="cdash.filterdata.colorblind != 0">Classic palette</span>
               </a>
             </li>
             <li>
-              <a class="cdash-link" id="label_showfilters" ng-click="showfilters_toggle()">
+              <a class="cdash-link" id="label_showfilters" data-test="show-filters-toggle" ng-click="showfilters_toggle()">
                 <span ng-show="showfilters == 0">Show Filters</span>
                 <span ng-show="showfilters != 0">Hide Filters</span>
               </a>
@@ -55,22 +55,22 @@
       <div class="container"
            ng-if="showTimelineChart"
            style="margin-top: 30px; margin-bottom: 20px;">
-        <div timeline></div>
+        <div timeline data-test="timeline"></div>
       </div>
 
       <table ng-if="::cdash.testingdataurl" width="100%" cellpadding="11" cellspacing="0">
         <tr>
           <td height="25" align="left">
             Testing data for this project can be found at:
-            <a class="cdash-link" ng-href="{{::cdash.testingdataurl}}">{{::cdash.testingdataurl}}</a>
+            <a class="cdash-link" data-test="testing-data-url" ng-href="{{::cdash.testingdataurl}}">{{::cdash.testingdataurl}}</a>
           </td>
         </tr>
       </table>
 
       <!-- Display the site & build name common to all child builds. -->
-      <div ng-if="::cdash.childview == 1">
+      <div ng-if="::cdash.childview == 1" data-test="parent-build-info">
         <br/>
-        <div id="site" align="left">
+        <div id="site" align="left" data-test="parent-site">
           <b>Site</b>:
           <a class="cdash-link" ng-href="sites/{{::cdash.siteid}}?project={{::cdash.projectid}}&currenttime={{::cdash.unixtimestamp}}">
             {{::cdash.site}}
@@ -78,7 +78,7 @@
           <img ng-if="::cdash.siteoutoforder == 1" src="img/flag.png" title="flag"/>
         </div>
 
-        <div id="buildname" align="left">
+        <div id="buildname" align="left" data-test="parent-build-name">
           <b>Build Name</b>: {{::cdash.buildname}}
           <img ng-if="::cdash.buildplatform" class="icon" alt="platform" ng-src="img/platform_{{::cdash.buildplatform}}.png"/>
           <a class="cdash-link"
@@ -100,48 +100,48 @@
           </a>
         </div>
 
-        <div id="numbuilds" align="left">
+        <div id="numbuilds" align="left" data-test="parent-num-subprojects">
           <b>Number of SubProjects</b>: {{::cdash.numchildren}}
         </div>
 
         <div ng-if="::cdash.advancedview != 0">
-          <div id="buildstamp" align="left">
+          <div id="buildstamp" align="left" data-test="parent-stamp">
             <b>Stamp</b>: {{::cdash.stamp}}
           </div>
-          <div id="buildstarttime" align="left">
+          <div id="buildstarttime" align="left" data-test="parent-start-time">
             <b>Build Start Time</b>: {{::cdash.starttime}}
           </div>
-          <div id="osname" align="left">
+          <div id="osname" align="left" data-test="parent-os-name">
             <b>OS Name</b>: {{::cdash.osname}}
           </div>
-          <div id="osplatform" align="left">
+          <div id="osplatform" align="left" data-test="parent-os-platform">
             <b>OS Platform</b>: {{::cdash.osplatform}}
           </div>
-          <div id="osrelease" align="left">
+          <div id="osrelease" align="left" data-test="parent-os-release">
             <b>OS Release</b>: {{::cdash.osrelease}}
           </div>
-          <div id="osversion" align="left">
+          <div id="osversion" align="left" data-test="parent-os-version">
             <b>OS Version</b>: {{::cdash.osversion}}
           </div>
-          <div id="generator" align="left">
+          <div id="generator" align="left" data-test="parent-generator">
           <b>CTest version: </b>{{::cdash.generator}}
           </div>
 
           <div ng-if="::cdash.showorder">
             <div ng-if="::cdash.updateduration != false"
-                 id="updateduration" align="left">
+                 id="updateduration" align="left" data-test="parent-update-time">
               <b>Update Time: </b>{{::cdash.updateduration}}
             </div>
             <div ng-if="::cdash.configureduration != false"
-                 id="configureduration" align="left">
+                 id="configureduration" align="left" data-test="parent-configure-time">
               <b>Configure Time: </b>{{::cdash.configureduration}}
             </div>
             <div ng-if="::cdash.buildduration != false"
-                 id="buildduration" align="left">
+                 id="buildduration" align="left" data-test="parent-build-time">
               <b>Build Time: </b>{{::cdash.buildduration}}
             </div>
             <div ng-if="::cdash.testduration != false"
-                 id="testduration" align="left">
+                 id="testduration" align="left" data-test="parent-test-time">
               <b>Test Time: </b>{{::cdash.testduration}}
             </div>
           </div>
@@ -155,11 +155,13 @@
 
       <!-- BuildGroups -->
       <div ng-repeat="buildgroup in cdash.buildgroups | orderBy:'position'| limitTo:buildgroup_limit" class="buildgroup"
+           data-test="build-group-{{::buildgroup.name}}"
            buildgroup>
       </div>  <!-- end BuildGroups -->
 
       <!-- Coverage -->
       <div class="buildgroup"
+           data-test="coverage"
            ng-if="::cdash.coverages.length > 0 || cdash.coveragegroups.length > 0">
         <a class="cdash-link" id="Coverage"></a>
         <table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb" id="coveragetable">
@@ -181,90 +183,99 @@
               <!-- Site & Build Name for non-grouped coverage -->
               <th ng-if="::cdash.childview != 1"
                   ng-click="updateOrderByFields(sortCoverage, 'site', $event, 'coverage')"
+                  data-test="header-site"
                   class="column-header">
                 Site
-                <span class="glyphicon" ng-class="sortCoverage.orderByFields.indexOf('-site') != -1 ? 'glyphicon-chevron-down' : (sortCoverage.orderByFields.indexOf('site') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+                <span class="glyphicon" ng-class="sortCoverage.orderByFields.indexOf('-site') != -1 ? 'glyphicon-chevron-down' : (sortCoverage.orderByFields.indexOf('site') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')" data-test="{{ sortCoverage.orderByFields.indexOf('-site') != -1 ? 'sort-descending' : (sortCoverage.orderByFields.indexOf('site') != -1 ? 'sort-ascending' : 'sort-none') }}"></span>
               </th>
 
               <th ng-if="::cdash.childview != 1"
                   ng-click="updateOrderByFields(sortCoverage, 'buildname', $event, 'coverage')"
+                  data-test="header-build-name"
                   class="column-header">
                 Build Name
-                <span class="glyphicon" ng-class="sortCoverage.orderByFields.indexOf('-buildname') != -1 ? 'glyphicon-chevron-down' : (sortCoverage.orderByFields.indexOf('buildname') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+                <span class="glyphicon" ng-class="sortCoverage.orderByFields.indexOf('-buildname') != -1 ? 'glyphicon-chevron-down' : (sortCoverage.orderByFields.indexOf('buildname') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')" data-test="{{ sortCoverage.orderByFields.indexOf('-buildname') != -1 ? 'sort-descending' : (sortCoverage.orderByFields.indexOf('buildname') != -1 ? 'sort-ascending' : 'sort-none') }}"></span>
               </th>
 
               <!-- SubProject name for grouped coverage -->
               <th ng-if="::cdash.childview == 1"
                   ng-click="updateOrderByFields(sortCoverage,'label', $event, 'coverage')"
+                  data-test="header-subproject"
                   class="column-header">
                 SubProject
-                <span class="glyphicon" ng-class="sortCoverage.orderByFields.indexOf('-label') != -1 ? 'glyphicon-chevron-down' : (sortCoverage.orderByFields.indexOf('label') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+                <span class="glyphicon" ng-class="sortCoverage.orderByFields.indexOf('-label') != -1 ? 'glyphicon-chevron-down' : (sortCoverage.orderByFields.indexOf('label') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')" data-test="{{ sortCoverage.orderByFields.indexOf('-label') != -1 ? 'sort-descending' : (sortCoverage.orderByFields.indexOf('label') != -1 ? 'sort-ascending' : 'sort-none') }}"></span>
               </th>
 
               <!-- Fields common to both modes -->
               <th ng-click="updateOrderByFields(sortCoverage, 'percentage', $event, 'coverage')"
+                  data-test="header-percentage"
                   class="column-header">
                 Percentage
-                <span class="glyphicon" ng-class="sortCoverage.orderByFields.indexOf('-percentage') != -1 ? 'glyphicon-chevron-down' : (sortCoverage.orderByFields.indexOf('percentage') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+                <span class="glyphicon" ng-class="sortCoverage.orderByFields.indexOf('-percentage') != -1 ? 'glyphicon-chevron-down' : (sortCoverage.orderByFields.indexOf('percentage') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')" data-test="{{ sortCoverage.orderByFields.indexOf('-percentage') != -1 ? 'sort-descending' : (sortCoverage.orderByFields.indexOf('percentage') != -1 ? 'sort-ascending' : 'sort-none') }}"></span>
               </th>
 
               <th ng-click="updateOrderByFields(sortCoverage, 'loctested', $event, 'coverage')"
+                  data-test="header-loc-tested"
                   class="column-header">
                 LOC Tested
-                <span class="glyphicon" ng-class="sortCoverage.orderByFields.indexOf('-loctested') != -1 ? 'glyphicon-chevron-down' : (sortCoverage.orderByFields.indexOf('loctested') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+                <span class="glyphicon" ng-class="sortCoverage.orderByFields.indexOf('-loctested') != -1 ? 'glyphicon-chevron-down' : (sortCoverage.orderByFields.indexOf('loctested') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')" data-test="{{ sortCoverage.orderByFields.indexOf('-loctested') != -1 ? 'sort-descending' : (sortCoverage.orderByFields.indexOf('loctested') != -1 ? 'sort-ascending' : 'sort-none') }}"></span>
               </th>
 
               <th ng-click="updateOrderByFields(sortCoverage, 'locuntested', $event, 'coverage')"
+                  data-test="header-loc-untested"
                   class="column-header">
                 LOC Untested
-                <span class="glyphicon" ng-class="sortCoverage.orderByFields.indexOf('-locuntested') != -1 ? 'glyphicon-chevron-down' : (sortCoverage.orderByFields.indexOf('locuntested') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+                <span class="glyphicon" ng-class="sortCoverage.orderByFields.indexOf('-locuntested') != -1 ? 'glyphicon-chevron-down' : (sortCoverage.orderByFields.indexOf('locuntested') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')" data-test="{{ sortCoverage.orderByFields.indexOf('-locuntested') != -1 ? 'sort-descending' : (sortCoverage.orderByFields.indexOf('locuntested') != -1 ? 'sort-ascending' : 'sort-none') }}"></span>
               </th>
 
               <th ng-click="updateOrderByFields(sortCoverage, 'datefull', $event, 'coverage')"
+                  data-test="header-date"
                   ng-class="::{'nob': cdash.displaylabels == 0 && cdash.coveragegroups.length == 0}"
                   class="column-header">
                 Date
-                <span class="glyphicon" ng-class="sortCoverage.orderByFields.indexOf('-datefull') != -1 ? 'glyphicon-chevron-down' : (sortCoverage.orderByFields.indexOf('datefull') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+                <span class="glyphicon" ng-class="sortCoverage.orderByFields.indexOf('-datefull') != -1 ? 'glyphicon-chevron-down' : (sortCoverage.orderByFields.indexOf('datefull') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')" data-test="{{ sortCoverage.orderByFields.indexOf('-datefull') != -1 ? 'sort-descending' : (sortCoverage.orderByFields.indexOf('datefull') != -1 ? 'sort-ascending' : 'sort-none') }}"></span>
               </th>
 
               <!-- Conditionally display the labels -->
               <th ng-if="::cdash.displaylabels == 1 && !cdash.coveragegroups"
+                  data-test="header-labels"
                   class="column-header nob">Labels</th>
 
             </tr>
           </thead>
 
           <!-- Coverage groups -->
-          <tbody ng-repeat="group in ::cdash.coveragegroups |orderBy:'position'" id="coveragebody">
-            <tr class="parent_row">
-              <td class="paddt" align="left">
+          <tbody ng-repeat="group in ::cdash.coveragegroups |orderBy:'position'" id="coveragebody" data-test="coverage-group">
+            <tr class="parent_row" data-test="coverage-group-summary">
+              <td class="paddt" align="left" data-test="subproject">
                 <b>{{::group.label}}</b>
                 <div class="glyphicon"
+                     data-test="coverage-group-toggle"
                      ng-if="::group.label !== 'Total'"
                      ng-click="group.hidden = ! group.hidden"
                      ng-class="{'glyphicon-chevron-down': !group.hidden, 'glyphicon-chevron-right': group.hidden}"></div>
               </td>
 
-              <td align="center" ng-class="::{'normal': group.percentage >= group.thresholdgreen, 'warning': group.percentage < group.thresholdgreen && group.percentage >= group.thresholdyellow, 'error': group.percentage < group.thresholdyellow}">
+              <td align="center" data-test="percentage" ng-class="::{'normal': group.percentage >= group.thresholdgreen, 'warning': group.percentage < group.thresholdgreen && group.percentage >= group.thresholdyellow, 'error': group.percentage < group.thresholdyellow}">
                 {{::group.percentage}}%
               </td>
 
-              <td class="center-text">
+              <td class="center-text" data-test="loc-tested">
                 {{::group.loctested}}
               </td>
-              <td class="center-text">
+              <td class="center-text" data-test="loc-untested">
                 {{::group.locuntested}}
               </td>
 
               <td class="center-text"></td>
             </tr>
 
-            <tr class="child_row" ng-show="!group.hidden" ng-repeat="coverage in group.coverages |orderBy:sortCoverage.orderByFields" ng-class-odd="'odd'" ng-class-even="'even'">
-              <td align="left" class="paddt">
+            <tr class="child_row" ng-show="!group.hidden" ng-repeat="coverage in group.coverages |orderBy:sortCoverage.orderByFields" ng-class-odd="'odd'" ng-class-even="'even'" data-test="coverage-row">
+              <td align="left" class="paddt" data-test="subproject">
                 {{::coverage.label}}
               </td>
 
-              <td align="center" ng-class="::{'normal': coverage.percentage >= group.thresholdgreen, 'warning': coverage.percentage < group.thresholdgreen && coverage.percentage >= group.thresholdyellow, 'error': coverage.percentage < group.thresholdyellow}">
+              <td align="center" data-test="percentage" ng-class="::{'normal': coverage.percentage >= group.thresholdgreen, 'warning': coverage.percentage < group.thresholdgreen && coverage.percentage >= group.thresholdyellow, 'error': coverage.percentage < group.thresholdyellow}">
                 <a class="cdash-link" ng-href="builds/{{::coverage.buildid}}/coverage">
                   {{::coverage.percentage}}%
                 </a>
@@ -272,19 +283,19 @@
                 <sub ng-if="::coverage.percentagediff < 0">{{::coverage.percentagediff}}%</sub>
               </td>
 
-              <td class="center-text">
+              <td class="center-text" data-test="loc-tested">
                 {{::coverage.loctested}}
                 <sub ng-if="::coverage.loctesteddiff > 0">+{{::coverage.loctesteddiff}}</sub>
                 <sub ng-if="::coverage.loctesteddiff < 0">{{::coverage.loctesteddiff}}</sub>
               </td>
 
-              <td class="center-text">
+              <td class="center-text" data-test="loc-untested">
                 {{::coverage.locuntested}}
                 <sub ng-if="::coverage.locuntesteddiff > 0">+{{::coverage.locuntesteddiff}}</sub>
                 <sub ng-if="::coverage.locuntesteddiff < 0">{{::coverage.locuntesteddiff}}</sub>
               </td>
 
-              <td align="center" ng-class="::{'nob': cdash.displaylabels == 0}">
+              <td align="center" data-test="date" ng-class="::{'nob': cdash.displaylabels == 0}">
                 <span class="builddateelapsed" alt="{{::coverage.date}}">
                   {{::coverage.dateelapsed}}
                 </span>
@@ -294,24 +305,24 @@
 
           <!-- Ungrouped coverage -->
           <tbody ng-if="::!cdash.coveragegroups || cdash.coveragegroups.length == 0" id="coveragebody">
-            <tr class="child_row" ng-repeat="coverage in cdash.coverages |orderBy:sortCoverage.orderByFields" ng-class-odd="'odd'" ng-class-even="'even'">
-              <td ng-if="::cdash.childview != 1" align="left" class="paddt">
+            <tr class="child_row" ng-repeat="coverage in cdash.coverages |orderBy:sortCoverage.orderByFields" ng-class-odd="'odd'" ng-class-even="'even'" data-test="coverage-row">
+              <td ng-if="::cdash.childview != 1" align="left" class="paddt" data-test="site">
                 <a class="cdash-link" ng-href="sites/{{::coverage.siteid}}?project={{::cdash.projectid}}&currenttime={{::cdash.unixtimestamp}}">
                   {{::coverage.site}}
                 </a>
               </td>
 
-              <td ng-if="::cdash.childview != 1" align="left" class="paddt">
+              <td ng-if="::cdash.childview != 1" align="left" class="paddt" data-test="build-name">
                 <a class="cdash-link" ng-href="builds/{{::coverage.buildid}}">
                   {{::coverage.buildname}}
                 </a>
               </td>
 
-              <td ng-if="::cdash.childview == 1" align="left" class="paddt">
+              <td ng-if="::cdash.childview == 1" align="left" class="paddt" data-test="subproject">
                 {{::coverage.label}}
               </td>
 
-              <td align="center" ng-class="::{'normal': coverage.percentage >= cdash.thresholdgreen, 'warning': coverage.percentage < cdash.thresholdgreen && coverage.percentage >= cdash.thresholdyellow, 'error': coverage.percentage < cdash.thresholdyellow}">
+              <td align="center" data-test="percentage" ng-class="::{'normal': coverage.percentage >= cdash.thresholdgreen, 'warning': coverage.percentage < cdash.thresholdgreen && coverage.percentage >= cdash.thresholdyellow, 'error': coverage.percentage < cdash.thresholdyellow}">
                 <a class="cdash-link" ng-if="::coverage.childlink" ng-href="{{::coverage.childlink}}">
                   {{::coverage.percentage}}%
                 </a>
@@ -322,25 +333,25 @@
                 <sub ng-if="::coverage.percentagediff < 0">{{::coverage.percentagediff}}%</sub>
               </td>
 
-              <td class="center-text">
+              <td class="center-text" data-test="loc-tested">
                 {{::coverage.loctested}}
                 <sub ng-if="::coverage.loctesteddiff > 0">+{{::coverage.loctesteddiff}}</sub>
                 <sub ng-if="::coverage.loctesteddiff < 0">{{::coverage.loctesteddiff}}</sub>
               </td>
 
-              <td class="center-text">
+              <td class="center-text" data-test="loc-untested">
                 {{::coverage.locuntested}}
                 <sub ng-if="::coverage.locuntesteddiff > 0">+{{::coverage.locuntesteddiff}}</sub>
                 <sub ng-if="::coverage.locuntesteddiff < 0">{{::coverage.locuntesteddiff}}</sub>
               </td>
 
-              <td align="center" ng-class="::{'nob': cdash.displaylabels == 0}">
+              <td align="center" data-test="date" ng-class="::{'nob': cdash.displaylabels == 0}">
                 <span class="builddateelapsed" alt="{{::coverage.date}}">
                   {{::coverage.dateelapsed}}
                 </span>
               </td>
 
-              <td ng-if="::cdash.displaylabels == 1" class="nob" align="left">
+              <td ng-if="::cdash.displaylabels == 1" class="nob" align="left" data-test="labels">
                 {{::coverage.label}}
               </td>
             </tr>
@@ -350,6 +361,7 @@
 
       <!-- Dynamic analysis -->
       <div class="buildgroup"
+           data-test="dynamic-analysis"
            ng-if="::cdash.dynamicanalyses.length > 0">
         <a class="cdash-link" id="DynamicAnalysis"></a>
         <table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb" id="dynamicanalysistable">
@@ -370,67 +382,75 @@
             <tr class="table-heading">
               <th ng-if="::cdash.childview == 1"
                   ng-click="updateOrderByFields(sortDA, 'label', $event, 'DA')"
+                  data-test="header-subproject"
                   class="column-header">
                 SubProject
-                <span class="glyphicon" ng-class="sortDA.orderByFields.indexOf('-label') != -1 ? 'glyphicon-chevron-down' : (sortDA.orderByFields.indexOf('label') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+                <span class="glyphicon" ng-class="sortDA.orderByFields.indexOf('-label') != -1 ? 'glyphicon-chevron-down' : (sortDA.orderByFields.indexOf('label') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')" data-test="{{ sortDA.orderByFields.indexOf('-label') != -1 ? 'sort-descending' : (sortDA.orderByFields.indexOf('label') != -1 ? 'sort-ascending' : 'sort-none') }}"></span>
               </th>
 
               <th ng-if="::cdash.childview != 1"
                   ng-click="updateOrderByFields(sortDA, 'site', $event, 'DA')"
+                  data-test="header-site"
                   class="column-header">
                 Site
-                <span class="glyphicon" ng-class="sortDA.orderByFields.indexOf('-site') != -1 ? 'glyphicon-chevron-down' : (sortDA.orderByFields.indexOf('site') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+                <span class="glyphicon" ng-class="sortDA.orderByFields.indexOf('-site') != -1 ? 'glyphicon-chevron-down' : (sortDA.orderByFields.indexOf('site') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')" data-test="{{ sortDA.orderByFields.indexOf('-site') != -1 ? 'sort-descending' : (sortDA.orderByFields.indexOf('site') != -1 ? 'sort-ascending' : 'sort-none') }}"></span>
               </th>
 
               <th ng-if="::cdash.childview != 1"
                   ng-click="updateOrderByFields(sortDA, 'buildname', $event, 'DA')"
+                  data-test="header-build-name"
                   class="column-header">
                 Build Name
-                <span class="glyphicon" ng-class="sortDA.orderByFields.indexOf('-buildname') != -1 ? 'glyphicon-chevron-down' : (sortDA.orderByFields.indexOf('buildname') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+                <span class="glyphicon" ng-class="sortDA.orderByFields.indexOf('-buildname') != -1 ? 'glyphicon-chevron-down' : (sortDA.orderByFields.indexOf('buildname') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')" data-test="{{ sortDA.orderByFields.indexOf('-buildname') != -1 ? 'sort-descending' : (sortDA.orderByFields.indexOf('buildname') != -1 ? 'sort-ascending' : 'sort-none') }}"></span>
               </th>
 
               <th ng-click="updateOrderByFields(sortDA, 'checker', $event, 'DA')"
+                  data-test="header-checker"
                   class="column-header">
                 Checker
-                <span class="glyphicon" ng-class="sortDA.orderByFields.indexOf('-checker') != -1 ? 'glyphicon-chevron-down' : (sortDA.orderByFields.indexOf('checker') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+                <span class="glyphicon" ng-class="sortDA.orderByFields.indexOf('-checker') != -1 ? 'glyphicon-chevron-down' : (sortDA.orderByFields.indexOf('checker') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')" data-test="{{ sortDA.orderByFields.indexOf('-checker') != -1 ? 'sort-descending' : (sortDA.orderByFields.indexOf('checker') != -1 ? 'sort-ascending' : 'sort-none') }}"></span>
               </th>
 
               <th ng-click="updateOrderByFields(sortDA, 'defectcount', $event, 'DA')"
+                  data-test="header-defect-count"
                   class="column-header">
                 Defect Count
-                <span class="glyphicon" ng-class="sortDA.orderByFields.indexOf('-defectcount') != -1 ? 'glyphicon-chevron-down' : (sortDA.orderByFields.indexOf('defectcount') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+                <span class="glyphicon" ng-class="sortDA.orderByFields.indexOf('-defectcount') != -1 ? 'glyphicon-chevron-down' : (sortDA.orderByFields.indexOf('defectcount') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')" data-test="{{ sortDA.orderByFields.indexOf('-defectcount') != -1 ? 'sort-descending' : (sortDA.orderByFields.indexOf('defectcount') != -1 ? 'sort-ascending' : 'sort-none') }}"></span>
               </th>
 
               <th ng-click="updateOrderByFields(sortDA, 'datefull', $event, 'DA')"
+                  data-test="header-date"
                   class="column-header nob">
                 Date
-                <span class="glyphicon" ng-class="sortDA.orderByFields.indexOf('-datefull') != -1 ? 'glyphicon-chevron-down' : (sortDA.orderByFields.indexOf('datefull') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+                <span class="glyphicon" ng-class="sortDA.orderByFields.indexOf('-datefull') != -1 ? 'glyphicon-chevron-down' : (sortDA.orderByFields.indexOf('datefull') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')" data-test="{{ sortDA.orderByFields.indexOf('-datefull') != -1 ? 'sort-descending' : (sortDA.orderByFields.indexOf('datefull') != -1 ? 'sort-ascending' : 'sort-none') }}"></span>
               </th>
             </tr>
           </thead>
 
           <tbody>
             <tr ng-repeat="da in cdash.dynamicanalyses |orderBy:sortDA.orderByFields"
+                data-test="dynamic-analysis-row"
                 ng-class-odd="'odd'" ng-class-even="'even'">
-              <td ng-if="::cdash.childview == 1" class="paddt" align="left">
+              <td ng-if="::cdash.childview == 1" class="paddt" align="left" data-test="subproject">
                 {{::da.label}}
               </td>
 
-              <td ng-if="::cdash.childview != 1" class="paddt" align="left">
+              <td ng-if="::cdash.childview != 1" class="paddt" align="left" data-test="site">
                 <a class="cdash-link" ng-href="sites/{{::da.siteid}}?project={{::cdash.projectid}}&currenttime={{::cdash.unixtimestamp}}">
                   {{::da.site}}
                 </a>
               </td>
 
-              <td ng-if="::cdash.childview != 1" class="paddt" align="left">
+              <td ng-if="::cdash.childview != 1" class="paddt" align="left" data-test="build-name">
                 <a class="cdash-link" ng-href="builds/{{::da.buildid}}">
                   {{::da.buildname}}
                 </a>
               </td>
 
-              <td class="center-text paddt cdash0link">{{::da.checker}}</td>
+              <td class="center-text paddt cdash0link" data-test="checker">{{::da.checker}}</td>
 
               <td class="paddt" align="center"
+                  data-test="defect-count"
                   ng-class="::{'error': da.defectcount > 0, 'normal': da.defectcount < 1}">
                 <a class="cdash-link" ng-if="::da.childlink" ng-href="{{::da.childlink}}">
                   {{::da.defectcount}}
@@ -440,6 +460,7 @@
                 </a>
               </td>
               <td class="paddt" align="center"
+                  data-test="date"
                   ng-class="::{'nob': cdash.displaylabels == 0}">
                 <span class="builddateelapsed" alt="{{::da.date}}">{{::da.dateelapsed}}</span>
               </td>
@@ -463,7 +484,7 @@
         <p>Are you sure you want to remove this build?</p>
       </div>
       <div class="modal-footer">
-        <button class="btn" ng-click="$ctrl.cancel()">cancel</button>
-        <button class="btn btn-danger" id="modal-delete-build-button" ng-click="$ctrl.ok()">Delete</button>
+        <button class="btn" data-test="cancel-remove-build" ng-click="$ctrl.cancel()">cancel</button>
+        <button class="btn btn-danger" id="modal-delete-build-button" data-test="confirm-remove-build" ng-click="$ctrl.ok()">Delete</button>
       </div>
     </script>

@@ -81,7 +81,7 @@
         >
 
             @if(isset($angular) && $angular === true)
-                <div ng-if="cdash.error">@{{cdash.error}}</div>
+                <div ng-if="cdash.error" data-test="error-message">@{{cdash.error}}</div>
             @endif
 
             @hasSection('main_content')

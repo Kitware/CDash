@@ -472,6 +472,14 @@ add_browser_test(/Browser/Pages/ProjectNotificationsPageTest)
 
 add_browser_test(/Browser/Pages/ProjectBuildsPageTest)
 
+add_browser_test(/Browser/Pages/ProjectBuildsPageSortingTest)
+
+add_browser_test(/Browser/Pages/ProjectBuildsPageSettingsTest)
+
+add_browser_test(/Browser/Pages/ProjectBuildsPageAdminTest)
+
+add_browser_test(/Browser/Pages/ProjectBuildsPageFiltersTest)
+
 add_browser_test(/Browser/Pages/CreateProjectPageTest)
 
 add_browser_test(/Browser/Pages/ProfilePageTest)
@@ -763,17 +771,9 @@ set_property(TEST deletesubproject PROPERTY DEPENDS
   cypress/e2e/manage-overview
   cypress/e2e/manage-build-group
   cypress/e2e/manage-sub-project
-  cypress/e2e/sort-index
-  cypress/e2e/expected-build
-  cypress/e2e/remove-build
   cypress/e2e/view-sub-projects
   cypress/e2e/query-tests
-  cypress/e2e/filter-labels
-  cypress/e2e/done-build
   cypress/e2e/sub-project-group-order
-  cypress/e2e/calendar
-  cypress/e2e/colorblind
-  cypress/e2e/daterange
   cypress/e2e/sites
   cypress/e2e/tests
 )

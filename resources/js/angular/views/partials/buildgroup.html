@@ -1,10 +1,11 @@
 <h3 class="buildgroupname" style="display: flex; align-items: center; justify-content: space-between;">
   <div>
     <a href="#" class="grouptrigger cdash-link"
+       data-test="build-group-name"
        ng-click="jumpToAnchor(buildgroup.linkname)">
       {{::buildgroup.name}}
     </a>
-    <span class="buildnums" style="margin-left: 10px;">{{::buildgroup.numbuildslabel}}</span>
+    <span class="buildnums" style="margin-left: 10px;" data-test="build-group-count">{{::buildgroup.numbuildslabel}}</span>
   </div>
   
   <!-- Action buttons styled consistently and aligned to the right -->
@@ -16,12 +17,13 @@
             ng-click="toggleSelectionMode(buildgroup)"
             title="Toggle bulk selection mode"
             style="font-size: 12px;"
-            data-cy="bulk-select-toggle-btn">
+            data-test="bulk-select-toggle">
       <span class="glyphicon" ng-class="buildgroup.selectionMode ? 'glyphicon-check' : 'glyphicon-unchecked'"></span>
       {{buildgroup.selectionMode ? 'Exit Selection' : 'Bulk Select'}}
     </button>
 
     <a class="btn btn-xs btn-default"
+       data-test="view-timeline-link"
        ng-href="viewBuildGroup.php?project={{::cdash.projectname_encoded}}&buildgroup={{::buildgroup.linkname}}&date={{::cdash.date}}&{{::cdash.filterurl}}"
        style="text-decoration: none; font-size: 12px;">
       <span class="glyphicon glyphicon-stats"></span> View Timeline
@@ -30,10 +32,10 @@
 </h3>
 
 <!-- Bulk actions toolbar (visible only when builds are selected) -->
-<div ng-if="cdash.user.admin == 1 && buildgroup.selectedBuilds.length > 0" style="background: linear-gradient(135deg, #f0f8ff 0%, #e6f2ff 100%); border: 2px solid #667eea; border-radius: 8px; padding: 16px; margin-bottom: 10px; box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);">
+<div ng-if="cdash.user.admin == 1 && buildgroup.selectedBuilds.length > 0" data-test="bulk-actions" style="background: linear-gradient(135deg, #f0f8ff 0%, #e6f2ff 100%); border: 2px solid #667eea; border-radius: 8px; padding: 16px; margin-bottom: 10px; box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);">
   <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
     <div style="display: flex; align-items: center; gap: 10px;">
-      <span style="font-weight: 600; color: #667eea; font-size: 14px;">
+      <span style="font-weight: 600; color: #667eea; font-size: 14px;" data-test="bulk-selected-count">
         <span class="glyphicon glyphicon-ok-sign" style="margin-right: 5px;"></span>
         {{buildgroup.selectedBuilds.length}} build(s) selected
       </span>
@@ -41,37 +43,37 @@
     
     <div style="display: flex; align-items: center; gap: 8px;">
       <label style="margin: 0; font-weight: 500;">Move to:</label>
-      <select ng-model="buildgroup.bulkTargetGroup" style="padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;">
+      <select ng-model="buildgroup.bulkTargetGroup" data-test="bulk-move-select" style="padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;">
         <option value="">-- Select Group --</option>
         <option ng-repeat="group in ::cdash.all_buildgroups" value="{{group.id}}">{{group.name}}</option>
       </select>
-      <button class="btn btn-sm btn-primary" ng-click="bulkMoveToGroup(buildgroup)" ng-disabled="!buildgroup.bulkTargetGroup">
+      <button class="btn btn-sm btn-primary" data-test="bulk-move-button" ng-click="bulkMoveToGroup(buildgroup)" ng-disabled="!buildgroup.bulkTargetGroup">
         <span class="glyphicon glyphicon-arrow-right"></span> Move
       </button>
     </div>
     
     <div style="display: flex; align-items: center; gap: 8px;">
       <!-- Expected builds belong to daily groups. -->
-      <button class="btn btn-sm btn-success" ng-if="buildgroup.type != 'Latest'" ng-click="bulkMarkAsExpected(buildgroup, 1)" data-cy="bulk-mark-expected-btn">
+      <button class="btn btn-sm btn-success" ng-if="buildgroup.type != 'Latest'" ng-click="bulkMarkAsExpected(buildgroup, 1)" data-test="bulk-mark-expected-button">
         <span class="glyphicon glyphicon-ok"></span> Mark as Expected
       </button>
-      <button class="btn btn-sm btn-warning" ng-if="buildgroup.type != 'Latest'" ng-click="bulkMarkAsExpected(buildgroup, 0)" data-cy="bulk-mark-not-expected-btn">
+      <button class="btn btn-sm btn-warning" ng-if="buildgroup.type != 'Latest'" ng-click="bulkMarkAsExpected(buildgroup, 0)" data-test="bulk-mark-not-expected-button">
         <span class="glyphicon glyphicon-remove"></span> Mark as Not Expected
       </button>
-      <button class="btn btn-sm btn-danger" ng-click="bulkDeleteBuilds(buildgroup)" data-cy="bulk-delete-btn">
+      <button class="btn btn-sm btn-danger" ng-click="bulkDeleteBuilds(buildgroup)" data-test="bulk-delete-button">
         <span class="glyphicon glyphicon-trash"></span> Delete
       </button>
     </div>
     
     <div style="margin-left: auto;">
-      <button class="btn btn-sm btn-default" ng-click="clearBuildSelection(buildgroup)" style="border-color: #dc3545; color: #dc3545;" data-cy="clear-selection-btn">
+      <button class="btn btn-sm btn-default" ng-click="clearBuildSelection(buildgroup)" style="border-color: #dc3545; color: #dc3545;" data-test="bulk-clear-selection-button">
         <span class="glyphicon glyphicon-remove-circle"></span> Clear Selection
       </button>
     </div>
   </div>
 </div>
 
-<table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb" id="project_{{::cdash.projectid}}_{{::buildgroup.id}}">
+<table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb" id="project_{{::cdash.projectid}}_{{::buildgroup.id}}" data-test="build-table">
   <thead>
     <tr class="table-heading1" >
       <td ng-if="cdash.user.admin == 1 && buildgroup.selectionMode" class="nob"></td>
@@ -86,7 +88,8 @@
     <tr class="table-heading">
 
       <th ng-if="cdash.user.admin == 1 && buildgroup.selectionMode" rowspan="2" class="column-header" style="width: 30px;">
-        <input type="checkbox" 
+        <input type="checkbox"
+               data-test="bulk-select-all"
                ng-model="buildgroup.selectAll" 
                ng-change="toggleSelectAll(buildgroup)"
                title="Select all builds">
@@ -94,143 +97,163 @@
 
       <th ng-if="::cdash.childview == 1"
           ng-click="updateOrderByFields(buildgroup, 'label', $event)"
+          data-test="header-subproject"
           colspan="2" rowspan="2" class="column-header">
         SubProject
-        <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-label') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('label') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+        <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-label') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('label') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')" data-test="{{ buildgroup.orderByFields.indexOf('-label') != -1 ? 'sort-descending' : (buildgroup.orderByFields.indexOf('label') != -1 ? 'sort-ascending' : 'sort-none') }}"></span>
       </th>
 
       <th ng-if="::cdash.childview != 1"
           ng-click="updateOrderByFields(buildgroup, 'site', $event)"
+          data-test="header-site"
           rowspan="2" class="column-header">
         Site
-        <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-site') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('site') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+        <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-site') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('site') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')" data-test="{{ buildgroup.orderByFields.indexOf('-site') != -1 ? 'sort-descending' : (buildgroup.orderByFields.indexOf('site') != -1 ? 'sort-ascending' : 'sort-none') }}"></span>
       </th>
 
       <th ng-if="::cdash.childview != 1"
           ng-click="updateOrderByFields(buildgroup, 'buildname', $event)"
+          data-test="header-build-name"
           rowspan="2" class="column-header">
         Build Name
-        <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-buildname') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('buildname') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+        <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-buildname') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('buildname') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')" data-test="{{ buildgroup.orderByFields.indexOf('-buildname') != -1 ? 'sort-descending' : (buildgroup.orderByFields.indexOf('buildname') != -1 ? 'sort-ascending' : 'sort-none') }}"></span>
       </th>
     </tr>
 
     <tr class="table-heading">
       <th ng-if="::buildgroup.hasupdatedata"
           ng-click="updateOrderByFields(buildgroup, 'update.files', $event)"
+          data-test="header-update-files"
           class="column-header">
         {{::cdash.updatetype}}
-        <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-update.files') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('update.files') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+        <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-update.files') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('update.files') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')" data-test="{{ buildgroup.orderByFields.indexOf('-update.files') != -1 ? 'sort-descending' : (buildgroup.orderByFields.indexOf('update.files') != -1 ? 'sort-ascending' : 'sort-none') }}"></span>
       </th>
 
       <th ng-if="::buildgroup.hasupdatedata && cdash.advancedview != 0 && cdash.showstarttime"
           ng-click="updateOrderByFields(buildgroup, 'update.timefull', $event)"
+          data-test="header-update-time"
           class="column-header">
         Time
-        <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-update.timefull') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('update.timefull') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+        <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-update.timefull') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('update.timefull') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')" data-test="{{ buildgroup.orderByFields.indexOf('-update.timefull') != -1 ? 'sort-descending' : (buildgroup.orderByFields.indexOf('update.timefull') != -1 ? 'sort-ascending' : 'sort-none') }}"></span>
       </th>
 
       <th ng-if="::buildgroup.hasconfiguredata"
           ng-click="updateOrderByFields(buildgroup, 'configure.error', $event)"
+          data-test="header-configure-errors"
           class="column-header">
         Error
-        <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-configure.error') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('configure.error') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+        <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-configure.error') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('configure.error') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')" data-test="{{ buildgroup.orderByFields.indexOf('-configure.error') != -1 ? 'sort-descending' : (buildgroup.orderByFields.indexOf('configure.error') != -1 ? 'sort-ascending' : 'sort-none') }}"></span>
       </th>
 
       <th ng-if="::buildgroup.hasconfiguredata"
           ng-click="updateOrderByFields(buildgroup, 'configure.warning', $event)"
+          data-test="header-configure-warnings"
           class="column-header">
         Warn
-        <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-configure.warning') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('configure.warning') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+        <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-configure.warning') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('configure.warning') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')" data-test="{{ buildgroup.orderByFields.indexOf('-configure.warning') != -1 ? 'sort-descending' : (buildgroup.orderByFields.indexOf('configure.warning') != -1 ? 'sort-ascending' : 'sort-none') }}"></span>
       </th>
 
       <th ng-if="::buildgroup.hasconfiguredata && cdash.advancedview != 0 && cdash.showstarttime"
           ng-click="updateOrderByFields(buildgroup, 'configure.timefull', $event)"
+          data-test="header-configure-time"
           class="column-header">
         Time
-        <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-configure.timefull') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('configure.timefull') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+        <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-configure.timefull') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('configure.timefull') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')" data-test="{{ buildgroup.orderByFields.indexOf('-configure.timefull') != -1 ? 'sort-descending' : (buildgroup.orderByFields.indexOf('configure.timefull') != -1 ? 'sort-ascending' : 'sort-none') }}"></span>
       </th>
 
       <th ng-if="::buildgroup.hascompilationdata"
           ng-click="updateOrderByFields(buildgroup, 'compilation.error', $event)"
+          data-test="header-build-errors"
           class="column-header">
         Error
-        <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-compilation.error') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('compilation.error') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+        <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-compilation.error') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('compilation.error') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')" data-test="{{ buildgroup.orderByFields.indexOf('-compilation.error') != -1 ? 'sort-descending' : (buildgroup.orderByFields.indexOf('compilation.error') != -1 ? 'sort-ascending' : 'sort-none') }}"></span>
       </th>
 
       <th ng-if="::buildgroup.hascompilationdata"
           ng-click="updateOrderByFields(buildgroup, 'compilation.warning', $event)"
+          data-test="header-build-warnings"
           class="column-header">
         Warn
-        <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-compilation.warning') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('compilation.warning') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+        <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-compilation.warning') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('compilation.warning') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')" data-test="{{ buildgroup.orderByFields.indexOf('-compilation.warning') != -1 ? 'sort-descending' : (buildgroup.orderByFields.indexOf('compilation.warning') != -1 ? 'sort-ascending' : 'sort-none') }}"></span>
       </th>
 
       <th ng-if="::buildgroup.hascompilationdata && cdash.advancedview != 0 && cdash.showstarttime"
           ng-click="updateOrderByFields(buildgroup, 'compilation.timefull', $event)"
+          data-test="header-build-time"
           class="column-header">
         Time
-        <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-compilation.timefull') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('compilation.timefull') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+        <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-compilation.timefull') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('compilation.timefull') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')" data-test="{{ buildgroup.orderByFields.indexOf('-compilation.timefull') != -1 ? 'sort-descending' : (buildgroup.orderByFields.indexOf('compilation.timefull') != -1 ? 'sort-ascending' : 'sort-none') }}"></span>
       </th>
 
       <th ng-if="::buildgroup.hastestdata"
           ng-click="updateOrderByFields(buildgroup, 'test.notrun', $event)"
+          data-test="header-tests-not-run"
           class="column-header">
         Not Run
-        <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-test.notrun') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('test.notrun') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+        <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-test.notrun') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('test.notrun') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')" data-test="{{ buildgroup.orderByFields.indexOf('-test.notrun') != -1 ? 'sort-descending' : (buildgroup.orderByFields.indexOf('test.notrun') != -1 ? 'sort-ascending' : 'sort-none') }}"></span>
       </th>
 
       <th ng-if="::buildgroup.hastestdata"
           ng-click="updateOrderByFields(buildgroup, 'test.fail', $event)"
+          data-test="header-tests-failed"
           class="column-header">
         Fail
-        <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-test.fail') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('test.fail') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+        <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-test.fail') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('test.fail') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')" data-test="{{ buildgroup.orderByFields.indexOf('-test.fail') != -1 ? 'sort-descending' : (buildgroup.orderByFields.indexOf('test.fail') != -1 ? 'sort-ascending' : 'sort-none') }}"></span>
       </th>
 
       <th ng-if="::buildgroup.hastestdata"
           ng-click="updateOrderByFields(buildgroup, 'test.pass', $event)"
+          data-test="header-tests-passed"
           class="column-header">
         Pass
-        <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-test.pass') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('test.pass') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+        <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-test.pass') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('test.pass') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')" data-test="{{ buildgroup.orderByFields.indexOf('-test.pass') != -1 ? 'sort-descending' : (buildgroup.orderByFields.indexOf('test.pass') != -1 ? 'sort-ascending' : 'sort-none') }}"></span>
       </th>
 
       <th ng-if="::buildgroup.hastestdata && cdash.showtesttime"
           ng-click="updateOrderByFields(buildgroup, 'test.timefull', $event)"
+          data-test="header-test-time"
           class="column-header">
         Time
-        <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-test.timefull') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('test.timefull') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+        <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-test.timefull') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('test.timefull') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')" data-test="{{ buildgroup.orderByFields.indexOf('-test.timefull') != -1 ? 'sort-descending' : (buildgroup.orderByFields.indexOf('test.timefull') != -1 ? 'sort-ascending' : 'sort-none') }}"></span>
       </th>
 
       <th ng-if="::buildgroup.hastestdata && cdash.advancedview != 0 && cdash.showProcTime"
           ng-click="updateOrderByFields(buildgroup, 'test.procTimeFull', $event)"
+          data-test="header-proc-time"
           class="column-header">
         Proc Time
-        <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-test.procTimeFull') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('test.procTimeFull') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+        <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-test.procTimeFull') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('test.procTimeFull') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')" data-test="{{ buildgroup.orderByFields.indexOf('-test.procTimeFull') != -1 ? 'sort-descending' : (buildgroup.orderByFields.indexOf('test.procTimeFull') != -1 ? 'sort-ascending' : 'sort-none') }}"></span>
       </th>
 
       <th ng-if="::cdash.showstarttime"
           ng-click="updateOrderByFields(buildgroup, 'builddatefull', $event)"
+          data-test="header-start-time"
           class="column-header">
         Start Time
-        <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-builddatefull') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('builddatefull') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+        <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-builddatefull') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('builddatefull') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')" data-test="{{ buildgroup.orderByFields.indexOf('-builddatefull') != -1 ? 'sort-descending' : (buildgroup.orderByFields.indexOf('builddatefull') != -1 ? 'sort-ascending' : 'sort-none') }}"></span>
       </th>
 
       <th ng-if="::cdash.showorder"
           ng-click="updateOrderByFields(buildgroup, 'position', $event)"
+          data-test="header-order"
           class="column-header">
         Order
-        <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-position') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('position') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+        <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-position') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('position') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')" data-test="{{ buildgroup.orderByFields.indexOf('-position') != -1 ? 'sort-descending' : (buildgroup.orderByFields.indexOf('position') != -1 ? 'sort-ascending' : 'sort-none') }}"></span>
       </th>
 
       <th ng-if="::cdash.childview != 1 && cdash.displaylabels == 1"
           ng-click="updateOrderByFields(buildgroup, 'label', $event)"
+          data-test="header-labels"
           rowspan="2" class="column-header nob">
         Labels
-        <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-label') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('label') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+        <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-label') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('label') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')" data-test="{{ buildgroup.orderByFields.indexOf('-label') != -1 ? 'sort-descending' : (buildgroup.orderByFields.indexOf('label') != -1 ? 'sort-ascending' : 'sort-none') }}"></span>
       </th>
    </tr>
   </thead>
 
   <tbody>
     <tr ng-repeat="build in buildgroup.pagination.filteredBuilds"
+        data-test="build-row"
         ng-class-odd="'odd'" ng-class-even="'even'"
         build
         valign="middle">
@@ -238,7 +261,7 @@
   </tbody>
 </table>
 
-<div ng-if="buildgroup.builds.length > buildgroup.pagination.numPerPage && buildgroup.pagination.numPerPage != -1">
+<div ng-if="buildgroup.builds.length > buildgroup.pagination.numPerPage && buildgroup.pagination.numPerPage != -1" data-test="pagination">
   <uib-pagination
     ng-model="buildgroup.pagination.currentPage"
     total-items="buildgroup.builds.length"
@@ -251,7 +274,7 @@
 
 <div ng-if="::buildgroup.builds.length > 10">
   <label>Items per page</label>
-  <select ng-model="buildgroup.pagination.numPerPage" convert-to-number ng-change="numBuildsPerPageChanged(buildgroup)">
+  <select ng-model="buildgroup.pagination.numPerPage" data-test="items-per-page" convert-to-number ng-change="numBuildsPerPageChanged(buildgroup)">
     <option value="10">10</option>
     <option value="25">25</option>
     <option value="50">50</option>
