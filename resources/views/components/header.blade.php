@@ -126,7 +126,7 @@ $showHeaderNav = isset($build);
                             </li>
                             <li>
                                 <!-- This only excludes passing tests for performance reasons. TODO: show all tests. -->
-                                <a href="{{ url('/queryTests.php') }}?project={{rawurlencode($project->Name)}}&date={{$currentDateString}}&filtercount=1&showfilters=1&field1=status&compare1=62&value1=passed">
+                                <a href="{{ url('/queryTests.php') }}?project={{rawurlencode($project->Name)}}&date={{$currentDateString}}&filtercount=1&showfilters=1&field1=status&compare1=62&value1=passed" data-test="header-tests-link">
                                     Tests
                                 </a>
                             </li>

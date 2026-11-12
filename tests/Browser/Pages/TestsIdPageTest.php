@@ -29,6 +29,13 @@ class TestsIdPageTest extends BrowserTestCase
     private Build $build;
     private Site $site;
 
+    /**
+     * Records which aren't deleted along with the project.
+     *
+     * @var array<Image|Label>
+     */
+    private array $cleanup = [];
+
     public function setUp(): void
     {
         parent::setUp();
@@ -50,6 +57,10 @@ class TestsIdPageTest extends BrowserTestCase
     public function tearDown(): void
     {
         $this->project->delete();
+        foreach ($this->cleanup as $model) {
+            $model->delete();
+        }
+        $this->cleanup = [];
         $this->site->delete();
         parent::tearDown();
     }
@@ -91,6 +102,47 @@ class TestsIdPageTest extends BrowserTestCase
         });
     }
 
+    public function testNavigatesToTheSameTestInOtherBuilds(): void
+    {
+        // Builds are related if they have the same name, site and type.
+        $builds = [];
+        foreach ([2, 1] as $days_ago) {
+            $builds[] = $this->project->builds()->create([
+                'siteid' => $this->site->id,
+                'projectid' => $this->project->id,
+                'name' => $this->build->name,
+                'type' => $this->build->type,
+                'uuid' => Str::uuid()->toString(),
+                'starttime' => $this->build->starttime->copy()->subDays($days_ago),
+            ]);
+        }
+        $builds[] = $this->build;
+        $testname = (string) Str::uuid();
+        $tests = array_map(function (Build $build) use ($testname): Test {
+            // Another test in the build, so the links must find the test by its name.
+            $this->createTest(['testname' => (string) Str::uuid(), 'status' => 'passed'], $build);
+            return $this->createTest(['testname' => $testname, 'status' => 'passed'], $build);
+        }, $builds);
+
+        $this->browse(function (Browser $browser) use ($tests): void {
+            // The header's links are shown once it has loaded, so wait for a link before checking that
+            // another one is missing.
+            $browser->visit("/tests/{$tests[1]->id}")
+                ->waitFor('[data-test="header-nav-previous"][href]')
+                ->waitForReload(fn (Browser $browser) => $browser->click('@header-nav-previous'))
+                ->assertPathIs("/tests/{$tests[0]->id}")
+                ->waitFor('[data-test="header-nav-next"][href]')
+                ->assertNotPresent('[data-test="header-nav-previous"][href]')
+                ->waitForReload(fn (Browser $browser) => $browser->click('@header-nav-next'))
+                ->assertPathIs("/tests/{$tests[1]->id}")
+                ->waitFor('[data-test="header-nav-latest"][href]')
+                ->waitForReload(fn (Browser $browser) => $browser->click('@header-nav-latest'))
+                ->assertPathIs("/tests/{$tests[2]->id}")
+                ->waitFor('[data-test="header-nav-previous"][href]')
+                ->assertNotPresent('[data-test="header-nav-next"][href]');
+        });
+    }
+
     public function testLabelsAreVisible(): void
     {
         /** @var Test $test */
@@ -101,6 +153,8 @@ class TestsIdPageTest extends BrowserTestCase
 
         $label1 = $test->labels()->save(Label::factory()->make());
         $label2 = $test->labels()->save(Label::factory()->make());
+        $this->cleanup[] = $label1;
+        $this->cleanup[] = $label2;
 
         $this->browse(function (Browser $browser) use ($test, $label1, $label2): void {
             $browser->visit("/tests/{$test->id}")
@@ -414,6 +468,7 @@ class TestsIdPageTest extends BrowserTestCase
             'extension' => 'png',
             'checksum' => (string) random_int(1000, 9999),
         ]);
+        $this->cleanup[] = $image1;
         $test->testImages()->create([
             'imgid' => $image1->id,
             'role' => 'TestImage',
@@ -434,6 +489,7 @@ class TestsIdPageTest extends BrowserTestCase
             'extension' => 'png',
             'checksum' => (string) random_int(1000, 9999),
         ]);
+        $this->cleanup[] = $image2;
         $test->testImages()->create([
             'imgid' => $image2->id,
             'role' => $validImageRole,
