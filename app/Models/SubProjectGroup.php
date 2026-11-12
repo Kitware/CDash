@@ -12,7 +12,7 @@ use Illuminate\Support\Carbon;
  * @property int $id
  * @property string $name
  * @property int $projectid
- * @property int $coveragetheshold
+ * @property int $coveragethreshold
  * @property int $is_default // bool?
  * @property Carbon $starttime
  * @property Carbon $endtime

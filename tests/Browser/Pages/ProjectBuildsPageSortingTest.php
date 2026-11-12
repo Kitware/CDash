@@ -338,6 +338,11 @@ class ProjectBuildsPageSortingTest extends ProjectBuildsPageTestCase
             $browser->click($header);
             $this->assertSortIndicator($browser, $header, 'ascending');
             $this->assertTexts($browser, $rows, ['dependency-a', 'dependency-b', 'dependency-c']);
+
+            $browser->refresh()
+                ->waitFor('@subproject-table');
+            $this->assertSortIndicator($browser, $header, 'ascending');
+            $this->assertTexts($browser, $rows, ['dependency-a', 'dependency-b', 'dependency-c']);
         });
     }
 }

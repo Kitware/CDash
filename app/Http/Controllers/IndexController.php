@@ -30,7 +30,8 @@ final class IndexController extends AbstractProjectController
 
         $this->setProjectByName($_GET['project']);
 
-        return $this->angular_view('index');
+        return $this->vue('project-builds-page', '', enableDaisyUI: false)
+            ->with('showCalendar', true);
     }
 
     public function apiIndex(): JsonResponse
@@ -365,7 +366,7 @@ final class IndexController extends AbstractProjectController
                 $coverage_response = [];
                 $coverage_response['buildid'] = (int) $build_array['id'];
                 if ($linkToChildCoverage) {
-                    $coverage_response['childlink'] = $build_response['multiplebuildshyperlink'] . '##Coverage';
+                    $coverage_response['childlink'] = $build_response['multiplebuildshyperlink'] . '#Coverage';
                 }
 
                 if ($build_array['type'] === 'Nightly' && $build_array['name'] !== 'Aggregate Coverage') {
@@ -465,7 +466,7 @@ final class IndexController extends AbstractProjectController
                 $starttimestamp = strtotime($build_array['starttime'] . ' UTC');
                 $DA_response['datefull'] = $starttimestamp;
                 if ($linkToChildrenDA) {
-                    $DA_response['childlink'] = $build_response['multiplebuildshyperlink'] . '##DynamicAnalysis';
+                    $DA_response['childlink'] = $build_response['multiplebuildshyperlink'] . '#DynamicAnalysis';
                 }
 
                 // If the data is more than 24h old then we switch from an elapsed to a normal representation

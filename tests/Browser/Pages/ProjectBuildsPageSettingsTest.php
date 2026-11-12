@@ -5,6 +5,7 @@ namespace Tests\Browser\Pages;
 use Facebook\WebDriver\Remote\RemoteWebElement;
 use Facebook\WebDriver\WebDriverBy;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Laravel\Dusk\Browser;
 
@@ -39,7 +40,7 @@ class ProjectBuildsPageSettingsTest extends ProjectBuildsPageTestCase
     public function testAdvancedViewShowsTimingColumns(): void
     {
         $this->project->pinnedTestMeasurements()->create(['name' => 'Processors', 'position' => 1]);
-        $this->createBuild([
+        $build = $this->createBuild([
             'updateid' => $this->createUpdate()->id,
             'configureerrors' => 0,
             'configurewarnings' => 0,
@@ -52,6 +53,8 @@ class ProjectBuildsPageSettingsTest extends ProjectBuildsPageTestCase
             'testpassed' => 1,
             'testduration' => 30,
         ]);
+        // The processor time used by the tests.
+        DB::table('buildtesttime')->insert(['buildid' => $build->id, 'time' => 90]);
         $timing_columns = ['update-time', 'configure-time', 'build-time', 'test-time', 'proc-time'];
 
         $this->browse(function (Browser $browser) use ($timing_columns): void {
@@ -72,6 +75,7 @@ class ProjectBuildsPageSettingsTest extends ProjectBuildsPageTestCase
             }
             self::assertSame('1m 5s', $browser->text('@build-group-Nightly @build-row @configure-time'));
             self::assertSame('2m', $browser->text('@build-group-Nightly @build-row @build-time'));
+            self::assertSame('1m 30s', $browser->text('@build-group-Nightly @build-row @proc-time'));
 
             // The setting is remembered for each project.
             self::assertSame('1', $browser->plainCookie("cdash_{$this->project->name}_advancedview"));

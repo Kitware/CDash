@@ -116,6 +116,33 @@ class ProjectBuildsPageAdminTest extends ProjectBuildsPageTestCase
         });
     }
 
+    public function testRemembersChangesToBuildsOnOtherPages(): void
+    {
+        for ($hour = 1; $hour <= 11; $hour++) {
+            $this->createBuild(['starttime' => self::DATE . sprintf(' %02d:00:00', $hour), 'done' => false]);
+        }
+
+        $this->browse(function (Browser $browser): void {
+            $button = "{$this->row(1)} @toggle-done-button";
+            $pagination = '@build-group-Nightly @pagination';
+
+            $browser->loginAs($this->admin)
+                ->visit($this->indexUrl())
+                ->waitFor('@build-group-Nightly')
+                ->select('@build-group-Nightly @items-per-page', '10')
+                ->waitFor($pagination);
+            $this->openAdminOptions($browser, $this->row(1))
+                ->click($button)
+                ->waitForTextIn($button, 'Mark as Not Done');
+
+            $browser->within($pagination, fn (Browser $pagination) => $pagination->clickLink('2'))
+                ->waitUntilMissing($button)
+                ->within($pagination, fn (Browser $pagination) => $pagination->clickLink('First'));
+            $this->openAdminOptions($browser, $this->row(1))
+                ->assertSeeIn($button, 'Mark as Not Done');
+        });
+    }
+
     public function testMarksBuildsExpected(): void
     {
         $build = $this->createBuild(['name' => 'expected']);
@@ -356,6 +383,31 @@ class ProjectBuildsPageAdminTest extends ProjectBuildsPageTestCase
                 ->waitFor('@build-group-Experimental');
             $this->assertBuildOrder($browser, ['second']);
             $this->assertBuildOrder($browser, ['first', 'third'], 'Experimental');
+        });
+    }
+
+    public function testMovingSelectedBuildsKeepsWhetherTheyAreExpected(): void
+    {
+        [$first, , $third] = $this->createBuildsForBulkActions();
+        $this->buildGroup('Nightly')->rules()->create([
+            'buildtype' => $first->type,
+            'buildname' => $first->name,
+            'siteid' => $first->siteid,
+            'expected' => 1,
+            'starttime' => Carbon::create(1980),
+        ]);
+
+        $this->browse(function (Browser $browser) use ($first, $third): void {
+            $browser->loginAs($this->admin)
+                ->visit($this->indexUrl())
+                ->waitFor('@build-group-Nightly');
+            $this->selectBuilds($browser, 1, 3)
+                ->select('@build-group-Nightly @bulk-move-select', (string) $this->buildGroup('Experimental')->id)
+                ->waitForReload(fn (Browser $browser) => $browser->click('@build-group-Nightly @bulk-move-button'))
+                ->waitFor('@build-group-Experimental');
+
+            self::assertTrue($this->isExpected($first, 'Experimental'));
+            self::assertFalse($this->isExpected($third, 'Experimental'));
         });
     }
 

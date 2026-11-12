@@ -484,7 +484,8 @@ final class BuildController extends AbstractBuildController
     public function viewBuildGroup(): View
     {
         $this->setProjectByName(request()->input('project', ''));
-        return $this->angular_view('index');
+        return $this->vue('project-builds-page', '', enableDaisyUI: false)
+            ->with('showCalendar', true);
     }
 
     public function apiBuildUpdateGraph(): JsonResponse

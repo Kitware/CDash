@@ -31,11 +31,6 @@ abstract class AbstractController extends BaseController
     {
         $path = request()->path() === '/' ? 'index.php' : request()->path();
         $file = pathinfo(substr($path, strrpos($path, '/')), PATHINFO_FILENAME);
-
-        // Special case: viewBuildGroup.php shares a controller with index.php.
-        if ($file === 'viewBuildGroup') {
-            $file = 'index';
-        }
         $controller_name = Str::studly($file) . 'Controller';
 
         return $this->view('cdash', $title)
