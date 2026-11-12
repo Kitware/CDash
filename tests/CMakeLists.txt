@@ -27,5 +27,5 @@ set_tests_properties(eslint PROPERTIES
 )
 
 add_subdirectory(cypress/e2e)
-add_subdirectory(cypress/component)
 add_subdirectory(Spec)
+add_subdirectory(Component)

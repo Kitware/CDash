@@ -38,6 +38,7 @@ yarn-error.log
 app/cdash/tests/.phpunit.cache/
 bootstrap/cache/*.php
 cypress_cache
+/.vitest/
 public/images
 
 # Files generated for Vue
