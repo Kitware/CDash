@@ -557,6 +557,8 @@ add_browser_test(/Browser/Pages/BuildSidebarComponentTest)
 
 add_browser_test(/Browser/Pages/TestsIdPageTest)
 
+add_browser_test(/Browser/Pages/TestOverviewPageTest)
+
 add_browser_test(/Browser/Pages/ProjectSettingsPageTest)
 
 add_browser_test(/Browser/Pages/BuildUpdatePageTest)

@@ -6,7 +6,7 @@
       <div class="pad4">
         <!-- Filters -->
         <div id="labelshowfilters">
-          <a class="cdash-link" id="label_showfilters" ng-click="showfilters_toggle()">
+          <a class="cdash-link" id="label_showfilters" data-test="show-filters-toggle" ng-click="showfilters_toggle()">
             <span ng-show="showfilters == 0">Show Filters</span>
             <span ng-show="showfilters != 0">Hide Filters</span>
           </a>
@@ -15,6 +15,7 @@
 
         <div class="form-inline pull-right">
           <select class="form-group"
+            data-test="group-select"
             ng-model="cdash.selectedGroup"
             ng-options="group as group.name for group in ::cdash.groups | orderBy: 'position' track by group.id"
             ng-change="selectionChanged = true">
@@ -22,6 +23,7 @@
           <div class="checkbox">
             <label>
               <input type="checkbox" name="showpassed"
+                     data-test="show-passed"
                      ng-model="cdash.showpassed"
                      ng-true-value="1"
                      ng-false-value="0"
@@ -30,7 +32,7 @@
           </div>
         </div>
 
-        <span>
+        <span data-test="test-summary">
           <ng-pluralize count="cdash.tests.length"
                         when="{'0':     'No tests',
                                '1':     '{} test',
@@ -41,83 +43,96 @@
       </div>
 
       <div ng-if="::cdash.tests.length > 0">
-        <table width="100%" class="tabb" cellspacing="0">
+        <table width="100%" class="tabb" cellspacing="0" data-test="tests-table">
           <thead>
             <tr class="table-heading">
               <th class="header text-center"
                   ng-if="::cdash.hassubprojects"
+                  data-test="header-subproject"
                   ng-click="updateOrderByFields('subproject', $event)">
                 SubProject
                 <span class="glyphicon"
+                      data-test="{{ orderByFields.indexOf('-subproject') != -1 ? 'sort-descending' : (orderByFields.indexOf('subproject') != -1 ? 'sort-ascending' : 'sort-none') }}"
                       ng-class="orderByFields.indexOf('-subproject') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('subproject') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')">
                 </span>
               </th>
 
               <th class="header text-center"
+                  data-test="header-test-name"
                   ng-click="updateOrderByFields('name', $event)">
                 Test Name
                 <span class="glyphicon"
+                      data-test="{{ orderByFields.indexOf('-name') != -1 ? 'sort-descending' : (orderByFields.indexOf('name') != -1 ? 'sort-ascending' : 'sort-none') }}"
                       ng-class="orderByFields.indexOf('-name') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('name') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')">
                 </span>
               </th>
 
               <th class="header text-center"
+                  data-test="header-failure"
                   ng-click="updateOrderByFields('failpercent', $event)">
                 Failure
                 <span class="glyphicon"
+                      data-test="{{ orderByFields.indexOf('-failpercent') != -1 ? 'sort-descending' : (orderByFields.indexOf('failpercent') != -1 ? 'sort-ascending' : 'sort-none') }}"
                       ng-class="orderByFields.indexOf('-failpercent') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('failpercent') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')">
                 </span>
               </th>
 
               <th class="header text-center"
+                  data-test="header-timeout"
                   ng-click="updateOrderByFields('timeoutpercent', $event)">
                 Timeout
                 <span class="glyphicon"
+                      data-test="{{ orderByFields.indexOf('-timeoutpercent') != -1 ? 'sort-descending' : (orderByFields.indexOf('timeoutpercent') != -1 ? 'sort-ascending' : 'sort-none') }}"
                       ng-class="orderByFields.indexOf('-timeoutpercent') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('timeoutpercent') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')">
                 </span>
               </th>
 
               <th class="header text-center"
+                  data-test="header-total-runs"
                   ng-click="updateOrderByFields('totalruns', $event)">
                 Total Runs
                 <span class="glyphicon"
+                      data-test="{{ orderByFields.indexOf('-totalruns') != -1 ? 'sort-descending' : (orderByFields.indexOf('totalruns') != -1 ? 'sort-ascending' : 'sort-none') }}"
                       ng-class="orderByFields.indexOf('-totalruns') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('totalruns') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')">
                 </span>
               </th>
 
               <th class="header text-center"
+                  data-test="header-time"
                   ng-click="updateOrderByFields('time', $event)"
                   tooltip-popup-delay="1500"
                   tooltip-append-to-body="true"
                   uib-tooltip="Maximum amount of time that this test took to run">
                 Time
                 <span class="glyphicon"
+                      data-test="{{ orderByFields.indexOf('-time') != -1 ? 'sort-descending' : (orderByFields.indexOf('time') != -1 ? 'sort-ascending' : 'sort-none') }}"
                       ng-class="orderByFields.indexOf('-time') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('time') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
               </th>
             </tr>
           </thead>
 
           <tbody class="test-table">
-            <tr ng-repeat="test in pagination.filteredTests"
+            <tr ng-repeat="test in pagination.filteredTests" data-test="test-row"
                 ng-class-odd="'odd'" ng-class-even="'even'">
-              <td ng-if="::cdash.hassubprojects">
+              <td ng-if="::cdash.hassubprojects" data-test="subproject">
                 {{::test.subproject}}
               </td>
-              <td>
+              <td data-test="test-name">
                 <a class="cdash-link" ng-href="{{::test.link}}">
                   {{::test.name}}
                 </a>
               </td>
-              <td class="text-center">{{::test.failpercent}}%</td>
-              <td class="text-center">{{::test.timeoutpercent}}%</td>
-              <td class="text-center">{{::test.totalruns}}</td>
-              <td class="text-center">{{::test.prettytime}}</td>
+              <td class="text-center" data-test="failure">{{::test.failpercent}}%</td>
+              <td class="text-center" data-test="timeout">{{::test.timeoutpercent}}%</td>
+              <td class="text-center" data-test="total-runs">{{::test.totalruns}}</td>
+              <td class="text-center" data-test="time">{{::test.prettytime}}</td>
             </tr>
           </tbody>
         </table>
 
         <div ng-if="::cdash.tests.length > 10">
           <uib-pagination
+            data-test="pagination"
             ng-model="pagination.currentPage"
             total-items="cdash.tests.length"
             max-size="pagination.maxSize"
@@ -128,7 +143,7 @@
 
           <div>
             <label>Items per page</label>
-            <select ng-model="pagination.numPerPage" convert-to-number ng-change="numTestsPerPageChanged()">
+            <select data-test="items-per-page" ng-model="pagination.numPerPage" convert-to-number ng-change="numTestsPerPageChanged()">
               <option value="10">10</option>
               <option value="50">50</option>
               <option value="100">100</option>
