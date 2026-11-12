@@ -18,9 +18,6 @@ use Tests\Traits\CreatesProjects;
 
 /**
  * The tests the page lists, the columns it shows for them, and its links.
- *
- * The page is going to be rewritten, so these tests only interact with it through data-test attributes,
- * URLs, cookies and the database.  Avoid selectors which depend on the page's markup or framework.
  */
 class QueryTestsPageTest extends BrowserTestCase
 {
@@ -133,6 +130,7 @@ class QueryTestsPageTest extends BrowserTestCase
             // Failed tests are listed first, then tests which didn't run, then passing tests.
             $this->assertTestNames($browser, ['unit', 'style', 'install']);
             self::assertSame('3', $browser->text('@test-count'));
+            self::assertSame('Query Tests: 3 matches', $browser->text('@heading'));
             self::assertSame(['Failed', 'Not Run', 'Passed'], $this->texts($browser, '@test-row @status'));
             self::assertSame(['1m 30s', '0s', '500ms'], $this->texts($browser, '@test-row @time'));
             self::assertSame(['Completed (Failed)', 'Required Files Missing', 'Completed'], $this->texts($browser, '@test-row @details'));

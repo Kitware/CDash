@@ -17,7 +17,8 @@ final class TestController extends AbstractProjectController
     public function queryTests(): View
     {
         $this->setProjectByName(request()->string('project'));
-        return $this->angular_view('queryTests', 'Query Tests');
+        return $this->vue('query-tests-page', 'Query Tests', enableDaisyUI: false)
+            ->with('showCalendar', true);
     }
 
     public function apiQueryTests(): JsonResponse

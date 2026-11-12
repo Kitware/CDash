@@ -20,9 +20,6 @@ use Tests\Traits\CreatesProjects;
 /**
  * Filtering the tests.  The filters panel is shared with other pages, so these tests cover the filters this
  * page offers and the tests they select, rather than the panel itself.
- *
- * The page is going to be rewritten, so these tests only interact with it through data-test attributes,
- * URLs, cookies and the database.  Avoid selectors which depend on the page's markup or framework.
  */
 class QueryTestsPageFiltersTest extends BrowserTestCase
 {
@@ -262,6 +259,29 @@ class QueryTestsPageFiltersTest extends BrowserTestCase
             $browser->visit("/queryTests.php?project={$this->project->name}&date=2025-01-15"
                 . "&filtercount=1&showfilters=1&field1=testoutput&compare1={$compare}&value1=" . rawurlencode($value));
             $this->assertTestNames($browser, $expected);
+        });
+    }
+
+    public function testKeepsTheFiltersWhenTheTestsCannotBeLoaded(): void
+    {
+        $this->createBuild(['starttime' => '2025-01-14 12:00:00'])->tests()->create(['testname' => 'crash', 'status' => Test::FAILED, 'output' => 'Segmentation fault']);
+        $this->createBuild()->tests()->create(['testname' => 'later-crash', 'status' => Test::FAILED, 'output' => 'Segmentation fault']);
+
+        $this->browse(function (Browser $browser): void {
+            // The regular expression is invalid.
+            $browser->visit("/queryTests.php?project={$this->project->name}&date=2025-01-14"
+                . '&filtercount=1&showfilters=1&field1=testoutput&compare1=97&value1=' . rawurlencode('Seg('))
+                ->waitFor('@error-message')
+                ->assertNotPresent('@tests-table')
+                ->waitFor('@filters @filter');
+            self::assertSame('Seg(', $browser->value('@filters @filter-value'));
+            self::assertSame('2025-01-14', $browser->value('@filter-begin'));
+
+            $browser->clear('@filters @filter-value')
+                ->type('@filters @filter-value', 'Seg.')
+                ->waitForReload(fn (Browser $browser) => $browser->click('@filters-apply'))
+                ->assertQueryStringHas('date', '2025-01-14');
+            $this->assertTestNames($browser, ['crash']);
         });
     }
 

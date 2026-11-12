@@ -16,6 +16,7 @@ const components = {
   'header-nav': () => import('./components/page-header/HeaderNav.vue'),
   'header-calendar': () => import('./components/shared/legacy/HeaderCalendar.vue'),
   'project-builds-page': () => import('./components/ProjectBuildsPage.vue'),
+  'query-tests-page': () => import('./components/QueryTestsPage.vue'),
   'build-dynamic-analysis-page': () => import('./components/BuildDynamicAnalysisPage.vue'),
   'build-dynamic-analysis-id-page': () => import('./components/BuildDynamicAnalysisIdPage.vue'),
   'projects-page': () => import('./components/ProjectsPage.vue'),

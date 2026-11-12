@@ -65,9 +65,6 @@ CDash.controller('HeadController', ["$rootScope", "$document", HeadController]);
 import { SubProjectController } from "./controllers/subproject";
 CDash.controller('SubProjectController', ["$scope", "$rootScope", "$http", SubProjectController]);
 
-import { QueryTestsController } from "./controllers/queryTests";
-CDash.controller('QueryTestsController', ["$scope", "$rootScope", "$filter", "apiLoader", "filters", "multisort", QueryTestsController]);
-
 import { OverviewController, linechart, bulletchart } from "./controllers/overview";
 CDash.controller('OverviewController', ["$scope", "$location", "anchors", "apiLoader", OverviewController]);
 CDash.directive('linechart', linechart);
@@ -104,11 +101,6 @@ CDash.directive('daterange', daterange);
 
 import { convertToNumber } from './directives/convertToNumber.js';
 CDash.directive('convertToNumber', convertToNumber);
-
-import { ctestNonXmlCharEscape, terminalColors, trustAsHtml } from './filters/terminalColors.js';
-CDash.filter('ctestNonXmlCharEscape', ctestNonXmlCharEscape);
-CDash.filter('terminalColors', terminalColors);
-CDash.filter('trustAsHtml', trustAsHtml);
 
 import { showEmptySubProjectsLast } from './filters/showEmptySubProjectsLast.js';
 CDash.filter('showEmptySubProjectsLast', showEmptySubProjectsLast);
