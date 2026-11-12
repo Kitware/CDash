@@ -480,6 +480,12 @@ add_browser_test(/Browser/Pages/ProjectBuildsPageAdminTest)
 
 add_browser_test(/Browser/Pages/ProjectBuildsPageFiltersTest)
 
+add_browser_test(/Browser/Pages/QueryTestsPageTest)
+
+add_browser_test(/Browser/Pages/QueryTestsPageSortingTest)
+
+add_browser_test(/Browser/Pages/QueryTestsPageFiltersTest)
+
 add_browser_test(/Browser/Pages/CreateProjectPageTest)
 
 add_browser_test(/Browser/Pages/ProfilePageTest)
@@ -772,10 +778,8 @@ set_property(TEST deletesubproject PROPERTY DEPENDS
   cypress/e2e/manage-build-group
   cypress/e2e/manage-sub-project
   cypress/e2e/view-sub-projects
-  cypress/e2e/query-tests
   cypress/e2e/sub-project-group-order
   cypress/e2e/sites
-  cypress/e2e/tests
 )
 
 add_php_test(removebuilds)

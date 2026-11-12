@@ -6,6 +6,7 @@
     >
       <a
         class="cdash-link"
+        data-test="header-nav-previous"
         :href="previousUrl"
       >
         <svg
@@ -31,6 +32,7 @@
     >
       <a
         class="cdash-link"
+        data-test="header-nav-latest"
         :href="latestUrl"
       >LATEST</a>
     </li>
@@ -40,6 +42,7 @@
     >
       <a
         class="cdash-link"
+        data-test="header-nav-next"
         :href="nextUrl"
       >
         NEXT
