@@ -61,7 +61,7 @@
     "@stylistic/eslint-plugin": "^5.10.0",
     "@vitejs/plugin-vue": "^6.0.10",
     "@vitest/browser-webdriverio": "^5.0.0",
-    "cypress": "14.5.3",
+    "cypress": "16.3.0",
     "eslint": "^10.13.0",
     "eslint-plugin-cypress": "^7.0.2",
     "eslint-plugin-vue": "^10.11.1",
