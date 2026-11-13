@@ -63,22 +63,24 @@ class TestOverview extends ResultsApi
         }
         if ($showpassed) {
             $response['showpassed'] = 1;
+            $showpassed_link = '&showpassed=1';
         } else {
             $response['showpassed'] = 0;
+            $showpassed_link = '';
         }
 
         get_dashboard_JSON($this->project->Name, $this->date, $response);
 
         // Setup the menu of relevant links.
         $menu = [];
-        $menu['previous'] = 'testOverview.php?project=' . urlencode($this->project->Name) . "&date={$this->previousDate}$group_link";
+        $menu['previous'] = 'testOverview.php?project=' . urlencode($this->project->Name) . "&date={$this->previousDate}$group_link$showpassed_link";
         if (date(FMT_DATE, $this->currentStartTime) != date(FMT_DATE)) {
-            $menu['next'] = 'testOverview.php?project=' . urlencode($this->project->Name) . "&date={$this->nextDate}$group_link";
+            $menu['next'] = 'testOverview.php?project=' . urlencode($this->project->Name) . "&date={$this->nextDate}$group_link$showpassed_link";
         } else {
             $menu['next'] = false;
         }
         $today = date(FMT_DATE);
-        $menu['current'] = 'testOverview.php?project=' . urlencode($this->project->Name) . "&date=$today$group_link";
+        $menu['current'] = 'testOverview.php?project=' . urlencode($this->project->Name) . "&date=$today$group_link$showpassed_link";
         $menu['back'] = 'index.php?project=' . urlencode($this->project->Name) . "&date=$this->date";
         $response['menu'] = $menu;
 
@@ -174,6 +176,13 @@ class TestOverview extends ResultsApi
             }
         }
 
+        // Each test links to its runs during the same days.
+        if (isset($response['begin'], $response['end'])) {
+            $dates_link = "&begin={$response['begin']}&end={$response['end']}";
+        } else {
+            $dates_link = "&date={$this->date}";
+        }
+
         // Compute fail percentage for each test found.
         $tests_response = [];
         foreach ($all_tests as $name => $test) {
@@ -197,7 +206,8 @@ class TestOverview extends ResultsApi
                 round(($test['failed'] / $total_runs) * 100, 2);
             $test_response['timeoutpercent'] =
                 round(($test['timeout'] / $total_runs) * 100, 2);
-            $test_response['link'] = "queryTests.php?project={$this->project->Name}&date={$this->date}&filtercount=1&showfilters=1&field1=testname&compare1=61&value1={$name}";
+            $test_response['link'] = 'queryTests.php?project=' . urlencode($this->project->Name) . $dates_link
+                . '&filtercount=1&showfilters=1&field1=testname&compare1=61&value1=' . urlencode((string) $name);
             $test_response['totalruns'] = $total_runs;
             $test_response['prettytime'] = time_difference($test['time'], true, '', true);
             $test_response['time'] = $test['time'];

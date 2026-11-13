@@ -223,6 +223,28 @@ class TestOverviewPageTest extends BrowserTestCase
         });
     }
 
+    public function testLinksToTheRunsOfEachTest(): void
+    {
+        // The name has to be encoded in the link.
+        $name = 'a+b & c#d';
+        $this->createBuild(['starttime' => '2025-01-13 12:00:00'])->tests()->create(['testname' => $name, 'status' => Test::FAILED]);
+        $this->createBuild(['starttime' => '2025-01-14 12:00:00'])->tests()->create(['testname' => $name, 'status' => Test::PASSED]);
+        $this->createBuild(['starttime' => '2025-01-15 12:00:00'])->tests()->create(['testname' => $name, 'status' => Test::FAILED]);
+
+        $this->browse(function (Browser $browser) use ($name): void {
+            $browser->visit("/testOverview.php?project={$this->project->name}&begin=2025-01-13&end=2025-01-14");
+            $this->assertTestNames($browser, [$name]);
+
+            // The link lists the test's runs during the same days.
+            $browser->click('@test-row @test-name a')
+                ->waitForLocation('/queryTests.php')
+                ->assertQueryStringHas('begin', '2025-01-13')
+                ->assertQueryStringHas('end', '2025-01-14')
+                ->assertQueryStringHas('value1', $name);
+            $this->assertTestNames($browser, [$name, $name]);
+        });
+    }
+
     public function testShowsTheTestsOfABuildGroup(): void
     {
         $nightly_group = $this->project->buildgroups()->where('name', 'Nightly')->firstOrFail();
@@ -635,19 +657,20 @@ class TestOverviewPageTest extends BrowserTestCase
         });
     }
 
-    public function testNavigationLinksKeepTheGroupAndFilters(): void
+    public function testNavigationLinksKeepTheSelectionAndFilters(): void
     {
         $group = $this->project->buildgroups()->where('name', 'Nightly')->firstOrFail();
+        $selection = "&group={$group->id}&showpassed=1";
         $filters = '&filtercount=1&showfilters=1&field1=testname&compare1=63&value1=x';
 
-        $this->browse(function (Browser $browser) use ($group, $filters): void {
-            $browser->visit("/testOverview.php?project={$this->project->name}&date=2025-01-15&group={$group->id}{$filters}")
+        $this->browse(function (Browser $browser) use ($selection, $filters): void {
+            $browser->visit("/testOverview.php?project={$this->project->name}&date=2025-01-15{$selection}{$filters}")
                 ->waitFor('@header-nav-previous');
 
             $url = "testOverview.php?project={$this->project->name}";
-            self::assertStringEndsWith("{$url}&date=2025-01-14&group={$group->id}{$filters}", (string) $browser->attribute('@header-nav-previous', 'href'));
-            self::assertStringEndsWith("{$url}&date=" . now()->toDateString() . "&group={$group->id}{$filters}", (string) $browser->attribute('@header-nav-latest', 'href'));
-            self::assertStringEndsWith("{$url}&date=2025-01-16&group={$group->id}{$filters}", (string) $browser->attribute('@header-nav-next', 'href'));
+            self::assertStringEndsWith("{$url}&date=2025-01-14{$selection}{$filters}", (string) $browser->attribute('@header-nav-previous', 'href'));
+            self::assertStringEndsWith("{$url}&date=" . now()->toDateString() . "{$selection}{$filters}", (string) $browser->attribute('@header-nav-latest', 'href'));
+            self::assertStringEndsWith("{$url}&date=2025-01-16{$selection}{$filters}", (string) $browser->attribute('@header-nav-next', 'href'));
 
             // There's no next day after today.
             $browser->visit("/testOverview.php?project={$this->project->name}&date=" . now()->toDateString())
