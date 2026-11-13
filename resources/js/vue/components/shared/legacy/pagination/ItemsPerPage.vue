@@ -1,7 +1,9 @@
 <template>
   <label>Items per page</label>
+  <!-- A margin stands in for the space after the label, which Vue's templates leave out. -->
   <select
     :value="modelValue"
+    style="margin-left: 0.25em;"
     data-test="items-per-page"
     @change="select(Number($event.target.value))"
   >

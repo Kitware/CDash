@@ -21,9 +21,6 @@ use Tests\Traits\CreatesProjects;
 
 /**
  * Sorting the tests by clicking the column headers.
- *
- * The page is going to be rewritten, so these tests only interact with it through data-test attributes,
- * URLs, cookies and the database.  Avoid selectors which depend on the page's markup or framework.
  */
 class QueryTestsPageSortingTest extends BrowserTestCase
 {
@@ -155,6 +152,51 @@ class QueryTestsPageSortingTest extends BrowserTestCase
             $browser->assertPresent("{$header} [data-test=\"sort-none\"]");
 
             // Columns are sorted in descending order first.
+            $browser->click($header);
+            $this->assertTestNames($browser, $descending);
+            $browser->assertPresent("{$header} [data-test=\"sort-descending\"]");
+
+            $browser->click($header);
+            $this->assertTestNames($browser, $ascending);
+            $browser->assertPresent("{$header} [data-test=\"sort-ascending\"]");
+        });
+    }
+
+    /**
+     * @return array<string,array{string,array<string>,array<string>}>
+     */
+    public static function optionalColumns(): array
+    {
+        return [
+            'time status' => ['@header-time-status', ['b', 'c', 'a'], ['a', 'b', 'c']],
+            'proc time' => ['@header-proc-time', ['a', 'c', 'b'], ['b', 'c', 'a']],
+            'processors' => ['@header-processors', ['c', 'b', 'a'], ['a', 'b', 'c']],
+        ];
+    }
+
+    /**
+     * @param array<string> $descending
+     * @param array<string> $ascending
+     */
+    #[DataProvider('optionalColumns')]
+    public function testSortsByOptionalColumn(string $header, array $descending, array $ascending): void
+    {
+        $this->project->showtesttime = true;
+        $this->project->testtimemaxstatus = 3;
+        $this->project->save();
+        PinnedTestMeasurement::factory()->for($this->project)->create(['name' => 'Processors', 'position' => 1]);
+        $build = $this->createBuild();
+        // Each column sorts the tests in a different order.  A test's Proc Time is its time multiplied by its
+        // number of processors.
+        foreach (['a' => [3, 10, 2], 'b' => [0, 1, 4], 'c' => [0, 2, 8]] as $name => [$timestatus, $time, $processors]) {
+            $test = $build->tests()->create(['testname' => $name, 'status' => Test::PASSED, 'timestatus' => $timestatus, 'time' => $time]);
+            TestMeasurement::factory()->for($test)->create(['name' => 'Processors', 'type' => 'numeric/double', 'value' => (string) $processors]);
+        }
+
+        $this->browse(function (Browser $browser) use ($header, $descending, $ascending): void {
+            $browser->visit("/queryTests.php?project={$this->project->name}&date=2025-01-15");
+            $this->assertTestNames($browser, ['a', 'b', 'c']);
+
             $browser->click($header);
             $this->assertTestNames($browser, $descending);
             $browser->assertPresent("{$header} [data-test=\"sort-descending\"]");
