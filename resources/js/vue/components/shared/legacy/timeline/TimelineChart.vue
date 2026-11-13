@@ -27,10 +27,12 @@
       </div>
       <div class="row">
         <div class="text-center">
+          <!-- The chart selects the page's days once it has been drawn. -->
           <button
             type="submit"
             class="btn btn-default"
             data-test="timeline-update"
+            :disabled="selection === null"
             @click="$emit('update', selection)"
           >
             Update

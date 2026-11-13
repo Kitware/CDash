@@ -56,9 +56,6 @@ CDash.controller('ViewSubProjectsController', ["$scope", "multisort", "apiLoader
 import { ManageOverviewController } from "./controllers/manageOverview";
 CDash.controller('ManageOverviewController', ["$scope", "$http", "apiLoader", ManageOverviewController]);
 
-import { TestOverviewController } from "./controllers/testOverview";
-CDash.controller('TestOverviewController', ["$scope", "$rootScope", "$filter", "apiLoader", "filters", "multisort", TestOverviewController]);
-
 import { HeadController } from "./controllers/head";
 CDash.controller('HeadController', ["$rootScope", "$document", HeadController]);
 
@@ -92,9 +89,6 @@ CDash.factory('multisort', multisort);
 
 import { renderTimer } from './services/renderTimer.js';
 CDash.factory('renderTimer', ["$timeout", renderTimer]);
-
-import { timeline } from './directives/timeline.js';
-CDash.directive('timeline', timeline);
 
 import { daterange } from './directives/daterange.js';
 CDash.directive('daterange', daterange);

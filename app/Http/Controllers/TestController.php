@@ -36,7 +36,8 @@ final class TestController extends AbstractProjectController
     public function testOverview(): View
     {
         $this->setProjectByName(request()->input('project'));
-        return $this->angular_view('testOverview', 'Test Overview');
+        return $this->vue('test-overview-page', 'Test Overview', enableDaisyUI: false)
+            ->with('showCalendar', true);
     }
 
     public function apiTestOverview(): JsonResponse

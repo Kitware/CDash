@@ -39,6 +39,7 @@ const components = {
   'administration-page': () => import('./components/AdministrationPage.vue'),
   'project-settings-page': () => import('./components/ProjectSettingsPage.vue'),
   'profile-page': () => import('./components/ProfilePage.vue'),
+  'test-overview-page': () => import('./components/TestOverviewPage.vue'),
 };
 
 const baseURL = document.getElementById('app').getAttribute('data-app-url');
