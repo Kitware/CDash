@@ -1,7 +1,4 @@
 export function ViewSubProjectsController($scope, multisort, apiLoader) {
-    // Hide filters by default.
-    $scope.showfilters = false;
-
     // Check for sort order cookie.
     var sort_order = [];
     var sort_cookie_value = $.cookie('cdash_subproject_sort');
