@@ -10,11 +10,6 @@ export function apiLoader($http, $rootScope, $window, renderTimer) {
     }).then(function success(s) {
       const cdash = s.data;
 
-      // Check if we should display filters.
-      if (cdash.filterdata && cdash.filterdata.showfilters == 1) {
-        controllerScope.showfilters = true;
-      }
-
       // Time how long it takes to render the page.
       renderTimer.initialRender(controllerScope, cdash);
 
