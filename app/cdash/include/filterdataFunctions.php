@@ -617,16 +617,27 @@ function get_sql_compare_and_value($compare, $value): array
 
 // Parse a filter's field, compare, and value from the request and return an
 // associative array representation of this filter.
+// Returns an empty array if none of them were given, and aborts with a 400 if
+// only some of them were.
 // This function also sets the 'hasdateclause' field in $filterdata
 // if necessary.
 function parse_filter_from_request($field_var, $compare_var, $value_var,
     &$filterdata): array
 {
     $required_params = [$field_var, $compare_var, $value_var];
+    $missing_params = [];
     foreach ($required_params as $param) {
         if (!array_key_exists($param, $_REQUEST)) {
-            return [];
+            $missing_params[] = $param;
         }
+    }
+    if ($missing_params === $required_params) {
+        // The filter UIs count empty blocks of filters in filtercount, but send none of their parameters.
+        return [];
+    }
+    if ($missing_params !== []) {
+        // Ignoring an incomplete filter would widen the query instead, possibly to every test of the day.
+        abort(400, 'Incomplete filter: missing ' . implode(', ', $missing_params));
     }
 
     $fieldinfo = htmlspecialchars(pdo_real_escape_string($_REQUEST[$field_var]));

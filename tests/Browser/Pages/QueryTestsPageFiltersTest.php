@@ -195,6 +195,44 @@ class QueryTestsPageFiltersTest extends BrowserTestCase
         });
     }
 
+    public function testIgnoresFiltersWithoutParameters(): void
+    {
+        $build = $this->createBuild();
+        $build->tests()->create(['testname' => 'kept', 'status' => Test::PASSED]);
+        $build->tests()->create(['testname' => 'removed', 'status' => Test::PASSED]);
+
+        $this->browse(function (Browser $browser): void {
+            // The filters panel counts an empty block of filters, but doesn't send its parameters.
+            $browser->visit("/queryTests.php?project={$this->project->name}&date=2025-01-15"
+                . '&filtercount=2&showfilters=1&field1=testname&compare1=61&value1=kept');
+            $this->assertTestNames($browser, ['kept']);
+        });
+    }
+
+    /**
+     * @return array<string,array{string,string}>
+     */
+    public static function incompleteFilters(): array
+    {
+        return [
+            'value only' => ['&value1=kept', 'field1, compare1'],
+            'no compare' => ['&field1=testname&value1=kept', 'compare1'],
+            'no value' => ['&field1=testname&compare1=61', 'value1'],
+            'in a block' => ['&field1=block&field1count=1&field1field1=testname&field1value1=kept', 'field1compare1'],
+        ];
+    }
+
+    #[DataProvider('incompleteFilters')]
+    public function testRejectsIncompleteFilters(string $filter, string $missing): void
+    {
+        $this->browse(function (Browser $browser) use ($filter, $missing): void {
+            // Ignoring the incomplete filter would list every test of the day instead.
+            $browser->visit("/queryTests.php?project={$this->project->name}&date=2025-01-15&filtercount=1&showfilters=1{$filter}")
+                ->waitForTextIn('@error-message', "Incomplete filter: missing {$missing}")
+                ->assertNotPresent('@tests-table');
+        });
+    }
+
     public function testFilteringByBuildStartTimeIncludesOtherDays(): void
     {
         foreach (['2025-01-13', '2025-01-15', '2025-01-17'] as $date) {
