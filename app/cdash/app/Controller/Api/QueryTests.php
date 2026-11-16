@@ -27,6 +27,9 @@ use Illuminate\Support\Facades\DB;
 
 class QueryTests extends ResultsApi
 {
+    // Listing every test of a busy day can exceed PHP's memory limit.
+    private const MAX_TESTS = 50000;
+
     public function __construct(Database $db, Project $project)
     {
         parent::__construct($db, $project);
@@ -219,6 +222,8 @@ class QueryTests extends ResultsApi
         unset($filterdata['xml']);
         $response['filterdata'] = $filterdata;
         $this->setFilterData($filterdata);
+        $limit = $filterdata['limit'];
+        $this->limitSQL = ' LIMIT ' . (is_int($limit) && $limit > 0 ? min($limit, self::MAX_TESTS) : self::MAX_TESTS);
         $response['filterurl'] = get_filterurl();
 
         // Menu
