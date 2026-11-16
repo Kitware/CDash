@@ -31,14 +31,12 @@ CDash.config(['$httpProvider', function ($httpProvider) {
   }]);
 }]);
 
-// filterdataTemplate.html and subProjectTable.html are only ever reached via
-// ng-include in server-rendered view HTML (not through Angular DI), so their
-// content is pre-loaded into $templateCache under the same path ng-include
-// requests, instead of being fetched over HTTP.
-import filterdataTemplateHtml from './views/partials/filterdataTemplate.html';
+// subProjectTable.html is only ever reached via ng-include in server-rendered
+// view HTML (not through Angular DI), so its content is pre-loaded into
+// $templateCache under the same path ng-include requests, instead of being
+// fetched over HTTP.
 import subProjectTableHtml from './views/partials/subProjectTable.html';
 CDash.run(["$templateCache", function ($templateCache) {
-  $templateCache.put('assets/js/angular/views/partials/filterdataTemplate.html', filterdataTemplateHtml);
   $templateCache.put('assets/js/angular/views/partials/subProjectTable.html', subProjectTableHtml);
 }]);
 
@@ -57,7 +55,7 @@ import { ManageOverviewController } from "./controllers/manageOverview";
 CDash.controller('ManageOverviewController', ["$scope", "$http", "apiLoader", ManageOverviewController]);
 
 import { HeadController } from "./controllers/head";
-CDash.controller('HeadController', ["$rootScope", "$document", HeadController]);
+CDash.controller('HeadController', ["$rootScope", HeadController]);
 
 import { SubProjectController } from "./controllers/subproject";
 CDash.controller('SubProjectController', ["$scope", "$rootScope", "$http", SubProjectController]);
@@ -67,19 +65,11 @@ CDash.controller('OverviewController', ["$scope", "$location", "anchors", "apiLo
 CDash.directive('linechart', linechart);
 CDash.directive('bulletchart', bulletchart);
 
-import { FiltersController, filterRow, filterButtons } from "./controllers/filters";
-CDash.controller('FiltersController', ["$scope", "$rootScope", "$http", "$timeout", FiltersController]);
-CDash.directive('filterRow', filterRow);
-CDash.directive('filterButtons', filterButtons);
-
 import { modalSvc } from './services/modal.js';
 CDash.factory('modalSvc', ["$uibModal", modalSvc]);
 
 import { anchorsSvc } from './services/anchors.js';
 CDash.service('anchors', ["$anchorScroll", "$location", "$timeout", anchorsSvc]);
-
-import { filtersSvc } from './services/filters.js';
-CDash.factory('filters', filtersSvc);
 
 import { apiLoader } from './services/apiLoader.js';
 CDash.factory('apiLoader', ["$http", "$rootScope", "$window", "renderTimer", apiLoader]);
@@ -89,9 +79,6 @@ CDash.factory('multisort', multisort);
 
 import { renderTimer } from './services/renderTimer.js';
 CDash.factory('renderTimer', ["$timeout", renderTimer]);
-
-import { daterange } from './directives/daterange.js';
-CDash.directive('daterange', daterange);
 
 import { convertToNumber } from './directives/convertToNumber.js';
 CDash.directive('convertToNumber', convertToNumber);
