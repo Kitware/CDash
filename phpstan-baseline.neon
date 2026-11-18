@@ -5842,12 +5842,6 @@ parameters:
 			path: app/Utils/TestDiffUtil.php
 
 		-
-			rawMessage: 'Call to function array_search() requires parameter #3 to be set.'
-			identifier: function.strict
-			count: 2
-			path: app/Utils/TestDiffUtil.php
-
-		-
 			rawMessage: 'Only booleans are allowed in an if condition, stdClass|null given.'
 			identifier: if.condNotBoolean
 			count: 1
