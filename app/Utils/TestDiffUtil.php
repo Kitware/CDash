@@ -66,8 +66,9 @@ class TestDiffUtil
         // has changed since the previous build.
         $newstatus_b2t_ids = [];
 
+        $previous_test_names = array_flip(array_column($previous_tests, 'name'));
         foreach ($tests as $test) {
-            if (array_search($test['name'], array_column($previous_tests, 'name')) === false) {
+            if (!isset($previous_test_names[$test['name']])) {
                 // This test was found for the current build but not the previous build.
                 $num_positive++;
                 $newstatus_b2t_ids[] = $test['buildtestid'];
@@ -78,8 +79,9 @@ class TestDiffUtil
         Test::whereIn('id', $newstatus_b2t_ids)
             ->update(['newstatus' => 1]);
 
+        $test_names = array_flip(array_column($tests, 'name'));
         foreach ($previous_tests as $previous_test) {
-            if (array_search($previous_test['name'], array_column($tests, 'name')) === false) {
+            if (!isset($test_names[$previous_test['name']])) {
                 // This test had status=$type in the previous build, but it doesn't any more.
                 $num_negative++;
             }

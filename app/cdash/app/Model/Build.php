@@ -1177,13 +1177,13 @@ class Build
         $testtimestatusfailed = 0;
 
         // Get the tests performed by the previous build.
-        $previous_tests = Test::where('buildid', $previousbuildid)->get();
+        $previous_tests = Test::where('buildid', $previousbuildid)->get()->keyBy('testname');
 
         // Loop through the tests performed by this build.
         $current_tests = Test::where('buildid', $this->Id)->get();
         /** @var Test $current_test */
         foreach ($current_tests as $current_test) {
-            $previous_test = $previous_tests->firstWhere('testname', $current_test->testname);
+            $previous_test = $previous_tests->get($current_test->testname);
             if ($previous_test !== null) {
                 if ($current_test->status === 'passed') {
                     // if the current test passed
