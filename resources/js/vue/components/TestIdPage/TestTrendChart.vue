@@ -1,20 +1,6 @@
 <template>
   <div class="tw-w-full">
-    <div class="tw-flex tw-justify-between tw-items-center tw-mb-2">
-      <div>
-        <a
-          v-if="testHistoryUrl"
-          class="tw-btn tw-btn-sm tw-btn-outline tw-font-normal tw-border-base-300 tw-text-neutral-500 hover:tw-bg-base-200 hover:tw-text-neutral-700"
-          data-test="test-history-link"
-          :href="testHistoryUrl"
-        >
-          <FontAwesomeIcon
-            :icon="FA.faLink"
-            size="xs"
-          />
-          Show History
-        </a>
-      </div>
+    <div class="tw-flex tw-flex-wrap tw-justify-between tw-items-center tw-gap-2 tw-mb-2">
       <select
         id="measurement-switcher"
         v-model="selectedMeasurement"
@@ -32,16 +18,36 @@
           {{ measurement.name }}
         </option>
       </select>
+      <TrendFilterBar
+        v-model="filters"
+        :build="{ siteName, name: buildName, group: buildType }"
+      >
+        <a
+          class="tw-btn tw-btn-sm tw-btn-outline tw-font-normal tw-border-base-300 tw-text-neutral-500 hover:tw-bg-base-200 hover:tw-text-neutral-700"
+          :class="{ 'tw-invisible': !historyUrl, 'tw-opacity-50 tw-pointer-events-none': loading }"
+          :aria-disabled="loading || undefined"
+          data-test="test-history-link"
+          :href="historyUrl && !loading ? historyUrl : undefined"
+        >
+          <FontAwesomeIcon
+            :icon="FA.faLink"
+            size="xs"
+          />
+          Show History
+        </a>
+      </TrendFilterBar>
     </div>
     <div
-      v-if="loading"
+      v-if="loading && history.length === 0"
       class="tw-flex tw-justify-center tw-items-center tw-h-60"
     >
       <span class="tw-loading tw-loading-spinner tw-loading-lg" />
     </div>
     <VChart
       v-else
-      class="tw-w-full tw-h-60 tw-cursor-pointer"
+      class="tw-w-full tw-h-60 tw-cursor-pointer tw-transition-opacity"
+      :class="{ 'tw-opacity-50': loading }"
+      :aria-busy="loading"
       :option="chartOption"
       autoresize
       data-test="trend-chart"
@@ -56,6 +62,12 @@
         >
           <div v-if="chartData[tooltipParams[0].dataIndex]">
             <strong>Date:</strong> {{ new Date(chartData[tooltipParams[0].dataIndex].x).toLocaleString() }}<br>
+            <template
+              v-for="field in tooltipBuildFields"
+              :key="field.key"
+            >
+              <strong>{{ field.label }}:</strong> {{ chartData[tooltipParams[0].dataIndex][field.key] }}<br>
+            </template>
             <strong>Status:</strong> {{ chartData[tooltipParams[0].dataIndex].status }}<br>
             <strong>{{ selectedMeasurementLabel }}:</strong> {{ formatValue(chartData[tooltipParams[0].dataIndex].y) }}
             <template v-if="selectedMeasurement === 'time' && enableTestTiming && chartData[tooltipParams[0].dataIndex].status === 'PASSED'">
@@ -72,6 +84,8 @@
 <script>
 import VChart from 'vue-echarts';
 import Utils from '../shared/Utils';
+import TrendFilterBar from '../shared/TrendFilterBar.vue';
+import { loadTrendFilters, saveTrendFilters, trendBuildConditions, trendHistoryFilterParams, variedBuildFields } from '../shared/TrendFilters';
 import gql from 'graphql-tag';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faLink } from '@fortawesome/free-solid-svg-icons';
@@ -96,6 +110,7 @@ export default {
   components: {
     VChart,
     FontAwesomeIcon,
+    TrendFilterBar,
   },
 
   props: {
@@ -107,8 +122,16 @@ export default {
       type: Number,
       required: true,
     },
+    projectName: {
+      type: String,
+      required: true,
+    },
     siteId: {
       type: Number,
+      required: true,
+    },
+    siteName: {
+      type: String,
       required: true,
     },
     buildName: {
@@ -139,10 +162,6 @@ export default {
       type: String,
       required: true,
     },
-    testHistoryUrl: {
-      type: String,
-      default: '',
-    },
   },
 
   apollo: {
@@ -151,32 +170,28 @@ export default {
         query TestTrend(
           $projectId: ID!,
           $testName: String!,
-          $buildName: String!,
-          $buildType: String!,
-          $siteId: ID!,
-          $buildStartTime: DateTimeTz!,
+          $limit: Int!,
+          $buildFilters: ProjectBuildsFiltersMultiFilterInput,
           $measurementFilters: TestTestMeasurementsFiltersMultiFilterInput
         ) {
           project(id: $projectId) {
             id
             builds(
-              first: 100,
+              first: $limit,
               orderBy: [{ column: START_TIME, order: DESC }],
               onlyParents: false,
-              filters: {
-                all: [
-                  { eq: { name: $buildName } },
-                  { eq: { buildType: $buildType } },
-                  { has: { site: { eq: { id: $siteId } } } },
-                  { has: { tests: { eq: { name: $testName } } } },
-                  { le: { startTime: $buildStartTime } }
-                ]
-              }
+              filters: $buildFilters
             ) {
               edges {
                 node {
                   id
+                  name
+                  buildType
                   startTime
+                  site {
+                    id
+                    name
+                  }
                   tests(filters: { eq: { name: $testName } }) {
                     edges {
                       node {
@@ -209,10 +224,18 @@ export default {
         return {
           projectId: this.projectId,
           testName: this.testName,
-          buildName: this.buildName,
-          buildType: this.buildType,
-          siteId: this.siteId,
-          buildStartTime: this.buildStartTime,
+          limit: this.filters.limit,
+          buildFilters: {
+            all: [
+              ...trendBuildConditions(this.filters, {
+                name: this.buildName,
+                buildType: this.buildType,
+                siteId: this.siteId,
+              }),
+              { has: { tests: { eq: { name: this.testName } } } },
+              { le: { startTime: this.buildStartTime } },
+            ],
+          },
           measurementFilters,
         };
       },
@@ -231,6 +254,9 @@ export default {
             const testRecord = testEdgeRecord.node;
             tests.push({
               ...testRecord,
+              buildName: build.name,
+              buildType: build.buildType,
+              siteName: build.site.name,
               startTime: build.startTime,
               startTimeTimestamp: new Date(build.startTime).getTime(),
             });
@@ -244,6 +270,7 @@ export default {
   data() {
     return {
       selectedMeasurement: 'time',
+      filters: loadTrendFilters('test'),
       history: [],
       FA: {
         faLink,
@@ -269,12 +296,35 @@ export default {
           x: testRecord.startTimeTimestamp,
           y: this.selectedMeasurement === 'time' ? testRecord.runningTime : (measurement ? parseFloat(measurement.value) : 0),
           status: testRecord.status,
+          buildName: testRecord.buildName,
+          buildType: testRecord.buildType,
+          siteName: testRecord.siteName,
           buildtestid: testRecord.id,
           meanRunningTime: testRecord.meanRunningTime,
           stdDevRunningTime: testRecord.stdDevRunningTime,
           timeStatusCategory: testRecord.timeStatusCategory,
         };
       });
+    },
+
+    /**
+     * The test's results in the builds shown in the chart.
+     */
+    historyUrl() {
+      if (!this.history || this.history.length === 0) {
+        return '';
+      }
+      const params = trendHistoryFilterParams(this.filters, {
+        name: this.buildName,
+        buildType: this.buildType,
+        siteName: this.siteName,
+        startTime: this.buildStartTime,
+      }, this.history[0].startTime, [['testname', 61, this.testName]]);
+      return `${this.$baseURL}/queryTests.php?project=${encodeURIComponent(this.projectName)}&${params}`;
+    },
+
+    tooltipBuildFields() {
+      return variedBuildFields(this.chartData);
     },
 
     yAxisMax() {
@@ -395,6 +445,12 @@ export default {
       }
 
       return baseOption;
+    },
+  },
+
+  watch: {
+    filters(filters) {
+      saveTrendFilters('test', filters);
     },
   },
 

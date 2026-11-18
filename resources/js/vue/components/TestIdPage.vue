@@ -210,11 +210,12 @@
               <TestTrendChart
                 :test-name="test.name"
                 :project-id="Number(build.project.id)"
+                :project-name="build.project.name"
                 :site-id="Number(build.site.id)"
+                :site-name="build.site.name"
                 :build-name="build.name"
                 :build-type="build.buildType"
                 :build-start-time="build.startTime"
-                :test-history-url="testHistoryUrl"
                 :numeric-measurements="numericMeasurements"
                 :enable-test-timing="build.project.enableTestTiming"
                 :test-time-std-multiplier="build.project.testTimeStdMultiplier"
@@ -377,6 +378,7 @@ export default {
             startTime
             site {
               id
+              name
             }
             project {
               id
