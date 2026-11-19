@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Mockery\MockInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
 use Tests\Traits\CreatesSubmissions;
@@ -100,6 +101,65 @@ class DoneXMLTest extends TestCase
 
         $this->assertFalse($other_build->fresh()?->done);
         $this->assertTrue($this->project->builds()->findOrFail((int) $this->build->Id)->done);
+        $this->log->shouldNotHaveReceived('error');
+        $this->log->shouldNotHaveReceived('warning');
+    }
+
+    /**
+     * @return array<string,array{string,string,string}>
+     */
+    public static function quoteCases(): array
+    {
+        return [
+            'build name' => ['quoted_build_name.xml', "quoted 'build'", '20240501-0100-Nightly'],
+            'group' => ['quoted_group.xml', 'regular_submission', "20240501-0100-quoted 'group'"],
+        ];
+    }
+
+    /**
+     * The build assigned from the submission parameters must be the one the files are parsed into.
+     */
+    #[DataProvider('quoteCases')]
+    public function testMarksBuildWithQuoteInParametersAsDone(string $configure_file, string $build_name, string $stamp): void
+    {
+        $parameters = [
+            'build' => $build_name,
+            'site' => 'submission.site',
+            'stamp' => $stamp,
+        ];
+
+        $buildid = $this->makeSubmission($this->project->name, base_path("tests/Feature/Submission/Done/data/{$configure_file}"), parameters: $parameters);
+        $this->assertNotNull($buildid);
+        $this->assertSame($buildid, $this->makeSubmission($this->project->name, base_path('tests/Feature/Submission/Done/data/done.xml'), parameters: $parameters));
+
+        $this->assertSame([$buildid], $this->project->builds()->whereKeyNot($this->build->Id)->pluck('id')->all());
+        $build = $this->project->builds()->findOrFail($buildid);
+        $this->assertSame($build_name, $build->name);
+        $this->assertSame($stamp, $build->stamp);
+        $this->assertSame(0, $build->configureerrors);
+        $this->assertTrue($build->done);
+        $this->log->shouldNotHaveReceived('error');
+        $this->log->shouldNotHaveReceived('warning');
+    }
+
+    public function testMarksSubProjectBuildWithQuoteInParametersAsDone(): void
+    {
+        $parameters = [
+            'build' => 'regular_submission',
+            'site' => 'submission.site',
+            'stamp' => '20240501-0100-Nightly',
+            'subproject' => "quoted 'subproject'",
+        ];
+
+        $buildid = $this->makeSubmission($this->project->name, base_path('tests/Feature/Submission/Done/data/quoted_subproject.xml'), parameters: $parameters);
+        $this->assertNotNull($buildid);
+        $this->assertSame($buildid, $this->makeSubmission($this->project->name, base_path('tests/Feature/Submission/Done/data/done.xml'), parameters: $parameters));
+
+        $this->assertSame([$buildid], $this->project->builds()->whereNotNull('parentid')->pluck('id')->all());
+        $this->assertSame(["quoted 'subproject'"], $this->project->subprojects()->pluck('name')->all());
+        $build = $this->project->builds()->findOrFail($buildid);
+        $this->assertSame(0, $build->configureerrors);
+        $this->assertTrue($build->done);
         $this->log->shouldNotHaveReceived('error');
         $this->log->shouldNotHaveReceived('warning');
     }
