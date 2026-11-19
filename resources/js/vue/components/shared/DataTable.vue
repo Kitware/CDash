@@ -2,7 +2,6 @@
   <table
     class="tabb striped"
     :class="{ 'full-width': fullWidth }"
-    data-cy="data-table"
     :data-test="testId"
   >
     <thead>
@@ -24,7 +23,6 @@
         <th
           v-for="column in columns"
           :class="{ shrink: !column.expand }"
-          data-cy="column-header"
           @click="toggleSort(column.name)"
         >
           <FontAwesomeIcon
@@ -46,14 +44,12 @@
       </tr>
       <tr
         v-for="row in (sortable ? sortedRows : rows)"
-        data-cy="data-table-row"
         :data-test="testId + '-row'"
       >
         <td
           v-for="column in columns"
           :class="(row[column.name]?.classes ?? []).concat(column.expand ? [] : ['shrink'])"
           class="table-cell"
-          data-cy="data-table-cell"
           :data-test="testId + '-cell'"
         >
           <!--

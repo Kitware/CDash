@@ -6,8 +6,6 @@ services:
     build:
       args:
         DEVELOPMENT_BUILD: 1
-    environment:
-      CYPRESS_CACHE_FOLDER: /cdash/cypress_cache
     volumes:
       - ..:/cdash_src:ro
     links:

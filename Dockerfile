@@ -67,24 +67,7 @@ RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then \
         rsync \
         libzip-dev `# needed for Laravel Dusk/Selenium` \
         && \
-    `# Cypress dependencies` \
-    apt-get install -y --no-install-recommends \
-        libgtk2.0-0 \
-        libgtk-3-0 \
-        libgbm-dev \
-        libnotify-dev \
-        libnss3 \
-        libxss1 \
-        libasound2 \
-        libxtst6 \
-        xauth \
-        xvfb \
-        && \
     rm -rf /var/lib/apt/lists/* && \
-    mkdir /tmp/.X11-unix && \
-    chmod 1777 /tmp/.X11-unix && \
-    chown root /tmp/.X11-unix/ && \
-    mkdir -p /var/www/.cache/mesa_shader_cache && \
     pecl install xdebug && \
     docker-php-ext-enable xdebug && \
     docker-php-ext-install zip; \
@@ -252,8 +235,6 @@ LABEL MAINTAINER="Kitware, Inc. <cdash@public.kitware.com>"
 
 ARG BASE_IMAGE
 ARG DEVELOPMENT_BUILD
-
-ENV CYPRESS_CACHE_FOLDER=/cdash/cypress_cache
 
 # Set up testing environment if this is a development build
 RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then \

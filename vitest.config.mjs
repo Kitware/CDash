@@ -24,7 +24,7 @@ export default defineConfig({
         test: {
           name: 'unit',
           // Vitest only excludes node_modules and .git by default, so scope test
-          // discovery explicitly to keep it out of vendor/ and the Cypress suites.
+          // discovery explicitly to keep it out of vendor/.
           include: ['tests/Spec/**/*.spec.js'],
         },
       },
