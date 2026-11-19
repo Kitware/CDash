@@ -121,8 +121,10 @@ class ProjectSitesPageTest extends BrowserTestCase
 
                     self::assertCount(110, collect($browser->elements('@data-table-row')));
 
+                    // Read the table once rather than once per site.
+                    $text = $browser->text('');
                     for ($i = 0; $i < 110; $i++) {
-                        $browser->assertSee($sites[$i]->name);
+                        self::assertStringContainsString($sites[$i]->name, $text);
                     }
                 });
         });
