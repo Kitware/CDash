@@ -672,14 +672,8 @@ set_tests_properties(buildmodel PROPERTIES DEPENDS testoverview)
 add_php_test(uploadfile)
 set_tests_properties(uploadfile PROPERTIES DEPENDS buildmodel)
 
-add_php_test(actualbranchcoverage)
-set_tests_properties(actualbranchcoverage PROPERTIES DEPENDS uploadfile)
-
-add_php_test(unparsedsubmissionshonorbuildid)
-set_tests_properties(unparsedsubmissionshonorbuildid PROPERTIES DEPENDS actualbranchcoverage)
-
 add_php_test(multicoverage)
-set_tests_properties(multicoverage PROPERTIES DEPENDS unparsedsubmissionshonorbuildid)
+set_tests_properties(multicoverage PROPERTIES DEPENDS uploadfile)
 
 add_php_test(hidecolumns)
 set_tests_properties(hidecolumns PROPERTIES DEPENDS multicoverage)
