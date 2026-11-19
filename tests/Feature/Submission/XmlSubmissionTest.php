@@ -3,13 +3,17 @@
 namespace Tests\Feature\Submission;
 
 use App\Enums\AuthTokenScope;
+use App\Enums\SubmissionStatus;
 use App\Jobs\ProcessSubmission;
 use App\Models\Project;
+use App\Models\Submission;
 use App\Models\User;
 use App\Services\AuthTokenService;
 use Exception;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Exceptions;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Storage;
@@ -235,6 +239,52 @@ class XmlSubmissionTest extends TestCase
         Queue::assertPushed(ProcessSubmission::class, fn (ProcessSubmission $job) => $job->projectid === $this->project->id
             && $job->buildid === $buildid
             && $job->expected_md5 === '');
+    }
+
+    public function testRecordsSubmission(): void
+    {
+        $response = $this->submit(base_path('tests/Feature/Submission/data/configure.xml'), [
+            'project' => $this->project->name,
+            'build' => 'regular_submission',
+            'site' => 'submission.site',
+            'stamp' => '20240501-0100-Nightly',
+        ]);
+
+        $response->assertOk();
+        $this->assertSame(1, Submission::where('projectid', $this->project->id)->count());
+        $submission = Submission::where('projectid', $this->project->id)->firstOrFail();
+        $this->assertSame($this->project->builds()->firstOrFail()->id, $submission->buildid);
+        $this->assertSame('Configure', $submission->type);
+        $this->assertNull($submission->filename);
+        $this->assertSame(SubmissionStatus::QUEUED, $submission->status);
+        $this->assertSame(0, $submission->attempts);
+        $this->assertEquals($submission->received_at, $submission->next_attempt_at);
+        Queue::assertPushed(ProcessSubmission::class, fn (ProcessSubmission $job) => $job->submissionid === $submission->id
+            && $submission->path === "inbox/{$job->filename}"
+            && str_contains($job->filename, "_-_{$submission->id}_-_"));
+    }
+
+    public function testAcceptsSubmissionWhenRecordingFails(): void
+    {
+        Exceptions::fake();
+        // Make the insert itself fail, with a build that doesn't exist.
+        Submission::creating(fn (Submission $submission) => $submission->buildid = -1);
+
+        try {
+            $response = $this->submit(base_path('tests/Feature/Submission/data/configure.xml'), [
+                'project' => $this->project->name,
+            ]);
+        } finally {
+            Submission::flushEventListeners();
+        }
+
+        $response->assertOk();
+        Exceptions::assertReported(QueryException::class);
+        // The failed insert didn't abort the surrounding transaction.
+        $this->assertDatabaseMissing('submissions', ['projectid' => $this->project->id]);
+        Queue::assertCount(1);
+        Queue::assertPushed(ProcessSubmission::class, fn (ProcessSubmission $job) => $job->projectid === $this->project->id
+            && $job->submissionid === null);
     }
 
     /**

@@ -3,9 +3,11 @@
 namespace Tests\Feature\Submission;
 
 use App\Enums\AuthTokenScope;
+use App\Enums\SubmissionStatus;
 use App\Jobs\ProcessSubmission;
 use App\Models\Project;
 use App\Models\Site;
+use App\Models\Submission;
 use App\Models\User;
 use App\Services\AuthTokenService;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -589,6 +591,24 @@ class UnparsedSubmissionTest extends TestCase
             && $job->projectid === $this->project->id
             && $job->buildid === $buildid
             && $job->expected_md5 === $md5);
+    }
+
+    public function testRecordsDataFile(): void
+    {
+        $buildid = $this->createBuild();
+
+        $response = $this->putDataFile($this->dataFileParameters($buildid));
+
+        $response->assertOk();
+        $this->assertSame(1, Submission::where('projectid', $this->project->id)->count());
+        $submission = Submission::where('projectid', $this->project->id)->firstOrFail();
+        $this->assertSame($buildid, $submission->buildid);
+        $this->assertSame('BazelJSON', $submission->type);
+        $this->assertSame('bazel.json', $submission->filename);
+        $this->assertSame(SubmissionStatus::QUEUED, $submission->status);
+        $this->assertSame(0, $submission->attempts);
+        Queue::assertPushed(ProcessSubmission::class, fn (ProcessSubmission $job) => $job->submissionid === $submission->id
+            && $submission->path === "inbox/{$job->filename}");
     }
 
     public function testRejectsDataFileWithoutTokenWhenProjectRequiresAuthentication(): void

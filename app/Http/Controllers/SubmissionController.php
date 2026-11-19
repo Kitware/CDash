@@ -9,6 +9,7 @@ use App\Models\PendingSubmissions;
 use App\Models\Site;
 use App\Rules\ProjectNameRule;
 use App\Services\AuthTokenService;
+use App\Services\SubmissionService;
 use App\Utils\SubmissionUtils;
 use App\Utils\SystemUtils;
 use App\Utils\UnparsedSubmissionProcessor;
@@ -20,6 +21,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use League\Flysystem\UnableToMoveFile;
 use League\Flysystem\UnableToReadFile;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
@@ -115,8 +117,9 @@ final class SubmissionController extends AbstractProjectController
             $this->failProcessing(null, Response::HTTP_BAD_REQUEST, "md5 mismatch. expected: {$expected_md5}, received: {$md5sum}");
         }
 
-        // Save the incoming file in the inbox directory.
-        $filename = SubmissionUtils::xmlFilename((string) $projectname, $authtoken_hash, $expected_md5);
+        // Save the incoming file in the inbox directory.  The UUID in its name is also the submission's id.
+        $uuid = Str::uuid7()->toString();
+        $filename = SubmissionUtils::xmlFilename((string) $projectname, $authtoken_hash, $uuid, $expected_md5);
         if (!SubmissionUtils::storeInInbox($filename, $fp)) {
             $this->failProcessing($filename, Response::HTTP_INTERNAL_SERVER_ERROR, 'Failed to save submission file.');
         }
@@ -215,7 +218,14 @@ final class SubmissionController extends AbstractProjectController
         if ($buildid !== null) {
             PendingSubmissions::where('buildid', (int) $buildid)->increment('numfiles');
         }
-        ProcessSubmission::dispatch($filename, $this->project->Id, $buildid, $expected_md5);
+        $submissionid = SubmissionService::recordSubmission(
+            $uuid,
+            (int) $this->project->Id,
+            $buildid === null ? null : (int) $buildid,
+            $xml_info['xml_type'],
+            $stored_filename,
+        );
+        ProcessSubmission::dispatch($filename, $this->project->Id, $buildid, $expected_md5, $submissionid);
         fclose($fp);
         unset($fp);
 

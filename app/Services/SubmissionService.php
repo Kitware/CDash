@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\SubmissionStatus;
 use App\Enums\UnparsedSubmissionType;
 use App\Exceptions\BadSubmissionException;
 use App\Http\Submission\Handlers\AbstractSubmissionHandler;
@@ -9,6 +10,7 @@ use App\Http\Submission\Handlers\ActionableBuildInterface;
 use App\Http\Submission\Handlers\BuildPropertiesJSONHandler;
 use App\Http\Submission\Handlers\DoneHandler;
 use App\Http\Submission\Handlers\UpdateHandler;
+use App\Models\Submission;
 use App\Utils\SubmissionUtils;
 use CDash\Messaging\Notification\Email\EmailBuilder;
 use CDash\Messaging\Notification\Email\EmailMessage;
@@ -20,15 +22,14 @@ use CDash\Model\BuildEmail;
 use CDash\Model\BuildGroup;
 use CDash\Model\Project;
 use CDash\Model\Repository;
+use Closure;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use InvalidArgumentException;
+use Throwable;
 
-/**
- * Parses submission files and reports the results.
- */
 class SubmissionService extends AbstractService
 {
     /**
@@ -107,6 +108,43 @@ class SubmissionService extends AbstractService
         }
     }
 
+    /**
+     * Record a received submission file.  Returns the row's id, or null if the row couldn't be written.
+     */
+    public static function recordSubmission(string $id, int $projectid, ?int $buildid, string $type, string $path, ?string $filename = null): ?string
+    {
+        // The legacy Project::Fill() sets PHP's default timezone to the project's nightly timezone, so take the
+        // time in UTC.
+        $now = now('UTC');
+        $submission = new Submission([
+            'id' => $id,
+            'projectid' => $projectid,
+            'buildid' => $buildid,
+            'type' => $type,
+            'filename' => $filename,
+            'path' => $path,
+            'status' => SubmissionStatus::QUEUED,
+            'received_at' => $now,
+            'next_attempt_at' => $now,
+        ]);
+
+        return self::recordWithoutFailing(fn () => $submission->save()) ? $id : null;
+    }
+
+    /**
+     * Update a submission's row.  Does nothing for a job that has no row.
+     *
+     * @param array<string,mixed> $attributes
+     */
+    public static function updateSubmission(?string $id, array $attributes): void
+    {
+        if ($id === null) {
+            return;
+        }
+
+        self::recordWithoutFailing(fn () => Submission::whereKey($id)->update($attributes));
+    }
+
     /** Determine the descriptive filename for a submission file. */
     public static function generateBackupFileName($projectname, $subprojectname, $buildname,
         $sitename, $stamp, $fileNameWithExt): string
@@ -141,6 +179,25 @@ class SubmissionService extends AbstractService
         }
 
         return $filename;
+    }
+
+    /**
+     * Write to the submissions table.  A failed write is reported and skipped, so recording a submission
+     * never fails an upload or a job.  Returns whether the write succeeded.
+     *
+     * @param Closure(): mixed $callback
+     */
+    private static function recordWithoutFailing(Closure $callback): bool
+    {
+        try {
+            // Nested in another transaction, this rolls back to a savepoint if the write fails, so the
+            // caller's transaction can continue.  A deadlock still aborts it.
+            DB::transaction($callback);
+            return true;
+        } catch (Throwable $e) {
+            report($e);
+            return false;
+        }
     }
 
     /**
