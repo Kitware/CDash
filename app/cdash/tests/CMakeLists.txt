@@ -456,9 +456,7 @@ set_tests_properties(/CDash/Messaging/Topic/UpdateErrorTopic PROPERTIES DEPENDS 
 add_legacy_unit_test(/CDash/Service/RepositoryService)
 set_tests_properties(/CDash/Service/RepositoryService PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
-# Technically this test doesn't have to run serially.  It just needs to have exclusive access to the .env
 add_feature_test(/Feature/LdapIntegration)
-set_property(TEST /Feature/LdapIntegration APPEND PROPERTY RUN_SERIAL TRUE)
 
 add_browser_test(/Browser/Pages/SitesIdPageTest)
 
