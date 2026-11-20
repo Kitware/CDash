@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="build-command"
+	BuildStamp="20240501-0100-Nightly"
+	Name="submission.site"
+	Generator="ctest-3.30.0"
+	>
+	<Build>
+		<StartDateTime>May 01 01:00 UTC</StartDateTime>
+		<StartBuildTime>1714525220</StartBuildTime>
+		<BuildCommand>/usr/bin/cmake --build . --config "Release"</BuildCommand>
+		<Log Encoding="base64" Compression="bin/gzip"/>
+		<EndDateTime>May 01 01:01 UTC</EndDateTime>
+		<EndBuildTime>1714525260</EndBuildTime>
+		<ElapsedMinutes>1</ElapsedMinutes>
+	</Build>
+</Site>
