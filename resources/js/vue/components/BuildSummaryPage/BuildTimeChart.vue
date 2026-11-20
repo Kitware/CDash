@@ -3,6 +3,8 @@
     class="tw-w-full tw-h-60 tw-cursor-pointer"
     :option="chartOption"
     autoresize
+    data-test="build-time-chart"
+    :data-test-point-count="data.length"
     @click="handleChartClick"
   >
     <template #tooltip="params">
@@ -11,6 +13,12 @@
         class="tw-text-sm"
       >
         <strong>Start:</strong> {{ tooltipTimestamp(params[0].dataIndex) }}<br>
+        <template
+          v-for="field in tooltipBuildFields"
+          :key="field.key"
+        >
+          <strong>{{ field.label }}:</strong> {{ data[params[0].dataIndex]?.[field.key] }}<br>
+        </template>
         <strong>Configure Time:</strong> {{ tooltipDuration(params[0].dataIndex, 'configureTime') }}<br>
         <strong>Build Time:</strong> {{ tooltipDuration(params[0].dataIndex, 'buildTime') }}<br>
         <strong>Test Time:</strong> {{ tooltipDuration(params[0].dataIndex, 'testTime') }}
@@ -22,6 +30,7 @@
 <script>
 import VChart from 'vue-echarts';
 import Utils from '../shared/Utils';
+import { variedBuildFields } from '../shared/TrendFilters';
 
 import * as echarts from 'echarts/core';
 import { CanvasRenderer } from 'echarts/renderers';
@@ -52,6 +61,9 @@ export default {
      *   buildTime: import('luxon').Duration,
      *   testTime: import('luxon').Duration,
      *   buildId: number | string,
+     *   buildName: string,
+     *   buildType: string,
+     *   siteName: string,
      *   startTimestamp: import('luxon').DateTime | string,
      *   configureFailed: boolean,
      *   buildFailed: boolean,
@@ -65,6 +77,10 @@ export default {
   },
 
   computed: {
+    tooltipBuildFields() {
+      return variedBuildFields(this.data);
+    },
+
     chartOption() {
       return {
         animation: false,
@@ -75,7 +91,7 @@ export default {
           },
         },
         grid: {
-          left: '10px',
+          left: '30px',
           right: '10px',
           top: '20px',
           bottom: '10px',

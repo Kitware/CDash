@@ -2,7 +2,8 @@
  * URL handling for the legacy filters.  The filters are encoded in the query string as
  * "filtercount=2&field1=...&compare1=..." and so on, which the legacy APIs parse.
  *
- * Remove this once the pages which use it use the GraphQL filters.
+ * Remove this once the pages which use it use the GraphQL filters.  The trend charts' links to the
+ * legacy pages also use filterParams().
  */
 
 /**
@@ -34,7 +35,15 @@ export function showFiltersUrl(href, show) {
   return show ? href.replace('&showfilters=0', '&showfilters=1') : href.replace('&showfilters=1', '&showfilters=0');
 }
 
-function filterParams(prefix, filter, i) {
+/**
+ * The parameters for one filter.
+ *
+ * @param {string} prefix "" for a top-level filter, or e.g. "field2" for a filter in the second block.
+ * @param {{field: string, compare: number|string, value: string}} filter
+ * @param {number} i The filter's position, starting from 1.
+ * @returns {string} e.g. "&field1=site&compare1=61&value1=..."
+ */
+export function filterParams(prefix, filter, i) {
   return `&${prefix}field${i}=${encodeURIComponent(filter.field)}`
     + `&${prefix}compare${i}=${encodeURIComponent(filter.compare)}`
     + `&${prefix}value${i}=${encodeURIComponent(filter.value)}`;

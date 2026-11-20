@@ -422,20 +422,33 @@
 
         <!-- Graphs -->
         <div class="tw-border tw-border-base-300 tw-rounded-lg tw-overflow-hidden">
-          <div class="tw-flex tw-items-center tw-justify-between tw-px-3 tw-py-1 tw-bg-base-200">
+          <div class="tw-flex tw-flex-wrap tw-items-center tw-justify-between tw-gap-2 tw-px-3 tw-py-1 tw-bg-base-200">
             <span class="tw-text-base tw-font-bold">Build History</span>
-            <a
-              class="tw-btn tw-btn-sm tw-btn-outline"
-              data-test="build-history-link"
-              :href="$baseURL + '/index.php?project=' + cdash.projectname_encoded + '&filtercount=4&showfilters=1&filtercombine=and&field1=site&compare1=61&value1=' + cdash.build.sitename_encoded + '&field2=buildname&compare2=61&value2=' + cdash.build.name_encoded + '&field3=buildtype&compare3=61&value3=' + cdash.build.type_encoded + '&field4=buildstarttime&compare4=84&value4=' + cdash.build.starttime_encoded"
+            <TrendFilterBar
+              v-model="trendFilters"
+              :build="trendFilterBuild"
+              :filters="['sameSite', 'sameGroup']"
             >
-              <FontAwesomeIcon :icon="FA.faLink" />
-              Show History
-            </a>
+              <a
+                class="tw-btn tw-btn-sm tw-btn-outline"
+                :class="{ 'tw-invisible': !buildHistoryUrl, 'tw-opacity-50 tw-pointer-events-none': $apollo.queries.buildHistory.loading }"
+                :aria-disabled="$apollo.queries.buildHistory.loading || undefined"
+                data-test="build-history-link"
+                :href="buildHistoryUrl && !$apollo.queries.buildHistory.loading ? buildHistoryUrl : undefined"
+              >
+                <FontAwesomeIcon :icon="FA.faLink" />
+                Show History
+              </a>
+            </TrendFilterBar>
           </div>
           <div class="tw-p-1">
             <LoadingIndicator :is-loading="!buildHistory">
-              <BuildTimeChart :data="buildTimeData" />
+              <BuildTimeChart
+                class="tw-transition-opacity"
+                :class="{ 'tw-opacity-50': $apollo.queries.buildHistory.loading }"
+                :aria-busy="$apollo.queries.buildHistory.loading"
+                :data="buildTimeData"
+              />
             </LoadingIndicator>
           </div>
         </div>
@@ -455,11 +468,13 @@ import BuildSidebar from './shared/BuildSidebar.vue';
 import BuildTimelineCard from './BuildSummaryPage/BuildTimelineCard.vue';
 import gql from 'graphql-tag';
 import BuildTimeChart from './BuildSummaryPage/BuildTimeChart.vue';
+import TrendFilterBar from './shared/TrendFilterBar.vue';
+import { loadTrendFilters, saveTrendFilters, trendBuildConditions, trendHistoryFilterParams } from './shared/TrendFilters';
 import { DateTime, Duration } from 'luxon';
 
 export default {
   name: 'BuildSummaryPage',
-  components: { BuildTimelineCard, BuildTimeChart, BuildSummaryCard, LoadingIndicator, BuildSidebar, FontAwesomeIcon },
+  components: { BuildTimelineCard, BuildTimeChart, BuildSummaryCard, LoadingIndicator, BuildSidebar, FontAwesomeIcon, TrendFilterBar },
 
   props: {
     projectId: {
@@ -495,6 +510,7 @@ export default {
       cdash: {},
       loading: true,
       errored: false,
+      trendFilters: loadTrendFilters('build'),
     };
   },
 
@@ -523,6 +539,7 @@ export default {
             }
             subProject {
               id
+              name
             }
             project {
               id
@@ -604,10 +621,6 @@ export default {
           id: build.id,
           nerrors: Math.max(0, build.buildErrorsCount),
           nwarnings: Math.max(0, build.buildWarningsCount),
-          name_encoded: encodeURIComponent(build.name),
-          type_encoded: encodeURIComponent(build.buildType),
-          starttime_encoded: encodeURIComponent(build.startTime),
-          sitename_encoded: encodeURIComponent(build.site.name),
         };
 
         this.cdash.configure = {
@@ -620,8 +633,6 @@ export default {
           nnotrun: Math.max(0, build.notRunTestsCount),
           npassed: Math.max(0, build.passedTestsCount),
         };
-
-        this.cdash.projectname_encoded = encodeURIComponent(build.project.name);
       },
       error(error) {
         this.errored = true;
@@ -631,11 +642,11 @@ export default {
     },
     buildHistory: {
       query: gql`
-        query($projectId: ID, $filters: ProjectBuildsFiltersMultiFilterInput, $onlyParents: Boolean) {
+        query($projectId: ID, $limit: Int!, $filters: ProjectBuildsFiltersMultiFilterInput, $onlyParents: Boolean) {
           project(id: $projectId) {
             id
             builds(
-              first: 100,
+              first: $limit,
               orderBy: [{column: START_TIME, order: DESC}],
               filters: $filters
               onlyParents: $onlyParents
@@ -643,7 +654,13 @@ export default {
               edges {
                 node {
                   id
+                  name
+                  buildType
                   startTime
+                  site {
+                    id
+                    name
+                  }
                   configureDuration
                   buildDuration
                   testDuration
@@ -660,6 +677,7 @@ export default {
       variables() {
         return {
           projectId: this.projectId,
+          limit: this.trendFilters.limit,
           filters: this.buildHistoryFilters,
           onlyParents: this.isParentBuild,
         };
@@ -687,15 +705,53 @@ export default {
       }
       const build = this.buildData;
       const conditions = [
-        { eq: { name: build.name } },
-        { eq: { buildType: build.buildType } },
-        { has: { site: { eq: { id: build.site.id } } } },
+        ...trendBuildConditions(this.historyFilters, {
+          name: build.name,
+          buildType: build.buildType,
+          siteId: build.site.id,
+        }),
         { le: { startTime: build.startTime } },
       ];
       if (build.subProject) {
         conditions.push({ has: { subProject: { eq: { id: build.subProject.id } } } });
       }
       return { all: conditions };
+    },
+
+    /**
+     * The build history is the history of builds with this build's name, so that filter is always applied.
+     */
+    historyFilters() {
+      return {
+        ...this.trendFilters,
+        sameName: true,
+      };
+    },
+
+    trendFilterBuild() {
+      return {
+        siteName: this.buildData?.site.name ?? '',
+        name: this.buildData?.name ?? '',
+        group: this.buildData?.buildType ?? '',
+      };
+    },
+
+    /**
+     * The builds page, filtered to the builds in the build history chart.
+     */
+    buildHistoryUrl() {
+      if (!this.buildData || !this.buildHistory || this.buildHistory.length === 0) {
+        return '';
+      }
+      const build = this.buildData;
+      const params = trendHistoryFilterParams(this.historyFilters, {
+        name: build.name,
+        buildType: build.buildType,
+        siteName: build.site.name,
+        startTime: build.startTime,
+      }, this.buildHistory.at(-1).node.startTime);
+      const subproject = build.subProject ? `&subproject=${encodeURIComponent(build.subProject.name)}` : '';
+      return `${this.$baseURL}/index.php?project=${encodeURIComponent(build.project.name)}${subproject}&${params}`;
     },
 
     buildTimeData() {
@@ -706,6 +762,9 @@ export default {
         const build = edge.node;
         return {
           buildId: build.id,
+          buildName: build.name,
+          buildType: build.buildType,
+          siteName: build.site.name,
           configureTime: Duration.fromObject({ seconds: Math.max(build.configureDuration, 0) }),
           buildTime: Duration.fromObject({ seconds: Math.max(build.buildDuration, 0) }),
           testTime: Duration.fromObject({ seconds: Math.max(build.testDuration, 0) }),
@@ -715,6 +774,12 @@ export default {
           testFailed: (build.failedTestsCount ?? 0) > 0,
         };
       });
+    },
+  },
+
+  watch: {
+    trendFilters(filters) {
+      saveTrendFilters('build', filters);
     },
   },
 

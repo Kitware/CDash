@@ -32,7 +32,7 @@ class TestsIdPageTest extends BrowserTestCase
     /**
      * Records which aren't deleted along with the project.
      *
-     * @var array<Image|Label>
+     * @var array<Image|Label|Site>
      */
     private array $cleanup = [];
 
@@ -432,6 +432,118 @@ class TestsIdPageTest extends BrowserTestCase
             $browser->visit("/tests/{$tests[1]->id}")
                 ->waitFor('@trend-chart')
                 ->assertAttribute('@trend-chart', 'data-test-point-count', '2');
+        });
+    }
+
+    public function testTrendChartFilters(): void
+    {
+        /** @var Test $test */
+        $test = $this->createTest([
+            'testname' => (string) Str::uuid(),
+            'status' => 'passed',
+        ]);
+
+        $otherSite = Site::factory()->create();
+        $this->cleanup[] = $otherSite;
+
+        // An earlier build like the current one, a later build, which is never shown, and earlier builds
+        // which differ from the current one in its site (one build), name (two) or type (three), so that
+        // the number of builds shown tells which filters are applied.  The build like the current one is
+        // the oldest, so that the history pages' time ranges include all the others.
+        $builds = [
+            ['starttime' => $this->build->starttime->copy()->subMinutes(8)],
+            ['starttime' => $this->build->starttime->copy()->addMinute()],
+            ['starttime' => $this->build->starttime->copy()->subMinutes(2), 'siteid' => $otherSite->id],
+            ['starttime' => $this->build->starttime->copy()->subMinutes(3), 'name' => 'Other Build'],
+            ['starttime' => $this->build->starttime->copy()->subMinutes(4), 'name' => 'Other Build'],
+            ['starttime' => $this->build->starttime->copy()->subMinutes(5), 'type' => 'Debug'],
+            ['starttime' => $this->build->starttime->copy()->subMinutes(6), 'type' => 'Debug'],
+            ['starttime' => $this->build->starttime->copy()->subMinutes(7), 'type' => 'Debug'],
+        ];
+        foreach ($builds as $attributes) {
+            $build = $this->project->builds()->create(array_merge([
+                'siteid' => $this->site->id,
+                'name' => $this->build->name,
+                'type' => $this->build->type,
+                'uuid' => Str::uuid()->toString(),
+            ], $attributes));
+            $this->createTest(['testname' => $test->testname, 'status' => 'passed'], $build);
+        }
+
+        $this->browse(function (Browser $browser) use ($test): void {
+            try {
+                $browser->visit("/tests/{$test->id}")
+                    ->waitFor('[data-test="trend-chart"][data-test-point-count="2"]')
+                    ->assertAttributeContains('@trend-filter-site', 'title', $this->site->name)
+                    ->assertSelected('@trend-filter-site', 'this')
+                    ->assertSelected('@trend-filter-name', 'this')
+                    ->assertSelected('@trend-filter-group', 'this')
+                    ->select('@trend-filter-site', 'all')
+                    ->waitFor('[data-test="trend-chart"][data-test-point-count="3"]')
+                    // The history page lists the same builds as the chart.
+                    ->waitFor('[data-test="test-history-link"][href]')
+                    ->waitForReload(fn (Browser $browser) => $browser->click('@test-history-link'))
+                    ->waitFor('@test-count');
+                self::assertSame('3', $browser->text('@test-count'));
+
+                $browser->visit("/tests/{$test->id}")
+                    ->waitFor('[data-test="trend-chart"][data-test-point-count="3"]')
+                    ->select('@trend-filter-name', 'all')
+                    ->waitFor('[data-test="trend-chart"][data-test-point-count="5"]')
+                    ->select('@trend-filter-group', 'all')
+                    ->waitFor('[data-test="trend-chart"][data-test-point-count="8"]')
+                    // The choices are remembered.
+                    ->refresh()
+                    ->waitFor('[data-test="trend-chart"][data-test-point-count="8"]')
+                    ->assertSelected('@trend-filter-site', 'all')
+                    ->assertSelected('@trend-filter-name', 'all')
+                    ->assertSelected('@trend-filter-group', 'all')
+                    ->select('@trend-filter-site', 'this')
+                    ->waitFor('[data-test="trend-chart"][data-test-point-count="7"]')
+                    ->assertSelected('@trend-filter-site', 'this');
+            } finally {
+                $browser->script("try { localStorage.removeItem('cdash.trendFilters.test'); } catch {}");
+            }
+        });
+    }
+
+    public function testTrendChartLimit(): void
+    {
+        /** @var Test $test */
+        $test = $this->createTest([
+            'testname' => (string) Str::uuid(),
+            'status' => 'passed',
+        ]);
+        for ($i = 1; $i <= 25; $i++) {
+            $build = $this->project->builds()->create([
+                'siteid' => $this->site->id,
+                'name' => $this->build->name,
+                'type' => $this->build->type,
+                'uuid' => Str::uuid()->toString(),
+                'starttime' => $this->build->starttime->copy()->subMinutes($i),
+            ]);
+            $this->createTest(['testname' => $test->testname, 'status' => 'passed'], $build);
+        }
+
+        $this->browse(function (Browser $browser) use ($test): void {
+            try {
+                $browser->visit("/tests/{$test->id}")
+                    ->waitFor('[data-test="trend-chart"][data-test-point-count="26"]')
+                    ->assertSelected('@trend-filter-limit', '100')
+                    ->select('@trend-filter-limit', '25')
+                    ->waitFor('[data-test="trend-chart"][data-test-point-count="25"]')
+                    // The choice is remembered.
+                    ->refresh()
+                    ->waitFor('[data-test="trend-chart"][data-test-point-count="25"]')
+                    ->assertSelected('@trend-filter-limit', '25')
+                    // The history page lists the same builds as the chart.
+                    ->waitFor('[data-test="test-history-link"][href]')
+                    ->waitForReload(fn (Browser $browser) => $browser->click('@test-history-link'))
+                    ->waitFor('@test-count');
+                self::assertSame('25', $browser->text('@test-count'));
+            } finally {
+                $browser->script("try { localStorage.removeItem('cdash.trendFilters.test'); } catch {}");
+            }
         });
     }
 
