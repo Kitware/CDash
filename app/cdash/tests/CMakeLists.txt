@@ -253,6 +253,8 @@ add_feature_test_in_transaction(/Feature/GraphQL/Queries/BuildCommandTypeTest)
 
 add_feature_test_in_transaction(/Feature/GraphQL/Queries/BuildCommandOutputTypeTest)
 
+add_feature_test_in_transaction(/Feature/GraphQL/Queries/BuildMeasurementTypeTest)
+
 add_feature_test_in_transaction(/Feature/GraphQL/Queries/UpdateTypeTest)
 
 add_feature_test_in_transaction(/Feature/GraphQL/Queries/UpdateFileTypeTest)
@@ -312,6 +314,8 @@ add_feature_test_in_transaction(/Feature/Mail/InvitedToProjectTest)
 add_feature_test_in_transaction(/Feature/GraphQL/Mutations/CreateProjectTest)
 
 add_feature_test_in_transaction(/Feature/GraphQL/Mutations/UpdateProjectTest)
+
+add_feature_test_in_transaction(/Feature/GraphQL/Mutations/DeleteProjectTest)
 
 add_feature_test_in_transaction(/Feature/GraphQL/Mutations/UpdateSiteDescriptionTest)
 
@@ -386,6 +390,8 @@ add_feature_test_in_transaction(/Feature/Console/AutoRemoveBuildsCommandTest)
 add_feature_test_in_transaction(/Feature/Console/QueueSubmissionsCommandTest)
 
 add_feature_test_in_transaction(/Feature/Console/DeleteProjectCommandTest)
+
+add_feature_test_in_transaction(/Feature/Jobs/DeleteProjectTest)
 
 add_feature_test_in_transaction(/Feature/Console/ValidateXmlCommandTest)
 
