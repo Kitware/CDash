@@ -4,10 +4,12 @@ namespace Feature\Submission\Build;
 
 use App\Models\BuildError;
 use App\Models\Project;
+use App\Models\Site;
 use App\Utils\DatabaseCleanupUtils;
 use Exception;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Str;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 use Tests\Traits\CreatesProjects;
@@ -419,5 +421,64 @@ class BuildXMLTest extends TestCase
         DatabaseCleanupUtils::removeBuild($second_build->id);
 
         $this->assertSame(0, BuildError::where('buildid', $second_build->id)->count());
+    }
+
+    /**
+     * CTest sends the build's name, site and stamp with each file, so the upload creates the build before
+     * Build.xml is parsed.
+     */
+    public function testStoresCommandWhenUploadCreatedBuild(): void
+    {
+        $this->makeSubmission($this->project->name, base_path(
+            'tests/Feature/Submission/Build/data/build_command.xml'
+        ), parameters: [
+            'build' => 'build-command',
+            'site' => 'submission.site',
+            'stamp' => '20240501-0100-Nightly',
+        ]);
+
+        $this->assertSame(1, $this->project->builds()->count());
+        $this->assertSame('/usr/bin/cmake --build . --config "Release"', $this->project->builds()->firstOrFail()->command);
+    }
+
+    public function testStoresCommandWhenConfigureCreatedBuild(): void
+    {
+        $this->makeSubmission($this->project->name, base_path(
+            'tests/Feature/Submission/Build/data/build_command_configure.xml'
+        ));
+        $this->makeSubmission($this->project->name, base_path(
+            'tests/Feature/Submission/Build/data/build_command.xml'
+        ));
+
+        $this->assertSame(1, $this->project->builds()->count());
+        $this->assertSame('/usr/bin/cmake --build . --config "Release"', $this->project->builds()->firstOrFail()->command);
+    }
+
+    /**
+     * A parent build doesn't record a command; its child builds do.
+     */
+    public function testDoesNotStoreCommandOfParentBuild(): void
+    {
+        $site = Site::firstOrCreate(['name' => 'submission.site']);
+        $parent = $this->project->builds()->create([
+            'name' => 'build-command',
+            'stamp' => '20240501-0100-Nightly',
+            'siteid' => $site->id,
+            'uuid' => Str::uuid()->toString(),
+        ]);
+        $this->project->builds()->create([
+            'name' => 'build-command',
+            'stamp' => '20240501-0100-Nightly',
+            'siteid' => $site->id,
+            'uuid' => Str::uuid()->toString(),
+            'parentid' => $parent->id,
+        ]);
+
+        $this->makeSubmission($this->project->name, base_path(
+            'tests/Feature/Submission/Build/data/build_command.xml'
+        ));
+
+        $this->assertSame(2, $this->project->builds()->count());
+        $this->assertSame('', $parent->fresh()?->command);
     }
 }

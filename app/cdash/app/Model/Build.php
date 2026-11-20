@@ -1568,7 +1568,7 @@ class Build
                 $fields_to_update['endtime'] = $this->EndTime;
             }
 
-            if ($build->parentid !== null) {
+            if (!$build->children()->exists()) {
                 // If this is not a parent build, check if its command has changed.
                 if ($this->Command !== '' && $this->Command !== $build->command) {
                     if (!empty($build->command)) {
