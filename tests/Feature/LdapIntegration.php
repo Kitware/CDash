@@ -133,6 +133,8 @@ class LdapIntegration extends TestCase
         putenv('LDAP_LOCATE_USERS_BY');
 
         foreach ($this->users as $key => $user) {
+            // Logging in as an LDAP user creates a matching database user.
+            \App\Models\User::where('email', $user->getFirstAttribute('uid'))->delete();
             $user->delete(true);
         }
         $this->users = [];
