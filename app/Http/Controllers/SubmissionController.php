@@ -188,14 +188,14 @@ final class SubmissionController extends AbstractProjectController
         $buildid = null;
         if (request()->filled('build') && request()->filled('site') && request()->filled('stamp')) {
             $build = new Build();
-            $build->Name = pdo_real_escape_string(request()->query('build'));
+            $build->Name = request()->string('build')->toString();
             $build->ProjectId = $this->project->Id;
-            $build->SetStamp(pdo_real_escape_string(request()->query('stamp')));
+            $build->SetStamp(request()->string('stamp')->toString());
             $build->StartTime = gmdate(FMT_DATETIME);
             $build->SubmitTime = $build->StartTime;
 
             if (request()->filled('subproject')) {
-                $build->SetSubProject(pdo_real_escape_string(request()->query('subproject')));
+                $build->SetSubProject(request()->string('subproject')->toString());
             }
 
             $build->SiteId = Site::firstOrCreate([

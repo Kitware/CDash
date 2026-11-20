@@ -1639,15 +1639,6 @@ parameters:
 			path: app/Http/Controllers/SubProjectController.php
 
 		-
-			rawMessage: '''
-				Call to deprecated function pdo_real_escape_string():
-				04/01/2023
-			'''
-			identifier: function.deprecated
-			count: 3
-			path: app/Http/Controllers/SubmissionController.php
-
-		-
 			rawMessage: Cannot cast mixed to int.
 			identifier: cast.int
 			count: 1
