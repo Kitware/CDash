@@ -62,6 +62,3 @@ set_tests_properties(indexfilters PROPERTIES DEPENDS submitsortingdata)
 
 add_php_test(timeline)
 set_tests_properties(timeline PROPERTIES DEPENDS indexfilters)
-
-# TODO: (sbelsk) revisit why this test fails and add proper dependencies
-#add_php_test(parallelsubmissions)
