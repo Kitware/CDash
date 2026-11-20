@@ -4,6 +4,7 @@ function(add_js_unit_test TestName)
     COMMAND "node_modules/.bin/vitest" "run" "tests/Spec/${TestName}.spec.js"
     WORKING_DIRECTORY "${CDash_SOURCE_DIR}"
   )
+  set_property(GLOBAL APPEND PROPERTY CDASH_REGISTERED_TEST_FILES "tests/Spec/${TestName}.spec.js")
 endfunction()
 
 add_js_unit_test(build-histogram)

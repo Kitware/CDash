@@ -7,6 +7,7 @@ function(add_js_component_test TestName)
   set_tests_properties("Component/${TestName}" PROPERTIES
     PROCESSORS 2
   )
+  set_property(GLOBAL APPEND PROPERTY CDASH_REGISTERED_TEST_FILES "tests/Component/${TestName}.spec.js")
 endfunction()
 
 add_js_component_test(code-box)

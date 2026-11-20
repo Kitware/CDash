@@ -46,6 +46,7 @@ function(add_laravel_test TestName)
     ${TestName} PROPERTIES
     ATTACHED_FILES_ON_FAIL "${CDash_SOURCE_DIR}/storage/logs/cdash.log"
   )
+  set_property(GLOBAL APPEND PROPERTY CDASH_REGISTERED_TEST_FILES "tests${TestName}.php")
 
   # Storage::fake() empties and reuses the same directory for a given disk in every test process,
   # unless Laravel's parallel testing token is set, in which case it appends "_test_<token>" to the
