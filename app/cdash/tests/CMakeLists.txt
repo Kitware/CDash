@@ -287,6 +287,8 @@ add_feature_test_in_transaction(/Feature/Console/PurgeUnusedProjectsCommandTest)
 
 add_feature_test_in_transaction(/Feature/Jobs/PruneJobsTest)
 
+add_feature_test_in_transaction(/Feature/Jobs/PruneSubmissionsTest)
+
 add_feature_test_in_transaction(/Feature/Jobs/PruneAuthTokensTest)
 
 add_feature_test_in_transaction(/Feature/Console/SaveUserCommandTest)
@@ -394,6 +396,8 @@ add_feature_test_in_transaction(/Feature/Submission/UnparsedSubmissionTest)
 add_feature_test_in_transaction(/Feature/Submission/DeferredSubmissionTest)
 
 add_feature_test_in_transaction(/Feature/Submission/ConcurrentSubmissionTest)
+
+add_feature_test_in_transaction(/Feature/Submission/SubmissionRecordingTest)
 
 add_feature_test_in_transaction(/Feature/Submission/XmlValidationTest)
 

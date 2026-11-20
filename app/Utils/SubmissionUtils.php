@@ -379,9 +379,9 @@ class SubmissionUtils
     }
 
     /** Generate the inbox filename for a CTest XML submission */
-    public static function xmlFilename(string $projectname, string $token_hash, string $md5): string
+    public static function xmlFilename(string $projectname, string $token_hash, string $uuid, string $md5): string
     {
-        return "{$projectname}_-_{$token_hash}_-_" . Str::uuid()->toString() . "_-_{$md5}.xml";
+        return "{$projectname}_-_{$token_hash}_-_{$uuid}_-_{$md5}.xml";
     }
 
     /** Generate the inbox filename for an unparsed submission data file */

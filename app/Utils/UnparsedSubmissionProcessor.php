@@ -25,6 +25,7 @@ use App\Models\Project as EloquentProject;
 use App\Models\Site;
 use App\Rules\ProjectNameRule;
 use App\Services\AuthTokenService;
+use App\Services\SubmissionService;
 use CDash\Model\Build;
 use CDash\Model\Project;
 use Closure;
@@ -282,7 +283,15 @@ class UnparsedSubmissionProcessor
         // THis function will throw an exception if invalid data provided
         $this->populateBuildFileRow();
 
-        ProcessSubmission::dispatch($filename, $this->project->Id, $this->build->Id, $this->md5);
+        $submissionid = SubmissionService::recordSubmission(
+            Str::uuid7()->toString(),
+            (int) $this->project->Id,
+            (int) $this->build->Id,
+            $this->type,
+            $this->inboxdatafilename,
+            $this->backupfilename,
+        );
+        ProcessSubmission::dispatch($filename, $this->project->Id, $this->build->Id, $this->md5, $submissionid);
 
         SubmissionUtils::queueDeferredSubmissions();
 

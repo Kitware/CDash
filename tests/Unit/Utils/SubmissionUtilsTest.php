@@ -13,12 +13,13 @@ use Tests\TestCase;
 class SubmissionUtilsTest extends TestCase
 {
     private const MD5 = 'd41d8cd98f00b204e9800998ecf8427e';
+    private const UUID = '019a7d5e-3b8c-7f00-8e5a-2c4d6f8a9b01';
 
     public function testXmlFilename(): void
     {
-        $filename = SubmissionUtils::xmlFilename('MyProject', 'tokenhash', self::MD5);
+        $filename = SubmissionUtils::xmlFilename('MyProject', 'tokenhash', self::UUID, self::MD5);
 
-        $this->assertMatchesRegularExpression('/^MyProject_-_tokenhash_-_[0-9a-f-]{36}_-_' . self::MD5 . '\.xml$/', $filename);
+        $this->assertSame('MyProject_-_tokenhash_-_' . self::UUID . '_-_' . self::MD5 . '.xml', $filename);
         $this->assertSame([
             'projectname' => 'MyProject',
             'token_hash' => 'tokenhash',
@@ -29,9 +30,9 @@ class SubmissionUtilsTest extends TestCase
 
     public function testXmlFilenameWithoutTokenOrMd5(): void
     {
-        $filename = SubmissionUtils::xmlFilename('MyProject', '', '');
+        $filename = SubmissionUtils::xmlFilename('MyProject', '', self::UUID, '');
 
-        $this->assertMatchesRegularExpression('/^MyProject_-__-_[0-9a-f-]{36}_-_\.xml$/', $filename);
+        $this->assertSame('MyProject_-__-_' . self::UUID . '_-_.xml', $filename);
         $this->assertSame([
             'projectname' => 'MyProject',
             'token_hash' => '',

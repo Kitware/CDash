@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Enums\SubmissionStatus;
 use App\Enums\UnparsedSubmissionType;
 use App\Exceptions\BadSubmissionException;
 use App\Http\Submission\Handlers\AbstractSubmissionHandler;
@@ -24,6 +25,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use League\Flysystem\UnableToMoveFile;
 use Throwable;
 
@@ -38,13 +40,14 @@ class ProcessSubmission implements ShouldQueue
     public $projectid;
     public $buildid;
     public $expected_md5;
+    public ?string $submissionid = null;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($filename, $projectid, $buildid, $expected_md5)
+    public function __construct($filename, $projectid, $buildid, $expected_md5, ?string $submissionid = null)
     {
         $context = [];
         if (isset($projectid)) {
@@ -59,6 +62,7 @@ class ProcessSubmission implements ShouldQueue
         $this->projectid = $projectid;
         $this->buildid = $buildid;
         $this->expected_md5 = $expected_md5;
+        $this->submissionid = $submissionid;
     }
 
     private function renameSubmissionFile($src, $dst): bool
@@ -80,10 +84,16 @@ class ProcessSubmission implements ShouldQueue
         // Move file back to inbox.
         Storage::move("inprogress/{$this->filename}", "inbox/{$this->filename}");
 
-        // Requeue the file with exponential backoff.
+        // Requeue the file with exponential backoff.  The row is updated first, because the sync queue runs
+        // the next attempt immediately.
         PendingSubmissions::where('buildid', $this->buildid)->increment('numfiles');
-        $delay = ((int) config('cdash.retry_base')) ** $retry_handler->Retries;
-        self::dispatch($this->filename, $this->projectid, $this->buildid, $this->expected_md5)->delay(now()->addSeconds($delay));
+        $next_attempt_at = now('UTC')->addSeconds(((int) config('cdash.retry_base')) ** $retry_handler->Retries);
+        SubmissionService::updateSubmission($this->submissionid, [
+            'status' => SubmissionStatus::QUEUED,
+            'path' => "inbox/{$this->filename}",
+            'next_attempt_at' => $next_attempt_at,
+        ]);
+        self::dispatch($this->filename, $this->projectid, $this->buildid, $this->expected_md5, $this->submissionid)->delay($next_attempt_at);
 
         return true;
     }
@@ -102,6 +112,15 @@ class ProcessSubmission implements ShouldQueue
             return;
         }
 
+        // Times are taken in UTC, because parsing calls the legacy Project::Fill(), which sets PHP's default
+        // timezone to the project's nightly timezone.
+        SubmissionService::updateSubmission($this->submissionid, [
+            'status' => SubmissionStatus::PROCESSING,
+            'path' => "inprogress/{$this->filename}",
+            'attempts' => DB::raw('attempts + 1'),
+            'started_at' => now('UTC'),
+        ]);
+
         // Project existence validation occurs prior to jobs being queued, so we expect this to always exist.
         $project = Project::findOrFail((int) $this->projectid);
 
@@ -109,6 +128,11 @@ class ProcessSubmission implements ShouldQueue
         $handler = $this->doSubmit("inprogress/{$this->filename}", $project, $this->buildid, $this->expected_md5);
 
         if (!is_object($handler)) {
+            SubmissionService::updateSubmission($this->submissionid, [
+                'status' => SubmissionStatus::FAILED,
+                'error' => 'Failed to locate submission file',
+                'finished_at' => now('UTC'),
+            ]);
             return;
         }
 
@@ -118,12 +142,30 @@ class ProcessSubmission implements ShouldQueue
             return;
         }
 
+        // A deleted file's row keeps the path it had last.
+        $path = "inprogress/{$this->filename}";
         if ((int) config('cdash.backup_timeframe') === 0) {
             // We are configured not to store parsed files. Delete it now.
-            $this->deleteSubmissionFile("inprogress/{$this->filename}");
+            $this->deleteSubmissionFile($path);
         } else {
             // Move the file to a pretty name in the parsed directory.
-            $this->renameSubmissionFile("inprogress/{$this->filename}", "parsed/{$handler->backupFileName}");
+            $backup_path = "parsed/{$handler->backupFileName}";
+            $this->renameSubmissionFile($path, $backup_path);
+            $path = $backup_path;
+        }
+
+        SubmissionService::updateSubmission($this->submissionid, [
+            'status' => SubmissionStatus::DONE,
+            'path' => $path,
+            'finished_at' => now('UTC'),
+        ]);
+
+        // Record the build the file was parsed into, which may differ from the one named at upload, if any.
+        // This is a separate update so that a build deleted in the meantime can't keep the row from being
+        // marked done.
+        $buildid = $handler instanceof AbstractSubmissionHandler ? $handler->getBuild()->Id : null;
+        if (is_numeric($buildid) && (int) $buildid > 0) {
+            SubmissionService::updateSubmission($this->submissionid, ['buildid' => (int) $buildid]);
         }
 
         unset($handler);
@@ -143,11 +185,20 @@ class ProcessSubmission implements ShouldQueue
     public function failed(Throwable $exception): void
     {
         Log::warning("Failed to process {$this->filename} with message: {$exception}");
+        // The message can include bytes from the file, and Postgres rejects text with invalid UTF-8 or null
+        // bytes.  The full message is in the log.
+        $attributes = [
+            'status' => SubmissionStatus::FAILED,
+            'error' => Str::limit(str_replace("\0", '', mb_scrub($exception->getMessage(), 'UTF-8')), 1000),
+            'finished_at' => now('UTC'),
+        ];
         try {
             $this->renameSubmissionFile("inprogress/{$this->filename}", "failed/{$this->filename}");
+            $attributes['path'] = "failed/{$this->filename}";
         } catch (UnableToMoveFile $e) {
             report($e);
         }
+        SubmissionService::updateSubmission($this->submissionid, $attributes);
     }
 
     /**
