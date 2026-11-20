@@ -563,6 +563,14 @@ add_browser_test(/Browser/Pages/ProjectSettingsPageTest)
 
 add_browser_test(/Browser/Pages/BuildUpdatePageTest)
 
+add_browser_test(/Browser/Pages/ManageBuildGroupPageTest)
+
+add_browser_test(/Browser/Pages/ManageOverviewPageTest)
+
+add_browser_test(/Browser/Pages/ManageSubProjectPageTest)
+
+add_browser_test(/Browser/Pages/ViewSubProjectsPageTest)
+
 add_php_test(image)
 set_tests_properties(image PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
 
@@ -773,16 +781,8 @@ add_laravel_test(/Feature/SubProjectDependencies)
 set_tests_properties(/Feature/SubProjectDependencies PROPERTIES DEPENDS querytestsrevisionfilter)
 
 # These tests should go last so the removal of builds doesn't clobber other tests
-# TODO: Some of these dependencies may not be necessary.
 add_php_test(deletesubproject)
-set_property(TEST deletesubproject PROPERTY DEPENDS
-  cypress/e2e/manage-overview
-  cypress/e2e/manage-build-group
-  cypress/e2e/manage-sub-project
-  cypress/e2e/view-sub-projects
-  cypress/e2e/sub-project-group-order
-  cypress/e2e/sites
-)
+set_tests_properties(deletesubproject PROPERTIES DEPENDS timeline)
 
 add_php_test(removebuilds)
 set_tests_properties(removebuilds PROPERTIES DEPENDS deletesubproject)

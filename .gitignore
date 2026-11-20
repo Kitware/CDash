@@ -37,7 +37,6 @@ yarn-error.log
 .phpunit.cache
 app/cdash/tests/.phpunit.cache/
 bootstrap/cache/*.php
-cypress_cache
 /.vitest/
 public/images
 

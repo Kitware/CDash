@@ -1,7 +1,6 @@
 import js from '@eslint/js';
 import globals from 'globals';
 import pluginVue from 'eslint-plugin-vue';
-import pluginCypress from 'eslint-plugin-cypress';
 import stylistic from '@stylistic/eslint-plugin';
 import { defineConfig, globalIgnores } from 'eslint/config';
 
@@ -12,7 +11,6 @@ export default defineConfig([
   globalIgnores([
     'vendor/*',
     '_build/*',
-    'cypress_cache/*',
     'public/assets/*',
     'public/vendor/*',
     'resources/js/angular/*',
@@ -150,10 +148,6 @@ export default defineConfig([
     },
   },
   {
-    files: ['**/cypress/**/*.js'],
-    ...pluginCypress.configs.recommended,
-  },
-  {
     files: [
       '**/postcss.config.js',
       '**/babel.config.js',
@@ -168,7 +162,6 @@ export default defineConfig([
     files: [
       '**/webpack.mix.js',
       '**/tailwind.config.js',
-      '**/cypress.config.js',
     ],
     languageOptions: {
       sourceType: 'commonjs',

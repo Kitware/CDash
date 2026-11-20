@@ -28,7 +28,6 @@ set(laravel_testing_dir "${CDash_SOURCE_DIR}/tests")
 file(MAKE_DIRECTORY "/tmp/CDashTesting")
 
 find_program(PHP_EXE NAMES php PATHS c:/xampp/php /xampp/php REQUIRED)
-find_program(NPX_EXE NAMES npx PATHS c:/usr/bin/npx /usr/bin/npx REQUIRED)
 
 set(PHPUNIT "${CDash_SOURCE_DIR}/vendor/bin/phpunit")
 

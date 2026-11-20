@@ -16,7 +16,6 @@
         </label>
         <select
           id="selectedsort"
-          data-cy="select-sorting-order"
           @change="apply_sorting($event)"
         >
           <option

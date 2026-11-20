@@ -26,6 +26,5 @@ set_tests_properties(eslint PROPERTIES
   FAIL_REGULAR_EXPRESSION " \+[0-9]\+:[0-9]\+ \+warning"
 )
 
-add_subdirectory(cypress/e2e)
 add_subdirectory(Spec)
 add_subdirectory(Component)
