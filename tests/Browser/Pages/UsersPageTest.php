@@ -173,9 +173,9 @@ class UsersPageTest extends BrowserTestCase
             $browser->loginAs($this->users['admin'])
                 ->visit('/users')
                 ->whenAvailable('@invitations-table', function (Browser $browser): void {
-                    foreach ($this->invitations as $invitation) {
-                        $browser->waitForText($invitation->email);
-                    }
+                    $emails = array_map(fn (GlobalInvitation $invitation): string => $invitation->email, $this->invitations);
+                    // Read the table once per poll rather than once per invitation.
+                    $browser->waitUsing(null, 100, fn (): bool => Str::containsAll($browser->text(''), $emails), 'Waited %s seconds for all invitations.');
                     $browser->assertSee($this->invitations[0]->email);  // Add an assertion to suppress warnings...
                 });
         });
@@ -193,9 +193,9 @@ class UsersPageTest extends BrowserTestCase
             $browser->loginAs($this->users['admin'])
                 ->visit('/users')
                 ->whenAvailable('@users-table', function (Browser $browser): void {
-                    foreach ($this->users as $user) {
-                        $browser->waitForText($user->email);
-                    }
+                    $emails = array_map(fn (User $user): string => $user->email, $this->users);
+                    // Read the table once per poll rather than once per user.
+                    $browser->waitUsing(null, 100, fn (): bool => Str::containsAll($browser->text(''), $emails), 'Waited %s seconds for all users.');
                     $browser->assertSee($this->users['admin']->email);  // Add an assertion to suppress warnings...
                 });
         });
