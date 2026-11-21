@@ -144,6 +144,7 @@ class ProjectSettingsPageTest extends BrowserTestCase
             ['@cmake-project-root-input', '', 'cmakeprojectroot', null, 'string'],
             ['@bug-tracker-input', 'None', 'bugtrackertype', null, 'select'],
             ['@bug-tracker-input', 'GITHUB', 'bugtrackertype', 'GitHub', 'select'],
+            ['@bug-tracker-input', 'GITLAB', 'bugtrackertype', 'GitLab', 'select'],
             ['@bug-tracker-input', 'JIRA', 'bugtrackertype', 'JIRA', 'select'],
             ['@bug-tracker-url-input', $bugtrackerurl, 'bugtrackerurl', $bugtrackerurl, 'string'],
             ['@bug-tracker-url-input', '', 'bugtrackerurl', null, 'string'],

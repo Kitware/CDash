@@ -17,6 +17,7 @@
           <a
             class="tw-link tw-link-hover"
             :href="cdash.newissueurl"
+            data-test="new-issue-link"
           >
             <b>Create {{ cdash.bugtracker }} issue for this build</b>
           </a>

@@ -467,6 +467,7 @@ enum VcsViewer {
 
 enum BugTracker {
   GITHUB @enum(value: "GitHub")
+  GITLAB @enum(value: "GitLab")
   BUGANIZER @enum(value: "Buganizer")
   JIRA @enum(value: "JIRA")
 }
