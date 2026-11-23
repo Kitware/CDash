@@ -56,3 +56,24 @@ add_subdirectory(tests)
 
 # add the old tests directory
 add_subdirectory(app/cdash/tests)
+
+# A test file which isn't registered above never runs, so refuse to configure if any exist.
+file(GLOB_RECURSE unregistered_test_files
+  RELATIVE "${CDash_SOURCE_DIR}"
+  "${laravel_testing_dir}/Feature/*.php"
+  "${laravel_testing_dir}/Unit/*.php"
+  "${laravel_testing_dir}/Browser/*.php"
+  "${laravel_testing_dir}/Spec/*.spec.js"
+  "${laravel_testing_dir}/Component/*.spec.js"
+)
+# Abstract base classes for other tests.
+list(REMOVE_ITEM unregistered_test_files
+  tests/Browser/Pages/ProjectBuildsPageTestCase.php
+  tests/Unit/GraphQL/Directives/DirectiveTestCase.php
+)
+get_property(registered_test_files GLOBAL PROPERTY CDASH_REGISTERED_TEST_FILES)
+list(REMOVE_ITEM unregistered_test_files ${registered_test_files})
+if(unregistered_test_files)
+  list(JOIN unregistered_test_files "\n  " unregistered_test_files)
+  message(FATAL_ERROR "Test files which aren't registered with CTest:\n  ${unregistered_test_files}")
+endif()
