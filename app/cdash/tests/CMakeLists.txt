@@ -699,14 +699,8 @@ set_tests_properties(testhistory PROPERTIES DEPENDS subprojectnextprevious)
 add_php_test(expectedandmissing)
 set_tests_properties(expectedandmissing PROPERTIES DEPENDS testhistory)
 
-add_php_test(timesummary)
-set_tests_properties(timesummary PROPERTIES DEPENDS expectedandmissing)
-
-add_php_test(buildgetdate)
-set_tests_properties(buildgetdate PROPERTIES DEPENDS timesummary)
-
 add_php_test(replacebuild)
-set_tests_properties(replacebuild PROPERTIES DEPENDS buildgetdate)
+set_tests_properties(replacebuild PROPERTIES DEPENDS expectedandmissing)
 
 add_php_test(crosssubprojectcoverage)
 set_tests_properties(crosssubprojectcoverage PROPERTIES DEPENDS replacebuild)
@@ -756,11 +750,8 @@ set_tests_properties(coveragedirectories PROPERTIES DEPENDS managemeasurements)
 add_php_test(timestatus)
 set_tests_properties(timestatus PROPERTIES DEPENDS coveragedirectories)
 
-add_php_test(buildrelationship)
-set_tests_properties(buildrelationship PROPERTIES DEPENDS timestatus)
-
 add_php_test(expiredbuildrules)
-set_tests_properties(expiredbuildrules PROPERTIES DEPENDS buildrelationship)
+set_tests_properties(expiredbuildrules PROPERTIES DEPENDS timestatus)
 
 add_php_test(filterblocks)
 set_tests_properties(filterblocks PROPERTIES DEPENDS expiredbuildrules)
@@ -783,11 +774,8 @@ set_tests_properties(querytestsrevisionfilter PROPERTIES DEPENDS querytestsfilte
 add_laravel_test(/Feature/SubProjectDependencies)
 set_tests_properties(/Feature/SubProjectDependencies PROPERTIES DEPENDS querytestsrevisionfilter)
 
-# These tests should go last so the removal of builds doesn't clobber other tests
-add_php_test(deletesubproject)
-set_tests_properties(deletesubproject PROPERTIES DEPENDS timeline)
-
+# This test should go last so the removal of builds doesn't clobber other tests
 add_php_test(removebuilds)
-set_tests_properties(removebuilds PROPERTIES DEPENDS deletesubproject)
+set_tests_properties(removebuilds PROPERTIES DEPENDS timeline)
 
 add_subdirectory(ctest)

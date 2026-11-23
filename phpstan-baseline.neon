@@ -15302,30 +15302,6 @@ parameters:
 
 		-
 			rawMessage: '''
-				Call to deprecated function pdo_execute():
-				v2.5.0 01/22/2018
-			'''
-			identifier: function.deprecated
-			count: 1
-			path: app/cdash/tests/test_buildrelationship.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method getPdo() of class CDash\Database:
-				04/22/2023  Use Laravel query builder or Eloquent instead
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/test_buildrelationship.php
-
-		-
-			rawMessage: Property BuildRelationshipTestCase::$PDO has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/test_buildrelationship.php
-
-		-
-			rawMessage: '''
 				Call to deprecated method submission() of class KWWebTestCase:
 				12/09/2024  Use \Test\Traits\CreatesSubmissions instead
 			'''
@@ -15881,21 +15857,6 @@ parameters:
 			identifier: argument.templateType
 			count: 1
 			path: app/cdash/tests/test_crosssubprojectcoverage.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method submission() of class KWWebTestCase:
-				12/09/2024  Use \Test\Traits\CreatesSubmissions instead
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/test_deletesubproject.php
-
-		-
-			rawMessage: 'Method DeleteSubProjectTestCase::testDeleteSubProject() has no return type specified.'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_deletesubproject.php
 
 		-
 			rawMessage: '''
@@ -19148,84 +19109,6 @@ parameters:
 			identifier: missingType.property
 			count: 1
 			path: app/cdash/tests/test_timestatus.php
-
-		-
-			rawMessage: 'Argument of an invalid type mixed supplied for foreach, only iterables are supported.'
-			identifier: foreach.nonIterable
-			count: 1
-			path: app/cdash/tests/test_timesummary.php
-
-		-
-			rawMessage: Binary operation "." between 'Expected configure…' and mixed results in an error.
-			identifier: binaryOp.invalid
-			count: 1
-			path: app/cdash/tests/test_timesummary.php
-
-		-
-			rawMessage: Binary operation "." between 'Expected test…' and mixed results in an error.
-			identifier: binaryOp.invalid
-			count: 1
-			path: app/cdash/tests/test_timesummary.php
-
-		-
-			rawMessage: 'Call to deprecated method pass() of class SimpleTestCase.'
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/test_timesummary.php
-
-		-
-			rawMessage: Cannot access offset 'buildgroups' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_timesummary.php
-
-		-
-			rawMessage: Cannot access offset 'builds' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_timesummary.php
-
-		-
-			rawMessage: Cannot access offset 'configure' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/cdash/tests/test_timesummary.php
-
-		-
-			rawMessage: Cannot access offset 'site' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_timesummary.php
-
-		-
-			rawMessage: Cannot access offset 'test' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/cdash/tests/test_timesummary.php
-
-		-
-			rawMessage: Cannot access offset 'timefull' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/cdash/tests/test_timesummary.php
-
-		-
-			rawMessage: 'Method TimeSummaryTestCase::testTimeSummary() has no return type specified.'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_timesummary.php
-
-		-
-			rawMessage: 'Parameter #1 $array of function array_pop expects array, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/tests/test_timesummary.php
-
-		-
-			rawMessage: Variable $build might not be defined.
-			identifier: variable.undefined
-			count: 4
-			path: app/cdash/tests/test_timesummary.php
 
 		-
 			rawMessage: '''
