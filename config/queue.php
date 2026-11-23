@@ -52,6 +52,8 @@ return [
     */
 
     'failed' => [
+        // With the database driver, a job that times out has its transaction rolled back before failed() runs.
+        'driver' => 'database',
         'database' => 'pgsql',
         'table' => 'failed_jobs',
     ],

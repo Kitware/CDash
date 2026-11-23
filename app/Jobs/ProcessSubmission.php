@@ -13,6 +13,7 @@ use App\Models\BuildFile;
 use App\Models\PendingSubmissions;
 use App\Models\Project;
 use App\Models\Site;
+use App\Models\Submission;
 use App\Models\SuccessfulJob;
 use App\Services\SubmissionService;
 use App\Utils\SubmissionUtils;
@@ -26,7 +27,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use League\Flysystem\UnableToMoveFile;
+use League\Flysystem\FilesystemException;
 use Throwable;
 
 class ProcessSubmission implements ShouldQueue
@@ -41,6 +42,12 @@ class ProcessSubmission implements ShouldQueue
     public $buildid;
     public $expected_md5;
     public ?string $submissionid = null;
+
+    /**
+     * The job isn't retried: a retry would find its own row already claimed and return without parsing, and the
+     * first attempt has already moved the file out of inbox/.
+     */
+    public int $tries = 1;
 
     /**
      * Create a new job instance.
@@ -81,21 +88,63 @@ class ProcessSubmission implements ShouldQueue
         $retry_handler = new RetryHandler("inprogress/{$this->filename}");
         $retry_handler->increment();
 
-        // Move file back to inbox.
-        Storage::move("inprogress/{$this->filename}", "inbox/{$this->filename}");
-
-        // Requeue the file with exponential backoff.  The row is updated first, because the sync queue runs
-        // the next attempt immediately.
-        PendingSubmissions::where('buildid', $this->buildid)->increment('numfiles');
+        // Requeue the file with exponential backoff.  The row's update, the build's pending count and the file's
+        // move back to inbox/ run in one transaction, so if any of them fails, the others roll back and failed()
+        // finds the row processing and the file in inprogress/.  The transaction holds the build's lock, so it
+        // can't deadlock with the parse of another file uploaded for this build, which may delete the build.  The
+        // job is dispatched last, outside the transaction, because the sync queue runs the next attempt
+        // immediately.
         $next_attempt_at = now('UTC')->addSeconds(((int) config('cdash.retry_base')) ** $retry_handler->Retries);
-        SubmissionService::updateSubmission($this->submissionid, [
-            'status' => SubmissionStatus::QUEUED,
-            'path' => "inbox/{$this->filename}",
-            'next_attempt_at' => $next_attempt_at,
-        ]);
+        $buildid = $this->buildid === null ? null : (int) $this->buildid;
+        SubmissionService::withBuildLock($buildid, function () use ($next_attempt_at): void {
+            if ($this->submissionid !== null) {
+                SubmissionService::requeueSubmission($this->submissionid, "inbox/{$this->filename}", $next_attempt_at);
+            }
+            PendingSubmissions::where('buildid', $this->buildid)->increment('numfiles');
+            Storage::move("inprogress/{$this->filename}", "inbox/{$this->filename}");
+        });
         self::dispatch($this->filename, $this->projectid, $this->buildid, $this->expected_md5, $this->submissionid)->delay($next_attempt_at);
 
         return true;
+    }
+
+    /**
+     * Claim the submission's row, so that no other job processes its file.  Returns false if the row isn't
+     * queued, e.g. because another job claimed it.  A job whose row no longer exists, e.g. because it was
+     * pruned while the job waited in a long backlog, is detached from it and carries on as a job without one.
+     * Detaching only affects this run: failed() runs on a fresh copy of the job, whose id then matches no row.
+     */
+    private function claimOrDetachSubmission(string $submissionid): bool
+    {
+        if (SubmissionService::claimSubmission($submissionid)) {
+            return true;
+        }
+
+        try {
+            $submission = Submission::find($submissionid, ['status']);
+        } catch (Throwable $e) {
+            // Failing here would let failed() mark the other job's row failed and move its file.
+            report($e);
+            return false;
+        }
+        if ($submission !== null) {
+            // A failed row usually means the job was retried with queue:retry, which can't work: the file has
+            // already moved to failed/.
+            $message = "Not processing submission {$submissionid}, whose status is {$submission->status->value}";
+            $submission->status === SubmissionStatus::FAILED ? Log::warning($message) : Log::info($message);
+            return false;
+        }
+
+        $this->submissionid = null;
+        return true;
+    }
+
+    /**
+     * Whether a parsed file is a Done.xml that has to wait for its build's other files, and is requeued.
+     */
+    private static function waitsForOtherFiles(object $handler): bool
+    {
+        return $handler instanceof DoneHandler && $handler->shouldRequeue();
     }
 
     /**
@@ -105,21 +154,17 @@ class ProcessSubmission implements ShouldQueue
      */
     public function handle(): void
     {
+        if ($this->submissionid !== null && !$this->claimOrDetachSubmission($this->submissionid)) {
+            return;
+        }
+
         // Move file from inbox to inprogress.
         if (!$this->renameSubmissionFile("inbox/{$this->filename}", "inprogress/{$this->filename}")) {
             // Return early if the rename operation fails.
             // Presumably this means some other runner picked up the job before us.
             return;
         }
-
-        // Times are taken in UTC, because parsing calls the legacy Project::Fill(), which sets PHP's default
-        // timezone to the project's nightly timezone.
-        SubmissionService::updateSubmission($this->submissionid, [
-            'status' => SubmissionStatus::PROCESSING,
-            'path' => "inprogress/{$this->filename}",
-            'attempts' => DB::raw('attempts + 1'),
-            'started_at' => now('UTC'),
-        ]);
+        SubmissionService::updateSubmission($this->submissionid, ['path' => "inprogress/{$this->filename}"]);
 
         // Project existence validation occurs prior to jobs being queued, so we expect this to always exist.
         $project = Project::findOrFail((int) $this->projectid);
@@ -128,8 +173,7 @@ class ProcessSubmission implements ShouldQueue
         $handler = $this->doSubmit("inprogress/{$this->filename}", $project, $this->buildid, $this->expected_md5);
 
         if (!is_object($handler)) {
-            SubmissionService::updateSubmission($this->submissionid, [
-                'status' => SubmissionStatus::FAILED,
+            SubmissionService::failSubmission($this->submissionid, [
                 'error' => 'Failed to locate submission file',
                 'finished_at' => now('UTC'),
             ]);
@@ -137,7 +181,7 @@ class ProcessSubmission implements ShouldQueue
         }
 
         // Resubmit the file if necessary.
-        if (is_a($handler, DoneHandler::class) && $handler->shouldRequeue()) {
+        if (self::waitsForOtherFiles($handler)) {
             $this->requeueSubmissionFile();
             return;
         }
@@ -154,15 +198,11 @@ class ProcessSubmission implements ShouldQueue
             $path = $backup_path;
         }
 
-        SubmissionService::updateSubmission($this->submissionid, [
-            'status' => SubmissionStatus::DONE,
-            'path' => $path,
-            'finished_at' => now('UTC'),
-        ]);
+        SubmissionService::updateSubmission($this->submissionid, ['path' => $path]);
 
         // Record the build the file was parsed into, which may differ from the one named at upload, if any.
-        // This is a separate update so that a build deleted in the meantime can't keep the row from being
-        // marked done.
+        // This is a separate update so that a build deleted in the meantime can't keep the row from recording
+        // where the file is.
         $buildid = $handler instanceof AbstractSubmissionHandler ? $handler->getBuild()->Id : null;
         if (is_numeric($buildid) && (int) $buildid > 0) {
             SubmissionService::updateSubmission($this->submissionid, ['buildid' => (int) $buildid]);
@@ -185,24 +225,31 @@ class ProcessSubmission implements ShouldQueue
     public function failed(Throwable $exception): void
     {
         Log::warning("Failed to process {$this->filename} with message: {$exception}");
+
+        // A row that's done, requeued for a later attempt, or already failed is left as it is, with its file where
+        // it is.
+        if (SubmissionService::isSubmissionFinishedOrRequeued($this->submissionid)) {
+            return;
+        }
+
         // The message can include bytes from the file, and Postgres rejects text with invalid UTF-8 or null
         // bytes.  The full message is in the log.
         $attributes = [
-            'status' => SubmissionStatus::FAILED,
             'error' => Str::limit(str_replace("\0", '', mb_scrub($exception->getMessage(), 'UTF-8')), 1000),
             'finished_at' => now('UTC'),
         ];
         try {
             $this->renameSubmissionFile("inprogress/{$this->filename}", "failed/{$this->filename}");
             $attributes['path'] = "failed/{$this->filename}";
-        } catch (UnableToMoveFile $e) {
+        } catch (FilesystemException $e) {
             report($e);
         }
-        SubmissionService::updateSubmission($this->submissionid, $attributes);
+        SubmissionService::failSubmission($this->submissionid, $attributes);
     }
 
     /**
-     * Parse a submission file, then update the build's count of pending files and send notifications.
+     * Parse a submission file and, unless it's a Done.xml that has to wait for its build's other files, mark its
+     * row done in the same transaction.  Then update the build's count of pending files and send notifications.
      *
      * @throws BadSubmissionException
      **/
@@ -213,7 +260,8 @@ class ProcessSubmission implements ShouldQueue
             return false;
         }
 
-        // Special handling for "build metadata" files created while the DB was down.
+        // Special handling for "build metadata" files created while the DB was down.  Only QueueSubmissions
+        // queues these, so their jobs have no row.
         if (SubmissionUtils::isBuildMetadataFilename($this->filename)) {
             $filehandle = Storage::readStream($filename) ?? throw new BadSubmissionException("Failed to open file {$filename}");
             $handler = new UnparsedSubmissionProcessor();
@@ -225,7 +273,17 @@ class ProcessSubmission implements ShouldQueue
             return $handler;
         }
 
-        $handler = DB::transaction(fn () => self::parseSubmissionFile($filename, $project, $buildid, $expected_md5));
+        $handler = DB::transaction(function () use ($filename, $project, $buildid, $expected_md5) {
+            $handler = self::parseSubmissionFile($filename, $project, $buildid, $expected_md5);
+
+            // Mark the row done in the same transaction, so that a crash can't leave a parsed file that isn't
+            // marked done.  A Done.xml that has to wait for its build's other files is requeued instead.
+            if ($this->submissionid !== null && !self::waitsForOtherFiles($handler)) {
+                SubmissionService::markSubmissionDone($this->submissionid);
+            }
+
+            return $handler;
+        });
 
         $build = $handler->getBuild();
         PendingSubmissions::where('buildid', $build->Id ?? -1)->decrement('numfiles');

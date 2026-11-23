@@ -23,6 +23,8 @@ use CDash\Model\BuildGroup;
 use CDash\Model\Project;
 use CDash\Model\Repository;
 use Closure;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -145,6 +147,105 @@ class SubmissionService extends AbstractService
         self::recordWithoutFailing(fn () => Submission::whereKey($id)->update($attributes));
     }
 
+    /**
+     * Move a queued submission's row to processing, so that no other job processes its file.  Returns false
+     * if the row isn't queued, e.g. because another job claimed it first.
+     */
+    public static function claimSubmission(string $id): bool
+    {
+        // In the worker this commits at once, before parsing starts.  Nested in another transaction, an update
+        // that throws only rolls back its own savepoint.
+        return DB::transaction(fn () => Submission::whereKey($id)
+            ->where('status', SubmissionStatus::QUEUED)
+            ->update([
+                'status' => SubmissionStatus::PROCESSING,
+                'attempts' => DB::raw('attempts + 1'),
+                'started_at' => now('UTC'),
+            ]) > 0);
+    }
+
+    /**
+     * Mark a submission's row as done.  Call this inside the parse transaction, so that the parse and the
+     * row commit together.
+     */
+    public static function markSubmissionDone(string $id): void
+    {
+        // Parsing calls the legacy Project::Fill(), which sets PHP's default timezone to the project's nightly
+        // timezone, so take the time in UTC.
+        Submission::whereKey($id)->update([
+            'status' => SubmissionStatus::DONE,
+            'error' => null,
+            'finished_at' => now('UTC'),
+        ]);
+    }
+
+    /**
+     * Set a submission's row back to queued, for a file that will be parsed again later.  Unlike the
+     * best-effort updates, this one can't be skipped: the next attempt can only claim a queued row.
+     */
+    public static function requeueSubmission(string $id, string $path, Carbon $next_attempt_at): void
+    {
+        Submission::whereKey($id)->update([
+            'status' => SubmissionStatus::QUEUED,
+            'path' => $path,
+            'next_attempt_at' => $next_attempt_at,
+        ]);
+    }
+
+    /**
+     * Whether a failed job should leave a submission's row and file alone: the row is finished (done or failed),
+     * or a requeue has handed the file to a later attempt.  False for a job that has no row, or if the row can't
+     * be read.
+     */
+    public static function isSubmissionFinishedOrRequeued(?string $id): bool
+    {
+        if ($id === null) {
+            return false;
+        }
+
+        try {
+            return self::whereFinishedOrRequeued(Submission::whereKey($id))->exists();
+        } catch (Throwable $e) {
+            report($e);
+            return false;
+        }
+    }
+
+    /**
+     * Mark a submission's row as failed, unless it's finished or a requeue has handed it to a later attempt.
+     * Does nothing for a job that has no row.
+     *
+     * @param array<string,mixed> $attributes
+     */
+    public static function failSubmission(?string $id, array $attributes): void
+    {
+        if ($id === null) {
+            return;
+        }
+
+        self::recordWithoutFailing(fn () => Submission::whereKey($id)
+            ->whereNot(fn (Builder $query) => self::whereFinishedOrRequeued($query))
+            ->update(['status' => SubmissionStatus::FAILED, ...$attributes]));
+    }
+
+    /**
+     * Limit a query to rows that a failed job must leave alone: finished rows, and queued rows that were claimed
+     * before, i.e. requeued for a later attempt.  A job that dies after requeueing a file has its failed() run
+     * much later, possibly while the next attempt is still waiting to run, or after it failed with its own error.
+     *
+     * @param Builder<Submission> $query
+     *
+     * @return Builder<Submission>
+     */
+    private static function whereFinishedOrRequeued(Builder $query): Builder
+    {
+        return $query->where(fn (Builder $query) => $query
+            ->whereIn('status', [SubmissionStatus::DONE, SubmissionStatus::FAILED])
+            ->orWhere(fn (Builder $query) => $query
+                ->where('status', SubmissionStatus::QUEUED)
+                ->where('attempts', '>', 0)));
+    }
+
     /** Determine the descriptive filename for a submission file. */
     public static function generateBackupFileName($projectname, $subprojectname, $buildname,
         $sitename, $stamp, $fileNameWithExt): string
@@ -209,7 +310,7 @@ class SubmissionService extends AbstractService
      *
      * @return T
      */
-    private static function withBuildLock(?int $buildid, callable $callback): mixed
+    public static function withBuildLock(?int $buildid, callable $callback): mixed
     {
         return DB::transaction(function () use ($buildid, $callback) {
             // Process submissions for the same build one at a time.  Concurrent workers can otherwise
