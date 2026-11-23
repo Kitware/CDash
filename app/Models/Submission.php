@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
 /**
@@ -67,4 +68,20 @@ class Submission extends Model
         'started_at' => 'datetime',
         'finished_at' => 'datetime',
     ];
+
+    /**
+     * @return BelongsTo<Project, $this>
+     */
+    public function project(): BelongsTo
+    {
+        return $this->belongsTo(Project::class, 'projectid');
+    }
+
+    /**
+     * @return BelongsTo<Build, $this>
+     */
+    public function build(): BelongsTo
+    {
+        return $this->belongsTo(Build::class, 'buildid');
+    }
 }

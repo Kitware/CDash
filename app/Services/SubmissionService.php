@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Enums\SubmissionStatus;
 use App\Enums\UnparsedSubmissionType;
+use App\Enums\XmlSubmissionType;
 use App\Exceptions\BadSubmissionException;
 use App\Http\Submission\Handlers\AbstractSubmissionHandler;
 use App\Http\Submission\Handlers\ActionableBuildInterface;
@@ -366,7 +367,7 @@ class SubmissionService extends AbstractService
         $buildname = '';
         $subprojectname = '';
         $stamp = '';
-        if ($file !== 'Project') {
+        if ($file !== XmlSubmissionType::PROJECT->value) {
             // projects don't have some of these fields.
 
             $sitename = $handler->getSiteName();

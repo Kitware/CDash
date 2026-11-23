@@ -396,6 +396,8 @@ add_feature_test_in_transaction(/Feature/Jobs/DeleteProjectTest)
 
 add_feature_test_in_transaction(/Feature/Console/ValidateXmlCommandTest)
 
+add_feature_test_in_transaction(/Feature/Console/ListSubmissionsCommandTest)
+
 add_feature_test_in_transaction(/Feature/Submission/XmlSubmissionTest)
 
 add_feature_test_in_transaction(/Feature/Submission/UnparsedSubmissionTest)
