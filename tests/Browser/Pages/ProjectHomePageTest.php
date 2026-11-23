@@ -6,12 +6,14 @@ use App\Enums\ProjectRole;
 use App\Models\Build;
 use App\Models\BuildGroup;
 use App\Models\Project;
+use App\Models\ProjectMetric;
 use App\Models\Site;
 use App\Models\User;
 use App\Services\ProjectService;
 use App\Utils\TestingDay;
 use CDash\Model\Project as LegacyProject;
 use Facebook\WebDriver\Interactions\WebDriverActions;
+use Facebook\WebDriver\Remote\RemoteWebElement;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Carbon;
@@ -144,6 +146,43 @@ class ProjectHomePageTest extends BrowserTestCase
             ->waitFor('@add-contact-button')
             ->click('@add-contact-button')
             ->waitFor('[data-test="edit-contact-dialog"][open]');
+    }
+
+    private function createMetric(string $name, int $position, ?string $value = null): ProjectMetric
+    {
+        /** @var ProjectMetric $metric */
+        $metric = $this->project->metrics()->create([
+            'name' => $name,
+            'position' => $position,
+        ]);
+        if ($value !== null) {
+            $metric->values()->create([
+                'value' => $value,
+                'created_at' => Carbon::now()->subHours(2),
+            ]);
+        }
+
+        return $metric;
+    }
+
+    /**
+     * Log in as a project administrator and start editing the metrics.
+     */
+    private function openMetricsEditor(Browser $browser, User $admin): Browser
+    {
+        return $browser->loginAs($admin)
+            ->visit("/projects/{$this->project->id}")
+            ->waitFor('@edit-metrics-button')
+            ->click('@edit-metrics-button')
+            ->waitFor('@done-editing-metrics-button');
+    }
+
+    /**
+     * @return array<string>
+     */
+    private function cardTexts(Browser $browser, string $selector): array
+    {
+        return array_map(fn (RemoteWebElement $card): string => $card->getText(), $browser->elements($selector));
     }
 
     public function testShowsProjectInformation(): void
@@ -788,5 +827,163 @@ class ProjectHomePageTest extends BrowserTestCase
         });
 
         self::assertNull($this->project->refresh()->contact_info);
+    }
+
+    public function testShowsMetricsWithValuesInOrder(): void
+    {
+        $this->createMetric('Wheel size', 2, '48.2 MB');
+        $this->createMetric('Lines of code', 1, '1,204,553');
+        $this->createMetric('Peak memory', 3);
+
+        $this->browse(function (Browser $browser): void {
+            $browser->visit("/projects/{$this->project->id}")
+                ->waitFor('@project-metric');
+
+            // Metrics without values are hidden from visitors.
+            self::assertSame(["Lines of code\n1,204,553", "Wheel size\n48.2 MB"], $this->cardTexts($browser, '@project-metric'));
+
+            $browser->assertAttribute('[data-test="project-metric"]', 'title', 'Updated 2 hours ago')
+                ->assertMissing('@edit-metrics-button')
+                ->assertMissing('@add-metrics-button');
+        });
+    }
+
+    public function testEditorSeesMetricsWithoutValues(): void
+    {
+        $this->createMetric('Lines of code', 1, '1,204,553');
+        $this->createMetric('Peak memory', 2);
+        $admin = $this->addUserToProject(ProjectRole::ADMINISTRATOR);
+
+        $this->browse(function (Browser $browser) use ($admin): void {
+            $browser->loginAs($admin)
+                ->visit("/projects/{$this->project->id}")
+                ->waitFor('@edit-metrics-button');
+
+            self::assertSame(["Lines of code\n1,204,553", "Peak memory\nNo values"], $this->cardTexts($browser, '@project-metric'));
+            $browser->assertAttributeContains('[data-test="project-metric"]:nth-child(2)', 'class', 'tw-opacity-50');
+        });
+    }
+
+    public function testAddMetrics(): void
+    {
+        $admin = $this->addUserToProject(ProjectRole::ADMINISTRATOR);
+
+        $this->browse(function (Browser $browser) use ($admin): void {
+            $browser->loginAs($admin)
+                ->visit("/projects/{$this->project->id}")
+                ->waitFor('@add-metrics-button')
+                ->click('@add-metrics-button')
+                ->waitFor('@new-metric-input')
+                ->assertFocused('@new-metric-input')
+                ->type('@new-metric-input', 'Lines of code')
+                ->keys('@new-metric-input', '{enter}')
+                ->waitFor('@edit-project-metric')
+                // The input stays open for the next metric.
+                ->assertInputValue('@new-metric-input', '')
+                ->type('@new-metric-input', 'Wheel size')
+                ->click('@save-new-metric-button')
+                ->waitUntil('document.querySelectorAll(\'[data-test="edit-project-metric"]\').length === 2')
+                ->click('@done-editing-metrics-button')
+                ->waitFor('@project-metric');
+
+            self::assertSame(["Lines of code\nNo values", "Wheel size\nNo values"], $this->cardTexts($browser, '@project-metric'));
+        });
+
+        self::assertSame(['Lines of code', 'Wheel size'], $this->project->metrics()->orderBy('position')->pluck('name')->all());
+    }
+
+    public function testAddMetricExplainsDuplicateName(): void
+    {
+        $this->createMetric('Wheel size', 1, '48.2 MB');
+        $admin = $this->addUserToProject(ProjectRole::ADMINISTRATOR);
+
+        $this->browse(function (Browser $browser) use ($admin): void {
+            $this->openMetricsEditor($browser, $admin)
+                ->click('@add-metric-button')
+                ->waitFor('@new-metric-input')
+                ->type('@new-metric-input', 'Wheel size')
+                ->keys('@new-metric-input', '{enter}')
+                ->waitFor('@new-metric-error')
+                ->assertSeeIn('@new-metric-error', 'A metric with this name already exists.')
+                ->assertAttributeContains('@new-metric-input', 'class', 'tw-input-error')
+                ->assertInputValue('@new-metric-input', 'Wheel size');
+        });
+
+        self::assertSame(1, $this->project->metrics()->count());
+    }
+
+    public function testRenameMetric(): void
+    {
+        $metric = $this->createMetric('Wheel size', 1, '48.2 MB');
+        $admin = $this->addUserToProject(ProjectRole::ADMINISTRATOR);
+
+        $this->browse(function (Browser $browser) use ($admin): void {
+            $this->openMetricsEditor($browser, $admin)
+                ->click('@rename-metric-button')
+                ->waitFor('@rename-metric-input')
+                ->assertFocused('@rename-metric-input')
+                ->assertInputValue('@rename-metric-input', 'Wheel size')
+                // Escape cancels.
+                ->append('@rename-metric-input', ' (Linux)')
+                ->keys('@rename-metric-input', '{escape}')
+                ->waitUntilMissing('@rename-metric-input')
+                ->assertSeeIn('@edit-project-metric', 'Wheel size')
+                ->click('@rename-metric-button')
+                ->waitFor('@rename-metric-input')
+                ->append('@rename-metric-input', ' (Linux)')
+                ->keys('@rename-metric-input', '{enter}')
+                ->waitUntilMissing('@rename-metric-input')
+                ->waitForTextIn('@edit-project-metric', 'Wheel size (Linux)')
+                ->assertSeeIn('@edit-project-metric', '48.2 MB');
+        });
+
+        self::assertSame('Wheel size (Linux)', $metric->refresh()->name);
+    }
+
+    public function testDeleteMetric(): void
+    {
+        $metric = $this->createMetric('Wheel size', 1, '48.2 MB');
+        $metric->values()->create(['value' => '49 MB']);
+        $this->createMetric('Lines of code', 2, '1,204,553');
+        $admin = $this->addUserToProject(ProjectRole::ADMINISTRATOR);
+
+        $this->browse(function (Browser $browser) use ($admin): void {
+            $this->openMetricsEditor($browser, $admin)
+                ->click('@delete-metric-button')
+                ->waitFor('[data-test="delete-metric-dialog"][open]')
+                ->assertSeeIn('@delete-metric-dialog', "Delete Wheel size and its 2 values? This can't be undone.")
+                ->click('@cancel-delete-metric-button')
+                ->waitUntilMissing('[data-test="delete-metric-dialog"][open]')
+                ->click('@delete-metric-button')
+                ->waitFor('[data-test="delete-metric-dialog"][open]')
+                ->click('@confirm-delete-metric-button')
+                ->waitUntilMissing('[data-test="delete-metric-dialog"][open]')
+                ->waitUntil('document.querySelectorAll(\'[data-test="edit-project-metric"]\').length === 1')
+                ->assertSeeIn('@edit-project-metric', 'Lines of code');
+        });
+
+        self::assertSame(['Lines of code'], $this->project->metrics()->pluck('name')->all());
+    }
+
+    public function testEditMetricsExplainsMissingPermission(): void
+    {
+        $this->createMetric('Wheel size', 1, '48.2 MB');
+        $admin = $this->addUserToProject(ProjectRole::ADMINISTRATOR);
+
+        $this->browse(function (Browser $browser) use ($admin): void {
+            $this->openMetricsEditor($browser, $admin);
+
+            // Simulate the user losing access while the page is open.
+            $this->project->users()->updateExistingPivot($admin->id, ['role' => ProjectRole::USER]);
+
+            $browser->click('@add-metric-button')
+                ->waitFor('@new-metric-input')
+                ->type('@new-metric-input', 'Lines of code')
+                ->keys('@new-metric-input', '{enter}')
+                ->waitFor('@project-metrics-error')
+                ->assertSeeIn('@project-metrics-error', 'You do not have permission to edit this project.');
+        });
+
+        self::assertSame(['Wheel size'], $this->project->metrics()->pluck('name')->all());
     }
 }

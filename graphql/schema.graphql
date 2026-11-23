@@ -143,6 +143,27 @@ type Mutation {
   """
   updatePinnedTestMeasurementOrder(input: UpdatePinnedTestMeasurementOrderInput! @spread): UpdatePinnedTestMeasurementOrderMutationPayload! @field(resolver: "UpdatePinnedTestMeasurementOrder")
 
+  "Add a metric to the end of a project's list of metrics."
+  createProjectMetric(input: CreateProjectMetricInput! @spread): CreateProjectMetricMutationPayload! @field(resolver: "CreateProjectMetric")
+
+  "Rename a metric.  Its values are kept."
+  updateProjectMetric(input: UpdateProjectMetricInput! @spread): UpdateProjectMetricMutationPayload! @field(resolver: "UpdateProjectMetric")
+
+  "Delete a metric and all of its values.  Does not re-number positions."
+  deleteProjectMetric(input: DeleteProjectMetricInput! @spread): DeleteProjectMetricMutationPayload! @field(resolver: "DeleteProjectMetric")
+
+  """
+  Reorder a project's metrics.  Note: positions will be sequential, starting at 1 + the
+  previous maximum position.  Only the relative order is guaranteed.
+  """
+  updateProjectMetricOrder(input: UpdateProjectMetricOrderInput! @spread): UpdateProjectMetricOrderMutationPayload! @field(resolver: "UpdateProjectMetricOrder")
+
+  """
+  Submit new values for a project's metrics.  Every value is stored with the current time.
+  Nothing is saved if any of the values are invalid.
+  """
+  createProjectMetricValues(input: CreateProjectMetricValuesInput! @spread): CreateProjectMetricValuesMutationPayload! @field(resolver: "CreateProjectMetricValues")
+
   "Add a repository to a project.  Cannot retrieve password once set."
   createRepository(input: CreateRepositoryInput! @spread): CreateRepositoryMutationPayload! @field(resolver: "CreateRepository")
 
@@ -441,6 +462,9 @@ type Project {
   alongside Test details throughout the site.
   """
   pinnedTestMeasurements: [PinnedTestMeasurement!]! @hasMany(type: CONNECTION) @orderBy(column: "position")
+
+  "Metrics shown on the project's home page.  Values are submitted with createProjectMetricValues."
+  metrics: [ProjectMetric!]! @hasMany(type: CONNECTION) @orderBy(column: "position")
 
   "Repositories."
   repositories: [Repository!]! @hasMany(type: CONNECTION) @orderBy(column: "id")
@@ -768,6 +792,91 @@ type UpdatePinnedTestMeasurementOrderMutationPayload implements MutationPayloadI
 
   "The new list of pinned measurements."
   pinnedTestMeasurements: [PinnedTestMeasurement!]
+}
+
+
+input CreateProjectMetricInput {
+  projectId: ID!
+
+  "At most 25 characters, and unique within the project."
+  name: String!
+}
+
+
+type CreateProjectMetricMutationPayload implements MutationPayloadInterface {
+  "Optional error message."
+  message: String
+
+  projectMetric: ProjectMetric
+}
+
+
+input UpdateProjectMetricInput {
+  id: ID!
+
+  "At most 25 characters, and unique within the project."
+  name: String!
+}
+
+
+type UpdateProjectMetricMutationPayload implements MutationPayloadInterface {
+  "Optional error message."
+  message: String
+
+  projectMetric: ProjectMetric
+}
+
+
+input DeleteProjectMetricInput {
+  id: ID!
+}
+
+
+type DeleteProjectMetricMutationPayload implements MutationPayloadInterface {
+  "Optional error message."
+  message: String
+}
+
+
+input UpdateProjectMetricOrderInput {
+  projectId: ID!
+
+  "A list of every ProjectMetric ID for the project.  Relative position will be set based on position in the list."
+  projectMetricIds: [ID!]!
+}
+
+
+type UpdateProjectMetricOrderMutationPayload implements MutationPayloadInterface {
+  "Optional error message."
+  message: String
+
+  "The new list of metrics."
+  projectMetrics: [ProjectMetric!]
+}
+
+
+input CreateProjectMetricValuesInput {
+  projectId: ID!
+
+  "At most one value per metric."
+  values: [ProjectMetricValueInput!]!
+}
+
+
+input ProjectMetricValueInput {
+  "The name of one of the project's metrics."
+  name: String!
+
+  "At most 25 characters."
+  value: String!
+}
+
+
+type CreateProjectMetricValuesMutationPayload implements MutationPayloadInterface {
+  "Optional error message."
+  message: String
+
+  projectMetricValues: [ProjectMetricValue!]
 }
 
 
@@ -1660,6 +1769,43 @@ type PinnedTestMeasurement {
 
   "Note: Only the relative positions of PinnedTestMeasurements are guaranteed."
   position: Int!
+}
+
+
+type ProjectMetric {
+  "Unique primary key."
+  id: ID!
+
+  "Unique within the project.  Values are submitted by name."
+  name: String!
+
+  "Note: Only the relative positions of ProjectMetrics are guaranteed."
+  position: Int!
+
+  "The most recently submitted value, or null if no values have been submitted."
+  latestValue: ProjectMetricValue @hasOne
+
+  "Every value submitted for this metric, newest first."
+  values: [ProjectMetricValue!]! @hasMany(type: CONNECTION) @orderBy(column: "id", direction: DESC)
+
+  "The number of values submitted for this metric."
+  valueCount: Int! @count(relation: "values")
+}
+
+
+type ProjectMetricValue {
+  "Unique primary key."
+  id: ID!
+
+  value: String!
+
+  "The time the value was submitted."
+  createdAt: DateTimeTz! @rename(attribute: "created_at")
+
+  "The user who submitted the value, or null if the user has since been deleted."
+  user: User @belongsTo
+
+  metric: ProjectMetric! @belongsTo
 }
 
 

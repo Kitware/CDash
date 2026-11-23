@@ -282,6 +282,14 @@ class Project extends Model
     }
 
     /**
+     * @return HasMany<ProjectMetric, $this>
+     */
+    public function metrics(): HasMany
+    {
+        return $this->hasMany(ProjectMetric::class, 'project_id');
+    }
+
+    /**
      * @return HasMany<BuildGroup, $this>
      */
     public function buildgroups(): HasMany

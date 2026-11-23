@@ -12,7 +12,15 @@
         :visibility="project.visibility"
         :dashboard-url="dashboardUrl"
         :can-update="canUpdate"
-      />
+      >
+        <ProjectMetrics
+          v-if="showMetrics"
+          :project-id="projectId"
+          :metrics="metrics"
+          :can-update="canUpdate"
+          @changed="$apollo.queries.metrics.refetch()"
+        />
+      </ProjectHeader>
 
       <div class="tw-flex tw-flex-col lg:tw-flex-row tw-gap-8 tw-items-start">
         <div class="tw-flex tw-flex-col tw-gap-6 tw-flex-grow tw-min-w-0 tw-w-full">
@@ -72,6 +80,7 @@ import BuildGroupsSection from './ProjectHomePage/BuildGroupsSection.vue';
 import BuildHistogram from './ProjectHomePage/BuildHistogram';
 import ContactSection from './ProjectHomePage/ContactSection.vue';
 import ProjectHeader from './ProjectHomePage/ProjectHeader.vue';
+import ProjectMetrics from './ProjectHomePage/ProjectMetrics.vue';
 import RecentActivityCard from './ProjectHomePage/RecentActivityCard.vue';
 import ResourcesSection from './ProjectHomePage/ResourcesSection.vue';
 
@@ -84,6 +93,7 @@ export default {
     ContactSection,
     LoadingIndicator,
     ProjectHeader,
+    ProjectMetrics,
     RecentActivityCard,
     ResourcesSection,
   },
@@ -234,6 +244,38 @@ export default {
       },
     },
 
+    // Loaded separately so that changing the metrics only reloads the metrics.
+    metrics: {
+      query: gql`
+        query($id: ID) {
+          project(id: $id) {
+            id
+            metrics {
+              edges {
+                node {
+                  id
+                  name
+                  position
+                  valueCount
+                  latestValue {
+                    id
+                    value
+                    createdAt
+                  }
+                }
+              }
+            }
+          }
+        }
+      `,
+      variables() {
+        return {
+          id: this.projectId,
+        };
+      },
+      update: (data) => data.project?.metrics.edges.map(({ node }) => node),
+    },
+
     // The build group queries only need the project ID, so they start alongside the project query.
     buildGroups: {
       query: gql`
@@ -357,6 +399,11 @@ export default {
   },
 
   computed: {
+    // Visitors only see metrics with values.  Editors always see the metrics, so they can add some.
+    showMetrics() {
+      return !!this.metrics && (this.canUpdate || this.metrics.some((metric) => metric.latestValue));
+    },
+
     dashboardUrl() {
       return this.dashboardPageUrl('index.php');
     },
