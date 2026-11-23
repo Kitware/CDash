@@ -753,8 +753,11 @@ set_tests_properties(timestatus PROPERTIES DEPENDS coveragedirectories)
 add_php_test(expiredbuildrules)
 set_tests_properties(expiredbuildrules PROPERTIES DEPENDS timestatus)
 
+add_php_test(dynamicbuildgroupfilters)
+set_tests_properties(dynamicbuildgroupfilters PROPERTIES DEPENDS expiredbuildrules)
+
 add_php_test(filterblocks)
-set_tests_properties(filterblocks PROPERTIES DEPENDS expiredbuildrules)
+set_tests_properties(filterblocks PROPERTIES DEPENDS dynamicbuildgroupfilters)
 
 add_php_test(indexnextprevious)
 set_tests_properties(indexnextprevious PROPERTIES DEPENDS filterblocks)
