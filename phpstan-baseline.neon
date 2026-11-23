@@ -18226,30 +18226,6 @@ parameters:
 			path: app/cdash/tests/test_querytestsrevisionfilter.php
 
 		-
-			rawMessage: 'Parameter #1 $string of function base64_encode expects string, string|false given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/tests/test_removebuilds.php
-
-		-
-			rawMessage: 'Property App\Models\UploadFile::$filesize (int) does not accept int<0, max>|false.'
-			identifier: assign.propertyType
-			count: 2
-			path: app/cdash/tests/test_removebuilds.php
-
-		-
-			rawMessage: 'Property App\Models\UploadFile::$sha1sum (string) does not accept string|false.'
-			identifier: assign.propertyType
-			count: 2
-			path: app/cdash/tests/test_removebuilds.php
-
-		-
-			rawMessage: Variable property access on mixed.
-			identifier: property.dynamicName
-			count: 2
-			path: app/cdash/tests/test_removebuilds.php
-
-		-
 			rawMessage: '''
 				Call to deprecated function pdo_query():
 				04/01/2023

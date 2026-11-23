@@ -362,6 +362,8 @@ add_feature_test_in_transaction(/Feature/GraphQL/Mutations/CreateCoverageDiffMut
 
 add_feature_test_in_transaction(/Feature/Jobs/PruneBuildsTest)
 
+add_feature_test_in_transaction(/Feature/Utils/DatabaseCleanupUtilsTest)
+
 add_feature_test_in_transaction(/Feature/Database/ProjectRoleHistoryTest)
 
 add_feature_test_in_transaction(/Feature/Jobs/PruneEmailsTest)
@@ -387,6 +389,8 @@ add_feature_test_in_transaction(/Feature/Services/SiteServiceTest)
 add_feature_test_in_transaction(/Feature/Middleware/AuthenticateTokenTest)
 
 add_feature_test_in_transaction(/Feature/Console/AutoRemoveBuildsCommandTest)
+
+add_feature_test_in_transaction(/Feature/Console/DatabaseCleanCommandTest)
 
 add_feature_test_in_transaction(/Feature/Console/QueueSubmissionsCommandTest)
 
@@ -773,9 +777,5 @@ set_tests_properties(querytestsrevisionfilter PROPERTIES DEPENDS querytestsfilte
 
 add_laravel_test(/Feature/SubProjectDependencies)
 set_tests_properties(/Feature/SubProjectDependencies PROPERTIES DEPENDS querytestsrevisionfilter)
-
-# This test should go last so the removal of builds doesn't clobber other tests
-add_php_test(removebuilds)
-set_tests_properties(removebuilds PROPERTIES DEPENDS timeline)
 
 add_subdirectory(ctest)
