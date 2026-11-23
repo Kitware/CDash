@@ -469,6 +469,8 @@ set_tests_properties(/CDash/Service/RepositoryService PROPERTIES DEPENDS /CDash/
 
 add_feature_test(/Feature/LdapIntegration)
 
+add_feature_test(/Feature/Submission/CTestSubmissionTest)
+
 add_browser_test(/Browser/Pages/SitesIdPageTest)
 
 add_browser_test(/Browser/Pages/ProjectSitesPageTest)
@@ -774,8 +776,15 @@ set_tests_properties(querytestsrevisionfilter PROPERTIES DEPENDS querytestsfilte
 add_laravel_test(/Feature/SubProjectDependencies)
 set_tests_properties(/Feature/SubProjectDependencies PROPERTIES DEPENDS querytestsrevisionfilter)
 
+add_php_test(submitsortingdata)
+set_tests_properties(submitsortingdata PROPERTIES DEPENDS /Feature/SubProjectDependencies)
+
+add_php_test(indexfilters)
+set_tests_properties(indexfilters PROPERTIES DEPENDS submitsortingdata)
+
+add_php_test(timeline)
+set_tests_properties(timeline PROPERTIES DEPENDS indexfilters)
+
 # This test should go last so the removal of builds doesn't clobber other tests
 add_php_test(removebuilds)
 set_tests_properties(removebuilds PROPERTIES DEPENDS timeline)
-
-add_subdirectory(ctest)
