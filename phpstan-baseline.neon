@@ -12235,1068 +12235,6 @@ parameters:
 			path: app/cdash/include/filterdataFunctions.php
 
 		-
-			rawMessage: 'Call to an undefined method CDash\Test\UseCase\UseCase::setBuildCommand().'
-			identifier: method.notFound
-			count: 1
-			path: app/cdash/tests/case/CDash/BuildUseCaseTest.php
-
-		-
-			rawMessage: 'Cannot call method GetBuildConfigure() on mixed.'
-			identifier: method.nonObject
-			count: 4
-			path: app/cdash/tests/case/CDash/ConfigUseCaseTest.php
-
-		-
-			rawMessage: Property ConfigUseCaseTest::$cmd has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/case/CDash/ConfigUseCaseTest.php
-
-		-
-			rawMessage: Property ConfigUseCaseTest::$errors has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/case/CDash/ConfigUseCaseTest.php
-
-		-
-			rawMessage: Property ConfigUseCaseTest::$log has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/case/CDash/ConfigUseCaseTest.php
-
-		-
-			rawMessage: Property ConfigUseCaseTest::$warnings has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/case/CDash/ConfigUseCaseTest.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method execute() of class CDash\Database:
-				04/22/2023  Use Laravel query builder or Eloquent instead
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/case/CDash/DatabaseTest.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method getPdo() of class CDash\Database:
-				04/22/2023  Use Laravel query builder or Eloquent instead
-			'''
-			identifier: method.deprecated
-			count: 4
-			path: app/cdash/tests/case/CDash/DatabaseTest.php
-
-		-
-			rawMessage: 'Call to method PHPUnit\Framework\Assert::assertInstanceOf() with ''CDash\\Database'' and CDash\Database will always evaluate to true.'
-			identifier: method.alreadyNarrowedType
-			count: 1
-			path: app/cdash/tests/case/CDash/DatabaseTest.php
-
-		-
-			rawMessage: Cannot access offset 'CDash\\Database' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/case/CDash/DatabaseTest.php
-
-		-
-			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::equalTo().'
-			identifier: staticMethod.dynamicCall
-			count: 1
-			path: app/cdash/tests/case/CDash/DatabaseTest.php
-
-		-
-			rawMessage: 'Call to an undefined method CDash\Test\UseCase\UseCase::setChecker().'
-			identifier: method.notFound
-			count: 1
-			path: app/cdash/tests/case/CDash/DynamicAnalysisUseCaseTest.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method any() of class PHPUnit\Framework\TestCase:
-				https://github.com/sebastianbergmann/phpunit/issues/6461
-			'''
-			identifier: method.deprecated
-			count: 5
-			path: app/cdash/tests/case/CDash/Lib/Repository/GitHubTest.php
-
-		-
-			rawMessage: 'Property GitHubTest::$baseUrl (string) does not accept bool|string.'
-			identifier: assign.propertyType
-			count: 1
-			path: app/cdash/tests/case/CDash/Lib/Repository/GitHubTest.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method any() of class PHPUnit\Framework\TestCase:
-				https://github.com/sebastianbergmann/phpunit/issues/6461
-			'''
-			identifier: method.deprecated
-			count: 11
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
-
-		-
-			rawMessage: 'Call to function in_array() requires parameter #3 to be set.'
-			identifier: function.strict
-			count: 2
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
-
-		-
-			rawMessage: 'Method CommitAuthorSubscriptionBuilderTest::createFixed() has parameter $key with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
-
-		-
-			rawMessage: 'Method CommitAuthorSubscriptionBuilderTest::createFixed() return type has no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
-
-		-
-			rawMessage: 'Method CommitAuthorSubscriptionBuilderTest::createFixed() should return array but return statement is missing.'
-			identifier: return.missing
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
-
-		-
-			rawMessage: 'Method CommitAuthorSubscriptionBuilderTest::createMockBuildWithDiff() has parameter $diff with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
-
-		-
-			rawMessage: 'Method CommitAuthorSubscriptionBuilderTest::createNew() has parameter $key with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
-
-		-
-			rawMessage: 'Method CommitAuthorSubscriptionBuilderTest::createNew() return type has no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
-
-		-
-			rawMessage: 'Method CommitAuthorSubscriptionBuilderTest::createNew() should return array but return statement is missing.'
-			identifier: return.missing
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
-
-		-
-			rawMessage: 'Method CommitAuthorSubscriptionBuilderTest::getCommitAuthors() return type has no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
-
-		-
-			rawMessage: 'Method CommitAuthorSubscriptionBuilderTest::getDiff() return type has no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
-
-		-
-			rawMessage: 'Method CommitAuthorSubscriptionBuilderTest::getMockSubmission() has parameter $handler_class with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
-
-		-
-			rawMessage: 'Method CommitAuthorSubscriptionBuilderTest::getMockSubmission() has parameter $key with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
-
-		-
-			rawMessage: PHPDoc tag @var with type CDash\Model\Project is not subtype of native type PHPUnit\Framework\MockObject\MockObject.
-			identifier: varTag.nativeType
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
-
-		-
-			rawMessage: Property CommitAuthorSubscriptionBuilderTest::$diff has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
-
-		-
-			rawMessage: Property CommitAuthorSubscriptionBuilderTest::$fixed_keys has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
-
-		-
-			rawMessage: 'Trying to mock an undefined method GetCommitAuthors() on class App\Http\Submission\Handlers\ActionableBuildInterface.'
-			identifier: phpunit.mockMethod
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
-
-		-
-			rawMessage: 'Unable to resolve the template type T in call to method PHPUnit\Framework\TestCase::getMockBuilder()'
-			identifier: argument.templateType
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
-
-		-
-			rawMessage: 'assertEmpty() is not allowed. Use more strict assertion.'
-			identifier: phpunit.assertEmpty
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method any() of class PHPUnit\Framework\TestCase:
-				https://github.com/sebastianbergmann/phpunit/issues/6461
-			'''
-			identifier: method.deprecated
-			count: 9
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/UserSubscriptionBuilderTest.php
-
-		-
-			rawMessage: 'Call to function in_array() requires parameter #3 to be set.'
-			identifier: function.strict
-			count: 2
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/UserSubscriptionBuilderTest.php
-
-		-
-			rawMessage: 'Method UserSubscriptionBuilderTest::createFixed() has parameter $key with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/UserSubscriptionBuilderTest.php
-
-		-
-			rawMessage: 'Method UserSubscriptionBuilderTest::createFixed() return type has no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/UserSubscriptionBuilderTest.php
-
-		-
-			rawMessage: 'Method UserSubscriptionBuilderTest::createFixed() should return array but return statement is missing.'
-			identifier: return.missing
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/UserSubscriptionBuilderTest.php
-
-		-
-			rawMessage: 'Method UserSubscriptionBuilderTest::createMockBuildWithDiff() has parameter $diff with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/UserSubscriptionBuilderTest.php
-
-		-
-			rawMessage: 'Method UserSubscriptionBuilderTest::createNew() has parameter $key with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/UserSubscriptionBuilderTest.php
-
-		-
-			rawMessage: 'Method UserSubscriptionBuilderTest::createNew() return type has no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/UserSubscriptionBuilderTest.php
-
-		-
-			rawMessage: 'Method UserSubscriptionBuilderTest::createNew() should return array but return statement is missing.'
-			identifier: return.missing
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/UserSubscriptionBuilderTest.php
-
-		-
-			rawMessage: 'Method UserSubscriptionBuilderTest::getDiff() return type has no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/UserSubscriptionBuilderTest.php
-
-		-
-			rawMessage: 'Method UserSubscriptionBuilderTest::getMockHandler() has no return type specified.'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/UserSubscriptionBuilderTest.php
-
-		-
-			rawMessage: 'Method UserSubscriptionBuilderTest::getProjectSubscriberCollection() has no return type specified.'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/UserSubscriptionBuilderTest.php
-
-		-
-			rawMessage: Property UserSubscriptionBuilderTest::$diff has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/UserSubscriptionBuilderTest.php
-
-		-
-			rawMessage: Property UserSubscriptionBuilderTest::$fixed_keys has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Subscription/UserSubscriptionBuilderTest.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method any() of class PHPUnit\Framework\TestCase:
-				https://github.com/sebastianbergmann/phpunit/issues/6461
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/AuthoredTopicTest.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method any() of class PHPUnit\Framework\TestCase:
-				https://github.com/sebastianbergmann/phpunit/issues/6461
-			'''
-			identifier: method.deprecated
-			count: 6
-			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
-
-		-
-			rawMessage: 'Call to function in_array() requires parameter #3 to be set.'
-			identifier: function.strict
-			count: 2
-			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
-
-		-
-			rawMessage: 'Call to method PHPUnit\Framework\Assert::assertInstanceOf() with ''CDash\\Collection\\BuildErrorCollection'' and CDash\Collection\BuildErrorCollection will always evaluate to true.'
-			identifier: method.alreadyNarrowedType
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
-
-		-
-			rawMessage: 'Method BuildErrorTopicTest::createFixed() has parameter $key with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
-
-		-
-			rawMessage: 'Method BuildErrorTopicTest::createFixed() return type has no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
-
-		-
-			rawMessage: 'Method BuildErrorTopicTest::createFixed() should return array but return statement is missing.'
-			identifier: return.missing
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
-
-		-
-			rawMessage: 'Method BuildErrorTopicTest::createMockBuildWithDiff() has parameter $diff with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
-
-		-
-			rawMessage: 'Method BuildErrorTopicTest::createNew() has parameter $key with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
-
-		-
-			rawMessage: 'Method BuildErrorTopicTest::createNew() return type has no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
-
-		-
-			rawMessage: 'Method BuildErrorTopicTest::createNew() should return array but return statement is missing.'
-			identifier: return.missing
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
-
-		-
-			rawMessage: 'Method BuildErrorTopicTest::getDiff() return type has no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
-
-		-
-			rawMessage: 'Parameter #1 $build of method CDash\Messaging\Topic\BuildErrorTopic::subscribesToBuild() expects CDash\Model\Build, PHPUnit\Framework\MockObject\MockObject given.'
-			identifier: argument.type
-			count: 6
-			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
-
-		-
-			rawMessage: Property BuildErrorTopicTest::$diff has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
-
-		-
-			rawMessage: Property BuildErrorTopicTest::$fixed_keys has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
-
-		-
-			rawMessage: Value assigned to variable $subscriber is never read.
-			identifier: assign.unused
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
-
-		-
-			rawMessage: 'You should use assertSame() instead of assertEquals(), because both values are scalars of the same type'
-			identifier: phpunit.assertEquals
-			count: 6
-			path: app/cdash/tests/case/CDash/Messaging/Topic/BuildErrorTopicTest.php
-
-		-
-			rawMessage: 'Call to method PHPUnit\Framework\Assert::assertInstanceOf() with ''CDash\\Collection\\ConfigureCollection'' and CDash\Collection\ConfigureCollection will always evaluate to true.'
-			identifier: method.alreadyNarrowedType
-			count: 2
-			path: app/cdash/tests/case/CDash/Messaging/Topic/ConfigureTopicTest.php
-
-		-
-			rawMessage: 'You should use assertSame() instead of assertEquals(), because both values are scalars of the same type'
-			identifier: phpunit.assertEquals
-			count: 6
-			path: app/cdash/tests/case/CDash/Messaging/Topic/ConfigureTopicTest.php
-
-		-
-			rawMessage: 'assertEmpty() is not allowed. Use more strict assertion.'
-			identifier: phpunit.assertEmpty
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/ConfigureTopicTest.php
-
-		-
-			rawMessage: 'Call to method PHPUnit\Framework\Assert::assertInstanceOf() with ''CDash\\Collection\\DynamicAnalysisCollection'' and CDash\Collection\DynamicAnalysisCollection will always evaluate to true.'
-			identifier: method.alreadyNarrowedType
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/DynamicAnalysisTopicTest.php
-
-		-
-			rawMessage: 'You should use assertSame() instead of assertEquals(), because both values are scalars of the same type'
-			identifier: phpunit.assertEquals
-			count: 3
-			path: app/cdash/tests/case/CDash/Messaging/Topic/DynamicAnalysisTopicTest.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method any() of class PHPUnit\Framework\TestCase:
-				https://github.com/sebastianbergmann/phpunit/issues/6461
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/EmailSentTopicTest.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method any() of class PHPUnit\Framework\TestCase:
-				https://github.com/sebastianbergmann/phpunit/issues/6461
-			'''
-			identifier: method.deprecated
-			count: 2
-			path: app/cdash/tests/case/CDash/Messaging/Topic/FixedTopicTest.php
-
-		-
-			rawMessage: 'Call to function in_array() requires parameter #3 to be set.'
-			identifier: function.strict
-			count: 2
-			path: app/cdash/tests/case/CDash/Messaging/Topic/FixedTopicTest.php
-
-		-
-			rawMessage: 'Method FixedTopicTest::createFixed() has parameter $key with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/FixedTopicTest.php
-
-		-
-			rawMessage: 'Method FixedTopicTest::createFixed() return type has no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/FixedTopicTest.php
-
-		-
-			rawMessage: 'Method FixedTopicTest::createFixed() should return array but return statement is missing.'
-			identifier: return.missing
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/FixedTopicTest.php
-
-		-
-			rawMessage: 'Method FixedTopicTest::createMockBuildWithDiff() has parameter $diff with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/FixedTopicTest.php
-
-		-
-			rawMessage: 'Method FixedTopicTest::createNew() has parameter $key with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/FixedTopicTest.php
-
-		-
-			rawMessage: 'Method FixedTopicTest::createNew() return type has no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/FixedTopicTest.php
-
-		-
-			rawMessage: 'Method FixedTopicTest::createNew() should return array but return statement is missing.'
-			identifier: return.missing
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/FixedTopicTest.php
-
-		-
-			rawMessage: 'Method FixedTopicTest::getDiff() return type has no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/FixedTopicTest.php
-
-		-
-			rawMessage: Property FixedTopicTest::$diff has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/FixedTopicTest.php
-
-		-
-			rawMessage: Property FixedTopicTest::$fixed_keys has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/FixedTopicTest.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method any() of class PHPUnit\Framework\TestCase:
-				https://github.com/sebastianbergmann/phpunit/issues/6461
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/MissingTestTopicTest.php
-
-		-
-			rawMessage: 'Call to method PHPUnit\Framework\Assert::assertInstanceOf() with ''Illuminate\\Support\\Collection'' and Illuminate\Support\Collection will always evaluate to true.'
-			identifier: method.alreadyNarrowedType
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/MissingTestTopicTest.php
-
-		-
-			rawMessage: Cannot access property $buildid on mixed.
-			identifier: property.nonObject
-			count: 2
-			path: app/cdash/tests/case/CDash/Messaging/Topic/MissingTestTopicTest.php
-
-		-
-			rawMessage: Cannot access property $testname on mixed.
-			identifier: property.nonObject
-			count: 2
-			path: app/cdash/tests/case/CDash/Messaging/Topic/MissingTestTopicTest.php
-
-		-
-			rawMessage: 'You should use assertSame() instead of assertEquals(), because both values are scalars of the same type'
-			identifier: phpunit.assertEquals
-			count: 4
-			path: app/cdash/tests/case/CDash/Messaging/Topic/MissingTestTopicTest.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method addLabel() of class App\Models\Test:
-				10/26/2024  The legacy Label class is deprecated.  Use the labels() Eloquent relationship instead.
-			'''
-			identifier: method.deprecated
-			count: 6
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method any() of class PHPUnit\Framework\TestCase:
-				https://github.com/sebastianbergmann/phpunit/issues/6461
-			'''
-			identifier: method.deprecated
-			count: 5
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
-
-		-
-			rawMessage: 'Call to function in_array() requires parameter #3 to be set.'
-			identifier: function.strict
-			count: 2
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
-
-		-
-			rawMessage: 'Method TestFailureTopicTest::createFixed() has parameter $key with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
-
-		-
-			rawMessage: 'Method TestFailureTopicTest::createFixed() return type has no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
-
-		-
-			rawMessage: 'Method TestFailureTopicTest::createFixed() should return array but return statement is missing.'
-			identifier: return.missing
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
-
-		-
-			rawMessage: 'Method TestFailureTopicTest::createMockBuildWithDiff() has parameter $diff with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
-
-		-
-			rawMessage: 'Method TestFailureTopicTest::createNew() has parameter $key with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
-
-		-
-			rawMessage: 'Method TestFailureTopicTest::createNew() return type has no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
-
-		-
-			rawMessage: 'Method TestFailureTopicTest::createNew() should return array but return statement is missing.'
-			identifier: return.missing
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
-
-		-
-			rawMessage: 'Method TestFailureTopicTest::getDiff() return type has no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
-
-		-
-			rawMessage: Property TestFailureTopicTest::$diff has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
-
-		-
-			rawMessage: Property TestFailureTopicTest::$fixed_keys has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
-
-		-
-			rawMessage: Value assigned to variable $subscriber is never read.
-			identifier: assign.unused
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
-
-		-
-			rawMessage: 'You should use assertSame() instead of assertEquals(), because both values are scalars of the same type'
-			identifier: phpunit.assertEquals
-			count: 4
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
-
-		-
-			rawMessage: 'assertEmpty() is not allowed. Use more strict assertion.'
-			identifier: phpunit.assertEmpty
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TestFailureTopicTest.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method any() of class PHPUnit\Framework\TestCase:
-				https://github.com/sebastianbergmann/phpunit/issues/6461
-			'''
-			identifier: method.deprecated
-			count: 3
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TopicDecoratorTest.php
-
-		-
-			rawMessage: 'Method TopicDecoratorTest::getMockTopic() has no return type specified.'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TopicDecoratorTest.php
-
-		-
-			rawMessage: 'Method TopicDecoratorTest::getMockTopic() has parameter $named with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TopicDecoratorTest.php
-
-		-
-			rawMessage: 'Method TopicDecoratorTest::getMockTopicFixable() has no return type specified.'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TopicDecoratorTest.php
-
-		-
-			rawMessage: 'Method TopicDecoratorTest::getMockTopicFixable() has parameter $named with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TopicDecoratorTest.php
-
-		-
-			rawMessage: 'Method TopicDecoratorTest::getMockTopicLabelable() has no return type specified.'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TopicDecoratorTest.php
-
-		-
-			rawMessage: 'Method TopicDecoratorTest::getMockTopicLabelable() has parameter $named with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/TopicDecoratorTest.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method any() of class PHPUnit\Framework\TestCase:
-				https://github.com/sebastianbergmann/phpunit/issues/6461
-			'''
-			identifier: method.deprecated
-			count: 2
-			path: app/cdash/tests/case/CDash/Messaging/Topic/UpdateErrorTopicTest.php
-
-		-
-			rawMessage: 'Call to function in_array() requires parameter #3 to be set.'
-			identifier: function.strict
-			count: 2
-			path: app/cdash/tests/case/CDash/Messaging/Topic/UpdateErrorTopicTest.php
-
-		-
-			rawMessage: 'Method UpdateErrorTopicTest::createFixed() has parameter $key with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/UpdateErrorTopicTest.php
-
-		-
-			rawMessage: 'Method UpdateErrorTopicTest::createFixed() return type has no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/UpdateErrorTopicTest.php
-
-		-
-			rawMessage: 'Method UpdateErrorTopicTest::createFixed() should return array but return statement is missing.'
-			identifier: return.missing
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/UpdateErrorTopicTest.php
-
-		-
-			rawMessage: 'Method UpdateErrorTopicTest::createMockBuildWithDiff() has parameter $diff with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/UpdateErrorTopicTest.php
-
-		-
-			rawMessage: 'Method UpdateErrorTopicTest::createNew() has parameter $key with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/UpdateErrorTopicTest.php
-
-		-
-			rawMessage: 'Method UpdateErrorTopicTest::createNew() return type has no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/UpdateErrorTopicTest.php
-
-		-
-			rawMessage: 'Method UpdateErrorTopicTest::createNew() should return array but return statement is missing.'
-			identifier: return.missing
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/UpdateErrorTopicTest.php
-
-		-
-			rawMessage: 'Method UpdateErrorTopicTest::getDiff() return type has no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/UpdateErrorTopicTest.php
-
-		-
-			rawMessage: Property UpdateErrorTopicTest::$diff has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/UpdateErrorTopicTest.php
-
-		-
-			rawMessage: Property UpdateErrorTopicTest::$fixed_keys has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/case/CDash/Messaging/Topic/UpdateErrorTopicTest.php
-
-		-
-			rawMessage: 'You should use assertSame() instead of assertEquals(), because both values are scalars of the same type'
-			identifier: phpunit.assertEquals
-			count: 3
-			path: app/cdash/tests/case/CDash/Messaging/Topic/UpdateErrorTopicTest.php
-
-		-
-			rawMessage: 'Call to method PHPUnit\Framework\Assert::assertInstanceOf() with ''CDash\\Collection\\BuildEmailCollection'' and CDash\Collection\BuildEmailCollection will always evaluate to true.'
-			identifier: method.alreadyNarrowedType
-			count: 1
-			path: app/cdash/tests/case/CDash/Model/BuildTest.php
-
-		-
-			rawMessage: Cannot access offset 'BuildError' on array|false.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/cdash/tests/case/CDash/Model/BuildTest.php
-
-		-
-			rawMessage: Cannot access offset 'BuildWarning' on array|false.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/cdash/tests/case/CDash/Model/BuildTest.php
-
-		-
-			rawMessage: Cannot access offset 'Configure' on array|false.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/cdash/tests/case/CDash/Model/BuildTest.php
-
-		-
-			rawMessage: Cannot access offset 'TestFailure' on array|false.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 6
-			path: app/cdash/tests/case/CDash/Model/BuildTest.php
-
-		-
-			rawMessage: 'Missing call to parent::setUp() method.'
-			identifier: phpunit.callParent
-			count: 1
-			path: app/cdash/tests/case/CDash/Model/BuildTest.php
-
-		-
-			rawMessage: 'Missing call to parent::setUp() method.'
-			identifier: phpunit.callParent
-			count: 1
-			path: app/cdash/tests/case/CDash/Model/RepositoryTest.php
-
-		-
-			rawMessage: Property RepositoryTest::$project has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/case/CDash/Model/RepositoryTest.php
-
-		-
-			rawMessage: Property RepositoryTest::$repo has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/case/CDash/Model/RepositoryTest.php
-
-		-
-			rawMessage: 'You should use assertSame() instead of assertEquals(), because both values are scalars of the same type'
-			identifier: phpunit.assertEquals
-			count: 2
-			path: app/cdash/tests/case/CDash/Model/RepositoryTest.php
-
-		-
-			rawMessage: 'Call to an undefined method CDash\Test\UseCase\UseCase::createBuildFailureError().'
-			identifier: method.notFound
-			count: 1
-			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
-
-		-
-			rawMessage: 'Call to an undefined method CDash\Test\UseCase\UseCase::createTestFailed().'
-			identifier: method.notFound
-			count: 1
-			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
-
-		-
-			rawMessage: 'Call to an undefined method CDash\Test\UseCase\UseCase::setChecker().'
-			identifier: method.notFound
-			count: 1
-			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method any() of class PHPUnit\Framework\TestCase:
-				https://github.com/sebastianbergmann/phpunit/issues/6461
-			'''
-			identifier: method.deprecated
-			count: 4
-			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method forceRootUrl() of class Illuminate\Routing\UrlGenerator:
-				Use useOrigin
-			'''
-			identifier: staticMethod.deprecated
-			count: 1
-			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
-
-		-
-			rawMessage: 'Method MultipleSubprojectsEmailTest::getNotifications() has parameter $subscribers with no value type specified in iterable type array.'
-			identifier: missingType.iterableValue
-			count: 1
-			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
-
-		-
-			rawMessage: 'Parameter #1 $submission of class CDash\Messaging\Subscription\UserSubscriptionBuilder constructor expects App\Http\Submission\Handlers\ActionableBuildInterface, App\Http\Submission\Handlers\AbstractXmlHandler given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
-
-		-
-			rawMessage: 'Part $notification (mixed) of encapsed string cannot be cast to string.'
-			identifier: encapsedStringPart.nonString
-			count: 1
-			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
-
-		-
-			rawMessage: Property MultipleSubprojectsEmailTest::$database has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
-
-		-
-			rawMessage: 'Property MultipleSubprojectsEmailTest::$submission (App\Http\Submission\Handlers\ActionableBuildInterface) does not accept App\Http\Submission\Handlers\AbstractXmlHandler.'
-			identifier: assign.propertyType
-			count: 1
-			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
-
-		-
-			rawMessage: Property MultipleSubprojectsEmailTest::$tz has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/case/CDash/MultipleSubprojectsEmailTest.php
-
-		-
-			rawMessage: Access to an undefined property NightlyTimeTest::$Project.
-			identifier: property.notFound
-			count: 9
-			path: app/cdash/tests/case/CDash/NightlyTimeTest.php
-
-		-
-			rawMessage: 'Method NightlyTimeTest::validateTestingDay() has parameter $expected with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/case/CDash/NightlyTimeTest.php
-
-		-
-			rawMessage: 'Method NightlyTimeTest::validateTestingDay() has parameter $starttime with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/case/CDash/NightlyTimeTest.php
-
-		-
-			rawMessage: 'Call to method PHPUnit\Framework\Assert::assertInstanceOf() with ''CDash\\Service\\RepositoryService'' and CDash\Service\RepositoryService will always evaluate to true.'
-			identifier: method.alreadyNarrowedType
-			count: 1
-			path: app/cdash/tests/case/CDash/Service/RepositoryServiceTest.php
-
-		-
-			rawMessage: 'Call to an undefined method App\Http\Submission\Handlers\AbstractXmlHandler::GetBuildCollection().'
-			identifier: method.notFound
-			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			rawMessage: 'Call to an undefined method CDash\Test\UseCase\UseCase::createTestFailed().'
-			identifier: method.notFound
-			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			rawMessage: 'Call to an undefined method CDash\Test\UseCase\UseCase::createTestNotRun().'
-			identifier: method.notFound
-			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			rawMessage: 'Call to an undefined method CDash\Test\UseCase\UseCase::createTestPassed().'
-			identifier: method.notFound
-			count: 3
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			rawMessage: 'Call to an undefined method CDash\Test\UseCase\UseCase::createTestTimedout().'
-			identifier: method.notFound
-			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			rawMessage: 'Call to method CDash\Test\UseCase\UseCase::createSubproject() with incorrect case: createSubProject'
-			identifier: method.nameCase
-			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			rawMessage: Cannot access property $status on mixed.
-			identifier: property.nonObject
-			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			rawMessage: 'Cannot call method GetTestCollection() on mixed.'
-			identifier: method.nonObject
-			count: 4
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			rawMessage: 'PHPDoc tag @var for variable $tests contains generic class Illuminate\Support\Collection but does not specify its types: TKey, TValue'
-			identifier: missingType.generics
-			count: 3
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			rawMessage: 'Parameter #2 $array of method PHPUnit\Framework\Assert::assertArrayHasKey() expects array<mixed>|ArrayAccess<(int|string), mixed>, mixed given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			rawMessage: 'You should use assertSame() instead of assertEquals(), because both values are scalars of the same type'
-			identifier: phpunit.assertEquals
-			count: 13
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			rawMessage: 'assertEmpty() is not allowed. Use more strict assertion.'
-			identifier: phpunit.assertEmpty
-			count: 1
-			path: app/cdash/tests/case/CDash/TestUseCaseTest.php
-
-		-
-			rawMessage: 'Call to an undefined method CDash\Test\UseCase\UseCase::setBuildName().'
-			identifier: method.notFound
-			count: 1
-			path: app/cdash/tests/case/CDash/UpdateUseCaseTest.php
-
-		-
-			rawMessage: Variable $m is never read.
-			identifier: variable.unused
-			count: 1
-			path: app/cdash/tests/case/CDash/UpdateUseCaseTest.php
-
-		-
-			rawMessage: Variable $time is never read.
-			identifier: variable.unused
-			count: 1
-			path: app/cdash/tests/case/CDash/UpdateUseCaseTest.php
-
-		-
-			rawMessage: Variable $tz is never read.
-			identifier: variable.unused
-			count: 1
-			path: app/cdash/tests/case/CDash/UpdateUseCaseTest.php
-
-		-
-			rawMessage: Variable $y is never read.
-			identifier: variable.unused
-			count: 1
-			path: app/cdash/tests/case/CDash/UpdateUseCaseTest.php
-
-		-
-			rawMessage: 'You should use assertSame() instead of assertEquals(), because both values are scalars of the same type'
-			identifier: phpunit.assertEquals
-			count: 1
-			path: app/cdash/tests/case/CDash/UpdateUseCaseTest.php
-
-		-
-			rawMessage: 'Call to method PHPUnit\Framework\Assert::assertInstanceOf() with ''CDash\\Submission\\CommitAuthorHandlerInterface'' and App\Http\Submission\Handlers\BuildHandler will always evaluate to true.'
-			identifier: method.alreadyNarrowedType
-			count: 1
-			path: app/cdash/tests/case/CDash/XmlHandler/BuildHandlerTest.php
-
-		-
-			rawMessage: 'Call to method PHPUnit\Framework\Assert::assertInstanceOf() with ''CDash\\Submission\\CommitAuthorHandlerInterface'' and App\Http\Submission\Handlers\TestingHandler will always evaluate to true.'
-			identifier: method.alreadyNarrowedType
-			count: 1
-			path: app/cdash/tests/case/CDash/XmlHandler/TestingHandlerTest.php
-
-		-
-			rawMessage: 'Call to method PHPUnit\Framework\Assert::assertInstanceOf() with ''CDash\\Submission\\CommitAuthorHandlerInterface'' and App\Http\Submission\Handlers\UpdateHandler will always evaluate to true.'
-			identifier: method.alreadyNarrowedType
-			count: 1
-			path: app/cdash/tests/case/CDash/XmlHandler/UpdateHandlerTest.php
-
-		-
 			rawMessage: 'Path in require_once() "tests/kwtest/kw_db.php" is not a file or it does not exist.'
 			identifier: requireOnce.fileNotFound
 			count: 1
@@ -20351,6 +19289,1068 @@ parameters:
 			identifier: phpunit.assertEmpty
 			count: 2
 			path: tests/Feature/SlowPageTest.php
+
+		-
+			rawMessage: 'Call to an undefined method CDash\Test\UseCase\UseCase::setBuildCommand().'
+			identifier: method.notFound
+			count: 1
+			path: tests/Legacy/BuildUseCaseTest.php
+
+		-
+			rawMessage: 'Cannot call method GetBuildConfigure() on mixed.'
+			identifier: method.nonObject
+			count: 4
+			path: tests/Legacy/ConfigUseCaseTest.php
+
+		-
+			rawMessage: Property Tests\Legacy\ConfigUseCaseTest::$cmd has no type specified.
+			identifier: missingType.property
+			count: 1
+			path: tests/Legacy/ConfigUseCaseTest.php
+
+		-
+			rawMessage: Property Tests\Legacy\ConfigUseCaseTest::$errors has no type specified.
+			identifier: missingType.property
+			count: 1
+			path: tests/Legacy/ConfigUseCaseTest.php
+
+		-
+			rawMessage: Property Tests\Legacy\ConfigUseCaseTest::$log has no type specified.
+			identifier: missingType.property
+			count: 1
+			path: tests/Legacy/ConfigUseCaseTest.php
+
+		-
+			rawMessage: Property Tests\Legacy\ConfigUseCaseTest::$warnings has no type specified.
+			identifier: missingType.property
+			count: 1
+			path: tests/Legacy/ConfigUseCaseTest.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method execute() of class CDash\Database:
+				04/22/2023  Use Laravel query builder or Eloquent instead
+			'''
+			identifier: method.deprecated
+			count: 1
+			path: tests/Legacy/DatabaseTest.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method getPdo() of class CDash\Database:
+				04/22/2023  Use Laravel query builder or Eloquent instead
+			'''
+			identifier: method.deprecated
+			count: 4
+			path: tests/Legacy/DatabaseTest.php
+
+		-
+			rawMessage: 'Call to method PHPUnit\Framework\Assert::assertInstanceOf() with ''CDash\\Database'' and CDash\Database will always evaluate to true.'
+			identifier: method.alreadyNarrowedType
+			count: 1
+			path: tests/Legacy/DatabaseTest.php
+
+		-
+			rawMessage: Cannot access offset 'CDash\\Database' on mixed.
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: tests/Legacy/DatabaseTest.php
+
+		-
+			rawMessage: 'Dynamic call to static method PHPUnit\Framework\Assert::equalTo().'
+			identifier: staticMethod.dynamicCall
+			count: 1
+			path: tests/Legacy/DatabaseTest.php
+
+		-
+			rawMessage: 'Call to an undefined method CDash\Test\UseCase\UseCase::setChecker().'
+			identifier: method.notFound
+			count: 1
+			path: tests/Legacy/DynamicAnalysisUseCaseTest.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method any() of class PHPUnit\Framework\TestCase:
+				https://github.com/sebastianbergmann/phpunit/issues/6461
+			'''
+			identifier: method.deprecated
+			count: 5
+			path: tests/Legacy/Lib/Repository/GitHubTest.php
+
+		-
+			rawMessage: 'Property Tests\Legacy\Lib\Repository\GitHubTest::$baseUrl (string) does not accept bool|string.'
+			identifier: assign.propertyType
+			count: 1
+			path: tests/Legacy/Lib/Repository/GitHubTest.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method any() of class PHPUnit\Framework\TestCase:
+				https://github.com/sebastianbergmann/phpunit/issues/6461
+			'''
+			identifier: method.deprecated
+			count: 11
+			path: tests/Legacy/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
+
+		-
+			rawMessage: 'Call to function in_array() requires parameter #3 to be set.'
+			identifier: function.strict
+			count: 2
+			path: tests/Legacy/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Subscription\CommitAuthorSubscriptionBuilderTest::createFixed() has parameter $key with no type specified.'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/Legacy/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Subscription\CommitAuthorSubscriptionBuilderTest::createFixed() return type has no value type specified in iterable type array.'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Legacy/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Subscription\CommitAuthorSubscriptionBuilderTest::createFixed() should return array but return statement is missing.'
+			identifier: return.missing
+			count: 1
+			path: tests/Legacy/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Subscription\CommitAuthorSubscriptionBuilderTest::createMockBuildWithDiff() has parameter $diff with no type specified.'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/Legacy/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Subscription\CommitAuthorSubscriptionBuilderTest::createNew() has parameter $key with no type specified.'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/Legacy/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Subscription\CommitAuthorSubscriptionBuilderTest::createNew() return type has no value type specified in iterable type array.'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Legacy/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Subscription\CommitAuthorSubscriptionBuilderTest::createNew() should return array but return statement is missing.'
+			identifier: return.missing
+			count: 1
+			path: tests/Legacy/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Subscription\CommitAuthorSubscriptionBuilderTest::getCommitAuthors() return type has no value type specified in iterable type array.'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Legacy/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Subscription\CommitAuthorSubscriptionBuilderTest::getDiff() return type has no value type specified in iterable type array.'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Legacy/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Subscription\CommitAuthorSubscriptionBuilderTest::getMockSubmission() has parameter $handler_class with no type specified.'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/Legacy/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Subscription\CommitAuthorSubscriptionBuilderTest::getMockSubmission() has parameter $key with no type specified.'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/Legacy/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
+
+		-
+			rawMessage: PHPDoc tag @var with type CDash\Model\Project is not subtype of native type PHPUnit\Framework\MockObject\MockObject.
+			identifier: varTag.nativeType
+			count: 1
+			path: tests/Legacy/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
+
+		-
+			rawMessage: Property Tests\Legacy\Messaging\Subscription\CommitAuthorSubscriptionBuilderTest::$diff has no type specified.
+			identifier: missingType.property
+			count: 1
+			path: tests/Legacy/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
+
+		-
+			rawMessage: Property Tests\Legacy\Messaging\Subscription\CommitAuthorSubscriptionBuilderTest::$fixed_keys has no type specified.
+			identifier: missingType.property
+			count: 1
+			path: tests/Legacy/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
+
+		-
+			rawMessage: 'Trying to mock an undefined method GetCommitAuthors() on class App\Http\Submission\Handlers\ActionableBuildInterface.'
+			identifier: phpunit.mockMethod
+			count: 1
+			path: tests/Legacy/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
+
+		-
+			rawMessage: 'Unable to resolve the template type T in call to method PHPUnit\Framework\TestCase::getMockBuilder()'
+			identifier: argument.templateType
+			count: 1
+			path: tests/Legacy/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
+
+		-
+			rawMessage: 'assertEmpty() is not allowed. Use more strict assertion.'
+			identifier: phpunit.assertEmpty
+			count: 1
+			path: tests/Legacy/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method any() of class PHPUnit\Framework\TestCase:
+				https://github.com/sebastianbergmann/phpunit/issues/6461
+			'''
+			identifier: method.deprecated
+			count: 9
+			path: tests/Legacy/Messaging/Subscription/UserSubscriptionBuilderTest.php
+
+		-
+			rawMessage: 'Call to function in_array() requires parameter #3 to be set.'
+			identifier: function.strict
+			count: 2
+			path: tests/Legacy/Messaging/Subscription/UserSubscriptionBuilderTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Subscription\UserSubscriptionBuilderTest::createFixed() has parameter $key with no type specified.'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/Legacy/Messaging/Subscription/UserSubscriptionBuilderTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Subscription\UserSubscriptionBuilderTest::createFixed() return type has no value type specified in iterable type array.'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Legacy/Messaging/Subscription/UserSubscriptionBuilderTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Subscription\UserSubscriptionBuilderTest::createFixed() should return array but return statement is missing.'
+			identifier: return.missing
+			count: 1
+			path: tests/Legacy/Messaging/Subscription/UserSubscriptionBuilderTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Subscription\UserSubscriptionBuilderTest::createMockBuildWithDiff() has parameter $diff with no type specified.'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/Legacy/Messaging/Subscription/UserSubscriptionBuilderTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Subscription\UserSubscriptionBuilderTest::createNew() has parameter $key with no type specified.'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/Legacy/Messaging/Subscription/UserSubscriptionBuilderTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Subscription\UserSubscriptionBuilderTest::createNew() return type has no value type specified in iterable type array.'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Legacy/Messaging/Subscription/UserSubscriptionBuilderTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Subscription\UserSubscriptionBuilderTest::createNew() should return array but return statement is missing.'
+			identifier: return.missing
+			count: 1
+			path: tests/Legacy/Messaging/Subscription/UserSubscriptionBuilderTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Subscription\UserSubscriptionBuilderTest::getDiff() return type has no value type specified in iterable type array.'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Legacy/Messaging/Subscription/UserSubscriptionBuilderTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Subscription\UserSubscriptionBuilderTest::getMockHandler() has no return type specified.'
+			identifier: missingType.return
+			count: 1
+			path: tests/Legacy/Messaging/Subscription/UserSubscriptionBuilderTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Subscription\UserSubscriptionBuilderTest::getProjectSubscriberCollection() has no return type specified.'
+			identifier: missingType.return
+			count: 1
+			path: tests/Legacy/Messaging/Subscription/UserSubscriptionBuilderTest.php
+
+		-
+			rawMessage: Property Tests\Legacy\Messaging\Subscription\UserSubscriptionBuilderTest::$diff has no type specified.
+			identifier: missingType.property
+			count: 1
+			path: tests/Legacy/Messaging/Subscription/UserSubscriptionBuilderTest.php
+
+		-
+			rawMessage: Property Tests\Legacy\Messaging\Subscription\UserSubscriptionBuilderTest::$fixed_keys has no type specified.
+			identifier: missingType.property
+			count: 1
+			path: tests/Legacy/Messaging/Subscription/UserSubscriptionBuilderTest.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method any() of class PHPUnit\Framework\TestCase:
+				https://github.com/sebastianbergmann/phpunit/issues/6461
+			'''
+			identifier: method.deprecated
+			count: 1
+			path: tests/Legacy/Messaging/Topic/AuthoredTopicTest.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method any() of class PHPUnit\Framework\TestCase:
+				https://github.com/sebastianbergmann/phpunit/issues/6461
+			'''
+			identifier: method.deprecated
+			count: 6
+			path: tests/Legacy/Messaging/Topic/BuildErrorTopicTest.php
+
+		-
+			rawMessage: 'Call to function in_array() requires parameter #3 to be set.'
+			identifier: function.strict
+			count: 2
+			path: tests/Legacy/Messaging/Topic/BuildErrorTopicTest.php
+
+		-
+			rawMessage: 'Call to method PHPUnit\Framework\Assert::assertInstanceOf() with ''CDash\\Collection\\BuildErrorCollection'' and CDash\Collection\BuildErrorCollection will always evaluate to true.'
+			identifier: method.alreadyNarrowedType
+			count: 1
+			path: tests/Legacy/Messaging/Topic/BuildErrorTopicTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Topic\BuildErrorTopicTest::createFixed() has parameter $key with no type specified.'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/Legacy/Messaging/Topic/BuildErrorTopicTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Topic\BuildErrorTopicTest::createFixed() return type has no value type specified in iterable type array.'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Legacy/Messaging/Topic/BuildErrorTopicTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Topic\BuildErrorTopicTest::createFixed() should return array but return statement is missing.'
+			identifier: return.missing
+			count: 1
+			path: tests/Legacy/Messaging/Topic/BuildErrorTopicTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Topic\BuildErrorTopicTest::createMockBuildWithDiff() has parameter $diff with no type specified.'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/Legacy/Messaging/Topic/BuildErrorTopicTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Topic\BuildErrorTopicTest::createNew() has parameter $key with no type specified.'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/Legacy/Messaging/Topic/BuildErrorTopicTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Topic\BuildErrorTopicTest::createNew() return type has no value type specified in iterable type array.'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Legacy/Messaging/Topic/BuildErrorTopicTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Topic\BuildErrorTopicTest::createNew() should return array but return statement is missing.'
+			identifier: return.missing
+			count: 1
+			path: tests/Legacy/Messaging/Topic/BuildErrorTopicTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Topic\BuildErrorTopicTest::getDiff() return type has no value type specified in iterable type array.'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Legacy/Messaging/Topic/BuildErrorTopicTest.php
+
+		-
+			rawMessage: 'Parameter #1 $build of method CDash\Messaging\Topic\BuildErrorTopic::subscribesToBuild() expects CDash\Model\Build, PHPUnit\Framework\MockObject\MockObject given.'
+			identifier: argument.type
+			count: 6
+			path: tests/Legacy/Messaging/Topic/BuildErrorTopicTest.php
+
+		-
+			rawMessage: Property Tests\Legacy\Messaging\Topic\BuildErrorTopicTest::$diff has no type specified.
+			identifier: missingType.property
+			count: 1
+			path: tests/Legacy/Messaging/Topic/BuildErrorTopicTest.php
+
+		-
+			rawMessage: Property Tests\Legacy\Messaging\Topic\BuildErrorTopicTest::$fixed_keys has no type specified.
+			identifier: missingType.property
+			count: 1
+			path: tests/Legacy/Messaging/Topic/BuildErrorTopicTest.php
+
+		-
+			rawMessage: Value assigned to variable $subscriber is never read.
+			identifier: assign.unused
+			count: 1
+			path: tests/Legacy/Messaging/Topic/BuildErrorTopicTest.php
+
+		-
+			rawMessage: 'You should use assertSame() instead of assertEquals(), because both values are scalars of the same type'
+			identifier: phpunit.assertEquals
+			count: 6
+			path: tests/Legacy/Messaging/Topic/BuildErrorTopicTest.php
+
+		-
+			rawMessage: 'Call to method PHPUnit\Framework\Assert::assertInstanceOf() with ''CDash\\Collection\\ConfigureCollection'' and CDash\Collection\ConfigureCollection will always evaluate to true.'
+			identifier: method.alreadyNarrowedType
+			count: 2
+			path: tests/Legacy/Messaging/Topic/ConfigureTopicTest.php
+
+		-
+			rawMessage: 'You should use assertSame() instead of assertEquals(), because both values are scalars of the same type'
+			identifier: phpunit.assertEquals
+			count: 6
+			path: tests/Legacy/Messaging/Topic/ConfigureTopicTest.php
+
+		-
+			rawMessage: 'assertEmpty() is not allowed. Use more strict assertion.'
+			identifier: phpunit.assertEmpty
+			count: 1
+			path: tests/Legacy/Messaging/Topic/ConfigureTopicTest.php
+
+		-
+			rawMessage: 'Call to method PHPUnit\Framework\Assert::assertInstanceOf() with ''CDash\\Collection\\DynamicAnalysisCollection'' and CDash\Collection\DynamicAnalysisCollection will always evaluate to true.'
+			identifier: method.alreadyNarrowedType
+			count: 1
+			path: tests/Legacy/Messaging/Topic/DynamicAnalysisTopicTest.php
+
+		-
+			rawMessage: 'You should use assertSame() instead of assertEquals(), because both values are scalars of the same type'
+			identifier: phpunit.assertEquals
+			count: 3
+			path: tests/Legacy/Messaging/Topic/DynamicAnalysisTopicTest.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method any() of class PHPUnit\Framework\TestCase:
+				https://github.com/sebastianbergmann/phpunit/issues/6461
+			'''
+			identifier: method.deprecated
+			count: 1
+			path: tests/Legacy/Messaging/Topic/EmailSentTopicTest.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method any() of class PHPUnit\Framework\TestCase:
+				https://github.com/sebastianbergmann/phpunit/issues/6461
+			'''
+			identifier: method.deprecated
+			count: 2
+			path: tests/Legacy/Messaging/Topic/FixedTopicTest.php
+
+		-
+			rawMessage: 'Call to function in_array() requires parameter #3 to be set.'
+			identifier: function.strict
+			count: 2
+			path: tests/Legacy/Messaging/Topic/FixedTopicTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Topic\FixedTopicTest::createFixed() has parameter $key with no type specified.'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/Legacy/Messaging/Topic/FixedTopicTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Topic\FixedTopicTest::createFixed() return type has no value type specified in iterable type array.'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Legacy/Messaging/Topic/FixedTopicTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Topic\FixedTopicTest::createFixed() should return array but return statement is missing.'
+			identifier: return.missing
+			count: 1
+			path: tests/Legacy/Messaging/Topic/FixedTopicTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Topic\FixedTopicTest::createMockBuildWithDiff() has parameter $diff with no type specified.'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/Legacy/Messaging/Topic/FixedTopicTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Topic\FixedTopicTest::createNew() has parameter $key with no type specified.'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/Legacy/Messaging/Topic/FixedTopicTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Topic\FixedTopicTest::createNew() return type has no value type specified in iterable type array.'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Legacy/Messaging/Topic/FixedTopicTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Topic\FixedTopicTest::createNew() should return array but return statement is missing.'
+			identifier: return.missing
+			count: 1
+			path: tests/Legacy/Messaging/Topic/FixedTopicTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Topic\FixedTopicTest::getDiff() return type has no value type specified in iterable type array.'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Legacy/Messaging/Topic/FixedTopicTest.php
+
+		-
+			rawMessage: Property Tests\Legacy\Messaging\Topic\FixedTopicTest::$diff has no type specified.
+			identifier: missingType.property
+			count: 1
+			path: tests/Legacy/Messaging/Topic/FixedTopicTest.php
+
+		-
+			rawMessage: Property Tests\Legacy\Messaging\Topic\FixedTopicTest::$fixed_keys has no type specified.
+			identifier: missingType.property
+			count: 1
+			path: tests/Legacy/Messaging/Topic/FixedTopicTest.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method any() of class PHPUnit\Framework\TestCase:
+				https://github.com/sebastianbergmann/phpunit/issues/6461
+			'''
+			identifier: method.deprecated
+			count: 1
+			path: tests/Legacy/Messaging/Topic/MissingTestTopicTest.php
+
+		-
+			rawMessage: 'Call to method PHPUnit\Framework\Assert::assertInstanceOf() with ''Illuminate\\Support\\Collection'' and Illuminate\Support\Collection will always evaluate to true.'
+			identifier: method.alreadyNarrowedType
+			count: 1
+			path: tests/Legacy/Messaging/Topic/MissingTestTopicTest.php
+
+		-
+			rawMessage: Cannot access property $buildid on mixed.
+			identifier: property.nonObject
+			count: 2
+			path: tests/Legacy/Messaging/Topic/MissingTestTopicTest.php
+
+		-
+			rawMessage: Cannot access property $testname on mixed.
+			identifier: property.nonObject
+			count: 2
+			path: tests/Legacy/Messaging/Topic/MissingTestTopicTest.php
+
+		-
+			rawMessage: 'You should use assertSame() instead of assertEquals(), because both values are scalars of the same type'
+			identifier: phpunit.assertEquals
+			count: 4
+			path: tests/Legacy/Messaging/Topic/MissingTestTopicTest.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method addLabel() of class App\Models\Test:
+				10/26/2024  The legacy Label class is deprecated.  Use the labels() Eloquent relationship instead.
+			'''
+			identifier: method.deprecated
+			count: 6
+			path: tests/Legacy/Messaging/Topic/TestFailureTopicTest.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method any() of class PHPUnit\Framework\TestCase:
+				https://github.com/sebastianbergmann/phpunit/issues/6461
+			'''
+			identifier: method.deprecated
+			count: 5
+			path: tests/Legacy/Messaging/Topic/TestFailureTopicTest.php
+
+		-
+			rawMessage: 'Call to function in_array() requires parameter #3 to be set.'
+			identifier: function.strict
+			count: 2
+			path: tests/Legacy/Messaging/Topic/TestFailureTopicTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Topic\TestFailureTopicTest::createFixed() has parameter $key with no type specified.'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/Legacy/Messaging/Topic/TestFailureTopicTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Topic\TestFailureTopicTest::createFixed() return type has no value type specified in iterable type array.'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Legacy/Messaging/Topic/TestFailureTopicTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Topic\TestFailureTopicTest::createFixed() should return array but return statement is missing.'
+			identifier: return.missing
+			count: 1
+			path: tests/Legacy/Messaging/Topic/TestFailureTopicTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Topic\TestFailureTopicTest::createMockBuildWithDiff() has parameter $diff with no type specified.'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/Legacy/Messaging/Topic/TestFailureTopicTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Topic\TestFailureTopicTest::createNew() has parameter $key with no type specified.'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/Legacy/Messaging/Topic/TestFailureTopicTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Topic\TestFailureTopicTest::createNew() return type has no value type specified in iterable type array.'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Legacy/Messaging/Topic/TestFailureTopicTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Topic\TestFailureTopicTest::createNew() should return array but return statement is missing.'
+			identifier: return.missing
+			count: 1
+			path: tests/Legacy/Messaging/Topic/TestFailureTopicTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Topic\TestFailureTopicTest::getDiff() return type has no value type specified in iterable type array.'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Legacy/Messaging/Topic/TestFailureTopicTest.php
+
+		-
+			rawMessage: Property Tests\Legacy\Messaging\Topic\TestFailureTopicTest::$diff has no type specified.
+			identifier: missingType.property
+			count: 1
+			path: tests/Legacy/Messaging/Topic/TestFailureTopicTest.php
+
+		-
+			rawMessage: Property Tests\Legacy\Messaging\Topic\TestFailureTopicTest::$fixed_keys has no type specified.
+			identifier: missingType.property
+			count: 1
+			path: tests/Legacy/Messaging/Topic/TestFailureTopicTest.php
+
+		-
+			rawMessage: Value assigned to variable $subscriber is never read.
+			identifier: assign.unused
+			count: 1
+			path: tests/Legacy/Messaging/Topic/TestFailureTopicTest.php
+
+		-
+			rawMessage: 'You should use assertSame() instead of assertEquals(), because both values are scalars of the same type'
+			identifier: phpunit.assertEquals
+			count: 4
+			path: tests/Legacy/Messaging/Topic/TestFailureTopicTest.php
+
+		-
+			rawMessage: 'assertEmpty() is not allowed. Use more strict assertion.'
+			identifier: phpunit.assertEmpty
+			count: 1
+			path: tests/Legacy/Messaging/Topic/TestFailureTopicTest.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method any() of class PHPUnit\Framework\TestCase:
+				https://github.com/sebastianbergmann/phpunit/issues/6461
+			'''
+			identifier: method.deprecated
+			count: 3
+			path: tests/Legacy/Messaging/Topic/TopicDecoratorTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Topic\TopicDecoratorTest::getMockTopic() has no return type specified.'
+			identifier: missingType.return
+			count: 1
+			path: tests/Legacy/Messaging/Topic/TopicDecoratorTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Topic\TopicDecoratorTest::getMockTopic() has parameter $named with no type specified.'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/Legacy/Messaging/Topic/TopicDecoratorTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Topic\TopicDecoratorTest::getMockTopicFixable() has no return type specified.'
+			identifier: missingType.return
+			count: 1
+			path: tests/Legacy/Messaging/Topic/TopicDecoratorTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Topic\TopicDecoratorTest::getMockTopicFixable() has parameter $named with no type specified.'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/Legacy/Messaging/Topic/TopicDecoratorTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Topic\TopicDecoratorTest::getMockTopicLabelable() has no return type specified.'
+			identifier: missingType.return
+			count: 1
+			path: tests/Legacy/Messaging/Topic/TopicDecoratorTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Topic\TopicDecoratorTest::getMockTopicLabelable() has parameter $named with no type specified.'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/Legacy/Messaging/Topic/TopicDecoratorTest.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method any() of class PHPUnit\Framework\TestCase:
+				https://github.com/sebastianbergmann/phpunit/issues/6461
+			'''
+			identifier: method.deprecated
+			count: 2
+			path: tests/Legacy/Messaging/Topic/UpdateErrorTopicTest.php
+
+		-
+			rawMessage: 'Call to function in_array() requires parameter #3 to be set.'
+			identifier: function.strict
+			count: 2
+			path: tests/Legacy/Messaging/Topic/UpdateErrorTopicTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Topic\UpdateErrorTopicTest::createFixed() has parameter $key with no type specified.'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/Legacy/Messaging/Topic/UpdateErrorTopicTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Topic\UpdateErrorTopicTest::createFixed() return type has no value type specified in iterable type array.'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Legacy/Messaging/Topic/UpdateErrorTopicTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Topic\UpdateErrorTopicTest::createFixed() should return array but return statement is missing.'
+			identifier: return.missing
+			count: 1
+			path: tests/Legacy/Messaging/Topic/UpdateErrorTopicTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Topic\UpdateErrorTopicTest::createMockBuildWithDiff() has parameter $diff with no type specified.'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/Legacy/Messaging/Topic/UpdateErrorTopicTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Topic\UpdateErrorTopicTest::createNew() has parameter $key with no type specified.'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/Legacy/Messaging/Topic/UpdateErrorTopicTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Topic\UpdateErrorTopicTest::createNew() return type has no value type specified in iterable type array.'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Legacy/Messaging/Topic/UpdateErrorTopicTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Topic\UpdateErrorTopicTest::createNew() should return array but return statement is missing.'
+			identifier: return.missing
+			count: 1
+			path: tests/Legacy/Messaging/Topic/UpdateErrorTopicTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\Messaging\Topic\UpdateErrorTopicTest::getDiff() return type has no value type specified in iterable type array.'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Legacy/Messaging/Topic/UpdateErrorTopicTest.php
+
+		-
+			rawMessage: Property Tests\Legacy\Messaging\Topic\UpdateErrorTopicTest::$diff has no type specified.
+			identifier: missingType.property
+			count: 1
+			path: tests/Legacy/Messaging/Topic/UpdateErrorTopicTest.php
+
+		-
+			rawMessage: Property Tests\Legacy\Messaging\Topic\UpdateErrorTopicTest::$fixed_keys has no type specified.
+			identifier: missingType.property
+			count: 1
+			path: tests/Legacy/Messaging/Topic/UpdateErrorTopicTest.php
+
+		-
+			rawMessage: 'You should use assertSame() instead of assertEquals(), because both values are scalars of the same type'
+			identifier: phpunit.assertEquals
+			count: 3
+			path: tests/Legacy/Messaging/Topic/UpdateErrorTopicTest.php
+
+		-
+			rawMessage: 'Call to method PHPUnit\Framework\Assert::assertInstanceOf() with ''CDash\\Collection\\BuildEmailCollection'' and CDash\Collection\BuildEmailCollection will always evaluate to true.'
+			identifier: method.alreadyNarrowedType
+			count: 1
+			path: tests/Legacy/Model/BuildTest.php
+
+		-
+			rawMessage: Cannot access offset 'BuildError' on array|false.
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: tests/Legacy/Model/BuildTest.php
+
+		-
+			rawMessage: Cannot access offset 'BuildWarning' on array|false.
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: tests/Legacy/Model/BuildTest.php
+
+		-
+			rawMessage: Cannot access offset 'Configure' on array|false.
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: tests/Legacy/Model/BuildTest.php
+
+		-
+			rawMessage: Cannot access offset 'TestFailure' on array|false.
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 6
+			path: tests/Legacy/Model/BuildTest.php
+
+		-
+			rawMessage: 'Missing call to parent::setUp() method.'
+			identifier: phpunit.callParent
+			count: 1
+			path: tests/Legacy/Model/BuildTest.php
+
+		-
+			rawMessage: 'Missing call to parent::setUp() method.'
+			identifier: phpunit.callParent
+			count: 1
+			path: tests/Legacy/Model/RepositoryTest.php
+
+		-
+			rawMessage: Property Tests\Legacy\Model\RepositoryTest::$project has no type specified.
+			identifier: missingType.property
+			count: 1
+			path: tests/Legacy/Model/RepositoryTest.php
+
+		-
+			rawMessage: Property Tests\Legacy\Model\RepositoryTest::$repo has no type specified.
+			identifier: missingType.property
+			count: 1
+			path: tests/Legacy/Model/RepositoryTest.php
+
+		-
+			rawMessage: 'You should use assertSame() instead of assertEquals(), because both values are scalars of the same type'
+			identifier: phpunit.assertEquals
+			count: 2
+			path: tests/Legacy/Model/RepositoryTest.php
+
+		-
+			rawMessage: 'Call to an undefined method CDash\Test\UseCase\UseCase::createBuildFailureError().'
+			identifier: method.notFound
+			count: 1
+			path: tests/Legacy/MultipleSubprojectsEmailTest.php
+
+		-
+			rawMessage: 'Call to an undefined method CDash\Test\UseCase\UseCase::createTestFailed().'
+			identifier: method.notFound
+			count: 1
+			path: tests/Legacy/MultipleSubprojectsEmailTest.php
+
+		-
+			rawMessage: 'Call to an undefined method CDash\Test\UseCase\UseCase::setChecker().'
+			identifier: method.notFound
+			count: 1
+			path: tests/Legacy/MultipleSubprojectsEmailTest.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method any() of class PHPUnit\Framework\TestCase:
+				https://github.com/sebastianbergmann/phpunit/issues/6461
+			'''
+			identifier: method.deprecated
+			count: 4
+			path: tests/Legacy/MultipleSubprojectsEmailTest.php
+
+		-
+			rawMessage: '''
+				Call to deprecated method forceRootUrl() of class Illuminate\Routing\UrlGenerator:
+				Use useOrigin
+			'''
+			identifier: staticMethod.deprecated
+			count: 1
+			path: tests/Legacy/MultipleSubprojectsEmailTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\MultipleSubprojectsEmailTest::getNotifications() has parameter $subscribers with no value type specified in iterable type array.'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Legacy/MultipleSubprojectsEmailTest.php
+
+		-
+			rawMessage: 'Parameter #1 $submission of class CDash\Messaging\Subscription\UserSubscriptionBuilder constructor expects App\Http\Submission\Handlers\ActionableBuildInterface, App\Http\Submission\Handlers\AbstractXmlHandler given.'
+			identifier: argument.type
+			count: 1
+			path: tests/Legacy/MultipleSubprojectsEmailTest.php
+
+		-
+			rawMessage: 'Part $notification (mixed) of encapsed string cannot be cast to string.'
+			identifier: encapsedStringPart.nonString
+			count: 1
+			path: tests/Legacy/MultipleSubprojectsEmailTest.php
+
+		-
+			rawMessage: Property Tests\Legacy\MultipleSubprojectsEmailTest::$database has no type specified.
+			identifier: missingType.property
+			count: 1
+			path: tests/Legacy/MultipleSubprojectsEmailTest.php
+
+		-
+			rawMessage: 'Property Tests\Legacy\MultipleSubprojectsEmailTest::$submission (App\Http\Submission\Handlers\ActionableBuildInterface) does not accept App\Http\Submission\Handlers\AbstractXmlHandler.'
+			identifier: assign.propertyType
+			count: 1
+			path: tests/Legacy/MultipleSubprojectsEmailTest.php
+
+		-
+			rawMessage: Property Tests\Legacy\MultipleSubprojectsEmailTest::$tz has no type specified.
+			identifier: missingType.property
+			count: 1
+			path: tests/Legacy/MultipleSubprojectsEmailTest.php
+
+		-
+			rawMessage: Access to an undefined property Tests\Legacy\NightlyTimeTest::$Project.
+			identifier: property.notFound
+			count: 9
+			path: tests/Legacy/NightlyTimeTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\NightlyTimeTest::validateTestingDay() has parameter $expected with no type specified.'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/Legacy/NightlyTimeTest.php
+
+		-
+			rawMessage: 'Method Tests\Legacy\NightlyTimeTest::validateTestingDay() has parameter $starttime with no type specified.'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/Legacy/NightlyTimeTest.php
+
+		-
+			rawMessage: 'Call to method PHPUnit\Framework\Assert::assertInstanceOf() with ''CDash\\Service\\RepositoryService'' and CDash\Service\RepositoryService will always evaluate to true.'
+			identifier: method.alreadyNarrowedType
+			count: 1
+			path: tests/Legacy/Service/RepositoryServiceTest.php
+
+		-
+			rawMessage: 'Call to an undefined method App\Http\Submission\Handlers\AbstractXmlHandler::GetBuildCollection().'
+			identifier: method.notFound
+			count: 1
+			path: tests/Legacy/TestUseCaseTest.php
+
+		-
+			rawMessage: 'Call to an undefined method CDash\Test\UseCase\UseCase::createTestFailed().'
+			identifier: method.notFound
+			count: 1
+			path: tests/Legacy/TestUseCaseTest.php
+
+		-
+			rawMessage: 'Call to an undefined method CDash\Test\UseCase\UseCase::createTestNotRun().'
+			identifier: method.notFound
+			count: 1
+			path: tests/Legacy/TestUseCaseTest.php
+
+		-
+			rawMessage: 'Call to an undefined method CDash\Test\UseCase\UseCase::createTestPassed().'
+			identifier: method.notFound
+			count: 3
+			path: tests/Legacy/TestUseCaseTest.php
+
+		-
+			rawMessage: 'Call to an undefined method CDash\Test\UseCase\UseCase::createTestTimedout().'
+			identifier: method.notFound
+			count: 1
+			path: tests/Legacy/TestUseCaseTest.php
+
+		-
+			rawMessage: 'Call to method CDash\Test\UseCase\UseCase::createSubproject() with incorrect case: createSubProject'
+			identifier: method.nameCase
+			count: 1
+			path: tests/Legacy/TestUseCaseTest.php
+
+		-
+			rawMessage: Cannot access property $status on mixed.
+			identifier: property.nonObject
+			count: 1
+			path: tests/Legacy/TestUseCaseTest.php
+
+		-
+			rawMessage: 'Cannot call method GetTestCollection() on mixed.'
+			identifier: method.nonObject
+			count: 4
+			path: tests/Legacy/TestUseCaseTest.php
+
+		-
+			rawMessage: 'PHPDoc tag @var for variable $tests contains generic class Illuminate\Support\Collection but does not specify its types: TKey, TValue'
+			identifier: missingType.generics
+			count: 3
+			path: tests/Legacy/TestUseCaseTest.php
+
+		-
+			rawMessage: 'Parameter #2 $array of method PHPUnit\Framework\Assert::assertArrayHasKey() expects array<mixed>|ArrayAccess<(int|string), mixed>, mixed given.'
+			identifier: argument.type
+			count: 1
+			path: tests/Legacy/TestUseCaseTest.php
+
+		-
+			rawMessage: 'You should use assertSame() instead of assertEquals(), because both values are scalars of the same type'
+			identifier: phpunit.assertEquals
+			count: 13
+			path: tests/Legacy/TestUseCaseTest.php
+
+		-
+			rawMessage: 'assertEmpty() is not allowed. Use more strict assertion.'
+			identifier: phpunit.assertEmpty
+			count: 1
+			path: tests/Legacy/TestUseCaseTest.php
+
+		-
+			rawMessage: 'Call to an undefined method CDash\Test\UseCase\UseCase::setBuildName().'
+			identifier: method.notFound
+			count: 1
+			path: tests/Legacy/UpdateUseCaseTest.php
+
+		-
+			rawMessage: Variable $m is never read.
+			identifier: variable.unused
+			count: 1
+			path: tests/Legacy/UpdateUseCaseTest.php
+
+		-
+			rawMessage: Variable $time is never read.
+			identifier: variable.unused
+			count: 1
+			path: tests/Legacy/UpdateUseCaseTest.php
+
+		-
+			rawMessage: Variable $tz is never read.
+			identifier: variable.unused
+			count: 1
+			path: tests/Legacy/UpdateUseCaseTest.php
+
+		-
+			rawMessage: Variable $y is never read.
+			identifier: variable.unused
+			count: 1
+			path: tests/Legacy/UpdateUseCaseTest.php
+
+		-
+			rawMessage: 'You should use assertSame() instead of assertEquals(), because both values are scalars of the same type'
+			identifier: phpunit.assertEquals
+			count: 1
+			path: tests/Legacy/UpdateUseCaseTest.php
+
+		-
+			rawMessage: 'Call to method PHPUnit\Framework\Assert::assertInstanceOf() with ''CDash\\Submission\\CommitAuthorHandlerInterface'' and App\Http\Submission\Handlers\BuildHandler will always evaluate to true.'
+			identifier: method.alreadyNarrowedType
+			count: 1
+			path: tests/Legacy/XmlHandler/BuildHandlerTest.php
+
+		-
+			rawMessage: 'Call to method PHPUnit\Framework\Assert::assertInstanceOf() with ''CDash\\Submission\\CommitAuthorHandlerInterface'' and App\Http\Submission\Handlers\TestingHandler will always evaluate to true.'
+			identifier: method.alreadyNarrowedType
+			count: 1
+			path: tests/Legacy/XmlHandler/TestingHandlerTest.php
+
+		-
+			rawMessage: 'Call to method PHPUnit\Framework\Assert::assertInstanceOf() with ''CDash\\Submission\\CommitAuthorHandlerInterface'' and App\Http\Submission\Handlers\UpdateHandler will always evaluate to true.'
+			identifier: method.alreadyNarrowedType
+			count: 1
+			path: tests/Legacy/XmlHandler/UpdateHandlerTest.php
 
 		-
 			rawMessage: 'Parameter #1 $objectOrClass of class ReflectionClass constructor expects class-string<T of object>|T of object, array<string>|string given.'
