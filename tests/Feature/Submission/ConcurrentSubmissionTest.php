@@ -8,6 +8,7 @@ use App\Models\Build;
 use App\Models\BuildFile;
 use App\Models\Project;
 use App\Models\Site;
+use App\Services\SubmissionService;
 use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -124,6 +125,40 @@ class ConcurrentSubmissionTest extends TestCase
 
         $this->assertThrows(
             fn () => (new ProcessSubmission($filename, $this->project->id, $build->id, $md5))->handle(),
+            BadSubmissionException::class,
+            'was already parsed',
+        );
+        $this->assertDatabaseMissing('buildproperties', ['buildid' => $build->id]);
+    }
+
+    /**
+     * A job with a row also fails if a job without one, which found the file by md5, parsed it first.
+     */
+    public function testRejectsRecordedDataFileAlreadyParsedByAnotherJob(): void
+    {
+        $build = $this->createBuild();
+        $contents = '{"key": "value"}';
+        $md5 = md5($contents);
+        $filename = Str::uuid()->toString() . '.json';
+        Storage::put("inbox/{$filename}", $contents);
+        $buildfile = BuildFile::create([
+            'buildid' => $build->id,
+            'type' => 'BuildPropertiesJSON',
+            'md5' => $md5,
+            'filename' => 'properties.json',
+        ]);
+        $submissionid = Str::uuid7()->toString();
+        SubmissionService::recordSubmission($submissionid, $this->project->id, $build->id, 'BuildPropertiesJSON', "inbox/{$filename}", 'properties.json');
+
+        // Delete the buildfile row when this job takes the build's lock, as the other job would have done by then.
+        DB::listen(function (QueryExecuted $query) use ($buildfile): void {
+            if (str_contains($query->sql, 'pg_advisory_xact_lock')) {
+                BuildFile::whereKey($buildfile->getKey())->delete();
+            }
+        });
+
+        $this->assertThrows(
+            fn () => (new ProcessSubmission($filename, $this->project->id, $build->id, $md5, $submissionid))->handle(),
             BadSubmissionException::class,
             'was already parsed',
         );

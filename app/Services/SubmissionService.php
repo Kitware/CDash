@@ -148,6 +148,26 @@ class SubmissionService extends AbstractService
     }
 
     /**
+     * Where a submission's file is, according to its row.  Null for a job that has no row, or if the row can't be
+     * read.
+     */
+    public static function submissionPath(?string $id): ?string
+    {
+        if ($id === null) {
+            return null;
+        }
+
+        try {
+            $path = Submission::whereKey($id)->value('path');
+        } catch (Throwable $e) {
+            report($e);
+            return null;
+        }
+
+        return is_string($path) ? $path : null;
+    }
+
+    /**
      * Move a queued submission's row to processing, so that no other job processes its file.  Returns false
      * if the row isn't queued, e.g. because another job claimed it first.
      */
