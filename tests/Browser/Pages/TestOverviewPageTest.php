@@ -99,6 +99,15 @@ class TestOverviewPageTest extends BrowserTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * Wait for the timeline to be drawn.  It's loaded after the tests are listed and pushes the rest of the
+     * page down when it appears, so a click below it can otherwise land where the element used to be.
+     */
+    private function waitForTimeline(Browser $browser): void
+    {
+        $browser->waitForTextIn('@timeline-chart', 'Failing Tests');
+    }
+
     public function testSummarizesTheTestsWhichFailedDuringTheDay(): void
     {
         $first = $this->createBuild();
@@ -234,6 +243,7 @@ class TestOverviewPageTest extends BrowserTestCase
         $this->browse(function (Browser $browser) use ($name): void {
             $browser->visit("/testOverview.php?project={$this->project->name}&begin=2025-01-13&end=2025-01-14");
             $this->assertTestNames($browser, [$name]);
+            $this->waitForTimeline($browser);
 
             // The link lists the test's runs during the same days.
             $browser->click('@test-row @test-name a')
@@ -350,6 +360,7 @@ class TestOverviewPageTest extends BrowserTestCase
         $this->browse(function (Browser $browser) use ($header, $descending, $ascending): void {
             $browser->visit("/testOverview.php?project={$this->project->name}&date=2025-01-15");
             $this->assertTestNames($browser, ['beta', 'delta', 'alpha', 'gamma']);
+            $this->waitForTimeline($browser);
             $browser->assertPresent("{$header} [data-test=\"sort-none\"]");
 
             // Columns are sorted in descending order first.
@@ -375,6 +386,7 @@ class TestOverviewPageTest extends BrowserTestCase
         $this->browse(function (Browser $browser): void {
             $browser->visit("/testOverview.php?project={$this->project->name}&date=2025-01-15&showpassed=1");
             $this->assertTestNames($browser, ['always', 'sometimes', 'never']);
+            $this->waitForTimeline($browser);
             $browser->assertPresent('@header-failure [data-test="sort-descending"]');
 
             // So clicking the column sorts it in ascending order first.
@@ -410,6 +422,7 @@ class TestOverviewPageTest extends BrowserTestCase
 
             $browser->visit("/testOverview.php?project={$this->project->name}&date=2025-01-15");
             $this->assertTestNames($browser, ['a-test', 'b-test', 'c-test']);
+            $this->waitForTimeline($browser);
 
             $browser->click('@header-time');
             $this->assertTestNames($browser, ['b-test', 'a-test', 'c-test']);
@@ -441,6 +454,7 @@ class TestOverviewPageTest extends BrowserTestCase
         $this->browse(function (Browser $browser): void {
             $browser->visit("/testOverview.php?project={$this->project->name}&date=2025-01-15");
             $this->assertTestNames($browser, ['fast', 'slow']);
+            $this->waitForTimeline($browser);
 
             $browser->click('@header-time');
             $this->assertTestNames($browser, ['slow', 'fast']);
@@ -476,6 +490,7 @@ class TestOverviewPageTest extends BrowserTestCase
             // 50 tests are shown per page by default.
             $this->assertTestNames($browser, array_slice($names, 0, 50));
             self::assertSame('55 tests failed during this time period.', $browser->text('@test-summary'));
+            $this->waitForTimeline($browser);
 
             $browser->within('@pagination', fn (Browser $pagination) => $pagination->clickLink('2'));
             $this->assertTestNames($browser, array_slice($names, 50));
@@ -507,6 +522,7 @@ class TestOverviewPageTest extends BrowserTestCase
             // Without a showfilters parameter, the filters are hidden and toggled without reloading the page.
             $browser->visit("/testOverview.php?project={$this->project->name}&date=2025-01-15");
             $this->assertTestNames($browser, ['filtered']);
+            $this->waitForTimeline($browser);
             $browser->assertMissing('@filters')
                 ->click('@show-filters-toggle')
                 ->waitFor('@filters')
@@ -516,8 +532,9 @@ class TestOverviewPageTest extends BrowserTestCase
 
             // Otherwise, the parameter is changed.
             $browser->visit("/testOverview.php?project={$this->project->name}&date=2025-01-15&filtercount=0&showfilters=1")
-                ->waitFor('@filters')
-                ->waitForReload(fn (Browser $browser) => $browser->click('@show-filters-toggle'))
+                ->waitFor('@filters');
+            $this->waitForTimeline($browser);
+            $browser->waitForReload(fn (Browser $browser) => $browser->click('@show-filters-toggle'))
                 ->assertQueryStringHas('showfilters', '0');
             $this->assertTestNames($browser, ['filtered']);
             $browser->assertMissing('@filters');
@@ -548,6 +565,7 @@ class TestOverviewPageTest extends BrowserTestCase
                 ->waitFor('@filters @filter');
             $this->assertTestNames($browser, ['kept', 'removed']);
             self::assertSame(['Build Name', 'SubProject', 'Test Name'], $this->texts($browser, '@filters @filter-field option'));
+            $this->waitForTimeline($browser);
 
             $browser->type('@filters @filter-value', 'linux')
                 ->waitForReload(fn (Browser $browser) => $browser->click('@filters-apply'))
@@ -622,6 +640,7 @@ class TestOverviewPageTest extends BrowserTestCase
             $this->assertTestNames($browser, ['later']);
             self::assertSame('2025-01-15', $browser->value('@filter-begin'));
             self::assertSame('2025-01-15', $browser->value('@filter-end'));
+            $this->waitForTimeline($browser);
 
             $browser->clear('@filter-begin')
                 ->type('@filter-begin', '2025-01-13')
