@@ -17,22 +17,6 @@ function(add_php_test TestName)
   )
 endfunction()
 
-function(add_legacy_unit_test TestName)
-  add_test(
-    NAME ${TestName}
-    COMMAND
-      ${PHP_EXE}
-      ${PHPUNIT}
-      -c ${CDash_SOURCE_DIR}/phpunit.xml
-      --bootstrap ${testing_dir}/bootstrap.php
-      ${testing_dir}/case/${TestName}Test.php
-  )
-  set_tests_properties(
-    ${TestName} PROPERTIES
-    ATTACHED_FILES_ON_FAIL "${CDash_SOURCE_DIR}/storage/logs/cdash.log"
-  )
-endfunction()
-
 function(add_laravel_test TestName)
   add_test(
     NAME ${TestName}
@@ -66,7 +50,7 @@ endfunction()
 # Tests with no dependencies on other tests which require the database to be available
 function(add_feature_test TestName)
   add_laravel_test(${TestName})
-  set_property(TEST ${TestName} APPEND PROPERTY DEPENDS /CDash/XmlHandler/UpdateHandler)
+  set_property(TEST ${TestName} APPEND PROPERTY DEPENDS /Legacy/XmlHandler/UpdateHandlerTest)
   set_property(TEST install_2 APPEND PROPERTY DEPENDS ${TestName})
   set_tests_properties(
     ${TestName} PROPERTIES
@@ -127,8 +111,7 @@ add_unit_test(/Unit/Utils/SubmissionUtilsTest)
 
 add_unit_test(/Unit/Utils/RedirectUtilsTest)
 
-# TODO: Is this test useful now?
-add_legacy_unit_test(/PHPUnitTest)
+add_unit_test(/Unit/Services/XmlValidationServiceTest)
 
 add_unit_test(/Unit/GraphQL/SchemaValidationTest)
 
@@ -140,51 +123,52 @@ add_unit_test(/Unit/GraphQL/Directives/FilterDirectiveTest)
 
 add_unit_test(/Unit/GraphQL/Directives/FilterableDirectiveTest)
 
-add_php_test(seconds_from_interval)
+add_unit_test(/Unit/CommonFunctionsTest)
 
-add_php_test(extracttar)
+add_laravel_test(/Legacy/Model/BuildTest)
 
-add_legacy_unit_test(/CDash/Model/Build)
-
-add_legacy_unit_test(/CDash/Model/Repository)
+add_laravel_test(/Legacy/Model/RepositoryTest)
 
 ###################################################################################################
 
 add_laravel_test(/Feature/CDashTest)
 set_tests_properties(/Feature/CDashTest PROPERTIES DEPENDS install_1)
 
-add_legacy_unit_test(/CDash/MultipleSubprojectsEmail)
-set_tests_properties(/CDash/MultipleSubprojectsEmail PROPERTIES DEPENDS /Feature/CDashTest)
+add_laravel_test(/Legacy/MultipleSubprojectsEmailTest)
+set_tests_properties(/Legacy/MultipleSubprojectsEmailTest PROPERTIES DEPENDS /Feature/CDashTest)
 
-add_legacy_unit_test(/CDash/NightlyTime)
-set_tests_properties(/CDash/NightlyTime PROPERTIES DEPENDS /CDash/MultipleSubprojectsEmail)
+add_laravel_test(/Legacy/NightlyTimeTest)
+set_tests_properties(/Legacy/NightlyTimeTest PROPERTIES DEPENDS /Legacy/MultipleSubprojectsEmailTest)
 
-add_legacy_unit_test(/CDash/TestUseCase)
-set_tests_properties(/CDash/TestUseCase PROPERTIES DEPENDS /CDash/NightlyTime)
+add_laravel_test(/Legacy/TestUseCaseTest)
+set_tests_properties(/Legacy/TestUseCaseTest PROPERTIES DEPENDS /Legacy/NightlyTimeTest)
 
-add_legacy_unit_test(/CDash/BuildUseCase)
-set_tests_properties(/CDash/BuildUseCase PROPERTIES DEPENDS /CDash/TestUseCase)
+add_laravel_test(/Legacy/BuildUseCaseTest)
+set_tests_properties(/Legacy/BuildUseCaseTest PROPERTIES DEPENDS /Legacy/TestUseCaseTest)
 
-add_legacy_unit_test(/CDash/ConfigUseCase)
-set_tests_properties(/CDash/ConfigUseCase PROPERTIES DEPENDS /CDash/BuildUseCase)
+add_laravel_test(/Legacy/ConfigUseCaseTest)
+set_tests_properties(/Legacy/ConfigUseCaseTest PROPERTIES DEPENDS /Legacy/BuildUseCaseTest)
 
-add_legacy_unit_test(/CDash/UpdateUseCase)
-set_tests_properties(/CDash/UpdateUseCase PROPERTIES DEPENDS /CDash/ConfigUseCase)
+add_laravel_test(/Legacy/UpdateUseCaseTest)
+set_tests_properties(/Legacy/UpdateUseCaseTest PROPERTIES DEPENDS /Legacy/ConfigUseCaseTest)
 
-add_legacy_unit_test(/CDash/XmlHandler/BuildHandler)
-set_tests_properties(/CDash/XmlHandler/BuildHandler PROPERTIES DEPENDS /CDash/UpdateUseCase)
+add_laravel_test(/Legacy/DynamicAnalysisUseCaseTest)
+set_tests_properties(/Legacy/DynamicAnalysisUseCaseTest PROPERTIES DEPENDS /Legacy/UpdateUseCaseTest)
 
-add_legacy_unit_test(/CDash/XmlHandler/ConfigureHandler)
-set_tests_properties(/CDash/XmlHandler/ConfigureHandler PROPERTIES DEPENDS /CDash/XmlHandler/BuildHandler)
+add_laravel_test(/Legacy/XmlHandler/BuildHandlerTest)
+set_tests_properties(/Legacy/XmlHandler/BuildHandlerTest PROPERTIES DEPENDS /Legacy/DynamicAnalysisUseCaseTest)
 
-add_legacy_unit_test(/CDash/XmlHandler/DynamicAnalysisHandler)
-set_tests_properties(/CDash/XmlHandler/DynamicAnalysisHandler PROPERTIES DEPENDS /CDash/XmlHandler/ConfigureHandler)
+add_laravel_test(/Legacy/XmlHandler/ConfigureHandlerTest)
+set_tests_properties(/Legacy/XmlHandler/ConfigureHandlerTest PROPERTIES DEPENDS /Legacy/XmlHandler/BuildHandlerTest)
 
-add_legacy_unit_test(/CDash/XmlHandler/TestingHandler)
-set_tests_properties(/CDash/XmlHandler/TestingHandler PROPERTIES DEPENDS /CDash/XmlHandler/DynamicAnalysisHandler)
+add_laravel_test(/Legacy/XmlHandler/DynamicAnalysisHandlerTest)
+set_tests_properties(/Legacy/XmlHandler/DynamicAnalysisHandlerTest PROPERTIES DEPENDS /Legacy/XmlHandler/ConfigureHandlerTest)
 
-add_legacy_unit_test(/CDash/XmlHandler/UpdateHandler)
-set_tests_properties(/CDash/XmlHandler/UpdateHandler PROPERTIES DEPENDS /CDash/XmlHandler/TestingHandler)
+add_laravel_test(/Legacy/XmlHandler/TestingHandlerTest)
+set_tests_properties(/Legacy/XmlHandler/TestingHandlerTest PROPERTIES DEPENDS /Legacy/XmlHandler/DynamicAnalysisHandlerTest)
+
+add_laravel_test(/Legacy/XmlHandler/UpdateHandlerTest)
+set_tests_properties(/Legacy/XmlHandler/UpdateHandlerTest PROPERTIES DEPENDS /Legacy/XmlHandler/TestingHandlerTest)
 
 ###################################################################################################
 # Tests in this section are expected to run against the testing_clean database in transactions,
@@ -215,6 +199,10 @@ add_feature_test_in_transaction(/Feature/UpdateProjectLogoTest)
 add_feature_test_in_transaction(/Feature/ProjectLogoTest)
 
 add_feature_test_in_transaction(/Feature/TestImageAccessTest)
+
+add_feature_test_in_transaction(/Feature/TestFileDownloadTest)
+
+add_feature_test_in_transaction(/Feature/BuildFileDownloadTest)
 
 add_feature_test_in_transaction(/Feature/ProjectNotificationsTest)
 
@@ -400,6 +388,8 @@ add_feature_test_in_transaction(/Feature/Jobs/DeleteProjectTest)
 
 add_feature_test_in_transaction(/Feature/Console/ValidateXmlCommandTest)
 
+add_feature_test_in_transaction(/Feature/Console/ListSubmissionsCommandTest)
+
 add_feature_test_in_transaction(/Feature/Submission/XmlSubmissionTest)
 
 add_feature_test_in_transaction(/Feature/Submission/UnparsedSubmissionTest)
@@ -432,6 +422,8 @@ add_feature_test_in_transaction(/Feature/Submission/Configure/ConfigureXMLTest)
 
 add_feature_test_in_transaction(/Feature/Submission/Bazel/BazelJSONTest)
 
+add_feature_test_in_transaction(/Feature/Submission/BuildProperties/BuildPropertiesJSONTest)
+
 add_feature_test_in_transaction(/Feature/Submission/DynamicAnalysis/DynamicAnalysisXMLTest)
 
 add_feature_test_in_transaction(/Feature/Submission/Update/UpdateXMLTest)
@@ -453,23 +445,23 @@ add_feature_test_in_transaction(/Feature/Submission/Project/ProjectXMLTest)
 # Tests may wipe the database, provided that they use RUN_SERIAL. All tests in this section should
 # depend upon the last test prior to this section.
 
-add_legacy_unit_test(/CDash/Lib/Repository/GitHub)
-set_tests_properties(/CDash/Lib/Repository/GitHub PROPERTIES
-    DEPENDS /CDash/XmlHandler/UpdateHandler
+add_laravel_test(/Legacy/Lib/Repository/GitHubTest)
+set_tests_properties(/Legacy/Lib/Repository/GitHubTest PROPERTIES
+    DEPENDS /Legacy/XmlHandler/UpdateHandlerTest
     DISABLED "$<STREQUAL:${CDASH_IMAGE},ubi>"
 )
 
-add_legacy_unit_test(/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilder)
-set_tests_properties(/CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilder PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_laravel_test(/Legacy/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest)
+set_tests_properties(/Legacy/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest PROPERTIES DEPENDS /Legacy/XmlHandler/UpdateHandlerTest)
 
-add_legacy_unit_test(/CDash/Messaging/Subscription/UserSubscriptionBuilder)
-set_tests_properties(/CDash/Messaging/Subscription/UserSubscriptionBuilder PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_laravel_test(/Legacy/Messaging/Subscription/UserSubscriptionBuilderTest)
+set_tests_properties(/Legacy/Messaging/Subscription/UserSubscriptionBuilderTest PROPERTIES DEPENDS /Legacy/XmlHandler/UpdateHandlerTest)
 
-add_legacy_unit_test(/CDash/Messaging/Topic/UpdateErrorTopic)
-set_tests_properties(/CDash/Messaging/Topic/UpdateErrorTopic PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_laravel_test(/Legacy/Messaging/Topic/UpdateErrorTopicTest)
+set_tests_properties(/Legacy/Messaging/Topic/UpdateErrorTopicTest PROPERTIES DEPENDS /Legacy/XmlHandler/UpdateHandlerTest)
 
-add_legacy_unit_test(/CDash/Service/RepositoryService)
-set_tests_properties(/CDash/Service/RepositoryService PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_laravel_test(/Legacy/Service/RepositoryServiceTest)
+set_tests_properties(/Legacy/Service/RepositoryServiceTest PROPERTIES DEPENDS /Legacy/XmlHandler/UpdateHandlerTest)
 
 add_feature_test(/Feature/LdapIntegration)
 
@@ -510,35 +502,35 @@ add_browser_test(/Browser/Pages/PasswordResetPageTest)
 add_browser_test(/Browser/Pages/ProjectsPageTest)
 set_property(TEST /Browser/Pages/ProjectsPageTest APPEND PROPERTY RUN_SERIAL TRUE)
 
-add_legacy_unit_test(/CDash/Database)
-set_tests_properties(/CDash/Database PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_laravel_test(/Legacy/DatabaseTest)
+set_tests_properties(/Legacy/DatabaseTest PROPERTIES DEPENDS /Legacy/XmlHandler/UpdateHandlerTest)
 
-add_legacy_unit_test(/CDash/Messaging/Topic/AuthoredTopic)
-set_tests_properties(/CDash/Messaging/Topic/AuthoredTopic PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_laravel_test(/Legacy/Messaging/Topic/AuthoredTopicTest)
+set_tests_properties(/Legacy/Messaging/Topic/AuthoredTopicTest PROPERTIES DEPENDS /Legacy/XmlHandler/UpdateHandlerTest)
 
-add_legacy_unit_test(/CDash/Messaging/Topic/BuildErrorTopic)
-set_tests_properties(/CDash/Messaging/Topic/BuildErrorTopic PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_laravel_test(/Legacy/Messaging/Topic/BuildErrorTopicTest)
+set_tests_properties(/Legacy/Messaging/Topic/BuildErrorTopicTest PROPERTIES DEPENDS /Legacy/XmlHandler/UpdateHandlerTest)
 
-add_legacy_unit_test(/CDash/Messaging/Topic/ConfigureTopic)
-set_tests_properties(/CDash/Messaging/Topic/ConfigureTopic PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_laravel_test(/Legacy/Messaging/Topic/ConfigureTopicTest)
+set_tests_properties(/Legacy/Messaging/Topic/ConfigureTopicTest PROPERTIES DEPENDS /Legacy/XmlHandler/UpdateHandlerTest)
 
-add_legacy_unit_test(/CDash/Messaging/Topic/DynamicAnalysisTopic)
-set_tests_properties(/CDash/Messaging/Topic/DynamicAnalysisTopic PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_laravel_test(/Legacy/Messaging/Topic/DynamicAnalysisTopicTest)
+set_tests_properties(/Legacy/Messaging/Topic/DynamicAnalysisTopicTest PROPERTIES DEPENDS /Legacy/XmlHandler/UpdateHandlerTest)
 
-add_legacy_unit_test(/CDash/Messaging/Topic/EmailSentTopic)
-set_tests_properties(/CDash/Messaging/Topic/EmailSentTopic PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_laravel_test(/Legacy/Messaging/Topic/EmailSentTopicTest)
+set_tests_properties(/Legacy/Messaging/Topic/EmailSentTopicTest PROPERTIES DEPENDS /Legacy/XmlHandler/UpdateHandlerTest)
 
-add_legacy_unit_test(/CDash/Messaging/Topic/FixedTopic)
-set_tests_properties(/CDash/Messaging/Topic/FixedTopic PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_laravel_test(/Legacy/Messaging/Topic/FixedTopicTest)
+set_tests_properties(/Legacy/Messaging/Topic/FixedTopicTest PROPERTIES DEPENDS /Legacy/XmlHandler/UpdateHandlerTest)
 
-add_legacy_unit_test(/CDash/Messaging/Topic/MissingTestTopic)
-set_tests_properties(/CDash/Messaging/Topic/MissingTestTopic PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_laravel_test(/Legacy/Messaging/Topic/MissingTestTopicTest)
+set_tests_properties(/Legacy/Messaging/Topic/MissingTestTopicTest PROPERTIES DEPENDS /Legacy/XmlHandler/UpdateHandlerTest)
 
-add_legacy_unit_test(/CDash/Messaging/Topic/TestFailureTopic)
-set_tests_properties(/CDash/Messaging/Topic/TestFailureTopic PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_laravel_test(/Legacy/Messaging/Topic/TestFailureTopicTest)
+set_tests_properties(/Legacy/Messaging/Topic/TestFailureTopicTest PROPERTIES DEPENDS /Legacy/XmlHandler/UpdateHandlerTest)
 
-add_legacy_unit_test(/CDash/Messaging/Topic/TopicDecorator)
-set_tests_properties(/CDash/Messaging/Topic/TopicDecorator PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+add_laravel_test(/Legacy/Messaging/Topic/TopicDecoratorTest)
+set_tests_properties(/Legacy/Messaging/Topic/TopicDecoratorTest PROPERTIES DEPENDS /Legacy/XmlHandler/UpdateHandlerTest)
 
 add_browser_test(/Browser/Pages/UsersPageTest)
 
@@ -585,50 +577,42 @@ add_browser_test(/Browser/Pages/ManageSubProjectPageTest)
 add_browser_test(/Browser/Pages/ViewSubProjectsPageTest)
 
 add_php_test(image)
-set_tests_properties(image PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+set_tests_properties(image PROPERTIES DEPENDS /Legacy/XmlHandler/UpdateHandlerTest)
 
 add_php_test(consistenttestingday)
-set_tests_properties(consistenttestingday PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
-
-add_php_test(attachedfiles)
-set_tests_properties(attachedfiles PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+set_tests_properties(consistenttestingday PROPERTIES DEPENDS /Legacy/XmlHandler/UpdateHandlerTest)
 
 add_php_test(subprojectorder)
-set_tests_properties(subprojectorder PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
-
-add_php_test(buildproperties)
-set_tests_properties(buildproperties PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+set_tests_properties(subprojectorder PROPERTIES DEPENDS /Legacy/XmlHandler/UpdateHandlerTest)
 
 add_php_test(issuecreation)
-set_tests_properties(issuecreation PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+set_tests_properties(issuecreation PROPERTIES DEPENDS /Legacy/XmlHandler/UpdateHandlerTest)
 
 add_php_test(configurewarnings)
-set_tests_properties(configurewarnings PROPERTIES DEPENDS /CDash/XmlHandler/UpdateHandler)
+set_tests_properties(configurewarnings PROPERTIES DEPENDS /Legacy/XmlHandler/UpdateHandlerTest)
 
 ###################################################################################################
 
 set_property(TEST install_2 APPEND PROPERTY DEPENDS
   change_app_url_to_localhost
-  /CDash/Lib/Repository/GitHub
-  /CDash/Messaging/Subscription/CommitAuthorSubscriptionBuilder
-  /CDash/Messaging/Subscription/UserSubscriptionBuilder
-  /CDash/Messaging/Topic/UpdateErrorTopic
-  /CDash/Service/RepositoryService
-  /CDash/Database
-  /CDash/Messaging/Topic/AuthoredTopic
-  /CDash/Messaging/Topic/BuildErrorTopic
-  /CDash/Messaging/Topic/ConfigureTopic
-  /CDash/Messaging/Topic/DynamicAnalysisTopic
-  /CDash/Messaging/Topic/EmailSentTopic
-  /CDash/Messaging/Topic/FixedTopic
-  /CDash/Messaging/Topic/MissingTestTopic
-  /CDash/Messaging/Topic/TestFailureTopic
-  /CDash/Messaging/Topic/TopicDecorator
+  /Legacy/Lib/Repository/GitHubTest
+  /Legacy/Messaging/Subscription/CommitAuthorSubscriptionBuilderTest
+  /Legacy/Messaging/Subscription/UserSubscriptionBuilderTest
+  /Legacy/Messaging/Topic/UpdateErrorTopicTest
+  /Legacy/Service/RepositoryServiceTest
+  /Legacy/DatabaseTest
+  /Legacy/Messaging/Topic/AuthoredTopicTest
+  /Legacy/Messaging/Topic/BuildErrorTopicTest
+  /Legacy/Messaging/Topic/ConfigureTopicTest
+  /Legacy/Messaging/Topic/DynamicAnalysisTopicTest
+  /Legacy/Messaging/Topic/EmailSentTopicTest
+  /Legacy/Messaging/Topic/FixedTopicTest
+  /Legacy/Messaging/Topic/MissingTestTopicTest
+  /Legacy/Messaging/Topic/TestFailureTopicTest
+  /Legacy/Messaging/Topic/TopicDecoratorTest
   image
   consistenttestingday
-  attachedfiles
   subprojectorder
-  buildproperties
   issuecreation
   configurewarnings
 )
@@ -667,11 +651,8 @@ set_tests_properties(buildconfigure PROPERTIES DEPENDS aggregatecoverage)
 add_php_test(buildgrouprule)
 set_tests_properties(buildgrouprule PROPERTIES DEPENDS buildconfigure)
 
-add_php_test(committerinfo)
-set_tests_properties(committerinfo PROPERTIES DEPENDS buildgrouprule)
-
 add_php_test(projectindb)
-set_tests_properties(projectindb PROPERTIES DEPENDS committerinfo)
+set_tests_properties(projectindb PROPERTIES DEPENDS buildgrouprule)
 
 add_php_test(querytests)
 set_tests_properties(querytests PROPERTIES DEPENDS projectindb)
@@ -682,11 +663,8 @@ set_tests_properties(testoverview PROPERTIES DEPENDS querytests)
 add_php_test(buildmodel)
 set_tests_properties(buildmodel PROPERTIES DEPENDS testoverview)
 
-add_php_test(uploadfile)
-set_tests_properties(uploadfile PROPERTIES DEPENDS buildmodel)
-
 add_php_test(multicoverage)
-set_tests_properties(multicoverage PROPERTIES DEPENDS uploadfile)
+set_tests_properties(multicoverage PROPERTIES DEPENDS buildmodel)
 
 add_php_test(hidecolumns)
 set_tests_properties(hidecolumns PROPERTIES DEPENDS multicoverage)
@@ -703,11 +681,8 @@ set_tests_properties(testhistory PROPERTIES DEPENDS subprojectnextprevious)
 add_php_test(expectedandmissing)
 set_tests_properties(expectedandmissing PROPERTIES DEPENDS testhistory)
 
-add_php_test(replacebuild)
-set_tests_properties(replacebuild PROPERTIES DEPENDS expectedandmissing)
-
 add_php_test(crosssubprojectcoverage)
-set_tests_properties(crosssubprojectcoverage PROPERTIES DEPENDS replacebuild)
+set_tests_properties(crosssubprojectcoverage PROPERTIES DEPENDS expectedandmissing)
 
 add_php_test(aggregatesubprojectcoverage)
 set_tests_properties(aggregatesubprojectcoverage PROPERTIES DEPENDS crosssubprojectcoverage)

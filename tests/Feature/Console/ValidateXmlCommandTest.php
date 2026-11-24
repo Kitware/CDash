@@ -103,6 +103,60 @@ class ValidateXmlCommandTest extends TestCase
     }
 
     /**
+     * Tests validating a single file with a document type declaration
+     */
+    public function testSingleXmlWithDocumentType(): void
+    {
+        $params = $this->formatCommandParams('invalid_doctype_Configure.xml');
+        $rc = Artisan::call('submission:validate', $params);
+        $output = trim(Artisan::output());
+        $this->assertValidationFailure($output, $rc, 'An XML file with a document type declaration should fail.');
+        $this->assertStringContainsString('Files containing "<!DOCTYPE"', $output);
+    }
+
+    /**
+     * Tests validating a single file with "<!DOCTYPE" in a comment
+     */
+    public function testSingleXmlWithDocumentTypeInComment(): void
+    {
+        $params = $this->formatCommandParams('invalid_doctype_in_comment_Configure.xml');
+        $rc = Artisan::call('submission:validate', $params);
+        $output = trim(Artisan::output());
+        $this->assertValidationFailure($output, $rc, 'An XML file with "<!DOCTYPE" anywhere in it should fail.');
+        $this->assertStringContainsString('Files containing "<!DOCTYPE"', $output);
+    }
+
+    /**
+     * Tests validating a single file declared to be in an unsupported encoding
+     */
+    public function testSingleXmlWithUnsupportedEncoding(): void
+    {
+        $params = $this->formatCommandParams('invalid_encoding_Configure.xml');
+        $rc = Artisan::call('submission:validate', $params);
+        $output = trim(Artisan::output());
+        $this->assertValidationFailure($output, $rc, 'An XML file declared in an unsupported encoding should fail.');
+        $this->assertStringContainsString('Only files in UTF-8, US-ASCII or ISO-8859-1', $output);
+    }
+
+    /**
+     * Tests validating valid files with comments, processing instructions, a byte order mark, or no XML declaration
+     * before the root element
+     */
+    public function testMultipleValidXmlWithContentBeforeRoot(): void
+    {
+        $this->assertStringStartsWith(
+            "\xEF\xBB\xBF",
+            (string) file_get_contents(base_path('tests/data/XmlValidation/valid_no_declaration_Configure.xml')),
+            'This file should start with a byte order mark.',
+        );
+
+        $params = $this->formatCommandParams('valid_before_root_Configure.xml', 'valid_no_declaration_Configure.xml');
+        $rc = Artisan::call('submission:validate', $params);
+        $output = trim(Artisan::output());
+        $this->assertValidationSuccess($output, $rc, 'Valid XML files with this content before the root element should pass.');
+    }
+
+    /**
      * Tests validating multiple valid files
      */
     public function testMultipleValidXml(): void

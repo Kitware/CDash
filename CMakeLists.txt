@@ -63,6 +63,7 @@ file(GLOB_RECURSE unregistered_test_files
   "${laravel_testing_dir}/Feature/*.php"
   "${laravel_testing_dir}/Unit/*.php"
   "${laravel_testing_dir}/Browser/*.php"
+  "${laravel_testing_dir}/Legacy/*.php"
   "${laravel_testing_dir}/Spec/*.spec.js"
   "${laravel_testing_dir}/Component/*.spec.js"
 )
