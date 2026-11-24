@@ -1921,18 +1921,6 @@ parameters:
 			path: app/Http/Submission/Handlers/AbstractXmlHandler.php
 
 		-
-			rawMessage: 'Parameter #1 $filename of method DOMDocument::load() expects non-empty-string, string given.'
-			identifier: argument.type
-			count: 3
-			path: app/Http/Submission/Handlers/AbstractXmlHandler.php
-
-		-
-			rawMessage: 'Parameter #1 $filename of method DOMDocument::schemaValidate() expects non-empty-string, string given.'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Submission/Handlers/AbstractXmlHandler.php
-
-		-
 			rawMessage: Access to an undefined property object::$details.
 			identifier: property.notFound
 			count: 1
@@ -5081,6 +5069,18 @@ parameters:
 			identifier: argument.type
 			count: 2
 			path: app/Services/SubmissionService.php
+
+		-
+			rawMessage: 'Parameter #1 $filename of method DOMDocument::load() expects non-empty-string, string given.'
+			identifier: argument.type
+			count: 1
+			path: app/Services/XmlValidationService.php
+
+		-
+			rawMessage: 'Parameter #1 $filename of method DOMDocument::schemaValidate() expects non-empty-string, string given.'
+			identifier: argument.type
+			count: 1
+			path: app/Services/XmlValidationService.php
 
 		-
 			rawMessage: 'Parameter #1 $buildid of static method App\Utils\DatabaseCleanupUtils::removeBuild() expects array<int>|int, array<mixed> given.'

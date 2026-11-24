@@ -127,6 +127,8 @@ add_unit_test(/Unit/Utils/SubmissionUtilsTest)
 
 add_unit_test(/Unit/Utils/RedirectUtilsTest)
 
+add_unit_test(/Unit/Services/XmlValidationServiceTest)
+
 # TODO: Is this test useful now?
 add_legacy_unit_test(/PHPUnitTest)
 

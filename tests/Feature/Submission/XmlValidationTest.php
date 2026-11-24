@@ -78,6 +78,10 @@ class XmlValidationTest extends TestCase
         config(['cdash.validate_submissions' => SubmissionValidationType::REJECT]);
         $this->submit('invalid_Configure.xml', 400);
         $this->submit('invalid_syntax_Build.xml', 400);
+        $this->submit('invalid_doctype_Configure.xml', 400);
+        $this->submit('valid_before_root_Configure.xml');
+        $this->submit('valid_latin1_Configure.xml');
+        $this->submit('valid_utf8_alias_Configure.xml');
         $this->submit('valid_Configure1.xml');
         $this->submit('valid_Configure2.xml');
         $this->submit('valid_Build.xml');
