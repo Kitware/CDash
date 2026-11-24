@@ -1,7 +1,10 @@
+#include <iostream>
+
 int main(int ac, char* av[])
 {
   (void)ac;
   (void)av;
+  std::cout << "<DartMeasurement name=\"Answer\" type=\"numeric/double\">42</DartMeasurement>" << std::endl;
   return 0;
 }
 
