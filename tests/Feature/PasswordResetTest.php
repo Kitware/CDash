@@ -7,12 +7,14 @@ use App\Models\User;
 use App\Services\AuthTokenService;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\Testing\TestResponse;
+use JsonException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
@@ -103,6 +105,9 @@ class PasswordResetTest extends TestCase
             ->assertRedirect('/password/reset');
     }
 
+    /**
+     * @throws JsonException
+     */
     public function testRequestingResetLinkEmailsUser(): void
     {
         $this->requestResetLink($this->user->email)
@@ -113,7 +118,9 @@ class PasswordResetTest extends TestCase
         Notification::assertSentToTimes($this->user, ResetPassword::class, 1);
         Notification::assertSentTo($this->user, ResetPassword::class, function (ResetPassword $notification): bool {
             $url = url('/password/reset/' . $notification->token . '?email=' . urlencode($this->user->email));
-            self::assertSame($url, $notification->toMail($this->user)->actionUrl);
+            $mail = $notification->toMail($this->user);
+            self::assertInstanceOf(MailMessage::class, $mail);
+            self::assertSame($url, $mail->actionUrl);
             self::assertTrue(Password::tokenExists($this->user, $notification->token));
             return true;
         });
@@ -121,6 +128,9 @@ class PasswordResetTest extends TestCase
         $this->get('/password/reset')->assertSeeText(self::message('passwords.sent'));
     }
 
+    /**
+     * @throws JsonException
+     */
     public function testRequestingResetLinkForUnknownEmailLooksTheSame(): void
     {
         $this->requestResetLink(Str::uuid()->toString() . '@example.com')
@@ -144,6 +154,9 @@ class PasswordResetTest extends TestCase
         Notification::assertNothingSent();
     }
 
+    /**
+     * @throws JsonException
+     */
     public function testResetLinksAreThrottledPerAccount(): void
     {
         $this->requestResetLink($this->user->email);
@@ -183,6 +196,9 @@ class PasswordResetTest extends TestCase
             ->assertSeeText('Confirm New Password');
     }
 
+    /**
+     * @throws JsonException
+     */
     public function testResetChangesPassword(): void
     {
         $this->freezeSecond();
@@ -209,6 +225,9 @@ class PasswordResetTest extends TestCase
         $this->assertAuthenticatedAs($this->user);
     }
 
+    /**
+     * @throws JsonException
+     */
     public function testResetTokenCanOnlyBeUsedOnce(): void
     {
         $token = Password::createToken($this->user);
@@ -276,6 +295,8 @@ class PasswordResetTest extends TestCase
 
     /**
      * @param array<string, int> $config
+     *
+     * @throws JsonException
      */
     #[DataProvider('passwordPolicyCases')]
     public function testResetEnforcesPasswordPolicy(array $config, string $password, bool $allowed): void
@@ -307,6 +328,9 @@ class PasswordResetTest extends TestCase
         $this->assertPasswordIs(self::OLD_PASSWORD);
     }
 
+    /**
+     * @throws JsonException
+     */
     public function testResetRejectsCurrentPassword(): void
     {
         $token = Password::createToken($this->user);
@@ -332,6 +356,9 @@ class PasswordResetTest extends TestCase
         $this->get('/projects')->assertOk();
     }
 
+    /**
+     * @throws JsonException
+     */
     public function testResetLogsOutOtherSessions(): void
     {
         // Log in on another device and use CDash.
@@ -418,6 +445,9 @@ class PasswordResetTest extends TestCase
         $this->assertPasswordIs(self::OLD_PASSWORD);
     }
 
+    /**
+     * @throws JsonException
+     */
     public function testUsersWhoLoggedInExternallyCannotResetPassword(): void
     {
         $this->user->password_login_disabled = true;
@@ -434,6 +464,9 @@ class PasswordResetTest extends TestCase
         $this->assertPasswordIs(self::OLD_PASSWORD);
     }
 
+    /**
+     * @throws JsonException
+     */
     public function testFormerLdapUsersCanResetPasswordWhenLdapDisabled(): void
     {
         $this->user->ldapguid = Str::uuid()->toString();

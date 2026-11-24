@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Http\Exceptions\OriginMismatchException;
 use Illuminate\Http\Request;
 use Illuminate\Session\TokenMismatchException;
 use Illuminate\Support\Facades\Cookie;
@@ -11,6 +12,7 @@ use Illuminate\Support\Facades\Cookie;
  * Checks the CSRF token of requests whose user is logged in by a cookie (the session or
  * "remember me"), since a browser sends those cookies with requests forged by other sites.
  * Anonymous requests and requests authenticated by a bearer token don't need a CSRF token.
+ * Neither do requests that the browser marks as same-origin with the Sec-Fetch-Site header.
  *
  * This must run before AuthenticateToken, which logs in bearer token users.
  */
@@ -20,6 +22,7 @@ class VerifyCsrfTokenForSessions extends VerifyCsrfToken
      * @param Request $request
      *
      * @throws TokenMismatchException
+     * @throws OriginMismatchException
      */
     public function handle($request, Closure $next): mixed
     {

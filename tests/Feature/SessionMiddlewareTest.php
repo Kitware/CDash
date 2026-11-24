@@ -181,6 +181,29 @@ class SessionMiddlewareTest extends TestCase
         $this->post(self::API_POST_ROUTE, [], ['X-CSRF-TOKEN' => $csrfToken])->assertNotFound();
     }
 
+    /**
+     * @return array<string, array{string, int}>
+     */
+    public static function secFetchSiteHeaders(): array
+    {
+        return [
+            'same-origin' => ['same-origin', 404],
+            'same-site' => ['same-site', 419],
+            'cross-site' => ['cross-site', 419],
+            'none' => ['none', 419],
+        ];
+    }
+
+    #[DataProvider('secFetchSiteHeaders')]
+    public function testSessionUsersNeedCsrfTokenUnlessRequestIsSameOrigin(string $secFetchSite, int $status): void
+    {
+        $this->enforceCsrfChecks();
+        $this->logInThroughWebRoute(User::factory()->create(['password' => self::PASSWORD]));
+
+        // Browsers set Sec-Fetch-Site themselves, so a page on another site can't send "same-origin".
+        $this->post(self::API_POST_ROUTE, [], ['Sec-Fetch-Site' => $secFetchSite])->assertStatus($status);
+    }
+
     public function testGraphQLRequiresCsrfTokenFromSessionUsers(): void
     {
         $this->enforceCsrfChecks();
