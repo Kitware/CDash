@@ -13,6 +13,7 @@ export default defineConfig([
     '_build/*',
     'public/assets/*',
     'public/vendor/*',
+    'storage/*',
     'resources/js/angular/*',
     '**/__mocks__/**',
   ]),
