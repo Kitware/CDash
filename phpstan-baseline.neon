@@ -17995,36 +17995,6 @@ parameters:
 			path: app/cdash/tests/trilinos_submission_test.php
 
 		-
-			rawMessage: Cannot access offset 'id' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/trilinos_submission_test.php
-
-		-
-			rawMessage: Cannot access offset 'label' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/trilinos_submission_test.php
-
-		-
-			rawMessage: Cannot access offset 'numchildren' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/cdash/tests/trilinos_submission_test.php
-
-		-
-			rawMessage: Cannot access offset 'site' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: app/cdash/tests/trilinos_submission_test.php
-
-		-
-			rawMessage: Cannot access offset mixed on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/trilinos_submission_test.php
-
-		-
 			rawMessage: 'Loose comparison via "!=" between int<0, max> and int is not allowed.'
 			identifier: notEqual.notAllowed
 			count: 1
