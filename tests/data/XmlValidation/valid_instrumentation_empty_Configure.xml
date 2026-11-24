@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="dummy_build_name"
+  BuildStamp="dummy_stamp"
+  Name="dummy_name"
+  >
+	<Configure>
+		<StartDateTime>Nov 24 00:32 UTC</StartDateTime>
+		<StartConfigureTime>1795480322</StartConfigureTime>
+		<ConfigureCommand>"/usr/bin/cmake" "-S/tmp/instrumented/src" "-B/tmp/instrumented/build" "-GUnix Makefiles" "-C/tmp/instrumented/build/Testing/Temporary/CTestConfigureInitialCache.cmake" "-DFAIL_CONFIGURE=ON"</ConfigureCommand>
+		<Log>loading initial cache file /tmp/instrumented/build/Testing/Temporary/CTestConfigureInitialCache.cmake
+CMake Error at CMakeLists.txt:5 (message):
+  Configure failure requested
+
+
+-- Configuring incomplete, errors occurred!
+</Log>
+		<ConfigureStatus>1</ConfigureStatus>
+		<EndDateTime>Nov 24 00:32 UTC</EndDateTime>
+		<EndConfigureTime>1795480322</EndConfigureTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+		<Commands/>
+	</Configure>
+</Site>

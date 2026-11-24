@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="dummy_build_name"
+  BuildStamp="dummy_stamp"
+  Name="dummy_name"
+  >
+	<Build>
+		<StartDateTime>Nov 24 00:32 UTC</StartDateTime>
+		<StartBuildTime>1795480322</StartBuildTime>
+		<SourceDirectory>/tmp/instrumented/src</SourceDirectory>
+		<BinaryDirectory>/tmp/instrumented/build</BinaryDirectory>
+		<BuildCommand>/usr/bin/cmake --build . --config "Release" --target "install"</BuildCommand>
+		<Targets>
+			<Target name="lib" type="STATIC_LIBRARY">
+				<Commands>
+					<Link buildID="cc0179c9-316d-57f3-acaf-6039a06f0434" cmakeContent="content/cmake-2026-11-24T00-32-02-0132.json" command="/usr/bin/ranlib (truncated)" config="" duration="0" language="C" result="0" timeStart="1795480322162" workingDir="/tmp/instrumented/build">
+						<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
+							<Value>5.8603515625</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="AfterHostMemoryUsed">
+							<Value>2420192.0</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="BeforeCPULoadAverage">
+							<Value>5.8603515625</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="BeforeHostMemoryUsed">
+							<Value>2420192.0</Value>
+						</NamedMeasurement>
+						<Outputs>
+							<Output name="liblib.a" size="1388"/>
+						</Outputs>
+					</Link>
+					<Link buildID="cc0179c9-316d-57f3-acaf-6039a06f0434" cmakeContent="content/cmake-2026-11-24T00-32-02-0132.json" command="/usr/bin/ar (truncated)" config="" duration="1" language="C" result="0" timeStart="1795480322160" workingDir="/tmp/instrumented/build">
+						<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
+							<Value>5.8603515625</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="AfterHostMemoryUsed">
+							<Value>2420192.0</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="BeforeCPULoadAverage">
+							<Value>5.8603515625</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="BeforeHostMemoryUsed">
+							<Value>2420192.0</Value>
+						</NamedMeasurement>
+						<Outputs>
+							<Output name="liblib.a" size="1388"/>
+						</Outputs>
+					</Link>
+					<Compile buildID="cc0179c9-316d-57f3-acaf-6039a06f0434" cmakeContent="content/cmake-2026-11-24T00-32-02-0132.json" command="/usr/bin/cc (truncated)" config="" duration="9" language="C" result="0" source="/tmp/instrumented/src/lib.c" timeStart="1795480322145" workingDir="/tmp/instrumented/build">
+						<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
+							<Value>5.8603515625</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="AfterHostMemoryUsed">
+							<Value>2420192.0</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="BeforeCPULoadAverage">
+							<Value>5.8603515625</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="BeforeHostMemoryUsed">
+							<Value>2419152.0</Value>
+						</NamedMeasurement>
+						<Outputs>
+							<Output name="CMakeFiles/lib.dir/lib.c.o" size="1248"/>
+						</Outputs>
+					</Compile>
+				</Commands>
+			</Target>
+			<Target name="app" type="EXECUTABLE">
+				<Commands>
+					<Link buildID="cc0179c9-316d-57f3-acaf-6039a06f0434" cmakeContent="content/cmake-2026-11-24T00-32-02-0132.json" command="/usr/bin/cc (truncated)" config="" duration="8" language="C" result="0" timeStart="1795480322183" workingDir="/tmp/instrumented/build">
+						<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
+							<Value>5.8603515625</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="AfterHostMemoryUsed">
+							<Value>2420192.0</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="BeforeCPULoadAverage">
+							<Value>5.8603515625</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="BeforeHostMemoryUsed">
+							<Value>2420192.0</Value>
+						</NamedMeasurement>
+						<Outputs>
+							<Output name="app" size="70464"/>
+						</Outputs>
+					</Link>
+					<Compile buildID="cc0179c9-316d-57f3-acaf-6039a06f0434" cmakeContent="content/cmake-2026-11-24T00-32-02-0132.json" command="/usr/bin/cc (truncated)" config="" duration="10" language="C" result="0" source="/tmp/instrumented/src/app.c" timeStart="1795480322169" workingDir="/tmp/instrumented/build">
+						<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
+							<Value>5.8603515625</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="AfterHostMemoryUsed">
+							<Value>2420192.0</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="BeforeCPULoadAverage">
+							<Value>5.8603515625</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="BeforeHostMemoryUsed">
+							<Value>2420192.0</Value>
+						</NamedMeasurement>
+						<Outputs>
+							<Output name="CMakeFiles/app.dir/app.c.o" size="1400"/>
+						</Outputs>
+					</Compile>
+					<Custom buildID="cc0179c9-316d-57f3-acaf-6039a06f0434" cmakeContent="content/cmake-2026-11-24T00-32-02-0132.json" command="/usr/bin/cmake (truncated)" config="" duration="1" result="0" timeStart="1795480322194" workingDir="/tmp/instrumented/build">
+						<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
+							<Value>5.8603515625</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="AfterHostMemoryUsed">
+							<Value>2420192.0</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="BeforeCPULoadAverage">
+							<Value>5.8603515625</Value>
+						</NamedMeasurement>
+						<NamedMeasurement type="numeric/double" name="BeforeHostMemoryUsed">
+							<Value>2420192.0</Value>
+						</NamedMeasurement>
+					</Custom>
+				</Commands>
+			</Target>
+		</Targets>
+		<Commands>
+			<Custom buildID="cc0179c9-316d-57f3-acaf-6039a06f0434" cmakeContent="content/cmake-2026-11-24T00-32-02-0132.json" command="/usr/bin/cmake (truncated)" config="" duration="1" result="0" timeStart="1795480322200" workingDir="/tmp/instrumented/build">
+				<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
+					<Value>5.8603515625</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="numeric/double" name="AfterHostMemoryUsed">
+					<Value>2420192.0</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="numeric/double" name="BeforeCPULoadAverage">
+					<Value>5.8603515625</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="numeric/double" name="BeforeHostMemoryUsed">
+					<Value>2420192.0</Value>
+				</NamedMeasurement>
+				<Outputs>
+					<Output name="first.txt" size="0"/>
+					<Output name="second.txt" size="0"/>
+				</Outputs>
+			</Custom>
+			<CmakeBuild buildID="cc0179c9-316d-57f3-acaf-6039a06f0434" cmakeContent="content/cmake-2026-11-24T00-32-02-0132.json" command="/usr/bin/cmake (truncated)" duration="72" result="0" timeStart="1795480322135" workingDir="/tmp/instrumented/build">
+				<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
+					<Value>5.8603515625</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="numeric/double" name="AfterHostMemoryUsed">
+					<Value>2420192.0</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="numeric/double" name="BeforeCPULoadAverage">
+					<Value>5.8603515625</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="numeric/double" name="BeforeHostMemoryUsed">
+					<Value>2419152.0</Value>
+				</NamedMeasurement>
+			</CmakeBuild>
+			<Install cmakeContent="content/cmake-2026-11-24T00-32-02-0132.json" command="/usr/bin/cmake (truncated)" config="" duration="1" result="0" timeStart="1795480322206" workingDir="/tmp/instrumented/build">
+				<NamedMeasurement type="numeric/double" name="AfterCPULoadAverage">
+					<Value>5.8603515625</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="numeric/double" name="AfterHostMemoryUsed">
+					<Value>2420192.0</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="numeric/double" name="BeforeCPULoadAverage">
+					<Value>5.8603515625</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="numeric/double" name="BeforeHostMemoryUsed">
+					<Value>2420192.0</Value>
+				</NamedMeasurement>
+			</Install>
+		</Commands>
+		<Log Encoding="base64" Compression="bin/gzip"/>
+		<EndDateTime>Nov 24 00:32 UTC</EndDateTime>
+		<EndBuildTime>1795480322</EndBuildTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Build>
+</Site>
