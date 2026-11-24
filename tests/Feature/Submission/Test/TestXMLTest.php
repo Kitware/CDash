@@ -823,4 +823,25 @@ class TestXMLTest extends TestCase
             $this->assertNotFalse(imagecreatefromstring($response->streamedContent()));
         }
     }
+
+    /**
+     * Test that a file attached to a test is stored as a measurement named after the file.
+     */
+    public function testAttachedFile(): void
+    {
+        $this->makeSubmission($this->project->name, base_path(
+            'tests/Feature/Submission/Test/data/attached_file.xml'
+        ));
+
+        $measurement = $this->project->builds()->firstOrFail()->tests()->firstOrFail()
+            ->testMeasurements()->where('type', 'file')->firstOrFail();
+        $this->assertSame('output.txt', $measurement->name);
+        // The file is stored as a base64 encoded, gzipped tarball, which stores the file's contents uncompressed.
+        // The submitted value has more padding than strict decoding allows.
+        $archive = base64_decode(rtrim($measurement->value, '='), true);
+        $this->assertIsString($archive);
+        $tarball = gzdecode($archive);
+        $this->assertIsString($tarball);
+        $this->assertStringContainsString('This is my test output', $tarball);
+    }
 }

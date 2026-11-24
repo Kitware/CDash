@@ -14768,63 +14768,6 @@ parameters:
 
 		-
 			rawMessage: '''
-				Call to deprecated method execute() of class CDash\Database:
-				04/22/2023  Use Laravel query builder or Eloquent instead
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/test_attachedfiles.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method prepare() of class CDash\Database:
-				04/22/2023  Use Laravel query builder or Eloquent instead
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/test_attachedfiles.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method submission() of class KWWebTestCase:
-				12/09/2024  Use \Test\Traits\CreatesSubmissions instead
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/test_attachedfiles.php
-
-		-
-			rawMessage: 'Cannot call method fetchColumn() on PDOStatement|false.'
-			identifier: method.nonObject
-			count: 1
-			path: app/cdash/tests/test_attachedfiles.php
-
-		-
-			rawMessage: 'Method AttachedFilesTestCase::testAttachedFiles() throws checked exception PharException but it''s missing from the PHPDoc @throws tag.'
-			identifier: missingType.checkedException
-			count: 1
-			path: app/cdash/tests/test_attachedfiles.php
-
-		-
-			rawMessage: 'Method AttachedFilesTestCase::testAttachedFiles() throws checked exception UnexpectedValueException but it''s missing from the PHPDoc @throws tag.'
-			identifier: missingType.checkedException
-			count: 1
-			path: app/cdash/tests/test_attachedfiles.php
-
-		-
-			rawMessage: 'Parameter #1 $haystack of function str_contains expects string, string|false given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/tests/test_attachedfiles.php
-
-		-
-			rawMessage: 'Parameter #1 $stmt of method CDash\Database::execute() expects PDOStatement, PDOStatement|false given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/tests/test_attachedfiles.php
-
-		-
-			rawMessage: '''
 				Call to deprecated method getConfig() of class GuzzleHttp\Client:
 				ClientInterface::getConfig will be removed in guzzlehttp/guzzle:8.0.
 			'''
@@ -15206,84 +15149,6 @@ parameters:
 
 		-
 			rawMessage: '''
-				Call to deprecated function pdo_execute():
-				v2.5.0 01/22/2018
-			'''
-			identifier: function.deprecated
-			count: 10
-			path: app/cdash/tests/test_buildproperties.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method uploadfile() of class KWWebTestCase:
-				12/09/2024  Use \Test\Traits\CreatesSubmissions instead
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/test_buildproperties.php
-
-		-
-			rawMessage: Cannot access offset 'buildid' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_buildproperties.php
-
-		-
-			rawMessage: 'Method BuildPropertiesTestCase::create_build() has parameter $buildname with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/test_buildproperties.php
-
-		-
-			rawMessage: 'Method BuildPropertiesTestCase::create_build() has parameter $date with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/test_buildproperties.php
-
-		-
-			rawMessage: 'Method BuildPropertiesTestCase::create_build() has parameter $filename with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/test_buildproperties.php
-
-		-
-			rawMessage: 'Method BuildPropertiesTestCase::create_build() has parameter $md5 with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/test_buildproperties.php
-
-		-
-			rawMessage: 'Parameter #1 $json of function json_decode expects string, string|false given.'
-			identifier: argument.type
-			count: 1
-			path: app/cdash/tests/test_buildproperties.php
-
-		-
-			rawMessage: 'Part $build->Id (mixed) of encapsed string cannot be cast to string.'
-			identifier: encapsedStringPart.nonString
-			count: 1
-			path: app/cdash/tests/test_buildproperties.php
-
-		-
-			rawMessage: Property BuildPropertiesTestCase::$Builds has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/test_buildproperties.php
-
-		-
-			rawMessage: Property BuildPropertiesTestCase::$PDO has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/test_buildproperties.php
-
-		-
-			rawMessage: Variable $response might not be defined.
-			identifier: variable.undefined
-			count: 1
-			path: app/cdash/tests/test_buildproperties.php
-
-		-
-			rawMessage: '''
 				Call to deprecated method submission() of class KWWebTestCase:
 				12/09/2024  Use \Test\Traits\CreatesSubmissions instead
 			'''
@@ -15320,21 +15185,6 @@ parameters:
 			identifier: missingType.property
 			count: 1
 			path: app/cdash/tests/test_commitauthornotification.php
-
-		-
-			rawMessage: 'Call to deprecated method pass() of class SimpleTestCase.'
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/test_committerinfo.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method submission() of class KWWebTestCase:
-				12/09/2024  Use \Test\Traits\CreatesSubmissions instead
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/test_committerinfo.php
 
 		-
 			rawMessage: 'Argument of an invalid type mixed supplied for foreach, only iterables are supported.'
@@ -18232,48 +18082,6 @@ parameters:
 			path: app/cdash/tests/test_removebuilds.php
 
 		-
-			rawMessage: '''
-				Call to deprecated function pdo_query():
-				04/01/2023
-			'''
-			identifier: function.deprecated
-			count: 1
-			path: app/cdash/tests/test_replacebuild.php
-
-		-
-			rawMessage: 'Call to deprecated method pass() of class SimpleTestCase.'
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/test_replacebuild.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method submission() of class KWWebTestCase:
-				12/09/2024  Use \Test\Traits\CreatesSubmissions instead
-			'''
-			identifier: method.deprecated
-			count: 2
-			path: app/cdash/tests/test_replacebuild.php
-
-		-
-			rawMessage: 'Method ReplaceBuildTestCase::testReplaceBuild() has no return type specified.'
-			identifier: missingType.return
-			count: 1
-			path: app/cdash/tests/test_replacebuild.php
-
-		-
-			rawMessage: 'Only booleans are allowed in a negated boolean, PDOStatement|false given.'
-			identifier: booleanNot.exprNotBoolean
-			count: 1
-			path: app/cdash/tests/test_replacebuild.php
-
-		-
-			rawMessage: Property ReplaceBuildTestCase::$OriginalConfigSettings has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/test_replacebuild.php
-
-		-
 			rawMessage: Cannot access offset 'buildgroups' on mixed.
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -18296,18 +18104,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: app/cdash/tests/test_revisionfilteracrossdates.php
-
-		-
-			rawMessage: 'Method SecondsFromIntervalTestCase::intervalTest() has parameter $expected with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/test_seconds_from_interval.php
-
-		-
-			rawMessage: 'Method SecondsFromIntervalTestCase::intervalTest() has parameter $input with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/cdash/tests/test_seconds_from_interval.php
 
 		-
 			rawMessage: '''
@@ -19142,69 +18938,6 @@ parameters:
 			identifier: missingType.property
 			count: 1
 			path: app/cdash/tests/test_uniquediffs.php
-
-		-
-			rawMessage: Binary operation "." between 'Expected…' and mixed results in an error.
-			identifier: binaryOp.invalid
-			count: 1
-			path: app/cdash/tests/test_uploadfile.php
-
-		-
-			rawMessage: '''
-				Call to deprecated method submission() of class KWWebTestCase:
-				12/09/2024  Use \Test\Traits\CreatesSubmissions instead
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: app/cdash/tests/test_uploadfile.php
-
-		-
-			rawMessage: Cannot access offset 'buildgroups' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_uploadfile.php
-
-		-
-			rawMessage: Cannot access offset 'builds' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_uploadfile.php
-
-		-
-			rawMessage: Cannot access offset 'label' on mixed.
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: app/cdash/tests/test_uploadfile.php
-
-		-
-			rawMessage: 'Loose comparison via "==" between int<0, max> and int is not allowed.'
-			identifier: equal.notAllowed
-			count: 2
-			path: app/cdash/tests/test_uploadfile.php
-
-		-
-			rawMessage: 'Parameter #1 $array of function array_pop expects array, mixed given.'
-			identifier: argument.type
-			count: 2
-			path: app/cdash/tests/test_uploadfile.php
-
-		-
-			rawMessage: Property UploadFileTestCase::$BuildId has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/test_uploadfile.php
-
-		-
-			rawMessage: Property UploadFileTestCase::$FileId has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/test_uploadfile.php
-
-		-
-			rawMessage: Property UploadFileTestCase::$Sha1Sum has no type specified.
-			identifier: missingType.property
-			count: 1
-			path: app/cdash/tests/test_uploadfile.php
 
 		-
 			rawMessage: 'Argument of an invalid type mixed supplied for foreach, only iterables are supported.'

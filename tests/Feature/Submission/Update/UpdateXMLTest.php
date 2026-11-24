@@ -97,6 +97,24 @@ class UpdateXMLTest extends TestCase
     }
 
     /**
+     * Test that the committer of an updated file is stored separately from its author.
+     */
+    public function testCommitter(): void
+    {
+        $this->makeSubmission($this->project->name, base_path(
+            'tests/Feature/Submission/Update/data/committer.xml'
+        ));
+
+        $update = $this->project->builds()->firstOrFail()->updateStep;
+        $this->assertNotNull($update);
+        $file = $update->updateFiles()->where('filename', 'fakegitfile1.txt')->firstOrFail();
+        $this->assertSame('Test Author', $file->author);
+        $this->assertSame('simpletest@localhost', $file->email);
+        $this->assertSame('Test Committer', $file->committer);
+        $this->assertSame('simpleuser@localhost', $file->committeremail);
+    }
+
+    /**
      * Test that a SubProject build is not linked to the update of a build with the same site, name,
      * and stamp in another project.
      */
