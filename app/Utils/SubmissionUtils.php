@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Utils;
 
+use App\Enums\XmlSubmissionType;
 use App\Exceptions\BadSubmissionException;
 use App\Http\Submission\Handlers\BuildHandler;
 use App\Http\Submission\Handlers\ConfigureHandler;
@@ -35,7 +36,7 @@ class SubmissionUtils
      * @return array{
      *     file_handle: mixed,
      *     xml_handler: 'App\Http\Submission\Handlers\BuildHandler'|'App\Http\Submission\Handlers\ConfigureHandler'|'App\Http\Submission\Handlers\CoverageHandler'|'App\Http\Submission\Handlers\CoverageJUnitHandler'|'App\Http\Submission\Handlers\CoverageLogHandler'|'App\Http\Submission\Handlers\DoneHandler'|'App\Http\Submission\Handlers\DynamicAnalysisHandler'|'App\Http\Submission\Handlers\NoteHandler'|'App\Http\Submission\Handlers\ProjectHandler'|'App\Http\Submission\Handlers\TestingHandler'|'App\Http\Submission\Handlers\TestingJUnitHandler'|'App\Http\Submission\Handlers\UpdateHandler'|'App\Http\Submission\Handlers\UploadHandler',
-     *     xml_type: 'Build'|'Configure'|'Coverage'|'CoverageJUnit'|'CoverageLog'|'Done'|'DynamicAnalysis'|'Notes'|'Project'|'Test'|'TestJUnit'|'Update'|'Upload',
+     *     xml_type: value-of<XmlSubmissionType>,
      * }
      *
      * @throws BadSubmissionException
@@ -54,44 +55,44 @@ class SubmissionUtils
             if (str_contains($content, '<Update')) {
                 // Should be first otherwise confused with Build
                 $handler = UpdateHandler::class;
-                $file = 'Update';
+                $file = XmlSubmissionType::UPDATE->value;
             } elseif (str_contains($content, '<Build')) {
                 $handler = BuildHandler::class;
-                $file = 'Build';
+                $file = XmlSubmissionType::BUILD->value;
             } elseif (str_contains($content, '<Configure')) {
                 $handler = ConfigureHandler::class;
-                $file = 'Configure';
+                $file = XmlSubmissionType::CONFIGURE->value;
             } elseif (str_contains($content, '<Testing')) {
                 $handler = TestingHandler::class;
-                $file = 'Test';
+                $file = XmlSubmissionType::TEST->value;
             } elseif (str_contains($content, '<CoverageLog')) {
                 // Should be before coverage
                 $handler = CoverageLogHandler::class;
-                $file = 'CoverageLog';
+                $file = XmlSubmissionType::COVERAGE_LOG->value;
             } elseif (str_contains($content, '<Coverage')) {
                 $handler = CoverageHandler::class;
-                $file = 'Coverage';
+                $file = XmlSubmissionType::COVERAGE->value;
             } elseif (str_contains($content, '<report')) {
                 $handler = CoverageJUnitHandler::class;
-                $file = 'CoverageJUnit';
+                $file = XmlSubmissionType::COVERAGE_JUNIT->value;
             } elseif (str_contains($content, '<Notes')) {
                 $handler = NoteHandler::class;
-                $file = 'Notes';
+                $file = XmlSubmissionType::NOTES->value;
             } elseif (str_contains($content, '<DynamicAnalysis')) {
                 $handler = DynamicAnalysisHandler::class;
-                $file = 'DynamicAnalysis';
+                $file = XmlSubmissionType::DYNAMIC_ANALYSIS->value;
             } elseif (str_contains($content, '<Project')) {
                 $handler = ProjectHandler::class;
-                $file = 'Project';
+                $file = XmlSubmissionType::PROJECT->value;
             } elseif (str_contains($content, '<Upload')) {
                 $handler = UploadHandler::class;
-                $file = 'Upload';
+                $file = XmlSubmissionType::UPLOAD->value;
             } elseif (str_contains($content, '<testsuite')) {
                 $handler = TestingJUnitHandler::class;
-                $file = 'TestJUnit';
+                $file = XmlSubmissionType::TEST_JUNIT->value;
             } elseif (str_contains($content, '<Done')) {
                 $handler = DoneHandler::class;
-                $file = 'Done';
+                $file = XmlSubmissionType::DONE->value;
             }
         }
 

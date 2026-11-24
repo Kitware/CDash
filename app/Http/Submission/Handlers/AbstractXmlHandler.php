@@ -18,11 +18,10 @@ namespace App\Http\Submission\Handlers;
 =========================================================================*/
 
 use App\Models\Site;
+use App\Services\XmlValidationService;
 use App\Utils\Stack;
 use CDash\Model\Build;
 use CDash\Model\Project;
-use DOMDocument;
-use Illuminate\Support\Facades\Storage;
 use League\Flysystem\UnableToReadFile;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 
@@ -59,51 +58,7 @@ abstract class AbstractXmlHandler extends AbstractSubmissionHandler
             return [];
         }
 
-        // let us control the failures so we can continue
-        // parsing files instead of crashing midway
-        libxml_use_internal_errors(true);
-
-        // load the input file to be validated
-        $local_path = '';
-        $xml = new DOMDocument();
-        if (file_exists($path)) {
-            $xml->load($path, LIBXML_PARSEHUGE);
-        } else {
-            if (!Storage::exists($path)) {
-                throw new FileNotFoundException($path);
-            }
-            if (config('filesystems.default') === 'local') {
-                $xml->load(Storage::path($path), LIBXML_PARSEHUGE);
-            } else {
-                // Temporarily download the file because DOMDocument->load takes a path,
-                // not a stream...
-                $fp = Storage::readStream($path);
-                if ($fp === null) {
-                    throw UnableToReadFile::fromLocation($path);
-                }
-                $local_path = 'tmp/' . basename($path);
-                Storage::disk('local')->put($local_path, $fp);
-                $xml->load(Storage::disk('local')->path($local_path), LIBXML_PARSEHUGE);
-            }
-        }
-
-        // run the validator and collect errors if there are any.
-        $errors = [];
-        if (!$xml->schemaValidate(base_path(static::$schema_file))) {
-            $validation_errors = libxml_get_errors();
-            foreach ($validation_errors as $error) {
-                if ($error->level === LIBXML_ERR_ERROR || $error->level === LIBXML_ERR_FATAL) {
-                    $errors[] = "WARNING: {$error->message} in {$error->file}, line: {$error->line}, column: {$error->column}";
-                }
-            }
-            libxml_clear_errors();
-        }
-
-        if ($local_path !== '' && config('filesystems.default') !== 'local') {
-            Storage::disk('local')->delete($local_path);
-        }
-
-        return $errors;
+        return XmlValidationService::validate($path, base_path(static::$schema_file));
     }
 
     protected function getParent(): ?string

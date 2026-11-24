@@ -424,6 +424,27 @@ class BuildXMLTest extends TestCase
     }
 
     /**
+     * Test that resubmitting a build which is already done replaces it with a new build.
+     */
+    public function testReplacesDoneBuild(): void
+    {
+        $this->makeSubmission($this->project->name, base_path(
+            'tests/Feature/Submission/Build/data/replace_build_1.xml'
+        ));
+        $first_build = $this->project->builds()->firstOrFail();
+        $this->assertSame('ctest-3.0', $first_build->generator);
+        $first_build->update(['done' => true]);
+
+        $this->makeSubmission($this->project->name, base_path(
+            'tests/Feature/Submission/Build/data/replace_build_2.xml'
+        ));
+
+        $this->assertModelMissing($first_build);
+        $this->assertSame(1, $this->project->builds()->count());
+        $this->assertSame('ctest-3.1', $this->project->builds()->firstOrFail()->generator);
+    }
+
+    /**
      * CTest sends the build's name, site and stamp with each file, so the upload creates the build before
      * Build.xml is parsed.
      */

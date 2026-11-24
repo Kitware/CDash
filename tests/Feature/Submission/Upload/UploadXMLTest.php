@@ -67,4 +67,20 @@ class UploadXMLTest extends TestCase
         $this->assertSame('tmp.txt', $file->filename);
         Storage::assertExists("upload/{$file->sha1sum}");
     }
+
+    /**
+     * Test that the labels in an Upload.xml file are assigned to the build.
+     */
+    public function testLabelsFromUpload(): void
+    {
+        $this->makeSubmission($this->project->name, base_path(
+            'tests/Feature/Submission/Upload/data/with_labels.xml'
+        ));
+
+        $this->log->shouldNotHaveReceived('error');
+        $this->log->shouldNotHaveReceived('warning');
+
+        $build = $this->project->builds()->firstOrFail();
+        $this->assertSame(['UploadBuild'], $build->labels()->pluck('text')->all());
+    }
 }

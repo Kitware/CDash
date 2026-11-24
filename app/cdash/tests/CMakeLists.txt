@@ -111,6 +111,8 @@ add_unit_test(/Unit/Utils/SubmissionUtilsTest)
 
 add_unit_test(/Unit/Utils/RedirectUtilsTest)
 
+add_unit_test(/Unit/Services/XmlValidationServiceTest)
+
 add_unit_test(/Unit/GraphQL/SchemaValidationTest)
 
 add_unit_test(/Unit/GraphQL/RelationshipDirectivesTest)
@@ -121,9 +123,7 @@ add_unit_test(/Unit/GraphQL/Directives/FilterDirectiveTest)
 
 add_unit_test(/Unit/GraphQL/Directives/FilterableDirectiveTest)
 
-add_php_test(seconds_from_interval)
-
-add_php_test(extracttar)
+add_unit_test(/Unit/CommonFunctionsTest)
 
 add_laravel_test(/Legacy/Model/BuildTest)
 
@@ -199,6 +199,10 @@ add_feature_test_in_transaction(/Feature/UpdateProjectLogoTest)
 add_feature_test_in_transaction(/Feature/ProjectLogoTest)
 
 add_feature_test_in_transaction(/Feature/TestImageAccessTest)
+
+add_feature_test_in_transaction(/Feature/TestFileDownloadTest)
+
+add_feature_test_in_transaction(/Feature/BuildFileDownloadTest)
 
 add_feature_test_in_transaction(/Feature/ProjectNotificationsTest)
 
@@ -380,6 +384,8 @@ add_feature_test_in_transaction(/Feature/Jobs/DeleteProjectTest)
 
 add_feature_test_in_transaction(/Feature/Console/ValidateXmlCommandTest)
 
+add_feature_test_in_transaction(/Feature/Console/ListSubmissionsCommandTest)
+
 add_feature_test_in_transaction(/Feature/Submission/XmlSubmissionTest)
 
 add_feature_test_in_transaction(/Feature/Submission/UnparsedSubmissionTest)
@@ -411,6 +417,8 @@ add_feature_test_in_transaction(/Feature/Submission/Coverage/OpenCoverTarTest)
 add_feature_test_in_transaction(/Feature/Submission/Configure/ConfigureXMLTest)
 
 add_feature_test_in_transaction(/Feature/Submission/Bazel/BazelJSONTest)
+
+add_feature_test_in_transaction(/Feature/Submission/BuildProperties/BuildPropertiesJSONTest)
 
 add_feature_test_in_transaction(/Feature/Submission/DynamicAnalysis/DynamicAnalysisXMLTest)
 
@@ -570,14 +578,8 @@ set_tests_properties(image PROPERTIES DEPENDS /Legacy/XmlHandler/UpdateHandlerTe
 add_php_test(consistenttestingday)
 set_tests_properties(consistenttestingday PROPERTIES DEPENDS /Legacy/XmlHandler/UpdateHandlerTest)
 
-add_php_test(attachedfiles)
-set_tests_properties(attachedfiles PROPERTIES DEPENDS /Legacy/XmlHandler/UpdateHandlerTest)
-
 add_php_test(subprojectorder)
 set_tests_properties(subprojectorder PROPERTIES DEPENDS /Legacy/XmlHandler/UpdateHandlerTest)
-
-add_php_test(buildproperties)
-set_tests_properties(buildproperties PROPERTIES DEPENDS /Legacy/XmlHandler/UpdateHandlerTest)
 
 add_php_test(issuecreation)
 set_tests_properties(issuecreation PROPERTIES DEPENDS /Legacy/XmlHandler/UpdateHandlerTest)
@@ -606,9 +608,7 @@ set_property(TEST install_2 APPEND PROPERTY DEPENDS
   /Legacy/Messaging/Topic/TopicDecoratorTest
   image
   consistenttestingday
-  attachedfiles
   subprojectorder
-  buildproperties
   issuecreation
   configurewarnings
 )
@@ -647,11 +647,8 @@ set_tests_properties(buildconfigure PROPERTIES DEPENDS aggregatecoverage)
 add_php_test(buildgrouprule)
 set_tests_properties(buildgrouprule PROPERTIES DEPENDS buildconfigure)
 
-add_php_test(committerinfo)
-set_tests_properties(committerinfo PROPERTIES DEPENDS buildgrouprule)
-
 add_php_test(projectindb)
-set_tests_properties(projectindb PROPERTIES DEPENDS committerinfo)
+set_tests_properties(projectindb PROPERTIES DEPENDS buildgrouprule)
 
 add_php_test(querytests)
 set_tests_properties(querytests PROPERTIES DEPENDS projectindb)
@@ -662,11 +659,8 @@ set_tests_properties(testoverview PROPERTIES DEPENDS querytests)
 add_php_test(buildmodel)
 set_tests_properties(buildmodel PROPERTIES DEPENDS testoverview)
 
-add_php_test(uploadfile)
-set_tests_properties(uploadfile PROPERTIES DEPENDS buildmodel)
-
 add_php_test(multicoverage)
-set_tests_properties(multicoverage PROPERTIES DEPENDS uploadfile)
+set_tests_properties(multicoverage PROPERTIES DEPENDS buildmodel)
 
 add_php_test(hidecolumns)
 set_tests_properties(hidecolumns PROPERTIES DEPENDS multicoverage)
@@ -683,11 +677,8 @@ set_tests_properties(testhistory PROPERTIES DEPENDS subprojectnextprevious)
 add_php_test(expectedandmissing)
 set_tests_properties(expectedandmissing PROPERTIES DEPENDS testhistory)
 
-add_php_test(replacebuild)
-set_tests_properties(replacebuild PROPERTIES DEPENDS expectedandmissing)
-
 add_php_test(crosssubprojectcoverage)
-set_tests_properties(crosssubprojectcoverage PROPERTIES DEPENDS replacebuild)
+set_tests_properties(crosssubprojectcoverage PROPERTIES DEPENDS expectedandmissing)
 
 add_php_test(aggregatesubprojectcoverage)
 set_tests_properties(aggregatesubprojectcoverage PROPERTIES DEPENDS crosssubprojectcoverage)
