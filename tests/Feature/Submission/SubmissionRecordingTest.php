@@ -5,6 +5,7 @@ namespace Tests\Feature\Submission;
 use App\Enums\SubmissionStatus;
 use App\Exceptions\BadSubmissionException;
 use App\Jobs\ProcessSubmission;
+use App\Models\BuildFile;
 use App\Models\PendingSubmissions;
 use App\Models\Project;
 use App\Models\Site;
@@ -21,7 +22,9 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use League\Flysystem\UnableToCheckFileExistence;
 use League\Flysystem\UnableToMoveFile;
+use Mockery;
 use PHPUnit\Framework\Attributes\DataProvider;
 use ReflectionClass;
 use RuntimeException;
@@ -98,6 +101,29 @@ class SubmissionRecordingTest extends TestCase
             . $build->id . '</buildId><time>' . time() . '</time></Done>', $build->id, 'Done');
 
         return [$filename, $build->id];
+    }
+
+    /**
+     * Receive a data file for a build, writing its buildfile row and recording it, as an upload would, and return the
+     * inbox filename and the submission's id.
+     *
+     * @return array{string, string}
+     */
+    private function receiveDataFile(int $buildid, string $contents, string $filename): array
+    {
+        $md5 = md5($contents);
+        $inbox_filename = SubmissionUtils::dataFilename($this->project->name, '', 'BuildPropertiesJSON', $buildid, $md5, 'json');
+        Storage::put("inbox/{$inbox_filename}", $contents);
+        BuildFile::create([
+            'buildid' => $buildid,
+            'type' => 'BuildPropertiesJSON',
+            'md5' => $md5,
+            'filename' => $filename,
+        ]);
+        $submissionid = Str::uuid7()->toString();
+        SubmissionService::recordSubmission($submissionid, $this->project->id, $buildid, 'BuildPropertiesJSON', "inbox/{$inbox_filename}", $filename);
+
+        return [$inbox_filename, $submissionid];
     }
 
     public function testRecordsParsedXmlFile(): void
@@ -193,13 +219,27 @@ class SubmissionRecordingTest extends TestCase
         $this->assertSame('Invalid ? and null  bytes ' . str_repeat('x', 974) . '...', $submission->error);
     }
 
-    public function testKeepsPathOfFailedFileThatWasNotMoved(): void
+    public function testMovesFailedFileFromWhereItsRowSaysItIs(): void
+    {
+        $filename = $this->receiveXmlFile('Not a submission', null, 'Build');
+        $submissionid = $this->recordedSubmission()->id;
+
+        // The file is still in the inbox, as when a job fails before moving it to inprogress/.
+        (new ProcessSubmission($filename, $this->project->id, null, '', $submissionid))->failed(new RuntimeException('Failed'));
+
+        $submission = Submission::findOrFail($submissionid);
+        $this->assertSame(SubmissionStatus::FAILED, $submission->status);
+        $this->assertSame("failed/{$filename}", $submission->path);
+        $this->assertSame(["failed/{$filename}"], Storage::allFiles());
+    }
+
+    public function testKeepsPathOfFailedFileThatIsMissing(): void
     {
         Exceptions::fake();
         $filename = $this->receiveXmlFile('Not a submission', null, 'Build');
         $submissionid = $this->recordedSubmission()->id;
+        Storage::delete("inbox/{$filename}");
 
-        // The file is still in the inbox, so it can't be moved from inprogress/ to failed/.
         (new ProcessSubmission($filename, $this->project->id, null, '', $submissionid))->failed(new RuntimeException('Failed'));
 
         Exceptions::assertReported(UnableToMoveFile::class);
@@ -207,6 +247,167 @@ class SubmissionRecordingTest extends TestCase
         $this->assertSame(SubmissionStatus::FAILED, $submission->status);
         $this->assertSame("inbox/{$filename}", $submission->path);
         $this->assertSame('Failed', $submission->error);
+    }
+
+    public function testMovesFailedFileFromInprogressWhenItsRowIsOutOfDate(): void
+    {
+        $filename = $this->receiveXmlFile('Not a submission', null, 'Build');
+        $submissionid = $this->recordedSubmission()->id;
+        Submission::whereKey($submissionid)->update(['path' => 'inbox/moved.xml']);
+        Storage::move("inbox/{$filename}", 'inprogress/moved.xml');
+
+        // As when the job moved the file to inprogress/ but couldn't record that in the row.
+        (new ProcessSubmission($filename, $this->project->id, null, '', $submissionid))->failed(new RuntimeException('Failed'));
+
+        $submission = Submission::findOrFail($submissionid);
+        $this->assertSame(SubmissionStatus::FAILED, $submission->status);
+        $this->assertSame('failed/moved.xml', $submission->path);
+        $this->assertSame(['failed/moved.xml'], Storage::allFiles());
+    }
+
+    public function testRecordsFailureWhenStorageIsUnreachable(): void
+    {
+        Exceptions::fake();
+        $filename = $this->receiveXmlFile('Not a submission', null, 'Build');
+        $submissionid = $this->recordedSubmission()->id;
+        $disk = Mockery::mock(Storage::disk())->makePartial();
+        $disk->shouldReceive('exists')->andThrow(UnableToCheckFileExistence::forLocation("inbox/{$filename}"));
+        Storage::set(Config::string('filesystems.default'), $disk);
+
+        (new ProcessSubmission($filename, $this->project->id, null, '', $submissionid))->failed(new RuntimeException('Failed'));
+
+        Exceptions::assertReported(UnableToCheckFileExistence::class);
+        $submission = Submission::findOrFail($submissionid);
+        $this->assertSame(SubmissionStatus::FAILED, $submission->status);
+        $this->assertSame('Failed', $submission->error);
+        $this->assertSame("inbox/{$filename}", $submission->path);
+    }
+
+    public function testMovesFailedFileOfJobWhoseRowIsGone(): void
+    {
+        $filename = $this->receiveXmlFile('Not a submission', null, 'Build');
+        $submissionid = $this->recordedSubmission()->id;
+        Submission::whereKey($submissionid)->delete();
+
+        $this->assertThrows(
+            fn () => ProcessSubmission::dispatchSync($filename, $this->project->id, null, '', $submissionid),
+            BadSubmissionException::class,
+        );
+
+        $this->assertSame(["failed/{$filename}"], Storage::allFiles());
+    }
+
+    public function testFindsFileAtPathInItsRow(): void
+    {
+        Config::set('cdash.backup_timeframe', 48);
+        $filename = $this->receiveXmlFile((string) file_get_contents(base_path('tests/Feature/Submission/data/build.xml')), null, 'Build');
+        $submissionid = $this->recordedSubmission()->id;
+        Storage::move("inbox/{$filename}", 'inbox/moved.xml');
+        Submission::whereKey($submissionid)->update(['path' => 'inbox/moved.xml']);
+
+        ProcessSubmission::dispatchSync($filename, $this->project->id, null, '', $submissionid);
+
+        $submission = Submission::findOrFail($submissionid);
+        $this->assertSame(SubmissionStatus::DONE, $submission->status);
+        $this->assertSame(Storage::files('parsed'), [$submission->path]);
+        $this->assertSame([], Storage::files('inbox'));
+    }
+
+    public function testLocksUploadBuildOfXmlFileWhoseBuildWasDeleted(): void
+    {
+        $build = $this->project->builds()->create([
+            'name' => 'replaced',
+            'uuid' => Str::uuid()->toString(),
+            'siteid' => Site::factory()->create()->id,
+        ]);
+        $filename = $this->receiveXmlFile((string) file_get_contents(base_path('tests/Feature/Submission/data/build.xml')), $build->id, 'Build');
+        $submissionid = $this->recordedSubmission()->id;
+        $build->delete();
+        $locks = [];
+        DB::listen(function (QueryExecuted $query) use (&$locks): void {
+            if (str_contains($query->sql, 'pg_advisory_xact_lock')) {
+                $locks[] = $query->bindings;
+            }
+        });
+
+        ProcessSubmission::dispatchSync($filename, $this->project->id, $build->id, '', $submissionid);
+
+        // The lock still keeps the file from being parsed alongside the build's other files.
+        $this->assertSame([[$build->id]], $locks);
+        $this->assertSame(SubmissionStatus::DONE, Submission::findOrFail($submissionid)->status);
+    }
+
+    public function testParsesDataFileIntoBuildInItsRow(): void
+    {
+        $build = $this->project->builds()->create([
+            'name' => 'recorded',
+            'uuid' => Str::uuid()->toString(),
+            'siteid' => Site::factory()->create()->id,
+        ]);
+        $other_build = $this->project->builds()->create([
+            'name' => 'other',
+            'uuid' => Str::uuid()->toString(),
+            'siteid' => $build->siteid,
+        ]);
+        $contents = '{"key": "value"}';
+        [$filename, $submissionid] = $this->receiveDataFile($build->id, $contents, 'properties.json');
+
+        // The job names another build, which has no buildfile row for this file.
+        ProcessSubmission::dispatchSync($filename, $this->project->id, $other_build->id, md5($contents), $submissionid);
+
+        $this->assertSame(SubmissionStatus::DONE, Submission::findOrFail($submissionid)->status);
+        $this->assertDatabaseHas('buildproperties', ['buildid' => $build->id]);
+        $this->assertDatabaseMissing('buildproperties', ['buildid' => $other_build->id]);
+    }
+
+    public function testKeepsBuildFileRowOfAnotherUploadWithTheSameContents(): void
+    {
+        $build = $this->project->builds()->create([
+            'name' => 'twice',
+            'uuid' => Str::uuid()->toString(),
+            'siteid' => Site::factory()->create()->id,
+        ]);
+        $contents = '{"key": "value"}';
+        BuildFile::create([
+            'buildid' => $build->id,
+            'type' => 'BuildPropertiesJSON',
+            'md5' => md5($contents),
+            'filename' => 'second.json',
+        ]);
+        [$filename, $submissionid] = $this->receiveDataFile($build->id, $contents, 'first.json');
+
+        ProcessSubmission::dispatchSync($filename, $this->project->id, $build->id, md5($contents), $submissionid);
+
+        $this->assertSame(SubmissionStatus::DONE, Submission::findOrFail($submissionid)->status);
+        $this->assertDatabaseMissing('buildfile', ['buildid' => $build->id, 'filename' => 'first.json']);
+        $this->assertDatabaseHas('buildfile', ['buildid' => $build->id, 'filename' => 'second.json']);
+    }
+
+    public function testFailsDataFileWhoseBuildWasDeleted(): void
+    {
+        $build = $this->project->builds()->create([
+            'name' => 'deleted',
+            'uuid' => Str::uuid()->toString(),
+            'siteid' => Site::factory()->create()->id,
+        ]);
+        $contents = (string) file_get_contents(base_path('tests/Feature/Submission/data/gcov.tar'));
+        $md5 = md5($contents);
+        $filename = SubmissionUtils::dataFilename($this->project->name, '', 'GcovTar', $build->id, $md5, 'tar');
+        Storage::put("inbox/{$filename}", $contents);
+        $submissionid = Str::uuid7()->toString();
+        SubmissionService::recordSubmission($submissionid, $this->project->id, $build->id, 'GcovTar', "inbox/{$filename}", 'gcov.tar');
+        $build->delete();
+
+        $this->assertThrows(
+            fn () => ProcessSubmission::dispatchSync($filename, $this->project->id, $build->id, $md5, $submissionid),
+            BadSubmissionException::class,
+            'no longer exists',
+        );
+
+        $submission = Submission::findOrFail($submissionid);
+        $this->assertSame(SubmissionStatus::FAILED, $submission->status);
+        $this->assertSame("failed/{$filename}", $submission->path);
+        $this->assertStringContainsString('no longer exists', (string) $submission->error);
     }
 
     public function testFailsJobWhenClaimFails(): void
@@ -227,14 +428,13 @@ class SubmissionRecordingTest extends TestCase
             RuntimeException::class,
         );
 
-        // failed() can't move the file to failed/, since it never left inbox/.
-        Exceptions::assertReported(UnableToMoveFile::class);
+        // failed() moves the file from inbox/, where the row says it still is.
         $submission = Submission::findOrFail($submissionid);
         $this->assertSame(SubmissionStatus::FAILED, $submission->status);
         $this->assertSame('Failed to claim the submission', $submission->error);
         $this->assertNull($submission->started_at);
-        $this->assertSame("inbox/{$filename}", $submission->path);
-        $this->assertSame(["inbox/{$filename}"], Storage::allFiles());
+        $this->assertSame("failed/{$filename}", $submission->path);
+        $this->assertSame(["failed/{$filename}"], Storage::allFiles());
         $this->assertSame(0, $this->project->builds()->count());
     }
 
@@ -546,6 +746,25 @@ class SubmissionRecordingTest extends TestCase
         $this->assertNull($submission->finished_at);
         Queue::assertPushed(ProcessSubmission::class, fn (ProcessSubmission $job) => $job->filename === $filename
             && $job->submissionid === $submissionid);
+    }
+
+    /**
+     * @throws BadSubmissionException
+     */
+    public function testRequeuesDoneFileFromPathInItsRow(): void
+    {
+        Queue::fake();
+        [$filename, $buildid] = $this->receiveWaitingDoneFile();
+        $submissionid = $this->recordedSubmission()->id;
+        Storage::move("inbox/{$filename}", 'inbox/moved.xml');
+        Submission::whereKey($submissionid)->update(['path' => 'inbox/moved.xml']);
+
+        (new ProcessSubmission($filename, $this->project->id, $buildid, '', $submissionid))->handle();
+
+        $submission = Submission::findOrFail($submissionid);
+        $this->assertSame(SubmissionStatus::QUEUED, $submission->status);
+        $this->assertSame('inbox/moved.xml', $submission->path);
+        $this->assertSame(['inbox/moved.xml'], Storage::allFiles());
     }
 
     public function testRecordsDoneFileRequeuedOnSyncQueue(): void

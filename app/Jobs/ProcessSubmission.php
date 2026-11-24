@@ -82,10 +82,10 @@ class ProcessSubmission implements ShouldQueue
         return Storage::delete($filename);
     }
 
-    private function requeueSubmissionFile(): bool
+    private function requeueSubmissionFile(string $path): bool
     {
         // Increment retry count.
-        $retry_handler = new RetryHandler("inprogress/{$this->filename}");
+        $retry_handler = new RetryHandler($path);
         $retry_handler->increment();
 
         // Requeue the file with exponential backoff.  The row's update, the build's pending count and the file's
@@ -96,12 +96,13 @@ class ProcessSubmission implements ShouldQueue
         // immediately.
         $next_attempt_at = now('UTC')->addSeconds(((int) config('cdash.retry_base')) ** $retry_handler->Retries);
         $buildid = $this->buildid === null ? null : (int) $this->buildid;
-        SubmissionService::withBuildLock($buildid, function () use ($next_attempt_at): void {
+        $inbox_path = 'inbox/' . basename($path);
+        SubmissionService::withBuildLock($buildid, function () use ($next_attempt_at, $path, $inbox_path): void {
             if ($this->submissionid !== null) {
-                SubmissionService::requeueSubmission($this->submissionid, "inbox/{$this->filename}", $next_attempt_at);
+                SubmissionService::requeueSubmission($this->submissionid, $inbox_path, $next_attempt_at);
             }
             PendingSubmissions::where('buildid', $this->buildid)->increment('numfiles');
-            Storage::move("inprogress/{$this->filename}", "inbox/{$this->filename}");
+            Storage::move($path, $inbox_path);
         });
         self::dispatch($this->filename, $this->projectid, $this->buildid, $this->expected_md5, $this->submissionid)->delay($next_attempt_at);
 
@@ -158,19 +159,30 @@ class ProcessSubmission implements ShouldQueue
             return;
         }
 
+        // A job with a row takes its file's location from the row, and records each move there.  A data file's type
+        // and build come from the row too.
+        $submission = $this->submissionid === null ? null : Submission::find($this->submissionid);
+        if ($submission === null) {
+            // A row pruned since the claim detaches the job too.
+            $this->submissionid = null;
+        }
+        $path = $submission->path ?? "inbox/{$this->filename}";
+
         // Move file from inbox to inprogress.
-        if (!$this->renameSubmissionFile("inbox/{$this->filename}", "inprogress/{$this->filename}")) {
+        $inprogress_path = 'inprogress/' . basename($path);
+        if (!$this->renameSubmissionFile($path, $inprogress_path)) {
             // Return early if the rename operation fails.
             // Presumably this means some other runner picked up the job before us.
             return;
         }
-        SubmissionService::updateSubmission($this->submissionid, ['path' => "inprogress/{$this->filename}"]);
+        $path = $inprogress_path;
+        SubmissionService::updateSubmission($this->submissionid, ['path' => $path]);
 
         // Project existence validation occurs prior to jobs being queued, so we expect this to always exist.
         $project = Project::findOrFail((int) $this->projectid);
 
         // Parse file.
-        $handler = $this->doSubmit("inprogress/{$this->filename}", $project, $this->buildid, $this->expected_md5);
+        $handler = $this->doSubmit($path, $project, $submission);
 
         if (!is_object($handler)) {
             SubmissionService::failSubmission($this->submissionid, [
@@ -182,12 +194,11 @@ class ProcessSubmission implements ShouldQueue
 
         // Resubmit the file if necessary.
         if (self::waitsForOtherFiles($handler)) {
-            $this->requeueSubmissionFile();
+            $this->requeueSubmissionFile($path);
             return;
         }
 
         // A deleted file's row keeps the path it had last.
-        $path = "inprogress/{$this->filename}";
         if ((int) config('cdash.backup_timeframe') === 0) {
             // We are configured not to store parsed files. Delete it now.
             $this->deleteSubmissionFile($path);
@@ -239,8 +250,17 @@ class ProcessSubmission implements ShouldQueue
             'finished_at' => now('UTC'),
         ];
         try {
-            $this->renameSubmissionFile("inprogress/{$this->filename}", "failed/{$this->filename}");
-            $attributes['path'] = "failed/{$this->filename}";
+            // The file is where the row says, unless recording its move to inprogress/ failed.  For a job without a
+            // row, or whose row can't be read, it's in inprogress/ under the job's filename.
+            $path = SubmissionService::submissionPath($this->submissionid);
+            if ($path === null) {
+                $path = "inprogress/{$this->filename}";
+            } elseif (!Storage::exists($path)) {
+                $path = 'inprogress/' . basename($path);
+            }
+            $failed_path = 'failed/' . basename($path);
+            $this->renameSubmissionFile($path, $failed_path);
+            $attributes['path'] = $failed_path;
         } catch (FilesystemException $e) {
             report($e);
         }
@@ -253,7 +273,7 @@ class ProcessSubmission implements ShouldQueue
      *
      * @throws BadSubmissionException
      **/
-    private function doSubmit($filename, Project $project, $buildid = null, $expected_md5 = ''): AbstractSubmissionHandler|UnparsedSubmissionProcessor|false
+    private function doSubmit(string $filename, Project $project, ?Submission $submission): AbstractSubmissionHandler|UnparsedSubmissionProcessor|false
     {
         if (!Storage::exists($filename)) {
             Log::error("Failed to locate submission file {$filename}");
@@ -273,8 +293,11 @@ class ProcessSubmission implements ShouldQueue
             return $handler;
         }
 
-        $handler = DB::transaction(function () use ($filename, $project, $buildid, $expected_md5) {
-            $handler = self::parseSubmissionFile($filename, $project, $buildid, $expected_md5);
+        $handler = DB::transaction(function () use ($filename, $project, $submission) {
+            $buildid = $this->buildid === null ? null : (int) $this->buildid;
+            $handler = $submission === null
+                ? self::parseSubmissionFile($filename, $project, $buildid, $this->expected_md5)
+                : self::parseRecordedSubmissionFile($filename, $project, $submission, $buildid, $this->expected_md5);
 
             // Mark the row done in the same transaction, so that a crash can't leave a parsed file that isn't
             // marked done.  A Done.xml that has to wait for its build's other files is requeued instead.
@@ -295,7 +318,48 @@ class ProcessSubmission implements ShouldQueue
     }
 
     /**
-     * Parse a submission file as an unparsed data file if it has a buildfile row, or as CTest XML otherwise.
+     * Parse a submission file as recorded in its row: as an unparsed data file into the row's build if the row's
+     * type is a data file type, or as CTest XML otherwise.
+     *
+     * @throws BadSubmissionException
+     */
+    private static function parseRecordedSubmissionFile(string $filename, Project $project, Submission $submission, ?int $upload_buildid, ?string $expected_md5): AbstractSubmissionHandler
+    {
+        $type = UnparsedSubmissionType::tryFrom($submission->type);
+        if ($type === null) {
+            // XML is parsed with the build named at upload rather than the row's, which is null once that build is
+            // deleted, e.g. when a rerun replaces it.  The id still keeps the build's files from being parsed
+            // concurrently.
+            return SubmissionService::parseCTestXml($filename, $project, $upload_buildid);
+        }
+
+        // Deleting a build sets its submissions' buildid to null.
+        $build = $submission->buildid === null ? null : Build::find($submission->buildid);
+        if ($build === null) {
+            throw new BadSubmissionException("The build that {$filename} was uploaded for no longer exists");
+        }
+
+        $handler = SubmissionService::parseDataFile($filename, $build->id, $type);
+
+        // Uploads also write a buildfile row, which jobs without a row use to find data files by md5.  Deleting it
+        // shows whether such a job, queued by submission:queue, already parsed this file.
+        if (BuildFile::where([
+            'buildid' => $build->id,
+            'type' => $type->value,
+            'md5' => $expected_md5,
+            'filename' => $submission->filename,
+        ])->delete() === 0) {
+            throw new BadSubmissionException("Submission file {$filename} was already parsed");
+        }
+
+        self::nameDataFileBackup($handler, $project, $build, (string) $submission->filename);
+
+        return $handler;
+    }
+
+    /**
+     * Parse a submission file that has no row as an unparsed data file if it has a buildfile row, or as CTest XML
+     * otherwise.
      *
      * @throws BadSubmissionException
      */
@@ -322,8 +386,6 @@ class ProcessSubmission implements ShouldQueue
 
         /** @var Build $build */
         $build = $buildfile->build()->firstOrFail();
-        /** @var Site $site */
-        $site = $build->site()->firstOrFail();
 
         $handler = SubmissionService::parseDataFile($filename, $build->id, $type);
 
@@ -332,15 +394,19 @@ class ProcessSubmission implements ShouldQueue
             throw new BadSubmissionException("Submission file {$filename} was already parsed");
         }
 
-        $handler->backupFileName = SubmissionService::generateBackupFileName(
-            $project->name,
-            '',
-            $build->name,
-            $site->name,
-            $build->stamp,
-            $buildfile->filename,
-        );
+        self::nameDataFileBackup($handler, $project, $build, $buildfile->filename);
 
         return $handler;
+    }
+
+    /**
+     * Set the descriptive name a parsed data file is kept under.
+     */
+    private static function nameDataFileBackup(AbstractSubmissionHandler $handler, Project $project, Build $build, string $filename): void
+    {
+        /** @var Site $site */
+        $site = $build->site()->firstOrFail();
+
+        $handler->backupFileName = SubmissionService::generateBackupFileName($project->name, '', $build->name, $site->name, $build->stamp, $filename);
     }
 }

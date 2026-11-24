@@ -4756,24 +4756,6 @@ parameters:
 			path: app/Jobs/ProcessSubmission.php
 
 		-
-			rawMessage: 'Method App\Jobs\ProcessSubmission::doSubmit() has parameter $buildid with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
-			rawMessage: 'Method App\Jobs\ProcessSubmission::doSubmit() has parameter $expected_md5 with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
-			rawMessage: 'Method App\Jobs\ProcessSubmission::doSubmit() has parameter $filename with no type specified.'
-			identifier: missingType.parameter
-			count: 1
-			path: app/Jobs/ProcessSubmission.php
-
-		-
 			rawMessage: 'Method App\Jobs\ProcessSubmission::renameSubmissionFile() has parameter $dst with no type specified.'
 			identifier: missingType.parameter
 			count: 1
