@@ -115,6 +115,7 @@ class ProjectTypeTest extends TestCase
         // TODO: once BugTracker is an enum, get cases dynamically.
         $bugTrackerValues = [
             ['bugtrackertype', 'GitHub', 'bugTracker', 'GITHUB'],
+            ['bugtrackertype', 'GitLab', 'bugTracker', 'GITLAB'],
             ['bugtrackertype', 'Buganizer', 'bugTracker', 'BUGANIZER'],
             ['bugtrackertype', 'JIRA', 'bugTracker', 'JIRA'],
             ['bugtrackertype', null, 'bugTracker', null],

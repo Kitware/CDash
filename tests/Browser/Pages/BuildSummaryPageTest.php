@@ -68,6 +68,34 @@ class BuildSummaryPageTest extends BrowserTestCase
         });
     }
 
+    public function testShowsPrefilledGitLabIssueForFailedBuild(): void
+    {
+        $url = 'https://gitlab.example.org/group/project/-/issues/new?issuable_template=Build';
+        $this->project->update(['bugtrackertype' => 'GitLab', 'bugtrackernewissueurl' => $url]);
+        $build = $this->project->builds()->create([
+            'siteid' => $this->site->id,
+            'name' => 'Linux C++ & tests',
+            'uuid' => Str::uuid()->toString(),
+            'type' => 'Experimental',
+            'builderrors' => 1,
+        ]);
+
+        $this->browse(function (Browser $browser) use ($build, $url): void {
+            $browser->visit("/builds/{$build->id}")
+                ->waitFor('@new-issue-link')
+                ->assertSeeLink('Create GitLab issue for this build')
+            ;
+            $link = $browser->attribute('@new-issue-link', 'href');
+            self::assertIsString($link);
+            self::assertStringStartsWith($url . '&', $link);
+            parse_str((string) parse_url($link, PHP_URL_QUERY), $query);
+            self::assertIsArray($query['issue']);
+            self::assertSame("FAILED (b=1): {$this->project->name} - {$build->name} - Experimental", $query['issue']['title']);
+            self::assertIsString($query['issue']['description']);
+            self::assertStringContainsString("/builds/{$build->id}", $query['issue']['description']);
+        });
+    }
+
     public function testShowsHistoryLink(): void
     {
         $buildName = 'Linux-g++_' . Str::uuid()->toString();

@@ -286,6 +286,10 @@
                 value: 'GITHUB',
               },
               {
+                text: 'GitLab',
+                value: 'GITLAB',
+              },
+              {
                 text: 'JIRA',
                 value: 'JIRA',
               },

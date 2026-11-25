@@ -117,6 +117,7 @@ final class BuildController extends AbstractBuildController
             case 'Buganizer':
             case 'JIRA':
             case 'GitHub':
+            case 'GitLab':
                 $new_issue_url = RepositoryUtils::generate_bugtracker_new_issue_link($this->build, $this->project);
                 $bug_tracker = $this->project->BugTrackerType;
                 break;

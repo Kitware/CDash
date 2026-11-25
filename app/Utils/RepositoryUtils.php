@@ -235,6 +235,18 @@ class RepositoryUtils
         return "{$baseurl}title=$title&body=$body";
     }
 
+    public static function generate_GitLab_new_issue_link(?string $baseurl, string $title, string $body): string
+    {
+        if ($baseurl === null || $baseurl === '') {
+            return '';
+        }
+
+        return (string) Uri::of($baseurl)->withQuery([
+            'issue.title' => urldecode($title),
+            'issue.description' => urldecode($body),
+        ]);
+    }
+
     /** Generate the title and body for a broken build. */
     private static function generate_broken_build_message(array $emailtext, $Build, $Project): array|false
     {
