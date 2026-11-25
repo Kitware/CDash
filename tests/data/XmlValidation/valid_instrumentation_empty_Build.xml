@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="dummy_build_name"
+  BuildStamp="dummy_stamp"
+  Name="dummy_name"
+  >
+	<Build>
+		<StartDateTime>Nov 24 00:32 UTC</StartDateTime>
+		<StartBuildTime>1795480322</StartBuildTime>
+		<SourceDirectory>/tmp/instrumented/src</SourceDirectory>
+		<BinaryDirectory>/tmp/instrumented/build</BinaryDirectory>
+		<BuildCommand>make</BuildCommand>
+		<Targets/>
+		<Commands/>
+		<Log Encoding="base64" Compression="bin/gzip"/>
+		<EndDateTime>Nov 24 00:32 UTC</EndDateTime>
+		<EndBuildTime>1795480322</EndBuildTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Build>
+</Site>

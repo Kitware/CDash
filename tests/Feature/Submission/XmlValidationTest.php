@@ -40,6 +40,9 @@ class XmlValidationTest extends TestCase
         $this->submit('valid_Configure2.xml');
         $this->submit('valid_Build.xml');
         $this->submit('valid_instrumentation_Build.xml');
+        $this->submit('valid_instrumentation_custom_install_Build.xml');
+        $this->submit('valid_instrumentation_empty_Build.xml');
+        $this->submit('valid_instrumentation_empty_Configure.xml');
     }
 
     /** Check that error messages are logged but submission succeeds
@@ -54,6 +57,9 @@ class XmlValidationTest extends TestCase
         $this->submit('valid_Configure2.xml');
         $this->submit('valid_Build.xml');
         $this->submit('valid_instrumentation_Build.xml');
+        $this->submit('valid_instrumentation_custom_install_Build.xml');
+        $this->submit('valid_instrumentation_empty_Build.xml');
+        $this->submit('valid_instrumentation_empty_Configure.xml');
     }
 
     /** Check that error messages are logged but submission succeeds
@@ -68,6 +74,9 @@ class XmlValidationTest extends TestCase
         $this->submit('valid_Configure2.xml');
         $this->submit('valid_Build.xml');
         $this->submit('valid_instrumentation_Build.xml');
+        $this->submit('valid_instrumentation_custom_install_Build.xml');
+        $this->submit('valid_instrumentation_empty_Build.xml');
+        $this->submit('valid_instrumentation_empty_Configure.xml');
     }
 
     /** Check that the submission is dependent upon passing validation
@@ -86,6 +95,9 @@ class XmlValidationTest extends TestCase
         $this->submit('valid_Configure2.xml');
         $this->submit('valid_Build.xml');
         $this->submit('valid_instrumentation_Build.xml');
+        $this->submit('valid_instrumentation_custom_install_Build.xml');
+        $this->submit('valid_instrumentation_empty_Build.xml');
+        $this->submit('valid_instrumentation_empty_Configure.xml');
     }
 
     public function tearDown(): void

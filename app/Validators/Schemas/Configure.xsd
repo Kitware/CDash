@@ -29,7 +29,7 @@
               <xs:element name="Commands" minOccurs="0">
                 <xs:complexType>
                   <xs:sequence>
-                    <xs:choice maxOccurs="unbounded">
+                    <xs:choice minOccurs="0" maxOccurs="unbounded">
                       <xs:element name="Generate">
                         <xs:complexType>
                           <xs:sequence>
@@ -42,6 +42,9 @@
                           <xs:attribute name="result" use="required"/>
                           <xs:attribute name="timeStart" use="required" type="xs:integer"/>
                           <xs:attribute name="version" use="optional" type="xs:integer"/>
+                          <!-- CTest writes each field of CMake's instrumentation data as an attribute,
+                               so newer versions of CMake add attributes -->
+                          <xs:anyAttribute processContents="lax"/>
                         </xs:complexType>
                       </xs:element>
                       <xs:element name="Configure">
@@ -56,6 +59,7 @@
                           <xs:attribute name="result" use="required"/>
                           <xs:attribute name="timeStart" use="required" type="xs:integer"/>
                           <xs:attribute name="version" use="optional" type="xs:integer"/>
+                          <xs:anyAttribute processContents="lax"/>
                         </xs:complexType>
                       </xs:element>
                     </xs:choice>
